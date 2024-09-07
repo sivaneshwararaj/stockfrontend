@@ -40,25 +40,25 @@ export let similarTicker;
         <thead>
           <tr>
             <th class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-[#09090B]">Fund Name</th>
-            <th class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-[#09090B]">Total Assets</th>
+            <th class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]">Total Assets</th>
             <th class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]">Holdings</th>
           </tr>
         </thead>
         <tbody>
           {#each similarTicker as item, index}
-          <tr on:click={() => etfSelector(item?.symbol)} class="shake-ticker text-white cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
+          <tr on:click={() => etfSelector(item?.symbol)} class="shake-ticker sm:hover:text-white text-blue-400 cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
             {#if index <=6}
             
-              <td class="text-gray-200">
+              <td class="">
                 <div class="flex flex-row items-center">
                   <div class="rounded-full w-10 h-10 relative  flex items-center justify-center">
                     <img style="clip-path: circle(50%);" class="w-6 h-6 rounded-full" src={`https://financialmodelingprep.com/image-stock/${item.symbol}.png`} loading="lazy"/>
                   </div>
                   <div class="flex flex-col ml-3 w-full">
-                    <span class="text-blue-400 text-sm font-medium">{item?.symbol}</span>
-                    <span class="text-white text-xs">
+                    <span class="text-sm font-medium">{item?.symbol}</span>
+                    <span class="text-white text-sm">
                       {#if typeof item?.name !== 'undefined'}
-                        {item?.name?.length > 10 ? item?.name?.slice(0,10) + "..." : item?.name}
+                        {item?.name?.length > 20 ? item?.name?.slice(0,20) + "..." : item?.name}
                       {:else}
                         n/a
                       {/if}
@@ -69,11 +69,11 @@ export let similarTicker;
                 
               </td>
           
-            <td class="text-white text-center font-medium ">
+            <td class="text-white text-end font-semibold ">
               {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets, true) : '-'}
             </td>
           
-            <td class="text-white font-medium text-end">
+            <td class="text-white font-semibold text-end">
               {abbreviateNumber(item?.numberOfHoldings)}
             </td>
 
@@ -123,12 +123,12 @@ export let similarTicker;
   <!--End Header-->
 
 {#if similarTicker?.length !== 0}
-<div class="flex justify-start items-center w-full m-auto pl-2 mt-10">
+<div class="flex justify-start items-center w-full m-auto pl-2 mt-10 overflow-x-scroll">
 <table class="table table-sm table-compact mt-3 text-start flex justify-start items-center w-full px-3 m-auto">
   <thead>
     <tr class="border-b border-blue-400">
       <th class="text-white font-bold text-sm text-start bg-[#000] border-b border-blue-400">Company</th>
-      <th class="text-white font-bold text-sm text-center bg-[#000] border-b border-blue-400">Market Cap</th>
+      <th class="text-white font-bold text-sm text-end bg-[#000] border-b border-blue-400">Market Cap</th>
       <th class="text-white font-bold text-sm text-end bg-[#000] border-b border-blue-400">Change</th>
     </tr>
   </thead>
@@ -137,16 +137,16 @@ export let similarTicker;
           <tr on:click={() => etfSelector(item?.symbol)} class="shake-ticker text-white cursor-pointer border-b border-[#000]">
             {#if index <=6}
             
-              <td class="text-gray-200">
+              <td class="text-gray-200 whitespace-nowrap">
                 <div class="flex flex-row items-center">
                   <div class="rounded-full w-10 h-10 relative  flex items-center justify-center">
                     <img style="clip-path: circle(50%);" class="w-6 h-6 rounded-full" src={`https://financialmodelingprep.com/image-stock/${item.symbol}.png`} loading="lazy"/>
                   </div>
                   <div class="flex flex-col ml-3 w-full">
                     <span class="text-blue-400 text-sm font-medium">{item?.symbol}</span>
-                    <span class="text-white text-xs">
+                    <span class="text-white text-sm">
                       {#if typeof item?.name !== 'undefined'}
-                        {item?.name?.length > 10 ? item?.name?.slice(0,10) + "..." : item?.name}
+                        {item?.name?.length > 15 ? item?.name?.slice(0,15) + "..." : item?.name}
                       {:else}
                         n/a
                       {/if}
@@ -157,11 +157,11 @@ export let similarTicker;
                 
               </td>
           
-            <td class="text-white text-center font-medium ">
+            <td class="text-white text-end font-semibold ">
               {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets, true) : '-'}
             </td>
           
-            <td class="text-white font-medium text-end">
+            <td class="text-white font-semibold text-end">
               {abbreviateNumber(item?.numberOfHoldings)}
             </td>
 

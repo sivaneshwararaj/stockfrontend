@@ -31,7 +31,7 @@
                 <span class="font-bold text-white text-2xl">
                     Dividends
                 </span>
-                <span class="text-white font-medium ml-auto text-sm">
+                <span class="text-white font-semibold ml-auto text-[1rem]">
                     Dividend Yield {dividendYield ?? '0'}%
                 </span>
               </div>

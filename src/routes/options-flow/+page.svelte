@@ -822,7 +822,7 @@ $: {
                         {formatTime(displayedData[index]?.time)}
                       </div>
   
-                      <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.assetType)} style="justify-content: center;" class="td text-sm sm:text-[1rem] text-blue-400 font-normal">
+                      <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.assetType)} style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
                         {displayedData[index]?.ticker}
                       </div>
 

@@ -41,22 +41,22 @@
               <thead>
                 <tr >
                   <th class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-[#09090B]">Company Name</th>
-                  <th class="text-white font-semibold text-sm text-center bg-[#000] sm:bg-[#09090B]">Total Assets</th>
+                  <th class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]">Total Assets</th>
                   <th class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]">% of Fund</th>
                 </tr>
               </thead>
               <tbody>
                 {#each topETFHolder as item, index}
-                <tr on:click={() => etfSelector(item?.symbol)} class="text-white cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
+                <tr on:click={() => etfSelector(item?.symbol)} class="sm:hover:text-white text-blue-400 cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
                   {#if index <=6}
                  
-                    <td class="text-gray-200">
+                    <td >
                       <div class="flex flex-row items-center">
                         <div class="flex flex-col w-full">
-                          <span class="text-blue-400 text-sm font-medium">{item?.symbol}</span>
-                          <span class="text-white text-xs">
+                          <span class="text-sm font-medium">{item?.symbol}</span>
+                          <span class="text-white text-sm">
                             {#if typeof item?.name !== 'undefined'}
-                              {item?.name?.length > 15 ? item?.name?.slice(0,15) + "..." : item?.name}
+                              {item?.name?.length > 20 ? item?.name?.slice(0,20) + "..." : item?.name}
                             {:else}
                               n/a
                             {/if}
@@ -67,11 +67,11 @@
                       
                     </td>
                 
-                  <td class="text-white text-center font-medium ">
+                  <td class="text-white text-end font-semibold">
                     {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets,true) : '-'}
                   </td>
                 
-                  <td class="text-white font-medium text-end">
+                  <td class="text-white font-semibold text-end">
                     {item?.weightPercentage !== null ? item?.weightPercentage?.toFixed(2) : '-'}%
                   </td>
                   {/if}
@@ -116,7 +116,7 @@
       <!--End Header-->
     
         {#if topETFHolder?.length !== 0}
-        <div class="flex justify-start items-center w-full m-auto mt-10 overflow-hidden">
+        <div class="flex justify-start items-center w-full m-auto mt-10 overflow-x-scroll">
           <table class="table table-sm table-compact mt-3 text-start flex justify-start items-center w-full px-3 m-auto">
             <thead>
               <tr>
@@ -134,7 +134,7 @@
                     <div class="flex flex-row items-center">
                       <div class="flex flex-col w-full">
                         <span class="text-blue-400 text-sm font-medium">{item?.symbol}</span>
-                        <span class="text-white text-xs">
+                        <span class="text-white text-sm">
                           {#if typeof item?.name !== 'undefined'}
                             {item?.name?.length > 20 ? item?.name?.slice(0,20) + "..." : item?.name}
                           {:else}
@@ -147,11 +147,11 @@
                     
                   </td>
               
-                <td class="text-white text-end font-medium ">
+                <td class="text-white text-end font-semibold ">
                   {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets,true) : '-'}
                 </td>
               
-                <td class="text-white font-medium text-end">
+                <td class="text-white font-semibold text-end">
                   {item?.weightPercentage !== null ? abbreviateNumber(item?.weightPercentage)?.toFixed(2) : '-'}%
                 </td>
                 {/if}

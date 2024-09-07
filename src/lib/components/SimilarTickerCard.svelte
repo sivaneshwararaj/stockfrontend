@@ -40,25 +40,25 @@ export let similarstock;
           <thead>
             <tr>
               <th class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-[#09090B]">Company</th>
-              <th class="text-white font-semibold text-sm text-center bg-[#000] sm:bg-[#09090B]">Market Cap</th>
+              <th class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]">Market Cap</th>
               <th class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]">Avg Volume</th>
             </tr>
           </thead>
           <tbody>
             {#each similarstock as item, index}
-            <tr on:click={() => stockSelector(item?.symbol)} class="shake-ticker text-white cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
+            <tr on:click={() => stockSelector(item?.symbol)} class="shake-ticker sm:hover:text-white text-blue-400 cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
               {#if index <=6}
              
-                <td class="text-gray-200">
+                <td class="whitespace-nowrap">
                   <div class="flex flex-row items-center">
-                    <div class="rounded-full w-10 h-10 relative  flex items-center justify-center">
+                    <div class="rounded-full w-10 h-10 relative flex items-center justify-center">
                       <img style="clip-path: circle(50%);" class="w-6 h-6 rounded-full" src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`} loading="lazy"/>
                     </div>
                     <div class="flex flex-col ml-3 w-full">
-                      <span class="text-blue-400 text-sm font-medium">{item?.symbol}</span>
-                      <span class="text-white text-xs">
+                      <span class="text-sm font-medium">{item?.symbol}</span>
+                      <span class="text-white text-sm">
                         {#if typeof item?.name !== 'undefined'}
-                          {item?.name?.length > 10 ? item?.name?.slice(0,10) + "..." : item?.name}
+                          {item?.name?.length > 15 ? item?.name?.slice(0,15) + "..." : item?.name}
                         {:else}
                           n/a
                         {/if}
@@ -69,11 +69,11 @@ export let similarstock;
                   
                 </td>
             
-              <td class="text-white text-center font-medium ">
+              <td class="text-white text-end font-semibold ">
                 {item?.marketCap !== null ? abbreviateNumber(item?.marketCap,true) : '-'}
               </td>
             
-              <td class="text-white font-medium text-end">
+              <td class="text-white font-semibold text-end">
                 {item?.avgVolume !== null ? abbreviateNumber(item?.avgVolume) : '-'}
               </td>
               {/if}
@@ -104,7 +104,7 @@ export let similarstock;
   
    <!--Start Header-->
    <div class="w-full p-1 flex flex-col items-center pb-5 h-auto">
-    <h2 class="text-center m-auto text-[1.1rem] font-medium text-white mt-5">
+    <h2 class="text-center m-auto text-lg font-semibold text-white mt-5">
      Similar Ticker
     </h2>
     <div class="flex flex-col items-center mt-10 mb-5 w-full px-8">
@@ -117,7 +117,7 @@ export let similarstock;
   <!--End Header-->
 
     {#if similarstock?.length !== 0}
-    <div class="flex justify-start items-center w-full m-auto mt-10 overflow-hidden">
+    <div class="flex justify-start items-center w-full m-auto mt-10 overflow-x-scroll">
       <table class="table table-sm table-compact mt-3 text-start flex justify-start items-center w-full px-3 m-auto">
         <thead>
           <tr>
@@ -135,7 +135,7 @@ export let similarstock;
                 <div class="flex flex-row items-center">
                   <div class="flex flex-col w-full">
                     <span class="text-blue-400 text-sm font-medium">{item?.symbol}</span>
-                    <span class="text-white text-xs">
+                    <span class="text-white text-sm">
                       {#if typeof item?.name !== 'undefined'}
                         {item?.name?.length > 20 ? item?.name?.slice(0,20) + "..." : item?.name}
                       {:else}
@@ -148,11 +148,11 @@ export let similarstock;
                 
               </td>
           
-            <td class="text-white text-end font-medium text-sm">
+            <td class="text-white text-end font-semibold text-sm">
               {item?.marketCap !== null ? abbreviateNumber(item?.marketCap,true) : '-'}
             </td>
           
-            <td class="text-white font-medium text-end text-sm">
+            <td class="text-white font-semibold text-end text-sm">
               {item?.avgVolume !== null ? abbreviateNumber(item?.avgVolume) : '-'}
             </td>
             {/if}

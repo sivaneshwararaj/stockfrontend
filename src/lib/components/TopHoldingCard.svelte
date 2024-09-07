@@ -46,7 +46,7 @@ $: {
             <span class="hidden lg:block font-bold text-white text-2xl">
                 Top Holdings
             </span>
-            <span class="text-white font-medium ml-auto text-sm">
+            <span class="text-white font-semibold ml-auto text-[1rem]">
                 {totalAssetPercentage}% of assets
             </span>
           </div>
@@ -60,24 +60,24 @@ $: {
               <thead>
                 <tr>
                   <th class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-[#09090B]">Company</th>
-                  <th class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-[#09090B]">Market Value</th>
+                  <th class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]">Market Value</th>
                   <th class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]">Portfolio</th>
                 </tr>
               </thead>
               <tbody>
                 {#each topHoldingList?.slice(0,5) as item}
                 {#if item?.asset !== null}
-                <tr on:click={() => stockSelector(item?.asset)} class="lg:shake-ticker text-white cursor-pointer lg:hover:bg-[#245073] lg:hover:bg-opacity-[0.2] bg-[#000] lg:bg-[#09090B] border-b border-[#000] lg:border-[#27272A]">
-                    <td class="text-gray-200">
+                <tr on:click={() => stockSelector(item?.asset)} class="lg:shake-ticker sm:hover:text-white text-blue-400 cursor-pointer lg:hover:bg-[#245073] lg:hover:bg-opacity-[0.2] bg-[#000] lg:bg-[#09090B] border-b border-[#000] lg:border-[#27272A]">
+                    <td class="">
                       <div class="flex flex-row items-center">
                         <div class="rounded-full w-10 h-10 relative  flex items-center justify-center">
                           <img style="clip-path: circle(50%);" class="w-6 h-6 rounded-full" src={item?.asset?.length !== 0 ? `https://financialmodelingprep.com/image-stock/${item?.asset}.png` : defaultLogo} loading="lazy"/>
                         </div>
                         <div class="flex flex-col ml-3 w-full">
-                          <span class="text-blue-400 text-sm font-medium">{item?.asset ?? '-'}</span>
-                          <span class="text-white  text-xs">
+                          <span class="text-sm font-medium">{item?.asset ?? '-'}</span>
+                          <span class="text-white text-sm">
                             {#if typeof item?.name !== 'undefined'}
-                              {item?.name?.length > 10 ? formatString(item?.name?.slice(0,10)) + "..." : formatString(item?.name)}
+                              {item?.name?.length > 20 ? formatString(item?.name?.slice(0,20)) + "..." : formatString(item?.name)}
                             {:else}
                               n/a
                             {/if}
@@ -87,11 +87,11 @@ $: {
                     </td>
 
                 
-                  <td class="text-white text-center font-medium ">
+                  <td class="text-white text-end font-semibold ">
                     {item?.marketValue !== null ? abbreviateNumber(item?.marketValue, true) : '-'}
                   </td>
                 
-                  <td class="text-white font-medium text-end">
+                  <td class="text-white font-semibold text-end">
                     {abbreviateNumber(item?.weightPercentage?.toFixed(2))}%
                   </td>
 

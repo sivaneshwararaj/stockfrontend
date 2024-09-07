@@ -776,7 +776,7 @@ $: {
                           {formatTime(rawData[index]?.time)}
                         </div>
     
-                        <div on:click|stopPropagation={() => assetSelector(rawData[index]?.ticker, rawData[index]?.assetType)} style="justify-content: center;" class="td text-sm text-blue-400 font-normal">
+                        <div on:click|stopPropagation={() => assetSelector(rawData[index]?.ticker, rawData[index]?.assetType)} style="justify-content: center;" class="td text-sm sm:hover:text-white text-blue-400 font-normal">
                           {rawData[index]?.ticker}
                         </div>
   

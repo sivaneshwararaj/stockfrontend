@@ -146,7 +146,7 @@ $: {
   
     <!--Start Header-->
     <div class="bg-[#000] w-full p-1 flex flex-col items-center pb-5 h-auto">
-      <h2 class="text-center m-auto text-[1.1rem] font-medium text-white mt-5">
+      <h2 class="text-center m-auto text-lg font-semibold text-white mt-5">
         SEC Filings
       </h2>
 
