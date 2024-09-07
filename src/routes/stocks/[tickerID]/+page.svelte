@@ -204,9 +204,9 @@
       case "MAX":
         displayData = "MAX";
         await historicalPrice("max");
-        if (threeYearPrice?.length !== 0) {
-          displayLastLogicalRangeValue = threeYearPrice?.at(0)?.close;
-          lastValue = threeYearPrice.slice(-1)?.at(0)?.close;
+        if (maxPrice?.length !== 0) {
+          displayLastLogicalRangeValue = maxPrice?.at(0)?.close;
+          lastValue = maxPrice.slice(-1)?.at(0)?.close;
         } else {
           displayLastLogicalRangeValue = null;
           lastValue = null;
@@ -236,9 +236,9 @@
   let sixMonthPrice = [];
 
   let oneYearPrice = [];
-  let threeYearPrice = [];
+  let maxPrice = [];
 
-  async function historicalPrice(timePeriod: string) {
+async function historicalPrice(timePeriod: string) {
     const cachedData = getCache($stockTicker, "historicalPrice" + timePeriod);
     if (cachedData) {
       switch (timePeriod) {
@@ -255,7 +255,7 @@
           oneYearPrice = cachedData;
           break;
         case "max":
-          threeYearPrice = cachedData;
+          maxPrice = cachedData;
           break;
         default:
           console.log(`Unsupported time period: ${timePeriod}`);
@@ -304,16 +304,18 @@
             oneYearPrice = mappedData;
             break;
           case "max":
-            threeYearPrice = mappedData;
+            maxPrice = mappedData;
             break;
           default:
             console.log(`Unsupported time period: ${timePeriod}`);
         }
+
         setCache($stockTicker, mappedData, "historicalPrice" + timePeriod);
       } catch (e) {
         console.log(e);
       }
     }
+
   }
 
   async function initializePrice() {
@@ -543,7 +545,7 @@
     "1M": oneMonthPrice,
     "6M": sixMonthPrice,
     "1Y": oneYearPrice,
-    "MAX": threeYearPrice,
+    "MAX": maxPrice,
   };
 
 
@@ -554,7 +556,7 @@
       oneWeekPrice = [];
       oneMonthPrice = [];
       oneYearPrice = [];
-      threeYearPrice = [];
+      maxPrice = [];
       prePostData = {};
       communitySentiment = {};
       output = null;
@@ -577,6 +579,34 @@
     if (form) {
       $globalForm = form;
     }
+  }
+
+async function exportData() {
+
+  await historicalPrice('max');
+
+    const csvRows = [];
+
+    // Add headers row
+    csvRows.push('time,open,high,low,close');
+
+    // Add data rows
+    for (const row of output) {
+      const csvRow = `${row.time},${row.open},${row.high},${row.low},${row.close}`;
+      csvRows.push(csvRow);
+    }
+
+    // Create CSV blob and trigger download
+    const csv = csvRows.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', `${$stockTicker}.csv`);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 </script>
 
@@ -719,13 +749,20 @@
               <div class="{displayData === 'MAX' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
             </div>
 
-            <label on:click={changeChartType} class="ml-auto -mt-3 block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
+            <label on:click={changeChartType} class="ml-auto block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
               {#if displayChartType === "line"}
                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z" /></svg>
               {:else}
                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5" /></svg>
               {/if}
             </label>
+
+             <label on:click={exportData} class="ml-2 text-white block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
+              Export
+            </label>
+
+
+
           </div>
           <!--End Time Interval-->
 
@@ -851,7 +888,7 @@
                   {:else if displayData === "MAX"}
                     {#if displayChartType === "line"}
                       <AreaSeries
-                        data={threeYearPrice?.map(({ time, close }) => ({ time, value: close }))}
+                        data={maxPrice?.map(({ time, close }) => ({ time, value: close }))}
                         lineWidth={1.5}
                         priceScaleId="left"
                         lineColor={colorChange}
@@ -862,11 +899,11 @@
                         priceLineVisible={false}
                         lastPriceAnimation={1}
                       >
-                        <PriceLine price={threeYearPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                        <PriceLine price={maxPrice?.at(0)?.close} lineWidth={1} color="#fff" />
                       </AreaSeries>
                     {:else}
-                      <CandlestickSeries data={threeYearPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
-                        <PriceLine price={threeYearPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                      <CandlestickSeries data={maxPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
+                        <PriceLine price={maxPrice?.at(0)?.close} lineWidth={1} color="#fff" />
                       </CandlestickSeries>
                     {/if}
                   {/if}
@@ -885,7 +922,6 @@
           {/if}
 
           <!--End Graph-->
-
           <!--Start Time Interval-->
           <div class="pl-1 w-screen sm:hidden flex flex-row items-center">
             <div class="flex flex-col items-center mr-4">
