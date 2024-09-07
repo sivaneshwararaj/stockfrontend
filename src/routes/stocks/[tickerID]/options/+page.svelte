@@ -887,21 +887,20 @@ $: {
         
         
     
-            
-        <style>
+    <style>
+      .app {
+          height: 400px;
+          width: 100%;
+      }
+      
+      @media (max-width: 560px) {
           .app {
-              height: 420px;
-              max-width: 1500px;
-          }
-          
-          @media (max-width: 560px) {
-              .app {
-                  max-width: 520px;
-                  height: 420px;
-              }
-          }
-        
-          .chart {
               width: 100%;
+              height: 300px;
           }
-        </style>
+      }
+  
+      .chart {
+          width: 100%;
+      }
+  </style>
