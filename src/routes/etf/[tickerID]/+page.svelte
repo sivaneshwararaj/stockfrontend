@@ -714,6 +714,34 @@ async function initializePrice() {
     }
   }
   
+
+  async function exportData() {
+
+  await historicalPrice('max');
+
+    const csvRows = [];
+
+    // Add headers row
+    csvRows.push('time,open,high,low,close');
+
+    // Add data rows
+    for (const row of output) {
+      const csvRow = `${row.time},${row.open},${row.high},${row.low},${row.close}`;
+      csvRows.push(csvRow);
+    }
+
+    // Create CSV blob and trigger download
+    const csv = csvRows.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', `${$etfTicker}.csv`);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
     
 </script>
 
@@ -873,13 +901,17 @@ async function initializePrice() {
   
   
     
-                                    <label on:click={changeChartType} class="ml-auto -mt-3 block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
-                                      {#if displayChartType === 'line'}
-                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z"/></svg>
-                                        {:else}
-                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5"/></svg>
-                                        {/if}
-                                  </label>
+                                   <label on:click={changeChartType} class="ml-auto block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
+                                      {#if displayChartType === "line"}
+                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z" /></svg>
+                                      {:else}
+                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5" /></svg>
+                                      {/if}
+                                    </label>
+
+                                    <label on:click={exportData} class="ml-2 text-white block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
+                                      Export
+                                    </label>
                                     
                                   </div>
                                   <!--End Time Interval-->
