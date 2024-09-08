@@ -6,6 +6,7 @@ import { goto } from '$app/navigation';
 import {screenWidth } from '$lib/store';
 import MiniPlot from '$lib/components/MiniPlot.svelte';
 import { onMount } from 'svelte';
+import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
 
 let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
@@ -146,7 +147,7 @@ async function handleDelete() {
             'priceAlertIdList': deletePriceAlertList
         }
 
-        const response = await fetch(fastifyURL+'/delete-price-alert', {
+        const response = await fetch(data?.fastifyURL+'/delete-price-alert', {
             method: 'POST',
             headers: {
              "Content-Type": "application/json"
@@ -209,11 +210,26 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
             
         
         
-    <div class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40">
-        
-         
-      <div  class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+<section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
+          
+  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+    <ul>
+      <li><a href="/" class="text-gray-300">Home</a></li>
+      <li class="text-gray-300">Watchlist</li>
+    </ul>
+  </div>
+          
+  <div class="w-full overflow-hidden m-auto mt-5">
+    
+    <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden ">
+        <div class="relative flex justify-center items-start overflow-hidden w-full">
+
+
+            <main class="w-full lg:w-3/4 lg:pr-5">
+
+
+              <div class="w-full  m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
       
           <!-- Start Column -->
           <div>
@@ -256,7 +272,7 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
         
     
         {#if isLoaded}
-    
+      <div class="sm:hidden">
         <div class="text-white text-xs sm:text-sm pb-5 sm:pb-2 pl-3 sm:pl-0">
           Stock Indexes - {getCurrentDateFormatted()}
         </div>
@@ -268,6 +284,8 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
           <MiniPlot title="Dow" priceData = {priceDataDowJones} changesPercentage={changeDowJones} previousClose={previousCloseDowJones}/>
           <MiniPlot title="Russel" priceData = {priceDataRussel2000} changesPercentage={changeRussel2000} previousClose={previousCloseRussel2000}/>
           </div>
+        </div>
+
         </div>
       
       
@@ -403,8 +421,64 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
     
         {/if}
         
+       </main>
+
+
+  <aside class="hidden lg:block relative fixed w-1/4 ml-4">        
+  
+    {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
+    <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+        <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <div class="w-full flex justify-between items-center p-3 mt-3">
+            <h2 class="text-start text-xl font-semibold text-white ml-3">
+            Pro Subscription
+            </h2>
+            <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+            </div>
+            <span class="text-white p-3 ml-3 mr-3">
+                Upgrade now for unlimited access to all data and tools.
+            </span>
         </div>
-        
-        
-    
-    
+    </div>
+    {/if}
+  
+    <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+        <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <div class="w-full flex justify-between items-center p-3 mt-3">
+            <h2 class="text-start text-xl font-semibold text-white ml-3">
+            Wallstreet Analyst
+            </h2>
+            <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+            </div>
+            <span class="text-white p-3 ml-3 mr-3">
+                Get the latest top Wall Street analyst ratings.
+            </span>
+        </div>
+    </div>
+  
+    <div on:click={() => goto('/politicians')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+        <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <div class="w-full flex justify-between items-center p-3 mt-3">
+            <h2 class="text-start text-xl font-semibold text-white ml-3">
+            Congress Trading
+            </h2>
+            <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+            </div>
+            <span class="text-white p-3 ml-3 mr-3">
+                Get the latest top Congress trading insights.
+            </span>
+        </div>
+    </div>
+  
+  </aside>
+  
+  </div>
+  </div>
+  
+  
+  </div>
+  
+  
+  
+  </section>
+  
