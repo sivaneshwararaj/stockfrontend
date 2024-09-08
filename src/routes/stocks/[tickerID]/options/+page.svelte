@@ -448,6 +448,32 @@ onMount(async () => {
     };
   }
 })
+
+
+function daysLeft(targetDate) {
+  const targetTime = new Date(targetDate).getTime();
+  const currentTime = new Date().getTime();
+  const difference = targetTime - currentTime;
+
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math?.ceil(difference / millisecondsPerDay);
+
+  return daysLeft;
+}
+
+let optionHistoryList = [];
+
+function handleViewData(optionData) {
+      
+  optionHistoryList = optionData;
+  optionHistoryList?.forEach((item) => {
+        item.dte = daysLeft(item?.date_expiration);
+      });
+  //const openPopup = $screenWidth < 640 ? document.getElementById("optionDetailsMobileModal") : document.getElementById("optionDetailsDesktopModal");
+  //openPopup?.dispatchEvent(new MouseEvent('click'))
+
+  optionDetailsDesktopModal?.showModal()
+}
     
     
 $: {
@@ -496,7 +522,7 @@ $: {
         <section class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full">
             <div class="flex justify-center m-auto h-full overflow-hidden w-full">
                 <div class="relative flex justify-center items-center overflow-hidden w-full">
-                      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+                      <div class="xl:p-7 w-full m-auto mt-2 sm:mt-0">
                             <div class="mb-6">
                                 <h2 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
                                     Unsual Options Activity
@@ -644,6 +670,7 @@ $: {
                                             <td class="text-slate-200 font-semibold text-sm text-end">% Change</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">P/C</td>
                                              <td class="text-slate-200 font-semibold text-sm text-center">Bear/Bull</td>
+                                              <td class="text-slate-200 font-semibold text-sm text-end">% OTM</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total Volume</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total OI</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total Prem</td>
@@ -651,7 +678,7 @@ $: {
                                         </thead>
                                         <tbody>
                                           {#each (data?.user?.tier === 'Pro' ? optionList : optionList?.slice(0,3)) as item, index}
-                                          <tr class="odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                                          <tr on:click={() => handleViewData(item?.history)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                                             
         
                                             <td class="text-white text-sm sm:text-[1rem] text-start">
@@ -670,7 +697,7 @@ $: {
                                               {(item?.p_vol/item?.c_vol)?.toFixed(2)}
                                             </td>
     
-                                           <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-center">
+                                           <td class="whitespace-nowrap text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-center">
                                             {#if item?.bear_ratio > (item?.neutral_ratio ?? 0) && item?.bear_ratio > (item?.bull_ratio ?? 0)}
                                               <div class="badge bg-[#FF2F1F] text-white font-semibold gap-2">
                                                 {item?.bear_ratio?.toFixed(0)}% Bearish
@@ -701,6 +728,11 @@ $: {
                                               </div>
                                             {/if}
                                           </td>
+
+                                           <td class="text-sm sm:text-[1rem] text-white text-end">
+                                            {item?.otm_ratio?.toFixed(0)}%
+                                          </td>
+
 
     
                                             <td class="text-sm sm:text-[1rem] text-white text-end">
@@ -754,7 +786,215 @@ $: {
             
         </section>
         
+
         
+
+
+<!--Start Options Detail Desktop Modal-->
+
+
+<!-- Put this part before </body> tag -->
+
+<dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
+  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border border-gray-600 h-auto">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+     <p class="text-gray-200 mt-10 mb-3">
+      <span class="text-white text-xl font-semibold">Option Data Details:</span>
+      <br>
+     All individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+    </p>
+    <div class="border-gray-600 border-b w-full mb-3"></div>
+    <div class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto">
+     <div class="flex justify-start items-center m-auto">
+                                    
+                                    
+        <table class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto">
+            <thead>
+              <tr class="">
+                <td class="text-slate-200 font-semibold text-sm text-start">Time</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Date</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Expiry</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Strike</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">C/P</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Sent.</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Spot</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Price</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Prem.</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Type</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Vol.</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">OI</td>
+              </tr>
+            </thead>
+            <tbody>
+              {#each optionHistoryList as item}
+              <!-- row -->
+              <tr class="odd:bg-[#27272A] border-b-[#09090B]">
+                
+                <td class="text-white text-sm text-start whitespace-nowrap">
+                  {formatTime(item?.time)}
+                </td>
+
+                <td class="text-white text-sm sm:text-[1rem] text-start">
+                  {formatDate(item?.date)}
+                </td>
+
+                <td class="text-white text-sm sm:text-[1rem] text-end">
+                  {item?.dte < 0 ? 'expired' : item?.dte +'d'}
+                </td>
+                
+                <td class="text-sm sm:text-[1rem] text-end text-white">
+                  {item?.strike_price}
+                </td>
+
+                <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-start">
+                  {item?.put_call}
+                </td>
+
+                <td class="text-sm sm:text-[1rem] {item?.sentiment === 'Bullish' ? 'text-[#00FC50]' : item?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
+                  {item?.sentiment}
+                </td>
+
+                <td class="text-sm sm:text-[1rem] text-end text-white">
+                  {item?.underlying_price}
+                </td>
+              
+              <td class="text-sm sm:text-[1rem] text-end text-white">
+                {item?.price}
+              </td>
+              
+              <td class="text-sm sm:text-[1rem] text-end font-medium {item?.put_call === 'Puts' ? 'text-[#CB281C]' : 'text-[#0FB307]'} ">
+                {abbreviateNumber(item?.cost_basis)}
+              </td>
+
+              <td class="text-sm sm:text-[1rem] text-start {item?.type === 'Sweep' ? 'text-[#C6A755]' : 'text-[#976DB7]'}">
+                {item?.type}
+              </td>
+
+
+
+              <td class="text-white text-end">
+                  {new Intl.NumberFormat("en", {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0
+                  }).format(item?.volume)}
+              </td>
+
+              <td class="text-white text-end">
+                {new Intl.NumberFormat("en", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
+              }).format(item?.open_interest)}
+              </td>
+
+
+        
+
+              </tr>
+              
+          
+              {/each}
+
+            </tbody>
+        </table>
+        
+      </div>
+    </div>
+
+
+  </div>
+  <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
+    <button>close</button>
+  </form>
+</dialog>
+
+
+
+<!--End Options Detial Desktop Modal-->
+
+  <!--Start Options Detail Modal-->
+  <!--
+<div class="hidden drawer drawer-end z-[999] w-full overflow-hidden">
+  <input id="optionDetailsMobileModal" type="checkbox" class="drawer-toggle"/>
+  <div class="drawer-side overflow-hidden z-[999]">
+  
+      
+    <div class="bg-[#000] min-h-screen w-full border pb-20 overflow-hidden">
+
+        <label for="optionDetailsMobileModal" class="absolute left-6 top-6">
+          <svg class="w-6 h-6 inline-block mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff" d="M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z"/></svg>
+        </label>
+
+  
+  <div class="w-fit border overflow-hidden p-2">
+
+    <p class="text-xl font-semibold text-white mt-16 p-3">
+      <span class="text-xl font-semibold">Order Details:</span>
+      <br>
+      {optionSymbol}
+    </p>
+    <p class="py-4 text-gray-200 w-full p-3">
+      <span class="font-semibold text-white">Description:</span>
+      {optionDescription}
+    </p>
+
+    <table class="table table-sm table-compact w-full mt-5 mb-10 text-white">
+      <tbody>
+        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+          <td class="font-semibold">Premium</td>
+          <td class="">{optionPremium}</td>
+          <td class="font-semibold">C/P</td>
+          <td class="">{optionContract}</td>
+        </tr>
+        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+          <td class="font-semibold">Expiry</td>
+          <td class="">{optionExpiry}</td>
+          <td class="font-semibold">Type</td>
+          <td class="">{optionType}</td>
+        </tr>
+        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+          <td class="font-semibold">Strike</td>
+          <td class="">${optionStrike}</td>
+          <td class="font-semibold">Volume</td>
+          <td class="">{optionVolume}</td>
+        </tr>
+        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+          <td class="font-semibold">Spot</td>
+          <td class="">${optionSpot}</td>
+          <td class="font-semibold">Open Interest</td>
+          <td class="">{optionOpenInterest}</td>
+        </tr>
+        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+          <td class="font-semibold">Price</td>
+          <td class="">${optionPrice}</td>
+          <td class="font-semibold">Sentiment</td>
+          <td class="">{optionSentiment}</td>
+        </tr>
+        <tr class="odd:bg-[#27272A]">
+          <td class="font-semibold">Trade Count</td>
+          <td class="">{optionTradeCount}</td>
+          <td class="font-semibold">Exchange</td>
+          <td class="">{optionExchange}</td>
+        </tr>
+        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+          <td class="font-semibold">Execution Est.</td>
+          <td class="">{optionExecutionEstimate}</td>
+          <td class="font-semibold"></td>
+          <td class=""></td>
+        </tr>
+      </tbody>
+    </table>
+
+        
+  </div>
+
+</div>
+</div>
+</div>
+-->
+<!--End Options Detail Modal-->
+
     
     <style>
       .app {
