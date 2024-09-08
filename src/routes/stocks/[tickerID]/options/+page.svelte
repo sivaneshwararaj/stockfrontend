@@ -433,15 +433,34 @@ function daysLeft(targetDate) {
 
 let optionHistoryList = [];
 
+let container;
+let rawDataHistory = [];
+
+function getScroll() {
+    const scrollThreshold = container.scrollHeight * 0.8; // 80% of the container height
+
+    // Check if the user has scrolled to the bottom based on the threshold
+    const isBottom = container.scrollTop + container.clientHeight >= scrollThreshold;
+
+    // Only load more data if at the bottom and there is still data to load
+    if (isBottom && optionHistoryList?.length !== rawDataHistory?.length) {
+        const nextIndex = optionHistoryList.length;  // Ensure optionHistoryList is defined
+        const filteredNewResults = rawDataHistory.slice(nextIndex, nextIndex + 25);  // Ensure rawData is defined
+        optionHistoryList = [...optionHistoryList, ...filteredNewResults];
+    }
+}
+
 async function handleViewData(date:string) {
   isLoaded = false;
   optionDetailsDesktopModal?.showModal()
 
-  optionHistoryList = await getDailyTransactions($stockTicker+'-'+date);
+  rawDataHistory = await getDailyTransactions($stockTicker+'-'+date);
 
-  optionHistoryList?.forEach((item) => {
+  rawDataHistory?.forEach((item) => {
         item.dte = daysLeft(item?.date_expiration);
       });
+  
+  optionHistoryList = rawDataHistory?.slice(0,20)
   isLoaded = true;
 }
 
@@ -464,7 +483,10 @@ function changeStatement(event)
 {
     optionChainList = (data?.getOptionsChainData?.filter(item => item?.date_expiration === event.target.value))?.at(0)?.chain || [];
 }
-    
+
+
+
+
 $: {
   if ((displayTimePeriod || displayData) && optionsPlotData?.length !== 0 && typeof window !== 'undefined') {
     // Filter the raw plot data based on the selected time period
@@ -872,17 +894,17 @@ $: {
 
 <dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
   <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border-t sm:border border-gray-600 h-auto">
-     <p class="text-gray-200 mt-10">
+     <p class="text-gray-200 mt-10 cursor-text">
       <span class="text-white text-xl font-semibold mb-4">Option Data Details:</span>
       <br class="">
       {#if optionHistoryList?.length !== 0}
-        All individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+        <div class="mt-3">{rawDataHistory?.length} individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}</div>
       {:else}
       <div class="mt-3">No data available.</div>
       {/if}
     </p>
     <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
-    <div class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto">
+    <div bind:this={container} on:scroll={getScroll} class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto">
      <div class="flex justify-start items-center m-auto">
                                     
       {#if isLoaded}                         
