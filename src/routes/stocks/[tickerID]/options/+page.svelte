@@ -680,7 +680,7 @@ $: {
                                             </td>
                                             
                                             <td class="text-sm sm:text-[1rem] text-end text-white">
-                                              {(item?.p_vol/item?.c_vol)?.toFixed(2)}
+                                              {item?.c_vol !== 0 ? (item?.p_vol/item?.c_vol)?.toFixed(1) : '-'}
                                             </td>
     
                                            <td class="whitespace-nowrap text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-center">
@@ -765,11 +765,11 @@ $: {
                                             </td>
                                             
                                             <td class="text-sm sm:text-[1rem] text-end text-white">
-                                              {item?.total_open_interest_call}
+                                              {abbreviateNumber(item?.total_open_interest_call)}
                                             </td>
 
                                             <td class="text-sm sm:text-[1rem] text-end text-white">
-                                              {item?.total_volume_call}
+                                              {abbreviateNumber(item?.total_volume_call)}
                                             </td>
     
                                            <td class="whitespace-nowrap text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-end">
@@ -779,11 +779,11 @@ $: {
                                           </td>
 
                                            <td class="text-sm sm:text-[1rem] text-start text-white">
-                                              {item?.total_volume_put}
+                                              {abbreviateNumber(item?.total_volume_put)}
                                             </td>
     
                                            <td class="text-sm sm:text-[1rem] text-start text-white">
-                                              {item?.total_open_interest_put}
+                                              {abbreviateNumber(item?.total_open_interest_put)}
                                             </td>
 
     
