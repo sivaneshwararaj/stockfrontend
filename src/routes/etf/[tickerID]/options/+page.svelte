@@ -872,9 +872,6 @@ $: {
 
 <dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
   <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border-t sm:border border-gray-600 h-auto">
-    <form method="dialog border-none">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 border-none">✕</button>
-    </form>
      <p class="text-gray-200 mt-10">
       <span class="text-white text-xl font-semibold mb-4">Option Data Details:</span>
       <br class="">
