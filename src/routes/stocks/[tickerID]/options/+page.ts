@@ -39,9 +39,9 @@ export const load = async ({ parent, params }) => {
     }
   };
 
-  const getOptionsChain = async () => {
+  const getOptionsHistoricalData = async () => {
     let output;
-    const cachedData = getCache(params.tickerID, "getOptionsChain");
+    const cachedData = getCache(params.tickerID, "getOptionsHistoricalData");
     if (cachedData) {
       output = cachedData;
     } else {
@@ -50,7 +50,7 @@ export const load = async ({ parent, params }) => {
       };
 
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + "/options-chain-ticker", {
+      const response = await fetch(apiURL + "/options-historical-data-ticker", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,35 @@ export const load = async ({ parent, params }) => {
 
       output = await response.json();
 
-      setCache(params.tickerID, output, "getOptionsChain");
+      setCache(params.tickerID, output, "getOptionsHistoricalData");
+    }
+
+    return output;
+  };
+
+  const getOptionsChainData = async () => {
+    let output;
+    const cachedData = getCache(params.tickerID, "getOptionsChainData");
+    if (cachedData) {
+      output = cachedData;
+    } else {
+      const postData = {
+        ticker: params.tickerID,
+      };
+
+      // make the POST request to the endpoint
+      const response = await fetch(apiURL + "/options-chain-data-ticker", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
+        },
+        body: JSON.stringify(postData),
+      });
+
+      output = await response.json();
+
+      setCache(params.tickerID, output, "getOptionsChainData");
     }
 
     return output;
@@ -98,7 +126,8 @@ export const load = async ({ parent, params }) => {
   // Make sure to return a promise
   return {
     getOptionsPlotData: await getOptionsPlotData(),
-    getOptionsChain: await getOptionsChain(),
+    getOptionsHistoricalData: await getOptionsHistoricalData(),
+    getOptionsChainData: await getOptionsChainData(),
     getOptionsGexData: await getOptionsGexData(),
   };
 };
