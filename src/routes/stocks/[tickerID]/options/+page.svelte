@@ -623,7 +623,7 @@ $: {
     
                                 
                                 <h3 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4 text-center sm:text-start">
-                                    Historical Options Chain
+                                    Historical Option Data
                                 </h3>
     
     
