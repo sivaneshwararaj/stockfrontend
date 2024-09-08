@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import {numberOfUnreadNotification, displayCompanyName, screenWidth, stockTicker} from '$lib/store';
+  import {numberOfUnreadNotification, displayCompanyName, screenWidth, stockTicker, setCache, getCache} from '$lib/store';
   import { Chart } from 'svelte-echarts'
   import { abbreviateNumber } from '$lib/utils';
   import InfoModal from '$lib/components/InfoModal.svelte';
@@ -10,11 +10,40 @@
   import { BarChart,LineChart } from 'echarts/charts'
   import { GridComponent, TooltipComponent } from 'echarts/components'
   import { CanvasRenderer } from 'echarts/renderers'
+
   use([BarChart,LineChart, GridComponent, TooltipComponent, CanvasRenderer])
   
   
     export let data;
-    
+
+  const getDailyTransactions = async (transactionId) => {
+    let output;
+    const cachedData = getCache(transactionId, "getDailyTransactions");
+    if (cachedData) {
+      output = cachedData;
+    } else {
+      const postData = {
+        transactionId: transactionId,
+      };
+
+      // make the POST request to the endpoint
+      const response = await fetch(data?.apiURL + "/options-daily-transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": data?.apiKey,
+        },
+        body: JSON.stringify(postData),
+      });
+
+      output = await response.json();
+
+      setCache(transactionId, output, "getDailyTransactions");
+    }
+
+    return output;
+  };
+
     let rawPlotData = data?.getOptionsPlotData;
     let filteredList = [];
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -404,12 +433,14 @@ function daysLeft(targetDate) {
 
 let optionHistoryList = [];
 
-function handleViewData(optionData) {
+async function handleViewData(date:string) {
       
-  optionHistoryList = optionData;
+  optionHistoryList = await getDailyTransactions($stockTicker+'-'+date);
+
   optionHistoryList?.forEach((item) => {
         item.dte = daysLeft(item?.date_expiration);
       });
+
   optionDetailsDesktopModal?.showModal()
 }
 
@@ -665,7 +696,7 @@ $: {
                                         </thead>
                                         <tbody>
                                           {#each (data?.user?.tier === 'Pro' ? optionList : optionList?.slice(0,3)) as item, index}
-                                          <tr on:click={() => handleViewData(item?.history)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                                          <tr on:click={() => handleViewData(item?.date)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                                             
                                             <td class="text-white text-sm sm:text-[1rem] text-start">
                                               {formatDate(item?.date)}
@@ -843,12 +874,16 @@ $: {
     <form method="dialog border-none">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 border-none">✕</button>
     </form>
-     <p class="text-gray-200 mt-10 mb-3">
-      <span class="text-white text-xl font-semibold">Option Data Details:</span>
-      <br>
-     All individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+     <p class="text-gray-200 mt-10">
+      <span class="text-white text-xl font-semibold mb-4">Option Data Details:</span>
+      <br class="">
+      {#if optionHistoryList?.length !== 0}
+        All individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+      {:else}
+      <div class="mt-3">No data available.</div>
+      {/if}
     </p>
-    <div class="border-gray-600 border-b w-full mb-3"></div>
+    <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
     <div class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto">
      <div class="flex justify-start items-center m-auto">
                                     
