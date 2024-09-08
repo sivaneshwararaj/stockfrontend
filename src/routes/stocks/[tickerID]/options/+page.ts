@@ -39,9 +39,9 @@ export const load = async ({ parent, params }) => {
     }
   };
 
-  const getOptionsFlowData = async () => {
+  const getOptionsChain = async () => {
     let output;
-    const cachedData = getCache(params.tickerID, "getOptionsFlowData");
+    const cachedData = getCache(params.tickerID, "getOptionsChain");
     if (cachedData) {
       output = cachedData;
     } else {
@@ -50,7 +50,7 @@ export const load = async ({ parent, params }) => {
       };
 
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + "/options-flow-ticker", {
+      const response = await fetch(apiURL + "/options-chain-ticker", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,11 +61,7 @@ export const load = async ({ parent, params }) => {
 
       output = await response.json();
 
-      output?.forEach((item) => {
-        item.dte = daysLeft(item?.date_expiration);
-      });
-
-      setCache(params.tickerID, output, "getOptionsFlowData");
+      setCache(params.tickerID, output, "getOptionsChain");
     }
 
     return output;
@@ -102,7 +98,7 @@ export const load = async ({ parent, params }) => {
   // Make sure to return a promise
   return {
     getOptionsPlotData: await getOptionsPlotData(),
-    getOptionsFlowData: await getOptionsFlowData(),
+    getOptionsChain: await getOptionsChain(),
     getOptionsGexData: await getOptionsGexData(),
   };
 };

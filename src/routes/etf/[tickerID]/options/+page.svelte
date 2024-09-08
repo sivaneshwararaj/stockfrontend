@@ -23,7 +23,7 @@
     let displayData = 'volume';
     let options;
     let optionsGEX;
-    let rawData = data?.getOptionsFlowData
+    let rawData = data?.getOptionsChain
     let optionList = rawData?.slice(0,30);
     let flowSentiment = 'n/a';
     let callPercentage; 
@@ -436,7 +436,6 @@ function processPlotData(filteredList: any[]) {
     
     
 onMount(async () => {
-  calculateStats();
   if(data?.getOptionsGexData?.length !== 0) {
     optionsGEX = getGEXPlot();
   }
@@ -624,144 +623,13 @@ $: {
     
                                 
                                 <h3 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4 text-center sm:text-start">
-                                    Latest Options Activity 
+                                    Historical Options Chain
                                 </h3>
     
     
     
                                 {#if optionList?.length !== 0}
-                                <!--Start Widget-->
-    
-                                <div class="w-full mt-5 mb-10 m-auto flex justify-center items-center">
-                                  <div class="w-full grid grid-cols-2 xl:grid-cols-3 gap-y-3 lg:gap-y-3 gap-x-3 ">
-                                    <!--Start Flow Sentiment-->  
-                                    <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] shadow-lg rounded-md h-20">
-                                        <div class="flex flex-col items-start">
-                                            <span class="font-medium text-gray-200 text-[1rem] ">Flow Sentiment</span>
-                                            <span class="text-start text-[1rem] font-medium {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">{flowSentiment}</span>
-                                        </div>
-                                        
-                                    </div>
-                                    <!--End Flow Sentiment-->
-                                    <!--Start Put/Call-->  
-                                    <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] shadow-lg rounded-md h-20">
-                                      <div class="flex flex-col items-start">
-                                          <span class="font-medium text-gray-200 text-[1rem] ">Put/Call</span>
-                                          <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
-                                            {latestPutCallRatio?.toFixed(3)}
-                                          </span>
-                                      </div>
-                                      <!-- Circular Progress -->
-                                        <div class="relative size-14 ml-auto">
-                                          <svg class="size-full w-14 h-14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                                            <!-- Background Circle -->
-                                            <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#3E3E3E]" stroke-width="3"></circle>
-                                            <!-- Progress Circle inside a group with rotation -->
-                                            <g class="origin-center -rotate-90 transform">
-                                              <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-blue-500" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={latestPutCallRatio >=1 ? 0 : 100-(latestPutCallRatio*100)?.toFixed(2)}></circle>
-                                            </g>
-                                          </svg>
-                                          <!-- Percentage Text -->
-                                          <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                            <span class="text-center text-white text-sm">{latestPutCallRatio?.toFixed(2)}</span>
-                                          </div>
-                                        </div>
-                                      <!-- End Circular Progress -->
-                            
-                                  </div>
-                                  <!--End Put/Call-->
-                                  <!--Start Call Flow-->  
-                                  <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] shadow-lg rounded-md h-20">
-                                    <div class="flex flex-col items-start">
-                                        <span class="font-medium text-gray-200 text-[1rem] ">Call Flow</span>
-                                        <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
-                                          {new Intl.NumberFormat("en", {
-                                            minimumFractionDigits: 0,
-                                            maximumFractionDigits: 0
-                                        }).format(displayCallVolume)}
-                                        </span>
-                                    </div>
-                                    <!-- Circular Progress -->
-                                    <div class="relative size-14 ml-auto">
-                                      <svg class="size-full w-14 h-14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                                        <!-- Background Circle -->
-                                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#3E3E3E]" stroke-width="3"></circle>
-                                        <!-- Progress Circle inside a group with rotation -->
-                                        <g class="origin-center -rotate-90 transform">
-                                          <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#00FC50]" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={100-callPercentage?.toFixed(2)}></circle>
-                                        </g>
-                                      </svg>
-                                      <!-- Percentage Text -->
-                                      <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                        <span class="text-center text-white text-sm">{callPercentage}%</span>
-                                      </div>
-                                    </div>
-                                    <!-- End Circular Progress -->
-                                  </div>
-                                  <!--End Call Flow-->
-                                  <!--Start Put Flow-->  
-                                  <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] shadow-lg rounded-md h-20">
-                                    <div class="flex flex-col items-start">
-                                        <span class="font-medium text-gray-200 text-[1rem] ">Put Flow</span>
-                                        <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
-                                          {new Intl.NumberFormat("en", {
-                                            minimumFractionDigits: 0,
-                                            maximumFractionDigits: 0
-                                        }).format(displayPutVolume)}
-                                        </span>
-                                    </div>
-                                    <!-- Circular Progress -->
-                                    <div class="relative size-14 ml-auto">
-                                      <svg class="size-full w-14 h-14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                                        <!-- Background Circle -->
-                                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#3E3E3E]" stroke-width="3"></circle>
-                                        <!-- Progress Circle inside a group with rotation -->
-                                        <g class="origin-center -rotate-90 transform">
-                                          <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#EE5365]" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={100-putPercentage?.toFixed(2)}></circle>
-                                        </g>
-                                      </svg>
-                                      <!-- Percentage Text -->
-                                      <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                        <span class="text-center text-white text-sm">{putPercentage}%</span>
-                                      </div>
-                                    </div>
-                                    <!-- End Circular Progress -->
-                                    
-                                  </div>
-                                  <!--End Put Flow-->
-    
-                                    <!--Start Put/Call-->  
-                                    <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] shadow-lg rounded-md h-20">
-                                      <div class="flex flex-col items-start">
-                                          <span class="font-medium text-gray-200 text-[1rem] ">OTM Ratio</span>
-                                          <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
-                                            Volume in %
-                                          </span>
-                                      </div>
-                                      <!-- Circular Progress -->
-                                        <div class="relative size-14 ml-auto">
-                                          <svg class="size-full w-14 h-14" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                                            <!-- Background Circle -->
-                                            <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#3E3E3E]" stroke-width="3"></circle>
-                                            <!-- Progress Circle inside a group with rotation -->
-                                            <g class="origin-center -rotate-90 transform">
-                                              <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#EE5365]" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={displayOTMRatio >=1 ? 0 : 100-(displayOTMRatio*100)?.toFixed(2)}></circle>
-                                            </g>
-                                          </svg>
-                                          <!-- Percentage Text -->
-                                          <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                            <span class="text-center text-white text-sm">{(displayOTMRatio*100)?.toFixed(0)}%</span>
-                                          </div>
-                                        </div>
-                                      <!-- End Circular Progress -->
-                            
-                                  </div>
-                                  <!--End Put/Call-->
-                            
-                            
-                                    </div>
-                                </div>
-                              <!--End Widget-->
+                          
     
     
     
@@ -772,82 +640,82 @@ $: {
                                     <table class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto">
                                         <thead>
                                           <tr class="">
-                                            <td class="text-slate-200 font-semibold text-sm text-start">Time</td>
                                             <td class="text-slate-200 font-semibold text-sm text-start">Date</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">Expiry</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">Strike</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">C/P</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-start">Sent.</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">Spot</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">Price</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">Prem.</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-start">Type</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">Vol.</td>
-                                            <td class="text-slate-200 font-semibold text-sm text-end">OI</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-end">% Change</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-end">P/C</td>
+                                             <td class="text-slate-200 font-semibold text-sm text-center">Bear/Bull</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-end">Total Volume</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-end">Total OI</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-end">Total Prem</td>
                                           </tr>
                                         </thead>
                                         <tbody>
                                           {#each (data?.user?.tier === 'Pro' ? optionList : optionList?.slice(0,3)) as item, index}
-                                          <!-- row -->
                                           <tr class="odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                                             
-                                            <td class="text-white text-sm text-start whitespace-nowrap">
-                                              {formatTime(item?.time)}
-                                            </td>
-    
+        
                                             <td class="text-white text-sm sm:text-[1rem] text-start">
                                               {formatDate(item?.date)}
                                             </td>
     
                                             <td class="text-white text-sm sm:text-[1rem] text-end">
-                                              {item?.dte < 0 ? 'expired' : item?.dte +'d'}
+                                              {#if item?.changesPercentage >=0}
+                                                <span class="text-[#10DB06]">+{item?.changesPercentage >= 1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}%</span>
+                                              {:else}
+                                                <span class="text-[#FF2F1F]">{item?.changesPercentage <= -1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}% </span> 
+                                              {/if}
                                             </td>
                                             
                                             <td class="text-sm sm:text-[1rem] text-end text-white">
-                                              {item?.strike_price}
+                                              {(item?.p_vol/item?.c_vol)?.toFixed(2)}
                                             </td>
     
-                                            <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-start">
-                                              {item?.put_call}
-                                            </td>
+                                           <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-center">
+                                            {#if item?.bear_ratio > (item?.neutral_ratio ?? 0) && item?.bear_ratio > (item?.bull_ratio ?? 0)}
+                                              <div class="badge bg-[#FF2F1F] text-white font-semibold gap-2">
+                                                {item?.bear_ratio?.toFixed(0)}% Bearish
+                                              </div>
+                                            {:else if item?.bull_ratio > (item?.neutral_ratio ?? 0) && item?.bull_ratio > (item?.bear_ratio ?? 0)}
+                                              <div class="badge bg-[#75D377] text-black font-semibold gap-2">
+                                                {item?.bull_ratio?.toFixed(0)}% Bullish
+                                              </div>
+                                            {:else if item?.neutral_ratio > (item?.bull_ratio ?? 0) && item?.neutral_ratio > (item?.bear_ratio ?? 0)}
+                                              <div class="badge bg-[#FBCE3C] text-black font-semibold gap-2">
+                                                {item?.neutral_ratio?.toFixed(0)}% Neutral
+                                              </div>
+                                            {:else if item?.bear_ratio === item?.bull_ratio && item?.bear_ratio > (item?.neutral_ratio ?? 0)}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                {item?.bear_ratio?.toFixed(0)}% Bear/Bull Tie
+                                              </div>
+                                            {:else if item?.bear_ratio === item?.neutral_ratio && item?.bear_ratio > (item?.bull_ratio ?? 0)}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                {item?.bear_ratio?.toFixed(0)}% Bear/Neutral Tie
+                                              </div>
+                                            {:else if item?.bull_ratio === item?.neutral_ratio && item?.bull_ratio > (item?.bear_ratio ?? 0)}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                {item?.bull_ratio?.toFixed(0)}% Bull/Neutral Tie
+                                              </div>
+                                            {:else}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                Equal Distribution
+                                              </div>
+                                            {/if}
+                                          </td>
+
     
-                                            <td class="text-sm sm:text-[1rem] {item?.sentiment === 'Bullish' ? 'text-[#00FC50]' : item?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
-                                              {item?.sentiment}
+                                            <td class="text-sm sm:text-[1rem] text-white text-end">
+                                              {abbreviateNumber(item?.total_volume)}
                                             </td>
     
                                             <td class="text-sm sm:text-[1rem] text-end text-white">
-                                              {item?.underlying_price}
+                                              {abbreviateNumber(item?.total_oi)}
                                             </td>
                                           
+
                                           <td class="text-sm sm:text-[1rem] text-end text-white">
-                                            {item?.price}
+                                            {abbreviateNumber(item?.total_bull_prem+item?.total_bear_prem+item?.total_neutral_prem,true)}
                                           </td>
-                                          
-                                          <td class="text-sm sm:text-[1rem] text-end font-medium {item?.put_call === 'Puts' ? 'text-[#CB281C]' : 'text-[#0FB307]'} ">
-                                            {abbreviateNumber(item?.cost_basis)}
-                                          </td>
-                      
-                                          <td class="text-sm sm:text-[1rem] text-start {item?.type === 'Sweep' ? 'text-[#C6A755]' : 'text-[#976DB7]'}">
-                                            {item?.type}
-                                          </td>
-                          
-                            
-                          
-                                          <td class="text-white text-end">
-                                              {new Intl.NumberFormat("en", {
-                                                  minimumFractionDigits: 0,
-                                                  maximumFractionDigits: 0
-                                              }).format(item?.volume)}
-                                          </td>
-                          
-                                          <td class="text-white text-end">
-                                            {new Intl.NumberFormat("en", {
-                                              minimumFractionDigits: 0,
-                                              maximumFractionDigits: 0
-                                          }).format(item?.open_interest)}
-                                          </td>
-                      
-                      
+                                            
                                     
                             
                                           </tr>
@@ -857,6 +725,7 @@ $: {
     
                                         </tbody>
                                     </table>
+                                    
                                     
                                 </div>
     
@@ -887,7 +756,6 @@ $: {
         
         
     
-            
     <style>
       .app {
           height: 400px;
