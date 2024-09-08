@@ -23,18 +23,12 @@
     let displayData = 'volume';
     let options;
     let optionsGEX;
-    let rawData = data?.getOptionsChain
+
+    let rawData = data?.getOptionsHistoricalData;
     let optionList = rawData?.slice(0,30);
-    let flowSentiment = 'n/a';
-    let callPercentage; 
-    let putPercentage;
-    let displayCallVolume;
-    let displayPutVolume;
-    let latestPutCallRatio;
-    let displayOTMRatio;
+    let optionChainList = data?.getOptionsChainData?.at(0)?.chain || [];
     
-    
-    
+
     let totalVolume //= data?.getOptionsPlotData?.totalVolume;
     
     let totalOpenInterest //= data?.getOptionsPlotData?.totalOpenInterest;
@@ -109,10 +103,6 @@ function normalizer(value) {
       return formattedTimeString;
     }
     
-    function changeStatement(event)
-    {
-      displayData = event.target.value;
-    }
     
     function changeTimePeriod(event)
     {
@@ -306,55 +296,6 @@ function getGEXPlot() {
 return option;
 }
 
-    function calculateStats() {
-        const currentPrice = parseFloat(data?.getStockQuote?.price);
-        
-        const { callVolumeSum, putVolumeSum, bullishCount, bearishCount, otmVolume, itmVolume } = rawData?.reduce((acc, item) => {
-            const volume = parseInt(item?.volume);
-            const strikePrice = parseFloat(item?.strike_price);
-    
-            if (item?.put_call === "Calls") {
-                acc.callVolumeSum += volume;
-                if (strikePrice > currentPrice) {
-                    acc.otmVolume += volume;
-                } else {
-                    acc.itmVolume += volume;
-                }
-            } else if (item?.put_call === "Puts") {
-                acc.putVolumeSum += volume;
-                if (strikePrice < currentPrice) {
-                    acc.itmVolume += volume;
-                } else {
-                    acc.otmVolume += volume;
-                }
-            }
-    
-            if (item?.sentiment === "Bullish") {
-                acc.bullishCount += 1;
-            } else if (item?.sentiment === "Bearish") {
-                acc.bearishCount += 1;
-            }
-    
-            return acc;
-        }, { callVolumeSum: 0, putVolumeSum: 0, bullishCount: 0, bearishCount: 0, otmVolume: 0, itmVolume: 0 });
-    
-        if (bullishCount > bearishCount) {
-            flowSentiment = 'Bullish';
-        } else if (bullishCount < bearishCount) {
-            flowSentiment = 'Bearish';
-        } else {
-            flowSentiment = 'Neutral';
-        }
-    
-        latestPutCallRatio = (putVolumeSum / callVolumeSum);
-        callPercentage = Math.floor((callVolumeSum) / (callVolumeSum + putVolumeSum) * 100);
-        putPercentage = (100 - callPercentage);
-        displayCallVolume = callVolumeSum;
-        displayPutVolume = putVolumeSum;
-        
-        // Calculate OTM/ITM ratio
-        displayOTMRatio = otmVolume / (itmVolume+otmVolume) ?? 0;
-    }
 
 function filterDate(filteredList, displayTimePeriod) {
   const now = Date.now();
@@ -448,7 +389,49 @@ onMount(async () => {
     };
   }
 })
-    
+
+
+function daysLeft(targetDate) {
+  const targetTime = new Date(targetDate).getTime();
+  const currentTime = new Date().getTime();
+  const difference = targetTime - currentTime;
+
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math?.ceil(difference / millisecondsPerDay);
+
+  return daysLeft;
+}
+
+let optionHistoryList = [];
+
+function handleViewData(optionData) {
+      
+  optionHistoryList = optionData;
+  optionHistoryList?.forEach((item) => {
+        item.dte = daysLeft(item?.date_expiration);
+      });
+  optionDetailsDesktopModal?.showModal()
+}
+
+function handleMode(i) {
+    activeIdx = i;
+  }
+  
+  const tabs = [
+      {
+        title: "Historical Data",
+      },
+      {
+        title: "Chain Data",
+      },
+    ];
+  
+    let activeIdx = 0;
+
+function changeStatement(event)
+{
+    optionChainList = (data?.getOptionsChainData?.filter(item => item?.date_expiration === event.target.value))?.at(0)?.chain || [];
+}
     
 $: {
   if ((displayTimePeriod || displayData) && optionsPlotData?.length !== 0 && typeof window !== 'undefined') {
@@ -496,7 +479,7 @@ $: {
         <section class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full">
             <div class="flex justify-center m-auto h-full overflow-hidden w-full">
                 <div class="relative flex justify-center items-center overflow-hidden w-full">
-                      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+                      <div class="xl:p-7 w-full m-auto mt-2 sm:mt-0">
                             <div class="mb-6">
                                 <h2 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
                                     Unsual Options Activity
@@ -585,7 +568,7 @@ $: {
                                         <option value="oneYear">1 Year</option>
                                     </select>
 
-                                    <select class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]" on:change={changeStatement}>
+                                    <select class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]">
                                       <option disabled>Choose a category</option>
                                       <option value="volume" selected>Volume</option>
                                       <option value="openInterest">Open Interest</option>
@@ -611,7 +594,7 @@ $: {
                                 
 
                                 {#if data?.getOptionsGexData?.length !== 0}  
-                                <h3 class="text-2xl sm:text-2xl text-gray-200 font-bold mb-4 text-center sm:text-start">
+                                <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
                                     Daily Gamma Exposure (GEX)
                                 </h3>
 
@@ -622,21 +605,51 @@ $: {
                                 {/if}
     
                                 
-                                <h3 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4 text-center sm:text-start">
-                                    Historical Option Data
+                                <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
+                                    {activeIdx === 0 ? 'Historical Option Data' : 'Option Chain Data'}
                                 </h3>
     
-    
-    
+                               
                                 {#if optionList?.length !== 0}
                           
+                                 <div class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 mt-6 mb-6">
+                                  {#each tabs as item, i}
+                                    <button
+                                      on:click={() => handleMode(i)}
+                                      class="group relative z-[1] rounded-full px-6 py-1 {activeIdx === i
+                                        ? 'z-0'
+                                        : ''} "
+                                    >
+                                      {#if activeIdx === i}
+                                          <div
+                                            class="absolute inset-0 rounded-lg bg-purple-600"
+                                          ></div>
+                                      {/if}
+                                      <span
+                                        class="relative text-sm block font-medium duration-200 text-white">
+                                        {item.title}
+                                      </span>
+                                    </button>
+                                  {/each}
+                              </div>
+
+                               {#if activeIdx === 1}
+                                <div class="relative mb-6">
+                                <select class="w-48 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
+                                    <option disabled>Choose an Expiration Date</option>
+                                    {#each data?.getOptionsChainData as item, index}
+                                    <option value={item?.date_expiration} selected={index === 0 ? true : false}>
+                                      {new Date(item?.date_expiration)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+                                    </option>   
+                                    {/each}                            
+                                </select>
+                                </div>
+                                {/if}
     
-    
-    
-    
+
                                 <div class="flex justify-start items-center m-auto overflow-x-auto">
                                     
-                                    
+                                  {#if activeIdx === 0}
                                     <table class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto">
                                         <thead>
                                           <tr class="">
@@ -644,6 +657,7 @@ $: {
                                             <td class="text-slate-200 font-semibold text-sm text-end">% Change</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">P/C</td>
                                              <td class="text-slate-200 font-semibold text-sm text-center">Bear/Bull</td>
+                                              <td class="text-slate-200 font-semibold text-sm text-end">% OTM</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total Volume</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total OI</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total Prem</td>
@@ -651,9 +665,8 @@ $: {
                                         </thead>
                                         <tbody>
                                           {#each (data?.user?.tier === 'Pro' ? optionList : optionList?.slice(0,3)) as item, index}
-                                          <tr class="odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                                          <tr on:click={() => handleViewData(item?.history)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                                             
-        
                                             <td class="text-white text-sm sm:text-[1rem] text-start">
                                               {formatDate(item?.date)}
                                             </td>
@@ -667,10 +680,10 @@ $: {
                                             </td>
                                             
                                             <td class="text-sm sm:text-[1rem] text-end text-white">
-                                              {(item?.p_vol/item?.c_vol)?.toFixed(2)}
+                                              {item?.c_vol !== 0 ? (item?.p_vol/item?.c_vol)?.toFixed(1) : '-'}
                                             </td>
     
-                                           <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-center">
+                                           <td class="whitespace-nowrap text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-center">
                                             {#if item?.bear_ratio > (item?.neutral_ratio ?? 0) && item?.bear_ratio > (item?.bull_ratio ?? 0)}
                                               <div class="badge bg-[#FF2F1F] text-white font-semibold gap-2">
                                                 {item?.bear_ratio?.toFixed(0)}% Bearish
@@ -702,6 +715,11 @@ $: {
                                             {/if}
                                           </td>
 
+                                           <td class="text-sm sm:text-[1rem] text-white text-end">
+                                            {item?.otm_ratio?.toFixed(0)}%
+                                          </td>
+
+
     
                                             <td class="text-sm sm:text-[1rem] text-white text-end">
                                               {abbreviateNumber(item?.total_volume)}
@@ -725,6 +743,63 @@ $: {
     
                                         </tbody>
                                     </table>
+                                  {:else}
+                                    <table class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto">
+                                        <thead>
+                                          <tr class="">
+                                            <td class="text-slate-200 font-semibold text-sm text-end">Call Prem</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-end">Call OI</td>
+                                             <td class="text-slate-200 font-semibold text-sm text-end">Call Volume</td>
+                                              <td class="text-slate-200 font-semibold text-sm text-center">Strike Price</td>
+                                              <td class="text-slate-200 font-semibold text-sm text-start">Put Volume</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-start">Put OI</td>
+                                            <td class="text-slate-200 font-semibold text-sm text-start">Put Prem</td>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {#each (data?.user?.tier === 'Pro' ? optionChainList : optionChainList?.slice(0,3)) as item, index}
+                                          <tr class="odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionChainList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                                            
+                                            <td class="text-white text-sm sm:text-[1rem] text-end">
+                                               {abbreviateNumber(item?.total_premium_call,true)}
+                                            </td>
+                                            
+                                            <td class="text-sm sm:text-[1rem] text-end text-white">
+                                              {abbreviateNumber(item?.total_open_interest_call)}
+                                            </td>
+
+                                            <td class="text-sm sm:text-[1rem] text-end text-white">
+                                              {abbreviateNumber(item?.total_volume_call)}
+                                            </td>
+    
+                                           <td class="whitespace-nowrap text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-end">
+                                            <div class="rounded-lg w-fit px-2 text-center font-semibold badge gap-2 bg-[#FBCE3C] text-black m-auto flex justify-center  items-center">
+                                                {item?.strike_price}
+                                              </div>
+                                          </td>
+
+                                           <td class="text-sm sm:text-[1rem] text-start text-white">
+                                              {abbreviateNumber(item?.total_volume_put)}
+                                            </td>
+    
+                                           <td class="text-sm sm:text-[1rem] text-start text-white">
+                                              {abbreviateNumber(item?.total_open_interest_put)}
+                                            </td>
+
+    
+                                           <td class="text-white text-sm sm:text-[1rem] text-start">
+                                             {abbreviateNumber(item?.total_premium_put,true)}
+                                            </td>
+                                          
+                            
+                                          </tr>
+                                          
+                                      
+                                          {/each}
+    
+                                        </tbody>
+                                    </table>
+                                  {/if}
                                     
                                     
                                 </div>
@@ -754,7 +829,133 @@ $: {
             
         </section>
         
+
         
+
+
+<!--Start Options Detail Desktop Modal-->
+
+
+<!-- Put this part before </body> tag -->
+
+<dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
+  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border border-gray-600 h-auto">
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    </form>
+     <p class="text-gray-200 mt-10 mb-3">
+      <span class="text-white text-xl font-semibold">Option Data Details:</span>
+      <br>
+     All individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+    </p>
+    <div class="border-gray-600 border-b w-full mb-3"></div>
+    <div class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto">
+     <div class="flex justify-start items-center m-auto">
+                                    
+                                    
+        <table class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto">
+            <thead>
+              <tr class="">
+                <td class="text-slate-200 font-semibold text-sm text-start">Time</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Date</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Expiry</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Strike</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">C/P</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Sent.</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Spot</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Price</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Prem.</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Type</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">Vol.</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">OI</td>
+              </tr>
+            </thead>
+            <tbody>
+              {#each optionHistoryList as item}
+              <!-- row -->
+              <tr class="odd:bg-[#27272A] border-b-[#09090B]">
+                
+                <td class="text-white text-sm text-start whitespace-nowrap">
+                  {formatTime(item?.time)}
+                </td>
+
+                <td class="text-white text-sm sm:text-[1rem] text-start">
+                  {formatDate(item?.date)}
+                </td>
+
+                <td class="text-white text-sm sm:text-[1rem] text-end">
+                  {item?.dte < 0 ? 'expired' : item?.dte +'d'}
+                </td>
+                
+                <td class="text-sm sm:text-[1rem] text-end text-white">
+                  {item?.strike_price}
+                </td>
+
+                <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-start">
+                  {item?.put_call}
+                </td>
+
+                <td class="text-sm sm:text-[1rem] {item?.sentiment === 'Bullish' ? 'text-[#00FC50]' : item?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
+                  {item?.sentiment}
+                </td>
+
+                <td class="text-sm sm:text-[1rem] text-end text-white">
+                  {item?.underlying_price}
+                </td>
+              
+              <td class="text-sm sm:text-[1rem] text-end text-white">
+                {item?.price}
+              </td>
+              
+              <td class="text-sm sm:text-[1rem] text-end font-medium {item?.put_call === 'Puts' ? 'text-[#CB281C]' : 'text-[#0FB307]'} ">
+                {abbreviateNumber(item?.cost_basis)}
+              </td>
+
+              <td class="text-sm sm:text-[1rem] text-start {item?.type === 'Sweep' ? 'text-[#C6A755]' : 'text-[#976DB7]'}">
+                {item?.type}
+              </td>
+
+
+
+              <td class="text-white text-end">
+                  {new Intl.NumberFormat("en", {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0
+                  }).format(item?.volume)}
+              </td>
+
+              <td class="text-white text-end">
+                {new Intl.NumberFormat("en", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
+              }).format(item?.open_interest)}
+              </td>
+
+
+        
+
+              </tr>
+              
+          
+              {/each}
+
+            </tbody>
+        </table>
+        
+      </div>
+    </div>
+
+
+  </div>
+  <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
+    <button>close</button>
+  </form>
+</dialog>
+
+
+
+<!--End Options Detial Desktop Modal-->
+
     
     <style>
       .app {
