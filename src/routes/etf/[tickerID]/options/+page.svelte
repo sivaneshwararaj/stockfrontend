@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import {numberOfUnreadNotification, displayCompanyName, screenWidth, etfTicker} from '$lib/store';
+  import {numberOfUnreadNotification, displayCompanyName, screenWidth, etfTicker, setCache, getCache} from '$lib/store';
   import { Chart } from 'svelte-echarts'
   import { abbreviateNumber } from '$lib/utils';
   import InfoModal from '$lib/components/InfoModal.svelte';
@@ -10,11 +10,40 @@
   import { BarChart,LineChart } from 'echarts/charts'
   import { GridComponent, TooltipComponent } from 'echarts/components'
   import { CanvasRenderer } from 'echarts/renderers'
+
   use([BarChart,LineChart, GridComponent, TooltipComponent, CanvasRenderer])
   
   
     export let data;
-    
+    let isLoaded = false;
+  const getDailyTransactions = async (transactionId) => {
+    let output;
+    const cachedData = getCache(transactionId, "getDailyTransactions");
+    if (cachedData) {
+      output = cachedData;
+    } else {
+      const postData = {
+        transactionId: transactionId,
+      };
+
+      // make the POST request to the endpoint
+      const response = await fetch(data?.apiURL + "/options-daily-transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": data?.apiKey,
+        },
+        body: JSON.stringify(postData),
+      });
+
+      output = await response.json();
+
+      setCache(transactionId, output, "getDailyTransactions");
+    }
+
+    return output;
+  };
+
     let rawPlotData = data?.getOptionsPlotData;
     let filteredList = [];
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -404,13 +433,16 @@ function daysLeft(targetDate) {
 
 let optionHistoryList = [];
 
-function handleViewData(optionData) {
-      
-  optionHistoryList = optionData;
+async function handleViewData(date:string) {
+  isLoaded = false;
+  optionDetailsDesktopModal?.showModal()
+
+  optionHistoryList = await getDailyTransactions($etfTicker+'-'+date);
+
   optionHistoryList?.forEach((item) => {
         item.dte = daysLeft(item?.date_expiration);
       });
-  optionDetailsDesktopModal?.showModal()
+  isLoaded = true;
 }
 
 function handleMode(i) {
@@ -665,7 +697,7 @@ $: {
                                         </thead>
                                         <tbody>
                                           {#each (data?.user?.tier === 'Pro' ? optionList : optionList?.slice(0,3)) as item, index}
-                                          <tr on:click={() => handleViewData(item?.history)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                                          <tr on:click={() => handleViewData(item?.date)} on:mouseover={() => getDailyTransactions($etfTicker+'+'+item?.date)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                                             
                                             <td class="text-white text-sm sm:text-[1rem] text-start">
                                               {formatDate(item?.date)}
@@ -839,20 +871,24 @@ $: {
 <!-- Put this part before </body> tag -->
 
 <dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
-  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border border-gray-600 h-auto">
-    <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border-t sm:border border-gray-600 h-auto">
+    <form method="dialog border-none">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 border-none">✕</button>
     </form>
-     <p class="text-gray-200 mt-10 mb-3">
-      <span class="text-white text-xl font-semibold">Option Data Details:</span>
-      <br>
-     All individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+     <p class="text-gray-200 mt-10">
+      <span class="text-white text-xl font-semibold mb-4">Option Data Details:</span>
+      <br class="">
+      {#if optionHistoryList?.length !== 0}
+        All individual contracts for {new Date(optionHistoryList?.at(0)?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+      {:else}
+      <div class="mt-3">No data available.</div>
+      {/if}
     </p>
-    <div class="border-gray-600 border-b w-full mb-3"></div>
+    <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
     <div class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto">
      <div class="flex justify-start items-center m-auto">
                                     
-                                    
+      {#if isLoaded}                         
         <table class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto">
             <thead>
               <tr class="">
@@ -941,7 +977,15 @@ $: {
 
             </tbody>
         </table>
-        
+      {:else}
+        <div class="m-auto flex justify-center items-center h-80">
+            <div class="relative">
+            <label class="bg-[#272727] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <span class="loading loading-spinner loading-md"></span>
+            </label>
+            </div>
+        </div>
+        {/if}
       </div>
     </div>
 
