@@ -3,25 +3,12 @@
   import {AreaSeries, Chart, PriceLine, CandlestickSeries} from 'svelte-lightweight-charts';
   
   import { TrackingModeExitMode } from 'lightweight-charts';
-  import {setCache, getCache, screenWidth, taRatingComponent, displayCompanyName, numberOfUnreadNotification, globalForm, priceAnalysisComponent, trendAnalysisComponent, sentimentComponent, varComponent, userRegion, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, clientSideCache, cryptoTicker} from '$lib/store';
-  import { onDestroy, onMount } from 'svelte';
+  import {setCache, getCache, screenWidth, taRatingComponent, displayCompanyName, numberOfUnreadNotification, globalForm, priceAnalysisComponent, trendAnalysisComponent, sentimentComponent, varComponent, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, cryptoTicker} from '$lib/store';
+  import { onDestroy } from 'svelte';
   import CryptoKeyInformation from '$lib/components/CryptoKeyInformation.svelte';
   import Lazy from '$lib/components/Lazy.svelte';
+  import { Button } from "$lib/components/shadcn/button/index.js";
 
-    
-  const usRegion = ['cle1','iad1','pdx1','sfo1'];
-  
-  let apiURL;
-let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
-
-  userRegion?.subscribe(value => {
-  if (usRegion?.includes(value)) {
-    apiURL = import.meta.env.VITE_USEAST_API_URL;
-  } else {
-    apiURL = import.meta.env.VITE_EU_API_URL;
-  }
-  });
-  
   
     export let data;
     export let form;
@@ -50,55 +37,56 @@ let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
   
   //==========================//
   
-$: {
-  if (output !==null)
-  {
-    
-    //Bug value is NaN
-    if (displayData === '1D')
-    {
-      const length = oneDayPrice?.length;
-      for (let i = length - 1; i >= 0; i--) {
-        if (!isNaN(oneDayPrice[i]?.close)) {
-          currentDataRow = oneDayPrice[i];
-          break;
+ $: {
+    if (output !== null) {
+      //Bug value is NaN
+      let change;
+
+      if (displayData === "1D") {
+        const length = oneDayPrice?.length;
+        for (let i = length - 1; i >= 0; i--) {
+          if (!isNaN(oneDayPrice[i]?.close)) {
+            currentDataRow = oneDayPrice[i];
+            break;
+          }
         }
+      } else if (displayData === "6M") {
+        currentDataRow = sixMonthPrice?.slice(-1)?.at(0);
       }
+
+      //currentDataRow = oneWeekPrice.slice(-1)[0]
+      if(!$isCrosshairMoveActive && $realtimePrice !== null) {
+        change = (($realtimePrice/previousClose-1)*100)?.toFixed(2)
+      } else {
+        change = displayData === "1D" ? (((currentDataRow?.close ?? currentDataRow?.value) / previousClose - 1) * 100)?.toFixed(2) : (((currentDataRow?.close ?? currentDataRow?.value) / displayLastLogicalRangeValue - 1) * 100)?.toFixed(2);
+      }
+
+      const date = new Date(currentDataRow?.time);
+
+      const options = {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      };
+
+      //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
+      const formattedDate = displayData === "1D" || displayData === "1W" || displayData === "1M"
+      ? date.toLocaleString("en-US", options)
+      : date.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
+
+      const safeFormattedDate = formattedDate === "Invalid Date" ? convertTimestamp(data?.getStockQuote?.timestamp) : formattedDate;
+      displayLegend = {
+        close: currentDataRow?.value === '-' && currentDataRow?.close === undefined 
+            ? data?.getStockQuote?.price 
+            : (currentDataRow?.close ?? currentDataRow?.value),
+        date: safeFormattedDate,
+        change: change
+    };
+
     }
-    else if (displayData === '6M') {
-      currentDataRow = sixMonthPrice?.slice(-1)[0];
-    }
-  
-    
-    //currentDataRow = oneWeekPrice.slice(-1)[0]
-    const change = (displayData === '1D') 
-                  ? (((currentDataRow?.close ?? currentDataRow?.value)/previousClose -1 )*100)?.toFixed(2)
-                  : (((currentDataRow?.close ?? currentDataRow?.value)/displayLastLogicalRangeValue -1 )*100)?.toFixed(2)
-
-    const date = new Date(currentDataRow?.time)
-
-  const options = {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  };
-
-
-    //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-    const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') 
-    ? date.toLocaleString('en-US', options)
-    : date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
-
-
-    displayLegend = {'close': currentDataRow?.close ?? currentDataRow?.value, 'date': formattedDate, 'change': change};
-
-
-
   }
-
-}
     
   //==========================//
   
@@ -303,10 +291,10 @@ $: {
         timePeriod: timePeriod,
       };
 
-      const response = await fetch(apiURL+'/historical-price', {
+      const response = await fetch(data?.apiURL+'/historical-price', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
         },
         body: JSON.stringify(postData)
       });
@@ -795,14 +783,14 @@ afterUpdate(async () => {
                                   </div>
 
 
-  
-                                  <label on:click={changeChartType} class="ml-auto -mt-3 block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
-                                    {#if displayChartType === 'line'}
-                                      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z"/></svg>
-                                      {:else}
-                                      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5"/></svg>
-                                      {/if}
-                                </label>
+                                  <Button on:click={changeChartType} class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                    {#if displayChartType === "line"}
+                                      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z" /></svg>
+                                    {:else}
+                                      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5" /></svg>
+                                    {/if}
+                                  </Button>
+                                  
                                   
                                 </div>
                                   <!--End Time Interval-->

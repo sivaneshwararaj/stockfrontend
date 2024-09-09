@@ -79,57 +79,56 @@
     
     //==========================//
     
-      $: {
-        if (output !==null)
-        {
-          
-          //Bug value is NaN
-          if (displayData === '1D')
-          {
-            const length = oneDayPrice?.length;
-            for (let i = length - 1; i >= 0; i--) {
-              if (!isNaN(oneDayPrice[i]?.close ?? oneDayPrice[i]?.value)) {
-                currentDataRow = oneDayPrice[i];
-                break;
-              }
-            }
+   $: {
+    if (output !== null) {
+      //Bug value is NaN
+      let change;
+
+      if (displayData === "1D") {
+        const length = oneDayPrice?.length;
+        for (let i = length - 1; i >= 0; i--) {
+          if (!isNaN(oneDayPrice[i]?.close)) {
+            currentDataRow = oneDayPrice[i];
+            break;
           }
-          else if (displayData === '6M') {
-            currentDataRow = sixMonthPrice?.slice(-1)[0];
-          }
-        
-         
-         //currentDataRow = oneWeekPrice.slice(-1)[0]
-    
-         const change = (displayData === '1D') 
-                    ? (((currentDataRow?.close ?? currentDataRow?.value)/previousClose -1 )*100)?.toFixed(2)
-                    : (((currentDataRow?.close ?? currentDataRow?.value)/displayLastLogicalRangeValue -1 )*100)?.toFixed(2)
-  
-    
-          const date = new Date(currentDataRow?.time);
-    
-      
-          const options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          };
-    
-          //const formattedDate = ( displayData === '1W' || displayData === '1M' ) ? date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric',hour: '2-digit', minute: '2-digit' }).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-          
-          const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-          
-    
-    
-    
-          displayLegend = {'close':  (currentDataRow?.close ?? currentDataRow?.value) , 'date': formattedDate, 'change': change};
-    
-    
         }
-    
+      } else if (displayData === "6M") {
+        currentDataRow = sixMonthPrice?.slice(-1)?.at(0);
       }
+
+      //currentDataRow = oneWeekPrice.slice(-1)[0]
+      if(!$isCrosshairMoveActive && $realtimePrice !== null) {
+        change = (($realtimePrice/previousClose-1)*100)?.toFixed(2)
+      } else {
+        change = displayData === "1D" ? (((currentDataRow?.close ?? currentDataRow?.value) / previousClose - 1) * 100)?.toFixed(2) : (((currentDataRow?.close ?? currentDataRow?.value) / displayLastLogicalRangeValue - 1) * 100)?.toFixed(2);
+      }
+
+      const date = new Date(currentDataRow?.time);
+
+      const options = {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      };
+
+      //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
+      const formattedDate = displayData === "1D" || displayData === "1W" || displayData === "1M"
+      ? date.toLocaleString("en-US", options)
+      : date.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
+
+      const safeFormattedDate = formattedDate === "Invalid Date" ? convertTimestamp(data?.getStockQuote?.timestamp) : formattedDate;
+      displayLegend = {
+        close: currentDataRow?.value === '-' && currentDataRow?.close === undefined 
+            ? data?.getStockQuote?.price 
+            : (currentDataRow?.close ?? currentDataRow?.value),
+        date: safeFormattedDate,
+        change: change
+    };
+
+    }
+  }
       
     //==========================//
     
