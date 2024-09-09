@@ -409,9 +409,11 @@ $: {
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/earnings-calendar" class="text-start w-full text-[1rem] text-white ml-4 mt-4">Earnings Calendar</a>
                           </Button>
+                          <!--
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/fda-calendar" class="text-start w-full text-[1rem] text-white ml-4 mt-4">FDA Calendar</a>
                           </Button>
+                          -->
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/ipos/2024" class="text-start w-full text-[1rem] text-white ml-4 mt-4">IPO Calendar</a>
                           </Button>
