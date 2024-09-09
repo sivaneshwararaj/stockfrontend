@@ -1050,10 +1050,10 @@ function handleInput(event) {
                       </thead>
                       <tbody>
                         {#each displayResults as item}
-                        <tr on:click={() => {handleSave(false); goto("/stocks/"+item?.symbol)}} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A] cursor-pointer">
+                        <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]">
                           <td class="border-b-[#09090B] whitespace-nowrap">
                             <div class="flex flex-col items-start">
-                              <span class="text-blue-400 text-sm sm:text-[1rem]">{item?.symbol}</span>
+                              <a href={"/stocks/"+item?.symbol} on:click={() => handleSave(false)} class="text-blue-400 text-sm sm:text-[1rem]">{item?.symbol}</a>
                               <span class="text-white text-xs sm:hidden">{item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}</span>
                             </div>
                             
