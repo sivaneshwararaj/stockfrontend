@@ -41,7 +41,7 @@ const plotPieChart = () => {
     shareholderList = shareholderList?.filter(item => item?.ownership <= 100);
     topHolders = 0;
     otherOwner = 0;
-    institutionalOwner = rawData?.ownershipPercent;
+    institutionalOwner = rawData?.ownershipPercent > 100 ? 99.99 : rawData?.ownershipPercent;
 
     otherOwner = institutionalOwner === 0 ? 0 : (100-institutionalOwner);
     topHolders = shareholderList?.slice(0,10)?.reduce((total, shareholder) => total + shareholder.ownership, 0);
