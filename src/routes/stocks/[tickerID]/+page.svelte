@@ -71,6 +71,8 @@
   $: {
     if (output !== null) {
       //Bug value is NaN
+      let change;
+
       if (displayData === "1D") {
         const length = oneDayPrice?.length;
         for (let i = length - 1; i >= 0; i--) {
@@ -84,7 +86,11 @@
       }
 
       //currentDataRow = oneWeekPrice.slice(-1)[0]
-      const change = displayData === "1D" ? (((currentDataRow?.close ?? currentDataRow?.value) / previousClose - 1) * 100)?.toFixed(2) : (((currentDataRow?.close ?? currentDataRow?.value) / displayLastLogicalRangeValue - 1) * 100)?.toFixed(2);
+      if(!$isCrosshairMoveActive && $realtimePrice !== null) {
+        change = (($realtimePrice/previousClose-1)*100)?.toFixed(2)
+      } else {
+        change = displayData === "1D" ? (((currentDataRow?.close ?? currentDataRow?.value) / previousClose - 1) * 100)?.toFixed(2) : (((currentDataRow?.close ?? currentDataRow?.value) / displayLastLogicalRangeValue - 1) * 100)?.toFixed(2);
+      }
 
       const date = new Date(currentDataRow?.time);
 
