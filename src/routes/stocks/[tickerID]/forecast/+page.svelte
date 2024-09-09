@@ -57,7 +57,7 @@
                 <div class="flex items-baseline text-2xl font-semibold text-white">
                   {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg, true)}
                 </div>
-                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-green-100 text-green-800 dark:bg-green-700 dark:text-dark-100">
+                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black">
                   <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeRevenue > 0 ? 'text-green-500' : 'text-red-500 rotate-180'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="max-width:40px" aria-hidden="true"
                     ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg
                   >
@@ -74,7 +74,7 @@
                 <div class="flex items-baseline text-2xl font-semibold text-white">
                   {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedNetIncomeAvg, true)}
                 </div>
-                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-green-100 text-green-800 dark:bg-green-700 dark:text-dark-100">
+                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black">
                   <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeNetIncome > 0 ? 'text-green-500' : 'text-red-500 rotate-180'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="max-width:40px" aria-hidden="true"
                     ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg
                   >
@@ -91,7 +91,7 @@
                 <div class="flex items-baseline text-2xl font-semibold text-white">
                   {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedEbitdaAvg, true)}
                 </div>
-                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-green-100 text-green-800 dark:bg-green-700 dark:text-dark-100">
+                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black">
                   <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeEBITDA > 0 ? 'text-green-500' : 'text-red-500 rotate-180'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="max-width:40px" aria-hidden="true"
                     ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg
                   >
@@ -108,7 +108,7 @@
                 <div class="flex items-baseline text-2xl font-semibold text-white">
                   {data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg}
                 </div>
-                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-green-100 text-green-800 dark:bg-green-700 dark:text-dark-100">
+                <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black">
                   <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeEPS > 0 ? 'text-green-500' : 'text-red-500 rotate-180'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="max-width:40px" aria-hidden="true"
                     ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg
                   >
