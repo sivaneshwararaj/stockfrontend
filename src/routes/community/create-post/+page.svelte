@@ -76,7 +76,7 @@
 	</svelte:head>
 	
 	
-		<div class="flex justify-start items-start m-auto max-w-6xl w-full min-h-screen p-2 pt-10 pb-40">
+		<div class="flex justify-start items-start m-auto max-w-5xl w-full min-h-screen p-2 pt-10 pb-40">
 			
 			<div class="w-full">
 				<form
@@ -214,7 +214,7 @@
 
 			
             <!-- Sidebar -->
-			<aside class="hidden xl:inline-block pt-36 pl-10">
+			<aside class="hidden xl:inline-block pt-[150px] pl-10">
 
 				
 					<!-- Sidebar content -->
