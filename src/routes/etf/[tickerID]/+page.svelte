@@ -7,6 +7,8 @@
     import { onDestroy, onMount } from 'svelte';    
     import ETFKeyInformation from '$lib/components/ETFKeyInformation.svelte';
     import Lazy from '$lib/components/Lazy.svelte';
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import { Button } from "$lib/components/shadcn/button/index.js";
 
     export let data;
     export let form;
@@ -715,9 +717,44 @@ async function initializePrice() {
   }
   
 
-  async function exportData() {
+  async function exportPriceData(timePeriod: string) {
+    const cachedData = getCache($etfTicker, "exportPriceData" + timePeriod);
 
-  await historicalPrice('max');
+    if (cachedData) {
+      return cachedData;
+    }
+    else {
+      const postData = {
+        ticker: $etfTicker,
+        timePeriod: timePeriod,
+      };
+
+      const response = await fetch(data?.apiURL + "/export-price-data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": data?.apiKey,
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const output = (await response?.json()) ?? [];
+
+      setCache($etfTicker, output, "exportPriceData" + timePeriod);
+      return output;
+    }
+  }
+
+async function exportData(timePeriod:string) {
+  let exportList = [];
+  if(timePeriod === '1day') {
+    exportList = await exportPriceData(timePeriod);
+
+  } else if (data?.user?.tier === 'Pro') {
+      exportList = await exportPriceData(timePeriod);
+  } else {
+    return
+  }
 
     const csvRows = [];
 
@@ -725,8 +762,8 @@ async function initializePrice() {
     csvRows.push('time,open,high,low,close');
 
     // Add data rows
-    for (const row of output) {
-      const csvRow = `${row.time},${row.open},${row.high},${row.low},${row.close}`;
+    for (const row of exportList) {
+      const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close}`;
       csvRows.push(csvRow);
     }
 
@@ -737,12 +774,11 @@ async function initializePrice() {
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    a.setAttribute('download', `${$etfTicker}.csv`);
+    a.setAttribute('download', `${$etfTicker}_${timePeriod}.csv`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   }
-    
 </script>
 
 
@@ -901,17 +937,59 @@ async function initializePrice() {
   
   
     
-                                   <label on:click={changeChartType} class="ml-auto block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
-                                      {#if displayChartType === "line"}
-                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z" /></svg>
-                                      {:else}
-                                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5" /></svg>
-                                      {/if}
-                                    </label>
+                                  <Button on:click={changeChartType} class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                    {#if displayChartType === "line"}
+                                      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z" /></svg>
+                                    {:else}
+                                      <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5" /></svg>
+                                    {/if}
+                                  
+                                    </Button>
 
-                                    <label on:click={exportData} class="ml-2 text-white block cursor-pointer bg-[#27272A] sm:hover:bg-[#303030] duratiion-100 transition ease-in-out px-3 py-1 rounded-lg shadow-sm">
-                                      Export
-                                    </label>
+                                    <DropdownMenu.Root>
+                                        <DropdownMenu.Trigger asChild let:builder>
+                                          <Button  builders={[builder]}  class="ml-2 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                            <span class="truncate text-white">Export</span>
+                                            <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                            </svg>
+                                          </Button>
+                                        </DropdownMenu.Trigger>
+                                        <DropdownMenu.Content class="w-fit h-fit max-h-72 overflow-y-auto scroller">
+                                          <DropdownMenu.Label class="text-gray-400">
+                                            Historical Stock Price
+                                          </DropdownMenu.Label>
+                                          <DropdownMenu.Separator />
+                                          <DropdownMenu.Group>
+                                            <!--
+                                              <DropdownMenu.Item on:click={exportData} class="cursor-pointer hover:bg-[#27272A]">
+                                              <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+                                                1 min 
+                                              </DropdownMenu.Item>
+                                              <DropdownMenu.Item on:click={exportData} class="cursor-pointer hover:bg-[#27272A]">
+                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+                                                5 min
+                                              </DropdownMenu.Item>
+                                              <DropdownMenu.Item on:click={exportData} class="cursor-pointer hover:bg-[#27272A]">
+                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+                                                15 min
+                                              </DropdownMenu.Item>
+                                            -->
+                                              <DropdownMenu.Item on:click={() => exportData('30min')} class="cursor-pointer hover:bg-[#27272A]">
+                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+                                                30 min
+                                              </DropdownMenu.Item>
+                                              <DropdownMenu.Item on:click={() => exportData('1hour')} class="cursor-pointer hover:bg-[#27272A]">
+                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+                                                1 hour
+                                              </DropdownMenu.Item>
+                                              <DropdownMenu.Item on:click={() => exportData('1day')} class="cursor-pointer hover:bg-[#27272A]">
+                                                1 day
+                                              </DropdownMenu.Item>
+                                          </DropdownMenu.Group>
+                                        </DropdownMenu.Content>
+                                      </DropdownMenu.Root>
+
                                     
                                   </div>
                                   <!--End Time Interval-->
