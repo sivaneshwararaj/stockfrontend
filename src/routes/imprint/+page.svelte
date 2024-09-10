@@ -32,7 +32,7 @@ import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
 <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40">
     
-      <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+      <div class="text-sm sm:text-[1rem] breadcrumbs">
         <ul>
           <li><a href="/" class="text-gray-300">Home</a></li> 
           <li class="text-gray-300">Imprint</li>

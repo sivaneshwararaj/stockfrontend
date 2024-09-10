@@ -8,29 +8,34 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 </script>
 
 
-
 <svelte:head>
-  <title> {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Donation · Stocknear</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>
+  {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Donation · stocknear
+</title>
+<meta name="description" content={`Your donation helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
 
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Donation · Stocknear"/>
-  <meta property="og:type" content="website"/>
-  <!-- Add more Open Graph meta tags as needed -->
+<!-- Other meta tags -->
+<meta property="og:title" content={`Donation · stocknear`}/>
+<meta property="og:description" content={`Your donation helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
+<meta property="og:type" content="website"/>
+<!-- Add more Open Graph meta tags as needed -->
 
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Donation · Stocknear"/>
-  <!-- Add more Twitter meta tags as needed -->
+<!-- Twitter specific meta tags -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content={`Donation · stocknear`}/>
+<meta name="twitter:description" content={`Your donation helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
+<!-- Add more Twitter meta tags as needed -->
+
 </svelte:head>
-	    
+    
 
 
 <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40">
      
   
-      <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+      <div class="text-sm sm:text-[1rem] breadcrumbs ">
         <ul>
           <li><a href="/" class="text-gray-300">Home</a></li> 
           <li class="text-gray-300">Donation</li>
