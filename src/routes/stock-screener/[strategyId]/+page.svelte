@@ -44,13 +44,13 @@ const allRules = {
   cci: { label: 'CCI', step: [250,200,100,50,20,0,-20,-50,-100,-200,-250], category: 'ta', defaultCondition: 'over', defaultValue: 0 },
   atr: { label: 'ATR', step: [20,15,10,5,3,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
   sma20: { label: 'SMA20', step: ['Stock Price > SMA20', 'SMA20 > SMA50', 'SMA20 > SMA100', 'SMA20 > SMA200'], category: 'ta', defaultValue: 'any' },
-  sma50: { label: 'SMA50', step: ['Stock Price > SMA50', 'SMA50 > SMA20', 'SMA50 > SMA100', 'SMA50 > SMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
-  sma100: { label: 'SMA100', step: ['Stock Price > SMA100', 'SMA100 > SMA20', 'SMA100 > SMA50', 'SMA100 > SMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
-  sma200: { label: 'SMA200', step: ['Stock Price > SMA200', 'SMA200 > SMA20', 'SMA200 > SMA50', 'SMA200 > SMA100'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
+  sma50: { label: 'SMA50', step: ['Stock Price > SMA50', 'SMA50 > SMA20', 'SMA50 > SMA100', 'SMA50 > SMA200'], category: 'ta', defaultValue: 'any' },
+  sma100: { label: 'SMA100', step: ['Stock Price > SMA100', 'SMA100 > SMA20', 'SMA100 > SMA50', 'SMA100 > SMA200'], category: 'ta', defaultValue: 'any' },
+  sma200: { label: 'SMA200', step: ['Stock Price > SMA200', 'SMA200 > SMA20', 'SMA200 > SMA50', 'SMA200 > SMA100'], category: 'ta', defaultValue: 'any' },
   ema20: { label: 'EMA20', step: ['Stock Price > EMA20', 'EMA20 > EMA50', 'EMA20 > EMA100', 'EMA20 > EMA200'], category: 'ta', defaultValue: 'any' },
-  ema50: { label: 'EMA50', step: ['Stock Price > EMA50', 'EMA50 > EMA20', 'EMA50 > EMA100', 'EMA50 > EMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
-  ema100: { label: 'EMA100', step: ['Stock Price > EMA100', 'EMA100 > EMA20', 'EMA100 > EMA50', 'EMA100 > EMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
-  ema200: { label: 'EMA200', step: ['Stock Price > EMA200', 'EMA200 > EMA20', 'EMA200 > EMA50', 'EMA200 > EMA100'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
+  ema50: { label: 'EMA50', step: ['Stock Price > EMA50', 'EMA50 > EMA20', 'EMA50 > EMA100', 'EMA50 > EMA200'], category: 'ta', defaultValue: 'any' },
+  ema100: { label: 'EMA100', step: ['Stock Price > EMA100', 'EMA100 > EMA20', 'EMA100 > EMA50', 'EMA100 > EMA200'], category: 'ta', defaultValue: 'any' },
+  ema200: { label: 'EMA200', step: ['Stock Price > EMA200', 'EMA200 > EMA20', 'EMA200 > EMA50', 'EMA200 > EMA100'], category: 'ta', defaultValue: 'any' },
   price: { label: 'Stock Price', step: [1000,500,400,300,200,150,100,80,60,50,20,10,1], category: 'fund', defaultCondition: 'over', defaultValue: 10 },
 
   change1W: { label: 'Price Change 1W', step: ['20%','10%','5%','1%','-1%','-5%','-10%','-20%'], category: 'ta', defaultCondition: 'over', defaultValue: '1%' },
@@ -328,7 +328,7 @@ async function handleRule(newRule) {
     toast.success('Rule added', {
       style: 'border-radius: 200px; background: #333; color: #fff;'
     });
-    
+
     await updateStockScreenerData();
     //await handleSave(false);
   }
