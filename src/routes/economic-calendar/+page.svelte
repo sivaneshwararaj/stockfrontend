@@ -2,9 +2,11 @@
   import { format, startOfWeek, addDays, addWeeks, subWeeks, differenceInWeeks } from 'date-fns';
   import { screenWidth, numberOfUnreadNotification } from '$lib/store';
   import logo from '$lib/images/transcripts_logo.png';
-  import { listOfCountries } from '$lib/utils';
+  import { abbreviateNumber, listOfRelevantCountries } from '$lib/utils';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { goto } from '$app/navigation';
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import { Button } from "$lib/components/shadcn/button/index.js";
 
   export let data;
   let rawData;
@@ -17,6 +19,8 @@
   let currentWeek = startOfWeek(today, { weekStartsOn: 1 });
   let previousMax = false;
   let nextMax = false;
+  let searchQuery = '';
+  $: testList = [];
   
   $: economicCalendar = data?.getEconomicCalendar;
   $: daysOfWeek = getDaysOfWeek(currentWeek);
@@ -45,18 +49,7 @@
       });
   }
   
-  async function handleFilter(e, newFilter) {
-      const filterSet = new Set(filterList);
-      filterSet.has(newFilter) ? filterSet.delete(newFilter) : filterSet.add(newFilter);
-      filterList = Array.from(filterSet);
-      
-      if (filterList.length !== 0) {
-          await loadWorker();
-      } else {
-          weekday = rawData;
-      }
-  }
-  
+
   const handleMessage = (event) => {
       weekdayFiltered = event.data?.finalData?.output ?? [];
   };
@@ -93,6 +86,50 @@
   function changeWeek(state) {
       currentWeek = state === 'previous' ? subWeeks(currentWeek, 1) : addWeeks(currentWeek, 1);
   }
+
+
+function handleInput(event) {
+    const searchQuery = event.target.value?.toLowerCase() || '';
+  
+    setTimeout(() => {
+        testList = [];
+
+        if (searchQuery.length > 0) {
+          
+          const rawList = listOfRelevantCountries;
+            testList = rawList?.filter(item => {
+                const index = item?.toLowerCase();
+                // Check if country starts with searchQuery
+                return index?.startsWith(searchQuery);
+            }) || [];
+        }
+    }, 50);
+}
+
+
+$: checkedItems = new Set();
+
+
+
+async function handleChangeValue(value) {
+  if (checkedItems.has(value)) {
+      checkedItems.delete(value);
+    } else {
+      checkedItems.add(value);
+    }
+    const filterSet = new Set(filterList);
+      filterSet.has(value) ? filterSet.delete(value) : filterSet.add(value);
+      filterList = Array.from(filterSet);
+      
+      if (filterList.length !== 0) {
+          await loadWorker();
+      } else {
+          weekday = rawData;
+      }
+
+}
+
+
   </script>
       
   <svelte:head>
@@ -226,60 +263,48 @@
 
 <div class="flex flex-row items-center w-fit ml-auto mt-6 mb-2 mr-3 sm:mr-0">
 {#if filterList?.length !== 0}
-<label on:click={() => filterList = [] } class="mr-3 text-sm cursor-pointer bg-[#27272A] sm:hover:bg-[#27272A] text-white duration-100 transition ease-in-out px-4 py-2 rounded-lg shadow-lg ml-auto">
+<label on:click={() => {filterList = []; checkedItems = new Set();} } class="mr-3 text-sm cursor-pointer bg-[#27272A] sm:hover:bg-[#27272A] text-white duration-100 transition ease-in-out px-4 py-2 rounded-lg shadow-lg ml-auto">
   <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.578 6.487A8 8 0 1 1 2.5 10.5"/><path d="M7.5 6.5h-4v-4"/></g></svg>
       Reset All
 </label>
 {/if}
 
-<div class="dropdown dropdown-end z-30">
-  <button tabindex="0" role="button" class="text-sm cursor-pointer text-white bg-[#27272A] sm:hover:bg-[#27272A] duration-100 transition ease-in-out px-4 py-2 rounded-lg shadow-lg ml-auto">
-    Filter
-    <svg class="inline-block w-2.5 h-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
-  </button>
-  
-  <!-- Dropdown menu -->
-  
-    <ul tabindex="0" class="z-30 dropdown-content p-2 shadow bg-[#1D232A] rounded w-60 h-72 oveflow-hidden overflow-y-scroll">
-
-      <div class="mb-3 mt-1 ml-1">
-        <span class="text-white text-sm mb-2">
-          Popular
-        </span>
-        <hr class="mt-2 mb-2 border-gray-500"/>
-        {#each ['United States','Russia','China','UK','EU'] as item}
-      <li>
-        <label on:click|stopPropagation={(event) => handleFilter(event, item)} class="flex items-center ps-2 rounded">
-          <input checked={filterList?.includes(item)} type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-          <label class="w-full py-2 ms-2 text-sm font-medium text-white rounded cursor-pointer">
-            {item}
-          </label>
-        </label>
-      </li>
-      {/each}
+   <DropdownMenu.Root>
+    <DropdownMenu.Trigger asChild let:builder>
+      <Button builders={[builder]}  class="border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+        <span class="truncate text-white">Filter</span>
+        <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+      <div class="relative sticky z-40 focus:outline-none -top-1"
+          tabindex="0" role="menu" style="">
+      <input bind:value={searchQuery}
+          on:input={handleInput}
+          autocomplete="off"
+          class=" absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
+          focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
+          type="search" 
+          placeholder="Search...">
       </div>
-      <div>
-        <span class="text-white text-sm mb-2 ml-1">
-        All Countries
-        </span>
-        <hr class="mt-2 mb-2 border-gray-500"/>
-      </div>
-      {#each listOfCountries as item}
-      <li>
-        <div on:click|stopPropagation={(event) => handleFilter(event, item)} class="flex items-center ps-2 rounded">
-          <input type="checkbox" checked={filterList?.includes(item)} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-          <label class="w-full py-2 ms-2 text-sm font-medium text-white rounded cursor-pointer">
-            {item}
-          </label>
-        </div>
-      </li>
-      {/each}
-    </ul>
+      <DropdownMenu.Group>
+        {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : listOfRelevantCountries ) as item}
+          <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+            <div class="flex items-center" >
+              <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
+                <input type="checkbox" checked={checkedItems?.has(item)}>
+                <span class="ml-2">{item}</span>
+              </label>
+            </div>
+          </DropdownMenu.Item>
+        {/each}
+      </DropdownMenu.Group>
+    </DropdownMenu.Content>
+</DropdownMenu.Root>
+  
 
-
-</div>
   
 </div>
 
@@ -294,12 +319,12 @@
                             <tr class="whitespace-nowrap">
                               <th class="text-start text-white font-semibold text-sm"></th>
 
-                              <th class="text-start text-white font-semibold text-sm"></th>
-                              <th class="text-start text-white font-semibold text-sm">Event</th>
-                              <th class="text-end text-white font-semibold text-sm">Previous</th>
-                              <th class="text-end text-white font-semibold text-sm">Estimated</th>
-                              <th class="text-end text-white font-semibold text-sm">Actual</th>
-                              <th class="text-white font-semibold text-sm text-end">Impact</th>
+                              <th class="text-start text-white font-semibold text-sm sm:text-[1rem]"></th>
+                              <th class="text-start text-white font-semibold text-sm sm:text-[1rem]">Event</th>
+                              <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Previous</th>
+                              <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Forecast</th>
+                              <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Actual</th>
+                              <th class="text-white font-semibold text-sm sm:text-[1rem] text-end">Importance</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -326,25 +351,41 @@
                               </span>
                             </td>
 
+                           
+
                             <td class="text-start text-white border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap">
-                              {item?.event?.length > 15 ? item?.event?.slice(0,15) + '...' : item?.event}
+                              {item?.event?.length > 30 ? item?.event?.slice(0,30) + '...' : item?.event}
                             </td>
     
                           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                            {item?.previous !== null ? item?.previous : '-'}
+                            {item?.prior !== (null || '') ? abbreviateNumber(item?.prior) : '-'}
                           </td>
           
                           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                            {item?.estimate !== null ? item?.estimate : '-'}
+                            {item?.consensus !== (null || '') ? abbreviateNumber(item?.consensus) : '-'}
                           </td>
 
                           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                            {item?.actual !== null ? item?.actual : '-'}
+                            {item?.actual !== null ? abbreviateNumber(item?.actual) : '-'}
+                          </td>
+
+                            <td class="text-white text-start text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+                              <div class="flex flex-row items-center justify-end">
+                                      {#each Array.from({ length: 3 }) as _, i}
+                                      {#if i < Math.floor(item?.importance)}
+                                          <svg class="w-4 h-4 text-[#FFA500]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                          </svg>
+                                            {:else}
+                                                <svg class="w-4 h-4 text-gray-300 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                                                </svg>
+                                            {/if}
+                                        {/each}  
+                                    </div>
                           </td>
           
-                          <td class="{item?.impact === 'Low' ? 'text-[#00FC50]' : item?.impact === 'Medium' ? 'text-[#3DDBFE]' : item?.impact === 'High' ? 'text-[#FC2120]' : 'text-white'} text-end text-sm sm:text-[1rem] whitespace-nowrap  border-b-[#09090B]">
-                            {item?.impact}
-                          </td>
+                         
   
                         </tr>
                             

@@ -549,7 +549,6 @@ async function handleChangeValue(value) {
     console.warn(`Unhandled rule: ${ruleName}`);
   }
 
-  console.log(valueMappings[ruleName])
 }
 
 
