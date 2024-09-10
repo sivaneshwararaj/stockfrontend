@@ -622,6 +622,13 @@ async function exportData(timePeriod:string) {
   let exportList = [];
   if(timePeriod === '1day') {
     exportList = await exportPriceData(timePeriod);
+    exportList = exportList?.map(({ time, open, high, low, close }) => ({
+          date: time,
+          open,
+          high,
+          low,
+          close,
+        }));
 
   } else if (data?.user?.tier === 'Pro') {
       exportList = await exportPriceData(timePeriod);
