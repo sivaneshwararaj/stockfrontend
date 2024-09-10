@@ -79,7 +79,7 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
         
         
         <div class="z-1 absolute top-5">
-            <img class="w-36 ml-2" src={cloudFrontUrl+'/assets/donation_logo.png'} alt="logo">
+            <img class="w-32 sm:w-36 ml-3 sm:ml-2" src={cloudFrontUrl+'/assets/donation_logo.png'} alt="logo">
         </div>
         </div>
         <!-- End Column -->
