@@ -10,18 +10,18 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
 
 <svelte:head>
-  <title> {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Donation · stocknear</title>
+  <title> {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Donation · Stocknear</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content="Donation · stocknear"/>
+  <meta property="og:title" content="Donation · Stocknear"/>
   <meta property="og:type" content="website"/>
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Donation · stocknear"/>
+  <meta name="twitter:title" content="Donation · Stocknear"/>
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 	    
@@ -79,7 +79,7 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
         
         
         <div class="z-1 absolute top-5">
-            <img class="w-f ml-0" src={cloudFrontUrl+'/assets/donation_logo.png'} alt="logo">
+            <img class="w-36 ml-2" src={cloudFrontUrl+'/assets/donation_logo.png'} alt="logo">
         </div>
         </div>
         <!-- End Column -->
@@ -92,25 +92,67 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
     <div class="card w-full bg-[#09090B] border-t sm:border rounded-none sm:rounded-lg border-gray-600 m-auto ">
         <div class="card-body">
-            <h2 class="text-white text-2xl font-semibold">
+            <h2 class="text-white text-xl font-semibold">
                 Hey,
             </h2>
             <p class="text-white mb-5 text-[1rem]">
-                I guess you are here to see if I can convince you to donate or not.
-                Well, you don't have to, but if you love the idea of stocknear helping people who don't have much and want to get high quality data for affordable prices 
+                Thank you for considering supporting our mission. As the sole person behind Stocknear—handling everything from backend development to customer service—I'm committed to keeping our platform affordable and accessible to all investors.
                 <br>
                 <br>
+                Our Pro Membership is priced to be less than a cup of coffee, ensuring that high-quality stock data is within reach for retail investors of all backgrounds. This pricing reflects our core mission: <strong class="italic">Apes together strong</strong>.
             </p>
-        
+            <div class="text-white mb-5 text-[1rem]">
+                While the Pro Membership is designed to sustain our basic operations, your additional support can help us go even further. By donating, you're not just supporting a platform; you're investing in a vision of open, transparent, and affordable financial analysis.
+                <br>
+                <br>
+                Here's what makes Stocknear unique:
+                <ul style="padding-left: 5px; padding-top:10px;">
+                    <li style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;">
+                        100% open-source culture
+                    </li>
+                    <li style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;">
+                        No user tracking
+                    </li>
+                    <li style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;">
+                        No advertisements
+                    </li>
+                    <li style="margin-left: 15px; line-height: 22px; margin-bottom: 30px; list-style-type: disc;">
+                        No hidden fees or "shady" practices
+                    </li>
+                    
+                  </ul>
+
+                  Your donation will directly contribute to:
+                  <ul style="padding-left: 5px; padding-top:10px;">
+                    <li style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;">
+                        Maintaining our low price point
+                    </li>
+                    <li style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;">
+                        Better data quality and features
+                    </li>
+                    <li style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;">
+                        Furthering our goal to become the #1 stock analysis platform in the industry
+                    </li>
+                    
+                  </ul>
+                  
+            </div>
+
+
+            
             <h2 class="text-white text-2xl font-semibold">
                 Buy me a Coffee 
             </h2>
             <p class="text-white mb-5 text-[1rem]">
-                I guess you are here to see if I can convince you to donate or not.
-                Well, you don't have to, but if you love the idea of stocknear helping people who don't have much and want to get high quality data for affordable prices 
+               If you believe in our mission and want to support us beyond your Pro Subscription, consider buying me a coffee through Ko-fi. Every contribution, no matter the size, makes a significant impact on our ability to serve you and the retail investor community. 
                 <br>
                 <br>
+                Link: <a href="https://ko-fi.com/stocknear" rel="noopener noreferrer" target="_blank" class="text-blue-400 sm:hover:text-white">Donate here</a> 
+                <br>
+                <br>
+                Your support means the world to me and helps keep Stocknear running smoothly.
             </p>
+            
         </div>
       </div>
 
