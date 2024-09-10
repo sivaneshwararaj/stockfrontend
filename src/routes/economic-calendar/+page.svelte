@@ -7,8 +7,10 @@
   import { goto } from '$app/navigation';
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
+  import { onMount } from 'svelte';
 
   export let data;
+
   let rawData;
   let filterList = [];
   let weekdayFiltered = [];
@@ -55,11 +57,6 @@
   };
   
   const loadWorker = async () => {
-      if (!syncWorker) {
-          const SyncWorker = await import('./workers/filterWorker?worker');
-          syncWorker = new SyncWorker.default();
-          syncWorker.onmessage = handleMessage;
-      }
       syncWorker.postMessage({ rawData, filterList });
   };
   
@@ -87,6 +84,13 @@
       currentWeek = state === 'previous' ? subWeeks(currentWeek, 1) : addWeeks(currentWeek, 1);
   }
 
+  onMount(async () => {
+    if (!syncWorker) {
+        const SyncWorker = await import('./workers/filterWorker?worker');
+        syncWorker = new SyncWorker.default();
+        syncWorker.onmessage = handleMessage;
+    }
+  })
 
 function handleInput(event) {
     const searchQuery = event.target.value?.toLowerCase() || '';
@@ -263,16 +267,16 @@ async function handleChangeValue(value) {
 
 <div class="flex flex-row items-center w-fit ml-auto mt-6 mb-2 mr-3 sm:mr-0">
 {#if filterList?.length !== 0}
-<label on:click={() => {filterList = []; checkedItems = new Set();} } class="mr-3 text-sm cursor-pointer bg-[#27272A] sm:hover:bg-[#27272A] text-white duration-100 transition ease-in-out px-4 py-2 rounded-lg shadow-lg ml-auto">
-  <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.578 6.487A8 8 0 1 1 2.5 10.5"/><path d="M7.5 6.5h-4v-4"/></g></svg>
+<Button on:click={() => {filterList = []; checkedItems = new Set();} } class="mr-3 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+  <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-2" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.578 6.487A8 8 0 1 1 2.5 10.5"/><path d="M7.5 6.5h-4v-4"/></g></svg>
       Reset All
-</label>
+  </Button>
 {/if}
 
    <DropdownMenu.Root>
     <DropdownMenu.Trigger asChild let:builder>
       <Button builders={[builder]}  class="border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
-        <span class="truncate text-white">Filter</span>
+        <span class="truncate text-white">Filter Country</span>
         <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
         </svg>
@@ -321,9 +325,9 @@ async function handleChangeValue(value) {
 
                               <th class="text-start text-white font-semibold text-sm sm:text-[1rem]"></th>
                               <th class="text-start text-white font-semibold text-sm sm:text-[1rem]">Event</th>
-                              <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Previous</th>
-                              <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Forecast</th>
                               <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Actual</th>
+                              <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Forecast</th>
+                              <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Previous</th>
                               <th class="text-white font-semibold text-sm sm:text-[1rem] text-end">Importance</th>
                             </tr>
                           </thead>
@@ -356,23 +360,27 @@ async function handleChangeValue(value) {
                             <td class="text-start text-white border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap">
                               {item?.event?.length > 30 ? item?.event?.slice(0,30) + '...' : item?.event}
                             </td>
-    
-                          <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                            {item?.prior !== (null || '') ? abbreviateNumber(item?.prior) : '-'}
-                          </td>
-          
-                          <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                            {item?.consensus !== (null || '') ? abbreviateNumber(item?.consensus) : '-'}
-                          </td>
-
+                            
                           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
                             {item?.actual !== null ? abbreviateNumber(item?.actual) : '-'}
                           </td>
 
+                           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
+                            {item?.consensus !== (null || '') ? abbreviateNumber(item?.consensus) : '-'}
+                          </td>
+
+                          <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
+                            {item?.prior !== (null || '') ? abbreviateNumber(item?.prior) : '-'}
+                          </td>
+          
+                         
+
+                         
+
                             <td class="text-white text-start text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
                               <div class="flex flex-row items-center justify-end">
                                       {#each Array.from({ length: 3 }) as _, i}
-                                      {#if i < Math.floor(item?.importance)}
+                                      {#if i <= Math.floor(item?.importance)}
                                           <svg class="w-4 h-4 text-[#FFA500]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                                               <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
                                           </svg>
@@ -423,7 +431,7 @@ async function handleChangeValue(value) {
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                Pro Subscription
+                Pro Subscription 🔥
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                 </div>
