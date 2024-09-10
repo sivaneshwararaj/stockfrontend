@@ -1,6 +1,7 @@
 import { sectorList, listOfRelevantCountries } from "$lib/utils";
 
 const movingAverageConditions = {
+  // EMA conditions
   "Stock Price > EMA20": (item) => item.price > item.ema20,
   "Stock Price > EMA50": (item) => item.price > item.ema50,
   "Stock Price > EMA100": (item) => item.price > item.ema100,
@@ -17,7 +18,25 @@ const movingAverageConditions = {
   "EMA200 > EMA20": (item) => item.ema200 > item.ema20,
   "EMA200 > EMA50": (item) => item.ema200 > item.ema50,
   "EMA200 > EMA100": (item) => item.ema200 > item.ema100,
-  // Add additional conditions here
+
+  // SMA conditions
+  "Stock Price > SMA20": (item) => item.price > item.sma20,
+  "Stock Price > SMA50": (item) => item.price > item.sma50,
+  "Stock Price > SMA100": (item) => item.price > item.sma100,
+  "Stock Price > SMA200": (item) => item.price > item.sma200,
+  "SMA20 > SMA50": (item) => item.sma20 > item.sma50,
+  "SMA20 > SMA100": (item) => item.sma20 > item.sma100,
+  "SMA20 > SMA200": (item) => item.sma20 > item.sma200,
+  "SMA50 > SMA20": (item) => item.sma50 > item.sma20,
+  "SMA50 > SMA100": (item) => item.sma50 > item.sma100,
+  "SMA50 > SMA200": (item) => item.sma50 > item.sma200,
+  "SMA100 > SMA20": (item) => item.sma100 > item.sma20,
+  "SMA100 > SMA50": (item) => item.sma100 > item.sma50,
+  "SMA100 > SMA200": (item) => item.sma100 > item.sma200,
+  "SMA200 > SMA20": (item) => item.sma200 > item.sma20,
+  "SMA200 > SMA50": (item) => item.sma200 > item.sma50,
+  "SMA200 > SMA100": (item) => item.sma200 > item.sma100,
+  // Add additional SMA conditions here
 };
 
 // Convert the input to a value or return it as-is if it's already an array
@@ -85,11 +104,12 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
       }
 
       // Handle categorical data like analyst ratings, sector, country
-      else if (["analystrating", "sector", "country"].includes(ruleName)) {
-        if (ruleValue === "any") return true;
-        return Array.isArray(ruleValue)
-          ? ruleValue.includes(itemValue)
-          : itemValue === ruleValue;
+      else if (["analystRating", "sector", "country"].includes(rule.name)) {
+        if (rule.value === "any") return true;
+
+        if (Array.isArray(ruleValue) && !ruleValue.includes(itemValue))
+          return false;
+        if (!Array.isArray(ruleValue) && itemValue !== ruleValue) return false;
       }
 
       // Handle moving averages

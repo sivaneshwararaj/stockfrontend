@@ -43,10 +43,10 @@ const allRules = {
   mfi: { label: 'MFI', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
   cci: { label: 'CCI', step: [250,200,100,50,20,0,-20,-50,-100,-200,-250], category: 'ta', defaultCondition: 'over', defaultValue: 0 },
   atr: { label: 'ATR', step: [20,15,10,5,3,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  sma20: { label: 'SMA20', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
-  sma50: { label: 'SMA50', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
-  sma100: { label: 'SMA100', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
-  sma200: { label: 'SMA200', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  sma20: { label: 'SMA20', step: ['Stock Price > SMA20', 'SMA20 > SMA50', 'SMA20 > SMA100', 'SMA20 > SMA200'], category: 'ta', defaultValue: 'any' },
+  sma50: { label: 'SMA50', step: ['Stock Price > SMA50', 'SMA50 > SMA20', 'SMA50 > SMA100', 'SMA50 > SMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
+  sma100: { label: 'SMA100', step: ['Stock Price > SMA100', 'SMA100 > SMA20', 'SMA100 > SMA50', 'SMA100 > SMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
+  sma200: { label: 'SMA200', step: ['Stock Price > SMA200', 'SMA200 > SMA20', 'SMA200 > SMA50', 'SMA200 > SMA100'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
   ema20: { label: 'EMA20', step: ['Stock Price > EMA20', 'EMA20 > EMA50', 'EMA20 > EMA100', 'EMA20 > EMA200'], category: 'ta', defaultValue: 'any' },
   ema50: { label: 'EMA50', step: ['Stock Price > EMA50', 'EMA50 > EMA20', 'EMA50 > EMA100', 'EMA50 > EMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
   ema100: { label: 'EMA100', step: ['Stock Price > EMA100', 'EMA100 > EMA20', 'EMA100 > EMA50', 'EMA100 > EMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
@@ -164,7 +164,7 @@ const getStockScreenerData = async (rules) => {
   let getRuleOfList = rules?.map(rule => rule.name) || [];
 
   // Define the EMA parameters to check
-  const emaParameters = ['ema20', 'ema50', 'ema100', 'ema200'];
+  const emaParameters = ['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200'];
 
   // Function to check and add missing EMA parameters
   const ensureAllEmaParameters = (params) => {
@@ -181,7 +181,6 @@ const getStockScreenerData = async (rules) => {
   // Ensure all required EMA parameters are included
   ensureAllEmaParameters(getRuleOfList);
 
-  console.log(getRuleOfList);
 
   const postData = { ruleOfList: getRuleOfList };
   const response = await fetch(data?.apiURL + '/stock-screener-data', {
@@ -292,6 +291,10 @@ function handleAddRule() {
       case 'ema50':
       case 'ema100':
       case 'ema200':
+      case 'sma20':
+      case 'sma50':
+      case 'sma100':
+      case 'sma200':
         newRule = { name: ruleName, value: Array.isArray(valueMappings[ruleName]) ? valueMappings[ruleName] : [valueMappings[ruleName]] }; // Ensure value is an array
         break;
       default:
@@ -325,6 +328,7 @@ async function handleRule(newRule) {
     toast.success('Rule added', {
       style: 'border-radius: 200px; background: #333; color: #fff;'
     });
+    
     await updateStockScreenerData();
     //await handleSave(false);
   }
@@ -547,9 +551,18 @@ function changeRuleCondition(name: string, state: string) {
   ruleCondition[ruleName] = state;
 }
 
+let checkedItems = new Set(); // Set to store checked items for quick lookup
+function isChecked(item) {
+    return checkedItems.has(item);
+  }
+
 async function handleChangeValue(value) {
-  // Check if the current rule is "country"
-  if (['ema20', 'ema50', 'ema100', 'ema200','analystRating','sector','country']?.includes(ruleName)) {
+  if (checkedItems.has(value)) {
+      checkedItems.delete(value);
+    } else {
+      checkedItems.add(value);
+    }
+  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','sector','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
     if (!Array.isArray(valueMappings[ruleName])) {
@@ -570,13 +583,15 @@ async function handleChangeValue(value) {
       valueMappings[ruleName] = "any";
     }
 
-    await updateStockScreenerData();
+    await updateStockScreenerData()
   } else if (ruleName in valueMappings) {
     // Handle non-country rules as single values
     valueMappings[ruleName] = value;
   } else {
     console.warn(`Unhandled rule: ${ruleName}`);
   }
+
+  console.log(valueMappings[ruleName])
 }
 
 
@@ -683,6 +698,7 @@ function handleInput(event) {
         }
     }, 50);
 }
+
 
 </script>
   
@@ -875,7 +891,7 @@ function handleInput(event) {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
+                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -898,14 +914,14 @@ function handleInput(event) {
                                   <input bind:value={searchQuery}
                                       on:input={handleInput}
                                       autocomplete="off"
-                                      class="absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
+                                      class="{!['analystRating','sector','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
                                       focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
                                       type="search" 
                                       placeholder="Search...">
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
+                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -914,19 +930,12 @@ function handleInput(event) {
                                         </button>
                                         </DropdownMenu.Item>      
                                       {/each}
-                                    {:else if ['ema20', 'ema50', 'ema100', 'ema200']?.includes(row?.rule)}
+                                    {:else if ['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200']?.includes(row?.rule)}
                                       {#each row?.step as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                              <input type="checkbox" checked={ruleOfList?.some(rule => 
-                                                rule?.name === row?.rule && 
-                                                Array?.isArray(rule?.value) && 
-                                                rule?.value.includes(item))}
-                                                class="h-4 w-4 rounded bg-dark-500 border border-gray-500 text-blue-600 focus:ring-blue-500" id={ruleOfList?.some(rule => 
-                                                rule?.name === row?.rule && 
-                                                Array?.isArray(rule?.value) && 
-                                                rule?.value.includes(item))}>
+                                              <input type="checkbox" checked={isChecked(item)}>
                                               <span class="ml-2">{item}</span>
                                             </label>
                                           </div>
@@ -937,14 +946,7 @@ function handleInput(event) {
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                              <input type="checkbox" checked={ruleOfList?.some(rule => 
-                                                rule?.name === row?.rule && 
-                                                Array?.isArray(rule?.value) && 
-                                                rule?.value.includes(item))}
-                                                class="h-4 w-4 rounded bg-dark-500 border border-gray-500 text-blue-600 focus:ring-blue-500" id={ruleOfList?.some(rule => 
-                                                rule?.name === row?.rule && 
-                                                Array?.isArray(rule?.value) && 
-                                                rule?.value.includes(item))}>
+                                              <input type="checkbox" checked={isChecked(item)}>
                                               <span class="ml-2">{item}</span>
                                             </label>
                                           </div>
