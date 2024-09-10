@@ -486,9 +486,9 @@ onMount( async() => {
                             <strong>{item?.name}</strong> (<a href="/stocks/{item?.symbol}" class="text-blue-400 sm:hover:text-white">{item?.symbol}</a>)
                             {item?.isToday === true ? 'will report today' : ['Monday', 'Tuesday', 'Wednesday', 'Thursday'].includes(new Date().toLocaleDateString('en-US', { weekday: 'long' })) ? "will report tomorrow" : "will report monday"}
                             {#if item?.time}
-                                {#if compareTimes(item?.time, '16:00') > 0}
+                                {#if compareTimes(item?.time, '16:00') >= 0}
                                     after market closes.
-                                {:else if compareTimes(item?.time, '09:30') < 0}
+                                {:else if compareTimes(item?.time, '09:30') <= 0}
                                     before market opens.
                                 {:else}
                                     during market.
