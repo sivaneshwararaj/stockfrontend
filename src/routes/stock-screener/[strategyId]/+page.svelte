@@ -43,14 +43,14 @@ const allRules = {
   mfi: { label: 'MFI', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
   cci: { label: 'CCI', step: [250,200,100,50,20,0,-20,-50,-100,-200,-250], category: 'ta', defaultCondition: 'over', defaultValue: 0 },
   atr: { label: 'ATR', step: [20,15,10,5,3,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  sma20: { label: 'SMA-20', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  sma50: { label: 'SMA-50', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  sma100: { label: 'SMA-100', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  sma200: { label: 'SMA-200', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  ema20: { label: 'EMA-20', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  ema50: { label: 'EMA-50', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  ema100: { label: 'EMA-100', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
-  ema200: { label: 'EMA-200', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
+  sma20: { label: 'SMA20', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  sma50: { label: 'SMA50', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  sma100: { label: 'SMA100', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  sma200: { label: 'SMA200', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  ema20: { label: 'EMA20', step: ['Stock Price > EMA20', 'EMA20 > EMA50'], category: 'ta', defaultValue: 'any' },
+  ema50: { label: 'EMA50', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  ema100: { label: 'EMA100', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  ema200: { label: 'EMA200', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
   price: { label: 'Stock Price', step: [1000,500,400,300,200,150,100,80,60,50,20,10,1], category: 'fund', defaultCondition: 'over', defaultValue: 10 },
 
   change1W: { label: 'Price Change 1W', step: ['20%','10%','5%','1%','-1%','-5%','-10%','-20%'], category: 'ta', defaultCondition: 'over', defaultValue: '1%' },
@@ -160,7 +160,15 @@ const allRules = {
 const getStockScreenerData = async (rules) => {
  
   console.log('Fetching new data from API');
-  const postData = { ruleOfList: rules?.map(rule => rule.name) };
+  // Extract the rule names
+  let getRuleOfList = rules?.map(rule => rule.name) || [];
+
+  // If 'ema20' is included, ensure 'ema50' is also added
+  if (getRuleOfList?.includes("ema20") && !getRuleOfList?.includes("ema50")) {
+    getRuleOfList.push("ema50");
+  }
+  console.log(getRuleOfList)
+  const postData = { ruleOfList: getRuleOfList };
   const response = await fetch(data?.apiURL + '/stock-screener-data', {
     method: 'POST',
     headers: {
@@ -263,6 +271,7 @@ function handleAddRule() {
       case 'analystRating':
       case 'sector':
       case 'country':
+      case 'ema20':
         newRule = { name: ruleName, value: Array.isArray(valueMappings[ruleName]) ? valueMappings[ruleName] : [valueMappings[ruleName]] }; // Ensure value is an array
         break;
       default:
@@ -520,7 +529,7 @@ function changeRuleCondition(name: string, state: string) {
 
 async function handleChangeValue(value) {
   // Check if the current rule is "country"
-  if (['analystRating','sector','country']?.includes(ruleName)) {
+  if (['ema20', 'analystRating','sector','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
     if (!Array.isArray(valueMappings[ruleName])) {
@@ -846,7 +855,7 @@ function handleInput(event) {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['analystRating','sector','country']?.includes(row?.rule)}
+                                  {#if !['ema20', 'analystRating','sector','country']?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -876,15 +885,32 @@ function handleInput(event) {
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['analystRating','sector','country']?.includes(row?.rule)}
+                                    {#if !['ema20','analystRating','sector','country']?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
-                                        <button on:click={() => {handleChangeValue(newValue)}} class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-[#27272A]
-                                                        focus:bg-blue-100 focus:text-gray-900 focus:outline-none">
+                                        <button on:click={() => {handleChangeValue(newValue)}} class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-[#27272A] focus:bg-blue-100 focus:text-gray-900 focus:outline-none">            
                                             {ruleCondition[row?.rule] !== undefined ? ruleCondition[row?.rule] : ''} {newValue}
                                         </button>
                                         </DropdownMenu.Item>      
+                                      {/each}
+                                    {:else if ['ema20']?.includes(row?.rule)}
+                                      {#each row?.step as item}
+                                        <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                                          <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
+                                            <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
+                                              <input type="checkbox" checked={ruleOfList?.some(rule => 
+                                                rule?.name === row?.rule && 
+                                                Array?.isArray(rule?.value) && 
+                                                rule?.value.includes(item))}
+                                                class="h-4 w-4 rounded bg-dark-500 border border-gray-500 text-blue-600 focus:ring-blue-500" id={ruleOfList?.some(rule => 
+                                                rule?.name === row?.rule && 
+                                                Array?.isArray(rule?.value) && 
+                                                rule?.value.includes(item))}>
+                                              <span class="ml-2">{item}</span>
+                                            </label>
+                                          </div>
+                                        </DropdownMenu.Item>     
                                       {/each}
                                     {:else}
                                       {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : ['Buy','Hold','Sell'])) as item}
@@ -1142,6 +1168,8 @@ function handleInput(event) {
                               {item?.sector}
                               {:else if row?.rule === 'country'}
                               {item?.country}
+                              {:else if row?.rule === 'ema20'}
+                              {item?.ema20}
                               {:else if ['fundamentalAnalysis','trendAnalysis']?.includes(row?.rule)}
                               {item[row?.rule]?.accuracy}%
                               {:else}
