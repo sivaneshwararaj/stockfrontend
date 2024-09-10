@@ -1,5 +1,25 @@
 import { sectorList, listOfRelevantCountries } from "$lib/utils";
 
+const movingAverageConditions = {
+  "Stock Price > EMA20": (item) => item.price > item.ema20,
+  "Stock Price > EMA50": (item) => item.price > item.ema50,
+  "Stock Price > EMA100": (item) => item.price > item.ema100,
+  "Stock Price > EMA200": (item) => item.price > item.ema200,
+  "EMA20 > EMA50": (item) => item.ema20 > item.ema50,
+  "EMA20 > EMA100": (item) => item.ema20 > item.ema100,
+  "EMA20 > EMA200": (item) => item.ema20 > item.ema200,
+  "EMA50 > EMA20": (item) => item.ema50 > item.ema20,
+  "EMA50 > EMA100": (item) => item.ema50 > item.ema100,
+  "EMA50 > EMA200": (item) => item.ema50 > item.ema200,
+  "EMA100 > EMA20": (item) => item.ema100 > item.ema20,
+  "EMA100 > EMA50": (item) => item.ema100 > item.ema50,
+  "EMA100 > EMA200": (item) => item.ema100 > item.ema200,
+  "EMA200 > EMA20": (item) => item.ema200 > item.ema20,
+  "EMA200 > EMA50": (item) => item.ema200 > item.ema50,
+  "EMA200 > EMA100": (item) => item.ema200 > item.ema100,
+  // Add additional conditions here
+};
+
 // Convert the input to a value or return it as-is if it's already an array
 function convertUnitToValue(
   input: string | number | string[]
@@ -58,15 +78,14 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
       const ruleName = rule.name.toLowerCase();
 
       // Handle trend and fundamental analysis
-      if (["trendanalysis", "fundamentalanalysis"].includes(ruleName)) {
-        const accuracy = item[ruleName]?.accuracy;
+      if (["trendAnalysis", "fundamentalAnalysis"].includes(rule.name)) {
+        const accuracy = item[rule.name]?.accuracy;
         if (rule.condition === "over" && accuracy <= ruleValue) return false;
         if (rule.condition === "under" && accuracy > ruleValue) return false;
-        return true;
       }
 
       // Handle categorical data like analyst ratings, sector, country
-      if (["analystrating", "sector", "country"].includes(ruleName)) {
+      else if (["analystrating", "sector", "country"].includes(ruleName)) {
         if (ruleValue === "any") return true;
         return Array.isArray(ruleValue)
           ? ruleValue.includes(itemValue)
@@ -74,7 +93,7 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
       }
 
       // Handle moving averages
-      if (
+      else if (
         [
           "ema20",
           "ema50",
@@ -89,19 +108,11 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
         if (ruleValue === "any") return true;
 
         for (const condition of ruleValue) {
-          if (condition === "Stock Price > EMA20") {
-            const stockPrice = item["price"];
-            const maValue = item["ema20"];
-            if (!stockPrice || !maValue) return false;
-            if (!(stockPrice > maValue)) return false;
+          if (movingAverageConditions[condition]) {
+            if (!movingAverageConditions[condition](item)) return false;
+          } else {
+            console.warn(`Unknown condition: ${condition}`);
           }
-          if (condition === "EMA20 > EMA50") {
-            const ema20 = item["ema20"];
-            const ema50 = item["ema50"];
-            if (!ema20 || !ema50) return false;
-            if (ema20 < ema50) return false;
-          }
-          // Add additional conditions here
         }
 
         return true; // If all conditions are met
@@ -117,6 +128,7 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
     });
   });
 }
+
 onmessage = async (event: MessageEvent) => {
   const { stockScreenerData, ruleOfList } = event.data || {};
 

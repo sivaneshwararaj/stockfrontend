@@ -47,10 +47,10 @@ const allRules = {
   sma50: { label: 'SMA50', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
   sma100: { label: 'SMA100', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
   sma200: { label: 'SMA200', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
-  ema20: { label: 'EMA20', step: ['Stock Price > EMA20', 'EMA20 > EMA50'], category: 'ta', defaultValue: 'any' },
-  ema50: { label: 'EMA50', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
-  ema100: { label: 'EMA100', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
-  ema200: { label: 'EMA200', step: ['Stock Price'], category: 'ta', defaultCondition: 'over', defaultValue: 'Stock Price' },
+  ema20: { label: 'EMA20', step: ['Stock Price > EMA20', 'EMA20 > EMA50', 'EMA20 > EMA100', 'EMA20 > EMA200'], category: 'ta', defaultValue: 'any' },
+  ema50: { label: 'EMA50', step: ['Stock Price > EMA50', 'EMA50 > EMA20', 'EMA50 > EMA100', 'EMA50 > EMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
+  ema100: { label: 'EMA100', step: ['Stock Price > EMA100', 'EMA100 > EMA20', 'EMA100 > EMA50', 'EMA100 > EMA200'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
+  ema200: { label: 'EMA200', step: ['Stock Price > EMA200', 'EMA200 > EMA20', 'EMA200 > EMA50', 'EMA200 > EMA100'], category: 'ta', defaultCondition: 'over', defaultValue: 'any' },
   price: { label: 'Stock Price', step: [1000,500,400,300,200,150,100,80,60,50,20,10,1], category: 'fund', defaultCondition: 'over', defaultValue: 10 },
 
   change1W: { label: 'Price Change 1W', step: ['20%','10%','5%','1%','-1%','-5%','-10%','-20%'], category: 'ta', defaultCondition: 'over', defaultValue: '1%' },
@@ -158,16 +158,31 @@ const allRules = {
 
 
 const getStockScreenerData = async (rules) => {
- 
   console.log('Fetching new data from API');
+
   // Extract the rule names
   let getRuleOfList = rules?.map(rule => rule.name) || [];
 
-  // If 'ema20' is included, ensure 'ema50' is also added
-  if (getRuleOfList?.includes("ema20") && !getRuleOfList?.includes("ema50")) {
-    getRuleOfList.push("ema50");
-  }
-  console.log(getRuleOfList)
+  // Define the EMA parameters to check
+  const emaParameters = ['ema20', 'ema50', 'ema100', 'ema200'];
+
+  // Function to check and add missing EMA parameters
+  const ensureAllEmaParameters = (params) => {
+    const includedEmaParameters = params.filter(param => emaParameters.includes(param));
+    if (includedEmaParameters.length > 0) {
+      emaParameters.forEach(param => {
+        if (!params.includes(param)) {
+          params.push(param);
+        }
+      });
+    }
+  };
+
+  // Ensure all required EMA parameters are included
+  ensureAllEmaParameters(getRuleOfList);
+
+  console.log(getRuleOfList);
+
   const postData = { ruleOfList: getRuleOfList };
   const response = await fetch(data?.apiURL + '/stock-screener-data', {
     method: 'POST',
@@ -177,10 +192,12 @@ const getStockScreenerData = async (rules) => {
     },
     body: JSON.stringify(postData)
   });
+
   const output = await response.json();
   
   return output;
 };
+
 
   let filteredData = [];
   let displayResults = [];
@@ -272,6 +289,9 @@ function handleAddRule() {
       case 'sector':
       case 'country':
       case 'ema20':
+      case 'ema50':
+      case 'ema100':
+      case 'ema200':
         newRule = { name: ruleName, value: Array.isArray(valueMappings[ruleName]) ? valueMappings[ruleName] : [valueMappings[ruleName]] }; // Ensure value is an array
         break;
       default:
@@ -529,7 +549,7 @@ function changeRuleCondition(name: string, state: string) {
 
 async function handleChangeValue(value) {
   // Check if the current rule is "country"
-  if (['ema20', 'analystRating','sector','country']?.includes(ruleName)) {
+  if (['ema20', 'ema50', 'ema100', 'ema200','analystRating','sector','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
     if (!Array.isArray(valueMappings[ruleName])) {
@@ -855,7 +875,7 @@ function handleInput(event) {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['ema20', 'analystRating','sector','country']?.includes(row?.rule)}
+                                  {#if !['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -885,7 +905,7 @@ function handleInput(event) {
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['ema20','analystRating','sector','country']?.includes(row?.rule)}
+                                    {#if !['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -894,7 +914,7 @@ function handleInput(event) {
                                         </button>
                                         </DropdownMenu.Item>      
                                       {/each}
-                                    {:else if ['ema20']?.includes(row?.rule)}
+                                    {:else if ['ema20', 'ema50', 'ema100', 'ema200']?.includes(row?.rule)}
                                       {#each row?.step as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
@@ -1162,14 +1182,8 @@ function handleInput(event) {
                         {#each displayRules as row (row?.rule)}
                           {#if row?.rule !== 'marketCap'}
                             <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
-                              {#if row?.rule === 'analystRating'}
-                              {item?.analystRating}
-                              {:else if row?.rule === 'sector'}
-                              {item?.sector}
-                              {:else if row?.rule === 'country'}
-                              {item?.country}
-                              {:else if row?.rule === 'ema20'}
-                              {item?.ema20}
+                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country','analystRating']?.includes(row?.rule)}
+                              {item[row?.rule]}
                               {:else if ['fundamentalAnalysis','trendAnalysis']?.includes(row?.rule)}
                               {item[row?.rule]?.accuracy}%
                               {:else}
