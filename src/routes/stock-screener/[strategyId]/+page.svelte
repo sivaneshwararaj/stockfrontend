@@ -16,6 +16,7 @@
   export let form;
   let isLoaded = false;
   let syncWorker: Worker | undefined;
+  let downloadWorker: Worker | undefined;
   let searchQuery = '';
   $: testList = [];
 
@@ -157,46 +158,6 @@ const allRules = {
 };
 
 
-const getStockScreenerData = async (rules) => {
-  console.log('Fetching new data from API');
-
-  // Extract the rule names
-  let getRuleOfList = rules?.map(rule => rule.name) || [];
-
-  // Define the EMA parameters to check
-  const emaParameters = ['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200'];
-
-  // Function to check and add missing EMA parameters
-  const ensureAllEmaParameters = (params) => {
-    const includedEmaParameters = params.filter(param => emaParameters.includes(param));
-    if (includedEmaParameters.length > 0) {
-      emaParameters.forEach(param => {
-        if (!params.includes(param)) {
-          params.push(param);
-        }
-      });
-    }
-  };
-
-  // Ensure all required EMA parameters are included
-  ensureAllEmaParameters(getRuleOfList);
-
-
-  const postData = { ruleOfList: getRuleOfList };
-  const response = await fetch(data?.apiURL + '/stock-screener-data', {
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json", 
-      "X-API-KEY": data?.apiKey
-    },
-    body: JSON.stringify(postData)
-  });
-
-  const output = await response.json();
-  
-  return output;
-};
-
 
   let filteredData = [];
   let displayResults = [];
@@ -261,16 +222,19 @@ const handleMessage = (event) => {
 
 };
 
+const handleScreenerMessage = (event) => {
+    stockScreenerData = event?.data?.stockScreenerData;
+    shouldLoadWorker.set(true);
+
+};
+
 const loadWorker = async () => {
-    if (!syncWorker) {
-        const SyncWorker = await import('./workers/filterWorker?worker');
-        syncWorker = new SyncWorker.default();
-        syncWorker.onmessage = handleMessage;
-    }
     syncWorker.postMessage({ stockScreenerData, ruleOfList });
 };
 
-
+const updateStockScreenerData = async () => {
+    downloadWorker.postMessage({ ruleOfList: ruleOfList, apiURL: data?.apiURL, apiKey: data?.apiKey });
+};
  
 function handleAddRule() {
     
@@ -334,25 +298,6 @@ async function handleRule(newRule) {
   }
 }
 
-async function updateStockScreenerData() {
-  try {
-    const newData = await getStockScreenerData(ruleOfList);
-    stockScreenerData = newData?.filter(item => 
-    Object?.values(item)?.every(value => 
-      value !== null && value !== undefined && 
-      (typeof value !== 'object' || Object.values(value)?.every(subValue => subValue !== null && subValue !== undefined))
-    )
-  );
-
-    shouldLoadWorker.set(true);
-
-  } catch (error) {
-    console.error('Error fetching new stock screener data:', error);
-    toast.error('Failed to update stock data. Please try again.', {
-      style: 'border-radius: 200px; background: #333; color: #fff;'
-    });
-  }
-}
       
 async function handleResetAll() {
   selectedPopularStrategy = '';
@@ -416,6 +361,18 @@ let LoginPopup;
 
 onMount(async () => {
   
+   if (!syncWorker) {
+        const SyncWorker = await import('./workers/filterWorker?worker');
+        syncWorker = new SyncWorker.default();
+        syncWorker.onmessage = handleMessage;
+    }
+
+    if (!downloadWorker) {
+        const DownloadWorker = await import('./workers/downloadWorker?worker');
+        downloadWorker = new DownloadWorker.default();
+        downloadWorker.onmessage = handleScreenerMessage;
+    }
+
   if(!data?.user) {
     LoginPopup = (await import('$lib/components/LoginPopup.svelte')).default;
   }
@@ -551,7 +508,8 @@ function changeRuleCondition(name: string, state: string) {
   ruleCondition[ruleName] = state;
 }
 
-let checkedItems = new Set(); // Set to store checked items for quick lookup
+let checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
+
 function isChecked(item) {
     return checkedItems.has(item);
   }
