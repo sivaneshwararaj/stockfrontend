@@ -524,7 +524,7 @@ onMount( async() => {
                       Revenue of {abbreviateNumber(item?.revenue,true)} {item?.revenueSurprise > 0 ? 'exceeds' : 'misses'} estimates by {abbreviateNumber(Math.abs(item?.revenueSurprise),true)}, with {((item?.revenue/item?.revenuePrior-1)*100)?.toFixed(2)}% YoY {(item?.revenue/item?.revenuePrior-1) < 0 ? 'decline' : 'growth'}.
                   </li>
                   <li style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 30px; list-style-type: disc;">
-                    EPS of ${item?.eps} {item?.epsSurprise > 0 ? 'exceeds' : 'misses'} estimates by ${item?.epsSurprise?.toFixed(2)}, with {((item?.eps/item?.epsPrior-1)*100)?.toFixed(2)}% YoY {(item?.eps/item?.epsPrior-1) < 0 ? 'decline' : 'growth'}.
+                    EPS of ${item?.eps} {item?.epsSurprise > 0 ? 'exceeds' : 'misses'} estimates by ${item?.epsSurprise?.toFixed(2)}, with {(((item?.eps - item?.epsPrior) / Math.abs(item?.epsPrior)) * 100)?.toFixed(2)}% YoY {((item?.eps - item?.epsPrior) / Math.abs(item?.epsPrior)) < 0 ? 'decline' : 'growth'}.
                 </li>
 
                     {/each}
