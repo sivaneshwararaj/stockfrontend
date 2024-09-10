@@ -716,7 +716,7 @@ async function initializePrice() {
   }
   
 
-  async function exportPriceData(timePeriod: string) {
+ async function exportPriceData(timePeriod: string) {
     const cachedData = getCache($etfTicker, "exportPriceData" + timePeriod);
 
     if (cachedData) {
@@ -748,6 +748,13 @@ async function exportData(timePeriod:string) {
   let exportList = [];
   if(timePeriod === '1day') {
     exportList = await exportPriceData(timePeriod);
+    exportList = exportList?.map(({ time, open, high, low, close }) => ({
+          date: time,
+          open,
+          high,
+          low,
+          close,
+        }));
 
   } else if (data?.user?.tier === 'Pro') {
       exportList = await exportPriceData(timePeriod);
