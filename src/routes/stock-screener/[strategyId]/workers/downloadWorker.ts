@@ -66,7 +66,6 @@ const getStockScreenerData = async (rules, apiKey, apiURL) => {
 
 onmessage = async (event) => {
   const { ruleOfList, apiKey, apiURL } = event.data || {};
-  console.log(event.data);
 
   const output = await getStockScreenerData(ruleOfList, apiKey, apiURL);
 
