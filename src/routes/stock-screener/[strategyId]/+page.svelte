@@ -51,6 +51,8 @@ const allRules = {
   ema50: { label: 'EMA-50', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
   ema100: { label: 'EMA-100', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
   ema200: { label: 'EMA-200', step: [500,250,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
+  price: { label: 'Stock Price', step: [1000,500,300,100,50,10,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
+
   change1W: { label: 'Price Change 1W', step: ['20%','10%','5%','1%','-1%','-5%','-10%','-20%'], category: 'ta', defaultCondition: 'over', defaultValue: '1%' },
   change1M: { label: 'Price Change 1M', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
   change3M: { label: 'Price Change 3M', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
