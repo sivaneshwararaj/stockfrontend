@@ -1,31 +1,28 @@
-import {getCache, setCache } from '$lib/store';
+import { getCache, setCache } from "$lib/store";
 
-
-
-export const load = async ({parent}) => {
-
+export const load = async ({ parent }) => {
   const getCramerTracker = async () => {
     let output;
+    const { apiKey, apiURL, user } = await parent();
 
-    const cachedData = getCache('', 'getCramerTracker');
+    const cachedData = getCache("", "getCramerTracker");
     if (cachedData) {
       output = cachedData;
     } else {
-    
-    const { apiKey, apiURL } = await parent();
+      const response = await fetch(apiURL + "/cramer-tracker", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
+        },
+      });
 
-    const response = await fetch(apiURL + '/cramer-tracker', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json", "X-API-KEY": apiKey
-      },
-    });
+      output = await response.json();
 
-    output = await response.json();
-
-    setCache('', output, 'getCramerTracker');
-
+      setCache("", output, "getCramerTracker");
     }
+
+    output = user?.tier !== "Pro" ? output?.slice(0, 5) : output;
 
     //output = data?.user?.tier !== 'Pro' ? output?.slice(0,6) : output;
 
@@ -34,6 +31,6 @@ export const load = async ({parent}) => {
 
   // Make sure to return a promise
   return {
-    getCramerTracker: await getCramerTracker()
+    getCramerTracker: await getCramerTracker(),
   };
 };

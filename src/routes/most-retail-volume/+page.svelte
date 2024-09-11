@@ -234,7 +234,7 @@
                   <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                       <div class="w-full flex justify-between items-center p-3 mt-3">
                       <h2 class="text-start text-xl font-semibold text-white ml-3">
-                      Pro Subscription
+                      Pro Subscription 🔥
                       </h2>
                       <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                       </div>
@@ -245,30 +245,31 @@
               </div>
               {/if}
 
-              <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+              <div on:click={() => goto('/cramer-tracker')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                   <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                       <div class="w-full flex justify-between items-center p-3 mt-3">
                       <h2 class="text-start text-xl font-semibold text-white ml-3">
-                      Wallstreet Analyst
+                        Cramer Tracker 📉
                       </h2>
                       <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                       </div>
                       <span class="text-white p-3 ml-3 mr-3">
-                          Get the latest top Wall Street analyst ratings.
+                          Follow Jim Cramer latest stock picks
                       </span>
                   </div>
               </div>
 
-              <div on:click={() => goto('/politicians')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+              <div on:click={() => goto('/reddit-tracker')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                   <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                       <div class="w-full flex justify-between items-center p-3 mt-3">
                       <h2 class="text-start text-xl font-semibold text-white ml-3">
-                      Congress Trading
+                        Reddit Tracker 🚀
+                          
                       </h2>
                       <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                       </div>
                       <span class="text-white p-3 ml-3 mr-3">
-                          Get the latest top Congress trading insights.
+                          Get the latest trends of r/Wallstreetbets
                       </span>
                   </div>
               </div>

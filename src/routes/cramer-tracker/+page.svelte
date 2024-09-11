@@ -4,6 +4,7 @@
     import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
     import { onMount } from 'svelte';
     import ArrowLogo from "lucide-svelte/icons/move-up-right";
+    import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
 
     //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   
@@ -203,7 +204,7 @@
                         </table>
                     </div>
                       <InfiniteLoading on:infinite={infiniteHandler} />
-                      <!--<UpgradeToPro data={data} title="Get the latest dark pool trades in realtime from Hedge Funds & Major Institutional Traders"/>-->
+                      <UpgradeToPro data={data} title="Get the latest dark pool trades in realtime from Hedge Funds & Major Institutional Traders"/>
     
                   </div>
   
@@ -227,7 +228,7 @@
                       <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                           <div class="w-full flex justify-between items-center p-3 mt-3">
                           <h2 class="text-start text-xl font-semibold text-white ml-3">
-                          Pro Subscription
+                          Pro Subscription 🔥
                           </h2>
                           <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                           </div>
@@ -238,30 +239,30 @@
                   </div>
                   {/if}
   
-                  <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                  <div on:click={() => goto('/reddit-tracker')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                       <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                           <div class="w-full flex justify-between items-center p-3 mt-3">
                           <h2 class="text-start text-xl font-semibold text-white ml-3">
-                          Wallstreet Analyst
+                          Reddit Tracker 🚀
                           </h2>
                           <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                           </div>
                           <span class="text-white p-3 ml-3 mr-3">
-                              Get the latest top Wall Street analyst ratings.
+                              Get the latest trends of r/Wallstreetbets
                           </span>
                       </div>
                   </div>
   
-                  <div on:click={() => goto('/politicians')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                  <div on:click={() => goto('/most-retail-volume')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                       <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                           <div class="w-full flex justify-between items-center p-3 mt-3">
                           <h2 class="text-start text-xl font-semibold text-white ml-3">
-                          Congress Trading
+                            Retail Trader Tracker 💳
                           </h2>
                           <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                           </div>
                           <span class="text-white p-3 ml-3 mr-3">
-                              Get the latest top Congress trading insights.
+                              Follow the daily trends of retail investors
                           </span>
                       </div>
                   </div>
