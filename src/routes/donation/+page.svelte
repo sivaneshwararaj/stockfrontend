@@ -12,20 +12,20 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width" />
 <title>
-  {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Donation · stocknear
+  {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Become a sponsor to stocknear
 </title>
 <meta name="description" content={`Your donation helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
 
 <!-- Other meta tags -->
-<meta property="og:title" content={`Donation · stocknear`}/>
-<meta property="og:description" content={`Your donation helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
+<meta property="og:title" content={`sponsor · stocknear`}/>
+<meta property="og:description" content={`Your sponsor helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
 <meta property="og:type" content="website"/>
 <!-- Add more Open Graph meta tags as needed -->
 
 <!-- Twitter specific meta tags -->
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content={`Donation · stocknear`}/>
-<meta name="twitter:description" content={`Your donation helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
+<meta name="twitter:title" content={`sponsor · stocknear`}/>
+<meta name="twitter:description" content={`Your sponsor helps us to become the number 1 stock analysis platform in the world with the best price plans.`} />
 <!-- Add more Twitter meta tags as needed -->
 
 </svelte:head>
@@ -38,7 +38,7 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
       <div class="text-sm sm:text-[1rem] breadcrumbs ">
         <ul>
           <li><a href="/" class="text-gray-300">Home</a></li> 
-          <li class="text-gray-300">Donation</li>
+          <li class="text-gray-300">Sponsor</li>
         </ul>
       </div>
     
@@ -57,12 +57,12 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
         <div>
         <div class="flex flex-row justify-center items-center">
             <h1 class="text-3xl sm:text-4xl text-white text-center font-bold mb-5">
-            Donation
+            Sponsor
             </h1>
         </div>
 
         <span class="text-white text-[1rem] font-medium text-center flex justify-center  items-center ">
-            Apes together donate strong—because when we unite our bananas, we can move mountains!
+            Apes together sponsor strong—because when we unite our bananas, we can move mountains!
         </span>
         </div>
         <!-- End Column -->
@@ -107,7 +107,7 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
                 Our Pro Membership is priced to be less than a cup of coffee, ensuring that high-quality stock data is within reach for retail investors of all backgrounds. This pricing reflects our core mission: <strong class="italic">Apes together strong</strong>.
             </p>
             <div class="text-white mb-5 text-[1rem]">
-                While the Pro Membership is designed to sustain our basic operations, your additional support can help us go even further. By donating, you're not just supporting a platform; you're investing in a vision of open, transparent, and affordable financial analysis.
+                While the Pro Membership is designed to sustain our basic operations, your additional support can help us go even further. By sponsoring, you're not just supporting a platform; you're investing in a vision of open, transparent, and affordable financial analysis.
                 <br>
                 <br>
                 Here's what makes Stocknear unique:
@@ -127,7 +127,7 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
                     
                   </ul>
 
-                  Your donation will directly contribute to:
+                  Your support will directly contribute to:
                   <ul style="padding-left: 5px; padding-top:10px;">
                     <li style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;">
                         Maintaining our low price point
@@ -146,13 +146,13 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
             
             <h2 class="text-white text-2xl font-semibold">
-                Buy me a Coffee 
+                Become a sponsor to stocknear
             </h2>
             <p class="text-white mb-5 text-[1rem]">
                If you believe in our mission and want to support us beyond your Pro Subscription, consider buying me a coffee through Ko-fi. Every contribution, no matter the size, makes a significant impact on our ability to serve you and the retail investor community. 
                 <br>
                 <br>
-                Link: <a href="https://ko-fi.com/stocknear" rel="noopener noreferrer" target="_blank" class="text-blue-400 sm:hover:text-white">Donate here</a> 
+                <a href="https://github.com/sponsors/stocknear" rel="noopener noreferrer" target="_blank" class="text-blue-400 sm:hover:text-white">Sponsor us here</a> 
                 <br>
                 <br>
                 Your support means the world to me and helps keep Stocknear running smoothly.
