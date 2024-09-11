@@ -61,10 +61,10 @@ $: {
             <div class="mt-1">{$displayCompanyName} has released their quartely earnings on {new Date(rawData?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}:</div>
   
                     <li class="ml-[20px] sm:ml-[30px]" style="color: #fff; line-height: 22px; margin-top:20px; margin-bottom: 15px; list-style-type: disc;">
-                      Revenue of {abbreviateNumber(rawData?.revenue,true)} {rawData?.revenueSurprise > 0 ? 'exceeds' : 'misses'} estimates by {abbreviateNumber(Math.abs(rawData?.revenueSurprise),true)}, with {((rawData?.revenue/rawData?.revenuePrior-1)*100)?.toFixed(2)}% YoY {(rawData?.revenue/rawData?.revenuePrior-1) < 0 ? 'decline' : 'growth'}.
+                      Revenue of <strong>{abbreviateNumber(rawData?.revenue,true)}</strong> {rawData?.revenueSurprise > 0 ? 'exceeds' : 'misses'} estimates by {abbreviateNumber(Math.abs(rawData?.revenueSurprise),true)}, with <strong>{((rawData?.revenue/rawData?.revenuePrior-1)*100)?.toFixed(2)}%</strong> YoY {(rawData?.revenue/rawData?.revenuePrior-1) < 0 ? 'decline' : 'growth'}.
                   </li>
                   <li class="ml-[20px] sm:ml-[30px]" style="color: #fff; line-height: 22px; margin-top:0px; margin-bottom: 15px; list-style-type: disc;">
-                    EPS of ${rawData?.eps} {rawData?.epsSurprise > 0 ? 'exceeds' : 'misses'} estimates by ${rawData?.epsSurprise?.toFixed(2)}, with {(((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) * 100)?.toFixed(2)}% YoY {((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) < 0 ? 'decline' : 'growth'}.
+                    EPS of <strong>${rawData?.eps}</strong> {rawData?.epsSurprise > 0 ? 'exceeds' : 'misses'} estimates by ${rawData?.epsSurprise?.toFixed(2)}, with <strong>{(((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) * 100)?.toFixed(2)}%</strong> YoY {((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) < 0 ? 'decline' : 'growth'}.
                 </li>
         </div>
     {:else}
