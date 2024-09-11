@@ -3,14 +3,17 @@
     import InfoModal from '$lib/components/InfoModal.svelte';
     import { Chart } from 'svelte-echarts'
     import { init, use } from 'echarts/core'
-    import { LineChart } from 'echarts/charts'
-    import { GridComponent } from 'echarts/components'
+    import { BarChart } from 'echarts/charts'
+    import { GridComponent, TooltipComponent } from 'echarts/components'
     import { CanvasRenderer } from 'echarts/renderers'
 
     export let data;
+    
+    use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
 
-    use([LineChart, GridComponent, CanvasRenderer])
-  
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
     let isLoaded = false;
    
   
@@ -43,7 +46,7 @@
     let priceList = [];
     let netCallList = [];
     let netPutList = [];
-
+    console.log(rawData)
     // Iterate over the data and extract required information
     rawData?.forEach(item => {
   
@@ -55,7 +58,7 @@
     });
     
     sentiment = netCallList?.slice(-1)?.at(0) > netPutList?.slice(-1)?.at(0) ? 'bullish' : 'bearish';
-    
+
     const {unit, denominator } = normalizer(Math.max(...netCallList) ?? 0)
 
     const option = {
@@ -72,15 +75,25 @@
         top: '10%',
         containLabel: true
     },
-    xAxis:
-    {
-        type: 'category',
-        boundaryGap: false,
-        data: dates,
-        axisLabel: {
-            color: '#fff',
+    xAxis: {
+    type: 'category',
+    boundaryGap: false,
+    data: dates,  // Use the full dates here
+    axisLabel: {
+        color: '#fff',
+        formatter: function (value, index) {
+            if (index % 2 === 0) {
+            
+            const dateParts = value.split(' ')[0].split('-');
+            const day = dateParts[2]; // Extracting the day
+            const monthIndex = parseInt(dateParts[1], 10) - 1; // Zero-indexed months
+            return `${day} ${monthNames[monthIndex]}`; // Return formatted day and month
+            } else {
+              return '';
+            }
         }
-    },
+    }
+},
     yAxis: [
     { 
         type: 'value',
@@ -100,59 +113,30 @@
             }
         },
     },
-    {
-      type: 'value',
-      splitLine: {
-            show: false, // Disable x-axis grid lines
-      },
-      position: 'right',
-      
-      axisLabel: {
-        color: '#fff',
-          formatter: function (value, index) {
-            if (index % 2 === 0) {
-              return '$'+value?.toFixed(1)
-            } else {
-                  return ''; // Hide this tick
-              }
-          }
-      }
-    },
+  
     ],
     series: [
-        {
-            name: 'Price',
-            data: priceList,
-            type: 'line',
-            yAxisIndex: 1,
+       {
+            name: 'Net Call',
+            data: netCallList,
+            type: 'bar',
+            stack: 'NetFlow',
             itemStyle: {
-                color: '#fff'
+                color: '#2256FF'
             },
-            showSymbol: false,    
+            showSymbol: false,
+
         },
         {   
             name: 'Net Put',
             data: netPutList,
-            type: 'line',
-            areaStyle: {opacity: 0.5},
+            type: 'bar',
             stack: 'NetFlow',
             itemStyle: {
-                color: '#FF2F1F'
+                color: '#FF2256'
             },
             showSymbol: false,
            
-        },
-        {
-            name: 'Net Call',
-            data: netCallList,
-            type: 'line',
-            areaStyle: {opacity: 0.5},
-            stack: 'NetFlow',
-            itemStyle: {
-                color: '#10DB06'
-            },
-            showSymbol: false,
-
         },
     ]
     };
@@ -215,7 +199,6 @@
   
   </script>
     
-<svelte:options immutable={true} />
     
   <section class="overflow-hidden text-white h-full pb-8">
     <main class="overflow-hidden ">
@@ -238,7 +221,7 @@
   
         <div class="w-full flex flex-col items-start">
             <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-                Analysis of the 20-day moving average of the options net flow demonstrates a {sentiment} trend, characterized by the {sentiment === 'bullish' ? 'Net Call Flow exceeding the Net Put Flow' : 'Net Put Flow exceeding the Net Call Flow'} .
+                The options net flow demonstrates a {sentiment} trend in the last 2 trading hours, characterized by the {sentiment === 'bullish' ? 'Net Call Flow exceeding the Net Put Flow' : 'Net Put Flow exceeding the Net Call Flow'}.
             </div>
         </div>
   
@@ -253,17 +236,9 @@
   
         <div class="flex flex-row items-center justify-between mx-auto mt-5 w-full sm:w-11/12">
             
-            <div class="mt-3.5 sm:mt-0 flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center">
-                <div class="h-full transform -translate-x-1/2 " aria-hidden="true"></div>
-                <div class="w-3 h-3 bg-[#fff] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
-                <span class="mt-2 sm:mt-0 text-white text-center sm:text-start text-xs sm:text-md inline-block">
-                    Price
-                </span>
-            </div>
-
             <div class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center">
                 <div class="h-full transform -translate-x-1/2 " aria-hidden="true"></div>
-                <div class="w-3 h-3 bg-[#10DB06] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
+                <div class="w-3 h-3 bg-[#2256FF] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
                 <span class="mt-2 sm:mt-0 text-white text-xs sm:text-md sm:font-medium inline-block">
                     Net Call 
                 </span>

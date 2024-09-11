@@ -22,7 +22,6 @@ const article = data?.getArticle;
     <!-- Other meta tags -->
     <meta property="og:title" content="{article?.title}"/>
     <meta property="og:description" content="{article?.abstract}"/>
-    <meta property="og:image" content="{getImageURL(article?.collectionId, article?.id, article?.cover)}"/>
     <meta property="og:type" content="article"/>
     <!-- Add more Open Graph meta tags as needed -->
 
@@ -30,14 +29,13 @@ const article = data?.getArticle;
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:title" content="{article?.title}"/>
     <meta name="twitter:description" content="{article?.abstract}"/>
-    <meta name="twitter:image" content="{getImageURL(article?.collectionId, article?.id, article?.cover)}"/>
     <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
             
 <section class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40">
         
-    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4 sm:ml-0">
+    <div class="text-sm sm:text-[1rem] breadcrumbs ">
         <ul>
           <li><a href="/" class="text-gray-300">Home</a></li> 
           <li><a href="/blog" class="text-gray-300">All Blog Post</a></li> 
@@ -46,7 +44,7 @@ const article = data?.getArticle;
     </div>
 
 
-        <div class="mt-3 w-full max-w-4xl h-72 flex flex-col bg-cover bg-center bg-no-repeat" 
+        <div class="mt-3 w-full max-w-4xl h-72 flex flex-col bg-cover bg-center bg-no-repeat rounded-lg" 
           style="background-image: url('{article?.cover ? getImageURL(article?.collectionId, article?.id, article?.cover) : ''}');" />
     
             <main class="grow m-auto"> 
