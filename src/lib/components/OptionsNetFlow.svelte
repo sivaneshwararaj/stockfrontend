@@ -46,7 +46,7 @@
     let priceList = [];
     let netCallList = [];
     let netPutList = [];
-    console.log(rawData)
+
     // Iterate over the data and extract required information
     rawData?.forEach(item => {
   
