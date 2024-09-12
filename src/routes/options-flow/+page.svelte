@@ -468,7 +468,7 @@ onDestroy(async() => {
   
   
 function calculateStats(data) {
-    const { callVolumeSum, putVolumeSum, bullishCount, bearishCount } = data?.reduce((acc, item) => {
+    const { callVolumeSum, putVolumeSum, bullishCount, bearishCount, neutralCount } = data?.reduce((acc, item) => {
       const volume = parseInt(item?.volume);
   
       if (item?.put_call === "Calls") {
@@ -481,19 +481,23 @@ function calculateStats(data) {
         acc.bullishCount += 1;
       } else if (item?.sentiment === "Bearish") {
         acc.bearishCount += 1;
+      } else if (item?.sentiment === "Neutral") {
+        acc.neutralCount += 1;
       }
   
         return acc;
-      }, { callVolumeSum: 0, putVolumeSum: 0, bullishCount: 0, bearishCount: 0 });
+      }, { callVolumeSum: 0, putVolumeSum: 0, bullishCount: 0, bearishCount: 0, neutralCount: 0 });
 
-      if(bullishCount > bearishCount) {
-        flowSentiment = 'Bullish'
-      }
-      else if (bullishCount < bearishCount) {
-        flowSentiment = 'Bearish'
-      } else {
+      if (bullishCount > bearishCount) {
+        flowSentiment = 'Bullish';
+      } else if (bullishCount < bearishCount) {
+        flowSentiment = 'Bearish';
+      } else if (neutralCount > bearishCount && neutralCount > bullishCount) {
         flowSentiment = 'Neutral';
+      } else {
+        flowSentiment = '-';
       }
+
 
 
       putCallRatio = callVolumeSum !== 0 ? (putVolumeSum / callVolumeSum) : 0;
@@ -852,7 +856,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
               <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
                   <div class="flex flex-col items-start">
                       <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Flow Sentiment</span>
-                      <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : flowSentiment === 'Bearish' ? 'text-[#FC2120]' : }">{flowSentiment}</span>
+                      <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : flowSentiment === 'Bearish' ? 'text-[#FC2120]' : flowSentiment === 'Neutral' ? 'text-[#FBCE3C]' : 'text-white'}">{flowSentiment}</span>
                   </div>
                   
               </div>
@@ -1029,9 +1033,9 @@ const debouncedHandleInput = debounce(handleInput, 300);
   
   
           <!-- Page wrapper -->
-          <div class="flex justify-center w-full m-auto h-full overflow-hidden">
-    
-              <div class="mt-4 w-full overflow-x-auto overflow-y-auto h-[850px]">
+          <div class="flex w-full m-auto h-full overflow-hidden">
+              {#if displayedData?.length !== 0}
+              <div class="mt-8 w-full overflow-x-auto overflow-y-auto h-[850px]">
                 <div class="table-container">
                 <div class="table">
                   <VirtualList
@@ -1120,6 +1124,12 @@ const debouncedHandleInput = debounce(handleInput, 300);
                   <!--<InfiniteLoading on:infinite={infiniteHandler} />-->    
     
               </div>
+              {:else}
+              <div class="text-white text-center p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">      
+                  <svg class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
+                  Looks like your taste is one-of-a-kind! No matches found... yet!
+              </div>
+              {/if}
       
           </div>
 
