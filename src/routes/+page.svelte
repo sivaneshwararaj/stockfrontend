@@ -98,7 +98,7 @@ class="hidden sm:block [mask-image:linear-gradient(to_bottom_right,white,transpa
 
                                   <div class="flex flex-row justify-center items-center w-full sm:w-3/4 m-auto">
                                                                         
-                                    <h1 class="fade-down text-center text-5xl sm:text-6xl bg-white bg-clip-text text-transparent font-bold mb-6 w-80 sm:w-full">
+                                    <h1 class="fade-down text-center text-4xl sm:text-6xl bg-white bg-clip-text text-transparent font-bold mb-6 w-80 sm:w-full">
                                       Stock Analysis Platform for Data Freaks
                                     </h1>
                                   </div>
