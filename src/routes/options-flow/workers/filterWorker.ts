@@ -142,7 +142,6 @@ onmessage = async (event: MessageEvent) => {
   const { rawData, ruleOfList, filterQuery } = event.data || {};
   const filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
   postMessage({ message: "success", filteredData });
-  console.log(filteredData);
 };
 
 export {};

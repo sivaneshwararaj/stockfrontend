@@ -1,7 +1,6 @@
 <script lang='ts'>
   import { goto } from '$app/navigation';
   import { numberOfUnreadNotification, screenWidth } from '$lib/store';
-  import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 	import { abbreviateNumber } from '$lib/utils';
   import { onMount } from 'svelte';
   import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
@@ -16,23 +15,32 @@
     let stockList =  [];
   
   
-  async function infiniteHandler({ detail: { loaded, complete } }) 
-  {
-  if (stockList?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = stockList?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-      stockList = [...stockList, ...newArticles];
-      loaded();
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && stockList?.length !== rawData?.length) {
+        const nextIndex = stockList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        stockList = [...stockList, ...filteredNewResults];
     }
   }
+
   
     
   onMount(() => {
     rawData = data?.getMostRetailVolume ?? [];
     stockList = rawData?.slice(0,20) ?? []
+
     isLoaded = true;
+
+
+      if(data?.user?.tier === 'Pro') {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+      }
+
   })
   
   
@@ -208,7 +216,6 @@
                         </tbody>
                       </table>
                   </div>
-                    <InfiniteLoading on:infinite={infiniteHandler} />
                     <UpgradeToPro data={data} title="Get the top 100 stocks that retail investors put their money on the market to never miss out the next hype"/>
   
                 </div>
