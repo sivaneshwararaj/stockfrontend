@@ -285,7 +285,7 @@ $: {
                         { formatDateRange(rawData?.slice(-1)?.at(0)?.date)}
                       </td>
                   </tr>
-                  <tr class="border-y border-gray-800 odd:bg-[#27272A]">
+                  <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-[#27272A]">
                       <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                           <span>Total Volume</span>
                       </td>
@@ -293,7 +293,7 @@ $: {
                         {monthlyVolume}
                       </td>
                   </tr>
-                  <tr class="border-y border-gray-800 odd:bg-[#27272A]">
+                  <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-[#27272A]">
                       <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                           <span>Avg. Short % of Volume</span>
                       </td>

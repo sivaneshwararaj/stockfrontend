@@ -609,8 +609,8 @@ $: {
               <!--Start Flow Sentiment-->  
               <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
                   <div class="flex flex-col items-start">
-                      <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Flow Sentiment</span>
-                      <span class="text-start text-xl font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">{flowSentiment}</span>
+                      <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Flow Sentiment</span>
+                      <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">{flowSentiment}</span>
                   </div>
                   
               </div>
@@ -618,8 +618,8 @@ $: {
                <!--Start Put/Call-->  
                <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
                 <div class="flex flex-col items-start">
-                    <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Put/Call</span>
-                    <span class="text-start text-lg font-semibold text-white">
+                    <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Put/Call</span>
+                    <span class="text-start text-[1rem] font-semibold text-white">
                       {putCallRatio?.toFixed(3)}
                     </span>
                 </div>
@@ -645,8 +645,8 @@ $: {
              <!--Start Call Flow-->  
              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
-                  <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Call Flow</span>
-                  <span class="text-start text-lg font-semibold text-white">
+                  <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Call Flow</span>
+                  <span class="text-start text-[1rem] font-semibold text-white">
                     {new Intl.NumberFormat("en", {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0
@@ -674,8 +674,8 @@ $: {
             <!--Start Put Flow-->  
             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
-                  <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Put Flow</span>
-                  <span class="text-start text-lg font-semibold text-white">
+                  <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Put Flow</span>
+                  <span class="text-start text-[1rem] font-semibold text-white">
                     {new Intl.NumberFormat("en", {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0
@@ -705,8 +705,8 @@ $: {
              <!--Start Most Traded-->  
              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
-                  <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Most Traded Option</span>
-                  <span class="text-start text-lg font-semibold text-white mt-0.5">
+                  <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Most Traded Option</span>
+                  <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
                     <span class="text-blue-400 ">
                       {mostFrequentTicker?.ticker}
                     </span>
@@ -722,8 +722,8 @@ $: {
              <!--Start Highest Premium-->  
              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
-                  <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Highest Premium</span>
-                  <span class="text-start text-lg font-semibold text-white mt-0.5">
+                  <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Premium</span>
+                  <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
                     <span class="text-blue-400 ">
                       {highestPremiumTicker?.ticker}
                     </span>
@@ -739,8 +739,8 @@ $: {
             <!--Start Highest Volume-->  
             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
-                  <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Highest Volume</span>
-                  <span class="text-start text-lg font-semibold text-white mt-0.5">
+                  <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Volume</span>
+                  <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
                     <span class="text-blue-400 ">
                       {highestVolumeTicker?.ticker}
                     </span>
@@ -756,8 +756,8 @@ $: {
              <!--Start Highest Open Interest-->  
              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
-                  <span class="font-semibold text-gray-200 text-sm sm:text-lg ">Highest Open Interest</span>
-                  <span class="text-start text-lg font-semibold text-white mt-0.5">
+                  <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Open Interest</span>
+                  <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
                     <span class="text-blue-400 ">
                       {highestOpenInterestTicker?.ticker}
                     </span>
