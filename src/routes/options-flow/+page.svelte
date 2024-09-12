@@ -29,7 +29,8 @@ const allRules = {
   sentiment: { label: 'Sentiment', step: ["Bullish","Neutral", "Bearish"],  defaultValue: 'any' },
   execution_estimate: { label: 'Execution', step: ["At Ask","At Bid", "Below Ask", "Below Bid"], defaultValue: 'any' },
   option_activity_type: { label: 'Option Type', step: ["Sweep","Trade"],  defaultValue: 'any' },
-  date_expiration: { label: 'Date Expiration', step: ["Today", "1 day","1 Week","2 Weeks","1 Month","3 Months","6 Months","1 Year","3 Years"], defaultValue: 'any' },
+  date_expiration: { label: 'Date Expiration', step: ["Same Day", "1 day","1 Week","2 Weeks","1 Month","3 Months","6 Months","1 Year","3 Years"], defaultValue: 'any' },
+  underlying_type: { label: 'Asset Type', step: ["Stock", "ETF"], defaultValue: 'any' },
 
 };
 
@@ -115,6 +116,7 @@ function handleAddRule() {
       case "execution_estimate":
       case "option_activity_type":
       case "date_expiration":
+      case "underlying_type":
         newRule = { name: ruleName, value: Array.isArray(valueMappings[ruleName]) ? valueMappings[ruleName] : [valueMappings[ruleName]] }; // Ensure value is an array
         break;
       default:
@@ -188,7 +190,7 @@ async function handleChangeValue(value) {
     } else {
       checkedItems.add(value);
     }
-  if (["put_call","sentiment","execution_estimate","option_activity_type","date_expiration"]?.includes(ruleName)) {
+  if (["put_call","sentiment","execution_estimate","option_activity_type","date_expiration","underlying_type"]?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     if (!Array.isArray(valueMappings[ruleName])) {
       valueMappings[ruleName] = []; // Initialize as an empty array if not already
@@ -372,7 +374,6 @@ function handleViewData(optionData) {
             
             if(ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
               shouldLoadWorker.set(true)
-              console.log('yes')
             }
 
             if (previousCallVolume !== displayCallVolume && !muted) {
@@ -774,7 +775,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration"]?.includes(row?.rule)}
+                                  {#if !['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration","underlying_type"]?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -798,7 +799,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration"]?.includes(row?.rule)}
+                                    {#if !['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration","underlying_type"]?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -807,7 +808,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
                                         </button>
                                         </DropdownMenu.Item>      
                                       {/each}
-                                    {:else if ['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration"]?.includes(row?.rule)}
+                                    {:else if ['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration","underlying_type"]?.includes(row?.rule)}
                                       {#each row?.step as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
@@ -1062,7 +1063,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
                         {formatTime(displayedData[index]?.time)}
                       </div>
   
-                      <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.assetType)} style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
+                      <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.underlying_type)} style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
                         {displayedData[index]?.ticker}
                       </div>
 
@@ -1151,7 +1152,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
 
 
 <dialog id="ruleModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
-  <div class="modal-box w-full bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto">
+  <div class="modal-box w-full bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-800 h-auto">
     <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
       <button class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white">
         <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/>

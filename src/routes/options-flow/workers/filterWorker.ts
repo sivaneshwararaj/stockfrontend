@@ -23,6 +23,8 @@ function convertUnitToValue(
     "below ask",
     "sweep",
     "trade",
+    "stock",
+    "etf",
     ...[
       "1 day",
       "1 Week",
@@ -78,7 +80,7 @@ function isDateWithinRange(dateString: string, range: string): boolean {
   const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
   switch (range.toLowerCase()) {
-    case "today":
+    case "same day":
       // Check if the current date and expiration date are the same
       return isSameDay(now, expirationDate);
     case "1 day":
@@ -126,17 +128,31 @@ async function filterRawData(rawData, ruleOfList, filterQuery) {
       }
 
       // Handle categorical data like analyst ratings, sector, country
-      if (
+      else if (
         [
           "put_call",
           "sentiment",
           "execution_estimate",
           "option_activity_type",
+          "underlying_type",
         ].includes(ruleName)
       ) {
         if (isAny(ruleValue)) return true;
-        if (Array.isArray(ruleValue)) return ruleValue.includes(itemValue);
-        return itemValue === ruleValue;
+
+        // Ensure itemValue is not null/undefined and is a string
+        if (itemValue === null || itemValue === undefined) return false;
+
+        const lowerItemValue = itemValue.toString().toLowerCase();
+
+        if (Array.isArray(ruleValue)) {
+          // Make sure ruleValue items are also treated case-insensitively
+          return ruleValue.some(
+            (value) => lowerItemValue === value.toLowerCase()
+          );
+        }
+
+        // Compare case-insensitively
+        return lowerItemValue === ruleValue.toString().toLowerCase();
       }
 
       // Default numeric or string comparison
