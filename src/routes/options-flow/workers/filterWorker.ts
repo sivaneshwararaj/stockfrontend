@@ -91,8 +91,15 @@ function isDateWithinRange(dateString: string, range: string): boolean {
   }
 }
 
-async function filterRawData(rawData, ruleOfList) {
+async function filterRawData(rawData, ruleOfList, filterQuery) {
   return rawData?.filter((item) => {
+    if (
+      filterQuery?.length !== 0 &&
+      item.ticker !== filterQuery.toUpperCase()
+    ) {
+      return false; // Exclude if the ticker doesn't match the filterQuery
+    }
+
     return ruleOfList.every((rule) => {
       const itemValue = item[rule.name];
       const ruleValue = convertUnitToValue(rule.value);
@@ -132,8 +139,8 @@ async function filterRawData(rawData, ruleOfList) {
 }
 
 onmessage = async (event: MessageEvent) => {
-  const { rawData, ruleOfList } = event.data || {};
-  const filteredData = await filterRawData(rawData, ruleOfList);
+  const { rawData, ruleOfList, filterQuery } = event.data || {};
+  const filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
   postMessage({ message: "success", filteredData });
   console.log(filteredData);
 };

@@ -15,6 +15,8 @@
   
   let ruleOfList = [];
   let displayRules = [];
+  let filterQuery = '';
+
   let syncWorker: Worker | undefined;
   let ruleName = '';
   let shouldLoadWorker = writable(false);
@@ -47,11 +49,7 @@ Object.keys(allRules).forEach(ruleName => {
   valueMappings[ruleName] = allRules[ruleName].defaultValue;
 });
 
-// Update ruleCondition and valueMappings based on existing rules
-ruleOfList.forEach(rule => {
-  ruleCondition[rule.name] = rule.condition || allRules[rule.name].defaultCondition;
-  valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
-});
+
 
 
 async function handleDeleteRule(state) {
@@ -81,6 +79,7 @@ async function handleResetAll() {
   ruleOfList = [];
   ruleOfList = [...ruleOfList];
   ruleName = '';
+  filterQuery = '';
   checkedItems = new Set();
   Object.keys(allRules).forEach(ruleName => {
     ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
@@ -158,7 +157,7 @@ async function handleRule(newRule) {
 }
 
 const loadWorker = async () => {
-    syncWorker.postMessage({ rawData, ruleOfList });
+    syncWorker.postMessage({ rawData, ruleOfList, filterQuery });
 };
 
 const handleMessage = (event) => {
@@ -280,7 +279,6 @@ const nyseDate = new Date(data?.getOptionsFlowFeed?.at(0)?.date ?? null)?.toLoca
   let muted = true;
   let newIncomingData = false;
   let socket;
-  let filterQuery = '';
   let previousCallVolume = 0; //This is needed to play the sound only if it changes.
   let notFound = false;
   let isLoaded = false;
@@ -372,24 +370,10 @@ function handleViewData(optionData) {
             }
             rawData = [...newData];
             
-            // Apply current filters to the new rawData
-            let filteredData = rawData;
-
-            // Apply filterQuery if it exists
-            if (filterQuery?.length !== 0) {
-                filteredData = filteredData.filter(item => item?.ticker === filterQuery?.toUpperCase());
+            if(ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
+              shouldLoadWorker.set(true)
+              console.log('yes')
             }
-
-            if (filteredData.length !== 0) {
-                notFound = false;
-            } else {
-                notFound = true;
-            }
-
-            // Update displayedData instead of rawData
-            displayedData = filteredData;
-
-            calculateStats(displayedData);
 
             if (previousCallVolume !== displayCallVolume && !muted) {
                 audio?.play();
@@ -605,23 +589,7 @@ function calculateStats(data) {
     filterQuery = event.target.value;
 
     setTimeout(() => {
-        let filteredData = rawData;
-
-        if (filterQuery?.length !== 0) {
-            filteredData = rawData.filter(item => item?.ticker === filterQuery?.toUpperCase());
-        }
-
-        if (filteredData.length !== 0) {
-            notFound = false;
-        } else {
-            notFound = true;
-        }
-
-        // Update a separate variable for displayed data, not rawData itself
-        displayedData = filteredData;
-
-        
-        calculateStats(displayedData);
+        shouldLoadWorker.set(true)
     }, 200);
 }
 
