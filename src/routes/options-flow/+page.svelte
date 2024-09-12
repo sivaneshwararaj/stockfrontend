@@ -726,7 +726,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
               </div>
               
                 <div class="sm:mt-3 flex flex-col gap-y-2.5 sm:flex-row lg:gap-y-2 pb-1">
-                    <label for="ruleModal" class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
+                    <label on:click={() => ruleModal?.showModal()} class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
                             <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                         </svg> 
@@ -1149,41 +1149,30 @@ const debouncedHandleInput = debounce(handleInput, 300);
 
 
 
-      <!--Start View All List-->
-{#if $screenWidth >= 640}
-<!--Start Choose Rule Modal-->
-<input type="checkbox" id="ruleModal" class="modal-toggle" />
 
-<dialog id="ruleModal" class="modal modal-bottom sm:modal-middle ">
+<dialog id="ruleModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
+  <div class="modal-box w-full bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto">
+    <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
+      <button class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/>
+        </svg>
+      </button>
+    </form>
+    <p class="text-white mt-10 cursor-text">
+      <span class="text-white text-xl font-semibold mb-4">Add Filters</span>
+    </p>
 
-
-  <label id="ruleModal" for="ruleModal"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
-  
-  
-  <div class="modal-box w-full bg-[#262626] border border-slate-800  h-[800px] overflow-hidden ">
-
-
-    <div class="flex flex-col w-full mt-10 sm:mt-0">
-
-    
-      <div class="text-white text-3xl font-semibold mb-5">
-        Add Filters
-      </div>
-
-
-
-      <div class="text-white text-sm bg-[#262626] bg-opacity-[0.4] overflow-y-scroll scroller pt-3 rounded-lg max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
-
-        <div class="text-white relative">
-          
-       
-        <table class="table table-sm table-compact">
+    <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
+    <div class="h-full overflow-y-scroll overflow-x-auto">
+     <div class="flex justify-start items-center m-auto">
+                                    
+      <table class="table table-sm table-compact w-full">
           <!-- head -->
           <tbody>
             {#each allRows as row, index}
-              <tr on:click={() => changeRule(row?.rule)} class="hover:bg-[#333333] cursor-pointer">
-                <td class="border-b border-[#262626]">{index+1}</td>
-                <td class="text-start border-b border-[#262626]">
+              <tr on:click={() => changeRule(row?.rule)} class="text-white sm:hover:bg-[#333333] cursor-pointer">
+                <td class="border-b border-[#262626] text-sm sm:text-[1rem]">{index+1}</td>
+                <td class="text-start border-b border-[#262626] text-sm sm:text-[1rem]">
                   {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
                   <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                   {/if}
@@ -1194,58 +1183,15 @@ const debouncedHandleInput = debounce(handleInput, 300);
 
           </tbody>
         </table>
-
-    </div>
-
-    </div>
-
-        
       </div>
-  </dialog>
-<!--End Choose Rule Modal-->
-{:else}
-
-<div class="drawer drawer-end z-50">
-  <input id="ruleModal" type="checkbox" class="drawer-toggle" />
-
-  <div class="drawer-side overflow-x-hidden">
-    
-    
-    <div class="menu w-screen min-h-full bg-[#141417] text-base-content overflow-hidden">
-      <div style="top: 0rem;" class="flex flex-row fixed sticky h-14 z-40 justify-center items-center w-full border-b border-slate-900">
-          <label for="ruleModal" class="cursor-pointer mr-auto ml-3">
-            <svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff" d="M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z"/></svg>
-          </label>
-
-      </div>
-
-     
-          
-
-          <table class="table table-sm table-compact overflow-y-scroll text-white mb-10 mt-10">
-            <!-- head -->
-            <tbody>
-              {#each allRows as row, index}
-                <tr on:click={() => changeRule(row?.rule)} class="border-b border-slate-800 cursor-pointer">
-                  <td class="w-6">{index+1}</td>
-                  <td class="w-3">
-                    {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
-                    <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    {/if}
-                  </td>
-                  <td class="text-start">{row?.label}</td>
-                </tr>
-              {/each}
-
-            </tbody>
-          </table>
-
-
     </div>
   </div>
-</div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 
-{/if}
+
 
       
 
