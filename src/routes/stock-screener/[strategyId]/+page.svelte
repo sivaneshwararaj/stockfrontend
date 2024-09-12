@@ -1146,7 +1146,7 @@ function handleInput(event) {
                         {#each displayRules as row (row?.rule)}
                           {#if row?.rule !== 'marketCap'}
                             <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
-                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country','analystRating']?.includes(row?.rule)}
+                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country','analystRating']?.includes(row?.rule)}
                               {item[row?.rule]}
                               {:else if ['fundamentalAnalysis','trendAnalysis']?.includes(row?.rule)}
                               {item[row?.rule]?.accuracy}%
