@@ -19,8 +19,20 @@ function convertUnitToValue(
     "bearish",
     "at bid",
     "at ask",
+    "below bid",
+    "below ask",
     "sweep",
     "trade",
+    ...[
+      "1 day",
+      "1 Week",
+      "2 Weeks",
+      "1 Month",
+      "3 Months",
+      "6 Months",
+      "1 Year",
+      "3 Years",
+    ],
   ]);
   if (nonNumericValues.has(lowerInput)) return input;
   if (input.endsWith("%")) {
@@ -51,12 +63,49 @@ function isAny(value: string | string[]): boolean {
   return false;
 }
 
+function isDateWithinRange(dateString: string, range: string): boolean {
+  const now = new Date();
+  const expirationDate = new Date(dateString);
+  const timeDiff = expirationDate.getTime() - now.getTime();
+  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+
+  switch (range.toLowerCase()) {
+    case "1 day":
+      return daysDiff >= 0 && daysDiff <= 1;
+    case "1 week":
+      return daysDiff > 1 && daysDiff <= 7;
+    case "2 weeks":
+      return daysDiff > 7 && daysDiff <= 14;
+    case "1 month":
+      return daysDiff > 14 && daysDiff <= 30;
+    case "3 months":
+      return daysDiff > 30 && daysDiff <= 90;
+    case "6 months":
+      return daysDiff > 90 && daysDiff <= 180;
+    case "1 year":
+      return daysDiff > 180 && daysDiff <= 365;
+    case "3 years":
+      return daysDiff > 365 && daysDiff <= 1095;
+    default:
+      return false;
+  }
+}
+
 async function filterRawData(rawData, ruleOfList) {
   return rawData?.filter((item) => {
     return ruleOfList.every((rule) => {
       const itemValue = item[rule.name];
       const ruleValue = convertUnitToValue(rule.value);
       const ruleName = rule.name.toLowerCase();
+
+      // Handle date_expiration
+      if (ruleName === "date_expiration") {
+        if (isAny(ruleValue)) return true;
+        if (Array.isArray(ruleValue)) {
+          return ruleValue.some((range) => isDateWithinRange(itemValue, range));
+        }
+        return isDateWithinRange(itemValue, ruleValue as string);
+      }
 
       // Handle categorical data like analyst ratings, sector, country
       if (
@@ -67,14 +116,14 @@ async function filterRawData(rawData, ruleOfList) {
           "option_activity_type",
         ].includes(ruleName)
       ) {
-        if (isAny(ruleValue)) return true; // Return true for "any" or ["any"]
+        if (isAny(ruleValue)) return true;
         if (Array.isArray(ruleValue)) return ruleValue.includes(itemValue);
         return itemValue === ruleValue;
       }
 
       // Default numeric or string comparison
-      if (typeof ruleValue === "string") return true; // Skip non-numeric comparisons
-      if (itemValue === null) return false; // Null values do not meet any condition
+      if (typeof ruleValue === "string") return true;
+      if (itemValue === null) return false;
       if (rule.condition === "over" && itemValue <= ruleValue) return false;
       if (rule.condition === "under" && itemValue > ruleValue) return false;
       return true;

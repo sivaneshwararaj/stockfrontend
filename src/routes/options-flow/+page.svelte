@@ -25,8 +25,9 @@ const allRules = {
   cost_basis: { label: 'Premium', step: ['10M','5M','1M','500K','100K','50K','10K','5K'],  defaultCondition: 'over', defaultValue: '50K' },
   put_call: { label: 'Contract Type', step: ["Calls", "Puts"],  defaultValue: 'any' },
   sentiment: { label: 'Sentiment', step: ["Bullish","Neutral", "Bearish"],  defaultValue: 'any' },
-  execution_estimate: { label: 'Execution', step: ["At Ask","At Bid"],  defaultValue: 'any' },
+  execution_estimate: { label: 'Execution', step: ["At Ask","At Bid", "Below Ask", "Below Bid"], defaultValue: 'any' },
   option_activity_type: { label: 'Option Type', step: ["Sweep","Trade"],  defaultValue: 'any' },
+  date_expiration: { label: 'Date Expiration', step: ["1 day","1 Week","2 Weeks","1 Month","3 Months","6 Months","1 Year","3 Years"], defaultValue: 'any' },
 
 };
 
@@ -80,8 +81,13 @@ async function handleResetAll() {
   ruleOfList = [];
   ruleOfList = [...ruleOfList];
   ruleName = '';
+  checkedItems = new Set();
+  Object.keys(allRules).forEach(ruleName => {
+    ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
+    valueMappings[ruleName] = allRules[ruleName].defaultValue;
+  });
   displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
-
+  displayedData = rawData;
 }
 
 function changeRule(state: string)  
@@ -107,8 +113,9 @@ function handleAddRule() {
    switch (ruleName) {
       case "put_call":
       case "sentiment":
-      case "execution_estimate","option_activity_type":
+      case "execution_estimate":
       case "option_activity_type":
+      case "date_expiration":
         newRule = { name: ruleName, value: Array.isArray(valueMappings[ruleName]) ? valueMappings[ruleName] : [valueMappings[ruleName]] }; // Ensure value is an array
         break;
       default:
@@ -152,12 +159,13 @@ async function handleRule(newRule) {
 
 const loadWorker = async () => {
     syncWorker.postMessage({ rawData, ruleOfList });
-    console.log(ruleOfList)
 };
 
 const handleMessage = (event) => {
     displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
     displayedData = event.data?.filteredData ?? [];
+    calculateStats(displayedData);
+
     //console.log(displayedData)
 };
 
@@ -181,7 +189,7 @@ async function handleChangeValue(value) {
     } else {
       checkedItems.add(value);
     }
-  if (["put_call","sentiment","execution_estimate","option_activity_type"]?.includes(ruleName)) {
+  if (["put_call","sentiment","execution_estimate","option_activity_type","date_expiration"]?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     if (!Array.isArray(valueMappings[ruleName])) {
       valueMappings[ruleName] = []; // Initialize as an empty array if not already
@@ -292,36 +300,9 @@ const nyseDate = new Date(data?.getOptionsFlowFeed?.at(0)?.date ?? null)?.toLoca
   let optionOpenInterest;
   let optionSentiment;
   let optionPrice;
-  let optionTradeCount;
   let optionexecution_estimate;
-  let optionExchange;
 
-  /*
-  async function infiniteHandler({ detail: { loaded, complete, error } }) {
 
-		try {
-      const lastId = rawData?.at(-1)?.id;
-      const postData = {'lastId': lastId};
-      const response = await fetch(data?.apiURL + '/options-flow-feed', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
-        },
-        body: JSON.stringify(postData),
-      });
-      const newData = await response.json();
-      if(newData?.length === 0) {
-        complete();
-      }
-      else {
-        rawData = [...rawData,...newData];
-        loaded();
-      }
-		} catch (e) {
-			error();
-		}
-	}
-  */
   function toggleMode()
   {
       if ($isOpen) {
@@ -366,9 +347,9 @@ function handleViewData(optionData) {
   optionOpenInterest = new Intl.NumberFormat("en", {minimumFractionDigits: 0, maximumFractionDigits: 0}).format(optionData?.open_interest);
   optionSentiment = optionData?.sentiment;
   optionPrice = optionData?.price;
-  optionTradeCount = optionData?.tradeCount;
+  //optionTradeCount = optionData?.tradeCount;
   optionexecution_estimate = optionData?.execution_estimate;
-  optionExchange = optionData?.exchange;
+  //optionExchange = optionData?.exchange;
 
   const openPopup = $screenWidth < 640 ? document.getElementById("optionDetailsMobileModal") : document.getElementById("optionDetailsDesktopModal");
   openPopup?.dispatchEvent(new MouseEvent('click'))
@@ -639,6 +620,7 @@ function calculateStats(data) {
         // Update a separate variable for displayed data, not rawData itself
         displayedData = filteredData;
 
+        
         calculateStats(displayedData);
     }, 200);
 }
@@ -657,40 +639,6 @@ const debouncedHandleInput = debounce(handleInput, 300);
 
 
   
-// Function to filter elements with date_expiration within a given number of days
-const filterExpiringSoon = (data, days) => {
-  const currentDate = new Date(); // Get today's date
-  return data.filter(item => {
-    const expirationDate = new Date(item?.date_expiration);
-    const timeDiff = expirationDate - currentDate; // Time difference in milliseconds
-    const daysDiff = timeDiff / (1000 * 60 * 60 * 24); // Convert to days
-    return daysDiff <= days && daysDiff >= 0; // Ensure it's within the specified number of days and not in the past
-  });
-};
-
-
-$: {
-    if(filterList && typeof window !== 'undefined' && mode === false)
-    {
-      if(filterList?.length !== 0)
-      {
-        const newData = filterExpiringSoon(rawData, Math.max(...filterList));
-        if (newData?.length !== 0) {
-            rawData = newData;
-            notFound = false;
-        } else {
-            notFound = true;
-            rawData = data?.getOptionsFlowFeed;
-        }
-        
-      }
-      else if (filterQuery?.length === 0) {
-        rawData = data?.getOptionsFlowFeed;
-
-      }
-      calculateStats(rawData);
-   }
-  }
 
 
 
@@ -858,7 +806,7 @@ $: {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['put_call',"sentiment", "execution_estimate","option_activity_type"]?.includes(row?.rule)}
+                                  {#if !['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration"]?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -882,7 +830,7 @@ $: {
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['put_call',"sentiment", "execution_estimate","option_activity_type"]?.includes(row?.rule)}
+                                    {#if !['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration"]?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -891,7 +839,7 @@ $: {
                                         </button>
                                         </DropdownMenu.Item>      
                                       {/each}
-                                    {:else if ['put_call',"sentiment", "execution_estimate","option_activity_type"]?.includes(row?.rule)}
+                                    {:else if ['put_call',"sentiment", "execution_estimate","option_activity_type","date_expiration"]?.includes(row?.rule)}
                                       {#each row?.step as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
@@ -1254,18 +1202,7 @@ $: {
         Add Filters
       </div>
 
-      <!--Start Search bar-->
-      <form class="w-11/12 h-8 mb-8" on:keydown={(e) => e?.key === 'Enter' ? e.preventDefault() : '' }>   
-        <label for="search" class="mb-2 text-sm font-medium text-gray-200 sr-only">Search</label>
-        <div class="relative">
-            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-200 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-        </div>
-      </form>
-      <!-- End Search bar-->
+
 
       <div class="text-white text-sm bg-[#262626] bg-opacity-[0.4] overflow-y-scroll scroller pt-3 rounded-lg max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
 
@@ -1306,35 +1243,18 @@ $: {
   <div class="drawer-side overflow-x-hidden">
     
     
-    <div class="menu w-screen min-h-full bg-[#000] text-base-content overflow-hidden">
-      <div style="top: 0rem;" class="flex flex-row fixed sticky h-14 z-40 bg-[#000] justify-center items-center w-full border-b border-slate-900">
+    <div class="menu w-screen min-h-full bg-[#141417] text-base-content overflow-hidden">
+      <div style="top: 0rem;" class="flex flex-row fixed sticky h-14 z-40 justify-center items-center w-full border-b border-slate-900">
           <label for="ruleModal" class="cursor-pointer mr-auto ml-3">
             <svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff" d="M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z"/></svg>
           </label>
 
       </div>
 
-          <div class="flex flex-row items-center justify-center w-full m-auto mb-8 mt-5">
-            
-            <!--Start Search bar-->
-            <form class="w-11/12 h-8" on:keydown={(e) => e?.key === 'Enter' ? e.preventDefault() : '' }>   
-              <label for="search" class="mb-2 text-sm font-medium text-gray-200 sr-only">Search</label>
-              <div class="relative">
-                  <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                      <svg class="w-4 h-4 text-gray-200 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                      </svg>
-                  </div>
-              </div>
-            </form>
-            <!-- End Search bar-->
-          </div>
-          
-          
-      
      
-   
-          <table class="table table-sm table-compact overflow-y-scroll text-white mb-10">
+          
+
+          <table class="table table-sm table-compact overflow-y-scroll text-white mb-10 mt-10">
             <!-- head -->
             <tbody>
               {#each allRows as row, index}
