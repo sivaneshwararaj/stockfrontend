@@ -172,7 +172,6 @@ $: allRows = Object?.entries(allRules)
   }));
 
 
-      allRows?.sort((a, b) => a.label.localeCompare(b.label));
       let filteredRows;
       let searchTerm = '';
       /*
