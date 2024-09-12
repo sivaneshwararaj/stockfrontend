@@ -34,7 +34,6 @@ const pages = [
   //{title: "/portfolio"},
   { title: "/newsletter" },
   { title: "/options-flow" },
-  { title: "/options-zero-dte" },
   { title: "/ipos" },
   { title: "/list" },
   { title: "/list/dividend-kings" },

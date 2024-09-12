@@ -63,6 +63,14 @@ function isAny(value: string | string[]): boolean {
   return false;
 }
 
+function isSameDay(date1: Date, date2: Date): boolean {
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  );
+}
+
 function isDateWithinRange(dateString: string, range: string): boolean {
   const now = new Date();
   const expirationDate = new Date(dateString);
@@ -70,6 +78,9 @@ function isDateWithinRange(dateString: string, range: string): boolean {
   const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
   switch (range.toLowerCase()) {
+    case "today":
+      // Check if the current date and expiration date are the same
+      return isSameDay(now, expirationDate);
     case "1 day":
       return daysDiff >= 0 && daysDiff <= 1;
     case "1 week":

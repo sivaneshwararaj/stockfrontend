@@ -440,38 +440,7 @@ $: {
                         
               </div>
     
-              <div class="flex flex-row items-center w-full">
-    
-                <Accordion.Root class="w-full">
-      
-                  <Accordion.Item value="item-1">
-      
-                    <Accordion.Trigger class="">
-                      <Option class="h-5.5 w-5.5 mr-3 text-white ml-1"/>  
-                      <span class="text-white ml-1 mr-auto">Options</span>
-                    </Accordion.Trigger>
-                    <Accordion.Content class="border-l border-gray-500 ml-2 mt-5">
-    
-                      <Sheet.Close asChild let:builder>
-                        <div class="flex flex-col items-start">
-                          <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
-                            <a href="/options-flow" class="text-start w-full text-[1rem] text-white ml-4 mt-2">Options Flow</a>
-                          </Button>
-                          <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
-                            <a href="/options-zero-dte" class="text-start w-full text-[1rem] text-white ml-4 mt-4">0DTE Flow</a>
-                          </Button>
-                        </div>
-    
-                      </Sheet.Close>
-    
-                      
-                    </Accordion.Content
-                    >
-                  </Accordion.Item>
-                </Accordion.Root>
-                        
-              </div>
-    
+
               <div class="flex flex-row items-center w-full">
     
                 <Accordion.Root class="w-full">
@@ -544,21 +513,19 @@ $: {
     
               
     
-              <!--
-            <Sheet.Close asChild let:builder>
+             <Sheet.Close asChild let:builder>
               <Button builders={[builder]} type="submit" class="bg-[#141417] hover:bg-[#141417] -ml-4 w-full">
-                <a href="/dark-pool-flow" class="flex flex-row items-center w-full -mt-2"> 
+                <a href="/options-flow" class="flex flex-row items-center w-full -mt-2"> 
                       <div class="flex flex-row items-center mr-auto">
                         <div class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8">
-                          <Box class="h-5.5 w-5.5" />  
+                           <Option class="h-5.5 w-5.5"/>  
                         </div>
-                        <span class="ml-3 text-white text-[1rem]">Dark Pool</span>
+                        <span class="ml-3 text-white text-[1rem]">Options Flow</span>
                       </div>
                 </a>
               </Button>
-            </Sheet.Close>
-            -->
-    
+            </Sheet.Close>  
+              
             <Sheet.Close asChild let:builder>
               <Button builders={[builder]} type="submit" class="bg-[#141417] hover:bg-[#141417] -ml-4 w-full">
                 <a href="/hedge-funds" class="flex flex-row items-center w-full -mt-2"> 
@@ -824,29 +791,6 @@ $: {
                           
                 </div>
         
-                <div class="flex flex-row items-center ml-9 w-full mt-3">
-        
-                  <Accordion.Root class="w-full">
-        
-                    <Accordion.Item value="item-1">
-        
-                      <Accordion.Trigger class="">
-                        <Option class="h-5.5 w-5.5 mr-3 text-white ml-1"/>  
-                        <span class="text-white ml-1 mr-auto">Options</span>
-                      </Accordion.Trigger>
-                      <Accordion.Content class="border-l border-gray-500 ml-2 mt-5">
-                        <div class="flex flex-col items-start">
-                          <a href="/options-flow" class="text-[1rem] text-white ml-4 mt-4">Options Flow</a>
-                          <a href="/options-zero-dte" class="text-[1rem] text-white ml-4 mt-4">0DTE Flow</a>
-                        </div>
-                        
-                      </Accordion.Content
-                      >
-                    </Accordion.Item>
-                  </Accordion.Root>
-                          
-                </div>
-        
         
                 <div class="flex flex-row items-center ml-9 w-full mt-3">
         
@@ -899,17 +843,15 @@ $: {
                           
                 </div>
         
-                <!--
-                <a href="/dark-pool-flow" class="flex flex-row items-center ml-9 w-full mt-3">
+                <a href="/options-flow" class="flex flex-row items-center ml-9 w-full mt-3">
                   <div
                     class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
                   >
-                    <Box class="h-5.5 w-5.5" />
+                    <Option class="h-5.5 w-5.5"/>  
                     
                   </div>
-                  <span class="ml-3 text-white">Dark Pool</span>
+                  <span class="ml-3 text-white">Options Flow</span>
                 </a>
-              -->
         
                 <a href="/hedge-funds" class="flex flex-row items-center ml-9 w-full mt-3">
                   <div

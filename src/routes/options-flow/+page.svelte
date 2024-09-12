@@ -29,7 +29,7 @@ const allRules = {
   sentiment: { label: 'Sentiment', step: ["Bullish","Neutral", "Bearish"],  defaultValue: 'any' },
   execution_estimate: { label: 'Execution', step: ["At Ask","At Bid", "Below Ask", "Below Bid"], defaultValue: 'any' },
   option_activity_type: { label: 'Option Type', step: ["Sweep","Trade"],  defaultValue: 'any' },
-  date_expiration: { label: 'Date Expiration', step: ["1 day","1 Week","2 Weeks","1 Month","3 Months","6 Months","1 Year","3 Years"], defaultValue: 'any' },
+  date_expiration: { label: 'Date Expiration', step: ["Today", "1 day","1 Week","2 Weeks","1 Month","3 Months","6 Months","1 Year","3 Years"], defaultValue: 'any' },
 
 };
 
