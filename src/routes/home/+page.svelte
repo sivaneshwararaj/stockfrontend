@@ -363,7 +363,7 @@ onMount( async() => {
                     {#each optionsTable as item}
                     <Table.Row>
                       <Table.Cell>
-                        <a href={item?.assetType === 'stock' ? `/stocks/${item?.ticker}` : `/etf/${item?.ticker}`} class="text-sm sm:text-[1rem] font-medium text-blue-400 sm:hover:text-white transition duration-100">{item?.ticker}</a>
+                        <a href={item?.underlying_type === 'stock' ? `/stocks/${item?.ticker}` : `/etf/${item?.ticker}`} class="text-sm sm:text-[1rem] font-medium text-blue-400 sm:hover:text-white transition duration-100">{item?.ticker}</a>
                       </Table.Cell>
                       <Table.Cell class="text-right xl:table.-column text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">
                         {abbreviateNumber(item?.cost_basis,true)}

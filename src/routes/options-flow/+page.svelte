@@ -263,7 +263,6 @@ const nyseDate = new Date(data?.getOptionsFlowFeed?.at(0)?.date ?? null)?.toLoca
 });
 
   let rawData = [];
-  let filterList = [];
   let displayedData =[];
 
   let flowSentiment;
@@ -499,8 +498,8 @@ function calculateStats(data) {
 
       putCallRatio = callVolumeSum !== 0 ? (putVolumeSum / callVolumeSum) : 0;
       
-      callPercentage = Math.floor((callVolumeSum)/(callVolumeSum+putVolumeSum)*100);
-      putPercentage = (100-callPercentage);
+      callPercentage = (callVolumeSum+putVolumeSum) !== 0 ? Math.floor((callVolumeSum)/(callVolumeSum+putVolumeSum)*100) : 0;
+      putPercentage = (callVolumeSum+putVolumeSum) !== 0 ? (100-callPercentage) : 0;
   
       displayCallVolume = callVolumeSum;
       displayPutVolume = putVolumeSum;
@@ -853,7 +852,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
               <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
                   <div class="flex flex-col items-start">
                       <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Flow Sentiment</span>
-                      <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">{flowSentiment}</span>
+                      <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : flowSentiment === 'Bearish' ? 'text-[#FC2120]' : }">{flowSentiment}</span>
                   </div>
                   
               </div>
