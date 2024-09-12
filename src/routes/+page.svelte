@@ -98,13 +98,13 @@ class="hidden sm:block [mask-image:linear-gradient(to_bottom_right,white,transpa
 
                                   <div class="flex flex-row justify-center items-center w-full sm:w-3/4 m-auto">
                                                                         
-                                    <h1 class="fade-down text-center text-5xl sm:text-7xl bg-gradient-to-r from-[#E8BB28] to-purple-500 bg-clip-text text-transparent font-bold mb-6 w-80 sm:w-full">
-                                      A modern stock analysis platform
+                                    <h1 class="fade-down text-center text-5xl sm:text-6xl bg-white bg-clip-text text-transparent font-bold mb-6 w-80 sm:w-full">
+                                      Stock Analysis Platform for Data Freaks
                                     </h1>
                                   </div>
 
                                   
-                                  <div class="w-5/6 sm:w-3/4 m-auto text-center flex-1 justify-center items-center text-white text-lg sm:text-2xl">
+                                  <div class="text-gray-300 w-5/6 sm:w-3/4 m-auto font-semibold text-center flex-1 justify-center items-center  text-lg sm:text-2xl">
                                     Uncover what drives the stock market with our clear, actionable data.
                                   </div>
                                   
@@ -132,10 +132,16 @@ class="hidden sm:block [mask-image:linear-gradient(to_bottom_right,white,transpa
                                         </span>
                                         
                                       </a>
+                                      
 
 
                                       <div class="flex flex-row items-center gap-x-5 justify-center m-auto mt-3 w-ful">
-                                      <span class="text-white text-sm sm:text-lg">
+                                      <span class="hidden sm:block text-white text-sm sm:text-lg">
+                                        <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#FBCE3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M416 128L192 384l-96-96"/></svg>
+                                        100% Open Source
+                                      </span >
+
+                                        <span class="text-white text-sm sm:text-lg">
                                         <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#FBCE3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M416 128L192 384l-96-96"/></svg>
                                         No credit card required
                                       </span >
@@ -154,7 +160,7 @@ class="hidden sm:block [mask-image:linear-gradient(to_bottom_right,white,transpa
                                         <svg class="w-5 h-5 sm:w-6 sm:h-6 ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FAC109" d="m5.825 21l1.625-7.025L2 9.25l7.2-.625L12 2l2.8 6.625l7.2.625l-5.45 4.725L18.175 21L12 17.275z"/></svg>
                                       </div>
                                       <span class="text-sm font-semibold text-white mt-1.5">
-                                        Subscribed by over 200+ traders
+                                        Subscribed by over 170+ traders
                                       </span>
                                     </div>
 

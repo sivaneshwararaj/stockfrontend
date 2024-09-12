@@ -893,8 +893,15 @@ $: {
 <!-- Put this part before </body> tag -->
 
 <dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
-  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border-t sm:border border-gray-600 h-auto">
-     <p class="text-gray-200 mt-10 cursor-text">
+  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto">
+    <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
+      <button class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/>
+        </svg>
+      </button>
+    </form>
+
+    <p class="text-gray-200 mt-10 cursor-text">
       <span class="text-white text-xl font-semibold mb-4">Option Data Details:</span>
       <br class="">
       {#if optionHistoryList?.length !== 0}
@@ -1007,10 +1014,8 @@ $: {
         {/if}
       </div>
     </div>
-
-
   </div>
-  <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
+  <form method="dialog" class="modal-backdrop">
     <button>close</button>
   </form>
 </dialog>
