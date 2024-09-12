@@ -130,104 +130,104 @@ function getPlotOptions() {
               A complete list of companies in the Utilities Sector that are publicly traded on the US stock exchange.
           </div>
       
-          <div class="stats stats-horizontal no-scrollbar bg-[#27272A] shadow w-full rounded-lg">
-            
-            <div class="grid grid-cols-2 sm:grid-cols-4">
-
-              <div class="stat">
-                <div class="flex flex-row items-center">
-                  <label for="stocksInfo" class="cursor-pointer stat-title text-sm sm:text-lg font-semibold text-white">
-                    Stocks
-                  </label>
-                  <InfoModal
-                    title={"Stocks"}
-                    content={"The total number of companies who operates in this sector."}
-                    id={"stocksInfo"}
-                  />
-                  </div>
-                <div class="stat-value text-lg font-semibold text-white">{rawData?.length}</div>
+           <div class="mb-4 grid grid-cols-2 divide-y divide-gray-600 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-3 divide-x">
+          <div class="p-4 bp:p-5 sm:p-6">
+            <label for="stocksInfo" class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] sm:text-xl font-semibold">
+              Stocks
+              <InfoModal
+                title={"Stocks"}
+                content={"The total number of companies who operate in this sector."}
+                id={"stocksInfo"}
+              />
+            </label>
+            <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
+              <div class="flex items-baseline text-lg sm:text-xl font-semibold text-white">
+                {rawData?.length}
               </div>
-              
-
-
-              <div class="stat">
-                <div class="flex flex-row items-center">
-                <label for="marketCapModal" class="cursor-pointer stat-title text-sm sm:text-lg font-semibold text-white">
-                  Market Cap
-                </label>
-                <InfoModal
-                      title={"Market Cap"}
-                      content={"Combined market cap of all companies in this sector."}
-                      id={"marketCapModal"}
-                    />
-                </div>
-                
-                <div class="stat-value text-lg font-semibold text-white">{abbreviateNumber(totalMarketCap,true)}</div>
-              </div>
-              
-              <div class="stat">
-                <div class="flex flex-row items-center">
-                <label for="revenueInfo" class="cursor-pointer stat-title text-sm sm:text-lg font-semibold text-white">
-                  Revenue
-                </label>
-                <InfoModal
-                  title={"Revenue"}
-                  content={"The total revenue of all companies in this sector."}
-                    id={"revenueInfo"}
-                    />
-                  </div>
-                <div class="stat-value text-lg font-semibold text-white">{abbreviateNumber(totalRevenue,true)}</div>
-              </div>
-
-              <div class="stat">
-                <div class="flex flex-row items-center">
-                  <label for="profitsInfo" class="cursor-pointer stat-title text-sm sm:text-lg font-semibold text-white">
-                    Profits
-                  </label>
-                  <InfoModal
-                    title={"Profits"}
-                    content={"The total net income of all companies in this sector."}
-                    id={"profitsInfo"}
-                    />
-                    </div>
-                <div class="stat-value text-lg font-semibold text-white">{abbreviateNumber(totalProfits,true)}</div>
-              </div>
-
-              <div class="stat">
-                <div class="flex flex-row items-center">
-                  <label for="profitMarginInfo" class="cursor-pointer stat-title text-sm sm:text-lg font-semibold text-white">
-                    Profit Margin
-                  </label>
-                  <InfoModal
-                    title={"Profit Margin"}
-                    content={"The industry's profit margin, calculated by dividing the industry's total net income by the total revenue."}
-                      id={"profitMarginInfo"}
-                      />
-                  </div>
-
-                <div class="stat-value text-lg font-semibold text-white">{(totalProfits/totalRevenue *100)?.toFixed(2)}%</div>
-              </div>
-
-
-              <div class="stat">
-                <div class="flex flex-row items-center">
-                  <label for="peRatioInfo" class="cursor-pointer stat-title text-sm sm:text-lg font-semibold text-white">
-                    PE Ratio
-                  </label>
-                  <InfoModal
-                    title={"PE Ratio"}
-                    content={"The industry's PE Ratio, calculated by dividing the industry's total market cap by the total net income."}
-                    id={"peRatioInfo"}
-                  />
-                  </div>
-                <div class="stat-value text-lg font-semibold text-white">{(totalProfits/totalMarketCap *100)?.toFixed(2)}</div>
-              </div>
-
-
             </div>
-
-              
           </div>
+
+          <div class="p-4 bp:p-5 sm:p-6">
+            <label for="marketCapModal" class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] sm:text-xl font-semibold">
+              Market Cap
+              <InfoModal
+                title={"Market Cap"}
+                content={"Combined market cap of all companies in this sector."}
+                id={"marketCapModal"}
+              />
+            </label>
+            <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
+              <div class="flex items-baseline text-lg sm:text-xl font-semibold text-white">
+                {abbreviateNumber(totalMarketCap, true)}
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 bp:p-5 sm:p-6">
+            <label for="revenueInfo" class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] sm:text-xl font-semibold">
+              Revenue
+              <InfoModal
+                title={"Revenue"}
+                content={"The total revenue of all companies in this sector."}
+                id={"revenueInfo"}
+              />
+            </label>
+            <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
+              <div class="flex items-baseline text-lg sm:text-xl font-semibold text-white">
+                {abbreviateNumber(totalRevenue, true)}
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 bp:p-5 sm:p-6">
+            <label for="profitsInfo" class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] sm:text-xl font-semibold">
+              Profits
+              <InfoModal
+                title={"Profits"}
+                content={"The total net income of all companies in this sector."}
+                id={"profitsInfo"}
+              />
+            </label>
+            <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
+              <div class="flex items-baseline text-lg sm:text-xl font-semibold text-white">
+                {abbreviateNumber(totalProfits, true)}
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 bp:p-5 sm:p-6">
+            <label for="profitMarginInfo" class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] sm:text-xl font-semibold">
+              Profit Margin
+              <InfoModal
+                title={"Profit Margin"}
+                content={"The industry's profit margin, calculated by dividing the total net income by the total revenue."}
+                id={"profitMarginInfo"}
+              />
+            </label>
+            <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
+              <div class="flex items-baseline text-lg sm:text-xl font-semibold text-white">
+                {(totalProfits / totalRevenue * 100)?.toFixed(2)}%
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 bp:p-5 sm:p-6">
+            <label for="peRatioInfo" class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] sm:text-xl font-semibold">
+              PE Ratio
+              <InfoModal
+                title={"PE Ratio"}
+                content={"The industry's PE Ratio, calculated by dividing the total market cap by the total net income."}
+                id={"peRatioInfo"}
+              />
+            </label>
+            <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
+              <div class="flex items-baseline text-lg sm:text-xl font-semibold text-white">
+                {(totalMarketCap / totalProfits)?.toFixed(2)}
+              </div>
+            </div>
+          </div>
+        </div>
+
       
           <h2 class="text-white text-xl sm:text-2xl mt-8 font-semibold">
             Historical Performance
