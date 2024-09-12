@@ -612,7 +612,7 @@ $: {
                                       <div class="flex items-center w-full">
                                         <div class="flex flex-row justify-start items-center mb-5 mt-2">
                                           <!--<img class="rounded-full w-10 h-10" src={logoUrl} alt="" />-->
-                                          <div class="rounded-full w-10 h-10 relative bg-[#101112] flex items-center justify-center border border-slate-800">
+                                          <div class="rounded-full w-10 h-10 relative bg-[#141417] flex items-center justify-center border border-slate-800">
                                             <img style="clip-path: circle(50%);" class="w-6 h-6" src={`https://financialmodelingprep.com/image-stock/${$cryptoTicker?.toUpperCase()}.png`} loading="lazy"/>
                                           </div>
                                           
