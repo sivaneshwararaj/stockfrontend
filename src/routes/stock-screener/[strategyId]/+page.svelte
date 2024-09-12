@@ -3,7 +3,7 @@
   import { goto} from '$app/navigation';
   import { screenWidth, strategyId, numberOfUnreadNotification} from '$lib/store';
   import toast from 'svelte-french-toast';
-  import { abbreviateNumber, sectorList, listOfRelevantCountries } from '$lib/utils';
+  import { abbreviateNumber, sectorList, industryList, listOfRelevantCountries } from '$lib/utils';
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   //const userConfirmation = confirm('Unsaved changes detected. Leaving now will discard your strategy. Continue?');
@@ -92,6 +92,8 @@ const allRules = {
   growthTotalLiabilities: { label: 'Total Liabilities Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   growthTotalDebt: { label: 'Total Debt Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   growthTotalStockholdersEquity: { label: 'Shareholders Equity Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  researchDevelopmentRevenueRatio: { label: 'R&D / Revenue', step: ['20%','10%','5%','1%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+
   cagr3YearRevenue: { label: 'Revenue CAGR 3Y', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   cagr5YearRevenue: { label: 'Revenue CAGR 5Y', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   cagr3YearEPS: { label: 'EPS CAGR 3Y', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
@@ -102,6 +104,8 @@ const allRules = {
 
   pe: { label: 'PE Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
   forwardPE: { label: 'Forward PE', step: [50,20,10,5,1,0,-1,-5,-10,-20,-50], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  forwardPS: { label: 'Forward PS', step: [50,20,10,5,1,0], category: 'fund', defaultCondition: 'over', defaultValue: 5 },
+
   priceToBookRatio: { label: 'PB Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
   priceToSalesRatio: { label: 'PS Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
   beta: { label: 'Beta', step: [10,5,1,-5,-10], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
@@ -153,6 +157,7 @@ const allRules = {
   totalLiabilities: { label: 'Total Liabilities', step: ['500B','200B','100B','50B','10B','1B','100M','10M','1M'], category: 'fund', defaultCondition: 'over', defaultValue: '1M' },
   analystRating: { label: 'Analyst Rating', step: ['Buy', 'Hold', 'Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
   sector: { label: 'Sector', step: sectorList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  industry: { label: 'Industry', step: industryList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
   country: { label: 'Country', step: listOfRelevantCountries, category: 'fund', defaultCondition: '', defaultValue: 'any' },
 
 };
@@ -249,6 +254,7 @@ function handleAddRule() {
    switch (ruleName) {
       case 'analystRating':
       case 'sector':
+      case 'industry':
       case 'country':
       case 'ema20':
       case 'ema50':
@@ -519,7 +525,7 @@ async function handleChangeValue(value) {
     } else {
       checkedItems.add(value);
     }
-  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','sector','country']?.includes(ruleName)) {
+  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','sector','industry','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
     if (!Array.isArray(valueMappings[ruleName])) {
@@ -645,7 +651,7 @@ function handleInput(event) {
 
         if (searchQuery.length > 0) {
           
-          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ['Buy','Hold','Sell'];
+          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList :  ['Buy','Hold','Sell'];
             testList = rawList?.filter(item => {
                 const index = item?.toLowerCase();
                 // Check if country starts with searchQuery
@@ -709,7 +715,7 @@ function handleInput(event) {
                   Stock Screener
                 </h1>
                 <span class="inline-block text-xs sm:text-sm font-semibold text-white ml-2 mt-3">
-                  {ruleOfList?.length !== 0 ? filteredData?.length : 0} Matches Found
+                  {filteredData?.length} Matches Found
                 </span>
               </div>
                 <div class="flex w-[50%] md:block md:w-auto mt-5 sm:ml-auto">
@@ -847,7 +853,7 @@ function handleInput(event) {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
+                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country']?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -870,14 +876,14 @@ function handleInput(event) {
                                   <input bind:value={searchQuery}
                                       on:input={handleInput}
                                       autocomplete="off"
-                                      class="{!['analystRating','sector','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
+                                      class="{!['analystRating','sector','industry','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
                                       focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
                                       type="search" 
                                       placeholder="Search...">
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','country']?.includes(row?.rule)}
+                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country']?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -891,18 +897,18 @@ function handleInput(event) {
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                              <input type="checkbox" checked={isChecked(item)}>
+                                              <input type="checkbox" class="rounded" checked={isChecked(item)}>
                                               <span class="ml-2">{item}</span>
                                             </label>
                                           </div>
                                         </DropdownMenu.Item>     
                                       {/each}
                                     {:else}
-                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : ['Buy','Hold','Sell'])) as item}
+                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : ['Buy','Hold','Sell'])) as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                              <input type="checkbox" checked={isChecked(item)}>
+                                              <input type="checkbox" class="rounded" checked={isChecked(item)}>
                                               <span class="ml-2">{item}</span>
                                             </label>
                                           </div>

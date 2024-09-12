@@ -1,4 +1,4 @@
-import { sectorList, listOfRelevantCountries } from "$lib/utils";
+import { sectorList, industryList, listOfRelevantCountries } from "$lib/utils";
 
 const movingAverageConditions = {
   // EMA conditions
@@ -55,6 +55,7 @@ function convertUnitToValue(
   const nonNumericValues = new Set([
     "any",
     ...sectorList,
+    ...industryList,
     ...listOfRelevantCountries,
     "hold",
     "sell",
@@ -104,7 +105,9 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
       }
 
       // Handle categorical data like analyst ratings, sector, country
-      else if (["analystRating", "sector", "country"].includes(rule.name)) {
+      else if (
+        ["analystRating", "sector", "industry", "country"].includes(rule.name)
+      ) {
         if (rule.value === "any") return true;
 
         if (Array.isArray(ruleValue) && !ruleValue.includes(itemValue))
