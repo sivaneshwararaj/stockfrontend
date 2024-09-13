@@ -899,7 +899,7 @@ $: {
           {#if isLoaded }
 
   
-          <div class="w-full mt-5 mb-10 m-auto flex justify-center items-center">
+          <div class="w-full mt-5 m-auto flex justify-center items-center">
 
             
             <div class="w-full grid grid-cols-1 lg:grid-cols-4 gap-y-3 gap-x-3 ">
@@ -999,10 +999,10 @@ $: {
               <!-- End Circular Progress -->
             </div>
             <!--End Put Flow-->
-  
+            <!--
             {#if showMore}
-             <!--Start Most Traded-->  
-             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+
+            <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Most Traded Option</span>
                   <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
@@ -1016,9 +1016,7 @@ $: {
                   </span>
               </div>
             </div>
-            <!--End Most Traded-->
-  
-             <!--Start Highest Premium-->  
+
              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Premium</span>
@@ -1033,9 +1031,8 @@ $: {
                   </span>
               </div>
             </div>
-            <!--End Highest Premium-->
-  
-            <!--Start Highest Volume-->  
+
+            
             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Volume</span>
@@ -1050,9 +1047,8 @@ $: {
                   </span>
               </div>
             </div>
-            <!--End Highest Volume-->
-  
-             <!--Start Highest Open Interest-->  
+
+            
              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Open Interest</span>
@@ -1067,19 +1063,21 @@ $: {
                   </span>
               </div>
             </div>
-            <!--End Highest Open Interest-->
   
             {/if}
+            -->
   
             </div>
           </div>
           
           <!--Start Expand-->
+          <!--
           <label on:click={() => showMore=!showMore} class="cursor-pointer w-full flex justify-center items-center -mt-5 transition duration-150 ease-in-out group">
             <div class="tracking-normal group-hover:translate-y-0.5 transition-transform duration-150 ease-in-out">
               <svg class="w-10 h-10 {showMore ? 'rotate-180' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M12 14.373q-.162 0-.298-.053q-.137-.053-.267-.183L7.046 9.748q-.14-.14-.15-.344q-.01-.204.15-.364t.354-.16t.354.16L12 13.287l4.246-4.247q.14-.14.344-.15q.204-.01.364.15t.16.354q0 .194-.16.354l-4.389 4.389q-.13.13-.267.183q-.136.053-.298.053"/></svg>
             </div>
           </label>
+          -->
           <!--End Expand-->
   
         
@@ -1093,7 +1091,7 @@ $: {
                   <div class="table">
                     <VirtualList
                       width="100%"
-                      height={850}
+                      height={$screenWidth < 640 ? 550 : 850}
                       itemCount={displayedData.length}
                       itemSize={40}
                     >
