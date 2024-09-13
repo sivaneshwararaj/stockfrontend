@@ -19,6 +19,8 @@
 
   let syncWorker: Worker | undefined;
   let ruleName = '';
+  let searchTerm = '';
+  let filteredRows = [];
   let shouldLoadWorker = writable(false);
 
 const allRules = {
@@ -92,6 +94,7 @@ async function handleResetAll() {
 
 function changeRule(state: string)  
 {
+  searchTerm = '';
   ruleName = state;
   handleAddRule()
 
@@ -134,27 +137,31 @@ function handleAddRule() {
 
 async function handleRule(newRule) {
   const existingRuleIndex = ruleOfList.findIndex(rule => rule.name === newRule.name);
+  
   if (existingRuleIndex !== -1) {
     const existingRule = ruleOfList[existingRuleIndex];
-    if (existingRule.value === newRule.value && existingRule.condition === newRule.condition) {
-      toast.error('Rule already exists!', {
-        style: 'border-radius: 200px; background: #333; color: #fff;'
+    if (existingRule.name === newRule.name) {
+      // Remove the rule instead of showing an error
+      ruleOfList.splice(existingRuleIndex, 1);
+      ruleOfList = [...ruleOfList]; // Trigger reactivity
+          Object.keys(allRules).forEach(ruleName => {
+        ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
+        valueMappings[ruleName] = allRules[ruleName].defaultValue;
       });
+      displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
     } else {
       ruleOfList[existingRuleIndex] = newRule;
       ruleOfList = [...ruleOfList]; // Trigger reactivity
-      toast.success('Rule updated', {
-        style: 'border-radius: 200px; background: #333; color: #fff;'
-      });
     }
   } else {
     ruleOfList = [...ruleOfList, newRule];
+    /*
     toast.success('Rule added', {
       style: 'border-radius: 200px; background: #333; color: #fff;'
     });
+    */
 
-     shouldLoadWorker.set(true);
-
+    shouldLoadWorker.set(true);
   }
 }
 
@@ -609,6 +616,12 @@ function debounce(fn, delay) {
 
 const debouncedHandleInput = debounce(handleInput, 300);
 
+$: {
+  if(searchTerm)
+  {
+    filteredRows = allRows?.filter((row) => row?.label?.toLowerCase()?.includes(searchTerm?.toLowerCase()));
+  }
+}
 
   
 
@@ -730,7 +743,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
               </div>
               
                 <div class="sm:mt-3 flex flex-col gap-y-2.5 sm:flex-row lg:gap-y-2 pb-1">
-                    <label on:click={() => ruleModal?.showModal()} class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
+                    <label for="ruleModal" class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
                             <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                         </svg> 
@@ -1158,31 +1171,67 @@ const debouncedHandleInput = debounce(handleInput, 300);
       
 
 
+<!--Start Choose Rule Modal-->
+<input type="checkbox" id="ruleModal" class="modal-toggle" />
+
+<dialog id="ruleModal" class="modal modal-bottom sm:modal-middle ">
 
 
-<dialog id="ruleModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
-  <div class="modal-box w-full bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-800 h-auto">
-    <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
-      <button class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white">
-        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/>
-        </svg>
-      </button>
-    </form>
-    <p class="text-white mt-10 cursor-text">
-      <span class="text-white text-xl font-semibold mb-4">Add Filters</span>
-    </p>
+  <label id="ruleModal" for="ruleModal" on:click={() => searchTerm = ''} class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
+  
+  
+  <div class="modal-box w-full bg-[#141417] border border-gray-800  h-[800px] overflow-hidden ">
 
-    <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
-    <div class="h-full overflow-hidden overflow-y-scroll">
-     <div class="flex justify-start items-center m-auto">
-                                    
-      <table class="table table-sm table-compact w-full">
+
+    <div class="flex flex-col w-full mt-10 sm:mt-0">
+
+    
+      <div class="text-white text-3xl font-semibold mb-5">
+        Add Filters
+      </div>
+
+      <label for="ruleModal" class="cursor-pointer absolute right-5 top-5 bg-[#141417] text-[1.8rem] text-white">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/></svg>
+      </label>
+
+      <!--Start Search bar-->
+      <form class="w-11/12 h-8 mb-8" on:keydown={(e) => e?.key === 'Enter' ? e.preventDefault() : '' }>   
+        <label for="search" class="mb-2 text-sm font-medium text-gray-200 sr-only">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-200 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input 
+              autocomplete="off"
+              type="search"
+              id="search"
+              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-300 rounded-lg bg-[#404040] border border-blue-500"
+              placeholder="Search {allRows?.length} filters..."
+              bind:value={searchTerm}
+              />
+        </div>
+      </form>
+      <!-- End Search bar-->
+
+      <div class="text-white text-sm bg-[#141417] overflow-y-scroll  pt-3 rounded-lg max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
+
+        <div class="text-white relative">
+          
+        {#if searchTerm?.length !== 0 && filteredRows?.length === 0}
+          <span class="text-lg text-white font-medium flex justify-center items-center m-auto">
+            Nothing Found
+          </span>
+        {:else}
+
+        <table class="w-full table-sm table-compact">
           <!-- head -->
           <tbody>
-            {#each allRows as row, index}
-              <tr on:click={() => changeRule(row?.rule)} class="text-white sm:hover:bg-[#333333] cursor-pointer">
-                <td class="border-b border-[#262626] text-sm sm:text-[1rem]">{index+1}</td>
-                <td class="text-start border-b border-[#262626] text-sm sm:text-[1rem]">
+            {#each (searchTerm?.length !== 0 ? filteredRows : allRows) as row, index}
+              <tr on:click={() => changeRule(row?.rule)} class="hover:bg-[#333333] cursor-pointer">
+                <td class="border-b border-[#262626]">{index+1}</td>
+                <td class="text-start border-b border-[#262626]">
                   {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
                   <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                   {/if}
@@ -1193,13 +1242,17 @@ const debouncedHandleInput = debounce(handleInput, 300);
 
           </tbody>
         </table>
-      </div>
+        {/if}
+
     </div>
-  </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
-</dialog>
+
+    </div>
+
+        
+      </div>
+  </dialog>
+<!--End Choose Rule Modal-->
+      
 
 
 

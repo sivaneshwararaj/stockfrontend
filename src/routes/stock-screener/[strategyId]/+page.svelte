@@ -279,27 +279,26 @@ function handleAddRule() {
 
 async function handleRule(newRule) {
   const existingRuleIndex = ruleOfList.findIndex(rule => rule.name === newRule.name);
+  
   if (existingRuleIndex !== -1) {
     const existingRule = ruleOfList[existingRuleIndex];
-    if (existingRule.value === newRule.value && existingRule.condition === newRule.condition) {
-      toast.error('Rule already exists!', {
-        style: 'border-radius: 200px; background: #333; color: #fff;'
-      });
+    if (existingRule.name === newRule.name) {
+      // Remove the rule instead of showing an error
+      ruleOfList.splice(existingRuleIndex, 1);
+      ruleOfList = [...ruleOfList]; // Trigger reactivity
     } else {
       ruleOfList[existingRuleIndex] = newRule;
       ruleOfList = [...ruleOfList]; // Trigger reactivity
-      toast.success('Rule updated', {
-        style: 'border-radius: 200px; background: #333; color: #fff;'
-      });
     }
   } else {
     ruleOfList = [...ruleOfList, newRule];
+    /*
     toast.success('Rule added', {
       style: 'border-radius: 200px; background: #333; color: #fff;'
     });
+    */
 
     await updateStockScreenerData();
-    //await handleSave(false);
   }
 }
 
@@ -1222,7 +1221,7 @@ function handleInput(event) {
     
       <div class="text-white text-3xl font-semibold mb-5">
         Add Filters
-      </div>+
+      </div>
 
       <label for="ruleModal" class="cursor-pointer absolute right-5 top-5 bg-[#141417] text-[1.8rem] text-white">
         <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/></svg>
