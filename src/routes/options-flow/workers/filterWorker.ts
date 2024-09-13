@@ -114,9 +114,26 @@ async function filterRawData(rawData, ruleOfList, filterQuery) {
     }
 
     return ruleOfList.every((rule) => {
-      const itemValue = item[rule.name];
-      const ruleValue = convertUnitToValue(rule.value);
       const ruleName = rule.name.toLowerCase();
+      const ruleValue = convertUnitToValue(rule.value);
+
+      // Handle volumeOIRatio
+      if (ruleName === "volumeoiratio") {
+        const volume = parseFloat(item.volume);
+        const openInterest = parseFloat(item.open_interest);
+
+        if (isNaN(volume) || isNaN(openInterest) || openInterest === 0) {
+          return false; // Invalid data, exclude this item
+        }
+
+        const ratio = (volume / openInterest) * 100;
+
+        if (rule.condition === "over" && ratio <= ruleValue) return false;
+        if (rule.condition === "under" && ratio >= ruleValue) return false;
+        return true;
+      }
+
+      const itemValue = item[rule.name];
 
       // Handle date_expiration
       if (ruleName === "date_expiration") {
@@ -127,7 +144,7 @@ async function filterRawData(rawData, ruleOfList, filterQuery) {
         return isDateWithinRange(itemValue, ruleValue as string);
       }
 
-      // Handle categorical data like analyst ratings, sector, country
+      // Handle categorical data
       else if (
         [
           "put_call",
@@ -138,28 +155,29 @@ async function filterRawData(rawData, ruleOfList, filterQuery) {
         ].includes(ruleName)
       ) {
         if (isAny(ruleValue)) return true;
-
-        // Ensure itemValue is not null/undefined and is a string
         if (itemValue === null || itemValue === undefined) return false;
 
         const lowerItemValue = itemValue.toString().toLowerCase();
 
         if (Array.isArray(ruleValue)) {
-          // Make sure ruleValue items are also treated case-insensitively
           return ruleValue.some(
-            (value) => lowerItemValue === value.toLowerCase()
+            (value) => lowerItemValue === value.toString().toLowerCase()
           );
         }
 
-        // Compare case-insensitively
         return lowerItemValue === ruleValue.toString().toLowerCase();
       }
 
       // Default numeric or string comparison
       if (typeof ruleValue === "string") return true;
-      if (itemValue === null) return false;
-      if (rule.condition === "over" && itemValue <= ruleValue) return false;
-      if (rule.condition === "under" && itemValue > ruleValue) return false;
+      if (itemValue === null || itemValue === undefined) return false;
+      const numericItemValue = parseFloat(itemValue);
+      if (isNaN(numericItemValue)) return false;
+
+      if (rule.condition === "over" && numericItemValue <= ruleValue)
+        return false;
+      if (rule.condition === "under" && numericItemValue >= ruleValue)
+        return false;
       return true;
     });
   });

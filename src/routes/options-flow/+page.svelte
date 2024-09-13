@@ -26,6 +26,7 @@
 const allRules = {
   volume: { label: 'Volume', step: ['100K','10K','1K'],  defaultCondition: 'over', defaultValue: '1K' },
   open_interest: { label: 'Open Interest', step: ['100K','10K','1K'],  defaultCondition: 'over', defaultValue: '1K' },
+  volumeOIRatio: { label: 'Volume / Open Interest', step: ['100%','80%','60%','50%','30%','15%','10%','5%'],  defaultCondition: 'over', defaultValue: 'any' },
   cost_basis: { label: 'Premium', step: ['10M','5M','1M','500K','100K','50K','10K','5K'],  defaultCondition: 'over', defaultValue: '50K' },
   put_call: { label: 'Contract Type', step: ["Calls", "Puts"],  defaultValue: 'any' },
   sentiment: { label: 'Sentiment', step: ["Bullish","Neutral", "Bearish"],  defaultValue: 'any' },
