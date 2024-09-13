@@ -13,7 +13,24 @@
 
   export let data;
   
-  let ruleOfList = [];
+  let ruleOfList = [
+  {
+    "name": "underlying_type",
+    "value": "any"
+  },
+  {
+    "name": "put_call",
+    "value": "any"
+  },
+  {
+    "name": "date_expiration",
+    "value": "any"
+  },
+  {
+    "name": "execution_estimate",
+    "value": "any"
+  }];
+
   let displayRules = [];
   let filterQuery = '';
 
@@ -30,7 +47,7 @@ const allRules = {
   cost_basis: { label: 'Premium', step: ['10M','5M','1M','500K','100K','50K','10K','5K'],  defaultCondition: 'over', defaultValue: '50K' },
   put_call: { label: 'Contract Type', step: ["Calls", "Puts"],  defaultValue: 'any' },
   sentiment: { label: 'Sentiment', step: ["Bullish","Neutral", "Bearish"],  defaultValue: 'any' },
-  execution_estimate: { label: 'Execution', step: ["At Ask","At Bid", "Below Ask", "Below Bid"], defaultValue: 'any' },
+  execution_estimate: { label: 'Execution', step: ["At Ask","At Bid", "At Midpoint", "Below Ask", "Below Bid",], defaultValue: 'any' },
   option_activity_type: { label: 'Option Type', step: ["Sweep","Trade"],  defaultValue: 'any' },
   date_expiration: { label: 'Date Expiration', step: ["Same Day", "1 day","1 Week","2 Weeks","1 Month","3 Months","6 Months","1 Year","3 Years"], defaultValue: 'any' },
   underlying_type: { label: 'Asset Type', step: ["Stock", "ETF"], defaultValue: 'any' },
@@ -422,6 +439,10 @@ function daysLeft(targetDate) {
     
 
   onMount(async () => {
+
+    displayRules = allRows?.filter(row => ruleOfList?.some(rule => rule?.name === row?.rule));
+
+
     audio = new Audio(notifySound);
     rawData = data?.getOptionsFlowFeed;
     rawData?.forEach((item) => {
@@ -1081,6 +1102,7 @@ $: {
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Time</div>
                         <div class="td bg-[#161618] font-bold text-slate-300 text-xs text-start uppercase">Symbol</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Expiry</div>
+                        <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">DTE</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Strike</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">C/P</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Sent.</div>
@@ -1101,12 +1123,17 @@ $: {
                         class="tr cursor-pointer {index % 2 === 0 ? 'bg-[#27272A]' : 'bg-[#09090B]'}"
                       >
                         <!-- Row data -->
+                         
                         <div style="justify-content: center;" class="td text-white pb-3 text-xs sm:text-sm text-start">
                           {formatTime(displayedData[index]?.time)}
                         </div>
 
                         <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.underlying_type)} style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
                           {displayedData[index]?.ticker}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">
+                          {reformatDate(displayedData[index]?.date_expiration)}
                         </div>
 
                         <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">

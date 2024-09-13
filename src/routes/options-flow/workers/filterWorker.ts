@@ -19,6 +19,7 @@ function convertUnitToValue(
     "bearish",
     "at bid",
     "at ask",
+    "at midpoint",
     "below bid",
     "below ask",
     "sweep",
