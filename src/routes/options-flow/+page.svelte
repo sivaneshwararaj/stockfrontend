@@ -388,6 +388,8 @@ function sendMessage(message) {
   }
 }
 async function websocketRealtimeData() {
+
+  let newData = [];
   try {
     socket = new WebSocket(data?.wsURL + "/options-flow-reader");
 
@@ -401,16 +403,14 @@ async function websocketRealtimeData() {
       previousCallVolume = displayCallVolume ?? 0;
       if (mode === true) {
         try {
-          const newData = JSON.parse(event.data);
-          if (rawData?.length !== newData?.length) {
-            newIncomingData = true;
+          newData = JSON.parse(event.data) ?? [];
+          if(newData?.length !== 0) {
+            newData.forEach((item) => {
+              item.dte = daysLeft(item?.date_expiration);
+            });
+             rawData = [...newData, ...rawData];
           }
-
-          rawData = [...newData, ...rawData];
-          // Update dte for each item
-          rawData.forEach((item) => {
-            item.dte = daysLeft(item?.date_expiration);
-          });
+         
           if (ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
             shouldLoadWorker.set(true);
           }
