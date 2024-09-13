@@ -550,7 +550,7 @@ function calculateStats(data) {
         return acc;
       }, { callVolumeSum: 0, putVolumeSum: 0, bullishCount: 0, bearishCount: 0, neutralCount: 0 });
 
-      if (bullishCount > bearishCount) {
+      if (bullishCount >= bearishCount) {
         flowSentiment = 'Bullish';
       } else if (bullishCount < bearishCount) {
         flowSentiment = 'Bearish';
@@ -559,7 +559,6 @@ function calculateStats(data) {
       } else {
         flowSentiment = '-';
       }
-
 
 
       putCallRatio = callVolumeSum !== 0 ? (putVolumeSum / callVolumeSum) : 0;
@@ -884,7 +883,7 @@ $: {
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                              <input type="checkbox" checked={isChecked(item)}>
+                                              <input type="checkbox" class="rounded" checked={isChecked(item)}>
                                               <span class="ml-2">{item}</span>
                                             </label>
                                           </div>
@@ -1242,7 +1241,7 @@ $: {
     <div class="flex flex-col w-full mt-10 sm:mt-0">
 
     
-      <div class="text-white text-3xl font-semibold mb-5">
+      <div class="text-white text-xl sm:text-3xl font-semibold mb-5">
         Add Filters
       </div>
 
@@ -1285,7 +1284,7 @@ $: {
           <!-- head -->
           <tbody>
             {#each (searchTerm?.length !== 0 ? filteredRows : allRows) as row, index}
-              <tr on:click={() => changeRule(row?.rule)} class="hover:bg-[#333333] cursor-pointer">
+              <tr on:click={() => changeRule(row?.rule)} class="sm:hover:bg-[#333333] cursor-pointer">
                 <td class="border-b border-[#262626]">{index+1}</td>
                 <td class="text-start border-b border-[#262626]">
                   {#if ruleOfList.find((rule) => rule?.name === row?.rule)}

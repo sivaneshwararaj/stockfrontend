@@ -1219,7 +1219,7 @@ function handleInput(event) {
     <div class="flex flex-col w-full mt-10 sm:mt-0">
 
     
-      <div class="text-white text-3xl font-semibold mb-5">
+      <div class="text-white text-xl sm:text-3xl font-semibold mb-5">
         Add Filters
       </div>
 
@@ -1262,7 +1262,7 @@ function handleInput(event) {
           <!-- head -->
           <tbody>
             {#each (searchTerm?.length !== 0 ? filteredRows : allRows) as row, index}
-              <tr on:click={() => changeRule(row?.rule)} class="hover:bg-[#333333] cursor-pointer">
+              <tr on:click={() => changeRule(row?.rule)} class="sm:hover:bg-[#333333] cursor-pointer">
                 <td class="border-b border-[#262626]">{index+1}</td>
                 <td class="text-start border-b border-[#262626]">
                   {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
