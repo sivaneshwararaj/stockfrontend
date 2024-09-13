@@ -373,10 +373,14 @@ function handleViewData(optionData) {
     previousCallVolume = displayCallVolume ?? 0;
     if(mode === true) {
         try {
-            const newData = JSON.parse(event.data);
+            let newData = JSON.parse(event.data);
             if(rawData?.length !== newData?.length) {
                 newIncomingData = true;
             }
+            newData = newData?.forEach((item) => {
+              item.dte = daysLeft(item?.date_expiration);
+            });
+
             rawData = [...newData];
             
             if(ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
@@ -404,11 +408,25 @@ function handleViewData(optionData) {
   }
   }
   
+
+function daysLeft(targetDate) {
+  const targetTime = new Date(targetDate).getTime();
+  const currentTime = new Date().getTime();
+  const difference = targetTime - currentTime;
+
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math?.ceil(difference / millisecondsPerDay);
+
+  return daysLeft;
+}
     
 
   onMount(async () => {
     audio = new Audio(notifySound);
     rawData = data?.getOptionsFlowFeed;
+    rawData?.forEach((item) => {
+        item.dte = daysLeft(item?.date_expiration);
+      });
     displayedData = rawData;
     calculateStats(rawData);
 
@@ -1049,17 +1067,18 @@ $: {
           <!-- Page wrapper -->
           <div class="flex w-full m-auto h-full overflow-hidden">
               {#if displayedData?.length !== 0}
-              <div class="mt-8 w-full overflow-x-auto overflow-y-auto h-[850px]">
+             <div class="mt-8 w-full overflow-x-auto overflow-y-auto h-[850px]">
                 <div class="table-container">
-                <div class="table">
-                  <VirtualList
-                    width="100%"
-                    height={850}
-                    itemCount={displayedData.length}
-                    itemSize={40}
-                  >
-                    <div slot="header" class="tr th sticky z-40 top-0">
-                      <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Time</div>
+                  <div class="table">
+                    <VirtualList
+                      width="100%"
+                      height={850}
+                      itemCount={displayedData.length}
+                      itemSize={40}
+                    >
+                      <div slot="header" class="tr th sticky z-40 top-0">
+                        <!-- Table headers -->
+                        <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Time</div>
                         <div class="td bg-[#161618] font-bold text-slate-300 text-xs text-start uppercase">Symbol</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Expiry</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Strike</div>
@@ -1071,72 +1090,68 @@ $: {
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Type</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-end uppercase">Vol</div>
                         <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-end uppercase">OI</div>
-                    </div>
-                
-                    <div on:click={() => handleViewData(displayedData[index])} slot="item" let:index let:style {style} class="tr cursor-pointer">
-
-
-                      <div style="justify-content: center;" class="td text-white pb-3 text-xs sm:text-sm text-start">
-                        {formatTime(displayedData[index]?.time)}
-                      </div>
-  
-                      <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.underlying_type)} style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
-                        {displayedData[index]?.ticker}
                       </div>
 
-                      <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">
-                        {reformatDate(displayedData[index]?.date_expiration)}
+                      <div
+                        on:click={() => handleViewData(displayedData[index])}
+                        slot="item"
+                        let:index
+                        let:style
+                        {style}
+                        class="tr cursor-pointer {index % 2 === 0 ? 'bg-[#27272A]' : 'bg-[#09090B]'}"
+                      >
+                        <!-- Row data -->
+                        <div style="justify-content: center;" class="td text-white pb-3 text-xs sm:text-sm text-start">
+                          {formatTime(displayedData[index]?.time)}
+                        </div>
+
+                        <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.underlying_type)} style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
+                          {displayedData[index]?.ticker}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">
+                          {displayedData[index]?.dte < 0 ? 'expired' : displayedData[index]?.dte + 'd'}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">
+                          {displayedData[index]?.strike_price}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] {displayedData[index]?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-start">
+                          {displayedData[index]?.put_call}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] {displayedData[index]?.sentiment === 'Bullish' ? 'text-[#00FC50]' : displayedData[index]?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
+                          {displayedData[index]?.sentiment}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-start text-white">
+                          {displayedData[index]?.underlying_price}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-start text-white">
+                          {displayedData[index]?.price}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-start font-semibold {displayedData[index]?.put_call === 'Puts' ? 'text-[#CB281C]' : 'text-[#0FB307]'}">
+                          {abbreviateNumber(displayedData[index]?.cost_basis)}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-start {displayedData[index]?.option_activity_type === 'Sweep' ? 'text-[#C6A755]' : 'text-[#976DB7]'}">
+                          {displayedData[index]?.option_activity_type}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-end">
+                          {new Intl.NumberFormat('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(displayedData[index]?.volume)}
+                        </div>
+
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-end">
+                          {new Intl.NumberFormat('en', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(displayedData[index]?.open_interest)}
+                        </div>
                       </div>
-
-                    <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">
-                      {displayedData[index]?.strike_price}
-                    </div>
-
-                    <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] {displayedData[index]?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-start">
-                      {displayedData[index]?.put_call}
-                    </div>
-
-                    <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] {displayedData[index]?.sentiment === 'Bullish' ? 'text-[#00FC50]' : displayedData[index]?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
-                      {displayedData[index]?.sentiment}
-                    </div>
-  
-                      <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] text-start text-white">
-                        {displayedData[index]?.underlying_price}
-                      </div>
-                    
-                    <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] text-start text-white">
-                      {displayedData[index]?.price}
-                    </div>
-                    
-                    <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] text-start font-semibold {displayedData[index]?.put_call === 'Puts' ? 'text-[#CB281C]' : 'text-[#0FB307]'} ">
-                      {abbreviateNumber(displayedData[index]?.cost_basis)}
-                    </div>
-
-                    <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] text-start {displayedData[index]?.option_activity_type === 'Sweep' ? 'text-[#C6A755]' : 'text-[#976DB7]'}">
-                      {displayedData[index]?.option_activity_type}
-                    </div>
-    
-                    <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] text-white text-end">
-                        {new Intl.NumberFormat("en", {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0
-                        }).format(displayedData[index]?.volume)}
-                    </div>
-    
-                    <div style="justify-content: center;" class="td  text-sm sm:text-[1rem] text-white text-end">
-                      {new Intl.NumberFormat("en", {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0
-                    }).format(displayedData[index]?.open_interest)}
-                    </div>
-
-                    </div>
-                  </VirtualList>
+                    </VirtualList>
+                  </div>
                 </div>
-              </div>
-             
-                  <!--<InfiniteLoading on:infinite={infiniteHandler} />-->    
-    
               </div>
               {:else}
               <div class="text-white text-center p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">      
@@ -1427,16 +1442,16 @@ $: {
   }
 
   .table :global(.virtual-list-inner) {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+  }
 
-    @media (max-width: 768px) {
-        .table {
-            width: 1000px;
-        }
-    }
+  @media (max-width: 768px) {
+      .table {
+          width: 1000px;
+      }
+  }
 
   .table .virtual-list-inner {
       flex-flow: column nowrap;
@@ -1462,11 +1477,11 @@ $: {
       flex-flow: row nowrap;
   }
 
-  .tr:nth-of-type(even) {
+  .tr.even {
       background-color: #27272A;
   }
 
-  .tr:nth-of-type(odd) {
+  .tr.odd {
       background-color: #09090B;
   }
 
