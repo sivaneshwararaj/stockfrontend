@@ -390,15 +390,16 @@ function handleViewData(optionData) {
     previousCallVolume = displayCallVolume ?? 0;
     if(mode === true) {
         try {
-            let newData = JSON.parse(event.data);
+            const newData = JSON.parse(event.data);
             if(rawData?.length !== newData?.length) {
                 newIncomingData = true;
             }
-            newData = newData?.forEach((item) => {
-              item.dte = daysLeft(item?.date_expiration);
-            });
 
             rawData = [...newData];
+
+            rawData?.forEach((item) => {
+                item.dte = daysLeft(item?.date_expiration);
+              });
             
             if(ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
               shouldLoadWorker.set(true)
