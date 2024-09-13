@@ -380,52 +380,66 @@ function handleViewData(optionData) {
 
 }
 
-  async function websocketRealtimeData() {
-  
+function sendMessage(message) {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.send(message);
+  } else {
+    console.error("WebSocket is not open. Unable to send message.");
+  }
+}
+async function websocketRealtimeData() {
   try {
-  socket = new WebSocket(data?.wsURL+"/options-flow-reader");
-  
-  
-  socket.addEventListener('message', (event) => {
-    previousCallVolume = displayCallVolume ?? 0;
-    if(mode === true) {
+    socket = new WebSocket(data?.wsURL + "/options-flow-reader");
+
+    socket.addEventListener("open", () => {
+      const ids = rawData.map(item => item.id);
+
+      sendMessage(JSON.stringify({ ids }));
+    });
+
+    socket.addEventListener('message', (event) => {
+      previousCallVolume = displayCallVolume ?? 0;
+      if (mode === true) {
         try {
-            const newData = JSON.parse(event.data);
-            if(rawData?.length !== newData?.length) {
-                newIncomingData = true;
-            }
+          const newData = JSON.parse(event.data);
+          if (rawData?.length !== newData?.length) {
+            newIncomingData = true;
+          }
 
-            rawData = [...newData];
-
-            rawData?.forEach((item) => {
-                item.dte = daysLeft(item?.date_expiration);
-              });
-            
-            if(ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
-              shouldLoadWorker.set(true)
-            }
-
-            if (previousCallVolume !== displayCallVolume && !muted) {
-                audio?.play();
-            }
+          rawData = [...newData, ...rawData];
+          // Update dte for each item
+          rawData.forEach((item) => {
+            item.dte = daysLeft(item?.date_expiration);
+          });
+          if (ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
+            shouldLoadWorker.set(true);
+          }
+          if (previousCallVolume !== displayCallVolume && !muted && audio) {
+            audio.play();
+          }
+        } catch (e) {
+          console.error('Error processing WebSocket message:', e);
         }
-        catch(e) {
-            console.log(e)
-        }
-    }
-});
-  
-  
-  socket.addEventListener('close', (event) => {
+      }
+    });
+
+    socket.addEventListener('close', (event) => {
       console.log('WebSocket connection closed:', event.reason);
       // Handle disconnection, you might want to attempt to reconnect here
+      setTimeout(() => websocketRealtimeData(), 5000); // Attempt to reconnect after 5 seconds
     });
+
+    socket.addEventListener('error', (error) => {
+      console.error('WebSocket error:', error);
+      // Handle WebSocket errors here
+    });
+
   } catch (error) {
     console.error('WebSocket connection error:', error);
     // Handle connection errors here
+    setTimeout(() => websocketRealtimeData(), 5000); // Attempt to reconnect after 5 seconds
   }
-  }
-  
+}
 
 function daysLeft(targetDate) {
   const targetTime = new Date(targetDate).getTime();
@@ -1180,7 +1194,7 @@ $: {
                 </div>
               </div>
               {:else}
-              <div class="text-white text-center p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">      
+              <div class="text-white text-center p-3 sm:p-5 mb-10 mt-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">      
                   <svg class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
                   Looks like your taste is one-of-a-kind! No matches found... yet!
               </div>
