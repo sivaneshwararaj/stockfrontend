@@ -1205,7 +1205,6 @@ function handleInput(event) {
   </div>
 -->
 
-{#if $screenWidth >= 640}
 <!--Start Choose Rule Modal-->
 <input type="checkbox" id="ruleModal" class="modal-toggle" />
 
@@ -1215,7 +1214,7 @@ function handleInput(event) {
   <label id="ruleModal" for="ruleModal" on:click={() => searchTerm = ''} class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
   
   
-  <div class="modal-box w-full bg-[#262626] border border-slate-800  h-[800px] overflow-hidden ">
+  <div class="modal-box w-full bg-[#141417] border border-gray-800  h-[800px] overflow-hidden ">
 
 
     <div class="flex flex-col w-full mt-10 sm:mt-0">
@@ -1223,7 +1222,11 @@ function handleInput(event) {
     
       <div class="text-white text-3xl font-semibold mb-5">
         Add Filters
-      </div>
+      </div>+
+
+      <label for="ruleModal" class="cursor-pointer absolute right-5 top-5 bg-[#141417] text-[1.8rem] text-white">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/></svg>
+      </label>
 
       <!--Start Search bar-->
       <form class="w-11/12 h-8 mb-8" on:keydown={(e) => e?.key === 'Enter' ? e.preventDefault() : '' }>   
@@ -1246,7 +1249,7 @@ function handleInput(event) {
       </form>
       <!-- End Search bar-->
 
-      <div class="text-white text-sm bg-[#262626] bg-opacity-[0.4] overflow-y-scroll scroller pt-3 rounded-lg max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
+      <div class="text-white text-sm bg-[#141417] overflow-y-scroll scroller pt-3 rounded-lg max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
 
         <div class="text-white relative">
           
@@ -1283,83 +1286,6 @@ function handleInput(event) {
       </div>
   </dialog>
 <!--End Choose Rule Modal-->
-{:else}
-
-<div class="drawer drawer-end z-50">
-  <input id="ruleModal" type="checkbox" class="drawer-toggle" />
-
-  <div class="drawer-side overflow-x-hidden">
-    
-    
-    <div class="menu w-screen min-h-full bg-[#000] text-base-content overflow-hidden">
-      <div style="top: 0rem;" class="flex flex-row fixed sticky h-14 z-40 bg-[#000] justify-center items-center w-full border-b border-slate-900">
-          <label on:click={() => searchTerm = ''} for="ruleModal" class="cursor-pointer mr-auto ml-3">
-            <svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff" d="M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z"/></svg>
-          </label>
-
-      </div>
-
-          <div class="flex flex-row items-center justify-center w-full m-auto mb-8 mt-5">
-            
-            <!--Start Search bar-->
-            <form class="w-11/12 h-8" on:keydown={(e) => e?.key === 'Enter' ? e.preventDefault() : '' }>   
-              <label for="search" class="mb-2 text-sm font-medium text-gray-200 sr-only">Search</label>
-              <div class="relative">
-                  <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                      <svg class="w-4 h-4 text-gray-200 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                      </svg>
-                  </div>
-                  <input 
-                    autocomplete="off"
-                    type="search"
-                    id="search"
-                    class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-300 rounded-lg bg-[#404040] border border-blue-500"
-                    placeholder="Search"
-                    bind:value={searchTerm}
-                    />
-              </div>
-            </form>
-            <!-- End Search bar-->
-          </div>
-          
-          
-      
-     
-      
-          {#if searchTerm?.length !== 0 && filteredRows?.length === 0}
-            <span class="text-lg text-white font-medium flex justify-center items-center mt-5">
-              Nothing Found
-            </span>
-          {:else}
-
-          <table class="table table-sm table-compact overflow-y-scroll text-white mb-10">
-            <!-- head -->
-            <tbody>
-              {#each (searchTerm?.length !== 0 ? filteredRows : allRows) as row, index}
-                <tr on:click={() => changeRule(row?.rule)} class="border-b border-slate-800 cursor-pointer">
-                  <td class="w-6">{index+1}</td>
-                  <td class="w-3">
-                    {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
-                    <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    {/if}
-                  </td>
-                  <td class="text-start">{row?.label}</td>
-                </tr>
-              {/each}
-
-            </tbody>
-          </table>
-          {/if}
-
-
-    </div>
-  </div>
-</div>
-
-{/if}
-
-      
       
 <!--Start Login Modal-->
 {#if LoginPopup}

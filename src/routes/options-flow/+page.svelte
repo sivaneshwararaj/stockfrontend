@@ -1173,7 +1173,7 @@ const debouncedHandleInput = debounce(handleInput, 300);
     </p>
 
     <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
-    <div class="h-full overflow-y-scroll overflow-x-auto">
+    <div class="h-full overflow-hidden overflow-y-scroll">
      <div class="flex justify-start items-center m-auto">
                                     
       <table class="table table-sm table-compact w-full">
