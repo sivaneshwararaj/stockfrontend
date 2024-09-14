@@ -22,10 +22,10 @@
   let searchQuery = '';
   $: testList = [];
 
-  let ruleOfList = data?.getStrategy?.rules ?? [];
 
   let strategyList = data?.getAllStrategies;
   let selectedStrategy = strategyList?.at(0)?.id ?? '';
+  let ruleOfList = strategyList?.at(0)?.rules ?? [];
 
   let displayRules = [];
   let selectedPopularStrategy = ''; 
@@ -238,8 +238,19 @@ async function handleDeleteStrategy() {
       toast.success('Strategy deleted successfully!', {
         style: 'border-radius: 200px; background: #333; color: #fff;'});
   
-        strategyList= strategyList?.filter(item => item?.id !== selectedStrategy);
+        strategyList= strategyList?.filter(item => item?.id !== selectedStrategy) ?? [];
         selectedStrategy = strategyList?.at(0)?.id ?? '';
+        ruleOfList = strategyList?.find(item => item.id === selectedStrategy)?.rules ?? []
+        ruleOfList.forEach(rule => {
+              ruleCondition[rule.name] = rule.condition || allRules[rule.name].defaultCondition;
+              valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
+            });
+        if(ruleOfList?.length === 0) {
+          filteredData = [];
+          displayResults = [];
+        }
+        checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
+        await updateStockScreenerData();
     }
     else if ( output === 'failure')
     {
@@ -299,8 +310,11 @@ async function createStrategy(event)
     const closePopup = document.getElementById("addStrategy");
     closePopup?.dispatchEvent(new MouseEvent('click'))
     selectedStrategy = output?.id;
-    ruleOfList = [];
+    if(strategyList?.length !== 0) {
+      ruleOfList = []
+    }
     strategyList?.unshift(output);
+    selectedPopularStrategy = '';
   } else {
     toast.error('Something went wrong. Please try again later!', {
       style: 'border-radius: 200px; background: #333; color: #fff;'});
@@ -308,6 +322,24 @@ async function createStrategy(event)
 
   return output;
 
+}
+
+async function switchStrategy(item) {
+  displayTableTab = 'general';
+  ruleName = '';
+  selectedPopularStrategy = '';
+  selectedStrategy = item?.id ?? ''
+  ruleOfList = strategyList?.find(item => item.id === selectedStrategy)?.rules ?? []
+  ruleOfList.forEach(rule => {
+        ruleCondition[rule.name] = rule.condition || allRules[rule.name].defaultCondition;
+        valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
+      });
+  if(ruleOfList?.length === 0) {
+     filteredData = [];
+    displayResults = [];
+  }
+  checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
+  await updateStockScreenerData();
 }
 
 function changeRule(state: string)  
@@ -506,7 +538,9 @@ async function handleSave(printToast) {
   if(data?.user)
   {
     if(isSaved === false)
-    {
+    { 
+      strategyList.find(item => item.id === selectedStrategy).rules = ruleOfList;
+
         const postData = {'strategyId': selectedStrategy, 'rules': ruleOfList}  
                       
         const response = await fetch(data?.fastifyURL+'/save-strategy', {
@@ -898,8 +932,8 @@ function handleInput(event) {
                                   <DropdownMenu.Separator />
                                   <DropdownMenu.Group>
                                     {#each strategyList as item}
-                                      <DropdownMenu.Item on:click={() => selectedStrategy = item?.id} class="cursor-pointer sm:hover:bg-[#27272A]">
-                                        {item?.title}
+                                      <DropdownMenu.Item on:click={() => switchStrategy(item)} class="{item?.id === selectedStrategy ? 'bg-[#27272A]' : ''} cursor-pointer sm:hover:bg-[#27272A]">
+                                        {item?.title} ({item?.rules?.length})
                                       </DropdownMenu.Item>
                                     {/each}
                                   </DropdownMenu.Group>
@@ -936,12 +970,13 @@ function handleInput(event) {
                         </svg> 
                         <div>Add Filters</div>
                     </label>
-
+                    
+                    {#if data?.user && selectedStrategy?.length !== 0}
                     <label for={!data?.user ? 'userLogin' : ''} on:click={() => handleSave(true)} class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
                       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="M5 5v22h22V9.594l-.281-.313l-4-4L22.406 5zm2 2h3v6h12V7.437l3 3V25h-2v-9H9v9H7zm5 0h4v2h2V7h2v4h-8zm-1 11h10v7H11z"/></svg>
                         <div>Save</div>
                     </label>
-                    {#if data?.user && selectedStrategy?.length !== 0}
+                    
                     <label for="deleteStrategy" class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
                       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
                         <div>Delete</div>
