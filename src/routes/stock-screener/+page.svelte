@@ -963,7 +963,7 @@ function handleInput(event) {
                 </div>
                 </div> 
                 {#if showFilters}
-                <div class="mt-3 flex flex-col gap-y-2.5 sm:flex-row lg:gap-y-2 pb-1">
+                <div class="mt-3 flex flex-col gap-y-2.5 sm:flex-row lg:gap-y-2 ">
                     <label for="ruleModal" class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
                             <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
@@ -1006,7 +1006,7 @@ function handleInput(event) {
                 </div> 
 
 
-                <div class="sm:grid sm:grid-cols-2 sm:gap-x-2.5 lg:grid-cols-3 w-full mt-5 border-t border-b border-gray-600">
+                <div class="sm:grid sm:grid-cols-2 sm:gap-x-2.5 lg:grid-cols-3 w-full mt-3 border-t border-b border-gray-600">
                   {#each displayRules as row (row?.rule)}
                     <!--Start Added Rules-->
                     <div class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default">
