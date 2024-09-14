@@ -709,7 +709,7 @@ $: {
   
   </svelte:head>
     
-<body class="sm:fixed h-screen w-full max-w-screen-xl">
+<body class="xl:fixed h-screen w-full max-w-screen-xl">
 
  
 
