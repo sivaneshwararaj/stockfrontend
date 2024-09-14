@@ -386,7 +386,7 @@ onMount( async() => {
               </Card.Content>
             </Card.Root>
             
-            <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[470px]">
+            <Card.Root class="order-3 sm:order-1 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[470px]">
               <Card.Header class="flex flex-row items-center">
                 <div class="flex flex-col items-start w-full">
                   <div class="flex flex-row w-full items-center">
@@ -428,45 +428,7 @@ onMount( async() => {
               </Card.Content>
             </Card.Root>
 
-            <!--
-            <Card.Root class="overflow-hidden">
-              <Card.Header class="flex flex-row items-center">
-                <div class="flex flex-col items-start w-full">
-                  <div class="flex flex-row w-full items-center">
-                    <Card.Title class="text-xl sm:text-2xl tex-white font-semibold">Retail Trader Tracker</Card.Title>
-                    <a href="/most-retail-volume" class="ml-auto rounded-lg text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-white text-black">
-                      View All
-                      <ArrowUpRight class="hidden sm:inline-block h-4 w-4 shrink-0 -mt-1 ml-0.5" />
-                    </a>
-                  </div>
-                  <Card.Description class="mt-2 text-sm sm:text-[1rem]">Latest Retail Trader investing behavior to identify market trends.</Card.Description>
-                </div>
-              </Card.Header>
-              <Card.Content>                
-                {#if isLoaded && data?.getDashboard?.retailTracker?.length !== 0}
-                  <div class="app w-full h-[300px] mt-5">
-                    <Chart {init} options={optionsGraph} class="chart" />
-                </div>
-                  {:else}
-                  <div class="flex w-11/12 flex-col gap-x-4 gap-y-5 mt-5">
-                    <div class="rounded-lg skeleton h-6 w-full"></div>
-                    <div class="rounded-lg skeleton h-6 w-11/12"></div>
-                    <div class="rounded-lg skeleton h-6 w-5/6"></div>
-                    <div class="rounded-lg skeleton h-6 w-72"></div>
-                    <div class="rounded-lg skeleton h-6 w-28"></div>
-                  </div>
-                  {/if}
-              </Card.Content>
-            </Card.Root>
-            -->
-
-          </div>
-
-
-            <!--Start Earnings Section-->
-            <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
-
-              <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
+              <Card.Root class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
                 <Card.Header class="flex flex-row items-center">
                   <div class="flex flex-col items-start w-full">
                     <div class="flex flex-row w-full items-center">
@@ -506,7 +468,7 @@ onMount( async() => {
                 </Card.Content>
               </Card.Root>
               
-              <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
+              <Card.Root class="order-2 sm:order-3 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
                 <Card.Header class="flex flex-row items-center">
                   <div class="flex flex-col items-start w-full">
                     <div class="flex flex-row w-full items-center">
@@ -537,10 +499,41 @@ onMount( async() => {
                 {/if}
                 </Card.Content>
               </Card.Root>
-              
-        
-            </div>
-            <!--End of Earnings Section-->
+            <!--
+            <Card.Root class="overflow-hidden">
+              <Card.Header class="flex flex-row items-center">
+                <div class="flex flex-col items-start w-full">
+                  <div class="flex flex-row w-full items-center">
+                    <Card.Title class="text-xl sm:text-2xl tex-white font-semibold">Retail Trader Tracker</Card.Title>
+                    <a href="/most-retail-volume" class="ml-auto rounded-lg text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-white text-black">
+                      View All
+                      <ArrowUpRight class="hidden sm:inline-block h-4 w-4 shrink-0 -mt-1 ml-0.5" />
+                    </a>
+                  </div>
+                  <Card.Description class="mt-2 text-sm sm:text-[1rem]">Latest Retail Trader investing behavior to identify market trends.</Card.Description>
+                </div>
+              </Card.Header>
+              <Card.Content>                
+                {#if isLoaded && data?.getDashboard?.retailTracker?.length !== 0}
+                  <div class="app w-full h-[300px] mt-5">
+                    <Chart {init} options={optionsGraph} class="chart" />
+                </div>
+                  {:else}
+                  <div class="flex w-11/12 flex-col gap-x-4 gap-y-5 mt-5">
+                    <div class="rounded-lg skeleton h-6 w-full"></div>
+                    <div class="rounded-lg skeleton h-6 w-11/12"></div>
+                    <div class="rounded-lg skeleton h-6 w-5/6"></div>
+                    <div class="rounded-lg skeleton h-6 w-72"></div>
+                    <div class="rounded-lg skeleton h-6 w-28"></div>
+                  </div>
+                  {/if}
+              </Card.Content>
+            </Card.Root>
+            -->
+
+          </div>
+
+
 
 
           <div class="grid gap-4 sm:gap-8 sm:grid-cols-3 text-start">
