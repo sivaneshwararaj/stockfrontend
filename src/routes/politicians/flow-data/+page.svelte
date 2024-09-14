@@ -9,7 +9,7 @@
   import { stockTicker, etfTicker, cryptoTicker, screenWidth, numberOfUnreadNotification } from '$lib/store';
   import { onMount } from 'svelte';
   import defaultLogo from '$lib/images/stocks/logo/default_logo.png';
-	import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+	//import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   //  import * as XLSX from 'xlsx';
@@ -636,7 +636,7 @@
                     <!--<InfiniteLoading on:infinite={infiniteHandler} />-->
                       {/if}
 
-                      <UpgradeToPro data={data} title="Track the latest trades of corrupt US Politicians"/>
+                      <!--<UpgradeToPro data={data} title="Track the latest trades of corrupt US Politicians"/>-->
 
   
                   </div>

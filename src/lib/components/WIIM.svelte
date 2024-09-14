@@ -95,17 +95,10 @@ $: {
 
                                             <div class="flex flex-col w-full max-w-3xl pt-2 pl-2 pr-2 sm:pr-0">
                                                 <span class="text-white text-[1rem] ">
-                                                    {data?.user?.tier !== 'Pro' && latestInfoDate(item?.date) ? item?.text?.slice(0,30) + '...' : item?.text }
+                                                    {item?.text }
                                                 </span>
                                             </div>
 
-                                            {#if data?.user?.tier !== 'Pro' && latestInfoDate(item?.date)}
-                                                <a href="/pricing" class="w-full max-w-xl mt-5 text-blue-300 hover:text-white font-medium text-sm flex justify-center items-center">
-                                                    Unlock with Pro Subscription
-                                                <svg class="ml-1 w-5 h-5 inline-block"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                                                </a>
-                                            {/if}
-                        
                                            
                         
                         

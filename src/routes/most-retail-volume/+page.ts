@@ -23,7 +23,7 @@ export const load = async ({ parent }) => {
       setCache("", output, "getMostRetailVolume");
     }
 
-    output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
+    //output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
 
     return output;
   };

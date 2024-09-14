@@ -5,7 +5,7 @@
   import { abbreviateNumber } from '$lib/utils';
   import InfoModal from '$lib/components/InfoModal.svelte';
   import { onMount } from 'svelte'
-  import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+  //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import { init, use } from 'echarts/core'
   import { BarChart,LineChart } from 'echarts/charts'
   import { GridComponent, TooltipComponent } from 'echarts/components'
@@ -411,12 +411,10 @@ onMount(async () => {
   }
   
 
-  if(data?.user?.tier === 'Pro') {
     window.addEventListener('scroll', handleScroll);
     return () => {
         window.removeEventListener('scroll', handleScroll);
     };
-  }
 })
 
 
@@ -718,8 +716,8 @@ $: {
                                           </tr>
                                         </thead>
                                         <tbody>
-                                          {#each (data?.user?.tier === 'Pro' ? optionList : optionList?.slice(0,3)) as item, index}
-                                          <tr on:click={() => handleViewData(item?.date)} on:mouseover={() => getDailyTransactions($stockTicker+'+'+item?.date)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                                          {#each optionList as item, index}
+                                          <tr on:click={() => handleViewData(item?.date)} on:mouseover={() => getDailyTransactions($stockTicker+'+'+item?.date)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                                             
                                             <td class="text-white text-sm sm:text-[1rem] text-start">
                                               {formatDate(item?.date)}
@@ -811,8 +809,8 @@ $: {
                                           </tr>
                                         </thead>
                                         <tbody>
-                                          {#each (data?.user?.tier === 'Pro' ? optionChainList : optionChainList?.slice(0,3)) as item, index}
-                                          <tr class="odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionChainList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                                          {#each optionChainList as item, index}
+                                          <tr class="odd:bg-[#27272A] border-b-[#09090B]">
                                             
                                             <td class="text-white text-sm sm:text-[1rem] text-end">
                                                {abbreviateNumber(item?.total_premium_call,true)}
@@ -858,7 +856,7 @@ $: {
                                     
                                 </div>
     
-                                <UpgradeToPro data={data} title="Get the recent Options Flow Data from Hedge Funds and major institutional traders to never miss out"/>
+                                <!---<UpgradeToPro data={data} title="Get the recent Options Flow Data from Hedge Funds and major institutional traders to never miss out"/>-->
     
                                 {:else}
                                 <div class="flex justify-center items-center m-auto mt-16 mb-6">
@@ -893,15 +891,8 @@ $: {
 <!-- Put this part before </body> tag -->
 
 <dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
-  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto">
-    <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
-      <button class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white">
-        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/>
-        </svg>
-      </button>
-    </form>
-
-    <p class="text-gray-200 mt-10 cursor-text">
+  <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#09090B] border-t sm:border border-gray-600 h-auto">
+     <p class="text-gray-200 mt-10 cursor-text">
       <span class="text-white text-xl font-semibold mb-4">Option Data Details:</span>
       <br class="">
       {#if optionHistoryList?.length !== 0}
@@ -1014,8 +1005,10 @@ $: {
         {/if}
       </div>
     </div>
+
+
   </div>
-  <form method="dialog" class="modal-backdrop">
+  <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
     <button>close</button>
   </form>
 </dialog>

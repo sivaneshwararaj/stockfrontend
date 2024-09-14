@@ -1,16 +1,5 @@
 import { getCache, setCache } from "$lib/store";
 
-function daysLeft(targetDate) {
-  const targetTime = new Date(targetDate).getTime();
-  const currentTime = new Date().getTime();
-  const difference = targetTime - currentTime;
-
-  const millisecondsPerDay = 1000 * 60 * 60 * 24;
-  const daysLeft = Math?.ceil(difference / millisecondsPerDay);
-
-  return daysLeft;
-}
-
 export const load = async ({ parent, params }) => {
   const { apiKey, apiURL } = await parent();
 

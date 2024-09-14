@@ -588,11 +588,8 @@ $: {
                   <Card.Header class="p-4">
                     <Card.Title>Upgrade to Pro</Card.Title>
                     <Card.Description>
-                      {#if data?.user?.freeTrial === true}
-                       Your free trial will expire soon.
-                       Upgrade now for unlimited access to all features!
-                      {:else}
-                        Unlock all features of the platform and level up your trading.
+                      {#if !data?.user || data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
+                       Support the Platform to be always free ❤
                       {/if}
                     </Card.Description>
                   </Card.Header>
@@ -600,7 +597,7 @@ $: {
                     <Sheet.Close asChild let:builder>
                       <Button on:click={() => goto('/pricing')} builders={[builder]} type="submit" size="sm" class="w-full bg-white hover:bg-white/80">
                         <span class="flex flex-row items-center text-black font-semibold text-center">
-                          Upgrade
+                          Become Pro
                         </span>
                       </Button>
                   </Sheet.Close>
@@ -903,17 +900,12 @@ $: {
                 <Card.Header class="p-2 pt-0 md:p-4">
                   <Card.Title>Upgrade to Pro</Card.Title>
                   <Card.Description>
-                    {#if data?.user?.freeTrial === true}
-                      Your free trial will be expired soon.
-                      Upgrade now for unlimited access to all features!
-                    {:else}
-                      Unlock all features of the platform and level up your trading.
-                    {/if}
+                    Support the Platform to be always free ❤
                   </Card.Description>
                 </Card.Header>
                 <Card.Content class="p-2 pt-0 md:p-4 md:pt-0">
                   <a href="/pricing" class="flex justify-center items-center text-center rounded-lg text-sm py-2 m-auto text-center w-full bg-white text-black font-semibold hover:bg-white/80">
-                    Upgrade
+                    Become Pro
                   </a>
                 </Card.Content>
               </Card.Root>

@@ -22,9 +22,7 @@ export const load = async ({ parent }) => {
       setCache("", output, "getCramerTracker");
     }
 
-    output = user?.tier !== "Pro" ? output?.slice(0, 5) : output;
-
-    //output = data?.user?.tier !== 'Pro' ? output?.slice(0,6) : output;
+    //output = user?.tier !== "Pro" ? output?.slice(0, 5) : output;
 
     return output;
   };
