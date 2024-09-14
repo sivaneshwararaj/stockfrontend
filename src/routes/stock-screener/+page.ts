@@ -17,17 +17,36 @@ const ensureAllEmaParameters = (params) => {
 };
 
 export const load = async ({ parent, params }) => {
-  const { apiURL, apiKey, fastifyURL } = await parent();
+  const { apiURL, apiKey, fastifyURL, user } = await parent();
 
   const getStrategyId = async () => {
     return params.strategyId;
   };
 
-  const getStrategy = async () => {
+  const getAllStrategies = async () => {
+    const postData = { userId: user?.id };
+    const response = await fetch(fastifyURL + "/all-strategies", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const output = (await response.json())?.items;
+
+    output?.sort((a, b) => new Date(b?.updated) - new Date(a?.updated));
+
+    //console.log(output);
+
+    return output;
+  };
+
+  const getStrategy = async (strategyId) => {
     let output;
 
     // make the POST request to the endpoint
-    const postData = { strategyId: params.strategyId };
+    const postData = { strategyId: strategyId };
     const response = await fetch(fastifyURL + "/get-strategy", {
       method: "POST",
       headers: {
@@ -43,7 +62,9 @@ export const load = async ({ parent, params }) => {
 
   const getStockScreenerData = async () => {
     let output;
-    const strategy = await getStrategy();
+    const strategyList = await getAllStrategies();
+
+    const strategy = await getStrategy(strategyList?.at(0)?.id);
     let getRuleOfList = strategy?.rules?.map((item) => item?.name) || [];
 
     // Ensure all required EMA parameters are included
@@ -81,5 +102,6 @@ export const load = async ({ parent, params }) => {
     getStockScreenerData: await getStockScreenerData(),
     getStrategy: await getStrategy(),
     getStrategyId: await getStrategyId(),
+    getAllStrategies: await getAllStrategies(),
   };
 };

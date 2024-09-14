@@ -1,38 +1,254 @@
 <script lang='ts'>
-  import { goto } from '$app/navigation';
-  import { strategyId, screenWidth, numberOfUnreadNotification } from '$lib/store';
-  import Input  from '$lib/components/Input.svelte';
+  import { onMount, onDestroy } from 'svelte';
+  import { goto} from '$app/navigation';
+  import { screenWidth, numberOfUnreadNotification, strategyId} from '$lib/store';
   import toast from 'svelte-french-toast';
-  import logo from "$lib/images/stock_screener_logo.png";
-  import { formatDate, formatRuleValue } from '$lib/utils';
+  import { abbreviateNumber, sectorList, industryList, listOfRelevantCountries } from '$lib/utils';
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import { Button } from "$lib/components/shadcn/button/index.js";
+  import Input  from '$lib/components/Input.svelte';
 
+  //const userConfirmation = confirm('Unsaved changes detected. Leaving now will discard your strategy. Continue?');
 
-  import { onMount } from 'svelte';
-  
+  import { writable } from 'svelte/store';
 
+  let shouldLoadWorker = writable(false);
   export let data;
   export let form;
-  
+  let showFilters = true;
   let isLoaded = false;
-  let strategyList = [];
+  let syncWorker: Worker | undefined;
+  let downloadWorker: Worker | undefined;
+  let searchQuery = '';
+  $: testList = [];
+
+  let ruleOfList = data?.getStrategy?.rules ?? [];
+
+  let strategyList = data?.getAllStrategies;
+  let selectedStrategy = strategyList?.at(0)?.id ?? '';
+
+  let displayRules = [];
+  let selectedPopularStrategy = ''; 
+  let displayTableTab = 'general';
+
+  let stockScreenerData = data?.getStockScreenerData?.filter(item => 
+  Object?.values(item)?.every(value => 
+    value !== null && value !== undefined && 
+    (typeof value !== 'object' || Object?.values(value)?.every(subValue => subValue !== null && subValue !== undefined))
+  )
+);
+
+
+// Define all possible rules and their properties
+const allRules = {
+  avgVolume: { label: 'Average Volume', step: ['100M','10M','1M','100K','10K','1K','0'], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  volume: { label: 'Volume', step: ['100M','10M','1M','100K','10K','1K','0'], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  rsi: { label: 'RSI', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
+  stochRSI: { label: 'Stoch RSI Fast', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
+  mfi: { label: 'MFI', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
+  cci: { label: 'CCI', step: [250,200,100,50,20,0,-20,-50,-100,-200,-250], category: 'ta', defaultCondition: 'over', defaultValue: 0 },
+  atr: { label: 'ATR', step: [20,15,10,5,3,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
+  sma20: { label: 'SMA20', step: ['Stock Price > SMA20', 'SMA20 > SMA50', 'SMA20 > SMA100', 'SMA20 > SMA200'], category: 'ta', defaultValue: 'any' },
+  sma50: { label: 'SMA50', step: ['Stock Price > SMA50', 'SMA50 > SMA20', 'SMA50 > SMA100', 'SMA50 > SMA200'], category: 'ta', defaultValue: 'any' },
+  sma100: { label: 'SMA100', step: ['Stock Price > SMA100', 'SMA100 > SMA20', 'SMA100 > SMA50', 'SMA100 > SMA200'], category: 'ta', defaultValue: 'any' },
+  sma200: { label: 'SMA200', step: ['Stock Price > SMA200', 'SMA200 > SMA20', 'SMA200 > SMA50', 'SMA200 > SMA100'], category: 'ta', defaultValue: 'any' },
+  ema20: { label: 'EMA20', step: ['Stock Price > EMA20', 'EMA20 > EMA50', 'EMA20 > EMA100', 'EMA20 > EMA200'], category: 'ta', defaultValue: 'any' },
+  ema50: { label: 'EMA50', step: ['Stock Price > EMA50', 'EMA50 > EMA20', 'EMA50 > EMA100', 'EMA50 > EMA200'], category: 'ta', defaultValue: 'any' },
+  ema100: { label: 'EMA100', step: ['Stock Price > EMA100', 'EMA100 > EMA20', 'EMA100 > EMA50', 'EMA100 > EMA200'], category: 'ta', defaultValue: 'any' },
+  ema200: { label: 'EMA200', step: ['Stock Price > EMA200', 'EMA200 > EMA20', 'EMA200 > EMA50', 'EMA200 > EMA100'], category: 'ta', defaultValue: 'any' },
+  price: { label: 'Stock Price', step: [1000,500,400,300,200,150,100,80,60,50,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 10 },
+
+  change1W: { label: 'Price Change 1W', step: ['20%','10%','5%','1%','-1%','-5%','-10%','-20%'], category: 'ta', defaultCondition: 'over', defaultValue: '1%' },
+  change1M: { label: 'Price Change 1M', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
+  change3M: { label: 'Price Change 3M', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
+  change6M: { label: 'Price Change 6M', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
+  change1Y: { label: 'Price Change 1Y', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
+  change3Y: { label: 'Price Change 3Y', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
+  marketCap: { label: 'Market Cap', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  revenue: { label: 'Revenue', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthRevenue: { label: 'Revenue Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  costOfRevenue: { label: 'Cost of Revenue', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthCostOfRevenue: { label: 'Cost of Revenue Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  costAndExpenses: { label: 'Cost & Expenses', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthCostAndExpenses: { label: 'Cost & Expenses Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  netIncome: { label: 'Net Income', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthNetIncome: { label: 'Net Income Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  grossProfit: { label: 'Gross Profit', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthGrossProfit: { label: 'Gross Profit Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  researchAndDevelopmentExpenses: { label: 'Research & Development', step: ['10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  growthResearchAndDevelopmentExpenses: { label: 'R&D Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  payoutRatio: { label: 'Payout Ratio', step: ['100%','80%','60%','40%','20%','0%','-20%','-40%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
+  dividendYield: { label: 'Dividend Yield', step: ['50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  annualDividend: { label: 'Annual Dividend', step: [10,5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  dividendGrowth: { label: 'Dividend Growth', step: ['50%','20%','10%','5%','3%','2%','1%','0%'],category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  eps: { label: 'EPS', step: [20,15,10,5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  growthEPS: { label: 'EPS Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  interestIncome: { label: 'Interest Income', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  interestExpense: { label: 'Interest Expenses', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthInterestExpense: { label: 'Interest Expenses Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  operatingExpenses: { label: 'Operating Expenses', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthOperatingExpenses: { label: 'Operating Expenses Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  operatingIncome: { label: 'Operating Income', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthOperatingIncome: { label: 'Operating Income Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  growthFreeCashFlow: { label: 'Free Cash Flow Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  growthOperatingCashFlow: { label: 'Operating Cash Flow Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  growthStockBasedCompensation: { label: 'Stock-Based Compensation Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  growthTotalLiabilities: { label: 'Total Liabilities Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  growthTotalDebt: { label: 'Total Debt Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  growthTotalStockholdersEquity: { label: 'Shareholders Equity Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  researchDevelopmentRevenueRatio: { label: 'R&D / Revenue', step: ['20%','10%','5%','1%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+
+  cagr3YearRevenue: { label: 'Revenue CAGR 3Y', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  cagr5YearRevenue: { label: 'Revenue CAGR 5Y', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  cagr3YearEPS: { label: 'EPS CAGR 3Y', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  cagr5YearEPS: { label: 'EPS CAGR 5Y', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  returnOnInvestedCapital: { label: 'Return On Capital', step: ['100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  relativeVolume: { label: 'Relative Volume', step: ['500%','200%','100%','50%','10%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '50%' },
+  institutionalOwnership: { label: 'Institutional Ownership', step: ['90%','80%','70%','60%','50%','40%','30%','20%','10%'], category: 'fund', defaultCondition: 'over', defaultValue: '10%' },
+
+  pe: { label: 'PE Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
+  forwardPE: { label: 'Forward PE', step: [50,20,10,5,1,0,-1,-5,-10,-20,-50], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  forwardPS: { label: 'Forward PS', step: [50,20,10,5,1,0], category: 'fund', defaultCondition: 'over', defaultValue: 5 },
+
+  priceToBookRatio: { label: 'PB Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
+  priceToSalesRatio: { label: 'PS Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
+  beta: { label: 'Beta', step: [10,5,1,-5,-10], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
+  ebitda: { label: 'EBITDA', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  growthEBITDA: { label: 'EBITDA Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  var: { label: 'Value-at-Risk', step: ['-1%','-5%','-10%','-15%','-20%'], category: 'fund', defaultCondition: 'over', defaultValue: '-5%' },
+  trendAnalysis: { label: 'AI Trend Analysis (Bullish)', step: ['80%','70%','60%','50%'], category: 'ai', defaultCondition: 'over', defaultValue: '50%' },
+  fundamentalAnalysis: { label: 'AI Fundamental Analysis (Bullish)', step: ['80%','70%','60%','50%'], category: 'ai', defaultCondition: 'over', defaultValue: '50%' },
+  currentRatio: { label: 'Current Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
+  quickRatio: { label: 'Quick Ratio', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
+  debtEquityRatio: { label: 'Debt / Equity', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 1 },
+  debtRatio: { label: 'Debt Ratio', step: [1,0.5,0,-0.5,-1], category: 'fund', defaultCondition: 'over', defaultValue: -0.5 },
+  returnOnAssets: { label: 'Return on Assets', step: [10,8,6,4,2,1,0,-2,-4,-6,-8,-10], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  returnOnEquity: { label: 'Return on Equity', step: [10,8,6,4,2,1,0,-2,-4,-6,-8,-10], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  enterpriseValue: { label: 'Enterprise Value', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  freeCashFlowPerShare: { label: 'FCF / Share', step: [10,8,6,4,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  cashPerShare: { label: 'Cash / Share', step: [50,20,10,5,1,0,-1,-5,-10,-20,-50], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  priceToFreeCashFlowsRatio: { label: 'Price / FCF', step: [50,20,10,5,1,0,-1,-5,-10,-20,-50], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  sharesShort: { label: 'Short Interest', step: ['50M','20M','10M','5M','1M','500K'],category: 'fund', defaultCondition: 'over', defaultValue: '500K' },
+  shortRatio: { label: 'Short Ratio', step: [10,5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  shortFloatPercent: { label: 'Short % Float', step: ['50%','30%','20%','10%','5%','1%','0%'], category:'fund', defaultCondition: 'over', defaultValue: '0%' },
+  shortOutStandingPercent: { label: 'Short % Shares', step: ['50%','30%','20%','10%','5%','1%','0%'], category:'fund', defaultCondition: 'over', defaultValue: '0%' },
+  failToDeliver: { label: 'Fail to Deliver', step: ['1M','500K','200K','100K','50K','10K','1K'], category: 'fund', defaultCondition: 'over', defaultValue: '1K' },
+  freeCashFlow: { label: 'Free Cash Flow', step: ['50B','10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  operatingCashFlow: { label: 'Operating Cash Flow', step: ['50B','10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  operatingCashFlowPerShare: { label: 'Operating Cash Flow / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+  freeCashFlowMargin: { label: 'FCF Margin', step: ['80%','50%','20%','10%','5%','0%','-5%','-10%','-20%','-50%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
+  totalDebt: { label: 'Total Debt', step: ['200B','100B','50B','10B','1B','100M','10M','1M'], category: 'fund', defaultCondition: 'over', defaultValue: '1M' },
+  cashFlowToDebtRatio: { label: 'Cash Flow / Debt', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+  operatingCashFlowSalesRatio: { label: 'Operating Cash Flow / Sales', step: [5,3,1,0.5,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  priceCashFlowRatio: { label: 'Price / Cash Flow', step: [20,15,10,5,3,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  priceEarningsRatio: { label: 'Price / Earnings', step: [100,50,20,10,5,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  priceEarningsToGrowthRatio: { label: 'Price / Earnings Growth', step: [10,5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  stockBasedCompensation: { label: 'Stock-Based Compensation', step: ['10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  totalStockholdersEquity: { label: 'Shareholders Equity', step: ['100B','50B','10B','1B','100M','50M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  grossProfitMargin: { label: 'Gross Margin', step: ['80%','60%','50%','20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  netProfitMargin: { label: 'Profit Margin', step: ['80%','60%','50%','20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  pretaxProfitMargin: { label: 'Pretax Margin', step: ['80%','60%','50%','20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  ebitdaMargin: { label: 'EBITDA Margin', step: ['80%','60%','50%','20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  assetTurnover: { label: 'Asset Turnover', step: [5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
+  earningsYield: { label: 'Earnings Yield', step: ['20%','15%','10%','5%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
+  freeCashFlowYield: { label: 'FCF Yield', step: ['20%','15%','10%','5%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
+  effectiveTaxRate: { label: 'Effective Tax Rate', step: ['20%','15%','10%','5%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
+  fixedAssetTurnover: { label: 'Fixed Asset Turnover', step: [10,5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  sharesOutStanding: { label: 'Shares Outstanding', step: ['10B','5B','1B','100M','50M','10M','1M'], category: 'fund', defaultCondition: 'over', defaultValue: '1M' },
+  employees: { label: 'Employees', step: ['500K','300K','200K','100K','10K','1K','100'], category: 'fund', defaultCondition: 'over', defaultValue: '100K' },
+  revenuePerEmployee: { label: 'Revenue Per Employee', step: ['5M','3M','2M','1M','500K','100K',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  profitPerEmployee: { label: 'Profit Per Employee', step: ['5M','3M','2M','1M','500K','100K',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  totalLiabilities: { label: 'Total Liabilities', step: ['500B','200B','100B','50B','10B','1B','100M','10M','1M'], category: 'fund', defaultCondition: 'over', defaultValue: '1M' },
+  analystRating: { label: 'Analyst Rating', step: ['Buy', 'Hold', 'Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  sector: { label: 'Sector', step: sectorList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  industry: { label: 'Industry', step: industryList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  country: { label: 'Country', step: listOfRelevantCountries, category: 'fund', defaultCondition: '', defaultValue: 'any' },
+
+};
+
+
+
+  let filteredData = [];
+  let displayResults = [];
+  let isSaved = false;
+
+  // Generate allRows from allRules
+$: allRows = Object?.entries(allRules)
+  ?.sort(([, a], [, b]) => a.label.localeCompare(b.label))  // Sort by label
+  ?.map(([ruleName, ruleProps]) => ({
+    rule: ruleName,
+    ...ruleProps
+  }));
+
+
+      let filteredRows;
+      let searchTerm = '';
+      /*
+      let taRows = allRows?.filter(row => row.category === 'ta');
+      let fundRows = allRows?.filter(row => row.category === 'fund');
+    
+      taRows?.sort((a, b) => a.label.localeCompare(b.label));
+      fundRows?.sort((a, b) => a.label.localeCompare(b.label));
+      */
   
-async function getAllStrategies()
-{
-    const postData = {'userId': data?.user?.id}
-    const response = await fetch(data?.fastifyURL+'/all-strategies', {
-    method: 'POST',
-    headers: {
-     "Content-Type": "application/json"
-    },
-    body: JSON.stringify(postData)
-  });
+      let ruleName = '';
+      
+      // Define your default values
 
-  const output = (await response.json())?.items;
+      let ruleCondition = {};
+      let valueMappings = {};
 
-  return output;
+      Object.keys(allRules).forEach(ruleName => {
+        ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
+        valueMappings[ruleName] = allRules[ruleName].defaultValue;
+      });
 
+      // Update ruleCondition and valueMappings based on existing rules
+      ruleOfList.forEach(rule => {
+        ruleCondition[rule.name] = rule.condition || allRules[rule.name].defaultCondition;
+        valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
+      });
+
+
+async function handleCreateStrategy() {
+  if(data?.user) {
+    const closePopup = document.getElementById("addStrategy");
+    closePopup?.dispatchEvent(new MouseEvent('click'))
+  } else {
+    goto('/pricing')
+  }
 }
 
+async function handleDeleteStrategy() {
+  
+    const postData = {'strategyId': selectedStrategy};
+
+    const response = await fetch(data?.fastifyURL+'/delete-strategy', {
+      method: 'POST',
+      headers: {
+         "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    });
+  
+    const output = (await response.json())?.items
+  
+    if (output === 'success')
+    {
+      toast.success('Strategy deleted successfully!', {
+        style: 'border-radius: 200px; background: #333; color: #fff;'});
+  
+        strategyList= strategyList?.filter(item => item?.id !== selectedStrategy);
+        selectedStrategy = strategyList?.at(0)?.id ?? '';
+    }
+    else if ( output === 'failure')
+    {
+      toast.error('Something went wrong. Please try again', {
+        style: 'border-radius: 200px; background: #333; color: #fff;'});
+    }
+  
+  
+  }
 
 async function createStrategy(event)
 { 
@@ -76,11 +292,15 @@ async function createStrategy(event)
   });
 
   const output = (await response.json())?.items;
-
   if (output?.id && output?.id?.length !== 0) {
     toast.success('Strategy created successfully!', {
             style: 'border-radius: 200px; background: #333; color: #fff;'});
-      goto("/stock-screener/"+output?.id);
+
+    const closePopup = document.getElementById("addStrategy");
+    closePopup?.dispatchEvent(new MouseEvent('click'))
+    selectedStrategy = output?.id;
+    ruleOfList = [];
+    strategyList?.unshift(output);
   } else {
     toast.error('Something went wrong. Please try again later!', {
       style: 'border-radius: 200px; background: #333; color: #fff;'});
@@ -90,439 +310,1133 @@ async function createStrategy(event)
 
 }
 
+function changeRule(state: string)  
+{
+  searchTerm = '';
+  selectedPopularStrategy = '';
+  ruleName = state;
+  handleAddRule()
+
+  //const closePopup = document.getElementById("ruleModal");
+  //closePopup?.dispatchEvent(new MouseEvent('click'))
+}
+
+
+const handleMessage = (event) => {
+    displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
+    filteredData = event.data?.filteredData ?? [];
+    displayResults = filteredData?.slice(0, 50);
+
+};
+
+const handleScreenerMessage = (event) => {
+    stockScreenerData = event?.data?.stockScreenerData;
+    shouldLoadWorker.set(true);
+
+};
+
+const loadWorker = async () => {
+    syncWorker.postMessage({ stockScreenerData, ruleOfList });
+};
+
+const updateStockScreenerData = async () => {
+    downloadWorker.postMessage({ ruleOfList: ruleOfList, apiURL: data?.apiURL, apiKey: data?.apiKey });
+};
+ 
+function handleAddRule() {
+    
+    if (ruleName === '') {
+      toast.error('Please select a rule', {
+        style: 'border-radius: 200px; background: #333; color: #fff;'
+      });
+      return;
+    }
+  
+    let newRule;
+  
+   switch (ruleName) {
+      case 'analystRating':
+      case 'sector':
+      case 'industry':
+      case 'country':
+      case 'ema20':
+      case 'ema50':
+      case 'ema100':
+      case 'ema200':
+      case 'sma20':
+      case 'sma50':
+      case 'sma100':
+      case 'sma200':
+        newRule = { name: ruleName, value: Array.isArray(valueMappings[ruleName]) ? valueMappings[ruleName] : [valueMappings[ruleName]] }; // Ensure value is an array
+        break;
+      default:
+        newRule = { 
+          name: ruleName, 
+          condition: ruleCondition[ruleName], 
+          value: valueMappings[ruleName] 
+        };
+        break;
+    }
+    handleRule(newRule);
+}
+
+async function handleRule(newRule) {
+  const existingRuleIndex = ruleOfList.findIndex(rule => rule.name === newRule.name);
+  
+  if (existingRuleIndex !== -1) {
+    const existingRule = ruleOfList[existingRuleIndex];
+    if (existingRule.name === newRule.name) {
+      // Remove the rule instead of showing an error
+      ruleOfList.splice(existingRuleIndex, 1);
+      ruleOfList = [...ruleOfList]; // Trigger reactivity
+    } else {
+      ruleOfList[existingRuleIndex] = newRule;
+      ruleOfList = [...ruleOfList]; // Trigger reactivity
+    }
+  } else {
+    ruleOfList = [...ruleOfList, newRule];
+    /*
+    toast.success('Rule added', {
+      style: 'border-radius: 200px; background: #333; color: #fff;'
+    });
+    */
+
+    await updateStockScreenerData();
+  }
+}
+
+      
+async function handleResetAll() {
+  selectedPopularStrategy = '';
+  displayTableTab = 'general';
+  ruleOfList = [];
+  ruleOfList = [...ruleOfList];
+  ruleName = '';
+  filteredData = [];
+  displayResults = [];
+  await handleSave(false);
+}
+
+async function handleDeleteRule(state) {
+  selectedPopularStrategy = '';
+  for (let i = 0; i < ruleOfList.length; i++) {
+    if (ruleOfList[i].name === state) {
+      ruleOfList.splice(i, 1); // Remove the element at index i from the ruleOfList
+      ruleOfList = [...ruleOfList]
+      break; // Exit the loop after deleting the element
+    }
+  }
+
+  if(ruleOfList?.length === 0)
+  {
+    ruleName = '';
+    filteredData = [];
+    displayResults = [];
+  }
+  else if (state === ruleName)
+  {
+    ruleName = '';
+  }
+
+  await handleSave(false);
+}
+      
+
+
+  
+async function handleScroll() {
+  const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+  const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+  if (isBottom && displayResults?.length !== filteredData?.length) {
+      const nextIndex = displayResults?.length;
+      const filteredNewResults = filteredData?.slice(nextIndex, nextIndex + 30);
+      displayResults = [...displayResults, ...filteredNewResults];
+  }
+}
+
+/*
+const handleKeyDown = (event) => {
+    if (event.ctrlKey && event.key === 's') {
+      event.preventDefault(); // prevent the browser's default save action
+      handleSave();
+    }
+  };
+
+*/
+
 let LoginPopup;
 
 onMount(async () => {
-  if(data?.user) {
-    strategyList = await getAllStrategies()
-  }
-  else {
-    strategyList = [];
+  
+   if (!syncWorker) {
+        const SyncWorker = await import('./workers/filterWorker?worker');
+        syncWorker = new SyncWorker.default();
+        syncWorker.onmessage = handleMessage;
+    }
+
+    if (!downloadWorker) {
+        const DownloadWorker = await import('./workers/downloadWorker?worker');
+        downloadWorker = new DownloadWorker.default();
+        downloadWorker.onmessage = handleScreenerMessage;
+    }
+
+  if(!data?.user) {
     LoginPopup = (await import('$lib/components/LoginPopup.svelte')).default;
   }
 
-  isLoaded = true;
-})
-
-  
-
-    
-  let editStrategyId;
-  let deleteStrategyId;
-  let ruleOfList = [];
-  let strategyTitle;
-
-  function handleView(liste, title) {
-  
-
-    ruleOfList = liste;
-    strategyTitle = title;
-    
-  }
-  
-  
-  async function handleDeleteStrategy() {
-  
-    const postData = {'strategyId': deleteStrategyId};
-
-    const response = await fetch(data?.fastifyURL+'/delete-strategy', {
-      method: 'POST',
-      headers: {
-         "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-    });
-  
-    const output = (await response.json())?.items
-  
-    if (output === 'success')
-    {
-      toast.success('Strategy deleted successfully!', {
-        style: 'border-radius: 200px; background: #333; color: #fff;'});
-  
-        strategyList= strategyList?.filter(item => item?.id !== deleteStrategyId);
+    shouldLoadWorker.subscribe(async (value) => {
+    if (value) {
+      isLoaded = false;
+      await loadWorker();
+      shouldLoadWorker.set(false); // Reset after worker is loaded
+      isLoaded = true;
     }
-    else if ( output === 'failure')
-    {
-      toast.error('Something went wrong. Please try again', {
-        style: 'border-radius: 200px; background: #333; color: #fff;'});
-    }
+  });
   
+});
+
+
+onDestroy(() => {
+    syncWorker?.terminate();
+    syncWorker = undefined;
+});
+
   
-  }
-  
-  
-  async function selectStrategy(state:String)
+async function handleSave(printToast) {
+  if(data?.user)
   {
-    $strategyId = state;
-    goto("/stock-screener/"+$strategyId);
+    if(isSaved === false)
+    {
+        const postData = {'strategyId': selectedStrategy, 'rules': ruleOfList}  
+                      
+        const response = await fetch(data?.fastifyURL+'/save-strategy', {
+          method: 'POST',
+          headers: {
+             "Content-Type": "application/json"
+          },
+          body: JSON.stringify(postData)
+        });
+      
+      
+        const output = (await response.json())?.items
+      
+        if (printToast === true) {
+          if (output?.id && output?.id?.length !== 0) {
+          toast.success('Strategy saved!', {
+                  style: 'border-radius: 200px; background: #333; color: #fff;'});
+          } else {
+            toast.error('Something went wrong. Please try again later!', {
+              style: 'border-radius: 200px; background: #333; color: #fff;'});
+          }
+        }
+       
+      isSaved = true;
+    }
+   
+  }  
+}
+  
+
+$: {
+  if (ruleOfList) {
+    const ruleToUpdate = ruleOfList?.find(rule => rule.name === ruleName);
+    if (ruleToUpdate) {
+      ruleToUpdate.value = valueMappings[ruleToUpdate.name];
+      ruleToUpdate.condition = ruleCondition[ruleToUpdate.name];
+      ruleOfList = [...ruleOfList];
+    }
+    shouldLoadWorker.set(true);
   }
-  
-  
-  const ruleMappings = {
-        ratingRecommendation: 'Analyst Rating',
-        revenue: 'Revenue',
-        growthRevenue: 'Revenue Growth',
-        costOfRevenue: 'Cost of Revenue',
-        growthCostOfRevenue: 'Cost Of Revenue Growth',
-        costAndExpenses: 'Cost & Expenses',
-        growthCostAndExpenses: 'Cost & Expenses Growth',
-        netIncome: 'Net Income',
-        growthNetIncome: 'Net Income Growth',
-        grossProfit: 'Gross Profit',
-        growthGrossProfit: 'Gross Profit Growth',
-        researchAndDevelopmentExpenses: 'R&D Expenses',
-        growthResearchAndDevelopmentExpenses: 'R&D Expenses Growth',
-        marketCap: 'Market Cap',
-        eps: 'EPS',
-        growthEPS: 'EPS Growth',
-        interestIncome: 'Interest Income',
-        interestExpenses: 'Interest Expenses',
-        growthInterestExpenses: 'Interest Expenses Growth',
-        operatingExpenses: 'Operating Expenses',
-        growthOperatingExpenses: 'Operating Expenses Growth',
-        operatingIncome: 'Operating Income',
-        growthOperatingIncome: 'Operating Income Growth',
-        pe: 'PE Ratio',
-        beta: 'Beta',
-        ebitda: 'EBITDA',
-        growthEBITDA: 'EBITDA Growth',
-        ESGScore: 'ESG Score',
-        atr: 'Average True Range (ATR)',
-        rsi: 'Relative Strength Index (RSI 14)',
-        sma50: '50-Day Simple Moving Average (SMA-50)',
-        sma200: '200-Day Simple Moving Average (SMA-200)',
-        ema50: '50-Day Exp. Moving Average (EMA-50)',
-        ema200: '200-Day Exp. Moving Average (EMA-200)',
-        change1W: 'Price Change 1W',
-        change1M: 'Price Change 1M',
-        change3M: 'Price Change 3M',
-        change6M: 'Price Change 6M',
-        change1Y: 'Price Change 1Y',
-        change3Y: 'Price Change 3Y',
-        priceToBookRatio: 'Price to Book Ratio (PB)',
-        priceToSalesRatio: 'Price to Sales Ratio (PS)',
-        avgVolume: 'Avgerage Volume',
+}
+
+
+
+enum Order {
+  HighToLow = 'highToLow',
+  LowToHigh = 'lowToHigh'
+}
+
+enum SortBy {
+  Change = 'change',
+  MarketCap = 'marketCap',
+  PE = 'pe', // Add new sorting criteria here
+  Volume = 'volume' // Add new sorting criteria here
+
+}
+
+// Mapping of SortBy enum to actual data keys
+const sortByKeys: Record<SortBy, string> = {
+  [SortBy.Change]: 'changesPercentage',
+  [SortBy.MarketCap]: 'marketCap',
+  [SortBy.PE]: 'pe',
+  [SortBy.Volume]: 'volume', // Add new key here
+
+};
+
+let order = Order.HighToLow;
+let sortBy = SortBy.MarketCap; // Default sorting by change percentage
+
+function changeOrder(state: Order) {
+  order = state === Order.HighToLow ? Order.LowToHigh : Order.HighToLow;
+}
+
+const sortItems = (tickerList: any[], key: string) => {
+  return tickerList?.sort((a, b) => {
+    const aValue = a[key] ?? 0;
+    const bValue = b[key] ?? 0;
+    return order === Order.HighToLow ? bValue - aValue : aValue - bValue;
+  });
+}
+
+$: {
+  if (order) {
+    const key = sortByKeys[sortBy]; // Use the mapping to get the key
+    displayResults = sortItems(filteredData, key)?.slice(0, 50);
+  }
+}
+
+
+$: {
+  if(searchTerm)
+  {
+    filteredRows = allRows?.filter((row) => row?.label?.toLowerCase()?.includes(searchTerm?.toLowerCase()));
+  }
+}
+
+
+
+$: isSaved = !ruleOfList;
+
+$: charNumber = $screenWidth < 640 ? 20 : 40;
+
+
+function changeRuleCondition(name: string, state: string) {
+  ruleName = name;
+  ruleCondition[ruleName] = state;
+}
+
+let checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
+
+function isChecked(item) {
+    return checkedItems.has(item);
+  }
+
+async function handleChangeValue(value) {
+  if (checkedItems.has(value)) {
+      checkedItems.delete(value);
+    } else {
+      checkedItems.add(value);
+    }
+  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','sector','industry','country']?.includes(ruleName)) {
+    // Ensure valueMappings[ruleName] is initialized as an array
+    searchQuery = '';
+    if (!Array.isArray(valueMappings[ruleName])) {
+      valueMappings[ruleName] = []; // Initialize as an empty array if not already
+    }
+
+    const index = valueMappings[ruleName].indexOf(value);
+    if (index === -1) {
+      // Add the country if it's not already selected
+      valueMappings[ruleName].push(value);
+    } else {
+      // Remove the country if it's already selected (deselect)
+      valueMappings[ruleName].splice(index, 1);
+    }
+
+    // If no countries are selected, set value to "any"
+    if (valueMappings[ruleName].length === 0) {
+      valueMappings[ruleName] = "any";
+    }
+
+    await updateStockScreenerData()
+  } else if (ruleName in valueMappings) {
+    // Handle non-country rules as single values
+    valueMappings[ruleName] = value;
+  } else {
+    console.warn(`Unhandled rule: ${ruleName}`);
+  }
+
+}
+
+
+
+
+async function popularStrategy(state: string) {
+  ruleOfList = [];
+    const strategies = {
+        dividendGrowth: {
+            name: 'Dividend Growth',
+            rules: [
+                { condition: "over", name: "dividendGrowth", value: '5%' },
+                { condition: "over", name: "dividendYield", value: '1%' },
+                { condition: "under", name: "payoutRatio", value: '60%' },
+                { condition: "over", name: "growthRevenue", value: '5%' }
+            ]
+        },
+        topGainers1Y: {
+            name: 'Top Gainers 1Y',
+            rules: [
+                { condition: "over", name: "change1Y", value: '50%' },
+                { condition: "over", name: "marketCap", value: '10B' },
+                { condition: "over", name: "eps", value: 5 }
+            ]
+        },
+        topShortedStocks: {
+            name: 'Top Shorted Stocks',
+            rules: [
+                { condition: "over", name: "shortFloatPercent", value: '20%' },
+                { condition: "over", name: "shortRatio", value: 1 },
+                { condition: "over", name: "shortOutStandingPercent", value: '10%' },
+                { condition: "over", name: "sharesShort", value: '20M' },
+                { condition: "over", name: "marketCap", value: '100M' }
+            ]
+        },
+        momentumTAStocks: {
+            name: 'Momentum TA Stocks',
+            rules: [
+                { condition: "under", name: "rsi", value: 40 },
+                { condition: "under", name: "stochRSI", value: 40 },
+                { condition: "over", name: "marketCap", value: '1B' },
+                { condition: "under", name: "mfi", value: 40 }
+            ]
+        },
+        topAIStocks: {
+            name: 'Best AI Forecast',
+            rules: [
+                { condition: "over", name: "fundamentalAnalysis", value: '70%' },
+                { condition: "over", name: "trendAnalysis", value: '60%' },
+                { condition: "over", name: "marketCap", value: '1B' }
+            ]
+        },
+        underValuedStocks: {
+            name: 'Undervalued Stocks',
+            rules: [
+                { condition: "under", name: "marketCap", value: '100M' },
+                { condition: "over", name: "debtEquityRatio", value: 1 },
+                { condition: "over", name: "debtRatio", value: -0.5 },
+                { condition: "over", name: "eps", value: 0 }
+            ]
+        },
+        strongCashFlow: {  // New Strategy Added
+            name: 'Strong Cash Flow',
+            rules: [
+                { condition: "over", name: "marketCap", value: '1B' },
+                { condition: "over", name: "freeCashFlow", value: '50B' },
+                { condition: "over", name: "operatingCashFlowPerShare", value: 5 },
+                { condition: "over", name: "operatingCashFlow", value: '50B' },
+                { condition: "over", name: "freeCashFlowPerShare", value: 2 },
+                { condition: "over", name: "freeCashFlowMargin", value: '50%' }
+            ]
+        }
     };
 
+    const strategy = strategies[state];
+    if (strategy) {
+        selectedPopularStrategy = strategy.name;
+        ruleOfList = strategy?.rules;
+        ruleOfList?.forEach(row => {
+            ruleName = row?.name;
+            ruleCondition[ruleName] = row?.condition;
+            handleChangeValue(row?.value);
+        });
+        
+        await updateStockScreenerData();
+    }
+}
+
+
+function handleInput(event) {
+    const searchQuery = event.target.value?.toLowerCase() || '';
   
+    setTimeout(() => {
+        testList = [];
+
+        if (searchQuery.length > 0) {
+          
+          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList :  ['Buy','Hold','Sell'];
+            testList = rawList?.filter(item => {
+                const index = item?.toLowerCase();
+                // Check if country starts with searchQuery
+                return index?.startsWith(searchQuery);
+            }) || [];
+        }
+    }, 50);
+}
+
 
 </script>
   
   
+
   <svelte:head>
-    <title> {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Free Stock Screener - Search, Filter and Analyze Stocks · stocknear</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-  
-    <meta name="description" content="A free stock screener to search, filter and analyze stocks with different indicators and metrics.">
-    <!-- Other meta tags -->
-    <meta property="og:title" content="Free Stock Screener - Search, Filter and Analyze Stocks · stocknear"/>
-    <meta property="og:description" content="A free stock screener to search, filter and analyze stocks with different indicators and metrics.">
-    <meta property="og:type" content="website"/>
-    <!-- Add more Open Graph meta tags as needed -->
-  
-    <!-- Twitter specific meta tags -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="Free Stock Screener - Search, Filter and Analyze Stocks · stocknear"/>
-    <meta name="twitter:description" content="A free stock screener to search, filter and analyze stocks with different indicators and metrics.">
-    <!-- Add more Twitter meta tags as needed -->
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Stock Screener · stocknear
+  </title>
+
+  <meta name="description" content={`Build your Stock Screener to find profitable stocks.`}>
+  <!-- Other meta tags -->
+  <meta property="og:title" content={`Stock Screener · stocknear`}/>
+  <meta property="og:description" content={`Build your Stock Screener to find profitable stocks.`} />
+  <meta property="og:type" content="website"/>
+  <!-- Add more Open Graph meta tags as needed -->
+
+  <!-- Twitter specific meta tags -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content={`Stock Screener · stocknear`}/>
+  <meta name="twitter:description" content={`Build your Stock Screener to find profitable stocks.`} />
+  <!-- Add more Twitter meta tags as needed -->
+
 </svelte:head>
-      
-  
-      
-  
-  
-<section class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40">
-
-        
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
-    <ul>
-      <li><a href="/" class="text-gray-300">Home</a></li> 
-      <li class="text-gray-300">Stock Screener</li>
-    </ul>
-  </div>
-      
-  <div class="w-full  m-auto sm:bg-[#27272A] sm:rounded-lg h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-  
-      <!-- Start Column -->
-      <div>
-        <div class="flex flex-row justify-center items-center">
-          <h1 class="text-3xl sm:text-4xl text-white text-center font-bold mb-5">
-            Stock Screener
-          </h1>
-        </div>
-
-        <span class="hidden sm:block text-white text-md font-medium text-center flex justify-center items-center ">
-          Scan the market with your own rules and find profitable stocks.
-        </span>
-
-        <div class="hidden sm:flex flex-col justify-center items-center m-auto pt-10 mb-10 sm:mb-0">
-          <label for={data?.user ? "addStrategy": "userLogin"} class="flex flex-row items-center justify-center w-56 sm:w-72 sm:hover:bg-purple-700 bg-purple-600 duration-100 cursor-pointer py-2.5 px-4 font-medium text-center text-white rounded-lg">
-            <svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#E2E8F0" d="M16 2A14.172 14.172 0 0 0 2 16a14.172 14.172 0 0 0 14 14a14.172 14.172 0 0 0 14-14A14.172 14.172 0 0 0 16 2Zm8 15h-7v7h-2v-7H8v-2h7V8h2v7h7Z"/><path fill="none" d="M24 17h-7v7h-2v-7H8v-2h7V8h2v7h7v2z"/></svg>
-            <span class="ml-2">
-              New Strategy
-            </span>
-          </label>
-        </div>
+          
+<svelte:window on:scroll={handleScroll} />
 
 
-      </div>
-      <!-- End Column -->
-  
-      <!-- Start Column -->
-      <div class="hidden sm:block relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0">
-        <svg class="w-40 -my-5" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="5" result="glow"/>
-              <feMerge>
-                <feMergeNode in="glow"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-          <path fill="#1E40AF" d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z" transform="translate(100 100)" filter="url(#glow)" />
-        </svg>
-        
+<section class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40 px-5">
 
-        <div class="z-1 absolute top-8">
-          <img class="w-32 ml-3" src={logo} alt="logo" loading="lazy">
-        </div>
-      </div>
-      <!-- End Column -->
+                    
+            
+    <div class="text-sm sm:text-[1rem] breadcrumbs">
+      <ul>
+        <li><a href="/" class="text-gray-300">Home</a></li> 
+        <li><span class="text-gray-300">Stock Screener</span></li>
+      </ul>
     </div>
+  
+            
+            <!--Start Build Strategy-->
+            <div class="mt-5 sm:rounded-lg">
+      
+              <div class="flex flex-col md:flex-row items-start md:items-center mb-5">
+                <div class="w-full flex flex-row items-center sm:mt-4">
+                <h1 class="text-white text-3xl font-semibold">
+                  Stock Screener
+                </h1>
+                <span class="inline-block text-xs sm:text-sm font-semibold text-white ml-2 mt-3">
+                  {filteredData?.length} Matches Found
+                </span>
+              </div>
+            
+              <div class="flex flex-row items-center w-full mt-5">
+              
+                <div class="flex w-full sm:w-[50%] md:block md:w-auto  sm:ml-auto">
+                      <div class="hidden text-sm sm:text-[1rem] font-semibold text-white md:block sm:mb-1">
+                          Popular Screens
+                      </div>
+                      <div class="relative inline-block text-left grow">
+                          <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild let:builder>
+                                  <Button builders={[builder]}  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                    <span class="truncate text-white">{selectedPopularStrategy?.length !== 0 ? selectedPopularStrategy : 'Select popular'}</span>
+                                    <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                  </Button>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                                  <DropdownMenu.Label class="text-gray-400">
+                                    Popular Strategies
+                                  </DropdownMenu.Label>
+                                  <DropdownMenu.Separator />
+                                  <DropdownMenu.Group>
+                                      <DropdownMenu.Item on:click={() => popularStrategy('dividendGrowth')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Dividend Growth
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => popularStrategy('topGainers1Y')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Top Gainers 1Y
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => popularStrategy('topShortedStocks')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Top Shorted Stocks
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => popularStrategy('topAIStocks')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Best AI Forecast
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => popularStrategy('momentumTAStocks')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Momentum TA Stocks
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => popularStrategy('underValuedStocks')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Undervalued Stocks
+                                      </DropdownMenu.Item>
+                                       <DropdownMenu.Item on:click={() => popularStrategy('strongCashFlow')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Strong Cash Flow
+                                      </DropdownMenu.Item>  
+                                  </DropdownMenu.Group>
+                                </DropdownMenu.Content>
+                              </DropdownMenu.Root>
 
-   
+
+                      </div>
+              </div>
+
+              <div class="flex w-full sm:w-[50%] sm:ml-3 md:block md:w-auto ml-3">
+                      <div class="hidden text-sm sm:text-[1rem] font-semibold text-white md:block sm:mb-1">
+                          Saved Screens
+                      </div>
+                      <div class="relative inline-block text-left grow">
+                          <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild let:builder>
+                                  <Button builders={[builder]}  class="min-w-[110px] w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                    <span class="truncate text-white ">{selectedStrategy?.length !== 0 ? strategyList?.find(item => item.id === selectedStrategy)?.title : 'Select screen'}</span>
+                                    <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                  </Button>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                                  <DropdownMenu.Label class="text-gray-400">
+                                    <DropdownMenu.Trigger asChild let:builder>
+                                    <Button on:click={handleCreateStrategy} builders={[builder]} class="p-0 -mb-2 -mt-2 text-sm inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap text-base text-white bg-[#0909B] focus:outline-none sm:text-smaller">
+                                        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+                                        </svg> 
+                                        <div class="text-sm text-start">New Screen</div>
+                                    </Button>
+                                    </DropdownMenu.Trigger>
+                                  </DropdownMenu.Label>
+                                  <DropdownMenu.Separator />
+                                  <DropdownMenu.Group>
+                                    {#each strategyList as item}
+                                      <DropdownMenu.Item on:click={() => selectedStrategy = item?.id} class="cursor-pointer sm:hover:bg-[#27272A]">
+                                        {item?.title}
+                                      </DropdownMenu.Item>
+                                    {/each}
+                                  </DropdownMenu.Group>
+                                </DropdownMenu.Content>
+                              </DropdownMenu.Root>
+
+
+                      </div>
+              </div>
+
+
+              </div>
+            
+            
+            </div>
+
+
+              <div class="rounded-lg border border-gray-700 bg-[#262626] p-2">
+                <div class="items-end border-b border-gray-600">
+                  <div class="mr-1 flex items-center justify-between lg:mr-2 pb-1.5 border-b border-gray-600 mt-1.5">
+                    <button on:click={() => showFilters = !showFilters} class="flex cursor-pointer items-center text-lg sm:text-xl font-semibold text-gray-200" title="Hide Filter Area">
+                      <svg class="-mb-0.5 h-6 w-6 {showFilters ? '' : '-rotate-90'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:40px">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        {ruleOfList?.length} Filters
+                    </button> 
+                </div>
+                </div> 
+                {#if showFilters}
+                <div class="mt-3 flex flex-col gap-y-2.5 sm:flex-row lg:gap-y-2 pb-1">
+                    <label for="ruleModal" class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+                        </svg> 
+                        <div>Add Filters</div>
+                    </label>
+
+                    <label for={!data?.user ? 'userLogin' : ''} on:click={() => handleSave(true)} class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
+                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="M5 5v22h22V9.594l-.281-.313l-4-4L22.406 5zm2 2h3v6h12V7.437l3 3V25h-2v-9H9v9H7zm5 0h4v2h2V7h2v4h-8zm-1 11h10v7H11z"/></svg>
+                        <div>Save</div>
+                    </label>
+                    {#if data?.user && selectedStrategy?.length !== 0}
+                    <label for="deleteStrategy" class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
+                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
+                        <div>Delete</div>
+                    </label>
+                    {/if}
+
+                    {#if ruleOfList?.length !== 0}
+                    <label on:click={handleResetAll} class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:text-red-500 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
+                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.578 6.487A8 8 0 1 1 2.5 10.5"/><path d="M7.5 6.5h-4v-4"/></g></svg>
+                        <div>Reset All</div>
+                    </label>
+                    {/if}
+
+                    <!--
+                    <div class="relative sm:ml-2">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
+                            <svg class="h-4 w-4 text-gray-400 xs:h-5 xs:w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" stroke="currentColor" viewBox="0 0 24 24" style="max-width: 40px" aria-hidden="true">
+                                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        
+                        <input type="text" placeholder="Search {allRows?.length} filters..." class="controls-input rounded-lg w-full py-2 pl-10 placeholder:text-gray-300 bg-[#313131] sm:w-72"> 
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2"></div> 
+                      
+                    </div> 
+                  -->
+                </div> 
+
+
+                <div class="sm:grid sm:grid-cols-2 sm:gap-x-2.5 lg:grid-cols-3 w-full mt-5 border-t border-b border-gray-600">
+                  {#each displayRules as row (row?.rule)}
+                    <!--Start Added Rules-->
+                    <div class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default">
+                      <div class="text-white text-[1rem]">
+                          {row?.label?.replace('[%]','')}
+                      </div> 
+                      <div class="flex items-center">
+                          <button on:click={() => handleDeleteRule(row?.rule)} class="mr-1.5 cursor-pointer text-gray-300 sm:hover:text-red-500 focus:outline-none" title="Remove filter">
+                              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="CurrentColor" style="max-width:40px">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                              </svg>
+                          </button> 
+                          <div class="relative inline-block text-left">
+                            <div on:click={() => ruleName = row?.rule}>
+                              <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild let:builder>
+                                  <Button builders={[builder]}  class="bg-[#000] h-[40px] flex flex-row justify-between items-center w-[150px] xs:w-[140px] sm:w-[150px] px-3 text-white rounded-lg truncate">
+                                    <span class="truncate ml-2 text-sm sm:text-[1rem]">
+                                      {#if valueMappings[row?.rule] === 'any'} 
+                                      Any
+                                      {:else}
+                                      {ruleCondition[row?.rule] !== undefined ? ruleCondition[row?.rule] : ''} {valueMappings[row?.rule]}
+                                      {/if}
+                                    </span> 
+                                    <svg class=" ml-1 h-6 w-6 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                  </Button>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country']?.includes(row?.rule)}
+                                  <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
+                                    <div class="flex items-center justify-start gap-x-1">
+                                        <div class="relative inline-block flex flex-row items-center justify-center">
+                                            <label on:click={() => changeRuleCondition(row?.rule, 'under')} class="cursor-pointer flex flex-row mr-2 justify-center items-center">
+                                              <input type="radio" class="radio checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2" 
+                                                  checked={ruleCondition[row?.rule] === 'under'} name={row?.rule} />
+                                              <span class="label-text text-white">Under</span> 
+                                            </label>
+                                            <label on:click={() => changeRuleCondition(row?.rule, 'over')} class="cursor-pointer flex flex-row ml-2 justify-center items-center">
+                                              <input type="radio" class="radio checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2"
+                                                checked={ruleCondition[row?.rule] === 'over'} name={row?.rule} />
+                                              <span class="label-text text-white">Over</span> 
+                                            </label>
+                                        </div>
+                                    </div> 
+                                  </DropdownMenu.Label>
+                                  {:else}
+                                  <div class="relative sticky z-40 focus:outline-none -top-1"
+                                      tabindex="0" role="menu" style="">
+                                  <input bind:value={searchQuery}
+                                      on:input={handleInput}
+                                      autocomplete="off"
+                                      class="{!['analystRating','sector','industry','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
+                                      focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
+                                      type="search" 
+                                      placeholder="Search...">
+                                  </div>
+                                  {/if}
+                                  <DropdownMenu.Group class="min-h-10 mt-2">
+                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country']?.includes(row?.rule)}
+                                      {#each row?.step as newValue}
+                                        <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+
+                                        <button on:click={() => {handleChangeValue(newValue)}} class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-[#27272A] focus:bg-blue-100 focus:text-gray-900 focus:outline-none">            
+                                            {ruleCondition[row?.rule] !== undefined ? ruleCondition[row?.rule] : ''} {newValue}
+                                        </button>
+                                        </DropdownMenu.Item>      
+                                      {/each}
+                                    {:else if ['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200']?.includes(row?.rule)}
+                                      {#each row?.step as item}
+                                        <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                                          <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
+                                            <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
+                                              <input type="checkbox" class="rounded" checked={isChecked(item)}>
+                                              <span class="ml-2">{item}</span>
+                                            </label>
+                                          </div>
+                                        </DropdownMenu.Item>     
+                                      {/each}
+                                    {:else}
+                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : ['Buy','Hold','Sell'])) as item}
+                                        <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                                          <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
+                                            <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
+                                              <input type="checkbox" class="rounded" checked={isChecked(item)}>
+                                              <span class="ml-2">{item}</span>
+                                            </label>
+                                          </div>
+                                        </DropdownMenu.Item>
+                                      {/each}
+
+                                    {/if}                      
+                                  </DropdownMenu.Group>
+                                </DropdownMenu.Content>
+                              </DropdownMenu.Root>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                    <!--End Added Rules-->
+                {/each}
+                </div>
+                {/if}
+
+                
+            </div>
+  
+                  <!--End Adding Rules-->
+  
+                  <!--Start Rules Preview -->
+                                
+                  <!--
+                  <div id="step-3" class="m-auto w-5/6 bg-[#09090B] sm:ml-10 h-auto max-h-[400px] no-scrollbar overflow-hidden overflow-y-scroll p-5 sm:rounded-lg border-b sm:border sm:hover:border-slate-700 border-slate-800 pb-10">
+                    <div class="flex flex-row items-center pb-5 sm:pb-0">
+                      <div class="text-white font-bold text-xl sm:text-2xl flex justify-start items-center">
+                        {ruleOfList.length} Rules Preview
+                      </div>
+                      <label on:click={handleResetAll} class="ml-auto cursor-pointer transition  bg-purple-600 sm:hover:bg-purple-700 border border-slate-800 py-2 px-3 rounded-lg text-white text-sm">
+                        Reset All
+                      </label>
+                    </div>
+                    {#if ruleOfList.length === 0}
+                    <div class="text-slate-300 font-medium text-sm sm:text-md flex flex-row justify-start items-center mt-4">
+                      <svg class="w-3 h-3 sm:w-4 sm:h-4 inline-block mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#ffcc4d" d="M19.59 15.86L12.007 1.924C11.515 1.011 10.779.5 9.989.5c-.79 0-1.515.521-2.016 1.434L.409 15.861c-.49.901-.544 1.825-.138 2.53c.405.707 1.216 1.109 2.219 1.109h15.02c1.003 0 1.814-.402 2.22-1.108c.405-.706.351-1.619-.14-2.531ZM10 4.857c.395 0 .715.326.715.728v6.583c0 .402-.32.728-.715.728a.721.721 0 0 1-.715-.728V5.584c0-.391.32-.728.715-.728Zm0 11.624c-.619 0-1.11-.51-1.11-1.14c0-.63.502-1.141 1.11-1.141c.619 0 1.11.51 1.11 1.14c0 .63-.502 1.141-1.11 1.141Z"/></svg>
+                      At least 1 rule is required 
+                    </div>
+
+                  {:else}
+                  
+                  {#each ruleOfList as rule}
+                      <div class="flex flex-row mt-4">
+
+                      <label on:click={() => handleUpdateRule(rule)} class=" cursor-pointer text-slate-300 sm:font-medium text-sm sm:text-md">
+
+                        <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+
+                        {ruleMappings[rule.name] || rule.name} · {formatRuleValue(rule)}
+                        </label>
+
+                        <label on:click={() => handleDeleteRule(rule.name)} class="text-sm text-[#FF3131] cursor-pointer ml-auto sm:ml-0">
+                          <svg class="h-6 w-6 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.413-.588T5 19V6q-.425 0-.713-.288T4 5q0-.425.288-.713T5 4h4q0-.425.288-.713T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5q0 .425-.288.713T19 6v13q0 .825-.588 1.413T17 21H7ZM7 6v13h10V6H7Zm2 10q0 .425.288.713T10 17q.425 0 .713-.288T11 16V9q0-.425-.288-.713T10 8q-.425 0-.713.288T9 9v7Zm4 0q0 .425.288.713T14 17q.425 0 .713-.288T15 16V9q0-.425-.288-.713T14 8q-.425 0-.713.288T13 9v7ZM7 6v13V6Z"/></svg>  
+                        </label>
+                      </div>
+                    {/each}
+                  {/if}
+                </div>
+                  -->
+                <!--End Rules Preview-->
+  
+            </div>
+            <!--End Build Strategy-->
+  
+  
+             
+              
+
+                  <div class="mt-10 sm:mt-6 grid-cols-2 items-center sm:grid lg:flex lg:space-x-1 lg:overflow-visible lg:px-1 lg:py-2">
+                    <h2 class="mb-1 whitespace-nowrap text-xl font-semibold text-white bp:text-[1.3rem] sm:mb-0">
+                        {filteredData?.length} Stocks
+                    </h2>
+                    <div class="hide-scroll col-span-2 overflow-x-auto border-t border-gray-600 lg:order-2 lg:grow lg:border-0 lg:pl-1 xl:pl-3">
+                        <nav class="grow py-2.5 sm:py-3 lg:py-1">
+                            <ul class="flex flex-row items-center space-x-2 whitespace-nowrap text-base">
+                                <li>
+                                    <button on:click={() => displayTableTab = 'general'} class="text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-[#27272A] {displayTableTab === 'general' ? 'font-semibold bg-[#27272A]' : ''}">
+                                        General
+                                    </button>
+                                </li>
+                                <li>
+                                    <button on:click={() => displayTableTab = 'filters'} class="text-lg flex flex-row items-center relative block rounded-md px-2 py-1 sm:hover:bg-[#27272A] {displayTableTab === 'filters' ? 'font-semibold bg-[#27272A]' : ''} focus:outline-none">
+                                      <span class="text-white">Filters</span>
+                                      <span class="ml-2 rounded-full avatar w-5 h-5 text-xs font-semibold text-white text-center flex-shrink-0 
+                                                  flex items-center justify-center {ruleOfList?.length !== 0 ? 'bg-red-500' : 'bg-gray-600'}">
+                                          {ruleOfList?.length}
+                                      </span>
+                                  </button>
+                                </li>
+                                <!--
+                                <li>
+                                    <button class="dont-move block rounded-md px-1.5 py-1 focus:outline-none">
+                                        Performance
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dont-move block rounded-md px-1.5 py-1 focus:outline-none">
+                                        Analysts
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dont-move block rounded-md px-1.5 py-1 focus:outline-none">
+                                        Dividends
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dont-move block rounded-md px-1.5 py-1 focus:outline-none">
+                                        Financials
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dont-move block rounded-md px-1.5 py-1 focus:outline-none">
+                                        Valuation
+                                    </button>
+                                </li>
+                                -->
+                            </ul>
+                        </nav>
+                    </div>
+                  </div>
+                  
+                <!--Start Matching Preview-->
+              {#if isLoaded}
+                {#if filteredData?.length !== 0}
+                  {#if displayTableTab === 'general'}
+                  <div class="w-full rounded-lg overflow-x-scroll ">
+                    <table class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]">
+                      <thead>
+                        <tr class="border-b-[#1A1A27]">
+                          <th class="text-white bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">Symbol</th>
+                          <th class="text-white hidden sm:table-cell bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">Company Name</th>
+                          <th on:click={() => { sortBy = 'marketCap'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end">
+                            Market Cap
+                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'marketCap' ? '' : 'rotate-180'}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          </th>
+                          <th on:click={() => { sortBy = 'change'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end">
+                            % Change
+                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'change' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          </th>
+                          <th class="text-white bg-[#09090B] text-end text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">
+                            Price
+                          </th>
+                          <th on:click={() => { sortBy = 'volume'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end">
+                            Volume
+                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'volume' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          </th>
+                          <th on:click={() => { sortBy = 'pe'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end">
+                            PE Ratio
+                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'pe' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {#each displayResults as item}
+                        <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]">
+                          <td class="border-b-[#09090B] whitespace-nowrap">
+                            <div class="flex flex-col items-start">
+                              <a href={"/stocks/"+item?.symbol} on:click={() => handleSave(false)} class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]">{item?.symbol}</a>
+                              <span class="text-white text-xs sm:hidden">{item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}</span>
+                            </div>
+                            
+                          </td>
+                          
+                          <td class="hidden sm:table-cell whitespace-nowrap text-[1rem] text-white border-b-[#09090B]">
+                            {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
+                          </td>
+                          
+                          <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
+                              {#if item?.symbol?.includes('.DE') || item?.symbol?.includes('.F')}
+                                €{item?.marketCap < 100 ? '< $100' : abbreviateNumber(item?.marketCap)}
+                              {:else}
+                                {item?.marketCap < 100 ? '< $100' : abbreviateNumber(item?.marketCap,true)}
+                              {/if}
+                          </td>
+
+                          <td class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]">
+                            {#if item?.changesPercentage >=0}
+                              <span class="text-[#10DB06]">+{item?.changesPercentage >= 1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}%</span>
+                            {:else}
+                              <span class="text-[#FF2F1F]">{item?.changesPercentage <= -1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}% </span> 
+                            {/if}
+                          </td>
+
+                          <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
+                            {item?.price < 0.01 ? '< $0.01' : item?.price?.toFixed(2)}
+                          </td>
+
+                           <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
+                            {item?.volume === 0 ? '-' : abbreviateNumber(item?.volume)}
+                          </td> 
+
+                          <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
+                            {item?.pe?.toFixed(2)}
+                          </td>               
+                        </tr>
+                        
+                        
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
+                  {:else if displayTableTab === 'filters'}
+                  <div class="w-full rounded-lg overflow-x-scroll ">
+                   <table class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]">
+                    <thead>
+                      <tr class="border-b-[#1A1A27]">
+                        <th class="text-white bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">Symbol</th>
+                        <th class="text-white hidden sm:table-cell bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">Company Name</th>
+                        <th class="text-white text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">Market Cap</th>
+                        {#each displayRules as row (row?.rule)}
+                          {#if row?.rule !== 'marketCap'}
+                            <th class="text-white text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">{row?.label}</th>
+                          {/if}
+                        {/each}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {#each displayResults as item (item?.symbol)}
+                      <tr on:click={() => {handleSave(false); goto("/stocks/"+item?.symbol)}} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A] cursor-pointer">
+                        <td class="border-b-[#09090B] whitespace-nowrap">
+                          <div class="flex flex-col items-start">
+                            <span class="text-blue-400 text-sm sm:text-[1rem]">{item?.symbol}</span>
+                            <span class="text-white text-xs sm:hidden">{item?.name?.length > charNumber ? item?.name?.slice(0, charNumber) + "..." : item?.name}</span>
+                          </div>
+                        </td>
+                        <td class="hidden sm:table-cell whitespace-nowrap text-[1rem] text-white border-b-[#09090B]">
+                          {item?.name?.length > charNumber ? item?.name?.slice(0, charNumber) + "..." : item?.name}
+                        </td>
+                        <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
+                          {abbreviateNumber(item?.marketCap, true)}
+                        </td>
+                        {#each displayRules as row (row?.rule)}
+                          {#if row?.rule !== 'marketCap'}
+                            <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
+                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country','analystRating']?.includes(row?.rule)}
+                              {item[row?.rule]}
+                              {:else if ['fundamentalAnalysis','trendAnalysis']?.includes(row?.rule)}
+                              {item[row?.rule]?.accuracy}%
+                              {:else}
+                              {abbreviateNumber(item[row?.rule])}
+                              {/if}
+                            </td>
+                          {/if}
+                        {/each}
+                      </tr>
+                      {/each}
+                    </tbody>
+                  </table>
+
+                  </div>
+                  {/if}
+                {:else}
+                <div class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">      
+                  <svg class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
+                  Looks like your taste is one-of-a-kind! No matches found... yet!
+              </div>
+                {/if}
+                  {:else}
+                  <div class="flex justify-center items-center h-80">
+                    <div class="relative">
+                    <label class="bg-[#262626] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <span class="loading loading-spinner loading-md"></span>
+                    </label>
+                    </div>
+                  </div>
+                {/if}
+              
+                  <!--End Matching Preview-->
+             
+      
+
+
+</section>
+          
+          
+      
+
+    
+
+  <!--
+  <div class="tabs w-screen mb-5 ">
+    <label on:click={() => handleRuleTab('all')} class="tab mr-2 text-white font-medium transition duration-150 ease-out hover:ease-out rounded-md hover:bg-[#333333] {displayTab === 'all' ? 'bg-[#333333]' : ''}">
+      All
+    </label> 
+    <label on:click={() => handleRuleTab('ta')} class="tab mr-2 text-white font-medium transition duration-150 ease-out hover:ease-out rounded-md hover:bg-[#333333] {displayTab === 'ta' ? 'bg-[#333333]' : ''}">
+      Technical Indicators
+    </label> 
+    <label on:click={() => handleRuleTab('fund')} class="tab mr-2 text-white font-medium transition duration-150 ease-out hover:ease-out rounded-md hover:bg-[#333333] {displayTab === 'fund' ? 'bg-[#333333]' : ''}">
+      Fundamental Data
+    </label> 
   </div>
+-->
+
+<!--Start Choose Rule Modal-->
+<input type="checkbox" id="ruleModal" class="modal-toggle" />
+
+<dialog id="ruleModal" class="modal modal-bottom sm:modal-middle ">
 
 
-    {#if isLoaded}
-      {#if strategyList?.length === 0}
-      <div class="flex justify-center items-center text-gray-400 font-bold text-2xl mt-10">
-        No strategies available
-      </div>
-      {:else}
-    
-      <div class="hidden sm:block">
-      {#each strategyList as st, index}
-      <div class=" sm:rounded-xl border border-gray-800 pt-5 pb-5 sm:pb-0 mt-5">
-        
-        <div class="flex flex-row {$screenWidth >= 640 ? '-mb-4' : ''} ">
-          <div class="text-white font-bold text-lg pl-5">
-            {index+1}. Strategy
-          </div>
-        
-          <div class="w-3/4 flex ml-auto flex-row justify-end items-center -mt-2">
-            <div class="flex flex-col justify-center items-center mr-2">
-              <label on:click|stopPropagation={() => handleView(st?.rules,st?.title)} for="viewStrategy" class="cursor-pointer w-8 h-8 bg-[#0A59F5] hover:bg-[#0844BC] hover:ring-[1px] sm:hover:bg-purple-700 bg-purple-600 duration-100 font-medium text-center text-white rounded-full">
-                <svg class="w-8 h-8 m-auto pt-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="1"></circle> <path d="M21 12C21 12 20 4 12 4C4 4 3 12 3 12" stroke="#fff" stroke-width="1"></path> </g></svg>
-              </label>
-              <span class="text-white text-xs mt-1">
-                Rules
-              </span>
-            </div>
-      
-            <div class=" flex flex-col justify-center items-center ml-2 mr-2">
-              <label on:click|stopPropagation={() => selectStrategy(st?.id)} class="cursor-pointer w-8 h-8 bg-[#0A59F5] hover:bg-[#0844BC] hover:ring-[1px] sm:hover:bg-purple-700 bg-purple-600 duration-100 font-medium text-center text-white rounded-full">
-                <svg class="h-6 w-6 m-auto pt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575t1.412.575l1.4 1.4q.575.575.6 1.388t-.55 1.387L19.3 8.925ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6l4.25 4.25Z"/></svg>
-              </label>
-              <span class="text-white text-xs mt-1">
-                Open
-              </span>
-            </div>
-      
-            <div class=" flex flex-col justify-center items-center ml-2 mr-8">
-              <label on:click|stopPropagation={() => deleteStrategyId= st?.id} for="deleteStrategy" class="cursor-pointer w-8 h-8 bg-[#0A59F5] hover:bg-[#0844BC] hover:ring-[1px] sm:hover:bg-purple-700 bg-purple-600 duration-100 font-medium text-center text-white rounded-full">
-                <svg class="h-6 w-6 m-auto pt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="white" d="M864 256H736v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zm-200 0H360v-72h304v72z"/></svg>
-              </label>
-              <span class="text-white text-xs mt-1">
-                Delete
-              </span>
-            </div>
-          </div>
-    
-          <!--
-          <div class="mt-1.5 ml-auto">
-            <label 
-              on:click={() => handleError(st?.rules)}
-              class="flex items-center cursor-pointer"
-            >
-
-              <div class="relative {onlineDict[st?.id] ? 'opacity-[1.0]' : 'opacity-[0.4]'} ">
-                <input
-                  disabled={st?.rules.length === 0}
-                  on:click={() => handleOnline(st?.rules, st?.id)} 
-                  id={st?.id} 
-                  checked={onlineDict[st?.id]} 
-                  type="checkbox" 
-                  class="sr-only"
-                />
-                <div class="w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
-                <div class="dot absolute w-6 h-6 bg-gray-400 rounded-full shadow -left-1 -top-1 transition"></div>
-              </div>
-            </label>
-          </div>
-    
-          <span class="ml-2 mr-5 mt-1 text-gray-500 text-sm font-medium">
-          {#if onlineDict[st?.id] === true}
-            <span class="text-white text-sm">
-              Online
-            </span>
-          {:else}
-            <span class="text-gray-500 text-sm">
-              Offline
-            </span>
-          {/if}
-          </span>
-          -->
-        </div>
-        
-    
-    
-        <span class="text-white text-xs pl-5 italic">
-          <svg class="inline-block w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#C2C4CA" d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2m4.2 14.2L11 13V7h1.5v5.2l4.5 2.7l-.8 1.3Z"/></svg>
-          Last updated: {formatDate(st?.updated)} ago
-        </span>
-    
-        <div class="p-5 grid grid-cols-2 gap-10 flex justify-center items-center mb-2">
-          <!--Start Column Title-->
-          <div class="flex flex-col">
-            <span class="text-white font-semibold text-[1rem]">
-              Strategy Name
-            </span>
-            <span class="text-white text-sm">
-              {st?.title}
-            </span>
-          </div>
-          <!--End Column Title-->
-
-          <!--Start Column Title-->
-          <div class="flex flex-col">
-            <span class="text-white font-semibold text-[1rem]">
-              Number of Rules
-            </span>
-            <span class="text-white text-sm">
-              {st?.rules?.length}
-            </span>
-          </div>
-          <!--End Column Title-->
-
-
+  <label id="ruleModal" for="ruleModal" on:click={() => searchTerm = ''} class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
   
   
-        </div>
-      </div>
-      {/each}
-      </div>
-
-      <div class="relative p-2 sm:hidden -mt-2">
-        {#each strategyList as item, index}
-          <div class="bg-[#09090B] shadow-lg border-t border-b border-gray-600 h-fit pb-2 px-2 pt-4 mb-7">
-              <div class="flex flex-row items-center">
-                <label class="font-medium cursor-pointer flex flex-col w-40">
-                  <span class="text-white">No. Strategy</span>
-                  <span class="text-white text-[1rem]">{index+1}</span>
-                </label>
-
-                <div class="font-medium text-white flex flex-col justify-end items-end ml-auto">
-                  <span class="text-end">Last updated</span>
-                  <span class="text-end text-sm">
-                    {formatDate(item?.updated)} ago
-                  </span>
-                </div>
-              </div>
-              <div class="border-1 border-b border-gray-600 w-full mt-5 mb-5" />
-
-              <div class="flex flex-row items-center">
-                <div class="flex flex-col w-40">
-                  <span class="font-medium text-white">Title</span>
-                  <span class="text-white text-[1rem] font-medium">
-                    {item?.title}
-                  </span>
-                </div>
-
-                <div class="flex flex-col justify-end items-end ml-auto">
-                  <span class="font-medium text-white text-ends">Total Rules</span>
-                  <span class="text-white font-medium text-[1rem] text-end">
-                    {item?.rules?.length}
-                  </span>
-                </div>
-              </div>
-
-              <div class="border-1 border-b border-gray-600 w-full mt-5 mb-5" />
+  <div class="modal-box w-full bg-[#141417] border border-gray-800  h-[800px] overflow-hidden ">
 
 
-              <div class="sm:hidden w-1/2 mt-5 m-auto flex flex-row justify-center items-center">
-                <div class="flex flex-col justify-center items-center mr-5">
-                  <label on:click|stopPropagation={() => handleView(item?.rules,item?.title)} for="viewStrategy" class="cursor-pointer w-12 h-12 bg-[#0A59F5] hover:bg-[#0844BC] hover:ring-[1px] bg-purple-600 duration-100 font-medium text-center text-white rounded-full">
-                    <svg class="w-10 h-10 hover:w-11 hover:h-11 ease-in-out duration-200 m-auto pt-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="1"></circle> <path d="M21 12C21 12 20 4 12 4C4 4 3 12 3 12" stroke="#fff" stroke-width="1"></path> </g></svg>
-                  </label>
-                  <span class="text-white text-sm mt-1">
-                    Rules
-                  </span>
-                </div>
-          
-                <div class=" flex flex-col justify-center items-center ml-5 mr-5">
-                  <label on:click|stopPropagation={() => goto("/stock-screener/"+item?.id)} class="cursor-pointer w-12 h-12 bg-[#0A59F5] hover:bg-[#0844BC] hover:ring-[1px] bg-purple-600 duration-100 font-medium text-center text-white rounded-full">
-                    <svg class="h-8 w-8 hover:w-9 hover:h-9 ease-in-out duration-200 m-auto pt-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575t1.412.575l1.4 1.4q.575.575.6 1.388t-.55 1.387L19.3 8.925ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6l4.25 4.25Z"/></svg>
-                  </label>
-                  <span class="text-white text-sm mt-1">
-                    Open
-                  </span>
-                </div>
-          
-                <div class=" flex flex-col justify-center items-center ml-5">
-                  <label on:click|stopPropagation={() => deleteStrategyId= item?.id} for="deleteStrategy" class="cursor-pointer w-12 h-12 bg-[#0A59F5] hover:bg-[#0844BC] hover:ring-[1px] bg-purple-600 duration-100 font-medium text-center text-white rounded-full">
-                    <svg class="h-8 w-8 hover:w-9 hover:h-9 ease-in-out duration-200 m-auto pt-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="white" d="M864 256H736v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zm-200 0H360v-72h304v72z"/></svg>
-                  </label>
-                  <span class="text-white text-sm mt-1">
-                    Delete
-                  </span>
-                </div>
-              </div>
+    <div class="flex flex-col w-full mt-10 sm:mt-0">
 
-
-          </div>
-        {/each}
-      </div>
     
-    
-      {/if}
-    {:else}
-    <div class="flex justify-center items-center h-80">
-      <div class="relative">
-      <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <span class="loading loading-spinner loading-md"></span>
+      <div class="text-white text-xl sm:text-3xl font-semibold mb-5">
+        Add Filters
+      </div>
+
+      <label for="ruleModal" class="cursor-pointer absolute right-5 top-5 bg-[#141417] text-[1.8rem] text-white">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/></svg>
       </label>
-      </div>
-  </div>
-    {/if}
 
-    <div class="{!data?.user ? 'hidden' : ''} sm:hidden fixed z-50 w-full h-16 max-w-3xl -right-5 bottom-5">
-      <div class="h-full max-w-3xl mx-auto">        
-        <div class="flex items-center justify-end mr-10">
-          <label for="addStrategy" class="inline-flex items-center justify-center w-14 h-14 font-medium bg-purple-600 rounded-full cursor-pointer">
-            <svg class="w-8 h-8 text-white inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z"/></svg>
-          </label>
+      <!--Start Search bar-->
+      <form class="w-11/12 h-8 mb-8" on:keydown={(e) => e?.key === 'Enter' ? e.preventDefault() : '' }>   
+        <label for="search" class="mb-2 text-sm font-medium text-gray-200 sr-only">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-200 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input 
+              autocomplete="off"
+              type="search"
+              id="search"
+              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-300 rounded-lg bg-[#404040] border border-blue-500"
+              placeholder="Search {allRows?.length} filters..."
+              bind:value={searchTerm}
+              />
         </div>
-      </div>
+      </form>
+      <!-- End Search bar-->
+
+      <div class="text-white text-sm bg-[#141417] overflow-y-scroll scroller pt-3 rounded-lg max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
+
+        <div class="text-white relative">
+          
+        {#if searchTerm?.length !== 0 && filteredRows?.length === 0}
+          <span class="text-lg text-white font-medium flex justify-center items-center m-auto">
+            Nothing Found
+          </span>
+        {:else}
+
+        <table class="table table-sm table-compact">
+          <!-- head -->
+          <tbody>
+            {#each (searchTerm?.length !== 0 ? filteredRows : allRows) as row, index}
+              <tr on:click={() => changeRule(row?.rule)} class="sm:hover:bg-[#333333] cursor-pointer">
+                <td class="border-b border-[#262626]">{index+1}</td>
+                <td class="text-start border-b border-[#262626]">
+                  {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
+                  <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                  {/if}
+                </td>
+                <td class="text-start border-b border-[#262626]">{row?.label}</td>
+              </tr>
+            {/each}
+
+          </tbody>
+        </table>
+        {/if}
+
     </div>
-    
-  
-  
-  </section>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+    </div>
+
+        
+      </div>
+  </dialog>
+<!--End Choose Rule Modal-->
+
+
   <!--Start Add Strategy Modal-->
   <input type="checkbox" id="addStrategy" class="modal-toggle" />
   
@@ -569,44 +1483,6 @@ onMount(async () => {
   <!--End Add Strategy Modal-->
   
   
-  
-  
-  <!--Start Edit Strategy Modal-->
-  <input type="checkbox" id="editStrategy" class="modal-toggle" />
-  
-  <dialog id="editStrategy" class="modal modal-bottom sm:modal-middle">
-  
-  
-    <label for="editStrategy"  class="cursor-pointer modal-backdrop"></label>
-    
-    
-    <div class="modal-box w-full" >
-  
-      <ul class="mt-3 menu menu-compact text-[#A4AAB8] bg-[#000] rounded-md pt-3">
-        <!--<hr>-->
-        <li class="mb-3">
-          <label on:click|stopPropagation={() => goto("/stock-screener/"+editStrategyId)} class="text-sm text-white cursor-pointer">
-            <svg class="mr-auto h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m18.988 2.012l3 3L19.701 7.3l-3-3zM8 16h3l7.287-7.287l-3-3L8 13z"/><path fill="white" d="M19 19H8.158c-.026 0-.053.01-.079.01c-.033 0-.066-.009-.1-.01H5V5h6.847l2-2H5c-1.103 0-2 .896-2 2v14c0 1.104.897 2 2 2h14a2 2 0 0 0 2-2v-8.668l-2 2V19z"/></svg>
-            Edit Strategy
-          </label>
-        </li>
-        <li>
-          <label class="text-sm text-[#E1341E] cursor-pointer">
-            <svg class="mr-auto h-5 w-5 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#97372f" d="M7 21q-.825 0-1.413-.588T5 19V6q-.425 0-.713-.288T4 5q0-.425.288-.713T5 4h4q0-.425.288-.713T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5q0 .425-.288.713T19 6v13q0 .825-.588 1.413T17 21H7ZM7 6v13h10V6H7Zm2 10q0 .425.288.713T10 17q.425 0 .713-.288T11 16V9q0-.425-.288-.713T10 8q-.425 0-.713.288T9 9v7Zm4 0q0 .425.288.713T14 17q.425 0 .713-.288T15 16V9q0-.425-.288-.713T14 8q-.425 0-.713.288T13 9v7ZM7 6v13V6Z"/></svg>  
-            Delete Strategy
-          </label>
-      </li>
-      </ul>
-  
-      <label for="editStrategy" class="btn btn-sm btn-circle absolute right-2 top-2 bg-red-600 hover:bg-red-800">✕</label>
-          
-        </div>
-    </dialog>
-  
-  <!--End Edit Strategy Modal-->
-  
-  
-  
   <!--Start Delete Strategy Modal-->
   <input type="checkbox" id="deleteStrategy" class="modal-toggle" />
   
@@ -616,7 +1492,7 @@ onMount(async () => {
     <label for="deleteStrategy"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
     
     
-    <div class="modal-box w-full bg-[#09090B] border border-gray-800 overflow-hidden ">
+    <div class="modal-box w-full bg-[#141417] border border-gray-800 overflow-hidden ">
   
       <h3 class="font-bold text-md sm:text-lg flex justify-center items-center mt-10 text-white">
         Are you sure you want to delete the strategy?
@@ -637,104 +1513,6 @@ onMount(async () => {
     </dialog>
   
   <!--End Delete Strategy Modal-->
-  
-  
-  
-  {#if $screenWidth >=640}
-  <!--Start View Strategy Modal-->
-  <input type="checkbox" id="viewStrategy" class="modal-toggle" />
-  
-  <dialog id="viewStrategy" class="modal modal-bottom sm:modal-middle">
-  
-  
-    <label for="viewStrategy"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
-    
-    
-    <div class="modal-box w-full bg-[#09090B] border border-gray-800 overflow-y-scroll overflow-hidden {$screenWidth < 640 ? 'min-h-screen' : 'h-[800px]'}">
-  
-  
-      <!--Start Rule Preview-->
-      <div class="mt-5 rounded-2xl pb-10">
-      
-        
-        <div class="text-white font-bold text-3xl flex justify-start items-center ml-3 mb-5">
-          {strategyTitle}
-        </div>
-  
-  
-        <div class="text-white font-bold text-2xl flex justify-start items-center ml-3 mt-5 pb-5">
-          {ruleOfList?.length} Rules
-        </div>
-  
-      
-        {#each ruleOfList as rule,index}
-          <div class="pl-3 pr-3 pb-2 text-white">
-            <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg">
-                <div class="text-sm w-full mt-2">
-                  <span class="mr-1">{index+1}.</span>
-                  <!--<svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 indine-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>-->
-                  {ruleMappings[rule.name] || rule.name} · {formatRuleValue(rule)}
-                </div>
-            </div>
-          </div>
-        {/each}       
-      </div>
-      <!--End Rule Preview-->
-
-  </div>
-</dialog>
-<!--End View Strategy Modal-->
-
-
-
-{:else}
-<!--Start Drawer Sidewise for mobile-->
-
-
-<div class="drawer drawer-end overflow-hidden" style="z-index: 9999">
-  <input id="viewStrategy" type="checkbox" class="drawer-toggle"/>
- 
-  <div class="drawer-side overflow-hidden overflow-y-scroll">
-    
-    
-
-  <div class="w-screen min-h-full bg-[#000] text-base-content overflow-y-scroll overflow-hidden p-2 pb-10">
-    <!-- Search layout -->
-    <div class="text-white font-bold text-2xl flex justify-start items-center pl-3 mt-5 pb-5 pt-10">
-      {ruleOfList?.length} Rules · {strategyTitle}
-    </div>
-
-
-    {#each ruleOfList as rule,index}
-          <div class="pl-3 pr-3 pb-2 text-white">
-            <div class="flex flex-row items-center w-full bg-[#09090B] p-3 rounded-lg">
-                <div class="text-sm w-full mt-2">
-                  <span class="mr-1">{index+1}.</span>
-                  <!--<svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 indine-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>-->
-                  {ruleMappings[rule.name] || rule.name} · {formatRuleValue(rule)}
-                </div>
-            </div>
-          </div>
-        {/each}
-
-
-
-<label for="viewStrategy" class="absolute left-6 top-4">
-  <svg class="w-6 h-6 inline-block mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff" d="M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z"/></svg>
-  <span class="text-white text-md font-medium">
-    Return
-  </span>
-</label>
-
-</div>
-
-  </div>
-</div>
-
-
-<!--End Drawer Sidewise for mobile-->
-{/if}
-
 
 
 <!--Start Login Modal-->
@@ -745,14 +1523,30 @@ onMount(async () => {
 
 
 
-
-
 <style>
-  
-  input:checked ~ .dot {
-    transform: translateX(100%);
-    background-color: #26D967;
+
+.scroller {
+  scrollbar-width: thin;
+}
+
+.scrollbar {
+    display: grid;
+    grid-gap: 90px;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scrollbar-width: thin; /* Hide the default scrollbar in Firefox */
+    scrollbar-color: transparent transparent; /* Hide the default scrollbar in Firefox */
   }
-  
-  
+
+  /* Custom scrollbar for Webkit (Chrome, Safari) */
+  .scrollbar::-webkit-scrollbar {
+    width: 0; /* Hide the width of the scrollbar */
+    height: 0; /* Hide the height of the scrollbar */
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: transparent; /* Make the thumb transparent */
+  }
+
 </style>

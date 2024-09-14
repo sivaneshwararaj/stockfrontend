@@ -4,12 +4,6 @@ import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
 
 
-export const load = async ({ locals}) => {
-
-	if (!locals.pb.authStore.isValid) {
-		redirect(303, '/stock-screener/demo');
-	}
-};
 
 
 export const actions = {
@@ -91,7 +85,7 @@ export const actions = {
 	
 
 	
-    oauth2: async ( { url, locals, request, cookies }) => {
+	oauth2: async ( { url, locals, request, cookies }) => {
 		const authMethods = await locals?.pb?.collection('users')?.listAuthMethods();
 
 		const data = await request?.formData();
@@ -137,10 +131,10 @@ export const actions = {
 		});
 
 
-
 		redirect(302,authProviderRedirect);
 
 	}
+	
 
  
 };
