@@ -1,60 +1,61 @@
-import { error, fail, redirect } from '@sveltejs/kit';
-import { registerUserSchema } from '$lib/schemas';
-import { validateData } from '$lib/utils';
-
+import { error, fail, redirect } from "@sveltejs/kit";
+import { registerUserSchema } from "$lib/schemas";
+import { validateData } from "$lib/utils";
 
 async function checkDisposableEmail(email) {
-const url = `https://disposable.debounce.io/?email=${encodeURIComponent(email)}`;
-	const response = await fetch(url, {
-		method: 'GET',
-		headers: {
-		"Content-Type": "application/json"
-		},
-	});
-	const output = (await response.json())?.disposable ?? false;
-	return output
+  const url = `https://disposable.debounce.io/?email=${encodeURIComponent(email)}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const output = (await response.json())?.disposable ?? false;
+  return output;
 }
 
 export const actions = {
-	register: async ({ locals, request }) => {
+  register: async ({ locals, request }) => {
+    const { formData, errors } = await validateData(
+      await request.formData(),
+      registerUserSchema
+    );
+    if (errors) {
+      return fail(400, {
+        data: formData,
+        errors: errors.fieldErrors,
+      });
+    }
+    const isEmailDisposable = await checkDisposableEmail(formData?.email);
 
+    if (isEmailDisposable === "true") {
+      error(400, "Disposable Email Addresses not allowed!");
+    }
 
-		const { formData, errors } = await validateData(await request.formData(), registerUserSchema);
-		if (errors) {
-			return fail(400, {
-				data: formData,
-				errors: errors.fieldErrors
-			});
-		}
-		const isEmailDisposable = await checkDisposableEmail(formData?.email);
+    //let username = generateUsername(formData.name.split(' ').join('')).toLowerCase();
 
-		if(isEmailDisposable === "true") {
-			error(400, 'Disposable Email Addresses not allowed!');
-		}
+    try {
+      const newUser = await locals.pb.collection("users").create(formData);
+      /*
+      await locals.pb?.collection('users').update(
+              newUser?.id, {
+                'freeTrial' : true,
+                'tier': 'Pro', //Give new users a free trial for the Pro Subscription
+            });
+      */
 
+      await locals.pb.collection("users").requestVerification(formData.email);
+    } catch (err) {
+      console.log("Error: ", err);
+      error(err.status, err.message);
+    }
 
-		//let username = generateUsername(formData.name.split(' ').join('')).toLowerCase();
+    try {
+      await locals.pb
+        .collection("users")
+        .authWithPassword(formData.email, formData.password);
 
-		try {
-			const newUser = await locals.pb.collection('users').create(formData);
-			await locals.pb?.collection('users').update(
-				newUser?.id, {
-					'freeTrial' : true,
-					'tier': 'Pro', //Give new users a free trial for the Pro Subscription
-			});
-
-			await locals.pb.collection('users').requestVerification(formData.email);
-		} catch (err) {
-			console.log('Error: ', err);
-			error(err.status, err.message);
-		}
-
-		try {
-			await locals.pb
-				.collection("users")
-				.authWithPassword(formData.email, formData.password);
-			
-			/*
+      /*
 			if (!locals.pb?.authStore?.model?.verified) {
 				locals.pb.authStore.clear();
 				return {
@@ -62,70 +63,74 @@ export const actions = {
 				};
 			}
 			*/
-		} catch (err) {
-			console.log("Error: ", err);
-			error(err.status, err.message);
-		}
+    } catch (err) {
+      console.log("Error: ", err);
+      error(err.status, err.message);
+    }
 
-		redirect(301, "/");
-	},
-	
-	oauth2: async ( { url, locals, request, cookies }) => {
-		const authMethods = await locals?.pb?.collection('users')?.listAuthMethods();
+    redirect(301, "/");
+  },
 
-		const data = await request?.formData();
-		const providerSelected = data?.get('provider');
+  oauth2: async ({ url, locals, request, cookies }) => {
+    const authMethods = await locals?.pb
+      ?.collection("users")
+      ?.listAuthMethods();
 
-		if (!authMethods) {
-            return {
-                authProviderRedirect: '',
-                authProviderState: ''
-            };
-        }
-        const redirectURL = `${url.origin}/oauth`;
-		
-		const targetItem = authMethods.authProviders?.findIndex(item => item?.name === providerSelected );
-		//console.log("==================")
-		//console.log(authMethods.authProviders)
-		//console.log('target item is: ', targetItem)
+    const data = await request?.formData();
+    const providerSelected = data?.get("provider");
 
-        const provider = authMethods.authProviders[targetItem];
-        const authProviderRedirect = `${provider.authUrl}${redirectURL}`;
-        const state = provider.state;
-        const verifier = provider.codeVerifier;
+    if (!authMethods) {
+      return {
+        authProviderRedirect: "",
+        authProviderState: "",
+      };
+    }
+    const redirectURL = `${url.origin}/oauth`;
 
-		cookies.set('state', state, {httpOnly: true,
-			sameSite: 'lax',
-			secure: true,
-			path: '/',
-			maxAge: 60*60
-	  	});
+    const targetItem = authMethods.authProviders?.findIndex(
+      (item) => item?.name === providerSelected
+    );
+    //console.log("==================")
+    //console.log(authMethods.authProviders)
+    //console.log('target item is: ', targetItem)
 
-		cookies.set('verifier', verifier, {httpOnly: true,
-			sameSite: 'lax',
-			secure: true,
-			path: '/',
-			maxAge: 60*60
-		});
+    const provider = authMethods.authProviders[targetItem];
+    const authProviderRedirect = `${provider.authUrl}${redirectURL}`;
+    const state = provider.state;
+    const verifier = provider.codeVerifier;
 
-		cookies.set('provider', providerSelected, {httpOnly: true,
-			sameSite: 'lax',
-			secure: true,
-			path: '/',
-			maxAge: 60*60
-		});
+    cookies.set("state", state, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      path: "/",
+      maxAge: 60 * 60,
+    });
 
-		cookies.set('path', "/", {httpOnly: true,
-			sameSite: 'lax',
-			secure: true,
-			path: '/',
-			maxAge: 60
-	  	});
-		
+    cookies.set("verifier", verifier, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      path: "/",
+      maxAge: 60 * 60,
+    });
 
+    cookies.set("provider", providerSelected, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      path: "/",
+      maxAge: 60 * 60,
+    });
 
-		redirect(302,authProviderRedirect);
+    cookies.set("path", "/", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      path: "/",
+      maxAge: 60,
+    });
 
-	}
-	
+    redirect(302, authProviderRedirect);
+  },
 };

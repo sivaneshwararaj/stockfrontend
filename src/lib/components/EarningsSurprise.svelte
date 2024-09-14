@@ -56,7 +56,6 @@ $: {
             </div>
         </div>
 
-    {#if data?.user?.tier === 'Pro'}
         <div class="text-white text-[1rem] {latestInfoDate(rawData?.date) ? 'bg-[#F9AB00] bg-opacity-[0.1] p-3 rounded-lg' : 'bg-[#09090B] pl-3'} ">
             <div class="mt-1">{$displayCompanyName} has released their quartely earnings on {new Date(rawData?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}:</div>
   
@@ -67,12 +66,6 @@ $: {
                     EPS of <strong>${rawData?.eps}</strong> {rawData?.epsSurprise > 0 ? 'exceeds' : 'misses'} estimates by ${rawData?.epsSurprise?.toFixed(2)}, with <strong>{(((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) * 100)?.toFixed(2)}%</strong> YoY {((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) < 0 ? 'decline' : 'growth'}.
                 </li>
         </div>
-    {:else}
-    <div class="shadow-lg shadow-bg-[#000] bg-[#111112] sm:bg-opacity-[0.5] text-sm sm:text-[1rem] rounded-md w-full p-4 min-h-24 mt-4 text-white m-auto flex justify-center items-center text-center font-semibold">
-        <svg class="mr-1.5 w-5 h-5 inline-block"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-        Unlock content with <a class="inline-block ml-2 text-blue-400 hover:sm:text-white" href="/pricing">Pro Subscription</a>
-    </div>
-    {/if}
 
     </div>
 

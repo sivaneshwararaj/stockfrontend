@@ -581,7 +581,7 @@ $: {
     
               </nav>
     
-              {#if data?.user?.tier === 'Free' || data?.user?.freeTrial === true}
+              {#if !data?.user || data?.user?.tier === 'Free' || data?.user?.freeTrial === true}
               <div class="pt-10 w-full mb-5 m-auto sticky">
                 <Card.Root
                 >
@@ -612,7 +612,7 @@ $: {
             </Sheet.Content>
           </Sheet.Root>
           
-          <a href="/home" class="-ml-2 flex flex-shrink-0">
+          <a href="/" class="-ml-2 flex flex-shrink-0">
             <img class="avatar w-9 3xl:w-10 rounded-full" src={cloudFrontUrl+"/assets/stocknear_logo.png"} />
             <span class="text-white font-semibold ml-2 text-lg">Stocknear</span>
           </a>
@@ -894,7 +894,7 @@ $: {
                 </a>
                     
             </nav>
-            {#if data?.user?.tier === 'Free' || data?.user?.freeTrial === true}
+            {#if !data?.user || data?.user?.tier === 'Free' || data?.user?.freeTrial === true}
             <div class="mt-auto p-4 ">
               <Card.Root
                 data-x-chunk-name="dashboard-02-chunk-0"

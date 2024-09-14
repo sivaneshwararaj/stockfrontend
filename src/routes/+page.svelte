@@ -1,504 +1,630 @@
-<script lang='ts'>  
-  import DotPattern from '$lib/components/DotPattern.svelte';
-  import Marquee from '$lib/components/Marquee.svelte';
-  import Pricing from '$lib/components/Pricing.svelte';
-  //import Discount from '$lib/components/Discount.svelte';
-  import { intersect } from 'svelte-intersection-observer-action';
+<script lang='ts'>
+
+  import { onMount } from 'svelte';
+ 
+  import * as Card from "$lib/components/shadcn/card/index.ts";
+  import * as Table from "$lib/components/shadcn/table/index.ts";
+  import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
+  import Zap from "lucide-svelte/icons/zap";
+  import Bomb from "lucide-svelte/icons/bomb";
+  import Crown from "lucide-svelte/icons/crown";
+  import Activity from "lucide-svelte/icons/activity";
+  import { abbreviateNumber, formatDate } from '$lib/utils';
+  import * as Tabs from "$lib/components/shadcn/tabs/index.js";
+
+  import { screenWidth, numberOfUnreadNotification} from '$lib/store';
+
+  /*
+  import { Chart } from 'svelte-echarts'
+  import { init, use } from 'echarts/core'
+  import { BarChart } from 'echarts/charts'
+  import { GridComponent } from 'echarts/components'
+  import { CanvasRenderer } from 'echarts/renderers'
+
+  // now with tree-shaking
+  use([BarChart, GridComponent, CanvasRenderer])
+  */
+
 
   export let data;
-  export let form;
+  let isLoaded = false;
+  const quickInfo = data?.getDashboard?.quickInfo;
+  let optionsMode = 'premium';
 
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-  const frontendStars = data?.getFrontendStars;
-  const backendStars = data?.getBackendStars;
-
+function compareTimes(time1, time2) {
+  const [hours1, minutes1] = time1.split(':').map(Number);
+  const [hours2, minutes2] = time2.split(':').map(Number);
   
-const threshold = 0.4 // change the threshold value to 0.4 for 40%
-const rootMargin = '-0px 0px'
-const intersectOptions = { callback, threshold, rootMargin }
-function callback(entry: IntersectionObserverEntry) {
-  if (entry.intersectionRatio > threshold) {
-    entry.target.classList.remove('invisible')
-    entry.target.classList.add('animate-fade-in-once')
-  }
+  if (hours1 > hours2) return 1;
+  if (hours1 < hours2) return -1;
+  if (minutes1 > minutes2) return 1;
+  if (minutes1 < minutes2) return -1;
+  return 0;
+}
+
+function formatTime(timeString) {
+  // Split the time string into components
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+  // Determine AM or PM
+  const period = hours >= 12 ? 'PM' : 'AM';
+
+  // Convert hours from 24-hour to 12-hour format
+  const formattedHours = hours % 12 || 12; // Converts 0 to 12 for midnight
+
+  // Format the time string
+  const formattedTimeString = `${formattedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+
+  return formattedTimeString;
+}
+
+function reformatDate(dateString) {
+    return dateString.substring(5, 7) + '/' + dateString.substring(8) + '/' + dateString.substring(2, 4);
 }
 
 
+function convertTimestamp(unixTimestamp) {
+    // Multiply by 1000 because JavaScript's Date object expects milliseconds
+    const date = new Date(unixTimestamp * 1000);
+
+    // Formatting the date to a human-readable format
+    const formattedDate = date.toLocaleString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    });
+
+    return formattedDate;
+}
+
+//const tickerGraphName = data?.getDashboard?.retailTracker?.map(item => item?.symbol) || [];
+//const tradedList = data?.getDashboard?.retailTracker?.map(item => item?.traded) || [];
+
+/*
+const optionsGraph = {
+  animation: false,
+  grid: {
+    left: '2%',
+    right: '3%',
+    bottom: '6%',
+    top: '0%',
+    containLabel: true
+  },
+  xAxis: {
+    type: 'value',
+    splitLine: {
+      show: false, // Disable x-axis grid lines
+    },
+    axisLabel: {
+      show: false // Hide x-axis labels
+    },
+    axisTick: {
+      show: false // Hide x-axis ticks
+    },
+    axisLine: {
+      show: false // Hide x-axis line
+    }
+  },
+  yAxis: {
+    type: 'category',
+    data: tickerGraphName,
+    inverse: true,
+    axisTick: {
+      show: false // Hide x-axis ticks
+    },
+    axisLabel: {
+        color: '#fff' // Set the y-axis label color to white
+    }
+  },
+  series: [
+    {
+      data: tradedList,
+      label: {
+        show: true,
+        position: 'inside',
+        formatter: function(params) {
+          return abbreviateNumber(params?.value,true);
+        },
+        fontWeight: 600,
+      },
+      type: 'bar',
+      showBackground: true,
+      backgroundStyle: {
+        color: 'rgba(180, 180, 180, 0.2)'
+      },
+      itemStyle: {
+        color: 'white'  // Bar color is white
+      }
+    }
+  ]
+};
+*/
+
+function latestInfoDate(inputDate) {
+    // Convert the input date string to milliseconds since epoch
+    const inputDateMs = Date?.parse(inputDate);
+
+    // Get today's date in milliseconds since epoch
+    const todayMs = Date?.now();
+
+    // Calculate the difference in milliseconds
+    const differenceInMs = todayMs - inputDateMs;
+
+    // Convert milliseconds to days
+    const differenceInDays = Math?.floor(differenceInMs / (1000 * 60 * 60 * 24));
+
+    // Return the difference in days
+    return differenceInDays <=1;
+}
+
+let optionsTable = data?.getDashboard?.optionsFlow?.premium || [];
+
+function changeTable(state) {
+  optionsMode = state;
+  if (optionsMode === 'premium') {
+    optionsTable = data?.getDashboard?.optionsFlow?.premium || [];
+  } else if (optionsMode === 'volume') {
+    optionsTable = data?.getDashboard?.optionsFlow?.volume || [];
+  } else {
+    optionsTable = data?.getDashboard?.optionsFlow?.openInterest || [];
+  }
+}
+let Feedback;
+
+onMount( async() => {
+  isLoaded = true;
+  Feedback = (await import('$lib/components/Feedback.svelte')).default
+})
 
 </script>
   
   
 
-
 <svelte:head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    Modern Stock Analysis Platform · stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Free Stock Analysis Information for Small Investors · stocknear
   </title>
 
   <meta name="description" content="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts.">
   <!-- Other meta tags -->
-  <meta property="og:title" content="Modern Stock Analysis Platform · stocknear"/>
+  <meta property="og:title" content="Free Stock Analysis Information for Small Investors · stocknear"/>
   <meta property="og:description" content="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."/>
   <meta property="og:type" content="website"/>
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Stock Analysis Information for Small Investors · stocknear"/>
+  <meta name="twitter:title" content="Free Stock Analysis Information for Small Investors · stocknear"/>
   <meta name="twitter:description" content="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."/>
   <!-- Add more Twitter meta tags as needed -->
-
 </svelte:head>
 
-
-<DotPattern
-width={20}
-height={20}
-cx={10}
-cy={10}
-cr={1}
-class="hidden sm:block [mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] "
-/>
+<svelte:options immutable={true}/>
 
 
-<div class="w-full max-w-screen overflow-hidden m-auto min-h-screen bg-[#09090B]">
+<div class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B]">
+    
+    <div class="flex flex-col m-auto justify-center items-center">
+      <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10 ">                
+      
+        {#if Feedback}
+          <Feedback data={data} />
+        {/if}
+        
+        
+        <div class="text-center mb-10 relative w-fit flex justify-center m-auto">
+          <a href="/options-flow" class="text-white antialiased  bg-[#27272A] w-full px-4 py-2 rounded-lg m-auto font-medium text-[1rem] flex items-center">
+            <span class="text-white sm:hover:text-blue-400">Options Flow Filter</span>
+          </a>
+          <div class="absolute top-[-1.2rem] -right-5 sm:-right-8 rotate-[7deg]">
+            <span class="bg-[#FBCE3C] text-black text-sm sm:text-[0.9rem] rounded-xl font-semibold sm:me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+              New
+            </span>
+          </div>
+        </div>
+      
 
-
-  <div class="m-auto flex flex-wrap flex-col justify-center items-center md:flex-row ">
-    <!--Left Col-->
+        <h1 class="text-white text-3xl font-semibold text-start w-full pl-4 pb-4 sm:pb-2">
+          Dashboard
+        </h1>
 
     
-    
-    <div class="flex flex-col w-full justify-center items-center">
-      <div class="text-center w-full pb-20 sm:pb-10">                
 
-        <section>
-          <div class="relative w-full mx-auto overflow-hidden">
-
-         
-              <div class="w-full m-auto flex justify-center overflow-hidden">
-                  <div class="py-7">
-    
-                      <!-- Section content -->
-                      <div class="relative m-auto">
-      
-                          <!-- Section header -->
-                          <div class="h-auto">
-                            
-                            <div class="w-full sm:rounded-xl h-auto mt-3">
-                              <div class="grid grid-cols-1 gap-10">
-                            
-                                <!-- Start Column -->
-                                <div >
-
-  
-
-                                  <div class="flex flex-row justify-center items-center w-full sm:w-3/4 m-auto">
-                                                                        
-                                    <h1 class="fade-down text-center text-4xl sm:text-6xl bg-white bg-clip-text text-transparent font-bold mb-6 w-80 sm:w-full">
-                                      Stock Analysis Platform for Data Freaks
-                                    </h1>
-                                  </div>
-
-                                  
-                                  <div class="text-gray-300 w-5/6 sm:w-3/4 m-auto font-semibold text-center flex-1 justify-center items-center  text-lg sm:text-2xl">
-                                    Uncover what drives the stock market with our clear, actionable data.
-                                  </div>
-                                  
-                                    
-             
-                                    <div class="flex flex-col gap-y-4 justify-center items-center mt-8 mb-6 m-auto w-full max-w-3xl">
-
-
-                                      <a href='/register'
-                                        class="animate-shine transition-colors group relative grid overflow-hidden rounded-xl px-6 py-3 shadow-[0_1000px_0_0_hsl(0_0%_20%)_inset] transition-colors"
-                                      >
-                                        <span>
-                                          <span
-                                            class="spark mask-gradient animate-flip before:animate-kitrotate absolute inset-0 h-[100%] w-[100%] overflow-hidden rounded-xl [mask:linear-gradient(white,_transparent_50%)] before:absolute before:aspect-square before:w-[200%] before:rotate-[-90deg] before:bg-[conic-gradient(from_0deg,transparent_0_340deg,white_360deg)] before:content-[''] before:[inset:0_auto_auto_50%] before:[translate:-50%_-15%]"
-                                          />
-                                        </span>
-                                        <span
-                                          class="backdrop absolute inset-px rounded-[11px] bg-purple-600 transition-colors duration-200 sm:group-hover:bg-purple-700"
-                                        />
-                                        <span class="z-10 text-white text-[1rem] sm:text-lg font-semibold">
-                                          <slot>Start free 30 days trial  <span class="ml-2 mt-0.5 tracking-normal group-hover:translate-x-0.5 transition-transform duration-100 ease-in-out">
-                                        </span></slot>
-                                        <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="#fff" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-
-                                        </span>
-                                        
-                                      </a>
-                                      
-
-
-                                      <div class="flex flex-row items-center gap-x-5 justify-center m-auto mt-3 w-ful">
-                                      <span class="hidden sm:block text-white text-sm sm:text-lg">
-                                        <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#FBCE3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M416 128L192 384l-96-96"/></svg>
-                                        100% Open Source
-                                      </span >
-
-                                        <span class="text-white text-sm sm:text-lg">
-                                        <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#FBCE3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M416 128L192 384l-96-96"/></svg>
-                                        No credit card required
-                                      </span >
-                                      <span class="text-white text-sm sm:text-lg">
-                                        <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="#FBCE3C" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M416 128L192 384l-96-96"/></svg>
-                                        Instant Access
-                                      </span >
-                                    </div>
-
-                                    <div class="flex flex-col items-center justify-center mt-2 sm:mt-4">
-                                      <div class="flex items-center">
-                                        <svg class="w-5 h-5 sm:w-6 sm:h-6 ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FAC109" d="m5.825 21l1.625-7.025L2 9.25l7.2-.625L12 2l2.8 6.625l7.2.625l-5.45 4.725L18.175 21L12 17.275z"/></svg>
-                                        <svg class="w-5 h-5 sm:w-6 sm:h-6 ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FAC109" d="m5.825 21l1.625-7.025L2 9.25l7.2-.625L12 2l2.8 6.625l7.2.625l-5.45 4.725L18.175 21L12 17.275z"/></svg>
-                                        <svg class="w-5 h-5 sm:w-6 sm:h-6 ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FAC109" d="m5.825 21l1.625-7.025L2 9.25l7.2-.625L12 2l2.8 6.625l7.2.625l-5.45 4.725L18.175 21L12 17.275z"/></svg>
-                                        <svg class="w-5 h-5 sm:w-6 sm:h-6 ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FAC109" d="m5.825 21l1.625-7.025L2 9.25l7.2-.625L12 2l2.8 6.625l7.2.625l-5.45 4.725L18.175 21L12 17.275z"/></svg>
-                                        <svg class="w-5 h-5 sm:w-6 sm:h-6 ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FAC109" d="m5.825 21l1.625-7.025L2 9.25l7.2-.625L12 2l2.8 6.625l7.2.625l-5.45 4.725L18.175 21L12 17.275z"/></svg>
-                                      </div>
-                                      <span class="text-sm font-semibold text-white mt-1.5">
-                                        Subscribed by over 170+ traders
-                                      </span>
-                                    </div>
-
-                                    </div>
-                                    
-
-                                    <!--<Discount />-->
-
-                                  </div>
-                                     
-              
-                                </div>
-                                <!-- End Column -->
-
-            
-
-                                <h1 class="text-white w-5/6 sm:w-full m-auto text-3xl sm:text-4xl font-bold mt-14 mb-10">
-                                  Explore High Quality Datasets
-                                </h1>
-                               
-                                <!--
-                                <div class="relative mb-4">
-                                  <div class="absolute top-0 flex w-full justify-center">
-                                    <div
-                                      class="h-[1px] animate-border-width rounded-full bg-gradient-to-r from-[rgba(251,206,60,0)] via-white to-[rgba(188,126,254,0)] transition-all duration-1000"
-                                    />
-                                  </div>
-
-                                  <div class="absolute flex items-center justify-center -top-[-140px] sm:top-[270px] -translate-y-1/2 left-1/2 -translate-x-1/2 pointer-events-none w-96 sm:w-[900px] aspect-square">
-                                    <div class="absolute inset-0 translate-z-0 bg-gradient-to-t from-[#E8BB28] to-purple-600 rounded-full blur-[1600px] opacity-[0.15]"></div>
-                                    <div class="absolute w-64 h-64 translate-z-0 bg-gradient-to-t from-[#E8BB28] to-purple-900 rounded-full blur-[800px] "></div>
-                                  </div>
-                                  
-
-                                  
-                                  <div class="overlay m-auto flex justify-center z-20 items-center w-fit sm:w-[820px] h-full">
-                                    <img class="w-full" src={cloudFrontUrl+"/assets/showcase-stock.png"} alt="logo">
-                                  </div>
-                                
-                                </div>
-                              -->
-                                
-
-
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 w-full m-auto">
-                                    <div class="card bg-[#121016] w-full lg:w-96 shadow-xl rounded-none sm:rounded-lg">
-                                      <div class="card-body">
-                                        <h2 class="card-title text-white text-2xl font-bold">
-                                          <svg class="w-9 h-9 inline-block mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><path fill="none" stroke="#fff" stroke-linejoin="round" d="M.5 3.498L7.5.5l7 2.998m-14 0l7 2.998m-7-2.998V3.5m14-.002l-7 2.998m7-2.998V11.5l-7 3m7-11.002L7.5 6.5v8m0-8.004V14.5m0-8.004L.5 3.5m7 11l-7-3v-8"/></svg>
-                                          Dark Pool
-                                        </h2>
-                                        <span class="text-start text-white">
-                                          Access high-volume, privately negotiated trades from exclusive exchanges, typically used by institutional investors. This data is now available to you!
-                                        </span>
-                                      </div>
-                                    </div>
-  
-                                  <div class="card bg-[#121016] w-full lg:w-96 shadow-xl rounded-none sm:rounded-lg ">
-                                    <div class="card-body">
-                                      <h2 class="card-title text-white text-2xl font-bold">
-                                        <svg class="w-10 h-10 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 16V8c0-.943 0-1.414-.293-1.707S12.943 6 12 6s-1.414 0-1.707.293S10 7.057 10 8v8c0 .943 0 1.414.293 1.707S11.057 18 12 18s1.414 0 1.707-.293S14 16.943 14 16m7-7V7c0-.943 0-1.414-.293-1.707S19.943 5 19 5s-1.414 0-1.707.293S17 6.057 17 7v2c0 .943 0 1.414.293 1.707S18.057 11 19 11s1.414 0 1.707-.293S21 9.943 21 9M7 14v-2c0-.943 0-1.414-.293-1.707S5.943 10 5 10s-1.414 0-1.707.293S3 11.057 3 12v2c0 .943 0 1.414.293 1.707S4.057 16 5 16s1.414 0 1.707-.293S7 14.943 7 14m5 7v-3m7-5v-2m-7-5V3m7 2V3M5 18v-2m0-6V8" color="#F9784E"/></svg>
-                                        Market Maker
-                                      </h2>
-                                      <span class="text-start text-white">
-                                        Access Market Maker Activity to monitor their trading volume and identify the companies they are focusing on to spot potential hot stocks.
-                                      </span>
-                                    </div>
-                                  </div>
-  
-                                  <div class="card bg-[#121016] w-full lg:w-96 shadow-xl rounded-none sm:rounded-lg ">
-                                    <div class="card-body">
-                                      <h2 class="card-title text-white text-2xl font-bold">
-                                        <svg class="w-10 h-10 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="M4 7a1 1 0 0 0 0 2h2.22l2.624 10.5c.223.89 1.02 1.5 1.937 1.5h12.47c.903 0 1.67-.6 1.907-1.47L27.75 10h-2.094l-2.406 9H10.78L8.157 8.5A1.984 1.984 0 0 0 6.22 7zm18 14c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3m-9 0c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3m3-14v5h-3l4 4l4-4h-3V7zm-3 16c.564 0 1 .436 1 1c0 .564-.436 1-1 1c-.564 0-1-.436-1-1c0-.564.436-1 1-1m9 0c.564 0 1 .436 1 1c0 .564-.436 1-1 1c-.564 0-1-.436-1-1c0-.564.436-1 1-1"/></svg>
-                                        Retail Trader Tracker
-                                      </h2>
-                                      <span class="text-start text-white">
-                                        Gain exclusive insights with our Retail Trader Tracker to discover where retail traders are investing and identify the next potential hype stocks.
-                                      </span>
-                                    </div>
-                                  </div>
-  
-                                  <div class="card bg-[#121016] w-full lg:w-96 shadow-xl rounded-none sm:rounded-lg ">
-                                    <div class="card-body">
-                                      <h2 class="card-title text-white text-2xl font-bold text-start">
-                                        <svg class="w-9 h-9 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#fff" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128m95.8 32.6L272 480l-32-136l32-56h-96l32 56l-32 136l-47.8-191.4C56.9 292 0 350.3 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-72.1-56.9-130.4-128.2-133.8"/></svg>
-                                          Wall Str. Analyst
-                                      </h2>
-                                      <span class="text-start text-white">
-                                        Access the Wall Street Analyst Database to explore insights from over 4,000 analysts, including their win rates, potential returns and latest ratings.
-                                      </span>
-                                    </div>
-                                  </div>
-  
-                                  <div class="card bg-[#121016] w-full lg:w-96 shadow-xl rounded-none sm:rounded-lg ">
-                                    <div class="card-body">
-                                      <h2 class="card-title text-white text-2xl font-bold text-start">
-                                        <svg class="w-10 h-10 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#fff" d="M247.002 32v47.725a56.5 56.5 0 0 1 17.996 0V32zM256 96.998c-11.5 0-23.002 5.001-23.002 15.002v10.1c7.37-2 15.05-3.098 23.002-3.098c7.953 0 15.632 1.098 23.002 3.098V112c0-10-11.502-15.002-23.002-15.002m0 40c-28.25 0-53.982 17.938-72.867 42.488c-16.345 21.249-26.934 47.277-29.496 67.516h204.726c-2.562-20.239-13.15-46.267-29.496-67.516c-18.885-24.55-44.617-42.488-72.867-42.488m-80 78.004h32v17.996h-32zm64 0h32v17.996h-32zm64 0h32v17.996h-32zm-170.29 49.996l-7.53 16.004h259.64l-7.53-16.004zm1.292 34v28.004h17.996v-28.004zm56 0v28.004h17.996v-28.004zm56 0v28.004h17.996v-28.004zm56 0v28.004h17.996v-28.004zm56 0v28.004h17.996v-28.004zm-270.004 46v16.004h334.004v-16.004zm14.004 34v60.004h17.996v-60.004zm48 0v60.004h17.996v-60.004zm48 0v60.004h17.996v-60.004zm48 0v60.004h17.996v-60.004zm48 0v60.004h17.996v-60.004zm48 0v60.004h17.996v-60.004zm48 0v60.004h17.996v-60.004zm-350.004 78v30.004h430.004v-30.004z"/></svg>
-                                        Congress Trading 
-                                      </h2>
-                                      <span class="text-start text-white">
-                                        Stay updated on the latest Congress Trading activities to see where politicians are investing and gain unique insights for potentially significant gains.
-                                      </span>
-                                    </div>
-                                  </div>
-  
-                                  <div class="card bg-[#121016] w-full lg:w-96 shadow-xl rounded-none sm:rounded-lg ">
-                                    <div class="card-body">
-                                      <h2 class="card-title text-white text-2xl font-bold text-start">
-                                        <svg class="w-10 h-10 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#fff" d="M9.228 2.183a1.33 1.33 0 0 1 1.543 0l5.852 4.152c.727.516.363 1.662-.528 1.664H3.907c-.894 0-1.26-1.147-.53-1.664zM10 5.874a.833.833 0 1 0 0-1.667a.833.833 0 0 0 0 1.667M4.5 9v4h2V9zM3 16.166c0-1.197.97-2.167 2.166-2.167h9.667A2.17 2.17 0 0 1 17 16.166v.333a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5zm12.5-7.167v4h-2V9zm-3 0v4h-2V9zm-3 0v4h-2V9z"/></svg>
-                                        Hedge Funds
-                                      </h2>
-                                      <span class="text-start text-white">
-                                        Access the Hedge Fund Portfolio to explore their investments and identify the top-performing funds.
-                                      </span>
-                                    </div>
-                                  </div>
-  
-  
-  
-                                </div>
-
-                                
-                                
-                                <h2 class=" text-white text-3xl sm:text-4xl font-bold mt-16 w-5/6 sm:w-1/2 text-center m-auto">
-                                  AI-Powered Algorithms to assist you in any way
-                                </h2>
-
-                                <section>
-                                  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-                                      <div class="pt-10 pb-12 md:pt-16 md:pb-20">
-                                  
-                                          <!-- Items -->
-                                          <div class="max-w-sm mx-auto grid gap-8 md:grid-cols-3 lg:gap-16 items-start md:max-w-none">
-                  
-                                              <!-- 1st item -->
-                                              <div use:intersect={intersectOptions} class="relative flex flex-col items-center invisible">
-                                                  
-                                                <div class="mb-4 rounded-full flex-shrink-0 w-16 h-16 relative flex items-center justify-center bg-gradient-to-r from-purple-800 to-purple-500">
-                                                  <svg class="w-7 h-7 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="M6.15.555a.389.389 0 0 0-.399 0a.26.26 0 0 0-.06.34c1.227 2.123 1.486 5.016-.19 6.611a5.505 5.505 0 0 1-1.495-1.994a3.88 3.88 0 0 0-1.995 3.49a4.688 4.688 0 0 0 4.987 4.488c3.211 0 4.877-1.994 4.986-4.488C12.114 6.01 9.99 2.33 6.15.555"/></svg>
-                                                </div>
-                                                  <h4 class="text-xl text-white font-semibold mb-2">Market Trends</h4>
-                                                  <p class="text-[1rem] sm:text-lg text-white text-center">
-                                                    We are analyzing and predicting the trends for each company for the forthcoming months.
-                                                  </p>
-                                              </div>
-                  
-                                              <!-- 2nd item -->
-                                              <div use:intersect={intersectOptions} class="relative flex flex-col items-center invisible">
-                                                <div class="mb-4 rounded-full flex-shrink-0 w-16 h-16 relative flex items-center justify-center bg-gradient-to-r from-purple-800 to-purple-500">
-                                                  <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="m24 20l-1.41 1.41L26.17 25H10a4 4 0 0 1 0-8h12a6 6 0 0 0 0-12H5.83l3.58-3.59L8 0L2 6l6 6l1.41-1.41L5.83 7H22a4 4 0 0 1 0 8H10a6 6 0 0 0 0 12h16.17l-3.58 3.59L24 32l6-6Z"/></svg>
-                                                </div>
-                                                  <h4 class="text-xl text-white font-semibold mb-2">Price Movements</h4>
-                                                  <p class="text-[1rem] sm:text-lg text-white text-center">
-                                                    We are predicting the price movements of each company to empower you with confidence in your investment strategy.
-                                                  </p>
-                                              </div>
-                  
-                                              <!-- 3rd item -->
-                                              <div use:intersect={intersectOptions} class="relative flex flex-col items-center invisible">
-                                                <div class="mb-4 rounded-full flex-shrink-0 w-16 h-16 relative flex items-center justify-center bg-gradient-to-r from-purple-800 to-purple-500">
-                                                  <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="#F9784E"><path d="M18 15V9c0-2.828 0-4.243-.879-5.121C16.243 3 14.828 3 12 3H8c-2.828 0-4.243 0-5.121.879C2 4.757 2 6.172 2 9v6c0 2.828 0 4.243.879 5.121C3.757 21 5.172 21 8 21h12M6 8h8m-8 4h8m-8 4h4"/><path d="M18 8h1c1.414 0 2.121 0 2.56.44c.44.439.44 1.146.44 2.56v8a2 2 0 1 1-4 0z"/></g></svg>
-                                                </div>
-                                                  <h4 class="text-xl text-white font-semibold mb-2">News Sentiments</h4>
-                                                  <p class="text-[1rem] sm:text-lg text-white text-center">
-                                                    We are processing millions of news articles to evaluate what the market thinks about each company.
-                                                  </p>
-                                              </div>
-                  
-                                          </div>
-                  
-                                      </div>
-                                  </div>
-                              </section>
-
-                              
-
-
-                              
-                                <h2 class="text-white text-3xl sm:text-4xl text-center m-auto font-bold mt-20 w-11/12 sm:w-1/2 mb-10">
-                                  Realtime Options Flow from Hedge Funds & Major Institutions
-                                </h2>
-                                    
-
-                                <div class="relative mb-4">
-                                  <div class="absolute top-0 flex w-full justify-center">
-                                    <div
-                                      class="h-[1px] animate-border-width rounded-full bg-gradient-to-r from-[rgba(251,206,60,0)] via-white to-[rgba(188,126,254,0)] transition-all duration-1000"
-                                    />
-                                  </div>
-  
-                                  <div class="absolute flex items-center justify-center -top-[-140px] sm:top-[270px] -translate-y-1/2 left-1/2 -translate-x-1/2 pointer-events-none w-96 sm:w-[900px] aspect-square">
-                                    <div class="absolute inset-0 translate-z-0 bg-gradient-to-t from-[#E8BB28] to-purple-600 rounded-full blur-[1600px] opacity-[0.15]"></div>
-                                    <div class="absolute w-64 h-64 translate-z-0 bg-gradient-to-t from-[#E8BB28] to-purple-900 rounded-full blur-[800px] "></div>
-                                  </div>
-                                  
-                                  
-  
-  
-                                  <div class="overlay m-auto flex justify-center items-center w-fit sm:w-[820px] h-full">
-                                    <img class="w-full" src={cloudFrontUrl+"/assets/showcase-options-flow.png"} loading = 'lazy' alt="logo">
-                                  </div>
-                                </div>
-                                
-
-                              
-                                
-                                <section>
-                                  <div class="max-w-6xl mx-auto px-4 sm:px-6">
-                                      <div class="pt-10 pb-12 md:pt-16 md:pb-20">
-                                  
-                                          <!-- Items -->
-                                          <div class="max-w-sm mx-auto grid gap-8 md:grid-cols-3 lg:gap-16 items-start md:max-w-none">
-                  
-                                              <!-- 1st item -->
-                                              <div use:intersect={intersectOptions} class="relative flex flex-col items-center invisible">
-                                                  
-                                                <div class="mb-4 rounded-full flex-shrink-0 w-16 h-16 relative flex items-center justify-center bg-gradient-to-r from-purple-800 to-purple-500">
-                                                  <svg style="clip-path: circle(50%);" class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="m7.288 23.292l7.997-7.997l1.414 1.414l-7.997 7.997z"/><path fill="#fff" d="M17 30a1 1 0 0 1-.37-.07a1 1 0 0 1-.62-.79l-1-7l2-.28l.75 5.27L21 24.52V17a1 1 0 0 1 .29-.71l4.07-4.07A8.94 8.94 0 0 0 28 5.86V4h-1.86a8.94 8.94 0 0 0-6.36 2.64l-4.07 4.07A1 1 0 0 1 15 11H7.48l-2.61 3.26l5.27.75l-.28 2l-7-1a1 1 0 0 1-.79-.62a1 1 0 0 1 .15-1l4-5A1 1 0 0 1 7 9h7.59l3.77-3.78A10.92 10.92 0 0 1 26.14 2H28a2 2 0 0 1 2 2v1.86a10.92 10.92 0 0 1-3.22 7.78L23 17.41V25a1 1 0 0 1-.38.78l-5 4A1 1 0 0 1 17 30"/></svg>
-                                                </div>
-                                                  <h4 class="text-xl text-white font-semibold mb-2">Track institutional activity</h4>
-                                                  <p class="text-[1rem] sm:text-lg text-white text-center">
-                                                    Gain insights into the latest moves smart money traders and hedge funds are doing. 
-                                                  </p>
-                                              </div>
-                  
-                                              <!-- 2nd item -->
-                                              <div use:intersect={intersectOptions} class="relative flex flex-col items-center invisible">
-                                                <div class="mb-4 rounded-full flex-shrink-0 w-16 h-16 relative flex items-center justify-center bg-gradient-to-r from-purple-800 to-purple-500">
-                                                  <svg style="clip-path: circle(50%);" class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#fff" d="M184 184a32 32 0 0 1-32 32c-13.7 0-26.95-8.93-31.5-21.22a8 8 0 0 1 15-5.56C137.74 195.27 145 200 152 200a16 16 0 0 0 0-32H40a8 8 0 0 1 0-16h112a32 32 0 0 1 32 32m-64-80a32 32 0 0 0 0-64c-13.7 0-26.95 8.93-31.5 21.22a8 8 0 0 0 15 5.56C105.74 60.73 113 56 120 56a16 16 0 0 1 0 32H24a8 8 0 0 0 0 16Zm88-32c-13.7 0-26.95 8.93-31.5 21.22a8 8 0 0 0 15 5.56C193.74 92.73 201 88 208 88a16 16 0 0 1 0 32H32a8 8 0 0 0 0 16h176a32 32 0 0 0 0-64"/></svg>
-                                                </div>
-                                                  <h4 class="text-xl text-white font-semibold mb-2">Fast, reliable market data</h4>
-                                                  <p class="text-[1rem] sm:text-lg text-white text-center">
-                                                    Get the latest options flow data delivered to you quickly and accurately.
-                                                  </p>
-                                              </div>
-                  
-                                              <!-- 3rd item -->
-                                              <div use:intersect={intersectOptions} class="relative flex flex-col items-center invisible" data-aos-delay="400">
-                                                <div class="mb-4 rounded-full flex-shrink-0 w-16 h-16 relative flex items-center justify-center bg-gradient-to-r from-purple-800 to-purple-500">
-                                                  <svg style="clip-path: circle(50%);" class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048"><path fill="#fff" d="M1536 0q27 0 50 10t40 27t28 41t10 50v1792q0 27-10 50t-27 40t-41 28t-50 10H512q-27 0-50-10t-40-27t-28-41t-10-50V128q0-27 10-50t27-40t41-28t50-10zm0 128H512v1792h1024zM896 1664h256v128H896z"/></svg>
-                                                </div>
-                                                  <h4 class="text-xl text-white font-semibold mb-2">Best User Experience</h4>
-                                                  <p class="text-[1rem] sm:text-lg text-white text-center">
-                                                    Enjoy an intuitive interface that makes finding the information you need effortless.
-                                                  </p>
-                                              </div>
-                  
-                                          </div>
-                  
-                                      </div>
-                                  </div>
-                              </section>
-            
-
-
-                              <h2 use:intersect={intersectOptions} class="invisible text-white text-3xl sm:text-4xl font-bold mt-16 w-11/12 sm:w-1/2 text-center m-auto">
-                                Loved by our Users ❤
-                              </h2>
-
-                              <section use:intersect={intersectOptions} class="invisible relative flex items-center justify-center">
-                                <div class="absolute top-0 max-w-6xl m-auto px-4 sm:px-6">
-                                    <div class="pt-8 pb-12 md:pb-20">
-                                
-                                      <Marquee />
-
-                                    </div>
-                                </div>
-                            </section>
-
-
-                                <h1 class="text-white w-5/6 sm:w-full m-auto text-3xl sm:text-4xl font-bold pt-96 mt-10 mb-4">
-                                  Proudly Open Source
-                                </h1>
-
-                                <div class="text-[1rem] sm:text-xl text-white font-semibold text-center w-11/12 sm:w-1/2 m-auto mb-8">
-                                  Stocknear is committed to open source & transparency. You can also run it locally or self-hosted.
-                                </div>
-
-                                <a href="https://github.com/stocknear" rel="noopener noreferrer" target="_blank"
-                                  class="w-fit sm:w-54 inline-flex animate-shine items-center justify-center rounded-xl text-sm border border-neutral-900 bg-[linear-gradient(110deg,#252626,55%,#fff,45%,#252626)] bg-[length:200%_100%] px-4 py-2 font-medium transition-colors"
-                                >
-                                <div class="m-auto flex-shrink-0 flex justify-center items-center">
-                                  <svg class="w-8 h-8 sm:w-10 sm:h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
-                                
-                                  <span class="text-white text-[1rem] ml-2 font-semibold">
-                                    stocknear
-                                    {frontendStars+backendStars}
-                                  </span>
-                                  <svg class="ml-1 w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="m18.7 4.627l2.247 4.31a2.27 2.27 0 0 0 1.686 1.189l4.746.65c2.538.35 3.522 3.479 1.645 5.219l-3.25 2.999a2.225 2.225 0 0 0-.683 2.04l.793 4.398c.441 2.45-2.108 4.36-4.345 3.24l-4.536-2.25a2.282 2.282 0 0 0-2.006 0l-4.536 2.25c-2.238 1.11-4.786-.79-4.345-3.24l.793-4.399c.14-.75-.12-1.52-.682-2.04l-3.251-2.998c-1.877-1.73-.893-4.87 1.645-5.22l4.746-.65a2.23 2.23 0 0 0 1.686-1.189l2.248-4.309c1.144-2.17 4.264-2.17 5.398 0"/></svg>
-                                </div>
-                                </a>
-
-
-   
-                                <div class="text-white text-sm sm:text-lgs font-semibold font-mono mt-5">
-                                  Leave a star to support us
-                                </div>
-
-
-                                <Pricing data={data} form={form}/>
-
-
-                                </div>
-
-                               
-
-
-                                
-                            </div>
-
-                      </div>
-
-                      
-      
-                  </div>
-              </div>
-      
+        <main class="flex flex-1 flex-col gap-4 sm:p-4 md:gap-8">
+          <div class="grid gap-4 grid-cols-2 md:gap-8 lg:grid-cols-4">
+            <Card.Root>
+              <Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card.Title class="cursor-pointer text-start text-[1rem] sm:text-xl font-semibold">
+                  <a href="/market-mover" class="sm:hover:underline">Most Active</a>
+                </Card.Title>
+                <Activity class="h-4 w-4 shrink-0" />
+              </Card.Header>
+              <Card.Content>
+                <a href={`/stocks/${quickInfo?.active?.symbol}`} class="flex text-start text-blue-400 sm:hover:text-white text-[1rem] sm:text-lg font-semibold">{quickInfo?.active?.symbol}</a>
+                <p class="text-start text-[1rem] sm:text-lg font-medium text-white mt-1">
+                  <!--${quickInfo?.active?.price}-->
+                      {#if quickInfo?.active?.changesPercentage >=0}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
+                      <span class="text-[#10DB06] font-medium">+{quickInfo?.active?.changesPercentage?.toFixed(2)}%</span>
+                    {:else}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 inline-block rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
+                      <span class="text-[#FF2F1F] font-medium">{quickInfo?.active?.changesPercentage?.toFixed(2)}% </span> 
+                    {/if}
+                </p>
+              </Card.Content>
+            </Card.Root>
+            <Card.Root >
+              <Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card.Title class="text-start text-[1rem] sm:text-xl font-semibold">
+                  <a href="/market-mover" class="sm:hover:underline">Top Stock</a>
+                </Card.Title>
+                <Crown class="h-4 w-4 shrink-0" />
+              </Card.Header>
+              <Card.Content>
+                <a href={`/stocks/${quickInfo?.winner?.symbol}`} class="flex text-start text-blue-400 sm:hover:text-white text-[1rem] sm:text-lg font-semibold">{quickInfo?.winner?.symbol}</a>
+                <p class="text-start text-[1rem] sm:text-lg font-medium text-white mt-1">
+                  <!--${quickInfo?.winner?.price}-->
+                      {#if quickInfo?.winner?.changesPercentage >=0}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
+                      <span class="text-[#10DB06] font-medium">+{abbreviateNumber(quickInfo?.winner?.changesPercentage?.toFixed(2))}%</span>
+                    {:else}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
+                      <span class="text-[#FF2F1F] font-medium">{abbreviateNumber(quickInfo?.winner?.changesPercentage?.toFixed(2))}% </span> 
+                    {/if}
+                </p>
+              </Card.Content>
+            </Card.Root>
+            <Card.Root>
+              <Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card.Title class="text-start text-[1rem] sm:text-xl font-semibold">
+                  <a href="/market-mover" class="sm:hover:underline">Worst Stock</a>
+                </Card.Title>
+                <Bomb class="h-4 w-4 shrink-0" />
+              </Card.Header>
+              <Card.Content>
+                <a href={`/stocks/${quickInfo?.loser?.symbol}`} class="flex text-start text-blue-400 sm:hover:text-white text-[1rem] sm:text-lg font-semibold">{quickInfo?.loser?.symbol}</a>
+                <p class="text-start text-[1rem] sm:text-lg font-medium text-white mt-1">
+                  <!--${quickInfo?.loser?.price?.toFixed(2)}-->
+                      {#if quickInfo?.loser?.changesPercentage >=0}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
+                      <span class="text-[#10DB06] font-medium">+{abbreviateNumber(quickInfo?.loser?.changesPercentage?.toFixed(2))}%</span>
+                    {:else}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
+                      <span class="text-[#FF2F1F] font-medium">{abbreviateNumber(quickInfo?.loser?.changesPercentage?.toFixed(2))}% </span> 
+                    {/if}
+                </p>
+              </Card.Content>
+            </Card.Root>
+            <Card.Root>
+              <Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card.Title class="text-start text-[1rem] sm:text-xl font-semibold">
+                  <a href={quickInfo?.topSector?.link} class="sm:hover:underline">Top Sector</a>
+                </Card.Title>
+                <Zap class="h-4 w-4 shrink-0" />
+              </Card.Header>
+              <Card.Content>
+                <a href={quickInfo?.topSector?.link} class="flex text-start text-blue-400 sm:hover:text-white text-[1rem] sm:text-lg font-semibold">
+                  {quickInfo?.topSector?.sector?.length > 15 ? quickInfo?.topSector?.sector?.slice(0,15) +'...' : quickInfo?.topSector?.sector}
+                </a>
+                <p class="text-start text-[1rem] sm:text-lg font-medium text-[#FF2F1F] mt-1">
+                  {#if quickInfo?.topSector?.changesPercentage >=0}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
+                      <span class="text-[#10DB06] font-medium">+{abbreviateNumber(quickInfo?.topSector?.changesPercentage?.toFixed(2))}%</span>
+                    {:else}
+                      <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
+                      <span class="text-[#FF2F1F] font-medium">{abbreviateNumber(quickInfo?.topSector?.changesPercentage?.toFixed(2))}% </span> 
+                    {/if}
+                </p>
+              </Card.Content>
+            </Card.Root>
           </div>
 
 
+      
 
-      </section>
+          <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
 
+            <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-scroll">
+              <Card.Header class="flex flex-row items-center">
+                <div class="flex flex-col items-start w-full">
+                  <div class="flex flex-row w-full items-center">
+                    <Card.Title class="text-xl sm:text-2xl tex-white font-semibold">Hottest Options Contract</Card.Title>
+                    <a href="/options-flow" class="ml-auto rounded-lg text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-white text-black">
+                      View All
+                      <ArrowUpRight class="hidden sm:inline-block h-4 w-4 shrink-0 -mt-1 ml-0.5" />
+                    </a>
+                  </div>
+                  <Card.Description class="mt-2 text-sm sm:text-[1rem]">Recent hedge fund options with the highest ...</Card.Description>
+                  <Tabs.Root value="premium" class="w-fit mt-5 ">
+                    <Tabs.List class="grid w-full grid-cols-3 bg-[#313131]">
+                      <Tabs.Trigger on:click={() => changeTable('premium')} value="premium" class="text-sm">Premium</Tabs.Trigger>
+                      <Tabs.Trigger on:click={() => changeTable('volume')} value="volume" class="text-sm">Volume</Tabs.Trigger>
+                      <Tabs.Trigger on:click={() => changeTable('openInterest')} value="openInterest" class="text-sm">{$screenWidth < 640 ? 'OI' : 'Open Interest'}</Tabs.Trigger>
+                    </Tabs.List>
+                  </Tabs.Root>
+                </div>
+              </Card.Header>
+              <Card.Content>
+                <Table.Root class="overflow-x-scroll w-full">
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.Head class="text-white font-semibold">Symbol</Table.Head>
+                      <Table.Head class="text-white text-right font-semibold">Prem</Table.Head>
+                      <Table.Head class="text-white text-right font-semibold">Strike</Table.Head>
+                      <Table.Head class="text-white text-right font-semibold">{optionsMode === 'openInterest' ? 'OI' : 'Vol'}</Table.Head>
+                      <Table.Head class="text-white text-right font-semibold">C/P</Table.Head>
+                      <Table.Head class="text-right text-white font-semibold">Expiry</Table.Head>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {#each optionsTable as item}
+                    <Table.Row>
+                      <Table.Cell>
+                        <a href={item?.underlying_type === 'stock' ? `/stocks/${item?.ticker}` : `/etf/${item?.ticker}`} class="text-sm sm:text-[1rem] font-medium text-blue-400 sm:hover:text-white transition duration-100">{item?.ticker}</a>
+                      </Table.Cell>
+                      <Table.Cell class="text-right xl:table.-column text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">
+                        {abbreviateNumber(item?.cost_basis,true)}
+                      </Table.Cell>
+                      <Table.Cell class="text-right xl:table.-column text-sm sm:text-[1rem]">
+                        ${item?.strike_price}
+                      </Table.Cell>
+                      <Table.Cell class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white">
+                        {abbreviateNumber(optionsMode === 'openInterest' ? item?.open_interest : item?.volume)}
+                      </Table.Cell>
+                      <Table.Cell class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">
+                        {item?.put_call}
+                      </Table.Cell>
+                      
+                      <Table.Cell class="text-right text-sm sm:text-[1rem]">{reformatDate(item?.date_expiration)}</Table.Cell>
+                    </Table.Row>
+                    {/each}
+                  </Table.Body>
+                </Table.Root>
+              </Card.Content>
+            </Card.Root>
+            
+            <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[470px]">
+              <Card.Header class="flex flex-row items-center">
+                <div class="flex flex-col items-start w-full">
+                  <div class="flex flex-row w-full items-center">
+                    <Card.Title class="text-xl sm:text-2xl tex-white font-semibold">Dividend Announcement <span class="text-sm text-gray-300">(NYSE Time)</span></Card.Title>
+                  </div>
+                </div>
+              </Card.Header>
+              <Card.Content>
+                {#if data?.getDashboard?.recentDividends?.length !== 0}
+                <ul style="padding-left: 5px;">
+                  {#each data?.getDashboard?.recentDividends as item}
+                  <strong>{item?.name}</strong> (<a href="/stocks/{item?.symbol}" class="sm:hover:text-white text-blue-400">{item?.symbol}</a>) has announced its upcoming dividend details as of {convertTimestamp(item?.updated)}:
+
+                  <li style="color: #fff; line-height: 22px; margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;">
+                     <span class="font-bold">Dividend:</span> ${item?.dividend} per share ({(item?.dividend/item?.dividendPrior-1) > 0 ? '+' :''}{((item?.dividend/item?.dividendPrior-1)*100)?.toFixed(2)}% YoY)
+                  </li>
+                  <li style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;">
+                    <span class="font-bold">Dividend Yield:</span> {item?.dividendYield?.toFixed(2)}%
+                  </li>
+                  <li style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;">
+                    <span class="font-bold">Ex-Dividend Date:</span> {new Date(item?.exDividendDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+                  </li>
+                  <li style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;">
+                    <span class="font-bold">Payable Date:</span> {new Date(item?.payableDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+                  </li>
+                  <li style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 30px; list-style-type: disc;">
+                    <span class="font-bold">Record Date:</span> {new Date(item?.recordDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+                  </li>
+
+                  {/each}
+              </ul>
+              {:else}
+                <div class="text-left text-white sm:p-5 w-fit rounded-lg flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]">
+                  <svg class="hidden sm:inline-block w-6 h-6 flex-shrink-0  sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
+                  Currently, there are no dividend announcement reports available.
+                </div>
+              {/if}
+             
+              </Card.Content>
+            </Card.Root>
+
+            <!--
+            <Card.Root class="overflow-hidden">
+              <Card.Header class="flex flex-row items-center">
+                <div class="flex flex-col items-start w-full">
+                  <div class="flex flex-row w-full items-center">
+                    <Card.Title class="text-xl sm:text-2xl tex-white font-semibold">Retail Trader Tracker</Card.Title>
+                    <a href="/most-retail-volume" class="ml-auto rounded-lg text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-white text-black">
+                      View All
+                      <ArrowUpRight class="hidden sm:inline-block h-4 w-4 shrink-0 -mt-1 ml-0.5" />
+                    </a>
+                  </div>
+                  <Card.Description class="mt-2 text-sm sm:text-[1rem]">Latest Retail Trader investing behavior to identify market trends.</Card.Description>
+                </div>
+              </Card.Header>
+              <Card.Content>                
+                {#if isLoaded && data?.getDashboard?.retailTracker?.length !== 0}
+                  <div class="app w-full h-[300px] mt-5">
+                    <Chart {init} options={optionsGraph} class="chart" />
+                </div>
+                  {:else}
+                  <div class="flex w-11/12 flex-col gap-x-4 gap-y-5 mt-5">
+                    <div class="rounded-lg skeleton h-6 w-full"></div>
+                    <div class="rounded-lg skeleton h-6 w-11/12"></div>
+                    <div class="rounded-lg skeleton h-6 w-5/6"></div>
+                    <div class="rounded-lg skeleton h-6 w-72"></div>
+                    <div class="rounded-lg skeleton h-6 w-28"></div>
+                  </div>
+                  {/if}
+              </Card.Content>
+            </Card.Root>
+            -->
+
+          </div>
+
+
+            <!--Start Earnings Section-->
+            <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
+
+              <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
+                <Card.Header class="flex flex-row items-center">
+                  <div class="flex flex-col items-start w-full">
+                    <div class="flex flex-row w-full items-center">
+                      <Card.Title class="text-xl sm:text-2xl tex-white font-semibold">Upcoming Earnings</Card.Title>
+                      <a href="/earnings-calendar" class="ml-auto rounded-lg text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-white text-black">
+                        View All
+                        <ArrowUpRight class="hidden sm:inline-block h-4 w-4 shrink-0 -mt-1 ml-0.5" />
+                      </a>
+                    </div>
+                  </div>
+                </Card.Header>
+                <Card.Content>
+                  {#if data?.getDashboard?.upcomingEarnings?.length !== 0}
+                  <ul style="padding-left: 5px;">
+                    {#each data?.getDashboard?.upcomingEarnings as item}
+                        <li style="margin-left: 8px; line-height: 22px; margin-bottom: 30px; list-style-type: disc;">
+                            <strong>{item?.name}</strong> (<a href="/stocks/{item?.symbol}" class="text-blue-400 sm:hover:text-white">{item?.symbol}</a>)
+                            {item?.isToday === true ? 'will report today' : ['Monday', 'Tuesday', 'Wednesday', 'Thursday'].includes(new Date().toLocaleDateString('en-US', { weekday: 'long' })) ? "will report tomorrow" : "will report monday"}
+                            {#if item?.time}
+                                {#if compareTimes(item?.time, '16:00') >= 0}
+                                    after market closes.
+                                {:else if compareTimes(item?.time, '09:30') <= 0}
+                                    before market opens.
+                                {:else}
+                                    during market.
+                                {/if}
+                            {/if}Analysts estimate {abbreviateNumber(item?.revenueEst,true)} in revenue ({((item?.revenueEst/item?.revenuePrior-1)*100)?.toFixed(2)}% YoY) and ${item?.epsEst} in earnings per share ({((item?.epsEst/item?.epsPrior-1)*100)?.toFixed(2)}% YoY).</li>
+
+                    {/each}
+                  </ul>
+                  {:else}
+                  <div class="text-left text-white sm:p-5 w-fit rounded-lg flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]">
+                    <svg class="hidden sm:inline-block w-6 h-6 flex-shrink-0  sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
+                    Currently, there are no upcoming earnings reports available that include the latest analyst estimates.
+                  </div>
+                  {/if}
+                </Card.Content>
+              </Card.Root>
+              
+              <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
+                <Card.Header class="flex flex-row items-center">
+                  <div class="flex flex-col items-start w-full">
+                    <div class="flex flex-row w-full items-center">
+                      <Card.Title class="text-xl sm:text-2xl tex-white font-semibold">Recent Earnings <span class="text-sm text-gray-300">(NYSE Time)</span></Card.Title>
+                    </div>
+                  </div>
+                </Card.Header>
+                <Card.Content>
+                  {#if data?.getDashboard?.recentEarnings?.length !== 0}
+                  <ul style="padding-left: 5px;">
+                    {#each data?.getDashboard?.recentEarnings as item}
+                    <strong>{item?.name}</strong> (<a href="/stocks/{item?.symbol}" class="sm:hover:text-white text-blue-400">{item?.symbol}</a>) has released its quarterly earnings at {formatTime(item?.time)}:
   
+                    <li style="color: #fff; line-height: 22px; margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;">
+                      Revenue of {abbreviateNumber(item?.revenue,true)} {item?.revenueSurprise > 0 ? 'exceeds' : 'misses'} estimates by {abbreviateNumber(Math.abs(item?.revenueSurprise),true)}, with {((item?.revenue/item?.revenuePrior-1)*100)?.toFixed(2)}% YoY {(item?.revenue/item?.revenuePrior-1) < 0 ? 'decline' : 'growth'}.
+                  </li>
+                  <li style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 30px; list-style-type: disc;">
+                    EPS of ${item?.eps} {item?.epsSurprise > 0 ? 'exceeds' : 'misses'} estimates by ${item?.epsSurprise?.toFixed(2)}, with {(((item?.eps - item?.epsPrior) / Math.abs(item?.epsPrior)) * 100)?.toFixed(2)}% YoY {((item?.eps - item?.epsPrior) / Math.abs(item?.epsPrior)) < 0 ? 'decline' : 'growth'}.
+                </li>
 
+                    {/each}
+                </ul>
+                {:else}
+                <div class="text-left text-white sm:p-5 w-fit rounded-lg flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]">
+                  <svg class="hidden sm:inline-block w-6 h-6 flex-shrink-0  sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
+                  Currently, there are no recent earnings reports available.
+                </div>
+                {/if}
+                </Card.Content>
+              </Card.Root>
+              
+        
+            </div>
+            <!--End of Earnings Section-->
+
+
+          <div class="grid gap-4 sm:gap-8 sm:grid-cols-3 text-start">
+            <Card.Root class="sm:col-span-2 overflow-x-scroll overflow-hidden overflow-y-scroll">
+              <Card.Header class="flex flex-row items-center">
+                <div class="text-start grid gap-2">
+                  <Card.Title class="text-2xl text-white font-semibold">Market Momentum</Card.Title>
+                </div>
+              </Card.Header>
+              <Card.Content>
+                {#each data?.getDashboard?.wiimFeed as item}
+                  <div class="pb-4 sm:pb-6 border-b sm:border border-gray-800 sm:p-6 mb-4 rounded-none sm:rounded-lg text-start">
+                    <div class="text-sm text-white">
+                      <div class="flex flex-col items-start">
+                        <div class="hidden sm:flex flex-row items-center mb-3">
+                          {#if latestInfoDate(item?.date)}
+                            <label class="bg-[#2D4F8A] text-white font-medium text-xs rounded-lg px-2 py-0.5">New</label>
+                            <span class="ml-2 mr-2"> &#183;</span>
+                          {/if}
+                          <span class="text-gray-300 text-xs">
+                            {formatDate(item?.date)} ago
+                          </span>
+                        </div>
+                        <span class="text-white text-sm sm:text-[1rem]">{item?.text}</span>
+                        <div class="flex flex-col mt-5 items-start w-full">
+                          <div class="flex flex-wrap gap-y-3 flex-row items-center">
+                            {#each item?.stocks as item2}
+                              <div class="p-2 pt-1 sm:pt-2 pl-0">
+                                <a href={item2?.assetType === 'stock' ? `/stocks/${item2?.ticker}` : item2?.assetType === 'etf' ? `/etf/${item2?.ticker}` : ''} class="cursor-pointer w-fit bg-[#404040] bg-opacity-[0.5] sm:hover:bg-opacity-[0.6] px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-xl hover:text-white text-blue-400">
+                                  {item2?.ticker}
+                                </a>
+                              </div>
+                            {/each}
+                          </div>
+                          
+                          <div class="sm:hidden flex flex-row items-center justify-end mt-3 ml-auto">
+                            {#if latestInfoDate(item?.date)}
+                              <label class="bg-[#2D4F8A] text-white font-medium text-xs rounded-lg px-2 py-0.5">New</label>
+                              <span class="ml-2 mr-2"> &#183;</span>
+                            {/if}
+                            <span class="text-gray-300 text-xs">
+                              {formatDate(item?.date)} ago
+                            </span>
+                          </div>
+
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  {/each}
+              </Card.Content>
+            </Card.Root>
+            <Card.Root>
+              <Card.Header>
+                <Card.Title class="text-start text-2xl text-white">Market News</Card.Title>
+              </Card.Header>
+              <Card.Content class="">
+                <div class="mb-4 rounded-lg text-start">
+                    {#each data?.getDashboard?.marketNews as item}
+                      <div class="flex flex-col items-start pt-4 pb-4 border-t border-gray-800">
+                        <div class="flex flex-row items-center mb-3">
+                          <span class="text-gray-300 text-xs">
+                            {formatDate(item?.date)} ago
+                          </span>
+                        </div>
+                        <a href={item?.url} rel="noopener noreferrer" target="_blank" class="text-sm sm:text-[1rem] text-blue-400 sm:hover:text-white transition duration-100">
+                          {item?.text}
+                        </a>
+                      </div>
+                    {/each}
+                    
+                    
+                </div>
+             
+              </Card.Content>
+            </Card.Root>
+          </div>
+        </main>
+      
         
      </div>
 
-
     </div>
-
-    
-    
-
-  </div>
-
-  
-
 </div>
 
 
@@ -507,51 +633,58 @@ class="hidden sm:block [mask-image:linear-gradient(to_bottom_right,white,transpa
 
 
 
-<style lang='scss'>
 
-.overlay {
-  position: relative;
-}
+  
+<style>
 
-.overlay img {
+
+.app {
+  height: 250px;
+  max-width: 100%; /* Ensure chart width doesn't exceed the container */
+  
+  }
+  
+  @media (max-width: 640px) {
+  .app {
+    height: 210px;
+  }
+  }
+  
+  .chart {
   width: 100%;
-  height: auto;
-}
+  }
 
-.overlay::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 50%);
-  pointer-events: none; /* Ensure the overlay doesn't interfere with interaction */
-}
+   .chart-container {
+    width: 100%;
+    height: 250px;
+  }
+.scrollbar {
+    display: grid;
+    grid-gap: 90px;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scrollbar-width: thin; /* Hide the default scrollbar in Firefox */
+    scrollbar-color: transparent transparent; /* Hide the default scrollbar in Firefox */
+  }
 
-    .bg-radial-gradient {
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background: radial-gradient(circle at top, rgba(255, 165, 0, 1) 0%, rgba(255, 165, 0, 0.7) 30%, rgba(128, 0, 128, 0.7) 70%, rgba(128, 0, 128, 1) 100%);
-    filter: blur(200px);
-}
+  /* Custom scrollbar for Webkit (Chrome, Safari) */
+  .scrollbar::-webkit-scrollbar {
+    width: 0; /* Hide the width of the scrollbar */
+    height: 0; /* Hide the height of the scrollbar */
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: transparent; /* Make the thumb transparent */
+  }
 
 
-.fade-down {
-    -webkit-transform: translate3d(0, -25px, 0);
-    transform: translate3d(0, -25px, 0);
-    opacity: 0;
-    animation: fadeDown 0.6s ease-out forwards;
-}
-
-@keyframes fadeDown {
-    to {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-        opacity: 1;
-    }
+  .stroke-text {
+  font-size: 56px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: transparent; /* Make the text transparent */
+  -webkit-text-stroke: 1px #CBD5E1; /* Add a black stroke outline with a thickness of 2px */
 }
 
 
-  </style>
+</style>

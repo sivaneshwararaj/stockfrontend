@@ -1,67 +1,30 @@
-import {getCache, setCache } from '$lib/store';
-import { redirect } from '@sveltejs/kit';
+import { getCache, setCache } from "$lib/store";
 
+export const load = async ({ parent }) => {
+  const { apiKey, apiURL } = await parent();
 
-export const load = async ({parent}) => {
-
-  const { user } = await parent();
-  
-  if (user) {
-		redirect(303, '/home');
-	}
-
-
-  const getFrontendStars = async () => {
-    let output;
-
+  const getDashboard = async () => {
     // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getFrontendStars');
+    const cachedData = getCache("", "getDashboard");
     if (cachedData) {
-      output = cachedData;
+      return cachedData;
     } else {
-
-      // make the POST request to the endpoint
-      const response = await fetch('https://api.github.com/repos/stocknear/frontend', {
-        method: 'GET',
+      const response = await fetch(apiURL + "/dashboard-info", {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
       });
 
-      output = (await response.json())['stargazers_count'];
-      setCache('', output, 'getFrontendStars');
+      const output = await response?.json();
+      setCache("", output, "getDashboard");
+      return output;
     }
-    return output;
   };
-
-  const getBackendStars = async () => {
-    let output;
-
-    // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getBackendStars');
-    if (cachedData) {
-      output = cachedData;
-    } else {
-
-      // make the POST request to the endpoint
-      const response = await fetch('https://api.github.com/repos/stocknear/backend', {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        },
-      });
-
-      output = (await response.json())['stargazers_count'];
-      setCache('', output, 'getBackendStars');
-    }
-    return output;
-  };
-
-
 
   // Make sure to return a promise
   return {
-    getFrontendStars: await getFrontendStars(),
-    getBackendStars: await getBackendStars(),
+    getDashboard: await getDashboard(),
   };
 };
