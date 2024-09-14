@@ -37,6 +37,7 @@
   let syncWorker: Worker | undefined;
   let ruleName = '';
   let searchTerm = '';
+  let showFilters = true;
   let filteredRows = [];
   let shouldLoadWorker = writable(false);
 
@@ -795,7 +796,18 @@ $: {
               </div>
 
               </div>
+
               
+                <div class="mr-1 flex items-center justify-between lg:mr-2 pb-1.5 border-b border-gray-600 mt-1.5">
+                    <button on:click={() => showFilters = !showFilters} class="flex cursor-pointer items-center text-lg sm:text-xl font-semibold text-gray-200" title="Hide Filter Area">
+                      <svg class="-mb-0.5 h-6 w-6 {showFilters ? '' : '-rotate-90'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:40px">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        {ruleOfList?.length} Filters
+                    </button> 
+                </div>
+
+                {#if showFilters}
                 <div class="sm:mt-3 flex flex-col gap-y-2.5 sm:flex-row lg:gap-y-2 pb-1">
                     <label for="ruleModal" class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out  focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller">
                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
@@ -902,7 +914,7 @@ $: {
                 {/each}
                 </div>
 
-
+                {/if}
                 
             </div>
   
