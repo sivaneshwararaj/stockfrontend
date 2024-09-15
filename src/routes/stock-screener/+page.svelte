@@ -67,6 +67,8 @@ const allRules = {
   change1Y: { label: 'Price Change 1Y', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
   change3Y: { label: 'Price Change 3Y', step: ['100%','50%','20%','10%','5%','1%','-1%','-5%','-10%','-20%','-50%'],category: 'ta', defaultCondition: 'over', defaultValue: '10%' },
   marketCap: { label: 'Market Cap', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
+  workingCapital: { label: 'Working Capital', step: ['20B','10B','5B','1B','500M','100M','50M','10M','1M','0'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
+  totalAssets: { label: 'Total Assets', step: ['500B','200B','100B','50B','10B','1B','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
   revenue: { label: 'Revenue', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
   growthRevenue: { label: 'Revenue Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   costOfRevenue: { label: 'Cost of Revenue', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
@@ -161,6 +163,9 @@ const allRules = {
   revenuePerEmployee: { label: 'Revenue Per Employee', step: ['5M','3M','2M','1M','500K','100K',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   profitPerEmployee: { label: 'Profit Per Employee', step: ['5M','3M','2M','1M','500K','100K',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   totalLiabilities: { label: 'Total Liabilities', step: ['500B','200B','100B','50B','10B','1B','100M','10M','1M'], category: 'fund', defaultCondition: 'over', defaultValue: '1M' },
+  altmanZScore: { label: 'Altman-Z-Score', step: [10,5,3,1], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
+  piotroskiScore: { label: 'Piotroski F-Score', step: [9,8,7,6,5,4,3,2,1], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
+
   analystRating: { label: 'Analyst Rating', step: ['Buy', 'Hold', 'Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
   sector: { label: 'Sector', step: sectorList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
   industry: { label: 'Industry', step: industryList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
