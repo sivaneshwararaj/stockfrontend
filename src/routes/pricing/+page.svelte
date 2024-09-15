@@ -505,6 +505,7 @@ async function purchasePlan(subscriptionType:string='') {
                                         </td>
                                     </tr>
                                     <!-- Row -->
+                                     <!--
                                     <tr class="border-t first:border-t-2 border-gray-800">
                                         <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
                                             <div class="flex items-center justify-between max-w-xs">
@@ -518,6 +519,7 @@ async function purchasePlan(subscriptionType:string='') {
                                             <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#10db06" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                                         </td>
                                     </tr>
+                                    -->
                                     <!-- Row -->
                                     <tr class="border-t first:border-t-2 border-gray-800">
                                         <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
@@ -526,7 +528,7 @@ async function purchasePlan(subscriptionType:string='') {
                                             </div>
                                         </td>
                                         <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-4 h-4 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path fill="#dd2e44" d="M21.533 18.002L33.768 5.768a2.5 2.5 0 0 0-3.535-3.535L17.998 14.467L5.764 2.233a2.498 2.498 0 0 0-3.535 0a2.498 2.498 0 0 0 0 3.535l12.234 12.234L2.201 30.265a2.498 2.498 0 0 0 1.768 4.267c.64 0 1.28-.244 1.768-.732l12.262-12.263l12.234 12.234a2.493 2.493 0 0 0 1.768.732a2.5 2.5 0 0 0 1.768-4.267z"/></svg>
+                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
                                         </td>
                                         <td class="text-sm px-2 py-4 text-center font-medium">
                                             <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#10db06" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
@@ -629,7 +631,7 @@ async function purchasePlan(subscriptionType:string='') {
                      {#if data?.user?.tier !== 'Pro'}
                     <div class="text-center">
                         <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan()} class="cursor-pointer w-56 py-3 px-6 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
-                            Subscribe to Pro
+                            Become a Pro
                              <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
                                  <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
                              </span>

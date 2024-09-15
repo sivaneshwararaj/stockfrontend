@@ -4,7 +4,7 @@ import {numberOfUnreadNotification, displayCompanyName, stockTicker, currentPort
 import InfoModal from '$lib/components/InfoModal.svelte';
 import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 import { goto } from '$app/navigation';
-//import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
 
 export let data;
 
@@ -248,8 +248,8 @@ changeTab(0)
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {#each historyList as item,index}
-                                  <tr on:click={() => goto(`/analysts/${item?.analystId}`)} class="cursor-pointer {latestInfoDate(item?.date) ? 'bg-[#F9AB00] bg-opacity-[0.1]' : 'odd:bg-[#27272A]'} border-b-[#09090B] ">
+                                  {#each (data?.user?.tier === 'Pro' ? historyList : historyList?.slice(0,3)) as item,index}
+                                  <tr on:click={() => goto(`/analysts/${item?.analystId}`)} class="cursor-pointer {latestInfoDate(item?.date) ? 'bg-[#F9AB00] bg-opacity-[0.1]' : 'odd:bg-[#27272A]'} border-b-[#09090B]  {index+1 === historyList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                                     <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start">
                                       <div class="flex flex-col items-start">
                                         <span class="text-blue-400">{item?.analyst_name} </span>
@@ -317,10 +317,11 @@ changeTab(0)
 
                           </div>
                         </div>
-
+                        {#if data?.user?.tier === 'Pro'}
                         <InfiniteLoading on:infinite={infiniteHandler} />
+                        {/if}
 
-                        <!--<UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>-->
+                        <UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>
 
                     {:else}
                     <div class="w-full flex justify-start items-center m-auto mt-10 mb-6">
@@ -344,4 +345,3 @@ changeTab(0)
 
     
 </section>
-
