@@ -211,10 +211,11 @@ $: allRows = Object?.entries(allRules)
 
 
 async function handleCreateStrategy() {
-  if(data?.user) {
+  if(data?.user?.tier === 'Pro' && !data?.user?.freeTrial) {
     const closePopup = document.getElementById("addStrategy");
     closePopup?.dispatchEvent(new MouseEvent('click'))
-  } else {
+  }  
+  else {
     goto('/pricing')
   }
 }
