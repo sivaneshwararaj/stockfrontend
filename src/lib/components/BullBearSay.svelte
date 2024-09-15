@@ -69,15 +69,22 @@
                   class="absolute inset-0 rounded-lg bg-purple-600"
                 ></div>
             {/if}
+            {#if data?.user?.tier !== 'Pro' && i === 1}
+            <a href='/pricing' class="relative text-sm block font-medium duration-200 text-white">
+              {item.title}
+              <svg class="inline-block ml-1 -mt-0.5 w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+            </a>
+            {:else}
             <span
               class="relative text-sm block font-medium duration-200 text-white">
-              {item.title}
+                {item.title}
             </span>
+            {/if}
           </button>
         {/each}
     </div>
     
-  
+
     <!--End Header-->
       <span class="text-gray-200 text-xs sm:text-[0.915rem] italic mt-6 sm:ml-auto">
         Updated {rawData?.date}
@@ -90,6 +97,7 @@
           <p class="pr-1">{rawData?.bullSays}</p>
           {:else}
           <p class="pr-1">{rawData?.bearSays}</p>
+          
           {/if}
         </span>
       </div>

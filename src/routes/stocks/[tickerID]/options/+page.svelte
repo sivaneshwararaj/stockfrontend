@@ -14,8 +14,12 @@
   use([BarChart,LineChart, GridComponent, TooltipComponent, CanvasRenderer])
   
   
-    export let data;
-    let isLoaded = false;
+export let data;
+let isLoaded = false;
+let activeEX = 0;
+let activeIdx = 0;
+
+
   const getDailyTransactions = async (transactionId) => {
     let output;
     const cachedData = getCache(transactionId, "getDailyTransactions");
@@ -51,7 +55,7 @@
     let optionsPlotData = data?.getOptionsPlotData?.plot;
     let displayData = 'volume';
     let options;
-    let optionsGEX;
+    let optionsEX;
 
     let rawData = data?.getOptionsHistoricalData;
     let optionList = rawData?.slice(0,30);
@@ -132,7 +136,7 @@ function normalizer(value) {
       return formattedTimeString;
     }
     
-    
+
     function changeTimePeriod(event)
     {
       displayTimePeriod = event.target.value;
@@ -213,20 +217,20 @@ function plotData(callData, putData) {
     return options;
 }
 
-function getGEXPlot() {
+function getEXPlot(state) {
   let dates = [];
-  let gexList = [];
+  let valueList = [];
   let priceList = [];
   
   data?.getOptionsGexData?.forEach(item => {
 
   dates?.push(item?.date);
-  gexList?.push(item?.gex);
+  valueList?.push(item[state]);
   priceList?.push(item?.close)
 
   });
 
-    const {unit, denominator } = normalizer(Math.max(...gexList) ?? 0)
+    const {unit, denominator } = normalizer(Math.max(...valueList) ?? 0)
 
 
     const option = {
@@ -310,7 +314,7 @@ function getGEXPlot() {
         },
         {
             name: 'GEX',
-            data: gexList,
+            data: valueList,
             type: 'bar',
             yAxisIndex: 1,
             itemStyle: {
@@ -407,7 +411,7 @@ function processPlotData(filteredList: any[]) {
     
 onMount(async () => {
   if(data?.getOptionsGexData?.length !== 0) {
-    optionsGEX = getGEXPlot();
+    optionsEX = getEXPlot('gex');
   }
   
 
@@ -477,13 +481,26 @@ function handleMode(i) {
       },
     ];
   
-    let activeIdx = 0;
-
 function changeStatement(event)
 {
     optionChainList = (data?.getOptionsChainData?.filter(item => item?.date_expiration === event.target.value))?.at(0)?.chain || [];
 }
 
+
+  const tabEX = [
+      {
+        title: "GEX",
+      },
+      {
+        title: "DEX",
+      },
+    ];
+
+
+function handleEXMode(i) {
+  activeEX = i;
+  optionsEX = getEXPlot(activeEX === 0 ? 'gex' : 'dex');
+}
 
 
 
@@ -649,12 +666,33 @@ $: {
 
                                 {#if data?.getOptionsGexData?.length !== 0}  
                                 <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
-                                    Daily Gamma Exposure (GEX)
+                                    {activeEX === 0 ? 'Daily Gamma Exposure (GEX)' : 'Daily Delta Exposure (DEX)'}
                                 </h3>
+
+                                <div class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 mt-6 mb-6">
+                                  {#each tabEX as item, i}
+                                    <button
+                                      on:click={() => handleEXMode(i)}
+                                      class="group relative z-[1] rounded-full px-6 py-1 {activeEX === i
+                                        ? 'z-0'
+                                        : ''} "
+                                    >
+                                      {#if activeEX === i}
+                                          <div
+                                            class="absolute inset-0 rounded-lg bg-purple-600"
+                                          ></div>
+                                      {/if}
+                                      <span
+                                        class="relative text-sm block font-medium duration-200 text-white">
+                                        {item.title}
+                                      </span>
+                                    </button>
+                                  {/each}
+                              </div>
 
                                 <div class="app w-full bg-[#09090B] rounded-xl mb-24">
                                   
-                                  <Chart {init} options={optionsGEX} class="chart" />
+                                  <Chart {init} options={optionsEX} class="chart" />
                                 </div>
                                 {/if}
     
@@ -711,6 +749,7 @@ $: {
                                             <td class="text-slate-200 font-semibold text-sm text-end">% Change</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">P/C</td>
                                              <td class="text-slate-200 font-semibold text-sm text-center">Bear/Bull</td>
+                                             <td class="text-slate-200 font-semibold text-sm text-center">Bid/Ask Vol</td>
                                               <td class="text-slate-200 font-semibold text-sm text-end">% OTM</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total Volume</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">Total OI</td>
@@ -721,7 +760,7 @@ $: {
                                           {#each (data?.user?.tier === 'Pro' ? optionList : optionList?.slice(0,3)) as item, index}
                                           <tr on:click={() => handleViewData(item?.date)} on:mouseover={() => getDailyTransactions($stockTicker+'+'+item?.date)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index+1 === optionList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                                             
-                                            <td class="text-white text-sm sm:text-[1rem] text-start">
+                                            <td class="text-white text-sm text-start">
                                               {formatDate(item?.date)}
                                             </td>
     
@@ -737,7 +776,7 @@ $: {
                                               {item?.c_vol !== 0 ? (item?.p_vol/item?.c_vol)?.toFixed(1) : '-'}
                                             </td>
     
-                                           <td class="whitespace-nowrap text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-center">
+                                           <td class="whitespace-nowrap text-sm sm:text-[1rem] text-center">
                                             {#if item?.bear_ratio > (item?.neutral_ratio ?? 0) && item?.bear_ratio > (item?.bull_ratio ?? 0)}
                                               <div class="badge bg-[#FF2F1F] text-white font-semibold gap-2">
                                                 {item?.bear_ratio?.toFixed(0)}% Bearish
@@ -761,6 +800,38 @@ $: {
                                             {:else if item?.bull_ratio === item?.neutral_ratio && item?.bull_ratio > (item?.bear_ratio ?? 0)}
                                               <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
                                                 {item?.bull_ratio?.toFixed(0)}% Bull/Neutral Tie
+                                              </div>
+                                            {:else}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                Equal Distribution
+                                              </div>
+                                            {/if}
+                                          </td>
+
+                                           <td class="whitespace-nowrap text-sm sm:text-[1rem] text-center">
+                                            {#if item?.bid_ratio > (item?.midpoint_ratio ?? 0) && item?.bid_ratio > (item?.ask_ratio ?? 0)}
+                                              <div class="badge bg-[#FF2F1F] text-white font-semibold gap-2">
+                                                {item?.bid_ratio?.toFixed(0)}% Bid
+                                              </div>
+                                            {:else if item?.ask_ratio > (item?.midpoint_ratio ?? 0) && item?.ask_ratio > (item?.bid_ratio ?? 0)}
+                                              <div class="badge bg-[#75D377] text-black font-semibold gap-2">
+                                                {item?.ask_ratio?.toFixed(0)}% Ask
+                                              </div>
+                                            {:else if item?.midpoint_ratio > (item?.ask_ratio ?? 0) && item?.midpoint_ratio > (item?.bid_ratio ?? 0)}
+                                              <div class="badge bg-[#FBCE3C] text-black font-semibold gap-2">
+                                                {item?.midpoint_ratio?.toFixed(0)}% Midpoint
+                                              </div>
+                                            {:else if item?.bid_ratio === item?.ask_ratio && item?.bid_ratio > (item?.midpoint_ratio ?? 0)}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                {item?.bid_ratio?.toFixed(0)}% Bid/Ask Tie
+                                              </div>
+                                            {:else if item?.bid_ratio === item?.midpoint_ratio && item?.bid_ratio > (item?.ask_ratio ?? 0)}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                {item?.bid_ratio?.toFixed(0)}% Bid/Neutral Tie
+                                              </div>
+                                            {:else if item?.ask_ratio === item?.midpoint_ratio && item?.ask_ratio > (item?.bid_ratio ?? 0)}
+                                              <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
+                                                {item?.ask_ratio?.toFixed(0)}% Ask/Neutral Tie
                                               </div>
                                             {:else}
                                               <div class="badge bg-[#B8B8B8] text-black font-semibold gap-2">
@@ -892,7 +963,7 @@ $: {
 
 <!-- Put this part before </body> tag -->
 
-<dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
+<dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer bg-[#fff] bg-opacity-[0.02]">
   <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto">
     <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
       <button class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white">
@@ -924,6 +995,7 @@ $: {
                 <td class="text-slate-200 font-semibold text-sm text-end">Strike</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">C/P</td>
                 <td class="text-slate-200 font-semibold text-sm text-start">Sent.</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Exec.</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">Spot</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">Price</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">Prem.</td>
@@ -959,6 +1031,9 @@ $: {
 
                 <td class="text-sm sm:text-[1rem] {item?.sentiment === 'Bullish' ? 'text-[#00FC50]' : item?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
                   {item?.sentiment}
+                </td>
+                 <td class="text-sm sm:text-[1rem] text-white text-start whitespace-nowrap">
+                  {item?.execution_estimate}
                 </td>
 
                 <td class="text-sm sm:text-[1rem] text-end text-white">

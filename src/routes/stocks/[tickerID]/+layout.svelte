@@ -840,16 +840,16 @@ $: {
 <!--Start Add Watchlist Modal-->
 <input type="checkbox" id="addWatchListModal" class="modal-toggle" />
 
-<dialog id="addWatchListModal" class="modal modal-bottom sm:modal-middle">
-  <label id="addWatchListModal" for="addWatchListModal" class="cursor-pointer modal-backdrop bg-[#09090B] bg-opacity-[0.5]"></label>
+<dialog id="addWatchListModal" class="modal modal-bottom sm:modal-middle bg-[#000] bg-opacity-[0.5]">
+  <label id="addWatchListModal" for="addWatchListModal" class="cursor-pointer modal-backdrop"></label>
 
-  <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-800">
-    <label for="addWatchListModal" class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-[1.8rem] text-white"> ✕ </label>
+  <div class="modal-box w-full bg-[#191919] sm:border sm:border-gray-800">
+    <label for="addWatchListModal" class="cursor-pointer bg-[#191919] absolute right-5 top-2 text-[1.8rem] text-white"> ✕ </label>
 
     <div class="text-white">
       <h3 class="font-semibold text-lg sm:text-xl mb-10">Add to Watchlist</h3>
 
-      <div class="flex flex-col items-center w-full max-w-3xl bg-[#09090B]">
+      <div class="flex flex-col items-center w-full max-w-3xl bg-[#191919]">
         {#each userWatchList as item}
           <label on:click|stopPropagation={() => toggleUserWatchlist(item?.id)} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
             <div class="flex flex-row items-center w-full bg-[#313131] p-3 rounded-lg {item?.ticker?.includes($stockTicker) ? 'ring-2 ring-[#04E000]' : ''}">

@@ -394,7 +394,7 @@ onDestroy( () => {
     
 <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
           
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+  <div class="text-sm sm:text-[1rem] breadcrumbs ">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
       <li class="text-gray-300">Watchlist</li>
@@ -560,45 +560,45 @@ onDestroy( () => {
   <aside class="hidden lg:block relative fixed w-1/4 ml-4">        
   
     {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
-    <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+      <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+          <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+              <div class="w-full flex justify-between items-center p-3 mt-3">
+              <h2 class="text-start text-xl font-semibold text-white ml-3">
+              Pro Subscription 🔥
+              </h2>
+              <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+              </div>
+              <span class="text-white p-3 ml-3 mr-3">
+                  Upgrade now for unlimited access to all data and tools.
+              </span>
+          </div>
+      </div>
+      {/if}
+  
+    <div on:click={() => goto('/price-alert')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
         <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
             <div class="w-full flex justify-between items-center p-3 mt-3">
             <h2 class="text-start text-xl font-semibold text-white ml-3">
-            Pro Subscription
+            Price Alert ⏰
             </h2>
             <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
             </div>
             <span class="text-white p-3 ml-3 mr-3">
-                Upgrade now for unlimited access to all data and tools.
+                Customize your alerts to never miss out again
             </span>
         </div>
     </div>
-    {/if}
   
-    <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+    <div on:click={() => goto('/stock-screener')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
         <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
             <div class="w-full flex justify-between items-center p-3 mt-3">
             <h2 class="text-start text-xl font-semibold text-white ml-3">
-            Wallstreet Analyst
+            Stock Screener 🔎
             </h2>
             <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
             </div>
             <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Wall Street analyst ratings.
-            </span>
-        </div>
-    </div>
-  
-    <div on:click={() => goto('/politicians')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
-        <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-            <div class="w-full flex justify-between items-center p-3 mt-3">
-            <h2 class="text-start text-xl font-semibold text-white ml-3">
-            Congress Trading
-            </h2>
-            <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
-            </div>
-            <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Congress trading insights.
+                Build your Stock Screener to find profitable stocks.
             </span>
         </div>
     </div>
