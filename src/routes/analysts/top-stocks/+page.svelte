@@ -2,7 +2,7 @@
   import { goto } from '$app/navigation';
   import { numberOfUnreadNotification, screenWidth } from '$lib/store';
 	import { abbreviateNumber } from '$lib/utils';
-  //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+  import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import { onMount } from 'svelte';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
@@ -297,8 +297,7 @@ $: {
                       </table>
                     </div>
 
-                    <!--<UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>-->
-
+                    <UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>
                     {:else}
                     <div class="flex justify-center items-center h-80">
                       <div class="relative">

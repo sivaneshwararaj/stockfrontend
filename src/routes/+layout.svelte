@@ -589,7 +589,7 @@ $: {
                     <Card.Title>Upgrade to Pro</Card.Title>
                     <Card.Description>
                       {#if !data?.user || data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
-                       Support the Platform to be always free ❤
+                       Get unlimit access to all features
                       {/if}
                     </Card.Description>
                   </Card.Header>
@@ -900,7 +900,7 @@ $: {
                 <Card.Header class="p-2 pt-0 md:p-4">
                   <Card.Title>Upgrade to Pro</Card.Title>
                   <Card.Description>
-                    Support the Platform to be always free ❤
+                    Get unlimit access to all features
                   </Card.Description>
                 </Card.Header>
                 <Card.Content class="p-2 pt-0 md:p-4 md:pt-0">

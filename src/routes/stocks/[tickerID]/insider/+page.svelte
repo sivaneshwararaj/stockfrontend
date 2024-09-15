@@ -3,7 +3,7 @@ import { displayCompanyName, numberOfUnreadNotification, stockTicker } from '$li
 import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 import { formatString, abbreviateNumber } from '$lib/utils';
 import InfoModal from '$lib/components/InfoModal.svelte';
-//import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 import { Chart } from 'svelte-echarts'
 import { init, use } from 'echarts/core'
 import { LineChart, BarChart } from 'echarts/charts'
@@ -536,8 +536,8 @@ onMount(async() => {
                               </tr>
                             </thead>
                             <tbody>
-                              {#each insiderTradingList as item, index}
-                              <tr class="text-white odd:bg-[#27272A]">
+                              {#each (data?.user?.tier === 'Pro' ? insiderTradingList : insiderTradingList?.slice(0,3)) as item, index}
+                              <tr class="text-white odd:bg-[#27272A] {index+1 === insiderTradingList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
       
                                 <td class="text-white text-sm sm:text-[1rem] border-b border-[#09090B] whitespace-nowrap">
                                   <div class="flex flex-col">
@@ -587,7 +587,7 @@ onMount(async() => {
                         <InfiniteLoading on:infinite={infiniteHandler} />
                       {/if}
 
-                      <!--<UpgradeToPro data={data} title="Access {$displayCompanyName}'s insider transactions to track executive selling and purchasing activity"/>-->
+                      <UpgradeToPro data={data} title="Access {$displayCompanyName}'s insider transactions to track executive selling and purchasing activity"/>
 
 
           

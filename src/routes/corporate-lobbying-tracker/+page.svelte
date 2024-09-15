@@ -3,7 +3,7 @@
     import { numberOfUnreadNotification, screenWidth } from '$lib/store';
     import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
     import { onMount } from 'svelte';
-    //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+    import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
     import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
     
@@ -224,18 +224,14 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
                           {/each}
                           </tbody>
                         </table>
+
                     </div>
                       <InfiniteLoading on:infinite={infiniteHandler} />
-                      <!--<UpgradeToPro data={data} title="Get the latest dark pool trades in realtime from Hedge Funds & Major Institutional Traders"/>-->
-                  
-                      
-                      
-
                   </div>
+                     <UpgradeToPro data={data} title="Get the latest lobbying spendings in realtime of US stock companies"/>
+
                   
                  
-
-  
                   {:else}
                   <div class="flex justify-center items-center h-80">
                     <div class="relative">

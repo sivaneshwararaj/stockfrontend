@@ -1,7 +1,7 @@
 <script lang='ts'>
   import { goto } from '$app/navigation';
   import { numberOfUnreadNotification } from '$lib/store';
-  //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+  import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { onMount } from 'svelte';
 
@@ -261,7 +261,7 @@ $: {
                       <tbody>
                         {#each analytRatingList as item, index}
 
-                        <tr on:click={() => goto(`/analysts/${item?.analystId}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
+                        <tr on:click={() => goto(`/analysts/${item?.analystId}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === rawData?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
                           <td class="text-white text-sm sm:text-[1rem] font-semibold text-white text-center">
                             {item?.rank}
                           </td>
@@ -329,8 +329,7 @@ $: {
                     </table>
                   </div>
                   
-                  <!--<UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>-->
-
+                  <UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>
                   {:else}
                   <div class="flex justify-center items-center h-80">
                     <div class="relative">

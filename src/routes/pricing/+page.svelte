@@ -56,10 +56,10 @@ async function purchasePlan(subscriptionType:string='') {
 
         }
         else if(mode) {
-            subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_ID
+            subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_19_99_ID
         }
         else {
-            subId = import.meta.env.VITE_LEMON_SQUEEZY_MONTHLY_ID
+            subId = import.meta.env.VITE_LEMON_SQUEEZY_MONTHLY_1_99_ID
         }
         const isDarkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         const checkoutUrl =

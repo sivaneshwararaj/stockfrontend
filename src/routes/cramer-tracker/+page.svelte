@@ -4,6 +4,7 @@
     import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
     import { onMount } from 'svelte';
     import ArrowLogo from "lucide-svelte/icons/move-up-right";
+    import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
 
     //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   
@@ -203,7 +204,7 @@
                         </table>
                     </div>
                       <InfiniteLoading on:infinite={infiniteHandler} />
-                      <!--<UpgradeToPro data={data} title="Get the latest dark pool trades in realtime from Hedge Funds & Major Institutional Traders"/>-->
+                      <UpgradeToPro data={data} title="Get the latest dark pool trades in realtime from Hedge Funds & Major Institutional Traders"/>
     
                   </div>
   

@@ -22,7 +22,7 @@ export const load = async ({ parent }) => {
       setCache("", output, "getTopAnalystStocksg");
     }
 
-    //output = user?.tier !== 'Pro' ? output?.reverse()?.slice(0,6) : output;
+    output = user?.tier !== "Pro" ? output?.reverse()?.slice(0, 6) : output;
     return output;
   };
 

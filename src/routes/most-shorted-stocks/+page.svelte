@@ -4,7 +4,7 @@
   import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 	import { abbreviateNumber } from '$lib/utils';
   import { onMount } from 'svelte';
-  //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+  import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   
@@ -163,7 +163,7 @@
                         <tbody>
                           {#each shortedList as item, index}
   
-                          <tr on:click={() => goto(`/stocks/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
+                          <tr on:click={() => goto(`/stocks/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === shortedList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
                             <td class="text-white text-sm sm:text-[1rem] font-medium text-white text-end">
                               {index+1}
                             </td>
@@ -205,7 +205,7 @@
                       </table>
                   </div>
                     <InfiniteLoading on:infinite={infiniteHandler} />
-                    <!--<UpgradeToPro data={data} title="Get the most shorted stocks on the market to never miss out the next short squeeze"/>-->
+                    <UpgradeToPro data={data} title="Get the most shorted stocks on the market to never miss out the next short squeeze"/>
   
                 </div>
 
