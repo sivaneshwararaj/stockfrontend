@@ -1,11 +1,12 @@
 <script lang='ts'>
   import { onMount, onDestroy } from 'svelte';
   import { goto} from '$app/navigation';
-  import { screenWidth, numberOfUnreadNotification, strategyId} from '$lib/store';
+  import { clearCache, screenWidth, numberOfUnreadNotification, getCache, setCache} from '$lib/store';
   import toast from 'svelte-french-toast';
   import { abbreviateNumber, sectorList, industryList, listOfRelevantCountries } from '$lib/utils';
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
+  import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
   import Input  from '$lib/components/Input.svelte';
 
   //const userConfirmation = confirm('Unsaved changes detected. Leaving now will discard your strategy. Continue?');
@@ -20,6 +21,7 @@
   let syncWorker: Worker | undefined;
   let downloadWorker: Worker | undefined;
   let searchQuery = '';
+  let infoText = {};
   $: testList = [];
 
 
@@ -43,11 +45,11 @@
 const allRules = {
   avgVolume: { label: 'Average Volume', step: ['100M','10M','1M','100K','10K','1K','0'], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
   volume: { label: 'Volume', step: ['100M','10M','1M','100K','10K','1K','0'], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
-  rsi: { label: 'RSI', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
-  stochRSI: { label: 'Stoch RSI Fast', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
-  mfi: { label: 'MFI', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
-  cci: { label: 'CCI', step: [250,200,100,50,20,0,-20,-50,-100,-200,-250], category: 'ta', defaultCondition: 'over', defaultValue: 0 },
-  atr: { label: 'ATR', step: [20,15,10,5,3,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
+  rsi: { label: 'Relative Strength Index', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
+  stochRSI: { label: 'Stochastic RSI Fast', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
+  mfi: { label: 'Money Flow Index', step: [90,80,70,60,50,40,30,20], category: 'ta', defaultCondition: 'over', defaultValue: 40 },
+  cci: { label: 'Commodity Channel Index', step: [250,200,100,50,20,0,-20,-50,-100,-200,-250], category: 'ta', defaultCondition: 'over', defaultValue: 0 },
+  atr: { label: 'Average True Range', step: [20,15,10,5,3,1], category: 'ta', defaultCondition: 'over', defaultValue: 10 },
   sma20: { label: 'SMA20', step: ['Stock Price > SMA20', 'SMA20 > SMA50', 'SMA20 > SMA100', 'SMA20 > SMA200'], category: 'ta', defaultValue: 'any' },
   sma50: { label: 'SMA50', step: ['Stock Price > SMA50', 'SMA50 > SMA20', 'SMA50 > SMA100', 'SMA50 > SMA200'], category: 'ta', defaultValue: 'any' },
   sma100: { label: 'SMA100', step: ['Stock Price > SMA100', 'SMA100 > SMA20', 'SMA100 > SMA50', 'SMA100 > SMA200'], category: 'ta', defaultValue: 'any' },
@@ -208,6 +210,27 @@ $: allRows = Object?.entries(allRules)
         ruleCondition[rule.name] = rule.condition || allRules[rule.name].defaultCondition;
         valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
       });
+
+
+
+async function getInfoText(parameter) {
+  const cachedData = getCache(parameter, "getInfoText");
+    if (cachedData) {
+      infoText = cachedData;
+    } else {
+      const postData = { parameter };
+      const response = await fetch(data?.apiURL + "/info-text", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      infoText = await response.json();
+      setCache(parameter, infoText, "getInfoText");
+    }
+};
 
 
 async function handleCreateStrategy() {
@@ -532,6 +555,7 @@ onMount(async () => {
 onDestroy(() => {
     syncWorker?.terminate();
     syncWorker = undefined;
+    clearCache();
 });
 
   
@@ -1011,9 +1035,35 @@ function handleInput(event) {
                   {#each displayRules as row (row?.rule)}
                     <!--Start Added Rules-->
                     <div class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default">
-                      <div class="text-white text-[1rem]">
-                          {row?.label?.replace('[%]','')}
-                      </div> 
+                      <div class="text-white text-[1rem] relative">
+                        {row?.label?.replace('[%]', '')}
+                          <HoverCard.Root>
+                            <HoverCard.Trigger
+                              class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black">
+                              <label on:mouseover={() => getInfoText(row?.rule)} class="relative" role="tooltip">
+                              <span class="absolute -right-[15px] -top-[3px] cursor-pointer p-1 text-gray-300 sm:hover:text-white">
+                                  <svg class="h-[10.5px] w-[10.5px]" viewBox="0 0 4 16" fill="currentColor" style="max-width:20px"><path d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"></path></svg>
+                              </span>
+                            </label> 
+                            </HoverCard.Trigger>
+                            <HoverCard.Content class="w-96">
+                              <div class="flex justify-between space-x-4 w-full">
+                                <div class="space-y-1 w-full">
+                                  <h4 class="text-lg font-semibold pb-1 border-b border-gray-400 ">{row?.label?.replace('[%]', '')}</h4>
+                                  <div class="text-sm w-full pt-2 text-black">
+                                    {infoText?.text ?? 'n/a'}
+                                  </div>
+                                  {#if infoText?.equation !== undefined}
+                                    <div class="text-sm w-full pt-2 text-black border-t border-gray-400">
+                                      {infoText?.equation}
+                                    </div>
+                                  {/if}
+                                </div>
+                              </div>
+                            </HoverCard.Content>
+                          </HoverCard.Root>
+                      </div>
+
                       <div class="flex items-center">
                           <button on:click={() => handleDeleteRule(row?.rule)} class="mr-1.5 cursor-pointer text-gray-300 sm:hover:text-red-500 focus:outline-none" title="Remove filter">
                               <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="CurrentColor" style="max-width:40px">
