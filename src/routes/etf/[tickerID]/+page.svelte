@@ -3,7 +3,7 @@
   import {AreaSeries, Chart, PriceLine, CandlestickSeries} from 'svelte-lightweight-charts';
   
     import { TrackingModeExitMode } from 'lightweight-charts';
-    import {getCache, setCache, taRatingComponent,  optionsNetFlowComponent, optionComponent, sentimentComponent, varComponent, retailVolumeComponent, trendAnalysisComponent, priceAnalysisComponent, assetType, screenWidth, globalForm, numberOfUnreadNotification, displayCompanyName, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, clientSideCache, etfTicker, isOpen,  isBeforeMarketOpen, isWeekend} from '$lib/store';
+    import {getCache, setCache, taRatingComponent, failToDeliverComponent, optionsNetFlowComponent, optionComponent, sentimentComponent, varComponent, retailVolumeComponent, trendAnalysisComponent, priceAnalysisComponent, assetType, screenWidth, globalForm, numberOfUnreadNotification, displayCompanyName, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, clientSideCache, etfTicker, isOpen,  isBeforeMarketOpen, isWeekend} from '$lib/store';
     import { onDestroy, onMount } from 'svelte';    
     import ETFKeyInformation from '$lib/components/ETFKeyInformation.svelte';
     import Lazy from '$lib/components/Lazy.svelte';
@@ -1397,21 +1397,19 @@ async function exportData(timePeriod:string) {
                                     </div>
                                   </Lazy>
                                   
-                                  <!--
                                   <Lazy>
-                                    <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$impliedVolatilityComponent ? 'hidden' : ''}">
-                                      {#await import('$lib/components/ImpliedVolatility.svelte') then {default: Comp}}
-                                        <svelte:component this={Comp} data={data} />
+                                    <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$failToDeliverComponent ? 'hidden' : ''}">
+                                      {#await import("$lib/components/FailToDeliver.svelte") then { default: Comp }}
+                                        <svelte:component this={Comp} {data} />
                                       {/await}
                                     </div>
                                   </Lazy>
-                                  -->
                 
   
                                     <!--End Price Prediction Model-->
     
                                      <!--Start CountrySegmentation-->
-                                      <div class="w-full pt-10 sm:p-6 m-auto {geographicList?.length !== 0 ? '' : 'hidden'}">
+                                      <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {geographicList?.length !== 0 ? '' : 'hidden'}">
                                           {#if CountrySegmentation}
                                             <CountrySegmentation
                                             geographicList = {geographicList}
