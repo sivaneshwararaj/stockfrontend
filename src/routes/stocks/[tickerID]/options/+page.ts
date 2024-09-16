@@ -50,8 +50,6 @@ export const load = async ({ parent, params }) => {
 
       output = await response.json();
 
-      console.log(output);
-
       setCache(params.tickerID, output, "getOptionsHistoricalData");
     }
 

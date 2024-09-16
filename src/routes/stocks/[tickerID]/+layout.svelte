@@ -250,12 +250,12 @@ async function fetchPortfolio()
   });
 
   onDestroy(() => {
-    try {
-      //socket?.send('close')
-      socket?.close();
-    } catch (e) {
-      console.log(e);
+    if (socket) {
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.close(); // Close the WebSocket connection
     }
+    socket = null; // Ensure socket is set to null
+  }
 
     //$displayCompanyName = '';
     $currentPortfolioPrice = null;
