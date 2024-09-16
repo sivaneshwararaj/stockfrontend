@@ -472,18 +472,20 @@ function daysLeft(targetDate) {
 
   });
   
-onDestroy(() => {
-  if (socket) {
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.close(); // Close the WebSocket connection
+onDestroy(async() => {
+
+ try {
+      //socket?.send('close')
+      socket?.close();
+    } catch (e) {
+      console.log(e);
     }
-    socket = null; // Ensure socket is set to null
-  }
-  if (audio) {
-    audio.pause();
-    audio = null;
-  }
-});
+    if (audio) {
+      audio.pause();
+      audio = null;
+    }
+  
+  })
   
 
     async function assetSelector(symbol, assetType)
