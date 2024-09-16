@@ -186,7 +186,10 @@ async function filterRawData(rawData, ruleOfList, filterQuery) {
 
 onmessage = async (event: MessageEvent) => {
   const { rawData, ruleOfList, filterQuery } = event.data || {};
-  const filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
+  let filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
+  filteredData = Array?.from(
+    new Map(filteredData?.map((item) => [item?.id, item]))?.values()
+  );
   postMessage({ message: "success", filteredData });
 };
 

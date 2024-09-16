@@ -15,21 +15,14 @@
   
   let ruleOfList = [
   {
-    "name": "underlying_type",
-    "value": "any"
-  },
-  {
-    "name": "put_call",
+    "name": "cost_basis",
     "value": "any"
   },
   {
     "name": "date_expiration",
     "value": "any"
   },
-  {
-    "name": "execution_estimate",
-    "value": "any"
-  }];
+];
 
   let displayRules = [];
   let filterQuery = '';
@@ -42,10 +35,10 @@
   let shouldLoadWorker = writable(false);
 
 const allRules = {
-  volume: { label: 'Volume', step: ['100K','10K','1K'],  defaultCondition: 'over', defaultValue: '1K' },
-  open_interest: { label: 'Open Interest', step: ['100K','10K','1K'],  defaultCondition: 'over', defaultValue: '1K' },
+  volume: { label: 'Volume', step: ['100K','10K','1K'],  defaultCondition: 'over', defaultValue: 'any' },
+  open_interest: { label: 'Open Interest', step: ['100K','10K','1K'],  defaultCondition: 'over', defaultValue: 'any' },
   volumeOIRatio: { label: 'Volume / Open Interest', step: ['100%','80%','60%','50%','30%','15%','10%','5%'],  defaultCondition: 'over', defaultValue: 'any' },
-  cost_basis: { label: 'Premium', step: ['10M','5M','1M','500K','100K','50K','10K','5K'],  defaultCondition: 'over', defaultValue: '50K' },
+  cost_basis: { label: 'Premium', step: ['10M','5M','1M','500K','100K','50K','10K','5K'],  defaultCondition: 'over', defaultValue: 'any' },
   put_call: { label: 'Contract Type', step: ["Calls", "Puts"],  defaultValue: 'any' },
   sentiment: { label: 'Sentiment', step: ["Bullish","Neutral", "Bearish"],  defaultValue: 'any' },
   execution_estimate: { label: 'Execution', step: ["At Ask","At Bid", "At Midpoint", "Below Ask", "Below Bid",], defaultValue: 'any' },
