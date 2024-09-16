@@ -84,8 +84,9 @@ async function handleDeleteRule(state) {
   {
     ruleName = '';
   }
-
+  
   displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
+  shouldLoadWorker.set(true);
 }
       
 
@@ -184,6 +185,7 @@ const loadWorker = async () => {
 const handleMessage = (event) => {
     displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
     displayedData = event.data?.filteredData ?? [];
+    console.log('handle Message')
     calculateStats(displayedData);
 
     //console.log(displayedData)
@@ -248,19 +250,6 @@ async function handleChangeValue(value) {
 
 }
 
-
-
-
-$: {
-  if (ruleOfList) {
-    const ruleToUpdate = ruleOfList?.find(rule => rule.name === ruleName);
-    if (ruleToUpdate) {
-      ruleToUpdate.value = valueMappings[ruleToUpdate.name];
-      ruleToUpdate.condition = ruleCondition[ruleToUpdate.name];
-      ruleOfList = [...ruleOfList];
-    }
-  }
-}
 
 
 
@@ -672,6 +661,20 @@ $: {
 }
 
   
+$: {
+  if (ruleOfList) {
+    const ruleToUpdate = ruleOfList?.find(rule => rule.name === ruleName);
+    if (ruleToUpdate) {
+      ruleToUpdate.value = valueMappings[ruleToUpdate.name];
+      ruleToUpdate.condition = ruleCondition[ruleToUpdate.name];
+      ruleOfList = [...ruleOfList];
+      console.log('test')
+      shouldLoadWorker.set(true);
+
+    }
+  }
+}
+
 
 
 
