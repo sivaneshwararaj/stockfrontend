@@ -26,7 +26,8 @@
 
   let displayRules = [];
   let filterQuery = '';
-
+  let socket: WebSocket | null = null; // Initialize socket as null
+  
   let syncWorker: Worker | undefined;
   let ruleName = '';
   let searchTerm = '';
@@ -287,7 +288,6 @@ const nyseDate = new Date(data?.getOptionsFlowFeed?.at(0)?.date ?? null)?.toLoca
   let audio;
   let muted = true;
   let newIncomingData = false;
-  let socket;
   let previousCallVolume = 0; //This is needed to play the sound only if it changes.
   let notFound = false;
   let isLoaded = false;
@@ -371,14 +371,12 @@ function sendMessage(message) {
   }
 }
 async function websocketRealtimeData() {
-
   let newData = [];
   try {
     socket = new WebSocket(data?.wsURL + "/options-flow-reader");
 
     socket.addEventListener("open", () => {
       const ids = rawData.map(item => item.id);
-
       sendMessage(JSON.stringify({ ids }));
     });
 
@@ -387,13 +385,13 @@ async function websocketRealtimeData() {
       if (mode === true) {
         try {
           newData = JSON.parse(event.data) ?? [];
-          if(newData?.length !== 0) {
+          if (newData?.length !== 0) {
             newData.forEach((item) => {
               item.dte = daysLeft(item?.date_expiration);
             });
-             rawData = [...newData, ...rawData];
+            rawData = [...newData, ...rawData];
           }
-         
+
           if (ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
             shouldLoadWorker.set(true);
           }
@@ -474,19 +472,18 @@ function daysLeft(targetDate) {
 
   });
   
-onDestroy(async() => {
-
-
-    if (typeof window !== 'undefined') 
-    {
-      socket?.close()
+onDestroy(() => {
+  if (socket) {
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.close(); // Close the WebSocket connection
     }
-    if (audio) {
-      audio.pause();
-      audio = null;
-    }
-  
-  })
+    socket = null; // Ensure socket is set to null
+  }
+  if (audio) {
+    audio.pause();
+    audio = null;
+  }
+});
   
 
     async function assetSelector(symbol, assetType)
