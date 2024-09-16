@@ -463,10 +463,11 @@ function daysLeft(targetDate) {
   });
 
     isLoaded = true;
-
+    /*
     if ($isOpen) {
       await websocketRealtimeData();
     }
+      */
 
     
 
