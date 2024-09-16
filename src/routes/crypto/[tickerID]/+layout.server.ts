@@ -24,22 +24,17 @@ const fetchData = async (apiURL, apiKey, endpoint, ticker) => {
 };
 
 const fetchWatchlist = async (fastifyURL, userId) => {
-  try {
-    const postData = { userId: userId };
-    const response = await fetch(fastifyURL + "/all-watchlists", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
+  const postData = { userId: userId };
+  const response = await fetch(fastifyURL + "/all-watchlists", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(postData),
+  });
 
-    const output = (await response.json())?.items;
-    return output;
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
+  const output = (await response.json())?.items;
+  return output;
 };
 
 /*

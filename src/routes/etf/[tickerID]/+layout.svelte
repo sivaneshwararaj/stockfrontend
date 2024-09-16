@@ -336,9 +336,7 @@ async function fetchPortfolio()
    {
      previousTicker = $etfTicker;
      //socket.send('close')
-      if (socket.readyState === WebSocket.OPEN) {
-        socket?.close(); // Close the WebSocket connection
-      }
+     socket?.close();
      await new Promise((resolve, reject) => {
        socket.addEventListener('close', resolve);
      });
@@ -357,12 +355,7 @@ async function fetchPortfolio()
   onDestroy(() => {
     try {
       //socket?.send('close')
-       if (socket && typeof socket !== "undefined") {
-        if (socket.readyState === WebSocket.OPEN) {
-          socket?.close(); // Close the WebSocket connection
-        }
-        socket = null; // Ensure socket is set to null
-      }
+      socket?.close()
     }
     catch(e) {
       console.log(e)
