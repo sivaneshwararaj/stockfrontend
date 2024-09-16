@@ -87,19 +87,19 @@ function isDateWithinRange(dateString: string, range: string): boolean {
     case "1 day":
       return daysDiff >= 0 && daysDiff <= 1;
     case "1 week":
-      return daysDiff > 1 && daysDiff <= 7;
+      return daysDiff >= 0 && daysDiff <= 7;
     case "2 weeks":
-      return daysDiff > 7 && daysDiff <= 14;
+      return daysDiff >= 0 && daysDiff <= 14;
     case "1 month":
-      return daysDiff > 14 && daysDiff <= 30;
+      return daysDiff >= 0 && daysDiff <= 30;
     case "3 months":
-      return daysDiff > 30 && daysDiff <= 90;
+      return daysDiff >= 0 && daysDiff <= 90;
     case "6 months":
-      return daysDiff > 90 && daysDiff <= 180;
+      return daysDiff >= 0 && daysDiff <= 180;
     case "1 year":
-      return daysDiff > 180 && daysDiff <= 365;
+      return daysDiff >= 0 && daysDiff <= 365;
     case "3 years":
-      return daysDiff > 365 && daysDiff <= 1095;
+      return daysDiff >= 0 && daysDiff <= 1095;
     default:
       return false;
   }
