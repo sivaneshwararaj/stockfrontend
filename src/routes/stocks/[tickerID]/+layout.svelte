@@ -237,7 +237,10 @@ async function fetchPortfolio()
     if (previousTicker !== $stockTicker && typeof socket !== "undefined") {
       previousTicker = $stockTicker;
       //socket.send('close')
-      socket?.close();
+      if (socket?.readyState === WebSocket?.OPEN) {
+        socket?.close();
+      }
+      
       await new Promise((resolve, reject) => {
         socket?.addEventListener("close", resolve);
       });
@@ -250,12 +253,18 @@ async function fetchPortfolio()
   });
 
   onDestroy(() => {
-    if (socket) {
-    if (socket.readyState === WebSocket.OPEN) {
-      socket.close(); // Close the WebSocket connection
+    try {
+      //socket?.send('close')
+       if (socket && typeof socket !== "undefined") {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket?.close(); // Close the WebSocket connection
+        }
+        socket = null; // Ensure socket is set to null
+      }
     }
-    socket = null; // Ensure socket is set to null
-  }
+    catch(e) {
+      console.log(e)
+    }  
 
     //$displayCompanyName = '';
     $currentPortfolioPrice = null;

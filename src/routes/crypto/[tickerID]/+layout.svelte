@@ -318,45 +318,47 @@ onMount(async () => {
 
 });
 
-afterUpdate( async () => {
- 
- if(previousTicker !== $cryptoTicker && typeof socket !== 'undefined')
- {
-   previousTicker = $cryptoTicker;
-   //socket.send('close')
-   socket?.close();
-   await new Promise((resolve, reject) => {
-     socket?.addEventListener('close', resolve);
-   });
-  
-   if(socket?.readyState === WebSocket?.CLOSED)
-   {
-     await websocketRealtimeData()
-     console.log('connecting again')
-   }
 
- }
+  afterUpdate(async () => {
+    if (previousTicker !== $cryptoTicker && typeof socket !== "undefined") {
+      previousTicker = $cryptoTicker;
+      //socket.send('close')
+      if (socket?.readyState === WebSocket?.OPEN) {
+        socket?.close();
+      }
+      
+      await new Promise((resolve, reject) => {
+        socket?.addEventListener("close", resolve);
+      });
 
-});
+      if (socket?.readyState === WebSocket?.CLOSED) {
+        await websocketRealtimeData();
+        console.log("connecting again");
+      }
+    }
+  });
 
 
-onDestroy(() => {
-  try {
-    //socket?.send('close')
-    socket?.close()
-  }
-  catch(e) {
-    console.log(e)
-  }  
- 
-  //$displayCompanyName = '';
-  $currentPortfolioPrice = null;
-  $currentPrice = null;
-  $priceIncrease = null;
-  $traded = false
-  
-});
+  onDestroy(() => {
+    try {
+      //socket?.send('close')
+       if (socket && typeof socket !== "undefined") {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket?.close(); // Close the WebSocket connection
+        }
+        socket = null; // Ensure socket is set to null
+      }
+    }
+    catch(e) {
+      console.log(e)
+    }  
 
+    //$displayCompanyName = '';
+    $currentPortfolioPrice = null;
+    $currentPrice = null;
+    $priceIncrease = null;
+    //$traded = false
+  });
 
     
     

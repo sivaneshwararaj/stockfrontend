@@ -1,13 +1,72 @@
 <script lang='ts'>
 import { screenWidth } from '$lib/store';
 import IndustryTable from '$lib/components/IndustryTable.svelte';
-import { sectorList } from '$lib/utils';
+import { industryList, sectorList } from '$lib/utils';
 
 export let data;
 let rawData = data?.getIndustryOverview;
 
+const sectorNavigation = [
+    {
+        title: 'Financial Services',
+        link: '/list/financial-sector'
+    },
+    {
+        title: 'Finance',
+        link: '/list/financial-sector'
+    },
+    {
+        title: 'Healthcare',
+        link: '/list/healthcare-sector'
+    },
+    {
+        title: 'Technology',
+        link: '/list/technology-sector'
+    },
+    {
+        title: 'Industrials',
+        link: '/list/industrials-sector'
+    },
+    {
+        title: 'Energy',
+        link: '/list/energy-sector'
+    },
+    {
+        title: 'Utilities',
+        link: '/list/utilities-sector'
+    },
+    {
+        title: 'Consumer Cyclical',
+        link: '/list/consumer-cyclical-sector'
+    },
+    {
+        title: 'Real Estate',
+        link: '/list/real-estate-sector'
+    },
+    {
+        title: 'Basic Materials',
+        link: '/list/basic-materials-sector'
+    },
+    {
+        title: 'Communication Services',
+        link: '/list/communication-services-sector'
+    },
+    {
+        title: 'Consumer Defensive',
+        link: '/list/consumer-defensive-sector'
+    },
+]
 
-  
+function sectorSelector(sector) {
+    const selectedSector = sectorNavigation?.find(item => item?.title === sector);
+
+    if (selectedSector) {
+      goto(selectedSector?.link);
+    } else {
+      // Handle the case when the sector is not found
+      console.error(`Sector not found: ${sector}`);
+    }
+  }
 
 $: charNumber = $screenWidth < 640 ? 20 : 30;
 
@@ -18,10 +77,8 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
           
         <div class="border border-gray-800 w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 bg-[#09090B] sm:rounded-lg h-auto p-5 mb-4">
             <svg class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
-            
-            These are all the actively traded REITs (Real Estate Investment Trusts) on the US stock market.
-            
-          </div>
+            We categorize stocks into {sectorList?.length} sectors and {industryList?.length} industries, based on the company's primary business activity.
+        </div>
     
       
         
