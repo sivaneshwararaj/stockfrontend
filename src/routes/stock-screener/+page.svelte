@@ -7,6 +7,7 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+
   import Input  from '$lib/components/Input.svelte';
 
   //const userConfirmation = confirm('Unsaved changes detected. Leaving now will discard your strategy. Continue?');
@@ -22,6 +23,8 @@
   let downloadWorker: Worker | undefined;
   let searchQuery = '';
   let infoText = {};
+  let tooltipTitle;
+
   $: testList = [];
 
 
@@ -217,8 +220,8 @@ $: allRows = Object?.entries(allRules)
       });
 
 
-
-async function getInfoText(parameter) {
+async function getInfoText(parameter, title) {
+  tooltipTitle = title;
   const cachedData = getCache(parameter, "getInfoText");
     if (cachedData) {
       infoText = cachedData;
@@ -1042,10 +1045,18 @@ function handleInput(event) {
                     <div class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default">
                       <div class="text-white text-[1rem] relative">
                         {row?.label?.replace('[%]', '')}
+                        <div class="sm:hidden relative inline-block">
+                          <label for="mobileTooltip" on:click={() => getInfoText(row?.rule, row?.label?.replace('[%]', ''))} class="relative" role="tooltip">
+                              <span class="absolute -right-[15px] -top-[3px] cursor-pointer p-1 text-gray-300 sm:hover:text-white">
+                                  <svg class="h-[10.5px] w-[10.5px]" viewBox="0 0 4 16" fill="currentColor" style="max-width:20px"><path d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"></path></svg>
+                              </span>
+                          </label> 
+                        </div>
+                        <div class="hidden sm:inline-block">
                           <HoverCard.Root>
                             <HoverCard.Trigger
                               class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black">
-                              <label on:mouseover={() => getInfoText(row?.rule)} class="relative" role="tooltip">
+                              <label on:mouseover={() => getInfoText(row?.rule, row?.label?.replace('[%]', ''))} class="relative" role="tooltip">
                               <span class="absolute -right-[15px] -top-[3px] cursor-pointer p-1 text-gray-300 sm:hover:text-white">
                                   <svg class="h-[10.5px] w-[10.5px]" viewBox="0 0 4 16" fill="currentColor" style="max-width:20px"><path d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"></path></svg>
                               </span>
@@ -1067,6 +1078,7 @@ function handleInput(event) {
                               </div>
                             </HoverCard.Content>
                           </HoverCard.Root>
+                        </div>
                       </div>
 
                       <div class="flex items-center">
@@ -1604,6 +1616,34 @@ function handleInput(event) {
     </dialog>
   
   <!--End Delete Strategy Modal-->
+
+
+<input type="checkbox" id="mobileTooltip" class="modal-toggle" />
+
+<dialog id="mobileTooltip" class="modal modal-bottom sm:modal-middle">
+
+
+  <label for="mobileTooltip"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
+  
+
+  <!-- Desktop modal content -->
+  <div class="modal-box w-full bg-[#191919] flex flex-col items-center">
+    <div class="mx-auto mb-8 h-1.5 w-20 flex-shrink-0 rounded-full bg-[#404040]" />
+    <div class="text-white mb-5 text-center">
+      <h3 class="font-bold text-2xl mb-5">{tooltipTitle}</h3>
+      <span class="text-white text-[1rem] font-normal">{infoText?.text ?? 'n/a'}</span>
+      {#if infoText?.equation !== undefined}
+        <div class="w-5/6 m-auto mt-5 border-t border-gray-400"></div>
+        <div class="text-[1rem] w-full pt-3 pb-3 m-auto text-white">
+            {infoText?.equation}
+        </div>
+        {/if}
+    </div>
+
+    <label for="mobileTooltip" class="sm:hidden cursor-pointer px-7 py-2 mb-5 rounded-full bg-[#0DDE00] text-center text-black text-[1rem] font-normal">OK</label>
+    
+  </div>
+</dialog>
 
 
 <!--Start Login Modal-->
