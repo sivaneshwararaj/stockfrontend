@@ -388,6 +388,11 @@
                     Dividend Aristocrats
                   </a>
                 </li>
+                 <li class="mb-2 cursor-pointer sm:hidden">
+                  <a href="/list/reit-stocks" class="hover:text-white text-blue-400 text-lg">
+                    All REITs
+                  </a>
+                </li>
                 <li class="mb-2 cursor-pointer sm:hidden">
                   <a href="/list/delisted-stocks" class="hover:text-white text-blue-400 text-lg">
                     Delisted Companies
@@ -399,6 +404,11 @@
             <!-- Column 2 -->
             <div class="mt-10 hidden sm:block">
               <ul class="list-disc space-y-1 pl-5">
+                <li class="mb-2 cursor-pointer">
+                  <a href="/list/reit-stocks" class="hover:text-white text-blue-400 text-lg">
+                    All REITs
+                  </a>
+                </li>
                 <li class="mb-2 cursor-pointer">
                   <a href="/list/delisted-stocks" class="hover:text-white text-blue-400 text-lg">
                     Delisted Companies

@@ -155,6 +155,10 @@ let navigation = [
         title: 'Dividend Aristocrats',
         link: '/list/dividend-aristocrats'
     },
+    {
+        title: 'All Active REITs on the US Stock Market',
+        link: '/list/reit-stocks'
+    },
     
 ];
 
@@ -244,7 +248,7 @@ const combinedNavigation = navigation?.concat(updatedNavigation);
                     <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                         <div class="w-full flex justify-between items-center p-3 mt-3">
                         <h2 class="text-start text-xl font-semibold text-white ml-3">
-                        Pro Subscription
+                        Pro Subscription 🔥
                         </h2>
                         <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                         </div>
@@ -255,30 +259,30 @@ const combinedNavigation = navigation?.concat(updatedNavigation);
                 </div>
                 {/if}
 
-                <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                <div on:click={() => goto('/watchlist')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                     <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                         <div class="w-full flex justify-between items-center p-3 mt-3">
                         <h2 class="text-start text-xl font-semibold text-white ml-3">
-                        Wallstreet Analyst
+                        Watchlist ⭐
                         </h2>
                         <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                         </div>
                         <span class="text-white p-3 ml-3 mr-3">
-                            Get the latest top Wall Street analyst ratings.
+                            Build your watchlist to keep track of their performance.
                         </span>
                     </div>
                 </div>
-
-                <div on:click={() => goto('/politicians')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                
+                <div on:click={() => goto('/stock-screener')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                     <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                         <div class="w-full flex justify-between items-center p-3 mt-3">
                         <h2 class="text-start text-xl font-semibold text-white ml-3">
-                        Congress Trading
+                        Stock Screener 🔎
                         </h2>
                         <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                         </div>
                         <span class="text-white p-3 ml-3 mr-3">
-                            Get the latest top Congress trading insights.
+                            Build your Stock Screener to find profitable stocks.
                         </span>
                     </div>
                 </div>
