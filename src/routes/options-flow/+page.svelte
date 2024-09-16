@@ -649,7 +649,7 @@ function calculateStats(data) {
 
     setTimeout(() => {
         shouldLoadWorker.set(true)
-    }, 200);
+    }, 0);
 }
 
 function debounce(fn, delay) {
