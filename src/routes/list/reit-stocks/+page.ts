@@ -5,7 +5,7 @@ export const load = async ({ parent }) => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache("", "getAllReEITs");
+    const cachedData = getCache("", "getAllREITs");
     if (cachedData) {
       output = cachedData;
     } else {
@@ -23,7 +23,7 @@ export const load = async ({ parent }) => {
 
       output = await response.json();
 
-      setCache("", output, "getAllReEITs");
+      setCache("", output, "getAllREITs");
     }
 
     return output;
