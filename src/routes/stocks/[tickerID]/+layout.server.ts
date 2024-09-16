@@ -31,13 +31,18 @@ const fetchData = async (apiURL, apiKey, endpoint, ticker) => {
 };
 
 const fetchFromFastify = async (fastifyURL, endpoint, userId) => {
-  const response = await fetch(`${fastifyURL}${endpoint}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId }),
-  });
-  const { items } = await response.json();
-  return items;
+  try {
+    const response = await fetch(`${fastifyURL}${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId }),
+    });
+    const { items } = await response.json();
+    return items;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
 };
 
 const fetchCommunitySentiment = async (pb, ticker, cookies) => {
