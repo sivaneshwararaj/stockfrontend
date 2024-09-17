@@ -69,6 +69,8 @@ function sectorSelector(sector) {
     }
   }
 
+
+
 $: charNumber = $screenWidth < 640 ? 20 : 30;
 
 </script>

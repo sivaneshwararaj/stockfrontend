@@ -1,7 +1,22 @@
 <script lang="ts">
     import { abbreviateNumber } from '$lib/utils';
+    import { goto } from '$app/navigation';
     export let charNumber;
     export let industryList
+
+function formatFilename(industryName) {
+    // Replace spaces with hyphens
+    let formattedName = industryName?.replace(/ /g, '-');
+    // Replace "&" with "and"
+    formattedName = formattedName?.replace(/&/g, 'and');
+    // Remove any extra hyphens (e.g., from consecutive spaces)
+    formattedName = formattedName?.replace(/-{2,}/g, '-');
+    // Convert to lowercase for consistency
+    goto("/list/industry/"+formattedName?.toLowerCase())
+}
+
+
+
 </script>
 
 
@@ -23,7 +38,7 @@
     <tbody>
         {#each industryList as item}
         <!-- row -->
-        <tr class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
+        <tr on:click={() => formatFilename(item?.industry)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
         <td class="hover:sm:text-white text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
             {item?.industry?.length > charNumber ? item?.industry?.slice(0,charNumber) + "..." : item?.industry}
         </td>

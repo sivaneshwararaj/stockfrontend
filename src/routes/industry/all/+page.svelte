@@ -6,67 +6,17 @@ import { goto } from '$app/navigation';
 export let data;
 let rawData = data?.getIndustryOverview;
 
-const sectorNavigation = [
-    {
-        title: 'Financial Services',
-        link: '/list/financial-sector'
-    },
-    {
-        title: 'Finance',
-        link: '/list/financial-sector'
-    },
-    {
-        title: 'Healthcare',
-        link: '/list/healthcare-sector'
-    },
-    {
-        title: 'Technology',
-        link: '/list/technology-sector'
-    },
-    {
-        title: 'Industrials',
-        link: '/list/industrials-sector'
-    },
-    {
-        title: 'Energy',
-        link: '/list/energy-sector'
-    },
-    {
-        title: 'Utilities',
-        link: '/list/utilities-sector'
-    },
-    {
-        title: 'Consumer Cyclical',
-        link: '/list/consumer-cyclical-sector'
-    },
-    {
-        title: 'Real Estate',
-        link: '/list/real-estate-sector'
-    },
-    {
-        title: 'Basic Materials',
-        link: '/list/basic-materials-sector'
-    },
-    {
-        title: 'Communication Services',
-        link: '/list/communication-services-sector'
-    },
-    {
-        title: 'Consumer Defensive',
-        link: '/list/consumer-defensive-sector'
-    },
-]
+function formatFilename(industryName) {
+    // Replace spaces with hyphens
+    let formattedName = industryName?.replace(/ /g, '-');
+    // Replace "&" with "and"
+    formattedName = formattedName?.replace(/&/g, 'and');
+    // Remove any extra hyphens (e.g., from consecutive spaces)
+    formattedName = formattedName?.replace(/-{2,}/g, '-');
+    // Convert to lowercase for consistency
+    goto("/list/industry/"+formattedName?.toLowerCase())
+}
 
-function sectorSelector(sector) {
-    const selectedSector = sectorNavigation?.find(item => item?.title === sector);
-
-    if (selectedSector) {
-      goto(selectedSector?.link);
-    } else {
-      // Handle the case when the sector is not found
-      console.error(`Sector not found: ${sector}`);
-    }
-  }
 
 
 $: charNumber = $screenWidth < 640 ? 20 : 30;
@@ -102,7 +52,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
                     <tbody>
                         {#each rawData as item}
                         <!-- row -->
-                        <tr on:click={() => sectorSelector(item?.sector)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
+                        <tr on:click={() => formatFilename(item?.industry)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                         <td class="hover:sm:text-white text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
                             {item?.industry?.length > charNumber ? item?.industry?.slice(0,charNumber) + "..." : item?.industry}
                         </td>

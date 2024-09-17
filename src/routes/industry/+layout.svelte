@@ -79,20 +79,19 @@ let activeIdx = 0;
 
 
         
-        <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B] px-3 lg:px-10 overflow-hidden">
+        <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B]  lg:px-10 overflow-hidden">
         
         
             <!--Start Top Winners/Losers-->
             <div class="flex flex-col justify-center items-center">
               
-              <div class="ml-2 text-start w-full text-white mb-1 text-3xl font-semibold">
+              <div class="ml-4 sm:ml-2 text-start w-full text-white mb-1 text-2xl sm:text-3xl font-semibold">
                 Stock Sectors & Industries
               </div>
     
               <div class="border-b mt-2 border-blue-400 w-full mb-7" />
-              
-                <div class="w-full mb-4">
-                    <div class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 -mt-3">
+                <div class="ml-4 sm:ml-0 w-full mb-4">
+                    <div class="bg-[#313131] w-fit relative mr-auto flex flex-wrap items-center justify-center rounded sm:rounded-lg p-1 -mt-3">
                     {#each tabs as item, i}
                     <button
                         on:click={() => handleMode(i)}

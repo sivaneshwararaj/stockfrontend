@@ -1,10 +1,25 @@
 <script lang='ts'>
     import { numberOfUnreadNotification } from '$lib/store';
     import { page } from '$app/stores';
+    import { industryList } from '$lib/utils';
     import ArrowLogo from "lucide-svelte/icons/move-up-right";
     import { goto } from '$app/navigation';
 
     export let data;
+
+function formatFilename(industryName) {
+    let formattedName = industryName?.replace(/ /g, '-')
+                                     .replace(/&/g, 'and')
+                                     .replace(/-{2,}/g, '-')
+                                     .toLowerCase();
+    return formattedName;
+}
+
+let navigationIndustry = industryList.map(industry => ({
+    title: industry,
+    link: `/list/industry/${formatFilename(industry)}`
+}));
+
 
 let navigation = [
     {
@@ -162,6 +177,7 @@ let navigation = [
     
 ];
 
+navigation = [...navigationIndustry, ...navigation];
 let updatedNavigation = navigation?.map(item => {
     return {
         ...item,
@@ -200,20 +216,20 @@ const combinedNavigation = navigation?.concat(updatedNavigation);
             <div class="text-sm sm:text-[1rem] breadcrumbs ml-3 lg:ml-10">
                 <ul>
                   <li><a href="/" class="text-gray-300">Home</a></li> 
+                  {#if $page.url.pathname.startsWith('/list/industry')}
+                  <li><a href="/industry" class="text-gray-300">Industry</a></li>
+                  {:else}
                   <li><a href="/list/" class="text-gray-300">Lists</a></li>
-                  {#if $page.url.pathname.startsWith('/list/')}
+                  {/if}
+                   {#if $page.url.pathname.startsWith('/list/')}
                     <li>
-                        <a class="text-gray-300">
+                        <span class="text-gray-300">
                             {combinedNavigation?.find((item) => item?.link === $page.url.pathname)?.title}
-                        </a>
+                        </span>
                     </li> 
-                    {/if}
+                  {/if}
                 </ul>
             </div>
-
-
-
-        
 
 
         
