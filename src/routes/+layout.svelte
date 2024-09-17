@@ -334,11 +334,11 @@ $: {
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/most-shorted-stocks" class="text-start w-full text-[1rem] text-white ml-4 mt-4">Top Shorted Stocks</a>
                           </Button>
-                          <!--
+                          
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/industry" class="text-start w-full text-[1rem] text-white ml-4 mt-4">By Industry</a>
                           </Button>
-                          -->
+                          
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/stock-screener" class="text-start w-full text-[1rem] text-white ml-4 mt-4">Stock Screener</a>
                           </Button>
@@ -729,7 +729,7 @@ $: {
                           <a href="/analysts" class="text-[1rem] text-white ml-4 mt-4">Top Analyst</a>
                           <a href="/analysts/top-stocks" class="text-[1rem] text-white ml-4 mt-4">Top Analyst Stocks</a>
                           <a href="/most-shorted-stocks" class="text-[1rem] text-white ml-4 mt-4">Top Shorted Stocks</a>
-                          <!--<a href="/industry" class="text-[1rem] text-white ml-4 mt-4">By Industry</a>-->
+                          <a href="/industry" class="text-[1rem] text-white ml-4 mt-4">By Industry</a>
                           <a href="/stock-screener" class="text-[1rem] text-white ml-4 mt-4">Stock Screener</a>
                           <a href="/market-mover" class="text-[1rem] text-white ml-4 mt-4">Market Mover</a>
                           <a href="/heatmaps" class="text-[1rem] text-white ml-4 mt-4">Heatmaps</a>
