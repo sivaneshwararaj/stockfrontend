@@ -1,3 +1,7 @@
+export const config = {
+  runtime: "nodejs20.x",
+};
+
 let companyName;
 
 const fetchData = async (apiURL, apiKey, endpoint, ticker) => {

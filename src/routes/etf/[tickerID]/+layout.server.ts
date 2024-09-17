@@ -1,3 +1,7 @@
+export const config = {
+  runtime: "nodejs20.x",
+};
+
 const cleanString = (input) => {
   const substringsToRemove = [
     "Depositary",

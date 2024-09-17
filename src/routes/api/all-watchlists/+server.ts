@@ -1,5 +1,9 @@
 import type { RequestHandler } from "./$types";
 
+export const config = {
+  runtime: "nodejs20.x",
+};
+
 export const GET = (async ({ locals }) => {
   const { user, pb } = locals;
   let output;
