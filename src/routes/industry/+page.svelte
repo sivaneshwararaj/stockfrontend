@@ -5,7 +5,7 @@ import { industryList, sectorList } from '$lib/utils';
 import { goto } from '$app/navigation';
 
 export let data;
-let rawData = data?.getIndustryOverview;
+let rawData = data?.getSectorIndustryOverview;
 
 const sectorNavigation = [
     {

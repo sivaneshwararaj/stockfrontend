@@ -10,7 +10,7 @@
   let changeEPS = 0;
   function findIndex(data) {
     const currentYear = new Date().getFullYear();
-    return data?.findIndex((item) => item?.date >= currentYear && item?.revenue === null);
+    return data?.findIndex((item) => item?.date > currentYear && item?.revenue === null);
   }
 
   if (data?.getAnalystEstimate?.length !== 0) {

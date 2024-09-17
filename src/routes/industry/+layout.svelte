@@ -1,13 +1,22 @@
 <script lang='ts'>
     import { numberOfUnreadNotification } from '$lib/store';
-    import { page } from '$app/stores';
-
+   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
 
     export let data;
 
 
+
+
   function handleMode(i) {
     activeIdx = i;
+    if(activeIdx === 0) {
+      goto("/industry")
+    } else if (activeIdx === 1) {
+      goto("/industry/sectors")
+    } else if (activeIdx === 2) {
+      goto("/industry/all")
+    }
   }
   
   const tabs = [
@@ -22,7 +31,16 @@
       },
     ];
   
-    let activeIdx = 0;
+let activeIdx = 0;
+
+  // Subscribe to the $page store to reactively update the activeIdx based on the URL
+  $: if ($page.url.pathname === '/industry') {
+    activeIdx = 0;
+  } else if ($page.url.pathname.startsWith('/industry/sectors')) {
+    activeIdx = 1;
+  } else if ($page.url.pathname.startsWith('/industry/all')) {
+    activeIdx = 2;
+  }
 
 </script>
         

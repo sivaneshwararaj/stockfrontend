@@ -1,17 +1,17 @@
 import { getCache, setCache } from "$lib/store";
 
 export const load = async ({ parent }) => {
-  const getSectorIndustryOverview = async () => {
+  const getIndustryOverview = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache("", "getSectorIndustryOverview");
+    const cachedData = getCache("", "getIndustryOverview");
     if (cachedData) {
       output = cachedData;
     } else {
       const { apiKey, apiURL } = await parent();
 
-      const response = await fetch(apiURL + "/sector-industry-overview", {
+      const response = await fetch(apiURL + "/industry-overview", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const load = async ({ parent }) => {
 
       output = await response.json();
 
-      setCache("", output, "getSectorIndustryOverview");
+      setCache("", output, "getIndustryOverview");
     }
 
     return output;
@@ -29,6 +29,6 @@ export const load = async ({ parent }) => {
 
   // Make sure to return a promise
   return {
-    getSectorIndustryOverview: await getSectorIndustryOverview(),
+    getIndustryOverview: await getIndustryOverview(),
   };
 };
