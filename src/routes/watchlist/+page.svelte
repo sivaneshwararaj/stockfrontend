@@ -311,17 +311,14 @@ async function deleteWatchList(event) {
 
 async function getAllListData()
 {
-    const postData = {'userId': data?.user?.id}
-    const response = await fetch(data?.fastifyURL+'/all-watchlists', {
-    method: 'POST',
+    const response = await fetch('/api/all-watchlists', {
+    method: 'GET',
     headers: {
     "Content-Type": "application/json"
     },
-    body: JSON.stringify(postData)
 });
 
-    allList = (await response.json())?.items;
-    console.log(allList)
+    allList = await response.json();
 
     if(allList?.length !== 0)
     {

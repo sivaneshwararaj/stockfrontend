@@ -23,17 +23,16 @@ const fetchData = async (apiURL, apiKey, endpoint, ticker) => {
   return output;
 };
 
-const fetchWatchlist = async (fastifyURL, userId) => {
-  const postData = { userId: userId };
-  const response = await fetch(fastifyURL + "/all-watchlists", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(postData),
-  });
-
-  const output = (await response.json())?.items;
+const fetchWatchlist = async (pb, userId) => {
+  let output;
+  try {
+    output = await pb.collection("watchlist").getFullList({
+      filter: `user="${userId}"`,
+    });
+  } catch (e) {
+    //console.log(e)
+    output = [];
+  }
   return output;
 };
 
@@ -57,15 +56,13 @@ async function fetchPortfolio(fastifyURL, userId)
 */
 
 export const load = async ({ params, locals, setHeaders }) => {
-  let apiURL = locals?.apiURL;
-  let fastifyURL = locals?.fastifyURL;
-  let apiKey = locals?.apiKey;
+  const { apiURL, apiKey, pb, user } = locals;
 
   const promises = [
     fetchData(apiURL, apiKey, "/crypto-profile", params.tickerID),
     fetchData(apiURL, apiKey, "/stock-quote", params.tickerID),
     fetchData(apiURL, apiKey, "/one-day-price", params.tickerID),
-    fetchWatchlist(fastifyURL, locals?.user?.id),
+    fetchWatchlist(pb, user?.id),
     //fetchPortfolio(fastifyURL, locals?.user?.id)
   ];
 

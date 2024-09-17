@@ -30,18 +30,21 @@ const fetchData = async (apiURL, apiKey, endpoint, ticker) => {
   return response.json();
 };
 
-const fetchFromFastify = async (fastifyURL, endpoint, userId) => {
-  const response = await fetch(`${fastifyURL}${endpoint}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId }),
-  });
-  const { items } = await response.json();
-  return items;
+const fetchWatchlist = async (pb, userId) => {
+  let output;
+  try {
+    output = await pb.collection("watchlist").getFullList({
+      filter: `user="${userId}"`,
+    });
+  } catch (e) {
+    //console.log(e)
+    output = [];
+  }
+  return output;
 };
 
 export const load = async ({ params, locals, setHeaders }) => {
-  const { apiURL, fastifyURL, apiKey, user } = locals;
+  const { apiURL, apiKey, pb, user } = locals;
   const { tickerID } = params;
 
   const endpoints = [
@@ -59,7 +62,7 @@ export const load = async ({ params, locals, setHeaders }) => {
     ...endpoints.map((endpoint) =>
       fetchData(apiURL, apiKey, endpoint, tickerID)
     ),
-    fetchFromFastify(fastifyURL, "/all-watchlists", user?.id),
+    fetchWatchlist(pb, user?.id),
     //fetchFromFastify(fastifyURL, '/get-portfolio-data', user?.id)
   ];
 
