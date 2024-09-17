@@ -13,13 +13,37 @@
     return data?.findIndex((item) => item?.date > currentYear && item?.revenue === null);
   }
 
-  if (data?.getAnalystEstimate?.length !== 0) {
+ const calculateChange = (current, previous) => {
+    if (previous !== undefined && previous !== 0) {
+        const change = ((Math.abs(current) / Math.abs(previous)) - 1) * 100;
+        // Preserve the direction of change (positive/negative)
+        const direction = (current < 0 || previous < 0) ? -1 : 1;
+        return change * direction;
+    } else {
+        return null;
+    }
+};
+
+if (data?.getAnalystEstimate?.length !== 0) {
     index = findIndex(data?.getAnalystEstimate);
-    changeRevenue = (data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg / data?.getAnalystEstimate[index - 2]?.revenue - 1) * 100;
-    changeNetIncome = (data?.getAnalystEstimate[index - 1]?.estimatedNetIncomeAvg / data?.getAnalystEstimate[index - 2]?.netIncome - 1) * 100;
-    changeEBITDA = (data?.getAnalystEstimate[index - 1]?.estimatedEbitdaAvg / data?.getAnalystEstimate[index - 2]?.ebitda - 1) * 100;
-    changeEPS = (data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg / data?.getAnalystEstimate[index - 2]?.eps - 1) * 100;
-  }
+
+    // Calculate changes using the helper function
+    const estimatedRevenueAvg = data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg;
+    const revenue = data?.getAnalystEstimate[index - 2]?.revenue;
+    const estimatedNetIncomeAvg = data?.getAnalystEstimate[index - 1]?.estimatedNetIncomeAvg;
+    const netIncome = data?.getAnalystEstimate[index - 2]?.netIncome;
+    const estimatedEbitdaAvg = data?.getAnalystEstimate[index - 1]?.estimatedEbitdaAvg;
+    const ebitda = data?.getAnalystEstimate[index - 2]?.ebitda;
+    const estimatedEpsAvg = data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg;
+    const eps = data?.getAnalystEstimate[index - 2]?.eps;
+
+    // Calculate percentage changes for each metric
+    changeRevenue = calculateChange(estimatedRevenueAvg, revenue);
+    changeNetIncome = calculateChange(estimatedNetIncomeAvg, netIncome);
+    changeEBITDA = calculateChange(estimatedEbitdaAvg, ebitda);
+    changeEPS = calculateChange(estimatedEpsAvg, eps);
+
+}
 </script>
 
 <svelte:head>
