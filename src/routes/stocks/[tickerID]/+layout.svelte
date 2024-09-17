@@ -226,12 +226,12 @@ async function fetchPortfolio()
       //SellTrade = (await import('$lib/components/SellTrade.svelte')).default;
       PriceAlert = (await import("$lib/components/PriceAlert.svelte")).default;
     }
-    /*
+    
     if ($isOpen) {
       //&& currentDateTime > startTime && currentDateTime < endTime
       await websocketRealtimeData();
-    }*/
-   
+    }
+  
   });
 
   afterUpdate(async () => {

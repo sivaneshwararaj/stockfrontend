@@ -305,7 +305,7 @@ onMount(async () => {
     //const endTime = currentDateTime.set({ hour: 22, minute: 0 });
     // Check if it's not a weekend and the current time is within the specified range
 
-    //await websocketRealtimeData()
+    await websocketRealtimeData()
 
   
     // Add a scroll event listener

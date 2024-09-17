@@ -374,11 +374,12 @@ async function websocketRealtimeData() {
   let newData = [];
   try {
     socket = new WebSocket(data?.wsURL + "/options-flow-reader");
-
+    /*
     socket.addEventListener("open", () => {
       const ids = rawData.map(item => item.id);
       sendMessage(JSON.stringify({ ids }));
     });
+    */
 
     socket.addEventListener('message', (event) => {
       previousCallVolume = displayCallVolume ?? 0;
@@ -389,14 +390,14 @@ async function websocketRealtimeData() {
             newData.forEach((item) => {
               item.dte = daysLeft(item?.date_expiration);
             });
-            rawData = [...newData, ...rawData];
+            rawData = newData;
           }
 
           if (ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
             shouldLoadWorker.set(true);
           }
           if (previousCallVolume !== displayCallVolume && !muted && audio) {
-            audio.play();
+            audio?.play();
           }
         } catch (e) {
           console.error('Error processing WebSocket message:', e);
@@ -463,11 +464,10 @@ function daysLeft(targetDate) {
   });
 
     isLoaded = true;
-    /*
+  
     if ($isOpen) {
       await websocketRealtimeData();
     }
-      */
 
     
 

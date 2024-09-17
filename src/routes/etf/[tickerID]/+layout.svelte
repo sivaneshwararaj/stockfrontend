@@ -314,12 +314,12 @@ async function fetchPortfolio()
       //const endTime = currentDateTime.set({ hour: 22, minute: 0 });
       // Check if it's not a weekend and the current time is within the specified range
   
-      /*
+    
       if ($isOpen) //&& currentDateTime > startTime && currentDateTime < endTime
       {
         await websocketRealtimeData()
       }
-      */
+    
   
       // Add a scroll event listener
       window.addEventListener('scroll', handleScroll);
