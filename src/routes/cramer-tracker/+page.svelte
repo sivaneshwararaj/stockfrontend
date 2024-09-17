@@ -38,7 +38,7 @@
     })
     
     
-    $: charNumber = $screenWidth < 640 ? 15 : 40;
+    $: charNumber = 20;
     
           
     </script>
