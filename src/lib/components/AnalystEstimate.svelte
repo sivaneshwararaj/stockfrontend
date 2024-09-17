@@ -24,7 +24,7 @@
 
   function findIndex(data) {
     const currentYear = new Date().getFullYear();
-    return data.findIndex((item) => item.date >= currentYear && item.revenue === null);
+    return data.findIndex((item) => item.date > currentYear && item.revenue === null);
   }
 
   function changeStatement(event) {
@@ -63,8 +63,8 @@
     if (filteredData) {
       filteredData.forEach((item, index) => {
         const date = item.date?.toString().slice(-2);
-        const isBeforeStopIndex = index < stopIndex - 1;
-        const isAfterStartIndex = index >= stopIndex - 2;
+        const isBeforeStopIndex = index < stopIndex;
+        const isAfterStartIndex = index >= stopIndex -2;
         dates.push(`FY${date}`);
         switch (displayData) {
           case "Revenue":
@@ -97,6 +97,7 @@
         }
       });
     }
+
     try {
       const lastValue = valueList[stopIndex - 2];
       avgList[stopIndex - 2] = lastValue;
