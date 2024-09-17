@@ -315,8 +315,8 @@
           {#if analystEstimateList?.length !== 0}
             <select class="mt-5 mb-5 sm:mb-0 sm:mt-3 ml-1 w-44 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
               <option disabled>Choose Fundamental Data</option>
-              <option disabled={deactivateContent} value="EPS"> EPS </option>
-              <option disabled={deactivateContent} value="EBITDA"> EBITDA </option>
+              <option disabled={deactivateContent} value="EPS">{deactivateContent ? 'EPS (Pro Only)' : 'EPS'}</option>
+              <option disabled={deactivateContent} value="EBITDA">{deactivateContent ? 'EBITDA (Pro Only)' : 'EBITDA'}</option>
               <option value="Net Income"> Net Income </option>
               <option value="Revenue" selected>Revenue</option>
             </select>
