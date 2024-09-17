@@ -69,17 +69,11 @@
                   class="absolute inset-0 rounded-lg bg-purple-600"
                 ></div>
             {/if}
-            {#if data?.user?.tier !== 'Pro' && i === 1}
-            <a href='/pricing' class="relative text-sm block font-medium duration-200 text-white">
-              {item.title}
-              <svg class="inline-block ml-1 -mt-0.5 w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-            </a>
-            {:else}
             <span
               class="relative text-sm block font-medium duration-200 text-white">
                 {item.title}
+                <svg class="{data?.user?.tier !== 'Pro' && i ===1 ? '' : 'hidden'} inline-block ml-1 -mt-0.5 w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
             </span>
-            {/if}
           </button>
         {/each}
     </div>
@@ -92,11 +86,19 @@
       <div class="flex mt-5 h-auto">
       
         <div class="{activeIdx === 0 ? 'bg-[#10DB06]' : 'bg-[#FF2F1F]'} w-full max-w-[3px] rounded-l-xl" />
-        <span class="text-gray-100 ml-3 text-[1rem] ">
+        <span class="text-gray-100 ml-3 text-[1rem] w-full">
           {#if activeIdx === 0}
           <p class="pr-1">{rawData?.bullSays}</p>
           {:else}
-          <p class="pr-1">{rawData?.bearSays}</p>
+
+          {#if data?.user?.tier === 'Pro'}
+            <p class="pr-1">{rawData?.bearSays}</p>
+           {:else}
+          <div class="shadow-lg shadow-bg-[#000] bg-[#111112] sm:bg-opacity-[0.5] text-sm sm:text-[1rem] rounded-md w-full p-4 min-h-24 mt-4 text-white m-auto flex justify-center items-center text-center font-semibold">
+              <svg class="mr-1.5 w-5 h-5 inline-block"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+              Unlock content with <a class="inline-block ml-2 text-blue-400 hover:sm:text-white" href="/pricing">Pro Subscription</a>
+            </div>
+          {/if}
           
           {/if}
         </span>
