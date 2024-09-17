@@ -8,10 +8,25 @@
   let changeNetIncome = 0;
   let changeEBITDA = 0;
   let changeEPS = 0;
-  function findIndex(data) {
-    const currentYear = new Date().getFullYear();
-    return data?.findIndex((item) => item?.date > currentYear && item?.revenue === null);
+
+function findIndex(data) {
+  const currentYear = new Date().getFullYear();
+  
+  // Find the index where the item's date is greater than the current year and revenue is null
+  const index = data?.findIndex((item) => item?.date > currentYear && item?.revenue === null);
+  
+  // If index is found and there is at least one item in the data for the current year with non-null revenue
+  if (index !== -1) {
+    const hasNonNullRevenue = data?.some((item) => item?.date === currentYear && item?.revenue !== null);
+    
+    // Add +1 to the index if the condition is met
+    return hasNonNullRevenue ? index + 1 : index;
   }
+  
+  return index; // Return the index or -1 if not found
+}
+
+
 
  const calculateChange = (current, previous) => {
     if (previous !== undefined && previous !== 0) {
@@ -26,6 +41,7 @@
 
 if (data?.getAnalystEstimate?.length !== 0) {
     index = findIndex(data?.getAnalystEstimate);
+
 
     // Calculate changes using the helper function
     const estimatedRevenueAvg = data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg;

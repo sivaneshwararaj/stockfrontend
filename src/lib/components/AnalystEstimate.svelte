@@ -22,10 +22,19 @@
 
   let displayData = "Revenue";
 
-  function findIndex(data) {
-    const currentYear = new Date().getFullYear();
-    return data.findIndex((item) => item.date > currentYear && item.revenue === null);
-  }
+function findIndex(data) {
+  const currentYear = new Date().getFullYear();
+  
+  // Find the index where the item's date is greater than or equal to the current year and revenue is null
+  const index = data.findIndex((item) => item.date > currentYear && item.revenue === null);
+  
+  // Check if there is any item for the current year with non-null revenue
+  const hasNonNullRevenue = data.some((item) => item.date === currentYear && item.revenue !== null);
+  
+  // Add +1 to the index if the condition is met
+  return index !== -1 && hasNonNullRevenue ? index + 1 : index;
+}
+
 
   function changeStatement(event) {
     displayData = event.target.value;
@@ -63,35 +72,33 @@
     if (filteredData) {
       filteredData.forEach((item, index) => {
         const date = item.date?.toString().slice(-2);
-        const isBeforeStopIndex = index < stopIndex;
-        const isAfterStartIndex = index >= stopIndex -2;
+        const isAfterStartIndex = stopIndex <= index+1;
         dates.push(`FY${date}`);
         switch (displayData) {
           case "Revenue":
-            valueList.push(isBeforeStopIndex ? item.revenue : null);
+            valueList.push(item.revenue);
             avgList.push(isAfterStartIndex ? item.estimatedRevenueAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedRevenueLow : null);
             highList.push(isAfterStartIndex ? item.estimatedRevenueHigh : null);
             break;
           case "Net Income":
-            valueList.push(isBeforeStopIndex ? item.netIncome : null);
+            valueList.push(item.netIncome);
             avgList.push(isAfterStartIndex ? item.estimatedNetIncomeAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedNetIncomeLow : null);
             highList.push(isAfterStartIndex ? item.estimatedNetIncomeHigh : null);
             break;
           case "EBITDA":
-            valueList.push(isBeforeStopIndex ? item.ebitda : null);
+            valueList.push(item.ebitda);
             avgList.push(isAfterStartIndex ? item.estimatedEbitdaAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedEbitdaLow : null);
             highList.push(isAfterStartIndex ? item.estimatedEbitdaHigh : null);
             break;
           case "EPS":
-            valueList.push(isBeforeStopIndex ? item.eps : null);
+            valueList.push(item.eps);
             avgList.push(isAfterStartIndex ? item.estimatedEpsAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedEpsLow : null);
             highList.push(isAfterStartIndex ? item.estimatedEpsHigh : null);
             break;
-
           default:
             break;
         }
