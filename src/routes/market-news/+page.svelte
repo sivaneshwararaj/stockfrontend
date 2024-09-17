@@ -1,9 +1,8 @@
 <script lang="ts">
-import { formatDistanceToNow } from 'date-fns';
-import { formatInTimeZone } from 'date-fns-tz'
 
-import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
+
 import { numberOfUnreadNotification } from '$lib/store';
+import { onMount } from 'svelte';
 
 export let data;
 
@@ -37,17 +36,22 @@ const inputDate = new Date(dateString);
 };
 
 
-async function infiniteHandler({ detail: { loaded, complete } }) 
-{
-  if (news?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = news?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-      news = [...news, ...newArticles];
-      loaded();
+ async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && news?.length !== rawData?.length) {
+        const nextIndex = news?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        news = [...news, ...filteredNewResults];
     }
-}
+  }
+
+  onMount(async () => {
+    window.addEventListener('scroll', handleScroll);
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
+      };
+  })
 
 let videoId = null;
 
@@ -117,7 +121,7 @@ function checkIfYoutubeVideo(link) {
                             {:else}
                                 <a href={item.url} target="_blank">
                                 <div class="h-48 sm:h-60 m-auto border border-slate-800 rounded-none sm:rounded-lg ">
-                                    <img src={item?.image} class="w-screen sm:w-full h-48 sm:h-60 rounded-none sm:rounded-t-lg" alt="news image" loading="lazy">
+                                    <img src={item?.image} class="w-screen sm:w-full object-cover h-48 sm:h-60 rounded-none sm:rounded-t-lg" alt="news image" loading="lazy">
                                 </div>
                                 </a>
                             {/if}
@@ -137,15 +141,13 @@ function checkIfYoutubeVideo(link) {
                                     {item?.title?.length > 120 ? item?.title?.slice(0,120) +'...' : item?.title}
                                   </a>
                                   <p class="text-white text-sm mt-2">
-                                    {item?.text.length > 100 ? item?.text.slice(0,100) + "..." : item?.text}
+                                    {item?.text?.length > 100 ? item?.text?.slice(0,100) + "..." : item?.text}
                                   </p>
                               </div>
 
                         </div>
 
                           {/each}
-
-                          <InfiniteLoading on:infinite={infiniteHandler} />
 
   
                       

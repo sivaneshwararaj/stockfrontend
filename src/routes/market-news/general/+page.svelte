@@ -1,50 +1,81 @@
 <script lang="ts">
-    import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
-    import { numberOfUnreadNotification } from '$lib/store';
-    import { formatDate } from '$lib/utils';
-    
-    export let data;
-    
-    
-    let rawData = data?.getGeneralNews;
-    let news = rawData.slice(0,15) ?? [];
-    
-    
-    async function infiniteHandler({ detail: { loaded, complete } }) 
-    {
-      if (news?.length === rawData?.length) {
-          complete();
-        } else {
-          const nextIndex = news?.length;
-          const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-          news = [...news, ...newArticles];
-          loaded();
-        }
-    }
 
-    
-    let videoId = null;
-    
-      
-    function checkIfYoutubeVideo(link) {
-    
-      const url = new URL(link);
-      if (url.hostname === "www.youtube.com") {
-      const searchParams = url.searchParams;
-      searchParams.delete('t'); // Remove the "t" parameter
-      const videoIdMatch = url.search.match(/v=([^&]+)/);
-    
-      if (videoIdMatch) {
-        return videoIdMatch[1];
-      }
-      } else {
-        return null;
-      }
-    
+
+import { numberOfUnreadNotification } from '$lib/store';
+import { onMount } from 'svelte';
+
+export let data;
+
+
+let rawData = data?.getGeneralNews;
+let news = rawData.slice(0,15) ?? [];
+
+const formatDate = (dateString) => {
+// Create a date object for the input dateString
+const inputDate = new Date(dateString);
+  
+  // Create a date object for the current time in New York City
+  const nycTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
+  const currentNYCDate = new Date(nycTime);
+  
+  // Calculate the difference in milliseconds
+  const difference = inputDate.getTime() - currentNYCDate.getTime();
+  
+  // Convert the difference to minutes
+  const minutes = Math.abs(Math.round(difference / (1000 * 60)));
+  
+  if (minutes < 60) {
+    return `${minutes} minutes`;
+  } else if (minutes < 1440) {
+    const hours = Math.round(minutes / 60);
+    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+  } else {
+    const days = Math.round(minutes / 1440);
+    return `${days} day${days !== 1 ? 's' : ''}`;
+  }
+};
+
+
+ async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && news?.length !== rawData?.length) {
+        const nextIndex = news?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        news = [...news, ...filteredNewResults];
     }
-    
-    
-    </script>
+  }
+
+  onMount(async () => {
+    window.addEventListener('scroll', handleScroll);
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
+      };
+  })
+
+let videoId = null;
+
+
+function checkIfYoutubeVideo(link) {
+
+  const url = new URL(link);
+  if (url.hostname === "www.youtube.com") {
+  const searchParams = url.searchParams;
+  searchParams?.delete('t'); // Remove the "t" parameter
+  const videoIdMatch = url?.search?.match(/v=([^&]+)/);
+
+  if (videoIdMatch) {
+    return videoIdMatch[1];
+  }
+  } else {
+    return null;
+  }
+
+}
+
+
+</script>
+
     
 <svelte:head>
 
@@ -92,7 +123,7 @@
                             {:else}
                                 <a href={item?.url} target="_blank">
                                 <div class="h-48 sm:h-60 m-auto border border-slate-800 rounded-none sm:rounded-lg ">
-                                    <img src={item?.image} class="w-screen sm:w-full h-48 sm:h-60 rounded-none sm:rounded-t-lg" alt="news image" loading="lazy">
+                                    <img src={item?.image} class="w-screen sm:w-full object-cover h-48 sm:h-60 rounded-none sm:rounded-t-lg" alt="news image" loading="lazy">
                                 </div>
                                 </a>
                             {/if}
@@ -114,7 +145,6 @@
 
                           {/each}
 
-                          <InfiniteLoading on:infinite={infiniteHandler} />
 
   
                       

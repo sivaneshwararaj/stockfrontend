@@ -3,10 +3,37 @@ import logo from '$lib/images/news_logo.png'
 import ScrollToTop from '$lib/components/ScrollToTop.svelte';
 import ArrowLogo from "lucide-svelte/icons/move-up-right";
 import { goto } from '$app/navigation';
+import { page } from '$app/stores';
 
 export let data;
-let displaySection = 'stock'
 
+
+  function handleMode(i) {
+    activeIdx = i;
+    if(activeIdx === 0) {
+      goto("/market-news")
+    } else if (activeIdx === 1) {
+      goto("/market-news/general")
+    }
+  }
+  
+  const tabs = [
+      {
+        title: "Stock",
+      },
+      {
+        title: "General",
+      },
+    ];
+  
+let activeIdx = 0;
+
+  // Subscribe to the $page store to reactively update the activeIdx based on the URL
+  $: if ($page.url.pathname === '/market-news') {
+    activeIdx = 0;
+  } else if ($page.url.pathname.startsWith('/market-news/general')) {
+    activeIdx = 1;
+  } 
 
 </script>
 
@@ -86,22 +113,25 @@ let displaySection = 'stock'
   
 
 
-                <div class="w-full mb-2" >
-                  <ul class="pr-4 sm:pr-0 w-full font-medium flex flex-row items-center bg-[#09090B] overflow-x-scroll no-scrollbar space-x-3 rtl:space-x-reverse py-2">
-                    <li class="cursor-pointer flex flex-col items-center text-xl">
-                      <a href='/market-news' on:click={() => displaySection = 'stock'} class="px-3 font-medium text-gray-400 sm:hover:text-white {displaySection === 'stock' ? 'text-white ' : 'bg-[#09090B]'}" >
-                        Stock
-                      </a>
-                      <div class="{displaySection === 'stock' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4.2rem]" />
-                    </li>
-                    <li class="cursor-pointer flex flex-col items-center text-xl">
-                      <a href='/market-news/general' on:click={() => displaySection = 'general'} class="px-3 font-medium text-gray-400 sm:hover:text-white {displaySection === 'general' ? 'text-white ' : 'bg-[#09090B]'}" >
-                        General
-                      </a>
-                      <div class="{displaySection === 'general' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4.2rem]" />
-                    </li>
-                  </ul>
-                </div>
+                <div class="bg-[#313131] w-fit relative mr-auto flex flex-wrap items-center justify-center rounded sm:rounded-lg p-1 -mt-3">
+                    {#each tabs as item, i}
+                    <button
+                        on:click={() => handleMode(i)}
+                        class="group relative z-[1] rounded-full px-6 py-1 {activeIdx === i
+                        ? 'z-0'
+                        : ''} "
+                    >
+                        {#if activeIdx === i}
+                            <div
+                            class="absolute inset-0 rounded-lg bg-purple-600"
+                            ></div>
+                        {/if}
+                        <span class="relative text-[1rem] sm:text-lg block font-semibold duration-200 text-white">
+                            {item.title}
+                        </span>
+                    </button>
+                    {/each}
+                    </div>
 
 
 
@@ -121,7 +151,7 @@ let displaySection = 'stock'
                   <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                       <div class="w-full flex justify-between items-center p-3 mt-3">
                       <h2 class="text-start text-xl font-semibold text-white ml-3">
-                      Pro Subscription
+                      Pro Subscription 🔥
                       </h2>
                       <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                       </div>
@@ -132,30 +162,44 @@ let displaySection = 'stock'
               </div>
               {/if}
 
-              <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+              <div on:click={() => goto('/earnings-calendar')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                    <div class="w-full flex justify-between items-center p-3 mt-3">
+                    <h2 class="text-start text-xl font-semibold text-white ml-3">
+                    Earnings Calendar 🌟
+                    </h2>
+                    <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                    </div>
+                    <span class="text-white p-3 ml-3 mr-3">
+                        Get the latest Earnings of companies
+                    </span>
+                </div>
+            </div>
+
+              <div on:click={() => goto('/dividends-calendar')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                   <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                       <div class="w-full flex justify-between items-center p-3 mt-3">
                       <h2 class="text-start text-xl font-semibold text-white ml-3">
-                      Wallstreet Analyst
+                      Dividend Calendar 💸
                       </h2>
                       <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                       </div>
                       <span class="text-white p-3 ml-3 mr-3">
-                          Get the latest top Wall Street analyst ratings.
+                          Stay updated on upcoming Dividends in the stock market.
                       </span>
                   </div>
               </div>
 
-              <div on:click={() => goto('/politicians')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+              <div on:click={() => goto('/economic-calendar')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
                   <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
                       <div class="w-full flex justify-between items-center p-3 mt-3">
                       <h2 class="text-start text-xl font-semibold text-white ml-3">
-                      Congress Trading
+                      Economic Events 🌍
                       </h2>
                       <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
                       </div>
                       <span class="text-white p-3 ml-3 mr-3">
-                          Get the latest top Congress trading insights.
+                          Stay updated on upcoming Economic Events worldwide.
                       </span>
                   </div>
               </div>
