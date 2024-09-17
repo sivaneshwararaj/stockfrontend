@@ -96,12 +96,12 @@
                             </td>
 
         
-                            <td class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >= 0 ? 'text-[#10DB06]' : 'text-[#FF2F1F]'} text-end">
-                                {item?.changesPercentage}
+                            <td class="text-sm sm:text-[1rem] whitespace-nowrap {(item?.changesPercentage !== null && item?.changesPercentage >= 0) ? 'text-[#10DB06]' : item?.changesPercentage < 0 ? 'text-[#FF2F1F]' : 'text-white'} text-end">
+                                {item?.changesPercentage !== null ? item?.changesPercentage : '-'}
                               </td>
 
                               <td class="text-sm sm:text-[1rem] text-white text-end">
-                                {abbreviateNumber(item?.volume)}
+                                {item?.volume !== null ? abbreviateNumber(item?.volume) : '-'}
                               </td>
 
                               <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
