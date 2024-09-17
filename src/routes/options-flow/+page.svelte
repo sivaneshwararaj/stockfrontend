@@ -362,7 +362,7 @@ function handleViewData(optionData) {
   openPopup?.dispatchEvent(new MouseEvent('click'))
 
 }
-
+/*
 function sendMessage(message) {
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(message);
@@ -370,6 +370,8 @@ function sendMessage(message) {
     console.error("WebSocket is not open. Unable to send message.");
   }
 }
+*/
+
 async function websocketRealtimeData() {
   let newData = [];
   try {
@@ -482,7 +484,7 @@ onDestroy(async() => {
       console.log(e);
     }
     if (audio) {
-      audio.pause();
+      audio?.pause();
       audio = null;
     }
   
