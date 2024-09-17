@@ -37,7 +37,7 @@ $: {
     <!--Start Content-->
     <div class="w-auto lg:w-full p-1 flex flex-col m-auto">
 
-        <div class="flex flex-col items-center w-full mb-6">
+        <div class="flex flex-col items-center w-full mb-3">
             <div class="flex flex-row justify-start mr-auto items-center">
             <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
             <div class="flex flex-row items-center">
@@ -54,7 +54,7 @@ $: {
             </div>
         </div>
 
-        <div class="text-white text-[1rem]">
+        <div class="text-white text-[1rem] pl-1">
             {$displayCompanyName} is scheduled to release its earnings on  {new Date(rawData?.date ?? null)?.toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',

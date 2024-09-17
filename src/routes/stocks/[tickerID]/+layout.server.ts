@@ -1,7 +1,3 @@
-export const config = {
-  runtime: "nodejs20.x",
-};
-
 const cleanString = (input) => {
   const substringsToRemove = [
     "Depositary",
@@ -79,6 +75,7 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     "/one-day-price",
     "/next-earnings",
     "/earnings-surprise",
+    "/dividend-announcement",
   ];
 
   const promises = [
@@ -101,6 +98,7 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     getOneDayPrice,
     getNextEarnings,
     getEarningsSurprise,
+    getDividendAnnouncement,
     getUserWatchlist,
     getCommunitySentiment,
   ] = await Promise.all(promises);
@@ -118,6 +116,7 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     getOneDayPrice,
     getNextEarnings,
     getEarningsSurprise,
+    getDividendAnnouncement,
     getUserWatchlist,
     getCommunitySentiment,
     companyName: cleanString(getStockDeck?.at(0)?.companyName),
