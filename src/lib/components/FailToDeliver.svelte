@@ -16,13 +16,12 @@
     let isLoaded = false;
 
   
-  
     let rawData = [];
     let optionsData;
     let avgFailToDeliver;
     let lowestPrice;
     let highestPrice;
-  
+    let weightedFTD;
 
 
 function findLowestAndHighestPrice(data, lastDateStr) {
@@ -212,7 +211,10 @@ function findLowestAndHighestPrice(data, lastDateStr) {
       ];
       Promise.all(asyncFunctions)
           .then((results) => {
-            optionsData = getPlotOptions()
+            if(rawData?.length !== 0) {
+              weightedFTD = ((rawData?.slice(-1)?.at(0)?.failToDeliver/data?.getStockQuote?.avgVolume) * 100)?.toFixed(2);
+              optionsData = getPlotOptions()
+            }
           })
           .catch((error) => {
             console.error('An error occurred:', error);
@@ -222,19 +224,7 @@ function findLowestAndHighestPrice(data, lastDateStr) {
   }
   }
   
-  let charNumber = 20;
-  
-  $: {
-  if($screenWidth < 640)
-  {
-    charNumber = 20;
-  }
-  else {
-    charNumber =40;
-  }
-  }
-    
-  
+  let charNumber = $screenWidth < 640 ? 20 : 40;
   
   </script>
     
@@ -330,7 +320,13 @@ function findLowestAndHighestPrice(data, lastDateStr) {
           </table>
           </div>
   
-  
+          <div class="w-full flex flex-col items-start mt-3">
+            <div class="text-white text-[1rem] mt-2 mb-2 w-full">
+                Using the latest FTD shares data, we calculate the monthly average volume ratio to determine that less than
+                <strong>{weightedFTD < 0.01 ? '< 0.01' : weightedFTD}%</strong> of shares failed to deliver.
+            </div>
+        </div>
+
         
         {/if}
   
