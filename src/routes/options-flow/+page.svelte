@@ -550,7 +550,7 @@ function calculateStats(data) {
         return acc;
       }, { callVolumeSum: 0, putVolumeSum: 0, bullishCount: 0, bearishCount: 0, neutralCount: 0 });
 
-      if (bullishCount >= bearishCount) {
+      if (bullishCount > bearishCount) {
         flowSentiment = 'Bullish';
       } else if (bullishCount < bearishCount) {
         flowSentiment = 'Bearish';
