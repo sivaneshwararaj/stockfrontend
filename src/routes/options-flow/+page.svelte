@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { screenWidth, numberOfUnreadNotification, etfTicker, stockTicker, isOpen } from '$lib/store';
+  import {screenWidth, numberOfUnreadNotification, etfTicker, stockTicker, isOpen } from '$lib/store';
   import notifySound from '$lib/audio/options-flow-reader.mp3';
   //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import { abbreviateNumber,cn } from '$lib/utils';
@@ -47,7 +47,6 @@
       month: "short",
       year: "numeric"
     });
-  
   let selectedDate: DateValue | undefined = undefined;
 
 const allRules = {
@@ -651,6 +650,52 @@ function calculateStats(data) {
   }
   
   
+const getHistoricalFlow = async () => {
+  // Create a delay using setTimeout wrapped in a Promise
+  isLoaded = false;
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // Make the POST request after the delay
+   const convertDate = new Date(df.format(selectedDate?.toDate()))
+  const year = convertDate?.getFullYear();
+  const month = String(convertDate?.getMonth() + 1).padStart(2, '0');
+  const day = String(convertDate?.getDate()).padStart(2, '0');
+
+  console.log(`${year}-${month}-${day}`)    
+  const postData = { 'selectedDate': `${year}-${month}-${day}`}  
+
+  try {
+    const response = await fetch('/api/options-historical-flow', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    });
+
+    rawData = await response?.json();
+    console.log(rawData)
+    if(rawData?.length !== 0) {
+      rawData?.forEach((item) => {
+      item.dte = daysLeft(item?.date_expiration);
+      });
+      shouldLoadWorker.set(true);
+    } else {
+
+      displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
+      displayedData = [];
+      calculateStats(displayedData);
+    }
+  } catch (error) {
+    console.error("Error fetching historical flow:", error);
+    rawData = [];
+  } finally {
+    isLoaded = true;
+  }
+};
+
+
+
   function handleInput(event) {
     filterQuery = event.target.value;
 
@@ -788,25 +833,7 @@ $: {
                 <div class="sm:ml-auto w-full sm:w-fit pt-5">
                     <div class="relative flex flex-col sm:flex-row items-center">
 
-                     <Popover.Root>
-                        <Popover.Trigger asChild let:builder>
-                          <Button
-                            class={cn(
-                              "w-fit mr-3 py-2 bg-[#000] sm:hover:bg-[#000] sm:hover:text-white text-white justify-start text-left font-normal border-none rounded-md",
-                              !selectedDate && "text-gray-300"
-                            )}
-                            builders={[builder]}
-                          >
-                            <CalendarIcon class="mr-2 h-4 w-4" />
-                            {selectedDate ? df.format(selectedDate?.toDate()) : "Pick a date"}
-                          </Button>
-                        </Popover.Trigger>
-                        <Popover.Content class="w-auto p-0 border-gray-500">
-                          <Calendar class="bg-[#09090B] text-white" bind:value={selectedDate} initialFocus />
-                        </Popover.Content>
-                      </Popover.Root>
-
-
+      
                         <div class="relative w-full sm:w-fit pl-3  sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#313131] rounded-md border border-gray-600">
                           <label class="flex flex-row items-center ">
                             <input 
@@ -826,6 +853,26 @@ $: {
                           </span>
                           {/if}
                         </div>
+
+                      <Popover.Root>
+                        <Popover.Trigger asChild let:builder>
+                          <Button
+                            class={cn(
+                              "w-full sm:w-[160px] truncate sm:mr-3 py-3 bg-[#000] sm:hover:bg-[#000] sm:hover:text-white text-white justify-center sm:justify-start text-center sm:text-left font-normal border-none rounded-md",
+                              !selectedDate && "text-gray-300"
+                            )}
+                            builders={[builder]}
+                          >
+                            <CalendarIcon class="mr-2 h-4 w-4" />
+                            {selectedDate ? df.format(selectedDate?.toDate()) : "Pick a date"}
+                          </Button>
+                        </Popover.Trigger>
+                        <Popover.Content class="w-auto p-0 border-gray-500">
+                          <Calendar class="bg-[#09090B] text-white" bind:value={selectedDate} initialFocus onValueChange={getHistoricalFlow}/>
+                        </Popover.Content>
+                      </Popover.Root>
+
+
                 </div>
               </div>
 

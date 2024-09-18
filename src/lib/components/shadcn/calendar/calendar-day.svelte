@@ -21,7 +21,7 @@
 		"h-9 w-9 p-0 font-normal ",
 		"[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground",
 		// Selected
-		"data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground data-[selected]:opacity-100",
+		"data-[selected]:bg-[#262626] data-[selected]:text-white data-[selected]:hover:bg-[#262626] data-[selected]:hover:text-white data-[selected]:focus:bg-[#262626] data-[selected]:focus:text-white data-[selected]:opacity-100",
 		// Disabled
 		"data-[disabled]:text-muted-foreground data-[disabled]:opacity-50",
 		// Unavailable
