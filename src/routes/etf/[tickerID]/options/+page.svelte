@@ -142,6 +142,10 @@ function normalizer(value) {
       displayTimePeriod = event.target.value;
     }
     
+  function changeVolumeOI(event)
+    {
+      displayData = event.target.value;
+    }
     
     
 function plotData(callData, putData) {
@@ -639,7 +643,7 @@ $: {
                                         <option value="oneYear">1 Year</option>
                                     </select>
 
-                                    <select class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]">
+                                    <select class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]" on:change={changeVolumeOI}>
                                       <option disabled>Choose a category</option>
                                       <option value="volume" selected>Volume</option>
                                       <option value="openInterest">Open Interest</option>
@@ -963,7 +967,7 @@ $: {
 
 <!-- Put this part before </body> tag -->
 
-<dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer ">
+<dialog id="optionDetailsDesktopModal" class="modal modal-bottom sm:modal-middle cursor-pointer bg-[#fff] bg-opacity-[0.02]">
   <div class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto">
     <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
       <button class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white">
