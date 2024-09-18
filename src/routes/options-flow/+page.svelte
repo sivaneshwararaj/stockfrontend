@@ -3,11 +3,19 @@
   import { screenWidth, numberOfUnreadNotification, etfTicker, stockTicker, isOpen } from '$lib/store';
   import notifySound from '$lib/audio/options-flow-reader.mp3';
   //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
-  import { abbreviateNumber } from '$lib/utils';
+  import { abbreviateNumber,cn } from '$lib/utils';
   import { onMount, onDestroy } from 'svelte';
   import toast from 'svelte-french-toast';
-    import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import {
+    DateFormatter,
+    type DateValue,
+  } from "@internationalized/date";
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import * as Popover from "$lib/components/shadcn/popover/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
+  import { Calendar } from "$lib/components/shadcn/calendar/index.js";
+  import CalendarIcon from "lucide-svelte/icons/calendar";
+  
   import VirtualList from 'svelte-tiny-virtual-list';
   import { writable } from 'svelte/store';
 
@@ -34,6 +42,13 @@
   let showFilters = true;
   let filteredRows = [];
   let shouldLoadWorker = writable(false);
+  const df = new DateFormatter("en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+  
+  let selectedDate: DateValue | undefined = undefined;
 
 const allRules = {
   volume: { label: 'Volume', step: ['100K','10K','1K'],  defaultCondition: 'over', defaultValue: 'any' },
@@ -737,7 +752,7 @@ $: {
       
 
 
-         <div class="rounded-lg border border-gray-700 bg-[#262626] p-2">
+         <div class="rounded-md border border-gray-700 bg-[#262626] p-2">
               <div class="flex flex-col sm:flex-row items-center pt-3 sm:pt-1 pb-3 sm:border-b sm:border-gray-600">
                 <div class="flex flex-row items-center justify-center sm:justify-start">
                   <label data-tip="Audio Preference" on:click={() => muted = !muted} class="xl:tooltip xl:tooltip-bottom flex flex-col items-center mr-3 cursor-pointer">
@@ -772,12 +787,32 @@ $: {
 
                 <div class="sm:ml-auto w-full sm:w-fit pt-5">
                     <div class="relative flex flex-col sm:flex-row items-center">
-                        <div class="relative w-full sm:w-fit pl-3 py-2 sm:py-1.5 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#313131] rounded-lg border border-gray-600">
+
+                     <Popover.Root>
+                        <Popover.Trigger asChild let:builder>
+                          <Button
+                            class={cn(
+                              "w-fit mr-3 py-2 bg-[#000] sm:hover:bg-[#000] sm:hover:text-white text-white justify-start text-left font-normal border-none rounded-md",
+                              !selectedDate && "text-gray-300"
+                            )}
+                            builders={[builder]}
+                          >
+                            <CalendarIcon class="mr-2 h-4 w-4" />
+                            {selectedDate ? df.format(selectedDate?.toDate()) : "Pick a date"}
+                          </Button>
+                        </Popover.Trigger>
+                        <Popover.Content class="w-auto p-0 border-gray-500">
+                          <Calendar class="bg-[#09090B] text-white" bind:value={selectedDate} initialFocus />
+                        </Popover.Content>
+                      </Popover.Root>
+
+
+                        <div class="relative w-full sm:w-fit pl-3  sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#313131] rounded-md border border-gray-600">
                           <label class="flex flex-row items-center ">
                             <input 
                             id="modal-search"
                               type="search" 
-                              class="text-white sm:ml-2 text-[1rem] placeholder-gray-300 border-transparent focus:border-transparent focus:ring-0 flex items-center justify-center w-full px-0 py-1 bg-inherit"
+                              class="text-white sm:ml-2 text-[1rem] placeholder-gray-300 border-transparent focus:border-transparent focus:ring-0 flex items-center justify-center w-full px-0 py-1.5 bg-inherit"
                               placeholder="Find by Symbol"
                               bind:value={filterQuery}
                               on:input={debouncedHandleInput}
@@ -842,7 +877,7 @@ $: {
                             <div on:click={() => ruleName = row?.rule}>
                               <DropdownMenu.Root>
                                 <DropdownMenu.Trigger asChild let:builder>
-                                  <Button builders={[builder]}  class="bg-[#000] h-[40px] flex flex-row justify-between items-center w-[150px] xs:w-[140px] sm:w-[150px] px-3 text-white rounded-lg truncate">
+                                  <Button builders={[builder]}  class="bg-[#000] h-[40px] flex flex-row justify-between items-center w-[150px] xs:w-[140px] sm:w-[150px] px-3 text-white rounded-md truncate">
                                     <span class="truncate ml-2 text-sm sm:text-[1rem]">
                                       {#if valueMappings[row?.rule] === 'any'} 
                                       Any
@@ -931,7 +966,7 @@ $: {
 
               
               <!--Start Flow Sentiment-->  
-              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+              <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
                   <div class="flex flex-col items-start">
                       <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Flow Sentiment</span>
                       <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : flowSentiment === 'Bearish' ? 'text-[#FC2120]' : flowSentiment === 'Neutral' ? 'text-[#FBCE3C]' : 'text-white'}">{flowSentiment}</span>
@@ -940,7 +975,7 @@ $: {
               </div>
               <!--End Flow Sentiment-->
                <!--Start Put/Call-->  
-               <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+               <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
                 <div class="flex flex-col items-start">
                     <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Put/Call</span>
                     <span class="text-start text-[1rem] font-semibold text-white">
@@ -967,7 +1002,7 @@ $: {
             </div>
             <!--End Put/Call-->
              <!--Start Call Flow-->  
-             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Call Flow</span>
                   <span class="text-start text-[1rem] font-semibold text-white">
@@ -996,7 +1031,7 @@ $: {
             </div>
             <!--End Call Flow-->
             <!--Start Put Flow-->  
-            <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+            <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Put Flow</span>
                   <span class="text-start text-[1rem] font-semibold text-white">
@@ -1027,7 +1062,7 @@ $: {
             <!--
             {#if showMore}
 
-            <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+            <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Most Traded Option</span>
                   <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
@@ -1042,7 +1077,7 @@ $: {
               </div>
             </div>
 
-             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Premium</span>
                   <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
@@ -1058,7 +1093,7 @@ $: {
             </div>
 
             
-            <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+            <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Volume</span>
                   <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
@@ -1074,7 +1109,7 @@ $: {
             </div>
 
             
-             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-lg h-20">
+             <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
               <div class="flex flex-col items-start">
                   <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Highest Open Interest</span>
                   <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
@@ -1204,7 +1239,7 @@ $: {
                 </div>
               </div>
               {:else}
-              <div class="text-white text-center p-3 sm:p-5 mb-10 mt-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">      
+              <div class="text-white text-center p-3 sm:p-5 mb-10 mt-5 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">      
                   <svg class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
                   Looks like your taste is one-of-a-kind! No matches found... yet!
               </div>
@@ -1273,7 +1308,7 @@ $: {
               autocomplete="off"
               type="search"
               id="search"
-              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-300 rounded-lg bg-[#404040] border border-blue-500"
+              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-300 rounded-md bg-[#404040] border border-blue-500"
               placeholder="Search {allRows?.length} filters..."
               bind:value={searchTerm}
               />
@@ -1281,7 +1316,7 @@ $: {
       </form>
       <!-- End Search bar-->
 
-      <div class="text-white text-sm bg-[#141417] overflow-y-scroll  pt-3 rounded-lg max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
+      <div class="text-white text-sm bg-[#141417] overflow-y-scroll  pt-3 rounded-md max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]">
 
         <div class="text-white relative">
           
