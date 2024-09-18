@@ -142,6 +142,10 @@ function normalizer(value) {
       displayTimePeriod = event.target.value;
     }
     
+  function changeVolumeOI(event)
+    {
+      displayData = event.target.value;
+    }
     
     
 function plotData(callData, putData) {
@@ -639,7 +643,7 @@ $: {
                                         <option value="oneYear">1 Year</option>
                                     </select>
 
-                                    <select class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]">
+                                    <select class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]" on:change={changeVolumeOI}>
                                       <option disabled>Choose a category</option>
                                       <option value="volume" selected>Volume</option>
                                       <option value="openInterest">Open Interest</option>
