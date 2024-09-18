@@ -21,6 +21,8 @@
     let description = '';
     let website = '-';
     let snippet;
+    let dividendYield = '-';
+    let payoutRatio = '-';
 
 let showFullText = false;
   
@@ -38,6 +40,9 @@ let showFullText = false;
       inceptionDate = new Date(info?.inceptionDate)?.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
       holdingsCount = info?.holdingsCount;
       avgVolume = info?.avgVolume; 
+      dividendYield = typeof data?.getStockDividend?.dividendYield !== 'undefined' ? data?.getStockDividend?.dividendYield?.toFixed(2)+'%' : '-'
+      payoutRatio = typeof data?.getStockDividend?.payoutRatio !== 'undefined' ? data?.getStockDividend?.payoutRatio?.toFixed(2)+'%' : '-'
+
       provider = info?.etfProvider;
       country = info?.domicile ?? '-';
       description = info?.description ?? 'A detailed description of the company is not yet available.';
@@ -124,14 +129,12 @@ let showFullText = false;
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">PE Ratio (ttm)</td>
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.pe?.toFixed(2)}</td>
                 </tr>
-                {#if data?.getStockDividend}
                 <tr class="text-white border-b border-[#27272A]">
                   <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Dividend Yield</td>
-                  <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockDividend?.dividendYield?.toFixed(2)}%</td>
+                  <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{dividendYield}</td>
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Payout Ratio</td>
-                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockDividend?.payoutRatio?.toFixed(2)}%</td>
+                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{payoutRatio}</td>
                 </tr>
-                {/if}
                 <tr class="text-white border-b border-[#27272A]">
                   <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Holdings</td>
                   <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{holdingsCount} Assets</td>

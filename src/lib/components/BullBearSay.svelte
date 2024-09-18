@@ -6,6 +6,23 @@
   
   let rawData = {};
 
+function latestInfoDate(inputDate) {
+    // Convert the input date string to milliseconds since epoch
+    const inputDateMs = Date?.parse(inputDate);
+
+    // Get today's date in milliseconds since epoch
+    const todayMs = Date?.now();
+
+    // Calculate the difference in milliseconds
+    const differenceInMs = todayMs - inputDateMs;
+
+    // Convert milliseconds to days
+    const differenceInDays = Math?.floor(differenceInMs / (1000 * 60 * 60 * 24));
+
+    // Return the difference in days
+    return differenceInDays <=1;
+}
+
   
   function handleMode(i) {
     activeIdx = i;
@@ -81,8 +98,9 @@
 
     <!--End Header-->
       <span class="text-gray-200 text-xs sm:text-[0.915rem] italic mt-6 sm:ml-auto">
+        <label class="{latestInfoDate(rawData?.date) ? '' : 'hidden'} bg-purple-600 mr-2 text-white font-medium not-italic text-xs rounded-lg px-2 py-0.5">New</label>
         Updated {rawData?.date}
-      </span>
+      </span> 
       <div class="flex mt-5 h-auto">
       
         <div class="{activeIdx === 0 ? 'bg-[#10DB06]' : 'bg-[#FF2F1F]'} w-full max-w-[3px] rounded-l-xl" />
