@@ -652,46 +652,53 @@ function calculateStats(data) {
   
 const getHistoricalFlow = async () => {
   // Create a delay using setTimeout wrapped in a Promise
-  isLoaded = false;
-  await new Promise(resolve => setTimeout(resolve, 500));
+  if(data?.user?.tier === 'Pro') {
+    isLoaded = false;
 
-  // Make the POST request after the delay
-   const convertDate = new Date(df.format(selectedDate?.toDate()))
-  const year = convertDate?.getFullYear();
-  const month = String(convertDate?.getMonth() + 1).padStart(2, '0');
-  const day = String(convertDate?.getDate()).padStart(2, '0');
+    displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
+    displayedData = [];
+    calculateStats(displayedData);
 
-  console.log(`${year}-${month}-${day}`)    
-  const postData = { 'selectedDate': `${year}-${month}-${day}`}  
+    await new Promise(resolve => setTimeout(resolve, 300));
 
-  try {
-    const response = await fetch('/api/options-historical-flow', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-    });
+    // Make the POST request after the delay
+    const convertDate = new Date(df.format(selectedDate?.toDate()))
+    const year = convertDate?.getFullYear();
+    const month = String(convertDate?.getMonth() + 1).padStart(2, '0');
+    const day = String(convertDate?.getDate()).padStart(2, '0');
+    
+    const postData = { 'selectedDate': `${year}-${month}-${day}`}  
 
-    rawData = await response?.json();
-    console.log(rawData)
-    if(rawData?.length !== 0) {
-      rawData?.forEach((item) => {
-      item.dte = daysLeft(item?.date_expiration);
+      try {
+      const response = await fetch('/api/options-historical-flow', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(postData)
       });
-      shouldLoadWorker.set(true);
-    } else {
 
-      displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
-      displayedData = [];
-      calculateStats(displayedData);
-    }
-  } catch (error) {
-    console.error("Error fetching historical flow:", error);
-    rawData = [];
-  } finally {
-    isLoaded = true;
+        rawData = await response?.json();
+        if(rawData?.length !== 0) {
+          rawData?.forEach((item) => {
+          item.dte = daysLeft(item?.date_expiration);
+          });
+          shouldLoadWorker.set(true);
+        }
+      } catch (error) {
+        console.error("Error fetching historical flow:", error);
+        rawData = [];
+      } finally {
+        isLoaded = true;
+      }
+  
   }
+  else {
+    toast.error('Only for Pro Members', {
+        style: 'border-radius: 200px; background: #333; color: #fff;'
+      });
+  }
+
 };
 
 
