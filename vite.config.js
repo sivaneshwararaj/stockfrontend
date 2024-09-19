@@ -1,16 +1,10 @@
-import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from "@sveltejs/kit/vite";
-import { visualizer } from "rollup-plugin-visualizer";
+//import { visualizer } from "rollup-plugin-visualizer";
 
 /** @type {import('vite').UserConfig} */
 const config = {
   plugins: [
-    sentrySvelteKit({
-      sourceMapsUploadOptions: {
-        org: "stocknear",
-        project: "stocknear",
-      },
-    }), //visualizer({ open: true }) // Plugin to visualize the bundle
+    //visualizer({ open: true }) // Plugin to visualize the bundle
     sveltekit(),
   ],
 
