@@ -1,21 +1,20 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import PocketBase from "pocketbase";
 import { serializeNonPOJOs } from "$lib/utils";
+import geoip from "geoip-lite";
 
 export const handle = sequence(async ({ event, resolve }) => {
   const ip =
-    event.request.headers.get("x-forwarded-for") ||
-    event.request.headers.get("remote-address");
+    event.request.headers.get("x-forwarded-for")?.split(",")[0] ||
+    event.getClientAddress();
 
   let isUS = false;
-
   if (ip) {
-    const geoResponse = await fetch(`https://ipinfo.io/${ip}/geo`);
-    const geoData = await geoResponse.json();
-    if (geoData.country === "US") {
+    const geoData = geoip?.lookup(ip);
+    if (geoData && geoData.country === "US") {
       isUS = true;
-      console.log("yelllo", geoData);
     }
+    console.log("yelllo", geoData);
   }
 
   // Use a ternary operator instead of the logical OR for better compatibility
