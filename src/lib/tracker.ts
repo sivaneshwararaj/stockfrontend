@@ -1,14 +1,4 @@
-import { userRegion } from "$lib/store";
-
-let fastifyURL = import.meta.env.VITE_EU_FASTIFY_URL;
-
-userRegion.subscribe((value) => {
-  if (value) {
-    fastifyURL = import.meta.env.VITE_USEAST_FASTIFY_URL;
-  } else {
-    fastifyURL = import.meta.env.VITE_EU_FASTIFY_URL;
-  }
-});
+let fastifyURL = import.meta.env.VITE_USEAST_FASTIFY_URL; //import.meta.env.VITE_EU_FASTIFY_URL;
 
 export const trackPageVisit = async (path, userAgent) => {
   const postData = {

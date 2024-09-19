@@ -1,5 +1,5 @@
 <script lang="ts">
-import {userRegion, secFilingsClicked, stockTicker, clientSideCache, } from '$lib/store';
+import {secFilingsClicked, stockTicker, clientSideCache, } from '$lib/store';
 import * as Tabs from "$lib/components/shadcn/tabs/index.js";
 
 import { fade } from 'svelte/transition';
@@ -7,17 +7,8 @@ import { fade } from 'svelte/transition';
   let secFilingsList;
 
 
-let apiURL;
+let apiURL = import.meta.env.VITE_USEAST_API_URL;
 let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
-
-
-userRegion?.subscribe(value => {
-if (value) {
-  apiURL = import.meta.env.VITE_USEAST_API_URL;
-} else {
-  apiURL = import.meta.env.VITE_EU_API_URL;
-}
-});
 
 
 let displayList = [];

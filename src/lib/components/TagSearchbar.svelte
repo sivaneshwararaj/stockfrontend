@@ -1,18 +1,10 @@
 <script lang="ts">
 
-  import { userRegion, searchBarData, stockTicker, etfTicker, screenWidth} from '$lib/store';  
+  import { searchBarData, stockTicker, etfTicker, screenWidth} from '$lib/store';  
 
-  let apiURL;
+let apiURL = import.meta.env.VITE_USEAST_API_URL;
 let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
 
-
-  userRegion.subscribe(value => {
-    if (value) {
-      apiURL = import.meta.env.VITE_USEAST_API_URL;
-    } else {
-      apiURL = import.meta.env.VITE_EU_API_URL;
-    }
-  });
 
   let assetType = '';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {userRegion, executiveClicked, stockTicker, clientSideCache, } from '$lib/store';
+  import {executiveClicked, stockTicker, clientSideCache, } from '$lib/store';
 	import { afterUpdate } from 'svelte';
 
   
@@ -7,17 +7,8 @@
   let executiveList = [];
 
 
-let apiURL;
+let apiURL = import.meta.env.VITE_USEAST_API_URL;
 let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
-
-
-userRegion?.subscribe(value => {
-if (value) {
-  apiURL = import.meta.env.VITE_USEAST_API_URL;
-} else {
-  apiURL = import.meta.env.VITE_EU_API_URL;
-}
-});
 
 
   let isLoaded = false;

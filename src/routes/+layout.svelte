@@ -19,7 +19,7 @@
   
   import { beforeNavigate, afterNavigate } from '$app/navigation';
   import { onMount, onDestroy } from 'svelte';
-  import { clearCache, showCookieConsent,  newAvatar, userRegion, screenWidth, stockTicker, etfTicker, loginData, numberOfUnreadNotification, cachedPosts, currentPagePosition, clientSideCache, twitchStatus } from '$lib/store';
+  import { clearCache, showCookieConsent,  newAvatar, screenWidth, stockTicker, etfTicker, loginData, numberOfUnreadNotification, cachedPosts, currentPagePosition, clientSideCache, twitchStatus } from '$lib/store';
 
   import { Button } from "$lib/components/shadcn/button/index.ts";
   import * as Card from "$lib/components/shadcn/card/index.ts";
@@ -77,10 +77,6 @@ async function detectSWUpdate() {
       })
     })
   }
-
-  $userRegion = data?.isUSRegion
-
-  console.log('region: ', $userRegion, data?.isUSRegion)
 
   let hideHeader = false;
 

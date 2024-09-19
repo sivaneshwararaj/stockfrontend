@@ -68,7 +68,7 @@ export const globalForm = writable(<Array<any>>[]);
 
 export const trendingList = writable(<Array<any>>[]);
 
-export const userRegion = writable(<string>"");
+//export const userRegion = writable(<string>"");
 
 export const loginData = writable({});
 

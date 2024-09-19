@@ -1,6 +1,6 @@
 <script lang='ts'>
     import toast from 'svelte-french-toast';
-    import {userRegion, currentPortfolioPrice, displayCompanyName, screenWidth, traded, stockTicker, etfTicker, cryptoTicker, assetType} from '$lib/store';
+    import {currentPortfolioPrice, displayCompanyName, screenWidth, traded, stockTicker, etfTicker, cryptoTicker, assetType} from '$lib/store';
 
 
     export let data;
@@ -8,15 +8,7 @@
     export let holdingShares;
 
 
-let fastifyURL;
-
-userRegion.subscribe(value => {
-  if (value) {
-    fastifyURL  = import.meta.env.VITE_USEAST_FASTIFY_URL;
-  } else {
-    fastifyURL  = import.meta.env.VITE_EU_FASTIFY_URL;
-  }
-});
+let fastifyURL = import.meta.env.VITE_USEAST_FASTIFY_URL;
 
 
 

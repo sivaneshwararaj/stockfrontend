@@ -1,6 +1,6 @@
 <script lang='ts'>
   import { goto } from '$app/navigation';
-  import { screenWidth, userRegion, numberOfUnreadNotification} from '$lib/store';
+  import { screenWidth, numberOfUnreadNotification} from '$lib/store';
   import Searchbar from '$lib/components/Searchbar.svelte';
   
   import AddPortfolio from '$lib/components/AddPortfolio.svelte';
