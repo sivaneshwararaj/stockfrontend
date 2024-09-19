@@ -20,61 +20,65 @@ function findLatestDateInPast(data) {
     }
   }
 
-  return latestDate?.toISOString()?.split('T')?.at(0); // Format to yyyy-mm-dd
+  return latestDate?.toISOString()?.split("T")?.at(0); // Format to yyyy-mm-dd
 }
-
 
 function getBarChart(data, dates) {
   let soldList = Array(dates?.length)?.fill(0);
   let boughtList = Array(dates?.length)?.fill(0);
   let grantList = Array(dates?.length)?.fill(0);
   let exerciseList = Array(dates?.length)?.fill(0);
-  
+
   // Group transactions by date and transaction type
   const groupedTransactions = {};
-  data?.forEach(item => {
+  data?.forEach((item) => {
     const { transactionDate, securitiesTransacted, transactionType } = item;
     const key = `${transactionDate}_${transactionType}`;
-    
+
     if (!groupedTransactions[key]) {
       groupedTransactions[key] = 0;
     }
-    
+
     // Update transaction type specific lists
     if (transactionType === "Sold") {
       soldList[dates?.indexOf(transactionDate)] -= securitiesTransacted;
-    } else if (transactionType === 'Bought') {
+    } else if (transactionType === "Bought") {
       boughtList[dates?.indexOf(transactionDate)] += securitiesTransacted;
-    } else if (transactionType === 'Grant') {
+    } else if (transactionType === "Grant") {
       grantList[dates?.indexOf(transactionDate)] += securitiesTransacted;
-    } else if (transactionType === 'Exercise') {
+    } else if (transactionType === "Exercise") {
       exerciseList[dates?.indexOf(transactionDate)] += securitiesTransacted;
     }
   });
-  
-  return { sold: soldList, bought: boughtList, grant: grantList, exercise: exerciseList };
+
+  return {
+    sold: soldList,
+    bought: boughtList,
+    grant: grantList,
+    exercise: exerciseList,
+  };
 }
 
-
-
-  
 onmessage = async (event: MessageEvent) => {
   const data = event.data?.message;
-  const rawData = data?.sort((a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate))
+  const rawData = data?.sort(
+    (a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate),
+  );
   const latestDate = findLatestDateInPast(rawData);
 
-  let historicalPrice = event.data?.historicalPrice?.filter(item => new Date(item?.time) >= new Date(latestDate));
+  let historicalPrice = event.data?.historicalPrice?.filter(
+    (item) => new Date(item?.time) >= new Date(latestDate),
+  );
 
-  const dataPoints =  historicalPrice?.map(({ close }) => (close ))
-  const dates = historicalPrice?.map(({ time }) => ( time ))
-  const barChartData = getBarChart(rawData, dates)
+  const dataPoints = historicalPrice?.map(({ close }) => close);
+  const dates = historicalPrice?.map(({ time }) => time);
+  const barChartData = getBarChart(rawData, dates);
 
-  let finalData = { rawData, dataPoints, dates, barChartData};
-  postMessage({ message: 'success', finalData});
+  let finalData = { rawData, dataPoints, dates, barChartData };
+  postMessage({ message: "success", finalData });
 
   // Sending data back to the main thread
   //postMessage({ message: 'Data received in the worker', ticker, apiURL });
 };
 
 export {};
-    

@@ -1,11 +1,13 @@
-import type { RequestHandler } from './$types';
-import { serialize } from 'object-to-formdata';
-import { validateData } from '$lib/utils';
-import { createCommentTextSchema, createCommentImageSchema } from '$lib/schemas';
-import { error} from '@sveltejs/kit';
+import type { RequestHandler } from "./$types";
+import { serialize } from "object-to-formdata";
+import { validateData } from "$lib/utils";
+import {
+  createCommentTextSchema,
+  createCommentImageSchema,
+} from "$lib/schemas";
+import { error } from "@sveltejs/kit";
 //import sharp from 'sharp';
 //import { marked } from 'marked';
-
 
 /*
 export const config = {
@@ -74,35 +76,34 @@ function addClassesToHtml(htmlString) {
 
 */
 
-export const POST = (async ( {request, locals} ) => {
-  
-let output = 'error';
+export const POST = (async ({ request, locals }) => {
+  let output = "error";
 
-const body = await request.formData();
+  const body = await request.formData();
 
-  if (body?.get('comment') === 'undefined')
-  {
-    body?.delete('comment');
-    body?.append('comment', '');
+  if (body?.get("comment") === "undefined") {
+    body?.delete("comment");
+    body?.append("comment", "");
   }
 
-  if (body?.get('reply') === null)
-  {
-    body?.delete('reply');
-    body?.append('reply', '');
+  if (body?.get("reply") === null) {
+    body?.delete("reply");
+    body?.append("reply", "");
   }
 
-  const {formData, errors} = await validateData( body, body?.get('image')?.length === 0 ? createCommentTextSchema : createCommentImageSchema);
-  
-
+  const { formData, errors } = await validateData(
+    body,
+    body?.get("image")?.length === 0
+      ? createCommentTextSchema
+      : createCommentImageSchema,
+  );
 
   if (errors) {
     return new Response(JSON.stringify(output));
   }
   //formData.comment = addClassesToHtml(marked(formData?.comment))
 
-
-/*
+  /*
   if (formData?.image?.type?.includes('image'))
 		{
 
@@ -136,63 +137,53 @@ const body = await request.formData();
 		}
     */
 
-    //Each comment gives the user +1 Karma points
+  //Each comment gives the user +1 Karma points
 
   await locals.pb.collection("users").update(locals?.user?.id, {
     "karma+": 1,
-  })
-
+  });
 
   let newComment;
   try {
+    newComment = await locals.pb
+      .collection("comments")
+      .create(serialize(formData), {
+        expand: "user,alreadyVoted(comment)",
+        fields:
+          "*,expand.user,expand.alreadyVoted(comment).user,expand.alreadyVoted(comment).type",
+      });
 
-    newComment = await locals.pb.collection('comments').create(serialize(formData), {
-      expand: 'user,alreadyVoted(comment)',
-      fields: "*,expand.user,expand.alreadyVoted(comment).user,expand.alreadyVoted(comment).type",
-    });
-
-
-
-    let postId = formData.post
-    const opPost = await locals.pb.collection('posts').getOne(postId)
+    let postId = formData.post;
+    const opPost = await locals.pb.collection("posts").getOne(postId);
     //create new record for notifications collections
-    if (locals?.user?.id !== opPost?.user)
-    {
-        let formDataNotifications = new FormData();
-        formDataNotifications.append('opUser', opPost?.user);
-        formDataNotifications.append('user', formData?.user)
-        formDataNotifications.append('post', postId);
-        formDataNotifications.append('comment', newComment?.id)
-        formDataNotifications.append('notifyType', 'comment');
-        
-        await locals.pb.collection('notifications').create(formDataNotifications);
+    if (locals?.user?.id !== opPost?.user) {
+      let formDataNotifications = new FormData();
+      formDataNotifications.append("opUser", opPost?.user);
+      formDataNotifications.append("user", formData?.user);
+      formDataNotifications.append("post", postId);
+      formDataNotifications.append("comment", newComment?.id);
+      formDataNotifications.append("notifyType", "comment");
 
+      await locals.pb.collection("notifications").create(formDataNotifications);
     }
 
-
-    
     let formDataAlreadyVoted = new FormData();
-    formDataAlreadyVoted.append('comment', newComment?.id);
-    formDataAlreadyVoted.append('user', newComment?.user);
-    formDataAlreadyVoted.append('type', 'upvote');
+    formDataAlreadyVoted.append("comment", newComment?.id);
+    formDataAlreadyVoted.append("user", newComment?.user);
+    formDataAlreadyVoted.append("type", "upvote");
     //console.log(formDataAlreadyVoted)
-    await locals.pb.collection('alreadyVoted').create(formDataAlreadyVoted);
+    await locals.pb.collection("alreadyVoted").create(formDataAlreadyVoted);
 
-  //User always upvotes their comment in the intial state
-  await locals.pb.collection("comments").update(newComment?.id, {
-    "upvote+": 1,
-  })
+    //User always upvotes their comment in the intial state
+    await locals.pb.collection("comments").update(newComment?.id, {
+      "upvote+": 1,
+    });
 
-
-    output = 'success';
-
-
+    output = "success";
   } catch (err) {
-    console.log('Error: ', err);
+    console.log("Error: ", err);
     error(err.status, err.message);
   }
 
-
-
-    return new Response(JSON.stringify([output, newComment]));
+  return new Response(JSON.stringify([output, newComment]));
 }) satisfies RequestHandler;

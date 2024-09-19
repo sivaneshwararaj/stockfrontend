@@ -80,7 +80,7 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
 
   const promises = [
     ...endpoints.map((endpoint) =>
-      fetchData(apiURL, apiKey, endpoint, tickerID)
+      fetchData(apiURL, apiKey, endpoint, tickerID),
     ),
     fetchWatchlist(pb, user?.id),
     //fetchFromFastify(fastifyURL, '/get-portfolio-data', user?.id),

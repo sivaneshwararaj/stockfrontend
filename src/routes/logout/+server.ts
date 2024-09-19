@@ -1,12 +1,8 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from "@sveltejs/kit";
 
 export const POST = ({ locals }) => {
-	locals.pb.authStore.clear();
-	locals.user = undefined;
+  locals.pb.authStore.clear();
+  locals.user = undefined;
 
-
-
-
-	redirect(303, '/');
-
+  redirect(303, "/");
 };

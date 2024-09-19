@@ -1,35 +1,33 @@
-import {getCache, setCache } from '$lib/store';
-
-
+import { getCache, setCache } from "$lib/store";
 
 export const load = async ({ parent, params }) => {
   const getBalanceSheetStatement = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache(params.tickerID, 'getBalanceSheetStatement');
+    const cachedData = getCache(params.tickerID, "getBalanceSheetStatement");
     if (cachedData) {
       output = cachedData;
     } else {
-
-      const {apiKey, apiURL} = await parent();
+      const { apiKey, apiURL } = await parent();
       const postData = {
-        ticker: params.tickerID
+        ticker: params.tickerID,
       };
 
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + '/stock-balance-sheet', {
-        method: 'POST',
+      const response = await fetch(apiURL + "/stock-balance-sheet", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
-        body: JSON.stringify(postData)
+        body: JSON.stringify(postData),
       });
 
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getBalanceSheetStatement'
-      setCache(params.tickerID, output, 'getBalanceSheetStatement');
+      setCache(params.tickerID, output, "getBalanceSheetStatement");
     }
 
     return output;
@@ -37,6 +35,6 @@ export const load = async ({ parent, params }) => {
 
   // Make sure to return a promise
   return {
-    getBalanceSheetStatement: await getBalanceSheetStatement()
+    getBalanceSheetStatement: await getBalanceSheetStatement(),
   };
 };

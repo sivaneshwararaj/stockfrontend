@@ -133,7 +133,7 @@ const sitemap = (
   posts,
   articles,
   stocks,
-  pages
+  pages,
 ) => `<?xml version="1.0" encoding="UTF-8" ?>
 <urlset
   xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
@@ -149,7 +149,7 @@ const sitemap = (
   <url>
     <loc>${website}${page.title}</loc>
   </url>
-  `
+  `,
     )
     .join("")}
   ${stocks
@@ -174,7 +174,7 @@ const sitemap = (
   <url>
     <loc>${website}/blog/article/${article.id}</loc>
   </url>
-  `
+  `,
     )
     .join("")}
   ${posts
@@ -183,7 +183,7 @@ const sitemap = (
   <url>
     <loc>${website}/community/post/${post.id}</loc>
   </url>
-  `
+  `,
     )
     .join("")}
 </urlset>`;

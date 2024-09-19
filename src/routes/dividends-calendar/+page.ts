@@ -1,29 +1,28 @@
-import { getCache, setCache } from '$lib/store';
+import { getCache, setCache } from "$lib/store";
 
-
-export const load = async ({parent}) => {
+export const load = async ({ parent }) => {
   const getDividendCalendar = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getDividendCalendar');
+    const cachedData = getCache("", "getDividendCalendar");
     if (cachedData) {
       output = cachedData;
     } else {
-      
-      const {apiKey, apiURL} = await parent();
+      const { apiKey, apiURL } = await parent();
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + '/dividends-calendar', {
-        method: 'GET',
+      const response = await fetch(apiURL + "/dividends-calendar", {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
       });
 
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getDividendCalendar'
-      setCache('', output, 'getDividendCalendar');
+      setCache("", output, "getDividendCalendar");
     }
 
     return output;
@@ -31,6 +30,6 @@ export const load = async ({parent}) => {
 
   // Make sure to return a promise
   return {
-    getDividendCalendar: await getDividendCalendar()
+    getDividendCalendar: await getDividendCalendar(),
   };
 };

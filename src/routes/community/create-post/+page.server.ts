@@ -17,7 +17,7 @@ function removeDuplicateClasses(str) {
   return str.replace(
     /class="([^"]*)"/,
     (match, classAttr) =>
-      `class="${[...new Set(classAttr.split(" "))].join(" ")}"`
+      `class="${[...new Set(classAttr.split(" "))].join(" ")}"`,
   );
 }
 
@@ -31,7 +31,7 @@ function addClassesToHtml(htmlString) {
     // Append the new class to tags that already have a class attribute, ensuring no duplicates
     const regexWithClass = new RegExp(
       `(<${tag}[^>]*\\bclass=["'][^"']*)(?!.*\\b${className}\\b)([^"']*)["']`,
-      "g"
+      "g",
     );
     htmlString = htmlString.replace(regexWithClass, `$1 ${className}$2"`);
   }
@@ -58,13 +58,13 @@ function addClassesToHtml(htmlString) {
     // Add class to blockquote
     htmlString = htmlString.replace(
       /<blockquote/g,
-      '<blockquote class="pl-4 pr-4 rounded-lg bg-[#323232]"'
+      '<blockquote class="pl-4 pr-4 rounded-lg bg-[#323232]"',
     );
 
     // Add class to p inside blockquote
     htmlString = htmlString.replace(
       /<blockquote([^>]*)>\s*<p/g,
-      `<blockquote$1>\n<p class="text-sm font-medium leading-relaxed text-white"`
+      `<blockquote$1>\n<p class="text-sm font-medium leading-relaxed text-white"`,
     );
   }
 

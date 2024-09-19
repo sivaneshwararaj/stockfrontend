@@ -1,23 +1,23 @@
-import { getCache, setCache } from '$lib/store';
+import { getCache, setCache } from "$lib/store";
 
-export const load = async ({parent, params}) => {
+export const load = async ({ parent, params }) => {
   const getIPOCalendar = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache(params.slug, 'getIPOCalendar');
+    const cachedData = getCache(params.slug, "getIPOCalendar");
     if (cachedData) {
       output = cachedData;
     } else {
-
-      const { apiURL, apiKey} = await parent();
+      const { apiURL, apiKey } = await parent();
       // make the POST request to the endpoint
-      const postData = {'year': params.slug};
+      const postData = { year: params.slug };
 
-      const response = await fetch(apiURL + '/ipo-calendar', {
-        method: 'POST',
+      const response = await fetch(apiURL + "/ipo-calendar", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
         body: JSON.stringify(postData),
       });
@@ -25,15 +25,15 @@ export const load = async ({parent, params}) => {
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getIPOCalendar'
-      setCache(params.slug, output, 'getIPOCalendar');
+      setCache(params.slug, output, "getIPOCalendar");
     }
 
     return output;
   };
 
-  const getYear = async() => {
+  const getYear = async () => {
     return params.slug;
-  }
+  };
 
   // Make sure to return a promise
   return {

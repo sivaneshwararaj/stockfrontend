@@ -6,7 +6,7 @@ export const actions = {
   login: async ({ request, locals }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      loginUserSchema
+      loginUserSchema,
     );
 
     if (errors) {
@@ -40,7 +40,7 @@ export const actions = {
   register: async ({ locals, request }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      registerUserSchema
+      registerUserSchema,
     );
 
     if (errors) {
@@ -95,7 +95,7 @@ await locals.pb?.collection('users').update(
     const redirectURL = `${url.origin}/oauth`;
 
     const targetItem = authMethods.authProviders?.findIndex(
-      (item) => item?.name === providerSelected
+      (item) => item?.name === providerSelected,
     );
     //console.log("==================")
     //console.log(authMethods.authProviders)

@@ -37,7 +37,7 @@ const checkMarketHour = async () => {
       isBeforeMarketOpenValue ||
       isAfterMarketCloseValue ||
       holidays?.includes(currentDate)
-    )
+    ),
   );
 };
 

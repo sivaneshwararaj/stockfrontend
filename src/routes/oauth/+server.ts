@@ -30,7 +30,7 @@ export const GET = async ({ locals, url, cookies }) => {
   }
 
   const targetItem = authMethods.authProviders.findIndex(
-    (item) => item.name === providerSelected
+    (item) => item.name === providerSelected,
   );
   const provider = authMethods.authProviders[targetItem];
 

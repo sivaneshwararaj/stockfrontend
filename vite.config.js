@@ -1,15 +1,23 @@
+import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { visualizer } from "rollup-plugin-visualizer";
 
 /** @type {import('vite').UserConfig} */
 const config = {
   plugins: [
+    sentrySvelteKit({
+      sourceMapsUploadOptions: {
+        org: "stocknear",
+        project: "stocknear",
+      },
+    }), //visualizer({ open: true }) // Plugin to visualize the bundle
     sveltekit(),
-    //visualizer({ open: true }) // Plugin to visualize the bundle
   ],
+
   server: {
     cors: true,
   },
+
   build: {
     target: "esnext",
     minify: true,
@@ -29,6 +37,7 @@ const config = {
     },
     brotliSize: true, // Enable Brotli compression
   },
+
   optimizeDeps: {
     exclude: ["pocketbase"],
   },

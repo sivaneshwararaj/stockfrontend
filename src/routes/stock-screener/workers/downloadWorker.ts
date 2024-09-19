@@ -22,7 +22,7 @@ const getStockScreenerData = async (rules, apiKey, apiURL) => {
   // Function to check and add missing EMA parameters
   const ensureAllEmaParameters = (params) => {
     const includedEmaParameters = params.filter((param) =>
-      emaParameters.includes(param)
+      emaParameters.includes(param),
     );
     if (includedEmaParameters.length > 0) {
       emaParameters.forEach((param) => {
@@ -76,9 +76,9 @@ onmessage = async (event) => {
         value !== undefined &&
         (typeof value !== "object" ||
           Object.values(value)?.every(
-            (subValue) => subValue !== null && subValue !== undefined
-          ))
-    )
+            (subValue) => subValue !== null && subValue !== undefined,
+          )),
+    ),
   );
 
   postMessage({ message: "success", stockScreenerData });

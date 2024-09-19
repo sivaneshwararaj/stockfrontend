@@ -1,25 +1,23 @@
-import { getCache, setCache } from '$lib/store';
+import { getCache, setCache } from "$lib/store";
 
-
-
-export const load = async ({parent}) => {
+export const load = async ({ parent }) => {
   const getBasicMaterialsSector = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getBasicMaterialsSector');
+    const cachedData = getCache("", "getBasicMaterialsSector");
     if (cachedData) {
       output = cachedData;
     } else {
-      
-      const {apiKey, apiURL} = await parent();
-      
-      const postData = {'filterList': 'basic-materials'};
-      
-      const response = await fetch(apiURL + '/filter-stock-list', {
-        method: 'POST',
+      const { apiKey, apiURL } = await parent();
+
+      const postData = { filterList: "basic-materials" };
+
+      const response = await fetch(apiURL + "/filter-stock-list", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
         body: JSON.stringify(postData),
       });
@@ -27,7 +25,7 @@ export const load = async ({parent}) => {
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getBasicMaterialsSector'
-      setCache('', output, 'getBasicMaterialsSector');
+      setCache("", output, "getBasicMaterialsSector");
     }
 
     return output;
@@ -37,19 +35,19 @@ export const load = async ({parent}) => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache('basic-materials', 'getHistoricalSector');
+    const cachedData = getCache("basic-materials", "getHistoricalSector");
     if (cachedData) {
       output = cachedData;
     } else {
-      
-      const {apiKey, apiURL} = await parent();
-      
-      const postData = {'filterList': 'basic-materials'}
+      const { apiKey, apiURL } = await parent();
 
-      const response = await fetch(apiURL + '/historical-sector-price', {
-        method: 'POST',
+      const postData = { filterList: "basic-materials" };
+
+      const response = await fetch(apiURL + "/historical-sector-price", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
         body: JSON.stringify(postData),
       });
@@ -57,7 +55,7 @@ export const load = async ({parent}) => {
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getHistoricalSector'
-      setCache('basic-materials', output, 'getHistoricalSector');
+      setCache("basic-materials", output, "getHistoricalSector");
     }
 
     return output;

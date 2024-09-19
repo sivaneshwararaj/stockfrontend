@@ -1,18 +1,18 @@
-import { defineConfig, devices } from '@playwright/test'; // import devices
+import { defineConfig, devices } from "@playwright/test"; // import devices
 
 export default defineConfig({
-  testDir: 'tests',
+  testDir: "tests",
   projects: [
     {
-      name: 'chromium',
+      name: "chromium",
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices["Desktop Chrome"],
       },
     },
     {
-      name: 'safari',
+      name: "safari",
       use: {
-        ...devices['Iphone 6'],
+        ...devices["Iphone 6"],
       },
     },
   ],

@@ -1,11 +1,11 @@
 function convertUnitToValue(
-  input: string | number | string[]
+  input: string | number | string[],
 ): number | string[] | string {
   if (Array.isArray(input)) return input;
   if (typeof input === "number") return input;
   if (typeof input !== "string") {
     throw new TypeError(
-      `Expected a string or number, but received ${typeof input}`
+      `Expected a string or number, but received ${typeof input}`,
     );
   }
   const lowerInput = input.toLowerCase();
@@ -162,7 +162,7 @@ async function filterRawData(rawData, ruleOfList, filterQuery) {
 
         if (Array.isArray(ruleValue)) {
           return ruleValue.some(
-            (value) => lowerItemValue === value.toString().toLowerCase()
+            (value) => lowerItemValue === value.toString().toLowerCase(),
           );
         }
 
@@ -188,7 +188,7 @@ onmessage = async (event: MessageEvent) => {
   const { rawData, ruleOfList, filterQuery } = event.data || {};
   let filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
   filteredData = Array?.from(
-    new Map(filteredData?.map((item) => [item?.id, item]))?.values()
+    new Map(filteredData?.map((item) => [item?.id, item]))?.values(),
   );
   postMessage({ message: "success", filteredData });
 };

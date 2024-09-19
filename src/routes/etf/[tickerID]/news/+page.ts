@@ -1,33 +1,33 @@
-import { getCache, setCache } from '$lib/store';
-
+import { getCache, setCache } from "$lib/store";
 
 export const load = async ({ parent, params }) => {
   const getStockNews = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache(params.tickerID, 'getStockNews');
+    const cachedData = getCache(params.tickerID, "getStockNews");
     if (cachedData) {
       output = cachedData;
     } else {
-      const {apiKey, apiURL} = await parent();
+      const { apiKey, apiURL } = await parent();
       const postData = {
-        ticker: params.tickerID
+        ticker: params.tickerID,
       };
 
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + '/stock-news', {
-        method: 'POST',
+      const response = await fetch(apiURL + "/stock-news", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
-        body: JSON.stringify(postData)
+        body: JSON.stringify(postData),
       });
 
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getStockNews'
-      setCache(params.tickerID, output, 'getStockNews');
+      setCache(params.tickerID, output, "getStockNews");
     }
 
     return output;
@@ -35,6 +35,6 @@ export const load = async ({ parent, params }) => {
 
   // Make sure to return a promise
   return {
-    getStockNews: await getStockNews()
+    getStockNews: await getStockNews(),
   };
 };

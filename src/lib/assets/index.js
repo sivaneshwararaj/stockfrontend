@@ -1,3 +1,3 @@
-import Info from './Info.svelte';
+import Info from "./Info.svelte";
 
-export {Info};
+export { Info };

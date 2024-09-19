@@ -18,7 +18,7 @@ export const load = async ({ parent }) => {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       output = (await response.json())["stargazers_count"];
@@ -43,7 +43,7 @@ export const load = async ({ parent }) => {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       output = (await response.json())["stargazers_count"];

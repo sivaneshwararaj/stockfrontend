@@ -1,127 +1,121 @@
-import { getCache, setCache } from '$lib/store';
-
-
+import { getCache, setCache } from "$lib/store";
 
 const transactionTypeMap = {
-  'P-Purchase': 'Bought',
-  'A-Award': 'Grant',
-  'D-Return': 'Grant',
-  'G-Gift': 'Grant',
-  'S-Sale': 'Sold',
-  'M-Exempt': 'Exercise',
-  'X-InTheMoney': 'Exercise',
-  'C-Conversion': 'Exercise',
-  'F-InKind': 'Sold',
-  'J-Other': (item) => {
-    if (item.acquistionOrDisposition === 'D') {
-      return 'Sold';
-    } else if (item.acquistionOrDisposition === 'A') {
-      return 'Bought';
+  "P-Purchase": "Bought",
+  "A-Award": "Grant",
+  "D-Return": "Grant",
+  "G-Gift": "Grant",
+  "S-Sale": "Sold",
+  "M-Exempt": "Exercise",
+  "X-InTheMoney": "Exercise",
+  "C-Conversion": "Exercise",
+  "F-InKind": "Sold",
+  "J-Other": (item) => {
+    if (item.acquistionOrDisposition === "D") {
+      return "Sold";
+    } else if (item.acquistionOrDisposition === "A") {
+      return "Bought";
     } else {
-      return 'Other';
+      return "Other";
     }
   },
-  '': 'n/a'
+  "": "n/a",
 };
 
 export const load = async ({ parent, params }) => {
-
-  const {apiURL, apiKey} = await parent();
-
+  const { apiURL, apiKey } = await parent();
 
   const getInsiderTrading = async () => {
     let output;
 
-
-      const cachedData = getCache(params.tickerID, 'getInsiderTrading');
-      if (cachedData) {
-        output = cachedData;
-      } else {
-        const postData = {
-          ticker: params.tickerID
-        };
+    const cachedData = getCache(params.tickerID, "getInsiderTrading");
+    if (cachedData) {
+      output = cachedData;
+    } else {
+      const postData = {
+        ticker: params.tickerID,
+      };
 
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + '/insider-trading', {
-        method: 'POST',
+      const response = await fetch(apiURL + "/insider-trading", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
-        body: JSON.stringify(postData)
+        body: JSON.stringify(postData),
       });
 
       output = await response.json();
 
-      output = output?.map(item => ({
+      output = output?.map((item) => ({
         ...item,
-        transactionType: typeof transactionTypeMap[item?.transactionType] === 'function'
-          ? transactionTypeMap[item?.transactionType](item)
-          : transactionTypeMap[item?.transactionType] || 'n/a'
+        transactionType:
+          typeof transactionTypeMap[item?.transactionType] === "function"
+            ? transactionTypeMap[item?.transactionType](item)
+            : transactionTypeMap[item?.transactionType] || "n/a",
       }));
-      
-      setCache(params.tickerID, output, 'getInsiderTrading');
-    
+
+      setCache(params.tickerID, output, "getInsiderTrading");
     }
 
     return output;
   };
 
-
   const getInsiderTradingStatistics = async () => {
-
     let output;
 
-    const cachedData = getCache(params.tickerID, 'getInsiderTradingStatistics');
-      if (cachedData) {
-        output = cachedData;
-      } else {
-        const postData = {
-          ticker: params.tickerID
-        };
+    const cachedData = getCache(params.tickerID, "getInsiderTradingStatistics");
+    if (cachedData) {
+      output = cachedData;
+    } else {
+      const postData = {
+        ticker: params.tickerID,
+      };
 
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + '/insider-trading-statistics', {
-        method: 'POST',
+      const response = await fetch(apiURL + "/insider-trading-statistics", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
-        body: JSON.stringify(postData)
+        body: JSON.stringify(postData),
       });
 
       output = await response?.json();
 
-      setCache(params.tickerID, output, 'getInsiderTradingStatistics');
-
+      setCache(params.tickerID, output, "getInsiderTradingStatistics");
     }
 
     return output;
   };
 
-
-async function historicalPrice() {
+  async function historicalPrice() {
     let output;
 
-    const cachedData = getCache(params.tickerID, 'historicalPrice'+'insider');
-      if (cachedData) {
-        output = cachedData;
+    const cachedData = getCache(params.tickerID, "historicalPrice" + "insider");
+    if (cachedData) {
+      output = cachedData;
     } else {
-        const postData = {
-          ticker: params.tickerID,
-          timePeriod: 'max',
-        };
-  
-        const response = await fetch(apiURL+'/historical-price', {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json", "X-API-KEY": apiKey
-          },
-          body: JSON.stringify(postData)
-        });
-  
-        output = await response?.json() ?? [];
+      const postData = {
+        ticker: params.tickerID,
+        timePeriod: "max",
+      };
 
-        //Adding this would create a bug hence I cant use the historicalPrice endpoint such as in +page.svelte but rather need to call
-        // it again without modification.
+      const response = await fetch(apiURL + "/historical-price", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
+        },
+        body: JSON.stringify(postData),
+      });
+
+      output = (await response?.json()) ?? [];
+
+      //Adding this would create a bug hence I cant use the historicalPrice endpoint such as in +page.svelte but rather need to call
+      // it again without modification.
       /*
         output= (data) => map(({ time, open, high, low, close }) => ({ 
             time: Date.parse(time), 
@@ -131,22 +125,17 @@ async function historicalPrice() {
             close 
         }));
         */
-        
-  
-        setCache(params.tickerID, output, 'historicalPrice'+'insider');
-      
+
+      setCache(params.tickerID, output, "historicalPrice" + "insider");
     }
 
-    return output; 
-    
+    return output;
   }
-
-  
 
   // Make sure to return a promise
   return {
     getInsiderTrading: await getInsiderTrading(),
     getInsiderTradingStatistics: await getInsiderTradingStatistics(),
-    getHistoricalPrice: await historicalPrice()
+    getHistoricalPrice: await historicalPrice(),
   };
 };

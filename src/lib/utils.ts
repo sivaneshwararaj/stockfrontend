@@ -20,7 +20,7 @@ type FlyAndScaleParams = {
 
 export const flyAndScale = (
   node: Element,
-  params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 0 }
+  params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 0 },
 ): TransitionConfig => {
   const style = getComputedStyle(node);
   const transform = style.transform === "none" ? "" : style.transform;
@@ -28,7 +28,7 @@ export const flyAndScale = (
   const scaleConversion = (
     valueA: number,
     scaleA: [number, number],
-    scaleB: [number, number]
+    scaleB: [number, number],
   ) => {
     const [minA, maxA] = scaleA;
     const [minB, maxB] = scaleB;
@@ -40,7 +40,7 @@ export const flyAndScale = (
   };
 
   const styleToString = (
-    style: Record<string, number | string | undefined>
+    style: Record<string, number | string | undefined>,
   ): string => {
     return Object.keys(style).reduce((str, key) => {
       if (style[key] === undefined) return str;
@@ -212,7 +212,7 @@ export function sumQuarterlyResultsByYear(quarterlyResults, namingList) {
 
   // Filter out years with less than 4 quarters
   const validYears = Object?.keys(quarterCounts)?.filter(
-    (year) => quarterCounts[year] === 4
+    (year) => quarterCounts[year] === 4,
   );
   const annualResults = validYears?.map((year) => yearlySummaries[year]);
 
@@ -420,7 +420,7 @@ export function formatETFName(inputString) {
 
   // Capitalize the first letter of each word
   const capitalizedWords = words?.map(
-    (word) => word.charAt(0)?.toUpperCase() + word?.slice(1)
+    (word) => word.charAt(0)?.toUpperCase() + word?.slice(1),
   );
 
   // Join the words back together with a space between them
@@ -442,7 +442,7 @@ export function addDays(data, days, state) {
   } else {
     const differenceInTime = result - createdDate;
     const differenceInDays = Math.round(
-      differenceInTime / (1000 * 60 * 60 * 24)
+      differenceInTime / (1000 * 60 * 60 * 24),
     );
     return Math.abs(differenceInDays);
   }

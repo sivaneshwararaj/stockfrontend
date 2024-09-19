@@ -5,7 +5,7 @@ const emaParameters = ["ema20", "ema50", "ema100", "ema200"];
 // Function to check and add missing EMA parameters
 const ensureAllEmaParameters = (params) => {
   const includedEmaParameters = params.filter((param) =>
-    emaParameters.includes(param)
+    emaParameters.includes(param),
   );
   if (includedEmaParameters.length > 0) {
     emaParameters.forEach((param) => {

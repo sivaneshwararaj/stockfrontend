@@ -1,26 +1,23 @@
-import { getCache, setCache } from '$lib/store';
+import { getCache, setCache } from "$lib/store";
 
-
-
-
-export const load = async ({parent}) => {
+export const load = async ({ parent }) => {
   const getIsraeliStocksUS = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getIsraeliStocksUS');
+    const cachedData = getCache("", "getIsraeliStocksUS");
     if (cachedData) {
       output = cachedData;
     } else {
-      
-      const{ apiURL, apiKey} = await parent();
-      
-      const postData = {'filterList': 'IL'}
+      const { apiURL, apiKey } = await parent();
 
-      const response = await fetch(apiURL + '/filter-stock-list', {
-        method: 'POST',
+      const postData = { filterList: "IL" };
+
+      const response = await fetch(apiURL + "/filter-stock-list", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
         body: JSON.stringify(postData),
       });
@@ -28,7 +25,7 @@ export const load = async ({parent}) => {
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getIsraeliStocksUS'
-      setCache('', output, 'getIsraeliStocksUS');
+      setCache("", output, "getIsraeliStocksUS");
     }
 
     return output;
@@ -36,6 +33,6 @@ export const load = async ({parent}) => {
 
   // Make sure to return a promise
   return {
-    getIsraeliStocksUS: await getIsraeliStocksUS()
+    getIsraeliStocksUS: await getIsraeliStocksUS(),
   };
 };

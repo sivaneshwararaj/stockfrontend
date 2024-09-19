@@ -41,7 +41,7 @@ const countryMap = Object.fromEntries(
   listOfRelevantCountries.map((entry) => {
     const [code, name] = Object.entries(entry)[0];
     return [name, code];
-  })
+  }),
 );
 
 onmessage = async (event: MessageEvent) => {
@@ -53,7 +53,7 @@ onmessage = async (event: MessageEvent) => {
 
   // Filter rawData based on the mapped country codes
   const output = rawData?.map((subArray) =>
-    subArray?.filter((item) => filterCodes.includes(item?.country))
+    subArray?.filter((item) => filterCodes.includes(item?.country)),
   );
 
   let finalData = { output };

@@ -98,6 +98,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.556.0",
+    "@sentry/sveltekit": "^8.30.0",
     "greeks": "^1.0.0",
     "html2canvas": "^1.4.1",
     "https": "^1.0.0",

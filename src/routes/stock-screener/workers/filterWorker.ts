@@ -41,13 +41,13 @@ const movingAverageConditions = {
 
 // Convert the input to a value or return it as-is if it's already an array
 function convertUnitToValue(
-  input: string | number | string[]
+  input: string | number | string[],
 ): number | string[] | string {
   if (Array.isArray(input)) return input;
   if (typeof input === "number") return input;
   if (typeof input !== "string") {
     throw new TypeError(
-      `Expected a string or number, but received ${typeof input}`
+      `Expected a string or number, but received ${typeof input}`,
     );
   }
   const lowerInput = input.toLowerCase();
@@ -157,7 +157,7 @@ onmessage = async (event: MessageEvent) => {
 
   const filteredData = await filterStockScreenerData(
     stockScreenerData,
-    ruleOfList
+    ruleOfList,
   );
 
   postMessage({ message: "success", filteredData });
