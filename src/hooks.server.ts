@@ -3,11 +3,6 @@ import PocketBase from "pocketbase";
 import { serializeNonPOJOs } from "$lib/utils";
 
 export const handle = sequence(async ({ event, resolve }) => {
-  // Use optional chaining and nullish coalescing for safer property access
-  const regionHeader =
-    event?.request?.headers?.get("x-vercel-id") ??
-    "fra1::fra1::8t4xg-1700258428633-157d82fdfcc7";
-
   const ip =
     event.request.headers.get("x-forwarded-for") ||
     event.request.headers.get("remote-address");
@@ -38,7 +33,7 @@ export const handle = sequence(async ({ event, resolve }) => {
     : import.meta.env.VITE_EU_WS_URL;
 
   event.locals = {
-    region: decodeURIComponent(regionHeader),
+    isUSRegion: isUS,
     pb: new PocketBase(pbURL),
     apiURL,
     fastifyURL,

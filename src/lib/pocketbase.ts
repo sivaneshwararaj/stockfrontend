@@ -1,15 +1,15 @@
 import PocketBase from "pocketbase";
 import { userRegion } from "$lib/store";
 
-const usRegion = ["cle1", "iad1", "pdx1", "sfo1"];
-
 let pbUrl;
 
 userRegion.subscribe((value) => {
-  if (usRegion?.includes(value)) {
+  if (value) {
     pbUrl = import.meta.env.VITE_USEAST_POCKETBASE_URL;
+    console.log("US region for pocketbase");
   } else {
     pbUrl = import.meta.env.VITE_EU_POCKETBASE_URL;
+    console.log("EU region for pocketbase");
   }
 });
 

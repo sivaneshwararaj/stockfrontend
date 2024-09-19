@@ -8,13 +8,10 @@
     export let holdingShares;
 
 
-
-const usRegion = ['cle1','iad1','pdx1','sfo1'];
-
 let fastifyURL;
 
 userRegion.subscribe(value => {
-  if (usRegion.includes(value)) {
+  if (value) {
     fastifyURL  = import.meta.env.VITE_USEAST_FASTIFY_URL;
   } else {
     fastifyURL  = import.meta.env.VITE_EU_FASTIFY_URL;

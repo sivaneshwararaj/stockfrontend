@@ -78,7 +78,7 @@ async function detectSWUpdate() {
     })
   }
 
-  $userRegion = data?.region?.split("::")[0];
+  $userRegion = data?.isUSRegion
 
   let hideHeader = false;
 

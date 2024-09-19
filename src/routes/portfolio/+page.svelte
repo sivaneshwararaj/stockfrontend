@@ -13,18 +13,6 @@
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-
-  
-  const usRegion = ['cle1','iad1','pdx1','sfo1'];
-let fastifyURL = import.meta.env.VITE_EU_FASTIFY_URL; // Set a default FASTIFY URL
-userRegion.subscribe(value => {
-if (usRegion.includes(value)) {
-  fastifyURL = import.meta.env.VITE_USEAST_FASTIFY_URL;
-} else {
-  fastifyURL = import.meta.env.VITE_EU_FASTIFY_URL;
-}
-});
-
   let isLoaded = false;
       
   
@@ -34,7 +22,7 @@ if (usRegion.includes(value)) {
   {
     const postData = {'userId': data?.user?.id};
   
-    const response = await fetch(fastifyURL+'/get-portfolio', {
+    const response = await fetch(data?.fastifyURL+'/get-portfolio', {
         method: 'POST',
         headers: {
            "Content-Type": "application/json"

@@ -37,7 +37,10 @@
       });
       return;
     }
-  
+    
+    const closePopup = document.getElementById('feedbackInfo');
+    closePopup?.dispatchEvent(new MouseEvent('click'))
+    
     const userId = data?.user?.id ?? '';
   
     const postData = {'user': userId,
@@ -65,8 +68,6 @@
         style: 'border-radius: 200px; background: #333; color: #fff;'});
     }
   
-    const closePopup = document.getElementById('feedbackInfo');
-    closePopup?.dispatchEvent(new MouseEvent('click'))
   
     rating = '';
   
