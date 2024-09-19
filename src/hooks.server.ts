@@ -14,7 +14,7 @@ export const handle = sequence(async ({ event, resolve }) => {
     const geoData = await geoResponse.json();
     if (geoData.country === "US") {
       isUS = true;
-      //console.log("yelllo", geoData);
+      console.log("yelllo", geoData);
     }
   }
 

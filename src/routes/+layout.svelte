@@ -80,6 +80,8 @@ async function detectSWUpdate() {
 
   $userRegion = data?.isUSRegion
 
+  console.log('region: ', $userRegion, data?.isUSRegion)
+
   let hideHeader = false;
 
   NProgress.configure({ showSpinner: false });
