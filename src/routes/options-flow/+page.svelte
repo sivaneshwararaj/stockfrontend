@@ -794,7 +794,7 @@ $: {
 
         {#if !$isOpen}
           <div class="text-white text-sm sm:text-[1rem] italic text-center sm:text-start w-full ml-2 mb-3">
-            Live flow of {nyseDate} (NYSE Time)
+            Live flow of {data?.user?.tier === 'Pro' && selectedDate ? df.format(selectedDate?.toDate()) : nyseDate} (NYSE Time)
           </div>
         {/if}
 
