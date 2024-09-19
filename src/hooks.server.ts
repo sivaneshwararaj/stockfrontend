@@ -20,14 +20,14 @@ export const handle = async ({ event, resolve }) => {
     const geoData = await geoResponse.json();
     if (geoData.country === "US") {
       isUS = true;
-      console.log("yelllo", geoData);
+      //console.log("yelllo", geoData);
     }
   }
 
   // Use a more compatible way to get the first element of the split array
-  const userRegion = regionHeader.split("::")[0] || "";
+  const userRegion = "fra1"; //regionHeader.split("::")[0] || "";
 
-  const isUsRegion = usRegion.has(userRegion);
+  const isUsRegion = false; //usRegion.has(userRegion);
 
   // Use a ternary operator instead of the logical OR for better compatibility
   const pbURL = isUsRegion
