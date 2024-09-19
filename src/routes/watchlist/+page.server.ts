@@ -1,10 +1,5 @@
-/*
-import { getCache, setCache } from '$lib/store';
-
-
-
-export const load = async ({parent}) => {
-
+export const load = async ({ locals }) => {
+  /*
   const getMiniPlotsIndex = async () => {
     let output;
 
@@ -30,12 +25,25 @@ export const load = async ({parent}) => {
 
     return output;
   };
+  */
 
+  const getAllWatchlist = async () => {
+    const { pb, user } = locals;
 
+    try {
+      const output = await pb.collection("watchlist").getFullList({
+        filter: `user="${user?.id}"`,
+      });
+
+      return output;
+    } catch (e) {
+      return [];
+    }
+  };
 
   // Make sure to return a promise
   return {
-    getMiniPlotsIndex: await getMiniPlotsIndex(),
+    //getMiniPlotsIndex: await getMiniPlotsIndex(),
+    getAllWatchlist: await getAllWatchlist(),
   };
 };
-*/

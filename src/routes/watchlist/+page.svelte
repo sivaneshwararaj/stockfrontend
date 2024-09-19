@@ -89,9 +89,8 @@ rawData?.forEach(({ symbol, priceData, changesPercentage, previousClose }) => {
 
     let displayWatchList;
 
-    let allList = [];
-    
-  
+    let allList = data?.getAllWatchlist;
+      
   async function handleRenameList() {
     const clicked = document.getElementById('editNameWatchList');
     clicked.dispatchEvent(new MouseEvent('click'));
@@ -309,27 +308,7 @@ async function deleteWatchList(event) {
 
 
 
-async function getAllListData()
-{
-    const response = await fetch('/api/all-watchlists', {
-    method: 'GET',
-    headers: {
-    "Content-Type": "application/json"
-    },
-});
 
-    allList = await response.json();
-
-    if(allList?.length !== 0)
-    {
-      displayWatchList = allList[0]
-    }
-    else {
-      displayWatchList = '';
-    }
-    
-
-}
 
 function changeWatchList(newWatchList)
 {
@@ -339,16 +318,15 @@ function changeWatchList(newWatchList)
 }
 
 
-onMount( async () => {
-
-if (data?.user)
-{
-  await getAllListData()
-
-}
+onMount(() => {
+if(allList?.length !== 0)
+    {
+      displayWatchList = allList[0]
+    }
+    else {
+      displayWatchList = '';
+    }
 isLoaded = true;
-
-
 
 });
 

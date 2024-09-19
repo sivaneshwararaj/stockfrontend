@@ -135,7 +135,6 @@ async function getWatchlistData()
   });
 
 const output = await response.json();
-console.log(output)
 
 try {
   watchList = sortTickersByChange(output[0]);
