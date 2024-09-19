@@ -1,5 +1,5 @@
 //import adapter from '@sveltejs/adapter-static';
-import adapter from "@sveltejs/adapter-vercel";
+import adapter from "@sveltejs/adapter-node";
 
 import compression from "compression";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
@@ -10,8 +10,6 @@ const config = {
     adapter: adapter({
       // Add the compression middleware to the adapter options
       middleware: (handler) => compression()(handler),
-      runtime: "nodejs20.x",
-      regions: ["fra1"],
       worker: true, // Add this line if the adapter supports handling worker files
     }),
   },
