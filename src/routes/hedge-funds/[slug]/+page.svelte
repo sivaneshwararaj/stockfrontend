@@ -20,6 +20,7 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
   
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+  
 
   function sectorSelector(sector) {
     let path;
@@ -73,6 +74,7 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
 
   let isLoaded = false;
   let rawData = data?.getHedgeFundsData;
+  displayCompanyName.update(() => rawData?.name ?? 'Company Data')
   let rawList = []
   let displayList = [];
   let optionsData = {};

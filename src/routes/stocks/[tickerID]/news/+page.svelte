@@ -91,10 +91,10 @@ function loadMoreData() {
 
 
 <section class="w-auto max-w-4xl bg-[#09090B] overflow-hidden text-black h-full mb-40">
-    <div class="m-auto h-full overflow-hidden ">
-            <main class="">
-                <div class="sm:p-7 m-auto mt-2 sm:mt-0">
-                    <div class="mb-6">
+    <div class="m-auto h-full overflow-hidden w-full">
+            <main class="w-full">
+                <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
+                    <div class="mb-6 w-full">
                         <h1 class="text-2xl sm:text-3xl text-white font-bold">
                           News
                         </h1>

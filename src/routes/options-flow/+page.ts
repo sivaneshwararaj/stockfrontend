@@ -37,30 +37,10 @@ const checkMarketHour = async () => {
       isBeforeMarketOpenValue ||
       isAfterMarketCloseValue ||
       holidays?.includes(currentDate)
-    ),
+    )
   );
 };
 
-export const load = async ({ parent }) => {
+export const load = async () => {
   await checkMarketHour();
-  const { apiURL, apiKey } = await parent();
-
-  const getOptionsFlowFeed = async () => {
-    // make the POST request to the endpoint
-    const response = await fetch(apiURL + "/options-flow-feed", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": apiKey,
-      },
-    });
-    const output = await response.json();
-
-    return output;
-  };
-
-  // Make sure to return a promise
-  return {
-    getOptionsFlowFeed: await getOptionsFlowFeed(),
-  };
 };

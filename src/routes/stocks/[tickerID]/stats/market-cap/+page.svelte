@@ -249,6 +249,7 @@ async function plotData()
             type: 'line',
             areaStyle: {opacity: 0.2},
             smooth: true,
+            symbol: 'none',
         },
         ],
         tooltip: {

@@ -83,24 +83,8 @@ rawData?.forEach(({ symbol, priceData, changesPercentage, previousClose }) => {
 });
 
 let isLoaded = false;
-let priceAlertList = [];
+let priceAlertList = data?.getPriceAlert;
         
-    
-    
-async function getPriceAlert()
-{
-    const postData = {'userId': data?.user?.id}
-    const response = await fetch(data?.fastifyURL+'/get-price-alert', {
-    method: 'POST',
-    headers: {
-     "Content-Type": "application/json"
-    },
-    body: JSON.stringify(postData)
-});
-
-    priceAlertList = (await response.json())?.items;
-    priceAlertList= priceAlertList?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
-}
 
 
 
@@ -164,11 +148,7 @@ async function handleDelete() {
 
 onMount( async () => {
 
-if (data?.user)
-{
-    await getPriceAlert()
 
-}
 isLoaded = true;
 
 
