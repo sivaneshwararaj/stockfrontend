@@ -1,6 +1,6 @@
 <script lang='ts'>
   import { goto} from '$app/navigation';
-  import { userRegion, numberOfUnreadNotification } from '$lib/store';
+  import { numberOfUnreadNotification } from '$lib/store';
   import { onMount } from 'svelte';
   import {getImageURL} from '$lib/utils';
 	import TopInvestors from '$lib/components/TopInvestors.svelte';
@@ -12,19 +12,6 @@
 let leaderboard = data?.getLeaderboard ?? [];
 let isLoaded = true;
   
-
-const usRegion = ['cle1','iad1','pdx1','sfo1'];
-
-let fastifyURL;
-
-userRegion.subscribe(value => {
-  if (usRegion.includes(value)) {
-    fastifyURL  = import.meta.env.VITE_USEAST_FASTIFY_URL;
-  } else {
-    fastifyURL  = import.meta.env.VITE_EU_FASTIFY_URL;
-  }
-});
-
 
 let currentDate = new Date();
 
@@ -166,7 +153,7 @@ async function getLeaderboard() {
     'endDate': endDate,
   };
 
-  const response = await fetch(fastifyURL+'/leaderboard', {
+  const response = await fetch(data?.fastifyURL+'/leaderboard', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json"

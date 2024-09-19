@@ -4,7 +4,7 @@
 	import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 
     import { onMount } from 'svelte';
-    import {userRegion, numberOfUnreadNotification, scrollToComment } from '$lib/store';
+    import {numberOfUnreadNotification, scrollToComment } from '$lib/store';
 
     export let data;
     export let form;
@@ -14,19 +14,9 @@
 
     let isLoaded = false;
         
-    const usRegion = ['cle1','iad1','pdx1','sfo1'];
     
-    let fastifyURL;
     
-    userRegion.subscribe(value => {
-    
-        if (usRegion.includes(value)) {
-          fastifyURL = import.meta.env.VITE_USEAST_FASTIFY_URL;
-        } else {
-          fastifyURL = import.meta.env.VITE_EU_FASTIFY_URL;
-        }
-      });
-    
+
     
 async function updateNotifications()
 {
@@ -46,7 +36,7 @@ if (notificationIdList.length !== 0)
 {
   const postData = {'unreadList': notificationIdList};
 
-    await fetch(fastifyURL+'/update-notifications', {
+    await fetch(data?.fastifyURL+'/update-notifications', {
       method: 'POST',
       headers: {
       "Content-Type": "application/json"

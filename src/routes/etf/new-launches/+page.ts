@@ -1,46 +1,29 @@
-import { userRegion, getCache, setCache } from '$lib/store';
+import { getCache, setCache } from "$lib/store";
 
-
-const usRegion = ['cle1','iad1','pdx1','sfo1'];
-
-let apiURL;
-let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
-
-
-userRegion.subscribe(value => {
-
-  if (usRegion.includes(value)) {
-    apiURL = import.meta.env.VITE_USEAST_API_URL;
-  } else {
-    apiURL = import.meta.env.VITE_EU_API_URL;
-  }
-});
-
-
-
-export const load = async () => {
+export const load = async ({ parent }) => {
   const getETFNewLaunches = async () => {
     let output;
 
     // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getETFNewLaunches');
+    const cachedData = getCache("", "getETFNewLaunches");
     if (cachedData) {
       output = cachedData;
     } else {
-      
+      const { apiKey, apiURL } = await parent();
 
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + '/etf-new-launches', {
-        method: 'GET',
+      const response = await fetch(apiURL + "/etf-new-launches", {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": apiKey
+          "Content-Type": "application/json",
+          "X-API-KEY": apiKey,
         },
       });
 
       output = await response.json();
 
       // Cache the data for this specific tickerID with a specific name 'getETFNewLaunches'
-      setCache('', output, 'getETFNewLaunches');
+      setCache("", output, "getETFNewLaunches");
     }
 
     return output;
@@ -48,6 +31,6 @@ export const load = async () => {
 
   // Make sure to return a promise
   return {
-    getETFNewLaunches: await getETFNewLaunches()
+    getETFNewLaunches: await getETFNewLaunches(),
   };
 };

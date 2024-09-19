@@ -9,25 +9,10 @@ export const handle = async ({ event, resolve }) => {
     event?.request?.headers?.get("x-vercel-id") ??
     "fra1::fra1::8t4xg-1700258428633-157d82fdfcc7";
 
-  const ip =
-    event.request.headers.get("x-forwarded-for") ||
-    event.request.headers.get("remote-address");
-
-  let isUS = false;
-
-  if (ip) {
-    const geoResponse = await fetch(`https://ipinfo.io/${ip}/geo`);
-    const geoData = await geoResponse.json();
-    if (geoData.country === "US") {
-      isUS = true;
-      //console.log("yelllo", geoData);
-    }
-  }
-
   // Use a more compatible way to get the first element of the split array
-  const userRegion = "fra1"; //regionHeader.split("::")[0] || "";
+  const userRegion = regionHeader.split("::")[0] || "";
 
-  const isUsRegion = false; //usRegion.has(userRegion);
+  const isUsRegion = usRegion.has(userRegion);
 
   // Use a ternary operator instead of the logical OR for better compatibility
   const pbURL = isUsRegion

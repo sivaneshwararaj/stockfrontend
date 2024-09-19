@@ -1,17 +1,3 @@
-import { userRegion } from "$lib/store";
-
-const usRegion = ["cle1", "iad1", "pdx1", "sfo1"];
-let apiURL;
-let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
-
-userRegion.subscribe((value) => {
-  if (usRegion.includes(value)) {
-    apiURL = import.meta.env.VITE_USEAST_API_URL;
-  } else {
-    apiURL = import.meta.env.VITE_EU_API_URL;
-  }
-});
-
 export const config = {
   runtime: "nodejs20.x",
 };
@@ -107,6 +93,7 @@ const website = "https://stocknear.com";
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ locals }) {
   //get all posts;
+  const { apiKey, apiURL } = locals;
 
   const outputPost = await locals.pb.collection("posts").getFullList();
 
