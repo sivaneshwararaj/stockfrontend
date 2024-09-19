@@ -14,7 +14,6 @@ export const handle = sequence(async ({ event, resolve }) => {
     if (geoData && geoData.country === "US") {
       isUS = true;
     }
-    console.log("yelllo", geoData);
   }
 
   // Use a ternary operator instead of the logical OR for better compatibility

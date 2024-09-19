@@ -119,7 +119,7 @@ function handleTypeOfTrade(state:string)
         ticker: $stockTicker,
       };
 
-      const response = await fetch(`${data?.fastifyURL}/update-watchlist`, {
+      const response = await fetch(data?.fastifyURL+'/update-watchlist', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postData),
