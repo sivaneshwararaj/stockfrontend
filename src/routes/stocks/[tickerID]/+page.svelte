@@ -672,10 +672,10 @@ async function exportData(timePeriod:string) {
     {$displayCompanyName} ({$stockTicker}) Stock Price, Quote & News · stocknear
   </title>
 
-  <meta name="description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock price quote with breaking news, financials, statistics, charts and more.`} />
+  <meta name="description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`} />
   <!-- Other meta tags -->
   <meta property="og:title" content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`} />
-  <meta property="og:description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock price quote with breaking news, financials, statistics, charts and more.`} />
+  <meta property="og:description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`} />
   <!--<meta property="og:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -683,7 +683,7 @@ async function exportData(timePeriod:string) {
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`} />
-  <meta name="twitter:description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock price quote with breaking news, financials, statistics, charts and more.`} />
+  <meta name="twitter:description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`} />
   <!--<meta name="twitter:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>

@@ -164,7 +164,7 @@ async function handleChangeValue(value) {
   <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40">
   
     
-    <div class="text-sm sm:text-[1rem] breadcrumbs">
+    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4 sm:ml-0">
       <ul>
         <li><a href="/" class="text-gray-300">Home</a></li> 
         <li class="text-gray-300">Economic Calendar</li>
@@ -265,17 +265,12 @@ async function handleChangeValue(value) {
 
 
 
-<div class="flex flex-row items-center w-fit ml-auto mt-6 mb-2 mr-3 sm:mr-0">
-{#if filterList?.length !== 0}
-<Button on:click={() => {filterList = []; checkedItems = new Set();} } class="mr-3 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
-  <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-2" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.578 6.487A8 8 0 1 1 2.5 10.5"/><path d="M7.5 6.5h-4v-4"/></g></svg>
-      Reset All
-  </Button>
-{/if}
+<div class="flex flex-row items-center w-fit m-auto sm:m-0 pt-6 pb-3">
 
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-3 sm:gap-y-0 gap-x-2.5 lg:grid-cols-3 w-full mt-3 ">
    <DropdownMenu.Root>
     <DropdownMenu.Trigger asChild let:builder>
-      <Button builders={[builder]}  class="border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+      <Button builders={[builder]}  class="border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
         <span class="truncate text-white">Filter Country</span>
         <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -307,7 +302,58 @@ async function handleChangeValue(value) {
       </DropdownMenu.Group>
     </DropdownMenu.Content>
 </DropdownMenu.Root>
-  
+
+   <DropdownMenu.Root>
+    <DropdownMenu.Trigger asChild let:builder>
+      <Button builders={[builder]}  class="border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+        <span class="truncate text-white">Filter Importance</span>
+        <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+      <div class="relative sticky z-40 focus:outline-none -top-1"
+          tabindex="0" role="menu" style="">
+          
+      </div>
+      <DropdownMenu.Group>
+        {#each [1, 2, 3] as i}
+          <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+            <div class="flex items-center">
+              <label on:click={() => { handleChangeValue(i) }} class="flex flex-row items-center cursor-pointer text-white" for={i}>
+                <input type="checkbox" checked={checkedItems?.has(i)} />
+                <div class="ml-2 flex flex-row items-center">
+                  {#if i > 0}
+                    {#each Array(i).fill() as _, index}
+                      <svg class="w-4 h-4 text-[#FFA500]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                      </svg>
+                    {/each}
+                    {#each Array(3 - i).fill() as _}
+                      <svg class="w-4 h-4 text-gray-300 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                      </svg>
+                    {/each}
+                  {/if}
+                </div>
+              </label>
+            </div>
+          </DropdownMenu.Item>
+        {/each}
+
+      </DropdownMenu.Group>
+    </DropdownMenu.Content>
+</DropdownMenu.Root>
+
+{#if filterList?.length !== 0}
+<Button on:click={() => {filterList = []; checkedItems = new Set();} } class="w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-start items-center px-3 py-2 text-white rounded-lg truncate">
+  <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-2" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.578 6.487A8 8 0 1 1 2.5 10.5"/><path d="M7.5 6.5h-4v-4"/></g></svg>
+      Reset All
+  </Button>
+{/if}
+
+</div>
 
   
 </div>
@@ -321,9 +367,9 @@ async function handleChangeValue(value) {
                       <table class="table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 ">
                           <thead>
                             <tr class="whitespace-nowrap">
-                              <th class="text-start text-white font-semibold text-sm"></th>
+                              <th class="text-start text-white font-semibold text-sm">Time</th>
 
-                              <th class="text-start text-white font-semibold text-sm sm:text-[1rem]"></th>
+                              <th class="text-start text-white font-semibold text-sm sm:text-[1rem]">Country</th>
                               <th class="text-start text-white font-semibold text-sm sm:text-[1rem]">Event</th>
                               <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Actual</th>
                               <th class="text-end text-white font-semibold text-sm sm:text-[1rem]">Forecast</th>
@@ -362,7 +408,7 @@ async function handleChangeValue(value) {
                             </td>
                             
                           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                            {item?.actual !== null ? abbreviateNumber(item?.actual) : '-'}
+                            {item?.actual !== (null || '') ? abbreviateNumber(item?.actual) : '-'}
                           </td>
 
                            <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
@@ -380,7 +426,7 @@ async function handleChangeValue(value) {
                             <td class="text-white text-start text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
                               <div class="flex flex-row items-center justify-end">
                                       {#each Array.from({ length: 3 }) as _, i}
-                                      {#if i <= Math.floor(item?.importance)}
+                                      {#if i < Math.floor(item?.importance)}
                                           <svg class="w-4 h-4 text-[#FFA500]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                                               <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
                                           </svg>

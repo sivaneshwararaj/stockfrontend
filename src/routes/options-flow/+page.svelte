@@ -505,23 +505,6 @@ onDestroy(async() => {
   
   })
   
-
-    async function assetSelector(symbol, assetType)
-      {    
-
-        if(assetType === 'etf')
-        {
-          etfTicker.update(value => symbol);
-          goto(`/etf/${symbol}`)
-        }
-        else if(assetType === 'stock') {
-          stockTicker.update(value => symbol);
-          goto(`/stocks/${symbol}`)
-        }
-        
-    }
-    
-  
   
   function reformatDate(dateString) {
       return dateString.substring(5, 7) + '/' + dateString.substring(8) + '/' + dateString.substring(2, 4);
@@ -1232,17 +1215,16 @@ $: {
                         let:index
                         let:style
                         {style}
-                        class="tr cursor-pointer {index % 2 === 0 ? 'bg-[#27272A]' : 'bg-[#09090B]'}"
+                        class="tr {index % 2 === 0 ? 'bg-[#27272A]' : 'bg-[#09090B]'}"
                       >
                         <!-- Row data -->
                          
                         <div style="justify-content: center;" class="td text-white pb-3 text-xs sm:text-sm text-start">
                           {formatTime(displayedData[index]?.time)}
                         </div>
-
-                        <div on:click|stopPropagation={() => assetSelector(displayedData[index]?.ticker, displayedData[index]?.underlying_type)} style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
+                        <a href={displayedData[index]?.underlying_type === 'stock' ? `/stocks/${displayedData[index]?.ticker}` : `/etf/${displayedData[index]?.ticker}`} on:click|stopPropagation style="justify-content: center;" class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal">
                           {displayedData[index]?.ticker}
-                        </div>
+                        </a>
 
                         <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">
                           {reformatDate(displayedData[index]?.date_expiration)}
