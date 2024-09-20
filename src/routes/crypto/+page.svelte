@@ -2,16 +2,12 @@
 import { goto } from '$app/navigation';
 import { numberOfUnreadNotification, screenWidth } from '$lib/store';
 import { abbreviateNumber  } from '$lib/utils';
-import { page } from '$app/stores';
 import logo from '$lib/images/box_logo.png';
+import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
 
 export let data;
 
-
-
-let charNumber =50;
-let notDestroyed = true;
 
 let rawData = data?.getCryptoList;
 let symbolList = rawData //rawData?.slice(0,30);
@@ -19,21 +15,7 @@ let symbolList = rawData //rawData?.slice(0,30);
 
 
 
-$: {
-    if($screenWidth < 640)
-    {
-    charNumber = 20;
-    }
-    else {
-    charNumber =50;
-    }
-}
-
-$: {
-    if ($page.url.pathname !== '/crypto') {
-    notDestroyed = false;
-    }
-}
+$: charNumber = $screenWidth < 640 ? 15 : 40;
   
 </script>
         
@@ -62,18 +44,25 @@ $: {
 
 </svelte:head>
           
-        <section class="w-full max-w-4xl overflow-hidden m-auto min-h-screen pt-5 pb-40">
-            <!--
-            <div class="text-sm breadcrumbs ml-4">
-                <ul>
-                  <li><a href="/" class="text-gray-300">Home</a></li> 
-                  <li><a class="text-gray-300">All Crypto Symbols</a></li> 
-                </ul>
-            </div>
-          -->
+  <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
+          
+    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+      <ul>
+        <li><a href="/" class="text-gray-300">Home</a></li>
+        <li class="text-gray-300">All Cryptos</li>
+      </ul>
+    </div>
+            
+    <div class="w-full overflow-hidden m-auto mt-5">
+      
+      <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden ">
+          <div class="relative flex justify-center items-start overflow-hidden w-full">
 
-          <div class="w-full max-w-4xl m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+
+              <main class="w-full lg:w-3/4 lg:pr-5">
+               
+                <div class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
           
               <!-- Start Column -->
               <div>
@@ -196,11 +185,65 @@ $: {
             </div>
           </div>
     
-          <!--<InfiniteLoading on:infinite={infiniteHandler} />-->
     
         
      
+      </main>
+              <aside class="hidden lg:block relative fixed w-1/4 ml-4">        
+              
+                {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
+                <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                        <div class="w-full flex justify-between items-center p-3 mt-3">
+                        <h2 class="text-start text-xl font-semibold text-white ml-3">
+                        Pro Subscription 🔥
+                        </h2>
+                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                        </div>
+                        <span class="text-white p-3 ml-3 mr-3">
+                            Upgrade now for unlimited access to all data and tools
+                        </span>
+                    </div>
+                </div>
+                {/if}
+
+                <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                        <div class="w-full flex justify-between items-center p-3 mt-3">
+                        <h2 class="text-start text-xl font-semibold text-white ml-3">
+                        Top Analyst 📊
+                        </h2>
+                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                        </div>
+                        <span class="text-white p-3 ml-3 mr-3">
+                            Get the latest top Wall Street analyst ratings
+                        </span>
+                    </div>
+                </div>
+
+                <div on:click={() => goto('/analysts/top-stocks')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                        <div class="w-full flex justify-between items-center p-3 mt-3">
+                        <h2 class="text-start text-xl font-semibold text-white ml-3">
+                        Top Stocks Picks ⭐
+                        </h2>
+                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                        </div>
+                        <span class="text-white p-3 ml-3 mr-3">
+                            Get the latest top Wall Street analyst ratings.
+                        </span>
+                    </div>
+                </div>
+
+              </aside>
+
+        </div>
+      </div>
+  
+    
+    </div>
         
-        </section>
         
-        
+    
+  </section>
+  

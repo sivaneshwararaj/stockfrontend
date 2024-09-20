@@ -68,8 +68,7 @@ $: {
                     {:else}
                         during market hours.
                     {/if}
-                <br>
-                Analysts project revenue of <strong>{abbreviateNumber(rawData?.revenueEst,true)}</strong>, reflecting a
+                <br>Analysts project revenue of <strong>{abbreviateNumber(rawData?.revenueEst,true)}</strong>, reflecting a
                 <strong>{revenueRatio}%</strong> YoY {revenueRatio > 0 ? 'growth' : revenueRatio < 0 ? 'shrinking' : ''} and earnings per share of
                 <strong>{rawData?.epsEst}</strong>, making a <strong>{epsRatio}%</strong> {epsRatio > 0 ? 'increase' : epsRatio < 0 ? 'decrease' : ''} YoY.
         </div>
