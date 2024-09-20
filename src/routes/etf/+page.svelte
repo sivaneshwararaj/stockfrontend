@@ -135,7 +135,7 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
         
     
         
-        <div class="w-full mt-10 m-auto mb-10 bg-[#09090B] pl-3 pr-3 overflow-hidden">
+        <div class="w-full mt-10 m-auto mb-10 bg-[#09090B] pl-3 pr-3">
         
         
             <!--Start Top Winners/Losers-->
@@ -149,41 +149,35 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
     
               <div class="border-b mt-2 border-blue-400 w-full mb-4" />
     
-      
-              <table class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto overflow-hidden">
+              <div class="w-full overflow-x-scroll">
+              <table class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                 <thead>
                   <tr>
-                    <th class="text-white font-medium hidden sm:table-cell text-[0.95rem] text-start">Symbol</th>
-                    <th class="text-white font-medium text-sm sm:text-[0.95rem]">Fund Name</th>
-                    <th class="text-white font-medium text-end text-sm sm:text-[0.95rem]">Holdings</th>
-                    <th class="text-white font-medium text-end text-sm sm:text-[0.95rem]">Total Assets</th>
+                    <th class="text-white font-medium text-sm sm:text-[1rem] text-start">Symbol</th>
+                    <th class="text-white font-medium text-sm sm:text-[1rem]">Fund Name</th>
+                    <th class="text-white font-medium text-end text-sm sm:text-[1rem]">Holdings</th>
+                    <th class="text-white font-medium text-end text-sm sm:text-[1rem]">Total Assets</th>
                   </tr>
                 </thead>
                 <tbody>
                   {#each stockList as item,index}
                   <tr on:click={() => goto("/etf/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer">
                     
-                    <td class="hidden sm:table-cell text-blue-400 font-medium text-sm text-start border-b-[#09090B]">
+                    <td class="text-blue-400 font-medium text-sm sm:text-[1rem] text-start border-b-[#09090B]">
                       {item?.symbol}
                     </td>
       
-                    <td class="text-gray-200 border-b-[#09090B]">
-                      <span class="hidden sm:block text-white">{item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}</span>
-                      <div class="sm:hidden flex flex-row">
-                        <div class="flex flex-col">
-                          <span class="text-blue-400 font-medium">{item?.symbol}</span>
-                          <span class="text-white">{item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}</span>
-                        </div>
-                      </div>
+                    <td class="text-white whitespace-nowrap text-sm sm:text-[1rem] border-b-[#09090B]">
+                     {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
                     </td>
                   
                   
-                    <td class="text-white text-center border-b-[#09090B]">
+                    <td class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]">
                       {item?.numberOfHoldings !== null ? abbreviateNumber(item?.numberOfHoldings) : '-'}
                     </td>
                     
       
-                  <td class="text-white border-b-[#09090B] text-end">
+                  <td class="text-white whitespace-nowrap text-sm sm:text-[1rem] border-b-[#09090B] text-end">
                     {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets,true) : '-'}
                   </td>
           
@@ -195,6 +189,7 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
       
                 </tbody>
               </table>
+            </div>
           </div>
         
         
