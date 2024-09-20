@@ -181,7 +181,7 @@ $: {
 
         <td class="text-white border-b-[#09090B] text-end flex flex-row items-center justify-end font-semibold">
           {#if item?.return >=0 && item?.return !== null}
-            <span class="inline-block text-[#10DB06] text-sm sm:text-[1rem] whitespace-nowrap">{abbreviateNumber(item?.return)}%</span>
+            <span class="inline-block text-[#37C97D] text-sm sm:text-[1rem] whitespace-nowrap">{abbreviateNumber(item?.return)}%</span>
           {:else if item?.return < 0 && item?.return !== null}
             <span class="inline-block text-[#FF2F1F] text-sm sm:text-[1rem] whitespace-nowrap">{abbreviateNumber(item?.return)}% </span> 
           {:else}

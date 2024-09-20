@@ -395,7 +395,7 @@ function findIndex(data) {
                             </span>
                           {/if}
                         {:else if item?.val - tableDataActual[index - 1]?.val > 0}
-                          <span class="text-[#10DB06]">
+                          <span class="text-[#37C97D]">
                             {(((item?.val - tableDataActual[index - 1]?.val) / Math.abs(tableDataActual[index - 1]?.val)) * 100)?.toFixed(2)}%
                           </span>
                         {:else if item?.val - tableDataActual[index - 1]?.val < 0}

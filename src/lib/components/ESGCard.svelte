@@ -68,7 +68,7 @@ $: {
                 {esgScore}
               </span>
             </div>
-            <progress class="progress bg-[#3B3D3F] w-11/12 {esgScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={esgScore} max="100"></progress>
+            <progress class="progress bg-[#3B3D3F] w-11/12 {esgScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={esgScore} max="100"></progress>
           </div>
 
 
@@ -82,7 +82,7 @@ $: {
                 {environmentalScore}
               </span>
             </div>
-            <progress class="progress bg-[#3B3D3F] w-11/12 {environmentalScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={environmentalScore} max="100"></progress>
+            <progress class="progress bg-[#3B3D3F] w-11/12 {environmentalScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={environmentalScore} max="100"></progress>
           </div>
 
           <div class="flex flex-col items-center w-full">
@@ -94,7 +94,7 @@ $: {
                 {socialScore}
               </span>
             </div>
-            <progress class="progress bg-[#3B3D3F] w-11/12 {socialScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={socialScore} max="100"></progress>
+            <progress class="progress bg-[#3B3D3F] w-11/12 {socialScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={socialScore} max="100"></progress>
           </div>
 
 
@@ -107,7 +107,7 @@ $: {
                 {governanceScore}
               </span>
             </div>
-            <progress class="progress bg-[#3B3D3F] w-11/12 {governanceScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={governanceScore} max="100"></progress>
+            <progress class="progress bg-[#3B3D3F] w-11/12 {governanceScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={governanceScore} max="100"></progress>
           </div>
 
 
@@ -165,7 +165,7 @@ $: {
               {esgScore}
             </span>
             </div>
-            <progress class="progress w-full {esgScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={esgScore} max="100"></progress>
+            <progress class="progress w-full {esgScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={esgScore} max="100"></progress>
         </div>
       </div>
 
@@ -179,7 +179,7 @@ $: {
               {environmentalScore}
             </span>
             </div>
-            <progress class="progress w-full {environmentalScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={environmentalScore} max="100"></progress>
+            <progress class="progress w-full {environmentalScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={environmentalScore} max="100"></progress>
         </div>
       </div>
 
@@ -192,7 +192,7 @@ $: {
             <span class="text-white text-md font-medium ml-auto">
               {socialScore}
             </div>
-            <progress class="progress w-full {socialScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={socialScore} max="100"></progress>
+            <progress class="progress w-full {socialScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={socialScore} max="100"></progress>
         </div>
       </div>
 
@@ -205,7 +205,7 @@ $: {
             <span class="text-white text-md font-medium ml-auto">
               {governanceScore}
             </div>
-            <progress class="progress w-full {governanceScore >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={governanceScore} max="100"></progress>
+            <progress class="progress w-full {governanceScore >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]'  : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}" value={governanceScore} max="100"></progress>
         </div>
       </div>
     

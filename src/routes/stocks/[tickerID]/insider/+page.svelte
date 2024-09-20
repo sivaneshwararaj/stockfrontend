@@ -558,7 +558,7 @@ onMount(async() => {
                                   </td>
                                   <td class="font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]">
                                     {#if item?.transactionType === 'Bought'}
-                                      <span class="text-[#10DB06]">Bought</span>
+                                      <span class="text-[#37C97D]">Bought</span>
                                     {:else if item?.transactionType === 'Grant'}
                                       <span class="text-white">Grant</span>
                                     {:else if item?.transactionType === 'Sold'}

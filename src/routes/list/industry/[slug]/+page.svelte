@@ -208,7 +208,7 @@ function getPlotOptions() {
                             </td>
 
         
-                            <td class="text-sm sm:text-[1rem] whitespace-nowrap {(item?.changesPercentage !== null && item?.changesPercentage >= 0) ? 'text-[#10DB06]' : item?.changesPercentage < 0 ? 'text-[#FF2F1F]' : 'text-white'} text-end">
+                            <td class="text-sm sm:text-[1rem] whitespace-nowrap {(item?.changesPercentage !== null && item?.changesPercentage >= 0) ? 'text-[#37C97D]' : item?.changesPercentage < 0 ? 'text-[#FF2F1F]' : 'text-white'} text-end">
                                 {item?.changesPercentage !== null ? item?.changesPercentage : '-'}
                               </td>
 

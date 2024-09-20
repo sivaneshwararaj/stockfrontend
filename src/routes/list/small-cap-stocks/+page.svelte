@@ -140,7 +140,7 @@
                             <span class="text-white font-semibold text-md ml-auto">${item.price?.toFixed(2)}</span>
                             <div class="flex flex-row mt-0.5 ml-auto">
                               {#if item?.changesPercentage >=0}
-                                <span class="text-[#10DB06] font-medium">+{item?.changesPercentage?.toFixed(2)}%</span>
+                                <span class="text-[#37C97D] font-medium">+{item?.changesPercentage?.toFixed(2)}%</span>
                               {:else}
                                 <span class="text-[#FF2F1F] font-medium">{item?.changesPercentage?.toFixed(2)}% </span> 
                               {/if}

@@ -103,7 +103,7 @@ function latestInfoDate(inputDate) {
       </span> 
       <div class="flex mt-5 h-auto">
       
-        <div class="{activeIdx === 0 ? 'bg-[#10DB06]' : 'bg-[#FF2F1F]'} w-full max-w-[3px] rounded-l-xl" />
+        <div class="{activeIdx === 0 ? 'bg-[#37C97D]' : 'bg-[#FF2F1F]'} w-full max-w-[3px] rounded-l-xl" />
         <span class="text-gray-100 ml-3 text-[1rem] w-full">
           {#if activeIdx === 0}
           <p class="pr-1">{rawData?.bullSays}</p>

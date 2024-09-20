@@ -109,7 +109,7 @@
   
           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap flex flex-row items-center justify-end">
             {#if item?.return >=0 && item?.return !== null}
-              <span class="inline-block text-[#10DB06] text-md">{abbreviateNumber(item?.return)}%</span>
+              <span class="inline-block text-[#37C97D] text-md">{abbreviateNumber(item?.return)}%</span>
             {:else if item?.return < 0 && item?.return !== null}
               <span class="inline-block text-[#FF2F1F] text-md">{abbreviateNumber(item?.return)}% </span> 
             {:else}

@@ -571,9 +571,9 @@ $: {
                                                 {#if (item?.value === 0 && tableList[index+1]?.value < 0)}
                                                     <span class="text-[#FF2F1F]">-100.00%</span>
                                                 {:else if (item?.value === 0 && tableList[index+1]?.value > 0)}
-                                                    <span class="text-[#10DB06]">100.00%</span>
+                                                    <span class="text-[#37C97D]">100.00%</span>
                                                 {:else if ((item?.value - tableList[index+1]?.value) > 0)}
-                                                    <span class="text-[#10DB06]">
+                                                    <span class="text-[#37C97D]">
                                                         {(((item?.value - tableList[index+1]?.value) / Math.abs(item?.value)) * 100)?.toFixed(2)}%
                                                     </span>
                                                 {:else if ((item?.value - tableList[index+1]?.value) < 0)}

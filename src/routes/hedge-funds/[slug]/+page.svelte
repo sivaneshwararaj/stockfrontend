@@ -505,7 +505,7 @@ onMount(async () => {
                         <div class="flex flex-col items-end ">
                           <div class="flex flex-row mt-1 text-[1rem] font-semibold">
                             {#if rawData.winRate >=0}
-                              <span class="text-[#10DB06]">+{abbreviateNumber(rawData.winRate?.toFixed(2))}%</span>
+                              <span class="text-[#37C97D]">+{abbreviateNumber(rawData.winRate?.toFixed(2))}%</span>
                             {:else}
                               <span class="text-[#FF2F1F]">{abbreviateNumber(rawData.winRate?.toFixed(2))}% </span> 
                             {/if}
@@ -584,7 +584,7 @@ onMount(async () => {
                           <span class="font-medium text-gray-200 text-sm sm:text-[0.85rem]">3 Year Perf.</span>
                           <span class="text-start text-[1rem] sm:text-sm font-semibold text-white mt-0.5">
                             {#if rawData?.performancePercentage3year >=0}
-                            <span class="text-[#10DB06]">+{abbreviateNumber(rawData?.performancePercentage3year?.toFixed(2))}%</span>
+                            <span class="text-[#37C97D]">+{abbreviateNumber(rawData?.performancePercentage3year?.toFixed(2))}%</span>
                           {:else}
                             <span class="text-[#FF2F1F]">{abbreviateNumber(rawData?.performancePercentage3year?.toFixed(2))}% </span> 
                           {/if}
@@ -619,7 +619,7 @@ onMount(async () => {
                         <span class="font-medium text-gray-200 text-sm sm:text-[0.85rem]">5 Year Perf.</span>
                         <span class="text-start text-[1rem] sm:text-sm font-semibold text-white mt-0.5">
                           {#if rawData?.performancePercentage5year >=0}
-                          <span class="text-[#10DB06]">+{abbreviateNumber(rawData?.performancePercentage5year?.toFixed(2))}%</span>
+                          <span class="text-[#37C97D]">+{abbreviateNumber(rawData?.performancePercentage5year?.toFixed(2))}%</span>
                         {:else}
                           <span class="text-[#FF2F1F]">{abbreviateNumber(rawData?.performancePercentage5year?.toFixed(2))}% </span> 
                         {/if}
@@ -654,7 +654,7 @@ onMount(async () => {
                         <span class="font-medium text-gray-200 text-sm sm:text-[0.85rem]">Incept. Perf.</span>
                         <span class="text-start text-[1rem] sm:text-sm font-semibold text-white mt-0.5">
                           {#if rawData?.performanceSinceInceptionPercentage >=0}
-                          <span class="text-[#10DB06]">+{abbreviateNumber(rawData?.performanceSinceInceptionPercentage?.toFixed(2))}%</span>
+                          <span class="text-[#37C97D]">+{abbreviateNumber(rawData?.performanceSinceInceptionPercentage?.toFixed(2))}%</span>
                         {:else}
                           <span class="text-[#FF2F1F]">{abbreviateNumber(rawData?.performanceSinceInceptionPercentage?.toFixed(2))}% </span> 
                         {/if}
@@ -778,7 +778,7 @@ onMount(async () => {
                           <span class="font-medium text-gray-200 text-[1rem]">3 Year Perf.</span>
                           <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
                             {#if rawData?.performancePercentage3year >=0}
-                            <span class="text-[#10DB06]">+{abbreviateNumber(rawData?.performancePercentage3year?.toFixed(2))}%</span>
+                            <span class="text-[#37C97D]">+{abbreviateNumber(rawData?.performancePercentage3year?.toFixed(2))}%</span>
                           {:else}
                             <span class="text-[#FF2F1F]">{abbreviateNumber(rawData?.performancePercentage3year?.toFixed(2))}% </span> 
                           {/if}
@@ -804,7 +804,7 @@ onMount(async () => {
                           <span class="font-medium text-gray-200 text-[1rem]">5 Year Perf.</span>
                           <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
                             {#if rawData?.performancePercentage5year >=0}
-                            <span class="text-[#10DB06]">+{abbreviateNumber(rawData?.performancePercentage5year?.toFixed(2))}%</span>
+                            <span class="text-[#37C97D]">+{abbreviateNumber(rawData?.performancePercentage5year?.toFixed(2))}%</span>
                           {:else}
                             <span class="text-[#FF2F1F]">{abbreviateNumber(rawData?.performancePercentage5year?.toFixed(2))}% </span> 
                           {/if}
@@ -831,7 +831,7 @@ onMount(async () => {
                           <span class="font-medium text-gray-200 text-[1rem]">Incept. Perf.</span>
                           <span class="text-start text-[1rem] font-semibold text-white mt-0.5">
                             {#if rawData?.performanceSinceInceptionPercentage >=0}
-                            <span class="text-[#10DB06]">+{abbreviateNumber(rawData?.performanceSinceInceptionPercentage?.toFixed(2))}%</span>
+                            <span class="text-[#37C97D]">+{abbreviateNumber(rawData?.performanceSinceInceptionPercentage?.toFixed(2))}%</span>
                           {:else}
                             <span class="text-[#FF2F1F]">{abbreviateNumber(rawData?.performanceSinceInceptionPercentage?.toFixed(2))}% </span> 
                           {/if}

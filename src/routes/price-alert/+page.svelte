@@ -365,7 +365,7 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
 
                     <td class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]">
                       {#if item?.changesPercentage >=0}
-                        <span class="text-[#10DB06]">+{item?.changesPercentage?.toFixed(2)}%</span>
+                        <span class="text-[#37C97D]">+{item?.changesPercentage?.toFixed(2)}%</span>
                       {:else}
                         <span class="text-[#FF2F1F]">{item?.changesPercentage?.toFixed(2)}% </span> 
                       {/if}

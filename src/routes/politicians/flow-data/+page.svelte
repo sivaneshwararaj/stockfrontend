@@ -545,7 +545,7 @@
                                       <span class="font-medium text-white">Type</span>
                                       <span class="text-white text-md text-end">
                                         {#if item?.type === 'Bought'}
-                                          <span class="text-[#10DB06]">Bought</span>
+                                          <span class="text-[#37C97D]">Bought</span>
                                         {:else if item?.type === 'Sold'}
                                           <span class="text-[#FF2F1F]">Sold</span>
                                         {/if}
@@ -623,7 +623,7 @@
                                 </td>
                                 <td class="text-sm sm:text-[1rem] text-end text-white">
                                   {#if item?.type === 'Bought'}
-                                    <span class="text-[#10DB06]">Bought</span>
+                                    <span class="text-[#37C97D]">Bought</span>
                                   {:else if item?.type === 'Sold'}
                                     <span class="text-[#FF2F1F]">Sold</span>
                                   {/if}

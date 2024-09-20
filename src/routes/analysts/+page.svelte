@@ -260,14 +260,14 @@ $: {
                       <tbody>
                         {#each analytRatingList as item, index}
 
-                        <tr on:click={() => goto(`/analysts/${item?.analystId}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === rawData?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
+                        <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === rawData?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                           <td class="text-white text-sm sm:text-[1rem] font-semibold text-white text-center">
                             {item?.rank}
                           </td>
 
                           <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap">
                             <div class="flex flex-col items-start">
-                              <span class="text-blue-400 font-medium">{item?.analystName} </span>
+                              <a href={"/analysts/"+item?.analystId} class="sm:hover:text-white text-blue-400 font-medium">{item?.analystName} </a>
                               <span class="text-white ">{item?.companyName} </span>
                                   <div class="flex flex-row items-center mt-1">
                                     {#each Array.from({ length: 5 }) as _, i}

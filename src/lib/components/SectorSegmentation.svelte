@@ -124,7 +124,7 @@ $: {
                                             {item?.exposure <= 0.01 ? "< 0.01%" : item?.exposure?.toFixed(2)+'%'}
                                         </span>
                                         </div>
-                                        <progress class="progress [&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]"  value={(item?.exposure)} max="100"></progress>
+                                        <progress class="progress [&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]"  value={(item?.exposure)} max="100"></progress>
                                     </div>
 
                                 </div>

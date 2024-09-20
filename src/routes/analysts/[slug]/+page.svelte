@@ -263,7 +263,7 @@ function sectorSelector(sector) {
                               <td class="text-sm sm:text-[1rem] text-start whitespace-nowrap">
                                 <div class="flex flex-col sm:flex-row items-start">
                                   <span class="font-medium text-white mr-1">{item?.action_company}:</span>
-                                  <span class="font-medium {['Strong Buy', 'Buy']?.includes(item?.rating_current) ? 'text-[#10DB06]' : item?.rating_current === 'Hold' ? 'text-[#FF7070]' : ['Strong Sell','Sell']?.includes(item?.rating_current) ? 'text-[#FF2F1F]' : 'text-gray-300'}"> 
+                                  <span class="font-medium {['Strong Buy', 'Buy']?.includes(item?.rating_current) ? 'text-[#37C97D]' : item?.rating_current === 'Hold' ? 'text-[#FF7070]' : ['Strong Sell','Sell']?.includes(item?.rating_current) ? 'text-[#FF2F1F]' : 'text-gray-300'}"> 
                                     {item?.rating_current}
                                   </span>
                                 </div>

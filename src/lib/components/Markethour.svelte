@@ -13,8 +13,8 @@
       Market Open
     </span>
     <span class="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2 ml-2">
-      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10DB06] opacity-75"></span>
-      <span class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-[#10DB06]"></span>
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#37C97D] opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-[#37C97D]"></span>
     </span>
 
   </div>

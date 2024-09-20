@@ -125,7 +125,7 @@ $: charNumber = $screenWidth < 640 ? 15 : 20;
                           <div class="flex flex-row mt-0.5 ml-auto">
                             {#if item.changesPercentage >=0}
                               <svg class="w-5 h-5 -mr-0.5 -mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
-                              <span class="text-[#10DB06]">+{item.changesPercentage?.toFixed(2)}%</span>
+                              <span class="text-[#37C97D]">+{item.changesPercentage?.toFixed(2)}%</span>
                             {:else}
                               <svg class="w-5 h-5 -mr-0.5 -mt-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
                               <span class="text-[#FF2F1F]">{item.changesPercentage?.toFixed(2)}% </span> 

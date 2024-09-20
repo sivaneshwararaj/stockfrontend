@@ -351,7 +351,7 @@ if(watchList && isLoaded)
         <div class="flex flex-row items-center mr-3 ml-auto">
         {#if roundedMean >= 0}
             <svg class="inline-block w-5 h-5 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
-            <span class="text-[#10DB06] text-sm font-medium">+{roundedMean}%</span>
+            <span class="text-[#37C97D] text-sm font-medium">+{roundedMean}%</span>
         {:else if roundedMean < 0}
             <svg class="inline-block w-5 h-5 mt-1 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
             <span class="text-[#FF2F1F] text-sm font-medium">{roundedMean}%</span>
@@ -444,7 +444,7 @@ if(watchList && isLoaded)
 
               <td class="border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
                 {#if item?.changesPercentage >=0}
-                <span class="text-[#10DB06]">+{item?.changesPercentage?.toFixed(2)}%</span>
+                <span class="text-[#37C97D]">+{item?.changesPercentage?.toFixed(2)}%</span>
               {:else}
                 <span class="text-[#FF2F1F]">{item?.changesPercentage?.toFixed(2)}% </span> 
               {/if}

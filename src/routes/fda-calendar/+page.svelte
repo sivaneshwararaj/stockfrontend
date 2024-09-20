@@ -212,7 +212,7 @@
 
                           <td class="text-end text-white text-sm sm:text-[1rem] font-medium">
                               {#if item?.changesPercentage >=0}
-                              <span class="text-[#10DB06]">+{item?.changesPercentage}%</span>
+                              <span class="text-[#37C97D]">+{item?.changesPercentage}%</span>
                             {:else}
                               <span class="text-[#FF2F1F]">{item?.changesPercentage}% </span> 
                             {/if}

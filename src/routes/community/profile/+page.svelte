@@ -875,8 +875,8 @@ onDestroy(async () => {
                                   <div class="ml-2 flex flex-row items-center">
                                 
                                     <span class="relative flex h-2 w-2 ">
-                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full {subscriptionData?.status_formatted === 'Active' || subscriptionData?.status_formatted === 'Paid' || subscriptionData?.status_formatted === 'On Trial' || data?.user?.freeTrial === true ? 'bg-[#10DB06]' : 'bg-[#FF3131]'} opacity-75"></span>
-                                      <span class="relative inline-flex rounded-full h-2 w-2 {subscriptionData?.status_formatted === 'Active' || subscriptionData?.status_formatted === 'Paid' || subscriptionData?.status_formatted === 'On Trial' || data?.user?.freeTrial === true ? 'bg-[#10DB06]' : 'bg-[#FF3131]'}"></span>
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full {subscriptionData?.status_formatted === 'Active' || subscriptionData?.status_formatted === 'Paid' || subscriptionData?.status_formatted === 'On Trial' || data?.user?.freeTrial === true ? 'bg-[#37C97D]' : 'bg-[#FF3131]'} opacity-75"></span>
+                                      <span class="relative inline-flex rounded-full h-2 w-2 {subscriptionData?.status_formatted === 'Active' || subscriptionData?.status_formatted === 'Paid' || subscriptionData?.status_formatted === 'On Trial' || data?.user?.freeTrial === true ? 'bg-[#37C97D]' : 'bg-[#FF3131]'}"></span>
                                     </span>
 
                                     <span class="ml-2 text-[1rem] text-slate-200 font-medium">
@@ -1119,7 +1119,7 @@ onDestroy(async () => {
       </span>
     </div>
 
-    <button on:click={() => isClicked = !isClicked} class="{!isClicked ? '' : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-full text-center bg-[#10DB06] text-black font-semibold text-[1rem] font-normal">
+    <button on:click={() => isClicked = !isClicked} class="{!isClicked ? '' : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-full text-center bg-[#37C97D] text-black font-semibold text-[1rem] font-normal">
       Change to Annual Plan
       <input class="hidden" name='subscriptionId' value={subscriptionData?.first_subscription_item?.subscription_id}/>
     </button>

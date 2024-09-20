@@ -380,7 +380,7 @@ async function plotData()
                                                 -
                                                 {:else}
                                                 {#if (item?.marketCap- tableList[index+1]?.marketCap) > 0}
-                                                <span class="text-[#10DB06]">
+                                                <span class="text-[#37C97D]">
                                                   +{(((item?.marketCap-tableList[index+1]?.marketCap) / item?.marketCap) * 100 )?.toFixed(2)}%
                                                 </span>
                                                 {:else if (item?.marketCap - tableList[index+1]?.marketCap ) < 0}

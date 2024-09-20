@@ -253,13 +253,15 @@ $: {
                         <tbody>
                           {#each analytRatingList as item, index}
   
-                          <tr on:click={() => goto(`/stocks/${item?.ticker}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === rawData?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
+                          <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === rawData?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                             <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white text-center">
                               {item?.rank}
                             </td>
   
-                            <td class="text-blue-400 text-sm sm:text-[1rem] whitespace-nowrap text-start">
+                            <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start">
+                              <a href={"/stocks/"+item?.ticker} class="sm:hover:text-white text-blue-400">
                                 {item?.ticker}
+                              </a>
                             </td>
   
                             <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start">

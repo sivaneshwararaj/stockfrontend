@@ -182,7 +182,7 @@ changeTab(0)
                       />
                     </label>      
 
-                      <div class="mt-1 break-words font-semibold leading-8 text-light text-xl {changesPercentage >= 0 ? 'text-[#10DB06]' : changesPercentage < 0 ? 'text-[#FF2F1F]' : 'text-white'}">
+                      <div class="mt-1 break-words font-semibold leading-8 text-light text-xl {changesPercentage >= 0 ? 'text-[#37C97D]' : changesPercentage < 0 ? 'text-[#FF2F1F]' : 'text-white'}">
                         {changesPercentage > 0 ? '+' : ''}{changesPercentage}
                       </div> 
                   </div>
@@ -279,7 +279,7 @@ changeTab(0)
                 
                                     <td class="text-sm sm:text-[1rem] whitespace-nowrap text-center text-white">
                                         <div class="flex flex-col items-start">
-                                            <span class="text-[1rem] font-medium {['Strong Buy', 'Buy']?.includes(item?.rating_current) ? 'text-[#10DB06]' : item?.rating_current === 'Hold' ? 'text-[#FF7070]' : ['Strong Sell','Sell']?.includes(item?.rating_current) ? 'text-[#FF2F1F]' : ''}"> 
+                                            <span class="text-[1rem] font-medium {['Strong Buy', 'Buy']?.includes(item?.rating_current) ? 'text-[#37C97D]' : item?.rating_current === 'Hold' ? 'text-[#FF7070]' : ['Strong Sell','Sell']?.includes(item?.rating_current) ? 'text-[#FF2F1F]' : ''}"> 
                                                 {item?.rating_current}
                                             </span>
                                             <span class="font-medium text-white">{item?.action_company?.replace('Initiates Coverage On','Initiates')}</span>

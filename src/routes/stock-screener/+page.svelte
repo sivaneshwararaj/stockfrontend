@@ -1341,7 +1341,7 @@ function handleInput(event) {
 
                           <td class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]">
                             {#if item?.changesPercentage >=0}
-                              <span class="text-[#10DB06]">+{item?.changesPercentage >= 1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}%</span>
+                              <span class="text-[#37C97D]">+{item?.changesPercentage >= 1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}%</span>
                             {:else}
                               <span class="text-[#FF2F1F]">{item?.changesPercentage <= -1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}% </span> 
                             {/if}

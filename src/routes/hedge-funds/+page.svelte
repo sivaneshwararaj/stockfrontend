@@ -209,7 +209,7 @@ async function handleInput(event) {
                                       <label class="cursor-pointer flex flex-col items-start">
                                           <div class="flex flex-row mt-1 text-[1rem] font-semibold">
                                             {#if item?.performancePercentage3year >=0}
-                                              <span class="text-[#10DB06]">+{abbreviateNumber(item?.performancePercentage3year?.toFixed(2))}%</span>
+                                              <span class="text-[#37C97D]">+{abbreviateNumber(item?.performancePercentage3year?.toFixed(2))}%</span>
                                             {:else}
                                               <span class="text-[#FF2F1F]">{abbreviateNumber(item?.performancePercentage3year?.toFixed(2))}% </span> 
                                             {/if}
@@ -220,7 +220,7 @@ async function handleInput(event) {
                                       <div class="flex flex-col items-end ">
                                         <div class="flex flex-row mt-1 text-[1rem] font-semibold">
                                           {#if item?.winRate >=0}
-                                            <span class="text-[#10DB06]">+{abbreviateNumber(item?.winRate?.toFixed(2))}%</span>
+                                            <span class="text-[#37C97D]">+{abbreviateNumber(item?.winRate?.toFixed(2))}%</span>
                                           {:else}
                                             <span class="text-[#FF2F1F]">{abbreviateNumber(item?.winRate?.toFixed(2))}% </span> 
                                           {/if}

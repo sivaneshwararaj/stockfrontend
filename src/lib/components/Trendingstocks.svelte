@@ -58,7 +58,7 @@ $: {
             <div class ="flex justify-center items-center m-auto font-medium text-xs sm:text-sm relative bottom-0">
               {#if item?.changesPercentage >=0}
                 <svg class="w-2.5 h-2.5 inline-block mt-0.5 mr-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="#10DB06" d="M3 19h18a1.002 1.002 0 0 0 .823-1.569l-9-13c-.373-.539-1.271-.539-1.645 0l-9 13A.999.999 0 0 0 3 19z"/></g></svg>
-                <span class="items-center justify-start text-[#10DB06]">+{item?.changesPercentage?.toFixed(2)}%</span>
+                <span class="items-center justify-start text-[#37C97D]">+{item?.changesPercentage?.toFixed(2)}%</span>
               {:else}
                 <svg class="w-2.5 h-2.5 inline-block mt-0.5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(180 12 12)"><path fill="#FF2F1F" d="M3 19h18a1.002 1.002 0 0 0 .823-1.569l-9-13c-.373-.539-1.271-.539-1.645 0l-9 13A.999.999 0 0 0 3 19z"/></g></svg>
                 <span class="items-center justify-start text-[#FF2F1F]">

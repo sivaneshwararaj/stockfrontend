@@ -65,11 +65,11 @@ function formatFilename(industryName) {
             {item?.profitMargin?.toFixed(2)}%
         </td>
 
-        <td class="{item?.avgChange1M >= 0 ? 'text-[#10DB06]' : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+        <td class="{item?.avgChange1M >= 0 ? 'text-[#37C97D]' : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
             {item?.avgChange1M?.toFixed(2) ?? '-'}%
         </td>
 
-        <td class="{item?.avgChange1Y >= 0 ? 'text-[#10DB06]' : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+        <td class="{item?.avgChange1Y >= 0 ? 'text-[#37C97D]' : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
             {item?.avgChange1Y?.toFixed(2) ?? '-'}%
         </td>
 

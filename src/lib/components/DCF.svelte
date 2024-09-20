@@ -266,7 +266,7 @@ $: {
                             The DCF model signals a
                         
                             {#if change < -3 }
-                            <span class="text-[#10DB06]">
+                            <span class="text-[#37C97D]">
                             <svg class="w-6 h-6 sm:w-7 sm:h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#10db06" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><path d="m3 17l6-6l4 4l8-8"/><path d="M17 7h4v4"/></g></svg>
                             Buy
                             </span>
@@ -293,7 +293,7 @@ $: {
                         {:else if change < 0 }
                         <div class="text-white">
                             The Stock Price is
-                            <span class="text-[#10DB06]">{Math?.abs(change)}% undervalued</span>.
+                            <span class="text-[#37C97D]">{Math?.abs(change)}% undervalued</span>.
                         </div>
                         {/if}
         

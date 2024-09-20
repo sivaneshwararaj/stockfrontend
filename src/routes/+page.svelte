@@ -248,7 +248,7 @@ onMount( async() => {
                   <!--${quickInfo?.active?.price}-->
                       {#if quickInfo?.active?.changesPercentage >=0}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
-                      <span class="text-[#10DB06] font-medium">+{quickInfo?.active?.changesPercentage?.toFixed(2)}%</span>
+                      <span class="text-[#37C97D] font-medium">+{quickInfo?.active?.changesPercentage?.toFixed(2)}%</span>
                     {:else}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 inline-block rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
                       <span class="text-[#FF2F1F] font-medium">{quickInfo?.active?.changesPercentage?.toFixed(2)}% </span> 
@@ -269,7 +269,7 @@ onMount( async() => {
                   <!--${quickInfo?.winner?.price}-->
                       {#if quickInfo?.winner?.changesPercentage >=0}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
-                      <span class="text-[#10DB06] font-medium">+{abbreviateNumber(quickInfo?.winner?.changesPercentage?.toFixed(2))}%</span>
+                      <span class="text-[#37C97D] font-medium">+{abbreviateNumber(quickInfo?.winner?.changesPercentage?.toFixed(2))}%</span>
                     {:else}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
                       <span class="text-[#FF2F1F] font-medium">{abbreviateNumber(quickInfo?.winner?.changesPercentage?.toFixed(2))}% </span> 
@@ -290,7 +290,7 @@ onMount( async() => {
                   <!--${quickInfo?.loser?.price?.toFixed(2)}-->
                       {#if quickInfo?.loser?.changesPercentage >=0}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
-                      <span class="text-[#10DB06] font-medium">+{abbreviateNumber(quickInfo?.loser?.changesPercentage?.toFixed(2))}%</span>
+                      <span class="text-[#37C97D] font-medium">+{abbreviateNumber(quickInfo?.loser?.changesPercentage?.toFixed(2))}%</span>
                     {:else}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
                       <span class="text-[#FF2F1F] font-medium">{abbreviateNumber(quickInfo?.loser?.changesPercentage?.toFixed(2))}% </span> 
@@ -312,7 +312,7 @@ onMount( async() => {
                 <p class="text-start text-[1rem] sm:text-lg font-medium text-[#FF2F1F] mt-1">
                   {#if quickInfo?.topSector?.changesPercentage >=0}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>
-                      <span class="text-[#10DB06] font-medium">+{abbreviateNumber(quickInfo?.topSector?.changesPercentage?.toFixed(2))}%</span>
+                      <span class="text-[#37C97D] font-medium">+{abbreviateNumber(quickInfo?.topSector?.changesPercentage?.toFixed(2))}%</span>
                     {:else}
                       <svg class="hidden sm:inline-block w-5 h-5 -mr-0.5 -mt-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g id="evaArrowUpFill0"><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"/></g></g></svg>    
                       <span class="text-[#FF2F1F] font-medium">{abbreviateNumber(quickInfo?.topSector?.changesPercentage?.toFixed(2))}% </span> 

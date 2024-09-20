@@ -46,7 +46,7 @@
         </div>
         <div class="flex flex-row m-auto w-full">
           {#if consensusRating === "Buy" || consensusRating === "Strong Buy"}
-            <span class="text-start font-semibold text-[#10DB06] mr-auto ml-5 mt-2 text-xl">
+            <span class="text-start font-semibold text-[#37C97D] mr-auto ml-5 mt-2 text-xl">
               {consensusRating}
             </span>
           {:else if consensusRating === "Sell" || consensusRating === "Strong Sell"}
@@ -87,7 +87,7 @@
                 {buyCount}%
               </span>
             </div>
-            <progress class="progress bg-[#3B3D3F] w-11/12 [&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]" value={buyCount} max="100"></progress>
+            <progress class="progress bg-[#3B3D3F] w-11/12 [&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]" value={buyCount} max="100"></progress>
           </div>
 
           <div class="flex flex-col items-center w-full">
@@ -134,7 +134,7 @@
             <span class="text-white text-lg font-medium inline-block"> Recommendation: </span>
             <span class="text-white text-2xl font-medium inline-block">
               {#if consensusRating === "Buy" || consensusRating === "Strong Buy"}
-                <span class="text-start font-medium text-[#10DB06] text-2xl">
+                <span class="text-start font-medium text-[#37C97D] text-2xl">
                   {consensusRating}
                 </span>
               {:else if consensusRating === "Sell" || consensusRating === "Strong Sell"}
@@ -168,7 +168,7 @@
         {:else if changesPercentage >= 0}
           <div class="text-white p-4 text-center">
             The Stock Price has an upside of
-            <span class="text-[#10DB06] font-medium">{abbreviateNumber(Math?.abs(changesPercentage))} %</span>
+            <span class="text-[#37C97D] font-medium">{abbreviateNumber(Math?.abs(changesPercentage))} %</span>
             based on <span class="font-semibold">{numOfAnalyst}</span> analysts.
           </div>
         {/if}
@@ -186,7 +186,7 @@
               </span>
             </div>
             <progress
-              class="progress w-full {buyCount >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]' : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}"
+              class="progress w-full {buyCount >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]' : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}"
               value={buyCount}
               max="100"
             ></progress>
@@ -202,7 +202,7 @@
               </span>
             </div>
             <progress
-              class="progress w-full {holdCount >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]' : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}"
+              class="progress w-full {holdCount >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]' : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}"
               value={holdCount}
               max="100"
             ></progress>
@@ -218,7 +218,7 @@
               </span>
             </div>
             <progress
-              class="progress w-full {sellCount >= 50 ? '[&::-webkit-progress-value]:bg-[#10DB06] [&::-moz-progress-bar]:bg-[#10DB06]' : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}"
+              class="progress w-full {sellCount >= 50 ? '[&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]' : '[&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]'}"
               value={sellCount}
               max="100"
             ></progress>

@@ -51,7 +51,7 @@
                             
                             <div class="flex justify-center">
                                 <div class="absolute left-0 h-20 px-px bg-gray-800 ml-4 sm:ml-5 transform -translate-x-1/2 "></div>
-                                <div class="absolute left-0 w-4 h-4 bg-[#10DB06] border-4 box-content border-gray-900 rounded-full ml-4 sm:ml-5 transform -translate-x-1/2"></div>
+                                <div class="absolute left-0 w-4 h-4 bg-[#37C97D] border-4 box-content border-gray-900 rounded-full ml-4 sm:ml-5 transform -translate-x-1/2"></div>
                                     
                                 <!--Start Item-->
                                 <div class="flex flex-row items-center ml-5 w-full mb-6">

@@ -41,7 +41,19 @@
       }
     }
     
-      
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const day = date.getDate().toString().padStart(2, '0');
+
+    const hours = date.getHours() % 12 || 12; // Convert to 12-hour format
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
+
+    return `${year}/${month}/${day} ${hours}:${minutes} ${ampm}`;
+}
     onMount(() => {
       rawData = data?.getCorporateLobbyingTracker ?? [];
       displayList = rawData?.slice(0,50) ?? []
@@ -64,7 +76,7 @@ function changeOrder(state:string) {
 }
 
 
-$: charNumber = $screenWidth < 640 ? 15 : 40;
+$: charNumber = $screenWidth < 640 ? 15 : 20;
 
 
   </script>
@@ -191,15 +203,17 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
                           <tbody>
                             {#each displayList as item, index}
     
-                            <tr on:click={() => goto(`/stocks/${item?.ticker}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === displayList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
+                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === displayList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
    
 
                             <td class="text-start text-sm sm:text-[1rem] text-white whitespace-nowrap">
-                                {item?.date}
+                                {formatDate(item?.date)}
                             </td>
 
                               <td class="text-blue-400 text-sm sm:text-[1rem] text-start">
+                                <a href={"/stocks/"+item?.ticker} class="sm:hover:text-white text-blue-400">
                                 {item?.ticker}
+                              </a>
                             </td>
 
                             <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start">
@@ -208,7 +222,7 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
   
                       
 
-                              <td class="text-end text-sm sm:text-[1rem] font-medium text-white">
+                              <td class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap">
                                 {item?.sector}
                               </td>
 

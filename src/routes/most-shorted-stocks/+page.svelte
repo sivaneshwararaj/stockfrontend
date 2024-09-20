@@ -145,7 +145,7 @@ async function handleScroll() {
                               Symbol
                             </th>
   
-                            <th class="hidden sm:table-cell text-start bg-[#09090B] text-white text-[1rem] font-semibold">
+                            <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
                               Name
                             </th>
                             <th class="text-end bg-[#09090B] text-white text-[1rem] font-semibold">
@@ -165,38 +165,36 @@ async function handleScroll() {
                         <tbody>
                           {#each stockList as item, index}
   
-                          <tr on:click={() => goto(`/stocks/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === stockList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
+                          <tr on:click={() => goto(`/stocks/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === stockList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                             <td class="text-white text-sm sm:text-[1rem] font-medium text-white text-end">
                               {index+1}
                             </td>
   
-                            <td class="text-sm sm:text-[1rem] whtitespace-nowrap text-start">
-                                <div class="flex flex-col items-start w-32 sm:w-fit">
-                                    <span class="text-blue-400">{item?.symbol}</span>
-                                    <span class="text-white sm:hidden">
-                                        {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
-                                    </span>
-                                </div>
+                            <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start">
+                                <a href={"/stocks/"+item?.symbol} class="sm:hover:text-white text-blue-400">
+                                {item?.symbol}
+                              </a>
+    
                             </td>
   
-                            <td class="hidden sm:table-cell text-white text-sm sm:text-[1rem] whtitespace-nowrap text-white text-start">
+                            <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start">
                                 {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
                             </td>
                           
-                            <td class="text-end text-sm sm:text-[1rem] whtitespace-nowrap font-medium text-white">
+                            <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
                                 {item?.shortRatio}
                             </td>
                             
-                            <td class="text-end text-sm sm:text-[1rem] whtitespace-nowrap font-medium text-white">
+                            <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
                               {abbreviateNumber(item?.sharesShort)}
                             </td>
 
 
-                            <td class="text-end text-sm sm:text-[1rem] whtitespace-nowrap font-medium text-white">
+                            <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
                                 {item?.shortFloatPercent}%
                             </td>
 
-                            <td class="text-end text-sm sm:text-[1rem] whtitespace-nowrap font-medium text-white">
+                            <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
                                 {item?.shortOutStandingPercent}%
                             </td>
 

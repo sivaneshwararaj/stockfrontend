@@ -100,7 +100,7 @@
             <div class="relative">
               <div class="">
                 <div class="flex justify-center">
-                  <!--<div class="{rawData.changesPercentage >= 0 ? 'bg-[#10DB06]' : 'bg-[#FF2F1F]'} w-1.5 mb-5 rounded-l-xl" />-->
+                  <!--<div class="{rawData.changesPercentage >= 0 ? 'bg-[#37C97D]' : 'bg-[#FF2F1F]'} w-1.5 mb-5 rounded-l-xl" />-->
 
                   <!--Start Item-->
                   <div class="flex flex-row items-center w-full mb-6">

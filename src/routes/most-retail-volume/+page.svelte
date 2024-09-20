@@ -160,7 +160,7 @@ async function handleScroll() {
                               Symbol
                             </th>
   
-                            <th class="hidden sm:table-cell text-start bg-[#09090B] text-white text-[1rem] font-semibold">
+                            <th class=" text-start bg-[#09090B] text-white text-[1rem] font-semibold">
                               Name
                             </th>
   
@@ -178,21 +178,18 @@ async function handleScroll() {
                         <tbody>
                           {#each stockList as item, index}
   
-                          <tr on:click={() => goto(`/${item?.assetType}/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === stockList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
+                          <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === stockList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                             <td class="text-white text-sm sm:text-[1rem] font-medium text-white text-end">
                               {index+1}
                             </td>
   
                             <td class="text-sm sm:text-[1rem] text-start">
-                                <div class="flex flex-col items-start w-32 sm:w-fit">
-                                    <span class="text-blue-400">{item?.symbol}</span>
-                                    <span class="text-white sm:hidden">
-                                        {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
-                                    </span>
-                                </div>
+                              <a href={"/stocks/"+item?.symbol} class="sm:hover:text-white text-blue-400">
+                                {item?.symbol}
+                              </a>
                             </td>
   
-                            <td class="hidden sm:table-cell text-white text-sm sm:text-[1rem] text-white text-start">
+                            <td class="whitespace-nowrap text-white text-sm sm:text-[1rem] text-white text-start">
                                 {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
                             </td>
                           
@@ -205,7 +202,7 @@ async function handleScroll() {
                               {item?.retailStrength}%
                             </td>
 
-                            <td class="text-end text-sm sm:text-[1rem] font-medium {item?.sentiment > 0 ? 'text-[#10DB06]' : item?.sentiment < 0 ? 'text-[#E57C34]' : 'text-[#C6A755]'}">
+                            <td class="text-end text-sm sm:text-[1rem] font-medium {item?.sentiment > 0 ? 'text-[#37C97D]' : item?.sentiment < 0 ? 'text-[#E57C34]' : 'text-[#C6A755]'}">
                               {item?.sentiment > 0 ? 'Bullish' : item?.sentiment < 0 ? 'Bearish' : 'Mixed'}
                           </td>
 

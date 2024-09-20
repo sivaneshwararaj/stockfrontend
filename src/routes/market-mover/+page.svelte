@@ -377,7 +377,8 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
       <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]">
         <thead>
           <tr>
-            <th class="text-white font-semibold text-[1rem] whitespace-nowrap">Company</th>
+            <th class="text-white font-semibold text-[1rem] whitespace-nowrap">Symbol</th>
+            <th class="text-white font-semibold text-[1rem] whitespace-nowrap">Name</th>
             <th on:click={() => { sortBy = 'change'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-[1rem] text-end">
               % Change
               <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'change' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -401,19 +402,17 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
           <tr on:click={() => goto("/stocks/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
     
           <td class="border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap">
-            <div class="flex flex-col">
-              <span class="text-blue-400 font-semibold">
-                {item?.symbol}
-              </span>
-              <span class="text-white text-sm border-b-[#09090B]">
-                {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
-              </span>
-            </div>
+             <a href={"/stocks/"+item?.symbol} class="sm:hover:text-white text-blue-400">
+              {item?.symbol}
+            </a>
+          </td>
+          <td class="border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white">
+            {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
           </td>
 
-          <td class="text-white text-end text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">
+          <td class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]">
               {#if item?.changesPercentage >=0}
-                <span class="text-[#10DB06]">+{item?.changesPercentage >= 1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}%</span>
+                <span class="text-[#37C97D]">+{item?.changesPercentage >= 1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}%</span>
               {:else}
                 <span class="text-[#FF2F1F]">{item?.changesPercentage <= -1000 ? abbreviateNumber(item?.changesPercentage) : item?.changesPercentage?.toFixed(2)}% </span> 
               {/if}

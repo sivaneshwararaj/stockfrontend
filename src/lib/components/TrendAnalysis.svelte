@@ -118,7 +118,7 @@ $: {
                   <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-lg h-20">
                       <div class="flex flex-col items-start">
                           <span class="font-medium text-gray-200 text-sm">Trend Sentiment</span>
-                          <span class="text-start text-[1rem] sm:text-lg font-semibold {flowSentiment === 'Bullish' ? 'text-[#10DB06]' : 'text-[#FC2120]'}">{flowSentiment}</span>
+                          <span class="text-start text-[1rem] sm:text-lg font-semibold {flowSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FC2120]'}">{flowSentiment}</span>
                       </div>
                   </div>
                   
@@ -199,7 +199,7 @@ $: {
 
             <div class="text-white text-[1rem] mt-4 sm:mt-7 ml-1">
               Over the next {displayData === 'threeMonth' ? '3 months' : displayData === 'oneMonth' ? '1 month' : '1 week'}, the model forecasts a 
-              <span class="font-semibold {flowSentiment === 'Bullish' ? 'text-[#10DB06]' : 'text-[#FC2120]'}">{flowSentiment}</span>
+              <span class="font-semibold {flowSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FC2120]'}">{flowSentiment}</span>
               trend, indicating that the future price is expected to {flowSentiment === 'Bullish' ? 'exceed' : 'to be less than'} the previous price of 
               <span class="font-medium">${lastPrice ?? 'n/a'}</span>.
             </div>

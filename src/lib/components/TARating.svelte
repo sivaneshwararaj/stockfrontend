@@ -119,11 +119,11 @@ $: if ($assetType || $stockTicker || $etfTicker || $cryptoTicker) {
 
           {#if overallSignal !== 'n/a'}
           <div class="text-white text-[1rem] sm:text-lg mt-3 mb-8 text-start">
-            Out of 11 indicators, <span class="font-semibold text-[#10DB06]">{buyCount}</span> indicates a Buy, 
+            Out of 11 indicators, <span class="font-semibold text-[#37C97D]">{buyCount}</span> indicates a Buy, 
             <span class="font-semibold text-[#F8901E]">{neutralCount}</span> are Neutral and <span class="font-semibold text-[#FF2F1F]">{sellCount}</span> indicate a Sell.
             On average, the signal is to
             {#if overallSignal === 'Buy' || overallSignal === 'Strong Buy'}
-            <span class="text-[#10DB06] sm:font-medium">
+            <span class="text-[#37C97D] sm:font-medium">
               <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#10db06" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><path d="m3 17l6-6l4 4l8-8"/><path d="M17 7h4v4"/></g></svg>
               Buy.
             </span>

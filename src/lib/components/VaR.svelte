@@ -194,7 +194,7 @@ function getPlotOptions() {
                                 <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#303030]" stroke-width="4"></circle>
                                 <!-- Progress Circle inside a group with rotation -->
                                 <g class="origin-center -rotate-90 transform">
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current {rating > 5 ? 'text-[#10DB06]' : rating < 5 ? 'text-[#FF2F1F]' : 'text-white'} " stroke-width="4" stroke-dasharray="100" stroke-dashoffset={100-rating*10}></circle>
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current {rating > 5 ? 'text-[#37C97D]' : rating < 5 ? 'text-[#FF2F1F]' : 'text-white'} " stroke-width="4" stroke-dasharray="100" stroke-dashoffset={100-rating*10}></circle>
                                 </g>
                             </svg>
                             <!-- Percentage Text -->

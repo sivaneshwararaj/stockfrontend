@@ -112,7 +112,7 @@ $: {
                             <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#303030]" stroke-width="3.5"></circle>
                             <!-- Progress Circle inside a group with rotation -->
                             <g class="origin-center -rotate-90 transform">
-                            <circle cx="18" cy="18" r="16" fill="none" class="stroke-current {oneYearResult > 5 ? 'text-[#10DB06]' : oneYearResult < 5 ? 'text-[#FF2F1F]' : 'text-white'} text-opacity-[0.7]" stroke-width="3.5" stroke-dasharray="100" stroke-dashoffset={100-oneYearResult*10}></circle>
+                            <circle cx="18" cy="18" r="16" fill="none" class="stroke-current {oneYearResult > 5 ? 'text-[#37C97D]' : oneYearResult < 5 ? 'text-[#FF2F1F]' : 'text-white'} text-opacity-[0.7]" stroke-width="3.5" stroke-dasharray="100" stroke-dashoffset={100-oneYearResult*10}></circle>
                             </g>
                         </svg>
                         <!--Start Inside Circle-->
@@ -124,7 +124,7 @@ $: {
                                 <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#303030]" stroke-width="4"></circle>
                                 <!-- Progress Circle inside a group with rotation -->
                                 <g class="origin-center -rotate-90 transform">
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current {oneMonthResult > 5 ? 'text-[#10DB06]' : oneMonthResult < 5 ? 'text-[#FF2F1F]' : 'text-white'} " stroke-width="4" stroke-dasharray="100" stroke-dashoffset={100-oneMonthResult*10}></circle>
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current {oneMonthResult > 5 ? 'text-[#37C97D]' : oneMonthResult < 5 ? 'text-[#FF2F1F]' : 'text-white'} " stroke-width="4" stroke-dasharray="100" stroke-dashoffset={100-oneMonthResult*10}></circle>
                                 </g>
                             </svg>
                             <!-- Percentage Text -->
@@ -175,7 +175,7 @@ $: {
                                     <svg class="w-3.5 h-3.5 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
                                     {/if}
                                 </span>
-                                <div class="w-2 {item?.value === 5 ? 'bg-white' : item?.value < 5 ? 'bg-[#FF2F1F]' : 'bg-[#10DB06]' } rounded-full" style="height: 120px;">
+                                <div class="w-2 {item?.value === 5 ? 'bg-white' : item?.value < 5 ? 'bg-[#FF2F1F]' : 'bg-[#37C97D]' } rounded-full" style="height: 120px;">
                                     {#if data?.user?.tier === 'Pro'}
                                     <div class="bg-[#2F2F2F] w-2 rounded-t-full" style="height: {(100-item?.value*10)}%;"></div>
                                     {:else if ['1M','1Y']?.includes(item?.label)}
@@ -194,7 +194,7 @@ $: {
                     <!-- Adjusted line -->
                     <div class="sm:-ml-5 border-b absolute border-dashed border-gray-400 w-11/12 sm:w-5/6 left-1/2 transform -translate-x-1/2 {dashedLinePosition[oneMonthResult]}">
                         <div class="w-full flex justify-end mb-2">
-                            <label class="text-sm font-semibold px-2 py-1.5 border rounded-full text-black {oneMonthResult === 5 ? 'bg-white border-white' : oneMonthResult < 5 ? 'bg-[#FF2F1F] border-[#FF2F1F]' : 'bg-[#10DB06] border-[#10DB06]'}">
+                            <label class="text-sm font-semibold px-2 py-1.5 border rounded-full text-black {oneMonthResult === 5 ? 'bg-white border-white' : oneMonthResult < 5 ? 'bg-[#FF2F1F] border-[#FF2F1F]' : 'bg-[#37C97D] border-[#37C97D]'}">
                                 Current: {oneMonthResult}
                             </label>
                         </div>
