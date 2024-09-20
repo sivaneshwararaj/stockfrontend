@@ -147,7 +147,7 @@ async function handleScroll() {
                               <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
                                 Symbol
                               </th>
-                              <th class="hidden sm:table-cell text-start bg-[#09090B] text-white text-[1rem] font-semibold">
+                              <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
                                 Name
                               </th>
                               <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
@@ -167,21 +167,17 @@ async function handleScroll() {
                           <tbody>
                             {#each displayList as item, index}
     
-                            <tr on:click={() => goto(`/stocks/${item?.ticker}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === displayList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
+                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === displayList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
    
-
                               <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start">
-                                <div class="flex flex-col items-start w-32 sm:w-fit">
-                                    <span class="text-blue-400">{item?.ticker}</span>
-                                    <span class="text-white sm:hidden">
-                                        {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
-                                    </span>
-                                </div>
-                            </td>
+                                <a href={"/stocks/"+item?.ticker} class="sm:hover:text-white text-blue-400">
+                                  {item?.ticker}
+                                </a>
+                              </td>
 
-                            <td class="hidden sm:table-cell text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start">
-                                {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
-                            </td>
+                              <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start">
+                                  {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
+                              </td>
   
                                 <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white">
                                     {new Date(item?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
