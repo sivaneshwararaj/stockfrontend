@@ -161,11 +161,13 @@ $: charNumber = $screenWidth < 640 ? 15 : 40;
                 </thead>
                 <tbody>
                   {#each stockList as item,index}
-                  <tr on:click={() => goto("/etf/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer">
+                  <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                     
-                    <td class="text-blue-400 font-medium text-sm sm:text-[1rem] text-start border-b-[#09090B]">
-                      {item?.symbol}
-                    </td>
+                    <td class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+                              <a href={"/etf/"+item?.symbol} class="sm:hover:text-white text-blue-400">
+                                {item?.symbol}
+                              </a>
+                            </td>
       
                     <td class="text-white whitespace-nowrap text-sm sm:text-[1rem] border-b-[#09090B]">
                      {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}

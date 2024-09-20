@@ -69,11 +69,13 @@ let etfProviderList = data?.getAllETFProviders;
                     <tbody>
                       {#each etfProviderList as item,index}
                       <!-- row -->
-                      <tr on:click={() => goto("/etf/etf-providers/"+item?.etfProvider)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer">
+                      <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                         
 
-                        <td class="text-blue-400 text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]">
-                            {formatETFName(item?.etfProvider)}
+                        <td class="text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]">
+                            <a href={"/etf/etf-providers/"+item?.etfProvider} class="sm:hover:text-white text-blue-400">
+                              {formatETFName(item?.etfProvider)}
+                            </a>
                         </td>
     
                         <td class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B] text-end sm:text-center">

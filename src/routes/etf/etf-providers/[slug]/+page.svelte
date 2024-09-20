@@ -2,7 +2,7 @@
     import { goto } from '$app/navigation';
     import { abbreviateNumber, formatETFName} from '$lib/utils';
     import { screenWidth, numberOfUnreadNotification } from '$lib/store';
-    import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
+    import { onMount } from 'svelte';
 
     export let data;
     let rawData = data?.getETFProviderData;
@@ -18,31 +18,25 @@
     ) / rawData?.length;
     
 
-    async function infiniteHandler({ detail: { loaded, complete } }) 
-  {
-  
-  if (etfProviderData?.length === rawData?.length) {
-      complete();
-      } 
-      else {
-      const nextIndex = etfProviderData?.length;
-      const newElements= rawData?.slice(nextIndex, nextIndex + 5);
-      etfProviderData = [...etfProviderData, ...newElements];
-      loaded();
-      }
+   async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && etfProviderData?.length !== rawData?.length) {
+        const nextIndex = etfProviderData?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        etfProviderData = [...etfProviderData, ...filteredNewResults];
+    }
   }
 
-    let charNumber = 20;
-    
-    $: {
-      if ($screenWidth < 640)
-      {
-        charNumber = 30;
-      }
-      else {
-        charNumber = 50;
-      }
-    }
+onMount(() => {
+   window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+})
+
+
+   $:charNumber = $screenWidth < 640 ? 20 : 30;
 
 
 </script>
@@ -124,10 +118,12 @@
                         <tbody>
                           {#each etfProviderData as item,index}
                           <!-- row -->
-                          <tr on:click={() => goto("/etf/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer">
+                          <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                             
-                            <td class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
-                              {item?.symbol}
+                            <td class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+                              <a href={"/etf/"+item?.symbol} class="sm:hover:text-white text-blue-400">
+                                {item?.symbol}
+                              </a>
                             </td>
     
                             <td class="text-gray-200 border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap">
@@ -158,7 +154,6 @@
                       </table>
         
 
-                <InfiniteLoading on:infinite={infiniteHandler} />
               </div>
 
             </div>
