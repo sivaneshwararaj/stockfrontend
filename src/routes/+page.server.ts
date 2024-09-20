@@ -2,6 +2,31 @@ import { error, fail, redirect } from "@sveltejs/kit";
 import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
+export const load = async ({ locals, setHeaders }) => {
+  const { apiKey, apiURL } = locals;
+
+  const getDashboard = async () => {
+    const response = await fetch(apiURL + "/dashboard-info", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
+      },
+    });
+
+    const output = await response?.json();
+
+    setHeaders({ "cache-control": "public, max-age=300" });
+
+    return output;
+  };
+
+  // Make sure to return a promise
+  return {
+    getDashboard: await getDashboard(),
+  };
+};
+
 async function checkDisposableEmail(email) {
   const url = `https://disposable.debounce.io/?email=${encodeURIComponent(email)}`;
   const response = await fetch(url, {
@@ -18,7 +43,7 @@ export const actions = {
   login: async ({ request, locals }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      loginUserSchema,
+      loginUserSchema
     );
 
     if (errors) {
@@ -52,7 +77,7 @@ export const actions = {
   register: async ({ locals, request }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      registerUserSchema,
+      registerUserSchema
     );
     if (errors) {
       return fail(400, {
@@ -122,7 +147,7 @@ export const actions = {
     const redirectURL = `${url.origin}/oauth`;
 
     const targetItem = authMethods.authProviders?.findIndex(
-      (item) => item?.name === providerSelected,
+      (item) => item?.name === providerSelected
     );
     //console.log("==================")
     //console.log(authMethods.authProviders)

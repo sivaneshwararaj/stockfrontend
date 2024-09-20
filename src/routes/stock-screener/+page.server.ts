@@ -2,11 +2,79 @@ import { error, fail, redirect } from "@sveltejs/kit";
 import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
+// Define the EMA parameters to check
+const emaParameters = ["ema20", "ema50", "ema100", "ema200"];
+// Function to check and add missing EMA parameters
+const ensureAllEmaParameters = (params) => {
+  const includedEmaParameters = params.filter((param) =>
+    emaParameters.includes(param)
+  );
+  if (includedEmaParameters.length > 0) {
+    emaParameters.forEach((param) => {
+      if (!params.includes(param)) {
+        params.push(param);
+      }
+    });
+  }
+};
+
+export const load = async ({ locals }) => {
+  const { apiURL, apiKey, fastifyURL, user } = locals;
+
+  const getAllStrategies = async () => {
+    const postData = { userId: user?.id };
+    const response = await fetch(fastifyURL + "/all-strategies", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const output = (await response.json())?.items;
+
+    output?.sort((a, b) => new Date(b?.updated) - new Date(a?.updated));
+
+    return output;
+  };
+
+  const getStockScreenerData = async () => {
+    const strategyList = await getAllStrategies();
+
+    const strategy = strategyList?.at(0);
+    let getRuleOfList = strategy?.rules?.map((item) => item?.name) || [];
+
+    // Ensure all required EMA parameters are included
+    ensureAllEmaParameters(getRuleOfList);
+
+    const postData = { ruleOfList: getRuleOfList };
+    // make the POST request to the endpoint
+    const response = await fetch(apiURL + "/stock-screener-data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const output = await response.json();
+
+    return output;
+  };
+
+  // Make sure to return a promise
+  return {
+    getStockScreenerData: await getStockScreenerData(),
+    getAllStrategies: await getAllStrategies(),
+  };
+};
+
 export const actions = {
   login: async ({ request, locals }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      loginUserSchema,
+      loginUserSchema
     );
 
     if (errors) {
@@ -40,7 +108,7 @@ export const actions = {
   register: async ({ locals, request }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      registerUserSchema,
+      registerUserSchema
     );
 
     if (errors) {
@@ -94,7 +162,7 @@ await locals.pb?.collection('users').update(
     const redirectURL = `${url.origin}/oauth`;
 
     const targetItem = authMethods.authProviders?.findIndex(
-      (item) => item?.name === providerSelected,
+      (item) => item?.name === providerSelected
     );
     //console.log("==================")
     //console.log(authMethods.authProviders)
