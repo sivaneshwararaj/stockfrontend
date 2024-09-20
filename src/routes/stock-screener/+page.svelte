@@ -1356,7 +1356,7 @@ function handleInput(event) {
                           </td> 
 
                           <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
-                            {item?.pe?.toFixed(2)}
+                            {item?.pe}
                           </td>               
                         </tr>
                         
