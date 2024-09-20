@@ -34,7 +34,6 @@ window.addEventListener('scroll', handleScroll);
 })
 
 
-
 let order = '';
 let sortBy = ''; // Default sorting by change percentage
 

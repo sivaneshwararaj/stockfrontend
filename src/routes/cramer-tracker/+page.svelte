@@ -1,12 +1,10 @@
 <script lang='ts'>
     import { goto } from '$app/navigation';
     import { numberOfUnreadNotification, screenWidth } from '$lib/store';
-    import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
     import { onMount } from 'svelte';
     import ArrowLogo from "lucide-svelte/icons/move-up-right";
     import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
 
-    //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   
     
       export let data;
@@ -18,23 +16,27 @@
 
 
   
-    async function infiniteHandler({ detail: { loaded, complete } }) 
-    {
-    if (displayList?.length === rawData?.length) {
-        complete();
-      } else {
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && displayList?.length !== rawData?.length) {
         const nextIndex = displayList?.length;
-        const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-        displayList = [...displayList, ...newArticles];
-        loaded();
-      }
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+        displayList = [...displayList, ...filteredNewResults];
     }
+  }
+
     
-      
+
     onMount(() => {
       rawData = data?.getCramerTracker ?? [];
       displayList = rawData?.slice(0,50) ?? []
       isLoaded = true;
+
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
+      };
     })
     
     
@@ -203,7 +205,6 @@
                           </tbody>
                         </table>
                     </div>
-                      <InfiniteLoading on:infinite={infiniteHandler} />
                       <UpgradeToPro data={data} title="Get the latest dark pool trades in realtime from Hedge Funds & Major Institutional Traders"/>
     
                   </div>

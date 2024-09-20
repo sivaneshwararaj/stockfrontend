@@ -2,49 +2,40 @@
 import { goto } from '$app/navigation';
 import { screenWidth, numberOfUnreadNotification } from '$lib/store';
 import { abbreviateNumber } from '$lib/utils';
-import { page } from '$app/stores';
+import { onMount } from 'svelte';
 import logo from '$lib/images/box_logo.png';
+import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
-import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 
 export let data;
 
 
-let charNumber =40;
-let notDestroyed = true;
 
 let rawData = data?.getStockList;
-let symbolList = rawData?.slice(0,50);
+let stockList = rawData?.slice(0,50);
 
 
-async function infiniteHandler({ detail: { loaded, complete } }) 
-{
-  if (symbolList?.length === rawData?.length && notDestroyed) {
-      complete();
-    } else if (notDestroyed) {
-      const nextIndex = symbolList?.length;
-      const newSymbols = rawData?.slice(nextIndex, nextIndex + 5);
-      symbolList = [...symbolList, ...newSymbols];
-      loaded();
+  
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && stockList?.length !== rawData?.length) {
+        const nextIndex = stockList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        stockList = [...stockList, ...filteredNewResults];
     }
-}
-
-    
-$: {
-    if($screenWidth < 640)
-    {
-    charNumber = 15;
-    }
-    else {
-    charNumber =40;
-    }
-}
-
-$: {
-  if ($page.url.pathname !== '/stocks') {
-    notDestroyed = false;
   }
-}
+  
+onMount(() => {
+   window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+})
+
+
+$: charNumber = $screenWidth < 640 ? 15 : 40;
+
 
 </script>
     
@@ -77,19 +68,25 @@ $: {
   
 
       
-    <section class="w-full max-w-4xl overflow-hidden m-auto min-h-screen pt-5 pb-40">
-        
-      <!--
-      <div class="text-sm breadcrumbs ml-4">
-        <ul>
-          <li><a href="/" class="text-gray-300">Home</a></li> 
-          <li><a class="text-gray-300">All Stock Symbols</a></li> 
-        </ul>
-      </div>
-      -->
+  <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
+          
+    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+      <ul>
+        <li><a href="/" class="text-gray-300">Home</a></li>
+        <li class="text-gray-300">All Stocks</li>
+      </ul>
+    </div>
+            
+    <div class="w-full overflow-hidden m-auto mt-5">
+      
+      <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden ">
+          <div class="relative flex justify-center items-start overflow-hidden w-full">
 
-      <div class="w-full max-w-4xl m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+
+              <main class="w-full lg:w-3/4 lg:pr-5">
+               
+                <div class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
       
           <!-- Start Column -->
           <div>
@@ -169,7 +166,7 @@ $: {
             </tr>
           </thead>
           <tbody>
-            {#each symbolList as item,index}
+            {#each stockList as item,index}
             <tr on:click={() => goto("/stocks/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer">
               
               <td class="hidden sm:table-cell text-blue-400 font-medium text-sm text-start border-b-[#09090B]">
@@ -205,12 +202,64 @@ $: {
         </table>
       </div>
 
-      <InfiniteLoading on:infinite={infiniteHandler} />
 
     
+      </main>
+              <aside class="hidden lg:block relative fixed w-1/4 ml-4">        
+              
+                {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
+                <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                        <div class="w-full flex justify-between items-center p-3 mt-3">
+                        <h2 class="text-start text-xl font-semibold text-white ml-3">
+                        Pro Subscription 🔥
+                        </h2>
+                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                        </div>
+                        <span class="text-white p-3 ml-3 mr-3">
+                            Upgrade now for unlimited access to all data and tools
+                        </span>
+                    </div>
+                </div>
+                {/if}
+
+                <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                        <div class="w-full flex justify-between items-center p-3 mt-3">
+                        <h2 class="text-start text-xl font-semibold text-white ml-3">
+                        Top Analyst 📊
+                        </h2>
+                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                        </div>
+                        <span class="text-white p-3 ml-3 mr-3">
+                            Get the latest top Wall Street analyst ratings
+                        </span>
+                    </div>
+                </div>
+
+                <div on:click={() => goto('/analysts/top-stocks')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                        <div class="w-full flex justify-between items-center p-3 mt-3">
+                        <h2 class="text-start text-xl font-semibold text-white ml-3">
+                        Top Stocks Picks ⭐
+                        </h2>
+                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                        </div>
+                        <span class="text-white p-3 ml-3 mr-3">
+                            Get the latest top Wall Street analyst ratings.
+                        </span>
+                    </div>
+                </div>
+
+              </aside>
+
+        </div>
+      </div>
+  
     
-     
+    </div>
+        
+        
     
-    </section>
-    
-    
+  </section>
+  

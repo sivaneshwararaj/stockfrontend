@@ -1,7 +1,6 @@
 <script lang='ts'>
   import { goto } from '$app/navigation';
   import { numberOfUnreadNotification, screenWidth } from '$lib/store';
-  import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 	import { abbreviateNumber } from '$lib/utils';
   import { onMount } from 'svelte';
   import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
@@ -13,26 +12,29 @@
 
     let isLoaded = false;
     let rawData = []
-    let shortedList =  [];
+    let stockList =  [];
   
   
-  async function infiniteHandler({ detail: { loaded, complete } }) 
-  {
-  if (shortedList?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = shortedList?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-      shortedList = [...shortedList, ...newArticles];
-      loaded();
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && stockList?.length !== rawData?.length) {
+        const nextIndex = stockList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        stockList = [...stockList, ...filteredNewResults];
     }
   }
   
     
   onMount(() => {
     rawData = data?.getMostShortedStocks ?? [];
-    shortedList = rawData?.slice(0,20) ?? []
+    stockList = rawData?.slice(0,50) ?? []
     isLoaded = true;
+
+     window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
   })
   
   
@@ -161,9 +163,9 @@
                           </tr>
                         </thead>
                         <tbody>
-                          {#each shortedList as item, index}
+                          {#each stockList as item, index}
   
-                          <tr on:click={() => goto(`/stocks/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === shortedList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
+                          <tr on:click={() => goto(`/stocks/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === stockList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''} cursor-pointer">
                             <td class="text-white text-sm sm:text-[1rem] font-medium text-white text-end">
                               {index+1}
                             </td>
@@ -204,7 +206,6 @@
                         </tbody>
                       </table>
                   </div>
-                    <InfiniteLoading on:infinite={infiniteHandler} />
                     <UpgradeToPro data={data} title="Get the most shorted stocks on the market to never miss out the next short squeeze"/>
   
                 </div>
