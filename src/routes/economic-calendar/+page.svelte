@@ -133,6 +133,21 @@ async function handleChangeValue(value) {
 
 }
 
+function handleReset() {
+  filterList = []; 
+  checkedItems = new Set();
+
+  economicCalendar = data?.getEconomicCalendar;
+  daysOfWeek = getDaysOfWeek(currentWeek);
+  formattedWeekday = daysOfWeek.map(day => format(day.date, "EEE, MMM d"));
+  weekday = getWeekdayData(economicCalendar, daysOfWeek);
+  rawData = weekday;
+  previousMax = differenceInWeeks(currentWeek, today) <= -maxWeeksChange;
+  nextMax = differenceInWeeks(currentWeek, today) >= maxWeeksChange;
+
+  currentWeek = startOfWeek(today, { weekStartsOn: 1 });
+  selectedWeekday = Math.min((currentDate.getDay() + 6) % 7, 4)
+}
 
   </script>
       
@@ -347,7 +362,7 @@ async function handleChangeValue(value) {
 </DropdownMenu.Root>
 
 {#if filterList?.length !== 0}
-<Button on:click={() => {filterList = []; checkedItems = new Set();} } class="w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-start items-center px-3 py-2 text-white rounded-lg truncate">
+<Button on:click={() => handleReset()} class="w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-start items-center px-3 py-2 text-white rounded-lg truncate">
   <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4 mr-2" viewBox="0 0 21 21"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.578 6.487A8 8 0 1 1 2.5 10.5"/><path d="M7.5 6.5h-4v-4"/></g></svg>
       Reset All
   </Button>

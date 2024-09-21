@@ -227,11 +227,16 @@ onMount( async() => {
         </div>
       -->
 
-        <h1 class="text-white text-3xl font-semibold text-start w-full pl-4 pb-4 sm:pb-2">
+      <h1 class="hidden sm:block text-3xl lg:text-5xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto">
+        Stock Analysis for
+        <span class="italic text-[#FBCE3C]">Data Freaks</span>  
+      </h1>
+      
+
+        <h1 class="text-white text-2xl font-semibold text-start w-full pb-4 sm:pl-4 sm:pb-2">
           Dashboard
         </h1>
 
-    
 
         <main class="flex flex-1 flex-col gap-4 sm:p-4 md:gap-8">
           <div class="grid gap-4 grid-cols-2 md:gap-8 lg:grid-cols-4">
