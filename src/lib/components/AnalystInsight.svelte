@@ -87,7 +87,7 @@
         id={"analystInsightInfo"}
       />
     </div>
-
+{#if data?.user?.tier === 'Pro'}
       {#if isLoaded}
         {#if Object?.keys(rawData)?.length !== 0}
           <div class="w-full flex flex-col items-start">
@@ -136,23 +136,12 @@
           </div>
         </div>
       {/if}
+       {:else}
+        <div class="shadow-lg shadow-bg-[#000] bg-[#111112] sm:bg-opacity-[0.5] text-sm sm:text-[1rem] rounded-md w-full p-4 min-h-24 mt-4 text-white m-auto flex justify-center items-center text-center font-semibold">
+            <svg class="mr-1.5 w-5 h-5 inline-block"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+            Unlock content with <a class="inline-block ml-2 text-blue-400 hover:sm:text-white" href="/pricing">Pro Subscription</a>
+          </div>
+        {/if}
 
   </main>
 </section>
-
-<style>
-  .app {
-    height: 300px;
-    max-width: 100%; /* Ensure chart width doesn't exceed the container */
-  }
-
-  @media (max-width: 640px) {
-    .app {
-      height: 210px;
-    }
-  }
-
-  .chart {
-    width: 100%;
-  }
-</style>

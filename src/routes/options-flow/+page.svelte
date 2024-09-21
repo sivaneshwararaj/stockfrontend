@@ -21,16 +21,7 @@
 
   export let data;
   
-  let ruleOfList = [
-  {
-    "name": "cost_basis",
-    "value": "any"
-  },
-  {
-    "name": "date_expiration",
-    "value": "any"
-  },
-];
+  let ruleOfList = data?.getPredefinedCookieRuleOfList || [];
 
   let displayRules = [];
   let filterQuery = '';
@@ -79,6 +70,11 @@ Object.keys(allRules).forEach(ruleName => {
   valueMappings[ruleName] = allRules[ruleName].defaultValue;
 });
 
+// Update ruleCondition and valueMappings based on existing rules
+ruleOfList.forEach(rule => {
+ruleCondition[rule.name] = rule.condition || allRules[rule.name].defaultCondition;
+valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
+});
 
 
 
@@ -118,6 +114,8 @@ async function handleResetAll() {
   });
   displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
   displayedData = rawData;
+  await saveCookieRuleOfList()
+
 }
 
 function changeRule(state: string)  
@@ -212,7 +210,7 @@ function changeRuleCondition(name: string, state: string) {
   ruleCondition[ruleName] = state;
 }
 
-let checkedItems = new Set();
+let checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
 
 function isChecked(item) {
     return checkedItems.has(item);
@@ -261,6 +259,7 @@ async function handleChangeValue(value) {
     }
 
     shouldLoadWorker.set(true);
+    await saveCookieRuleOfList()
 
 
 }
@@ -285,7 +284,16 @@ const nyseDate = new Date(data?.getOptionsFlowFeed?.at(0)?.date ?? null)?.toLoca
     timeZone: 'Europe/Berlin' 
 });
 
-  let rawData = [];
+let rawData = data?.getOptionsFlowFeed?.filter(item => 
+  Object?.values(item)?.every(value => 
+    value !== null && value !== undefined && 
+    (typeof value !== 'object' || Object?.values(value)?.every(subValue => subValue !== null && subValue !== undefined))
+  )
+);
+  rawData?.forEach((item) => {
+        item.dte = daysLeft(item?.date_expiration);
+    });
+  
   let displayedData =[];
 
   let flowSentiment;
@@ -450,6 +458,19 @@ function daysLeft(targetDate) {
   return daysLeft;
 }
     
+async function saveCookieRuleOfList() {
+    const postData = {
+      'ruleOfList' : ruleOfList
+    }
+
+    const response = await fetch('/api/options-flow-filter-cookie', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData),
+      }); // make a POST request to the server with the FormData object
+}
 
   onMount(async () => {
 
@@ -457,10 +478,6 @@ function daysLeft(targetDate) {
 
 
     audio = new Audio(notifySound);
-    rawData = data?.getOptionsFlowFeed;
-    rawData?.forEach((item) => {
-        item.dte = daysLeft(item?.date_expiration);
-      });
     displayedData = rawData;
     calculateStats(rawData);
 
@@ -478,6 +495,11 @@ function daysLeft(targetDate) {
       isLoaded = true;
     }
   });
+
+    if(ruleOfList?.length !== 0) {
+      shouldLoadWorker.set(true);
+      console.log('initial filter') 
+    }    
 
     isLoaded = true;
     /*
@@ -502,6 +524,7 @@ onDestroy(async() => {
       audio?.pause();
       audio = null;
     }
+
   
   })
   
@@ -716,7 +739,7 @@ $: {
   
 $: {
   if (ruleOfList) {
-    const ruleToUpdate = ruleOfList?.find(rule => rule.name === ruleName);
+    const ruleToUpdate = ruleOfList?.find(rule => rule?.name === ruleName);
     if (ruleToUpdate) {
       ruleToUpdate.value = valueMappings[ruleToUpdate.name];
       ruleToUpdate.condition = ruleCondition[ruleToUpdate.name];
@@ -1369,7 +1392,7 @@ $: {
               <tr on:click={() => changeRule(row?.rule)} class="sm:hover:bg-[#333333] cursor-pointer">
                 <td class="border-b border-[#262626]">{index+1}</td>
                 <td class="text-start border-b border-[#262626]">
-                  {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
+                  {#if ruleOfList?.find((rule) => rule?.name === row?.rule)}
                   <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                   {/if}
                 </td>
