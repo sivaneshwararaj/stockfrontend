@@ -124,7 +124,7 @@ $: if ($assetType || $stockTicker || $etfTicker || $cryptoTicker) {
             On average, the signal is to
             {#if overallSignal === 'Buy' || overallSignal === 'Strong Buy'}
             <span class="text-[#37C97D] sm:font-medium">
-              <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#10db06" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><path d="m3 17l6-6l4 4l8-8"/><path d="M17 7h4v4"/></g></svg>
+              <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke="#37C97D" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><path d="m3 17l6-6l4 4l8-8"/><path d="M17 7h4v4"/></g></svg>
               Buy.
             </span>
 

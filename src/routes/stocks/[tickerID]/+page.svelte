@@ -228,7 +228,7 @@
       default:
         return;
     }
-    colorChange = lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#10DB06";
+    colorChange = lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
     topColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.2)" : "rgb(16, 219, 6, 0.2)";
     bottomColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.001)" : "rgb(16, 219, 6, 0.001)";
 
@@ -365,7 +365,7 @@ async function historicalPrice(timePeriod: string) {
 
       //colorChange = lastValue < displayLastLogicalRangeValue ? "#CC3636" : "#367E18";
 
-      colorChange = lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#10DB06";
+      colorChange = lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
       topColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.2)" : "rgb(16, 219, 6, 0.2)";
       bottomColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.001)" : "rgb(16, 219, 6, 0.001)";
     } catch (e) {
@@ -719,7 +719,7 @@ async function exportData(timePeriod:string) {
                 {#if displayLegend?.change >= 0}
                   <svg class="inline-block w-5 h-5 mt-0.5 -mr-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                     ><g id="evaArrowUpFill0"
-                      ><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#10db06" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z" /></g></g
+                      ><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#37C97D" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z" /></g></g
                     ></svg
                   >
                   <span class="items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm">+{displayLegend?.change}%</span>

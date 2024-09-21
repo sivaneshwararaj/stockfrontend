@@ -228,7 +228,7 @@ const handleMessage = async (event) => {
             itemStyle: {
             color: (params) => {
                 // Set color based on positive or negative value
-                return params.data >= 0 ? '#10DB06' : '';
+                return params.data >= 0 ? '#37C97D' : '';
             },
             },
         },

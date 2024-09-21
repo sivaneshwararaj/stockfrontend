@@ -71,7 +71,7 @@
           <span style="color: #FF2F1F; font-weight: 500">{abbreviateNumber(Math.abs(changesPercentage))}%</span>
         {:else if changesPercentage >= 0}
           The Stock Price has an upside of
-          <span style="color: #10DB06; font-weight: 500">{abbreviateNumber(Math.abs(changesPercentage))}%</span>
+          <span style="color: #37C97D; font-weight: 500">{abbreviateNumber(Math.abs(changesPercentage))}%</span>
         {/if}
         based on <span style="font-weight: 600">{numOfAnalyst}</span> analysts in the past 12 months.
       </div>
