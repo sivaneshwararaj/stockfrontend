@@ -322,7 +322,7 @@ function findLowestAndHighestPrice(data, lastDateStr) {
   
           <div class="w-full flex flex-col items-start mt-3">
             <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-                Using the latest FTD shares data, we calculate the monthly average volume ratio to determine that less than
+                Using the latest FTD data, we divide it with the monthly average volume to determine that less than
                 <strong>{weightedFTD < 0.01 ? '< 0.01' : weightedFTD}%</strong> of shares failed to deliver.
             </div>
         </div>
