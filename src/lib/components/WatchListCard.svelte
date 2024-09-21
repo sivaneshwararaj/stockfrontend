@@ -407,11 +407,13 @@ if(watchList && isLoaded)
             <tbody class="p-0">
               {#each watchList as item, index}
               <!-- row -->
-              <tr on:click={() => goto(`/${item?.type === 'stock' ? 'stocks' : item?.type === 'etf' ? 'etf' : 'crypto'}/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] cursor-pointer">
+              <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                 
 
-                <td class="text-blue-400 text-sm sm:text-[1rem] text-start border-b-[#09090B]">
-                  {item?.symbol}
+                <td class="text-sm sm:text-[1rem] text-start border-b-[#09090B]">
+                  <a href={`/${item?.type === 'stock' ? 'stocks' : item?.type === 'etf' ? 'etf' : 'crypto'}/${item?.symbol}`} class="text-blue-400 sm:hover:text-white">
+                     {item?.symbol}
+                  </a>
                 </td>
 
                 <td class="text-white text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap">

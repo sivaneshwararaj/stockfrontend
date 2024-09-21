@@ -68,7 +68,7 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
             // Handle default case if needed
             break;
     }
-    goto("/list/" + path);
+    return path
 }
 
 
@@ -537,9 +537,11 @@ onMount(async () => {
                         <tbody>
                           {#each rawData?.topSectors as item}
                             {#each Object.entries(item) as [name, value]}
-                              <tr on:click={() => sectorSelector(name)} class="text-white cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#141417] border-b border-[#141417]">
-                                <td class="text-blue-400 sm:hover:text-white duration-100 text-[1rem] whitespace-nowrap">
-                                  {name}
+                              <tr class="text-white sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#141417] border-b border-[#141417]">
+                                <td class="text-[1rem] whitespace-nowrap">
+                                  <a href={"/list/"+sectorSelector(name)} class="text-blue-400 sm:hover:text-white">
+                                    {name}
+                                  </a>
                                 </td>
                                 <td class="text-white text-[1rem] whitespace-nowrap text-end">
                                   {value?.toFixed(2)}%
