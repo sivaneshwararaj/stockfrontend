@@ -92,7 +92,7 @@ function loadMoreData() {
 
 <section class="w-auto max-w-4xl bg-[#09090B] overflow-hidden text-black h-full mb-40">
     <div class="m-auto h-full overflow-hidden w-full">
-            <main class="w-full">
+            <main class="w-auto">
                 <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
                     <div class="mb-6 w-full">
                         <h1 class="text-2xl sm:text-3xl text-white font-bold">
@@ -101,9 +101,10 @@ function loadMoreData() {
                       </div>
 
                           {#if newsList?.length !== 0}
+
                           <div class="grid grid-cols-1 gap-2 pb-5">
                           {#each newsList as item}
-                                <div class="w-full flex flex-col bg-[#09090B] rounded-lg m-auto">
+                                <div class="w-fit flex flex-col bg-[#09090B] rounded-lg m-auto">
                                     {#if videoId = checkIfYoutubeVideo(item.url)}
                                         <iframe
                                             class="w-full h-96 rounded-lg border border-gray-800"
@@ -113,18 +114,18 @@ function loadMoreData() {
                                             allowfullscreen
                                         ></iframe>
                                     {:else}
-                                        <a href={item?.url} rel="noopener noreferrer" target="_blank" class="border border-gray-800 rounded-lg">
+                                        <a href={item?.url} rel="noopener noreferrer" target="_blank" class="w-fit border border-gray-800 rounded-lg">
                                         <div class="flex-shrink-0 m-auto ">
-                                            <img src={item?.image} class=" w-full rounded-lg" alt="news image" loading="lazy">
+                                            <img src={item?.image} class="h-auto w-auto rounded-lg" alt="news image" loading="lazy">
                                         </div>
                                         </a>
                                     {/if}
                                     <div class="mb-1 w-full">
-                                        <h3 class="text-sm sm:text-md text-white text-opacity-60 truncate mb-2 mt-3">
-                                          {item?.site} · {formatDate(item?.publishedDate)} ago
+                                        <h3 class="text-sm  text-white/80 truncate mb-2 mt-3">
+                                          {formatDate(item?.publishedDate)} ago · {item?.site}
                                         </h3>
                                         
-                                        <a href={item?.url} rel="noopener noreferrer" target="_blank" class="text-lg font-bold text-white">
+                                        <a href={item?.url} rel="noopener noreferrer" target="_blank" class="text-lg sm:text-xl font-bold text-white">
                                           {item?.title}
                                           <p class="text-white text-sm mt-2 font-normal">
                                             {item?.text}

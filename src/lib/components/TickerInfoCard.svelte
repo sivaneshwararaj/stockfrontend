@@ -31,13 +31,8 @@
 
 
   function getAbbreviatedName(fullName) {
-
-    if (fullName === null)
-    {
-      return '-';
-    }
-
-    const names = fullName?.split(' ');
+    try {
+       const names = fullName?.split(' ');
     let firstName = names?.at(0);
     // Remove any title prefix (e.g. Dr., Mr., Mrs., Ms.)
     if (names?.length > 1 && /^(Dr|Mr|Mrs|Ms)\.?$/i?.test(names?.at(0))) {
@@ -47,6 +42,11 @@
     const initials = names?.slice(0, -1)?.map(name => name?.charAt(0))?.join('. ');
     const lastName = names[names?.length - 1];
     return `${firstName?.charAt(0)}. ${lastName}`;
+    } catch(e) {
+      //console.log(e)
+      return '-'
+    }
+    
   }
 
 

@@ -12,7 +12,7 @@
     
     if ($stockTicker && typeof window !== 'undefined' && typeof stockDeck !== 'undefined' && stockDeck?.length !== 0)
     {
-        stockSplits = stockDeck[0]?.stockSplits;
+        stockSplits = stockDeck?.at(0)?.stockSplits || [];
         showFullHistory = false;
        
         
