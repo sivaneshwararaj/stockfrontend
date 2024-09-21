@@ -1,6 +1,5 @@
 <script lang='ts'>
-    import { numberOfUnreadNotification } from '$lib/store';
-   import { goto } from '$app/navigation';
+  import { numberOfUnreadNotification } from '$lib/store';
   import { page } from '$app/stores';
 
     export let data;
@@ -10,13 +9,7 @@
 
   function handleMode(i) {
     activeIdx = i;
-    if(activeIdx === 0) {
-      goto("/industry")
-    } else if (activeIdx === 1) {
-      goto("/industry/sectors")
-    } else if (activeIdx === 2) {
-      goto("/industry/all")
-    }
+
   }
   
   const tabs = [
@@ -93,7 +86,7 @@ let activeIdx = 0;
                 <div class="ml-4 sm:ml-0 w-full mb-4">
                     <div class="bg-[#313131] w-fit relative mr-auto flex flex-wrap items-center justify-center rounded sm:rounded-lg p-1 -mt-3">
                     {#each tabs as item, i}
-                    <button
+                    <a href={i === 0 ? '/industry' : i === 1 ? '/industry/sectors' : '/industry/all'}
                         on:click={() => handleMode(i)}
                         class="group relative z-[1] rounded-full px-6 py-1 {activeIdx === i
                         ? 'z-0'
@@ -107,7 +100,7 @@ let activeIdx = 0;
                         <span class="relative text-[1rem] block font-semibold duration-200 text-white">
                             {item.title}
                         </span>
-                    </button>
+                    </a>
                     {/each}
                     </div>
                 </div>

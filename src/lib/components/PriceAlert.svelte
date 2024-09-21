@@ -39,14 +39,14 @@
             });
     
             const output = (await response.json())?.items
+
+             const closePopup = document.getElementById("priceAlertModal");
+                closePopup?.dispatchEvent(new MouseEvent('click'))
     
             if (output === 'success') {
                 toast.success(`Successfully created price alert`, {
                     style: 'border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);',
                 });
-    
-                const closePopup = document.getElementById("priceAlertModal");
-                closePopup?.dispatchEvent(new MouseEvent('click'))
                 values = [0];
                 displayPrice = currentPrice;
     
