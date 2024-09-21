@@ -8,6 +8,8 @@
 
   export let apiURL;
   export let apiKey;
+
+  let dataLoaded = false; // Flag to track data loading
   
   let assetType = '';
 
@@ -21,13 +23,9 @@
   
   
   async function loadSearchData() {
-    
-    if($searchBarData?.length !== 0)
-    {
-      return
-    }
+    if ($searchBarData.length !== 0 || dataLoaded) return;
     else {
-  
+      dataLoaded = true;
        // make the GET request to the endpoint
        const response = await fetch(apiURL+'/searchbar-data', {
       method: 'GET',
@@ -37,9 +35,9 @@
       });
   
       $searchBarData = await response.json();
+      
     }
      
-  
   }
   
 
@@ -315,7 +313,7 @@ $: {
 
 
 
-<label on:click={loadSearchData} for="searchBarModal" class="cursor-pointer p-2 sm:hover:bg-[#27272A] text-gray-300 sm:hover:text-white flex-shrink-0 flex items-center justify-center border border-gray-800 rounded-lg">
+<label on:mouseover={loadSearchData} on:click={loadSearchData} for="searchBarModal" class="cursor-pointer p-2 sm:hover:bg-[#27272A] text-gray-300 sm:hover:text-white flex-shrink-0 flex items-center justify-center border border-gray-800 rounded-lg">
   <Search class="h-[20px] w-[20px]" />  
 </label>
 

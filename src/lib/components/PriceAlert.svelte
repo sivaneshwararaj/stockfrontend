@@ -19,6 +19,9 @@
         }
         else 
         {
+            const closePopup = document.getElementById("priceAlertModal");
+            closePopup?.dispatchEvent(new MouseEvent('click'))
+
             const postData = {
             'userId': data?.user?.id,
             'symbol': $assetType === 'stock' ? $stockTicker : $assetType === 'etf' ? $etfTicker : $cryptoTicker,
@@ -37,11 +40,8 @@
                 },
                 body: JSON.stringify(postData)
             });
-    
+            
             const output = (await response.json())?.items
-
-             const closePopup = document.getElementById("priceAlertModal");
-                closePopup?.dispatchEvent(new MouseEvent('click'))
     
             if (output === 'success') {
                 toast.success(`Successfully created price alert`, {
