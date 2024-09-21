@@ -1,7 +1,6 @@
 <script lang='ts'>
 import { screenWidth } from '$lib/store';
 import { abbreviateNumber } from '$lib/utils';
-import { goto } from '$app/navigation';
 
 export let data;
 let rawData = data?.getIndustryOverview;
@@ -14,7 +13,7 @@ function formatFilename(industryName) {
     // Remove any extra hyphens (e.g., from consecutive spaces)
     formattedName = formattedName?.replace(/-{2,}/g, '-');
     // Convert to lowercase for consistency
-    goto("/list/industry/"+formattedName?.toLowerCase())
+   return "/list/industry/"+formattedName?.toLowerCase();
 }
 
 
@@ -52,9 +51,11 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
                     <tbody>
                         {#each rawData as item}
                         <!-- row -->
-                        <tr on:click={() => formatFilename(item?.industry)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
-                        <td class="hover:sm:text-white text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
-                            {item?.industry?.length > charNumber ? item?.industry?.slice(0,charNumber) + "..." : item?.industry}
+                        <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
+                        <td class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+                            <a href={`/list/industry/${item?.industry?.replace(/ /g, '-')?.replace(/&/g, 'and')?.replace(/-{2,}/g, '-')?.toLowerCase()}`} class="sm:hover:text-white text-blue-400">
+                                {item?.industry?.length > charNumber ? item?.industry?.slice(0,charNumber) + "..." : item?.industry}
+                            </a>
                         </td>
 
 

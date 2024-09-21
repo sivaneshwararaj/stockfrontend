@@ -192,11 +192,13 @@ function getPlotOptions() {
                           <tbody>
                             {#each stockList as item}
     
-                            <tr on:click={() => goto(`/stocks/${item?.symbol}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
+                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]">
    
 
-                            <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start text-blue-400">
-                                {item?.symbol}
+                            <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start">
+                              <a href={`/stocks/${item?.symbol}`} class="sm:hover:text-white text-blue-400">
+                                 {item?.symbol}
+                              </a>
                             </td>
 
                             <td class="hidden sm:table-cell text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start">

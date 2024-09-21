@@ -58,16 +58,6 @@ const sectorNavigation = [
     },
 ]
 
-function sectorSelector(sector) {
-    const selectedSector = sectorNavigation?.find(item => item?.title === sector);
-
-    if (selectedSector) {
-      goto(selectedSector?.link);
-    } else {
-      // Handle the case when the sector is not found
-      console.error(`Sector not found: ${sector}`);
-    }
-  }
 
 
 
@@ -93,11 +83,13 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
               <!-- Content area -->
               <div class="w-full">
                 {#each sectorList as sector}
-                    <h2 on:click={() => sectorSelector(sector)} class="cursor-pointer text-white sm:hover:underline font-semibold text-lg sm:text-xl mt-5">
+                <div class="mt-4">
+                    <a href={sectorNavigation?.find(item => item?.title === sector)?.link} class=" cursor-pointer text-white sm:hover:underline font-semibold text-lg sm:text-xl ">
                         Sector: {sector} <svg class="inline-block h-6 w-6 -mt-1" viewBox="0 0 20 20" fill="white" style="max-width:40px"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    </h2>
+                    </a>
+                </div>
                     
-                    <div class="border-t border-gray-600 mt-5"/>
+                    <div class="border-t border-gray-600 mt-5 "/>
 
                     <IndustryTable charNumber = {charNumber} industryList = {rawData[sector]} />
                     <div class="border-t border-gray-600 mt-5"/>

@@ -57,17 +57,6 @@ const sectorNavigation = [
     },
 ]
 
-function sectorSelector(sector) {
-    const selectedSector = sectorNavigation?.find(item => item?.title === sector);
-
-    if (selectedSector) {
-      goto(selectedSector?.link);
-    } else {
-      // Handle the case when the sector is not found
-      console.error(`Sector not found: ${sector}`);
-    }
-  }
-
 
 $: charNumber = $screenWidth < 640 ? 20 : 30;
 
@@ -102,9 +91,11 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
                     <tbody>
                         {#each rawData as item}
                         <!-- row -->
-                        <tr on:click={() => sectorSelector(item?.sector)} class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
-                        <td class="hover:sm:text-white text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
-                            {item?.sector?.length > charNumber ? item?.sector?.slice(0,charNumber) + "..." : item?.sector}
+                        <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
+                        <td class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+                            <a href={sectorNavigation?.find(listItem => listItem?.title === item?.sector)?.link} class="sm:hover:text-white text-blue-400">
+                                {item?.sector?.length > charNumber ? item?.sector?.slice(0,charNumber) + "..." : item?.sector}
+                            </a>
                         </td>
 
 
