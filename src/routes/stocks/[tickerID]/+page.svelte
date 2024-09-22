@@ -607,7 +607,6 @@ async function historicalPrice(timePeriod: string) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": data?.apiKey,
         },
         body: JSON.stringify(postData),
       });
