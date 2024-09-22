@@ -3,19 +3,31 @@
     import { numberOfUnreadNotification, screenWidth } from '$lib/store';
     import { onMount } from 'svelte';
     import ArrowLogo from "lucide-svelte/icons/move-up-right";
-    import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+    import * as Card from "$lib/components/shadcn/card/index.ts";
+
+    import { Chart } from 'svelte-echarts'
+import Lazy from '$lib/components/Lazy.svelte';
+
+import { init, use } from 'echarts/core'
+import { GaugeChart, LineChart,} from 'echarts/charts'
+import { GridComponent, TooltipComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+use([GaugeChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer])
 
   
     
-      export let data;
-      let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-  
-      let isLoaded = false;
-      let rawData = []
-      let displayList =  [];
+  export let data;
+  let optionGraphWinrate;
+  let optionGraphReturn;
 
+  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-  
+  let isLoaded = false;
+  let rawData = data?.getCramerTracker ?? [];
+  let displayList = rawData?.slice(0,50) ?? []
+  let cumulativeList = []
+  let winRate;
+
 async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
@@ -26,13 +38,204 @@ async function handleScroll() {
     }
   }
 
+function computeWinRate(data) {
+  // Filter sentiments that should be considered bullish/buy or bearish/sell
+  const bullishSentiments = ['bullish', 'buy'];
+  const bearishSentiments = ['bearish', 'sell'];
+
+  // Reduce through the array to calculate the total trades and wins
+  const { wins, totalTrades } = data.reduce((acc, item) => {
+    const sentiment = item.sentiment.toLowerCase(); // Normalize to lower case for easier comparison
+    const isBullish = bullishSentiments.some(keyword => sentiment.includes(keyword));
+    const isBearish = bearishSentiments.some(keyword => sentiment.includes(keyword));
     
+    // Count the total trades
+    acc.totalTrades++;
 
-    onMount(() => {
-      rawData = data?.getCramerTracker ?? [];
-      displayList = rawData?.slice(0,50) ?? []
+    // Evaluate the wins based on sentiment and returnSince
+    if ((isBullish && item.returnSince > 0) || (isBearish && item.returnSince < 0)) {
+      acc.wins++;
+    }
+
+    return acc;
+  }, { wins: 0, totalTrades: 0 });
+
+  // Calculate and return the win rate percentage
+  return (wins / totalTrades) ;
+}
+
+
+function getPlotOptions() {
+  let dates = [];
+  const returnMap = {};
+  const reverseData = data?.getCramerTracker?.reverse();
+  // Iterate over the data and sum the returnSince values for each unique date
+  reverseData?.forEach(item => {
+    const { date, returnSince } = item;
+
+    if (returnMap[date]) {
+      returnMap[date] += returnSince; // Add to the existing return
+    } else {
+      returnMap[date] = returnSince; // Initialize the return for this date
+      dates.push(date); // Save the unique date in the dates array
+    }
+  });
+
+  // Convert the returnMap to an array of objects (cumulativeList)
+  cumulativeList = Object?.keys(returnMap)?.map(date => (
+    returnMap[date]?.toFixed(1)
+  ));
+
+  //console.log('Cumulative List:', cumulativeList);
+  //console.log('Unique Dates:', dates);
+
+  const optionCumulativeReturn = {
+    silent: true,
+    animation: false,
+    tooltip: {
+        trigger: 'axis',
+        hideDelay: 100, // Set the delay in milliseconds
+    },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '0%',
+    top: $screenWidth < 640 ? '20%' : '10%',
+    containLabel: true
+  },
+  xAxis: [
+    {
+      type: 'category',
+      boundaryGap: false,
+      splitLine: {
+            show: false, // Disable x-axis grid lines
+      },
+      data: dates,
+      axisLabel: {
+        show: false // Hide x-axis labels
+      }
+    }
+  ],
+  yAxis: [
+    {
+      type: 'value',
+      splitLine: {
+            show: false, // Disable x-axis grid lines
+      },
+      axisLabel: {
+        show: false // Hide y-axis labels
+      }
+    },
+  ],
+  series: [
+    {
+      name: 'Cumulative Returns [%]',
+      type: 'line',
+      smooth: true,
+      lineStyle: {
+        width: 0
+      },
+      showSymbol: false,
+      areaStyle: {
+        opacity: 1,
+        color: '#3B82F6'
+      },
+      emphasis: {
+        focus: 'series'
+      },
+      data: cumulativeList
+    },
+  ]
+};
+
+  const optionWinrate = {
+  silent: true,
+  animation: false,
+  series: [
+    {
+      type: 'gauge',
+      startAngle: 180,
+      endAngle: 0,
+      center: ['50%', '75%'],
+      radius: '90%',
+      min: 0,
+      max: 1,
+      splitNumber: 8,
+      axisLine: {
+        lineStyle: {
+          width: 6,
+          color: [
+            [0.3, '#F71F4F'],
+            [0.7, '#FFA838'],
+            [1, '#20AE54']
+          ]
+        }
+      },
+      pointer: {
+        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+        length: '12%',
+        width: 10,
+        offsetCenter: [0, '-60%'],
+        itemStyle: {
+          color: 'auto'
+        }
+      },
+      axisTick: {
+        length: 4,
+        lineStyle: {
+          color: 'auto',
+          width: 1
+        }
+      },
+      splitLine: {
+        length: 20,
+        lineStyle: {
+          color: 'auto',
+          width: 2
+        }
+      },
+      axisLabel: {
+        formatter: function (value) {
+          return '';
+        }
+      },
+      title: {
+        offsetCenter: [0, '5%'],
+        fontSize: 14,
+         color: '#fff',
+      },
+      detail: {
+        fontSize: 22,
+        offsetCenter: [0, '-20%'],
+        valueAnimation: true,
+        formatter: function (value) {
+          return (value * 100)?.toFixed(0)+ '%';
+        },
+        color: 'inherit'
+      },
+      data: [
+        {
+          value: winRate,
+          name: 'Winrate'
+        }
+      ]
+    }
+  ]
+};
+
+
+  return {optionCumulativeReturn, optionWinrate};
+  }
+  
+
+  onMount(() => {
+    winRate = computeWinRate(rawData);
+
+      const {optionCumulativeReturn, optionWinrate} = getPlotOptions()
+      optionGraphReturn = optionCumulativeReturn;
+      optionGraphWinrate = optionWinrate;
+
       isLoaded = true;
-
       window.addEventListener('scroll', handleScroll);
       return () => {
           window.removeEventListener('scroll', handleScroll);
@@ -135,7 +338,44 @@ async function handleScroll() {
   
                   {#if isLoaded}
   
-  
+                  
+                    <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:gap-8 px-3 sm:px-0">
+                     <Card.Root class="bg-[#141417]">
+                      <Card.Header class="flex flex-col items-start space-y-0 pb-2">
+                        <Card.Title class="text-start text-xl sm:text-2xl font-semibold pb-2">Cumulative Return</Card.Title>
+                        <Card.Description class="text-white text-sm pb-2">
+                          Following Jim Cramer's stock picks since {rawData?.slice(0)?.at(0)?.date}, would have yielded a <strong class="{cumulativeList?.slice(-1) > 0 ? 'text-[#00FC50]' : 'text-[#FC2120]'}">{cumulativeList?.slice(-1) > 0 ? '+' : ''}{cumulativeList?.slice(-1)}%</strong> cumulative return.
+                        </Card.Description>
+                      </Card.Header>
+                      <Card.Content class="w-full h-fit">
+                        <Lazy>
+                            <div class="w-full h-[250px] -mt-10">
+                            <Chart {init} options={optionGraphReturn} class="chart" />
+                          </div>
+                        </Lazy>
+                      </Card.Content>
+                    </Card.Root>
+                    <Card.Root class="bg-[#141417]">
+                      <Card.Header class="flex flex-col items-start space-y-0 pb-2">
+                        <Card.Title class="text-start text-xl sm:text-2xl font-semibold pb-2">Winrate</Card.Title>
+                        <Card.Description class="text-white text-sm pb-2">
+                          Cramer was accurate in <strong>{(winRate*100)?.toFixed(0)}%</strong> of his last {rawData?.length} forecasts.
+                          Time to consider the "Inverse Cramer" strategy?
+                        </Card.Description>
+                      </Card.Header>
+                      <Card.Content class="w-full h-[250px] ">
+                        <Lazy>
+                            <div class="w-full h-[250px] -mt-5">
+                            <Chart {init} options={optionGraphWinrate} class="chart" />
+                          </div>
+                        </Lazy>
+                      </Card.Content>
+                    </Card.Root>
+
+                  
+                 
+                  </div>
+
          
                   <div class="w-screen sm:w-full m-auto mt-20 sm:mt-10">
                       
@@ -145,10 +385,7 @@ async function handleScroll() {
                           <thead>
                             <tr class="bg-[#09090B]">
                               <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
-                                Symbol
-                              </th>
-                              <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
-                                Name
+                                Company Name
                               </th>
                               <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
                                 Date
@@ -167,17 +404,50 @@ async function handleScroll() {
                           <tbody>
                             {#each displayList as item, index}
     
-                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === displayList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]">
    
-                              <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start">
-                                <a href={"/stocks/"+item?.ticker} class="sm:hover:text-white text-blue-400">
-                                  {item?.ticker}
-                                </a>
+                              <td class="text-sm sm:text-[1rem] text-start whitespace-nowrap">
+                                {#if index >= 5 && data?.user?.tier !== 'Pro'}
+                                  <a class="block relative" href="/pricing">
+                                    <span class="text-base font-semibold text-blue-link blur group-hover:blur-[6px]">
+                                      XXXX
+                                    </span>
+                                    
+                                    <div class="ml-px max-w-[130px] truncate text-sm text-default blur group-hover:blur-[6px] lg:max-w-[150px]">
+                                      XXXXXXXXXXXXXXXX
+                                    </div>
+                                    
+                                    <div class="absolute top-3 flex items-center">
+                                      <svg class="size-5 text-[#FBCE3C]" 
+                                          viewBox="0 0 20 20" 
+                                          fill="currentColor" 
+                                          style="max-width: 40px;">
+                                        <path fill-rule="evenodd" 
+                                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" 
+                                              clip-rule="evenodd">
+                                        </path>
+                                      </svg>
+                                      
+                                      <span class="ml-1 font-semibold text-muted group-hover:text-default">
+                                        Upgrade
+                                      </span>
+                                    </div>
+                                  </a>
+                                {:else}
+                                  <div class="flex flex-col items-start">
+                                    <a href={`/stocks/${item?.ticker}`} 
+                                      class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]">
+                                      {item?.ticker}
+                                    </a>
+                                    <span class="text-white">
+                                      {item?.name?.length > charNumber 
+                                        ? item?.name?.slice(0, charNumber) + "..." 
+                                        : item?.name}
+                                    </span>
+                                  </div>
+                                {/if}
                               </td>
 
-                              <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start">
-                                  {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
-                              </td>
   
                                 <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white">
                                     {new Date(item?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
@@ -189,7 +459,7 @@ async function handleScroll() {
                               </td>
 
                               <td class="text-sm sm:text-[1rem] {item?.returnSince >= 0 ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-end">
-                                {item?.returnSince}%
+                                {item?.returnSince > 0 ? '+' : ''}{item?.returnSince}%
                               </td>
 
                               <td class="hidden xl:table-cell text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
@@ -201,7 +471,6 @@ async function handleScroll() {
                           </tbody>
                         </table>
                     </div>
-                      <UpgradeToPro data={data} title="Get the latest dark pool trades in realtime from Hedge Funds & Major Institutional Traders"/>
     
                   </div>
   
@@ -276,4 +545,21 @@ async function handleScroll() {
       
     </section>
     
-    
+<style>
+.app {
+height: 150px;
+max-width: 100%; /* Ensure chart width doesn't exceed the container */
+
+}
+
+@media (max-width: 640px) {
+.app {
+  height: 120px;
+}
+}
+
+.chart {
+width: 100%;
+}
+
+</style>

@@ -1,4 +1,4 @@
-export const load = async ({ locals, setHeaders }) => {
+export const load = async ({ locals }) => {
   const getCramerTracker = async () => {
     const { apiKey, apiURL, user } = locals;
 
@@ -10,11 +10,7 @@ export const load = async ({ locals, setHeaders }) => {
       },
     });
 
-    let output = await response.json();
-
-    output = user?.tier !== "Pro" ? output?.slice(0, 5) : output;
-
-    setHeaders({ "cache-control": "public, max-age=3000" });
+    const output = await response.json();
 
     return output;
   };
