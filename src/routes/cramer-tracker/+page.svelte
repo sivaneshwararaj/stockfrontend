@@ -140,9 +140,6 @@ rawData?.forEach(item => {
         opacity: 1,
         color: '#3B82F6'
       },
-      emphasis: {
-        focus: 'series'
-      },
       data: cumulativeList
     },
   ]
@@ -160,10 +157,10 @@ rawData?.forEach(item => {
       radius: '90%',
       min: 0,
       max: 1,
-      splitNumber: 8,
+      splitNumber: 3,
       axisLine: {
         lineStyle: {
-          width: 6,
+          width: 15,
           color: [
             [0.3, '#F71F4F'],
             [0.7, '#FFA838'],
@@ -173,7 +170,7 @@ rawData?.forEach(item => {
       },
       pointer: {
         icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
-        length: '12%',
+        length: '15%',
         width: 10,
         offsetCenter: [0, '-60%'],
         itemStyle: {
@@ -181,18 +178,10 @@ rawData?.forEach(item => {
         }
       },
       axisTick: {
-        length: 4,
-        lineStyle: {
-          color: 'auto',
-          width: 1
-        }
+        length: 0,
       },
       splitLine: {
-        length: 20,
-        lineStyle: {
-          color: 'auto',
-          width: 2
-        }
+        length: 0,
       },
       axisLabel: {
         formatter: function (value) {
@@ -349,13 +338,13 @@ rawData?.forEach(item => {
                       </Card.Header>
                       <Card.Content class="w-full h-fit">
                         <Lazy>
-                            <div class="w-full h-[250px] -mt-10">
+                            <div class="w-full h-[150px] ">
                             <Chart {init} options={optionGraphReturn} class="chart" />
                           </div>
                         </Lazy>
                       </Card.Content>
                     </Card.Root>
-                    <Card.Root class="bg-[#141417]">
+                    <Card.Root class="bg-[#141417] ">
                       <Card.Header class="flex flex-col items-start space-y-0 pb-2">
                         <Card.Title class="text-start text-xl sm:text-2xl font-semibold pb-2">Winrate</Card.Title>
                         <Card.Description class="text-white text-sm pb-2">
@@ -363,9 +352,9 @@ rawData?.forEach(item => {
                           Time to consider the "Inverse Cramer" strategy?
                         </Card.Description>
                       </Card.Header>
-                      <Card.Content class="w-full h-[250px] ">
+                      <Card.Content class="w-full h-fit relative">
                         <Lazy>
-                            <div class="w-full h-[250px] -mt-5">
+                            <div class="w-full h-[250px] absolute right-0 -top-14">
                             <Chart {init} options={optionGraphWinrate} class="chart" />
                           </div>
                         </Lazy>
