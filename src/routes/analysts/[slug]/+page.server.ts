@@ -1,6 +1,6 @@
 export const load = async ({ locals, setHeaders, params }) => {
   const getAnalystStats = async () => {
-    const { apiURL, apiKey } = locals;
+    const { apiURL, apiKey, user } = locals;
 
     const postData = { analystId: params.slug };
     // make the POST request to the endpoint

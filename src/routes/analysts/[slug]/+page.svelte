@@ -1,14 +1,16 @@
 <script lang='ts'>
-import { goto } from '$app/navigation';
 import { screenWidth, numberOfUnreadNotification } from '$lib/store';
-import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
+  import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+  import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
 
 export let data;
 
 let analystStats = data?.getAnalystStats;
 
-let rawData = data?.getAnalystStats?.ratingsList;
-let ratingsList = rawData?.slice(0,20) ?? [];
+let rawData = data?.user?.tier !== "Pro" ? data?.getAnalystStats?.ratingsList?.slice(0, 5) : data?.getAnalystStats?.ratingsList;
+let stockList = rawData?.slice(0,20) ?? [];
   
 let analystScore = analystStats?.analystScore;
 let rank = analystStats?.rank;
@@ -20,21 +22,9 @@ let avgReturn = analystStats?.avgReturn;
 let numOfAnalysts = new Intl.NumberFormat("en", {minimumFractionDigits: 0,maximumFractionDigits: 0}).format(analystStats?.numOfAnalysts);
 let numOfStocks = analystStats?.numOfStocks;
 
-  async function infiniteHandler({ detail: { loaded, complete } }) 
-  {
-  if (ratingsList?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = ratingsList?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-      ratingsList = [...ratingsList, ...newArticles];
-      loaded();
-    }
-  }
-  
 
 
-function sectorSelector(sector) {
+ function sectorSelector(sector) {
     let path;
     switch(sector) {
         case 'Financials':
@@ -80,20 +70,30 @@ function sectorSelector(sector) {
             // Handle default case if needed
             break;
     }
-    goto("/list/" + path);
+    return path
 }
-  
-  let charNumber = 40;
-  $: {
-    if ($screenWidth < 640)
-    {
-      charNumber = 20;
-    }
-    else {
-      charNumber = 40;
+ 
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && stockList?.length !== rawData?.length) {
+        const nextIndex = stockList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+        stockList = [...stockList, ...filteredNewResults];
     }
   }
-  
+
+
+onMount(async () => {
+
+window.addEventListener('scroll', handleScroll);
+  return () => {
+      window.removeEventListener('scroll', handleScroll);
+  };
+})
+
+
+$: charNumber = $screenWidth < 640 ? 20 : 40;
         
   </script>
   
@@ -122,27 +122,27 @@ function sectorSelector(sector) {
 
 
 
-<section class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40">
-
+ <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
+          
     <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
       <ul>
-        <li><a href="/" class="text-gray-300">Home</a></li> 
-        <li><a href="/analysts" class="text-gray-300">Analysts</a></li> 
-        <li class="text-gray-300">{analystName}</li>
+        <li><a href="/" class="text-gray-300">Home</a></li>
+        <li class="text-gray-300">Top Analyst Stocks</li>
       </ul>
     </div>
             
-            
-    <div class="w-full overflow-hidden m-auto ">
+    <div class="w-full overflow-hidden m-auto mt-5">
       
-      <div class="p-0 flex justify-center w-full m-auto overflow-hidden">
-          <div class="relative flex justify-center items-center overflow-hidden w-full">
-              <main class="w-full">
+      <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden ">
+          <div class="relative flex justify-center items-start overflow-hidden w-full">
+
+
+              <main class="w-full lg:w-3/4 lg:pr-5">
               
                 
-                <div class="w-screen sm:w-full m-auto mt-12">
+                <div class="w-full m-auto mt-12">
 
-                    <div class="flex flex-row items-center justify-center sm:justify-start">
+                    <div class="flex flex-row items-center -ml-10 sm:ml-0 justify-center sm:justify-start ">
                         <svg class="w-16 h-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#D4D4D4" d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5"/><path fill="#D4D4D4" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m7.993 22.926A5.002 5.002 0 0 0 19 20h-6a5.002 5.002 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0"/></svg>
                         <div class="ml-3 flex flex-col items-start">
                             <div class="text-xl font-bold text-gray-200">{analystName}</div>
@@ -168,9 +168,9 @@ function sectorSelector(sector) {
                     </div>
 
                     <div class="p-2 sm:p-0">
-                      <div class="stats stats-horizontal bg-[#09090B] rounded-lg shadow w-full rounded-none sm:rounded-lg mt-12 mb-5">
+                      <div class="stats stats-horizontal bg-[#09090B] w-full rounded-none sm:rounded-lg mt-12 mb-5">
               
-                          <div class="grid grid-cols-2 sm:grid-cols-4 ">
+                          <div class="grid grid-cols-2 sm:grid-cols-4">
                                     
               
                               <div class="stat">
@@ -184,12 +184,12 @@ function sectorSelector(sector) {
                                 </div>
                                 
                                 <div class="stat">
-                                    <div class="text-2xl font-bold {successRate >= 10 ? 'text-[#36D984]' : 'text-[#EF4444]'}">{successRate?.toFixed(2)}%</div>
+                                    <div class="text-2xl font-bold {successRate >= 0 ? 'text-[#36D984]' : 'text-[#EF4444]' }">{successRate >= 0 ? '+' : ''}{successRate?.toFixed(2)}%</div>
                                     <div class="text-gray-200 text-sm">Success Rate</div>
                                 </div>
         
                                 <div class="stat">
-                                    <div class="text-2xl font-bold {avgReturn >= 0 ? 'text-[#36D984]' : 'text-[#EF4444]'}">{avgReturn?.toFixed(2)}%</div>
+                                    <div class="text-2xl font-bold {avgReturn >= 0 ? 'text-[#36D984]' : 'text-[#EF4444]' }">{avgReturn >= 0 ? '+' : ''}{avgReturn?.toFixed(2)}%</div>
                                     <div class="text-gray-200 text-sm">Avg Return</div>
                                 </div>
               
@@ -203,15 +203,15 @@ function sectorSelector(sector) {
                       <div class="p-2 sm:p-0 mb-10">
                       <div class="text-white p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">
                         <div class="flex flex-col items-start">
-                          <span class="text-gray-300 font-bold">
+                          <span class="text-gray-300 font-bold text-lg smtext-xl">
                             Main Sectors:
                           </span>
 
                         <div class="mt-5 mb-3 flex flex-wrap gap-3 flex-row items-center">
                           {#each data?.getAnalystStats?.mainSectors as sector}
-                            <label on:click={() => sectorSelector(sector)} class="cursor-pointer w-fit bg-[#404040] bg-opacity-[0.5] sm:hover:bg-opacity-[0.6] px-3 sm:px-4 py-2 text-sm font-medium rounded-xl sm:hover:text-white text-blue-400">
-                              {sector}
-                            </label>
+                            <a href={"/list/"+sectorSelector(sector)} class="cursor-pointer w-fit bg-[#404040] bg-opacity-[0.5] sm:hover:bg-opacity-[0.6] px-3 sm:px-4 py-2 text-sm sm:text-[1rem] font-medium rounded-lg sm:hover:text-white text-blue-400">
+                                {sector}
+                            </a>
                           {/each}
                         </div>
 
@@ -247,14 +247,14 @@ function sectorSelector(sector) {
                             </tr>
                           </thead>
                           <tbody>
-                            {#each ratingsList as item}
+                            {#each stockList as item, index}
     
-                            <tr on:click={() => goto(`/stocks/${item?.ticker}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
+                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === stockList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
     
                               <td class="text-sm sm:text-[1rem] text-start whitespace-nowrap">
                                 <div class="flex flex-col items-start ">
-                                  <span class="text-blue-400 text-sm">{item?.ticker} </span>
-                                  <span class="text-white">{item?.name} </span>
+                                  <a href={`/stocks/${item?.ticker}`} class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]">{item?.ticker} </a>
+                                  <span class="text-white"> {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name} </span>
                               </div>
                                   
                               </td>
@@ -290,25 +290,74 @@ function sectorSelector(sector) {
                           </tbody>
                         </table>
                     </div>
-                      <InfiniteLoading on:infinite={infiniteHandler} />
+                    <UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>
+
     
                   </div>
 
 
                     
-                    <InfiniteLoading on:infinite={infiniteHandler} />
   
                 </div>
               
-              </main>
+               </main>
+
+                <aside class="hidden lg:block relative fixed w-1/4 ml-4">        
+              
+                  {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
+                  <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                      <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                          <div class="w-full flex justify-between items-center p-3 mt-3">
+                          <h2 class="text-start text-xl font-semibold text-white ml-3">
+                          Pro Subscription 🔥
+                          </h2>
+                          <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                          </div>
+                          <span class="text-white p-3 ml-3 mr-3">
+                              Upgrade now for unlimited access to all data and tools
+                          </span>
+                      </div>
+                  </div>
+                  {/if}
+  
+                  <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                      <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                          <div class="w-full flex justify-between items-center p-3 mt-3">
+                          <h2 class="text-start text-xl font-semibold text-white ml-3">
+                            Top Analyst 📊
+                          </h2>
+                          <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                          </div>
+                          <span class="text-white p-3 ml-3 mr-3">
+                              Get the latest top Wall Street analyst ratings
+                          </span>
+                      </div>
+                  </div>
+  
+                  <div on:click={() => goto('/analysts/top-stocks')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
+                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+                        <div class="w-full flex justify-between items-center p-3 mt-3">
+                        <h2 class="text-start text-xl font-semibold text-white ml-3">
+                          Top Stocks Picks ⭐
+                        </h2>
+                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
+                        </div>
+                        <span class="text-white p-3 ml-3 mr-3">
+                            Get the latest top Wall Street analyst ratings.
+                        </span>
+                    </div>
+                </div>
+  
+                </aside>
+  
           </div>
+        </div>
+    
+      
       </div>
-  
+          
+          
+      
+    </section>
     
-    </div>
-        
-        
-    
-  </section>
-  
   

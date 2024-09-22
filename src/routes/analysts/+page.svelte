@@ -295,13 +295,13 @@ $: {
   
                          <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-semibold text-white">
                             {#if Number(item?.successRate) >= 0}
-                            <span class="text-[#37C97D]">{Number(item?.successRate)?.toFixed(2)}%</span>
+                            <span class="text-[#37C97D]">+{Number(item?.successRate)?.toFixed(2)}%</span>
                             {/if}
                           </td>
 
                             <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-semibold text-white">
                               {#if Number(item?.avgReturn) >= 0}
-                                <span class="text-[#37C97D]">{Number(item?.avgReturn)?.toFixed(2)}%</span>
+                                <span class="text-[#37C97D]">+{Number(item?.avgReturn)?.toFixed(2)}%</span>
                               {:else}
                                 <span class="text-[#B84242]">{Number(item?.avgReturn)?.toFixed(2)}%</span>
                               {/if}
