@@ -25,10 +25,10 @@ async function loadSearchData() {
     else {
   
        // make the GET request to the endpoint
-       const response = await fetch(data?.apiURL+'/searchbar-data', {
+       const response = await fetch('/api/searchbar-data', {
       method: 'GET',
       headers: {
-          "Content-Type": "application/json","X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
       },
       });
   

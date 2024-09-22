@@ -42,17 +42,17 @@ const getOptionsBubble = async (ticker) => {
       optionsDict = cachedData;
     } else {
 
-      const postData = {'ticker': ticker};
+      const postData = {'ticker': ticker, path: 'options-bubble'};
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + '/options-bubble', {
+      const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(postData)
       });
 
-      optionsDict = await response.json();
+      optionsDict = await response?.json();
 
       // Cache the data for this specific tickerID with a specific name 'getOptionsBubble'
       setCache(ticker, optionsDict, 'getOptionsBubble');

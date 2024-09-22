@@ -229,7 +229,7 @@ async function getInfoText(parameter, title) {
       infoText = cachedData;
     } else {
       const postData = { parameter };
-      const response = await fetch(data?.apiURL + "/info-text", {
+      const response = await fetch("/api/info-text", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -406,7 +406,7 @@ const loadWorker = async () => {
 };
 
 const updateStockScreenerData = async () => {
-    downloadWorker.postMessage({ ruleOfList: ruleOfList, apiURL: data?.apiURL, apiKey: data?.apiKey });
+    downloadWorker.postMessage({ ruleOfList: ruleOfList});
 };
  
 function handleAddRule() {

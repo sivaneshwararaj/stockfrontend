@@ -121,17 +121,17 @@ const getShareStatistics = async (ticker) => {
       rawData = cachedData;
     } else {
 
-      const postData = {'ticker': ticker};
+      const postData = {'ticker': ticker, path: 'share-statistics'};
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + '/share-statistics', {
+      const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(postData)
       });
 
-      rawData = await response.json();
+      rawData = await response?.json();
 
       // Cache the data for this specific tickerID with a specific name 'getShareStatistics'
       setCache(ticker, rawData, 'getShareStatistics');

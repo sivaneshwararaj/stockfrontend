@@ -6,9 +6,7 @@
   import InfoModal from '$lib/components/InfoModal.svelte';
   
   export let watchListId;
-  export let apiKey;
-  export let apiURL;
-  
+
 
 
 const sortTickersByName = (tickerList) => {
@@ -126,18 +124,18 @@ async function getWatchlistData()
   const postData = {'watchListId': watchListId}
   
 
-  const response = await fetch(apiURL+'/get-watchlist', {
+  const response = await fetch('/api/get-watchlist', {
       method: 'POST',
       headers: {
-      "Content-Type": "application/json","X-API-KEY": apiKey
+      "Content-Type": "application/json"
       },
       body: JSON.stringify(postData)
   });
 
-const output = await response.json();
+const output = await response?.json();
 
 try {
-  watchList = sortTickersByChange(output[0]);
+  watchList = sortTickersByChange(output?.at(0));
 }
 catch(e) {
   watchList = []

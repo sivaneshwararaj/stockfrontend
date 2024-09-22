@@ -170,19 +170,19 @@
   return option;
   }
   
-  async function getSwapData(ticker) {
+ async function getSwapData(ticker) {
     const cachedData = getCache(ticker, 'getSwapData');
     if (cachedData) {
       rawData = cachedData;
     } else {
       try {
-        const response = await fetch(`${data?.apiURL}/swap-ticker`, {
+        const postData = {ticker: ticker, path: 'swap-ticker'}
+        const response = await fetch('/api/ticker-data', {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
-            "X-API-KEY": data?.apiKey
           },
-          body: JSON.stringify({ ticker })
+          body: JSON.stringify(postData)
         });
         if (!response.ok) throw new Error('API request failed');
         rawData = await response.json();
@@ -194,7 +194,6 @@
     }
     $swapComponent = rawData?.length !== 0;
   }
-  
 
   $: if ($stockTicker && typeof window !== 'undefined') {
     isLoaded = false;

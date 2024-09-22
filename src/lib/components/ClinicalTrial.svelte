@@ -169,17 +169,17 @@ const getClinicalTrial = async (ticker) => {
       displayList = cachedData;
     } else {
 
-      const postData = {'ticker': ticker};
+      const postData = {'ticker': ticker, path: 'clinical-trial'};
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + '/clinical-trial', {
+      const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(postData)
       });
 
-      rawData = await response.json();
+      rawData = await response?.json();
       displayList = rawData;
       // Cache the data for this specific tickerID with a specific name 'getClinicalTrial'
       setCache(ticker, rawData, 'getClinicalTrial');

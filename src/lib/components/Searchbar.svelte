@@ -5,10 +5,6 @@
   import { onMount } from 'svelte';
   import Search from "lucide-svelte/icons/search";
 
-
-  export let apiURL;
-  export let apiKey;
-
   let dataLoaded = false; // Flag to track data loading
   
   let assetType = '';
@@ -27,10 +23,10 @@
     else {
       dataLoaded = true;
        // make the GET request to the endpoint
-       const response = await fetch(apiURL+'/searchbar-data', {
+       const response = await fetch('/api/searchbar-data', {
       method: 'GET',
       headers: {
-          "Content-Type": "application/json","X-API-KEY": apiKey
+          "Content-Type": "application/json"
       },
       });
   

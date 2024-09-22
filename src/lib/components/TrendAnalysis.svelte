@@ -34,12 +34,12 @@ const getTrendAnalysis = async (ticker) => {
       trendList = cachedData;
     } else {
 
-      const postData = {'ticker': ticker};
+      const postData = {'ticker': ticker, path: 'trend-analysis'};
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + '/trend-analysis', {
+      const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(postData)
       });

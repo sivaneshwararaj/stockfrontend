@@ -318,10 +318,10 @@ async function historicalPrice(timePeriod:string) {
         timePeriod: timePeriod,
       };
 
-      const response = await fetch(data?.apiURL+'/historical-price', {
+      const response = await fetch('/api/historical-price', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(postData)
       });
@@ -416,11 +416,11 @@ async function initializePrice() {
   async function getPrePostQuote() {
   
   if(!$isOpen) {
-    const postData = { ticker: $etfTicker};
-      const response = await fetch(data?.apiURL+'/pre-post-quote', {
+    const postData = { ticker: $etfTicker, path: 'pre-post-quote'};
+      const response = await fetch('/api/ticker-data', {
       method: 'POST',
       headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
       },
       body: JSON.stringify(postData)
       });
@@ -729,16 +729,15 @@ async function initializePrice() {
         timePeriod: timePeriod,
       };
 
-      const response = await fetch(data?.apiURL + "/export-price-data", {
+      const response = await fetch("/api/export-price-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": data?.apiKey,
         },
         body: JSON.stringify(postData),
       });
 
-      const output = (await response?.json()) ?? [];
+      const output = await response?.json() ?? [];
 
       setCache($etfTicker, output, "exportPriceData" + timePeriod);
       return output;

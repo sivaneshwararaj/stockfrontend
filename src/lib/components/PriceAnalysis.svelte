@@ -145,12 +145,12 @@ const getPriceAnalysis = async (ticker) => {
       priceAnalysisDict = cachedData;
     } else {
 
-      const postData = {'ticker': ticker};
+      const postData = {'ticker': ticker, path: 'price-analysis'};
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + '/price-analysis', {
+      const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(postData)
       });

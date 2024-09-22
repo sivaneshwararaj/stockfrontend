@@ -280,11 +280,10 @@ async function historicalPrice(timePeriod: string) {
         timePeriod: timePeriod,
       };
 
-      const response = await fetch(data?.apiURL + "/historical-price", {
+      const response = await fetch("/api/historical-price", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": data?.apiKey,
         },
         body: JSON.stringify(postData),
       });
@@ -375,12 +374,11 @@ async function historicalPrice(timePeriod: string) {
 
   async function getPrePostQuote() {
     if (!$isOpen) {
-      const postData = { ticker: $stockTicker };
-      const response = await fetch(data?.apiURL + "/pre-post-quote", {
+      const postData = { ticker: $stockTicker, path: 'pre-post-quote' };
+      const response = await fetch("/api/ticker-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": data?.apiKey,
         },
         body: JSON.stringify(postData),
       });
@@ -605,7 +603,7 @@ async function historicalPrice(timePeriod: string) {
         timePeriod: timePeriod,
       };
 
-      const response = await fetch(data?.apiURL + "/export-price-data", {
+      const response = await fetch("/api/export-price-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

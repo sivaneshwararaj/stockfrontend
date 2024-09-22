@@ -628,7 +628,7 @@ $: {
               autocomplete="off"
               />
             -->
-            <Searchbar apiURL={data?.apiURL} apiKey={data?.apiKey}/>
+            <Searchbar/>
     
             <NotificationBell 
               data={data}

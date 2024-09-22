@@ -28,15 +28,14 @@ async function getTaRating(ticker) {
       rawData = cachedData;
     } else {
       try {
-        const response = await fetch(data?.apiURL+'/stock-rating', {
+        const response = await fetch('/api/ticker-data', {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
-            "X-API-KEY": data?.apiKey
           },
-          body: JSON.stringify({ ticker })
+          body: JSON.stringify({ ticker: ticker, path: 'stock-rating' })
         });
-        rawData = await response.json();
+        rawData = await response?.json();
 
         setCache(ticker, rawData, 'getTaRating');
       } catch (error) {

@@ -7,9 +7,6 @@ import { fade } from 'svelte/transition';
   let secFilingsList;
 
 
-let apiURL = import.meta.env.VITE_USEAST_API_URL;
-let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
-
 
 let displayList = [];
 let accordionOpen = {};
@@ -86,11 +83,11 @@ async function fetchData() {
     secFilingsList = $clientSideCache[$stockTicker]?.getSECFilings;
   }
   else {
-    const postData = { ticker: $stockTicker};
-    const response = await fetch(apiURL+'/get-sec-filings', {
+    const postData = { ticker: $stockTicker, path: 'get-sec-filings'};
+    const response = await fetch('/api/ticker-data', {
     method: 'POST',
     headers: {
-        "Content-Type": "application/json", "X-API-KEY": apiKey
+        "Content-Type": "application/json"
     },
     body: JSON.stringify(postData)
     });

@@ -184,12 +184,12 @@ function findLowestAndHighestFee(data, lastDateStr) {
       rawData = cachedData;
     } else {
   
-      const postData = {'ticker': ticker};
+      const postData = {'ticker': ticker, path: 'borrowed-share'};
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + '/borrowed-share', {
+      const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(postData)
       });

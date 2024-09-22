@@ -511,8 +511,6 @@ onDestroy( () => {
 
         <WatchListCard
           watchListId={displayWatchList?.id}
-          apiURL = {data?.apiURL}
-          apiKey = {data?.apiKey}
         />
         
         

@@ -8,8 +8,6 @@
   import InfoModal from "$lib/components/InfoModal.svelte";
 
   export let userTier;
-  export let apiURL;
-  export let apiKey;
 
   let isLoaded = false;
 
@@ -128,18 +126,17 @@
     if (cachedData) {
       revenueSegmentation = cachedData;
     } else {
-      const postData = { ticker: ticker };
+      const postData = { ticker: ticker, path: 'revenue-segmentation' };
       // make the POST request to the endpoint
-      const response = await fetch(apiURL + "/revenue-segmentation", {
+      const response = await fetch("/api/ticker-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": apiKey,
         },
         body: JSON.stringify(postData),
       });
 
-      revenueSegmentation = await response.json();
+      revenueSegmentation = await response?.json();
 
       // Cache the data for this specific tickerID with a specific name 'getRevenueSegmentation'
       setCache(ticker, revenueSegmentation, "getRevenueSegmentation");

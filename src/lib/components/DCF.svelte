@@ -190,13 +190,12 @@ async function getFairPrice(ticker) {
       fairPrice = cachedData;
     } else {
       try {
-        const response = await fetch(data?.apiURL+'/fair-price', {
+        const response = await fetch('/api/ticker-data', {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
-            "X-API-KEY": data?.apiKey
           },
-          body: JSON.stringify({ ticker })
+          body: JSON.stringify({ ticker: ticker, path: 'fair-price' })
         });
         fairPrice = await response.json();
 

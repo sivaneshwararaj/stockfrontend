@@ -33,15 +33,15 @@
       rawData = cachedData;
     } else {
       try {
-        const response = await fetch(data?.apiURL+'/correlation-ticker', {
+        const response = await fetch('/api/ticker-data', {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
             "X-API-KEY": data?.apiKey
           },
-          body: JSON.stringify({ ticker })
+          body: JSON.stringify({ ticker:ticker, path: 'correlation-ticker' })
         });
-        rawData = (await response.json()) || [];
+        rawData = (await response?.json()) || [];
 +
         setCache(ticker, rawData, 'getCorrelation');
       } catch (error) {

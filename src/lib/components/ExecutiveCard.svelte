@@ -6,11 +6,6 @@
   //export let executiveList;
   let executiveList = [];
 
-
-let apiURL = import.meta.env.VITE_USEAST_API_URL;
-let apiKey = import.meta.env.VITE_STOCKNEAR_API_KEY;
-
-
   let isLoaded = false;
   const currentYear = new Date().getFullYear();
 
@@ -25,11 +20,11 @@ async function fetchData() {
     executiveList = $clientSideCache[$stockTicker]?.getExecutives;
   }
   else {
-    const postData = { ticker: $stockTicker};
-    const response = await fetch(apiURL+'/get-executives', {
+    const postData = { ticker: $stockTicker, path: 'get-executives'};
+    const response = await fetch('/api/ticker-data', {
     method: 'POST',
     headers: {
-        "Content-Type": "application/json", "X-API-KEY": apiKey
+        "Content-Type": "application/json"
     },
     body: JSON.stringify(postData)
     });

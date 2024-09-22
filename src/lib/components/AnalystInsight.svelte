@@ -31,13 +31,12 @@
     if (cachedData) {
       rawData = cachedData;
     } else {
-      const postData = { ticker: ticker };
+      const postData = { ticker: ticker, path: 'analyst-insight' };
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + "/analyst-insight", {
+      const response = await fetch("/api/ticker-data", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": data?.apiKey,
         },
         body: JSON.stringify(postData),
       });

@@ -291,10 +291,10 @@
         timePeriod: timePeriod,
       };
 
-      const response = await fetch(data?.apiURL+'/historical-price', {
+      const response = await fetch('/api/historical-price', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json", "X-API-KEY": data?.apiKey
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(postData)
       });

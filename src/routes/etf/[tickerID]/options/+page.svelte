@@ -31,16 +31,15 @@ let activeIdx = 0;
       };
 
       // make the POST request to the endpoint
-      const response = await fetch(data?.apiURL + "/options-daily-transactions", {
+      const response = await fetch("/api/options-daily-transactions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": data?.apiKey,
         },
         body: JSON.stringify(postData),
       });
 
-      output = await response.json();
+      output = await response?.json();
 
       setCache(transactionId, output, "getDailyTransactions");
     }

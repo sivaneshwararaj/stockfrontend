@@ -22,7 +22,7 @@ const getStockScreenerData = async (rules, apiKey, apiURL) => {
   // Function to check and add missing EMA parameters
   const ensureAllEmaParameters = (params) => {
     const includedEmaParameters = params.filter((param) =>
-      emaParameters.includes(param),
+      emaParameters.includes(param)
     );
     if (includedEmaParameters.length > 0) {
       emaParameters.forEach((param) => {
@@ -47,11 +47,10 @@ const getStockScreenerData = async (rules, apiKey, apiURL) => {
 
   // Fetch new data if it's not in the cache
   const postData = { ruleOfList: getRuleOfList };
-  const response = await fetch(apiURL + "/stock-screener-data", {
+  const response = await fetch("/api/stock-screener-data", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-API-KEY": apiKey,
     },
     body: JSON.stringify(postData),
   });
@@ -76,9 +75,9 @@ onmessage = async (event) => {
         value !== undefined &&
         (typeof value !== "object" ||
           Object.values(value)?.every(
-            (subValue) => subValue !== null && subValue !== undefined,
-          )),
-    ),
+            (subValue) => subValue !== null && subValue !== undefined
+          ))
+    )
   );
 
   postMessage({ message: "success", stockScreenerData });
