@@ -66,25 +66,27 @@ function computeWinRate(data) {
 
 
 function getPlotOptions() {
-  let dates = [];
-  const returnMap = {};
-  const reverseData = data?.getCramerTracker?.reverse();
-  // Iterate over the data and sum the returnSince values for each unique date
-  reverseData?.forEach(item => {
-    const { date, returnSince } = item;
+let dates = [];
+const returnMap = {};
 
-    if (returnMap[date]) {
-      returnMap[date] += returnSince; // Add to the existing return
-    } else {
-      returnMap[date] = returnSince; // Initialize the return for this date
-      dates.push(date); // Save the unique date in the dates array
-    }
-  });
+// Iterate over the data and sum the returnSince values for each unique date
+rawData?.forEach(item => {
+  const { date, returnSince } = item;
 
-  // Convert the returnMap to an array of objects (cumulativeList)
-  cumulativeList = Object?.keys(returnMap)?.map(date => (
-    returnMap[date]?.toFixed(1)
-  ));
+  if (returnMap[date]) {
+    returnMap[date] += returnSince; // Add to the existing return
+  } else {
+    returnMap[date] = returnSince; // Initialize the return for this date
+    dates.push(date); // Save the unique date in the dates array
+  }
+});
+
+// Sort dates in ascending order (earliest date first, latest date last)
+  dates?.sort((a, b) => new Date(a) - new Date(b));
+
+  // Convert the returnMap to an array of objects (cumulativeList) in the correct order
+  cumulativeList = dates?.map(date => (returnMap[date]?.toFixed(1)));
+
 
   //console.log('Cumulative List:', cumulativeList);
   //console.log('Unique Dates:', dates);
@@ -372,8 +374,7 @@ function getPlotOptions() {
                       </Card.Content>
                     </Card.Root>
 
-                  
-                 
+                
                   </div>
 
          
