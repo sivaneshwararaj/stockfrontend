@@ -442,11 +442,11 @@ rawData?.forEach(item => {
                                 </td>
   
         
-                                <td class="text-sm sm:text-[1rem] whitespace-nowrap {item?.sentiment === 'Bullish' ? 'text-[#00FC50]' : item?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-center">
+                                <td class="text-sm sm:text-[1rem] whitespace-nowrap {(['Bullish', 'Buy'].includes(item?.sentiment) || item?.sentiment?.includes('Buy')) ? 'text-[#30B170]' : (['Bearish', 'Sell','Trim'].includes(item?.sentiment) || item?.sentiment?.includes('Sell') === 'Bearish') ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-center">
                                 {item?.sentiment}
                               </td>
 
-                              <td class="text-sm sm:text-[1rem] {item?.returnSince >= 0 ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-end">
+                              <td class="text-sm sm:text-[1rem] {item?.returnSince >= 0 ? 'text-[#30B170]' : 'text-[#FC2120]'} text-end">
                                 {item?.returnSince > 0 ? '+' : ''}{item?.returnSince}%
                               </td>
 
