@@ -30,10 +30,11 @@
             'priceWhenCreated': currentPrice?.toFixed(2),
             'condition': values?.at(0) < 0 ? 'below' : 'above',
             'targetPrice': displayPrice,
+            'path': 'create-price-alert'
         }
     
             // Make the POST request to the endpoint
-            const response = await fetch(data?.fastifyURL+'/create-price-alert', {
+            const response = await fetch('/api/fastify-post-data', {
                 method: 'POST',
                 headers: {
                 "Content-Type": "application/json"

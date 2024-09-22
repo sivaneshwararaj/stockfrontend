@@ -48,7 +48,7 @@
                       'description': inputValue};
   
   
-    const response = await fetch(data?.fastifyURL+'/feedback', {
+    const response = await fetch('/api/feedback', {
       method: 'POST',
       headers: {
       "Content-Type": "application/json"

@@ -42,9 +42,9 @@ let noPostMore = false;
 
 const getUserData = async() => {
 
-  const postData = {'userId': data?.userId};
+  const postData = {'userId': data?.userId, 'path': 'get-user-data'};
 
-  const response = await fetch(data?.fastifyURL+'/get-user-data', {
+  const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
           "Content-Type": "application/json"
@@ -93,10 +93,10 @@ const getUserStats = async () => {
     output = cachedData;
   } else {
 
-    const postData = {'userId': data?.userId};
+    const postData = {'userId': data?.userId, 'path': 'get-user-stats'};
 
     // make the POST request to the endpoint
-    const response = await fetch(data?.fastifyURL + '/get-user-stats', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -123,8 +123,7 @@ const getModerators = async () => {
     output = cachedData;
   } else {
 
-    // make the POST request to the endpoint
-    const response = await fetch(data?.fastifyURL + '/get-moderators', {
+    const response = await fetch('/api/get-moderators', {
       method: 'GET',
       headers: {
         "Content-Type": "application/json"
@@ -155,10 +154,11 @@ async function getPost() {
     startPage: currentPage,
     seenPostId: seenPostId.length === 0 ? [] : seenPostId,
     userId: data?.userId,
+    path: 'get-post'
   };
 
   // Make the POST request to the endpoint
-  const response = await fetch(data?.fastifyURL+'/get-post', {
+  const response = await fetch('/api/fastify-post-data', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json"

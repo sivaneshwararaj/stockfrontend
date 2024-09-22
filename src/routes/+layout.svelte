@@ -132,7 +132,7 @@ const loadWorker = async () => {
   if ('serviceWorker' in navigator) {
   const SyncWorker = await import('$lib/workers/notificationWorker?worker');
   syncWorker = new SyncWorker.default();
-  syncWorker.postMessage({ message: {'fastifyURL': data?.fastifyURL, 'userId': data?.user?.id }});
+  syncWorker.postMessage({ message: {'userId': data?.user?.id }});
   syncWorker.onmessage = handleMessage;
   } else {
     // Fallback logic here
@@ -147,7 +147,7 @@ async function fallbackWorker() {
   console.log('Fallback worker activated');
 
   const postData = {'userId': data?.user?.id};
-    const response = await fetch(data?.fastifyURL+'/get-notifications', {
+    const response = await fetch('/api/get-notifications', {
         method: 'POST',
         headers: {
         "Content-Type": "application/json"
@@ -162,17 +162,6 @@ async function fallbackWorker() {
 }
 
 
-/*
-const loadTwitchWorker = async () => {
-
-const SyncWorker = await import('$lib/workers/twitchStatusWorker?worker');
-syncWorker = new SyncWorker.default();
-
-syncWorker.postMessage({ message: {'fastifyURL': fastifyURL }});
-syncWorker.onmessage = handleTwitchMessage;
-
-};
-*/
 
 let Cookie;
 $showCookieConsent = typeof data?.cookieConsent !== 'undefined' ? false : true;

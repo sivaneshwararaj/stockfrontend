@@ -255,9 +255,9 @@ async function handleCreateStrategy() {
 
 async function handleDeleteStrategy() {
   
-    const postData = {'strategyId': selectedStrategy};
+    const postData = {'strategyId': selectedStrategy, 'path': 'delete-strategy'};
 
-    const response = await fetch(data?.fastifyURL+'/delete-strategy', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
          "Content-Type": "application/json"
@@ -325,10 +325,9 @@ async function createStrategy(event)
   for (const [key, value] of formData.entries()) {
     postData[key] = value;
   }
+  postData['path'] = 'create-strategy';
 
-
-
-  const response = await fetch(data?.fastifyURL+'/create-strategy', {
+  const response = await fetch('/api/fastify-post-data', {
     method: 'POST',
     headers: {
      "Content-Type": "application/json"
@@ -576,9 +575,9 @@ async function handleSave(printToast) {
     { 
       strategyList.find(item => item.id === selectedStrategy).rules = ruleOfList;
 
-        const postData = {'strategyId': selectedStrategy, 'rules': ruleOfList}  
+        const postData = {'strategyId': selectedStrategy, 'rules': ruleOfList, 'path': 'save-strategy'}  
                       
-        const response = await fetch(data?.fastifyURL+'/save-strategy', {
+        const response = await fetch('/api/fastify-post-data', {
           method: 'POST',
           headers: {
              "Content-Type": "application/json"

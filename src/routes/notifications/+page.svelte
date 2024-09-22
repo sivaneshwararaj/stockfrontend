@@ -34,9 +34,9 @@ for(let i = 0; i < notificationList?.length; i++)
 
 if (notificationIdList.length !== 0)
 {
-  const postData = {'unreadList': notificationIdList};
+  const postData = {'unreadList': notificationIdList, 'path': 'update-notifications'};
 
-    await fetch(data?.fastifyURL+'/update-notifications', {
+    await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
       "Content-Type": "application/json"

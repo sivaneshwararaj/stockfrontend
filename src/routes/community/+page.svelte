@@ -23,7 +23,6 @@
   let moderators ;
   let communityStats;
   let discordData = [];
-  let tickerMentioning = [];
   let posts = null;
   
 
@@ -73,8 +72,7 @@ const getModerators = async () => {
       output = cachedData;
     } else {
 
-      // make the POST request to the endpoint
-      const response = await fetch(data?.fastifyURL + '/get-moderators', {
+      const response = await fetch('/api/get-moderators', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -89,32 +87,7 @@ const getModerators = async () => {
     return output;
   };
 
-/*
-const getTickerMentioning = async () => {
-    let output;
 
-    // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getTickerMentioning');
-    if (cachedData) {
-      output = cachedData;
-    } else {
-
-      // make the POST request to the endpoint
-      const response = await fetch(apiURL + '/ticker-mentioning', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      output = await response.json();
-
-      setCache('', output, 'getTickerMentioning');
-    }
-
-    return output;
-};
-*/
 
 const getCommunityStats = async () => {
     let output;
@@ -124,8 +97,7 @@ const getCommunityStats = async () => {
       output = cachedData;
     } else {
 
-      // make the POST request to the endpoint
-      const response = await fetch(data?.fastifyURL + '/get-community-stats', {
+      const response = await fetch('/api/get-community-stats', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +139,7 @@ async function getPost() {
   }
 
   // Make the POST request to the endpoint
-  const response = await fetch(data?.fastifyURL+'/get-post', {
+  const response = await fetch('/api/get-post', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -112,17 +112,20 @@ function handleTypeOfTrade(state:string)
   async function toggleUserWatchlist(watchListId: string) {
     try {
       const watchlistIndex = userWatchList?.findIndex((item) => item?.id === watchListId);
-      const postData = {
-        userId: data?.user?.id,
-        watchListId,
-        ticker: $stockTicker,
-      };
+    const postData = {
+      'userId': data?.user?.id,
+      'watchListId': watchListId,
+      'ticker': $stockTicker,
+      'path': 'update-watchlist'
+    };
 
-      const response = await fetch(data?.fastifyURL+'/update-watchlist', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(postData),
-      });
+    const response = await fetch('/api/fastify-post-data', {
+      method: 'POST',
+      headers: {
+         "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData),
+    });
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -144,23 +147,7 @@ function handleTypeOfTrade(state:string)
     }
   }
 
-  /*
-async function fetchPortfolio()
-{
-  const postData = {'userId': data?.user?.id};
 
-    const response = await fetch(data?.fastifyURL+'/get-portfolio-data', {
-      method: 'POST',
-      headers: {
-      "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-    });
-
-    userPortfolio = (await response.json())?.items;
-
-}
-*/
 
   function sendMessage(message) {
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -276,33 +263,7 @@ async function fetchPortfolio()
 
   $: isTickerIncluded = userWatchList?.some((item) => item.user === data?.user?.id && item.ticker?.includes($stockTicker));
 
-  /*
-$: {
-  if(userPortfolio) {
-    availableCash = userPortfolio?.at(0)?.availableCash;
-    const userHoldingList = userPortfolio?.at(0)?.holdings || [];
 
-    const stockIndex = userHoldingList?.findIndex(stock => stock?.symbol === $stockTicker);
-    if (stockIndex !== -1)
-    {
-    
-    holdingShares = userHoldingList[stockIndex]['numberOfShares'];
-    }
-    else {
-        holdingShares = 0;
-    }
-  }
-}
-
-
-$: {
-  if(typeof window !== 'undefined' && $traded && data?.user && $stockTicker?.length !== 0)
-  {
-      fetchPortfolio();
-      $traded = false;
-  }
-}
-*/
 
   $: charNumber = $screenWidth < 640 ? 12 : 25;
 

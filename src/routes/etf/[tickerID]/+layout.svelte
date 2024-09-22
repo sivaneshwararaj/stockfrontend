@@ -166,9 +166,10 @@ async function toggleUserWatchlist(watchListId: string) {
       'userId': data?.user?.id,
       'watchListId': watchListId,
       'ticker': $etfTicker,
+      'path': 'update-watchlist'
     };
 
-    const response = await fetch(data?.fastifyURL + '/update-watchlist', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
          "Content-Type": "application/json"
@@ -198,22 +199,7 @@ async function toggleUserWatchlist(watchListId: string) {
   }
 }
       
-async function fetchPortfolio()
-{
-  const postData = {'userId': data?.user?.id};
 
-    const response = await fetch(data?.fastifyURL+'/get-portfolio-data', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-    });
-
-    userPortfolio = (await response.json())?.items;
-
-}
-    
       
 
   
@@ -291,10 +277,7 @@ async function fetchPortfolio()
   
   
   let LoginPopup;
-  let BuyTrade;
-  let SellTrade;
   let PriceAlert;
-  let AddPortfolio;
   
       
   onMount(async () => {
@@ -406,33 +389,8 @@ async function fetchPortfolio()
     }
   }
   
-$: {
-  if(userPortfolio) {
-    availableCash = userPortfolio?.at(0)?.availableCash;
-    const userHoldingList = userPortfolio?.at(0)?.holdings || [];
 
-    const stockIndex = userHoldingList?.findIndex(stock => stock?.symbol === $etfTicker);
-    if (stockIndex !== -1)
-    {
-    
-    holdingShares = userHoldingList[stockIndex]['numberOfShares'];
-    }
-    else {
-        holdingShares = 0;
-    }
-  }
-}
 
-  
-  $: {
-    if(typeof window !== 'undefined' && $traded && data?.user && $etfTicker?.length !== 0)
-    {
-        fetchPortfolio();
-        $traded = false;
-    }
-  }
-      
-  
   
   let charNumber = 50;
       

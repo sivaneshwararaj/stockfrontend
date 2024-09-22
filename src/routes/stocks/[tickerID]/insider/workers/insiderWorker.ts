@@ -62,12 +62,12 @@ function getBarChart(data, dates) {
 onmessage = async (event: MessageEvent) => {
   const data = event.data?.message;
   const rawData = data?.sort(
-    (a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate),
+    (a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate)
   );
   const latestDate = findLatestDateInPast(rawData);
 
   let historicalPrice = event.data?.historicalPrice?.filter(
-    (item) => new Date(item?.time) >= new Date(latestDate),
+    (item) => new Date(item?.time) >= new Date(latestDate)
   );
 
   const dataPoints = historicalPrice?.map(({ close }) => close);
@@ -76,9 +76,6 @@ onmessage = async (event: MessageEvent) => {
 
   let finalData = { rawData, dataPoints, dates, barChartData };
   postMessage({ message: "success", finalData });
-
-  // Sending data back to the main thread
-  //postMessage({ message: 'Data received in the worker', ticker, apiURL });
 };
 
 export {};

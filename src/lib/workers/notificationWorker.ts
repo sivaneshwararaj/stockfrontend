@@ -1,9 +1,9 @@
 // lib/workers/test.ts
 
-async function loadNotifications(fastifyURL: string, userId: string) {
+async function loadNotifications(userId: string) {
   const postData = { userId: userId };
 
-  const response = await fetch(fastifyURL + "/get-notifications", {
+  const response = await fetch("/api/get-notifications", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,12 +17,9 @@ async function loadNotifications(fastifyURL: string, userId: string) {
 
 onmessage = async (event: MessageEvent) => {
   const data = event.data?.message;
-  const fastifyURL = data?.fastifyURL;
   const userId = data?.userId;
   try {
-    const [notificationList] = await Promise.all([
-      loadNotifications(fastifyURL, userId),
-    ]);
+    const [notificationList] = await Promise.all([loadNotifications(userId)]);
 
     const numberOfUnreadNotification = notificationList?.length;
     const hasUnreadElement = notificationList?.length !== 0 ? true : false;

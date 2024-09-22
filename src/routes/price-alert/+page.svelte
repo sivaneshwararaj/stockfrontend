@@ -128,10 +128,11 @@ async function handleDelete() {
         priceAlertList = [...priceAlertList];
 
         const postData = {
-            'priceAlertIdList': deletePriceAlertList
+            'priceAlertIdList': deletePriceAlertList,
+            'path': 'delete-price-alert'
         }
 
-        const response = await fetch(data?.fastifyURL+'/delete-price-alert', {
+        const response = await fetch('/api/fastify-post-data', {
             method: 'POST',
             headers: {
              "Content-Type": "application/json"

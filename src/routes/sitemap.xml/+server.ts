@@ -9,7 +9,7 @@ const pages = [
   { title: "/crypto" },
   { title: "/etf/etf-providers" },
   { title: "/etf/new-launches" },
-  { title: "/trending" },
+  //{ title: "/trending" },
   { title: "/price-alert" },
   { title: "/heatmaps" },
   { title: "/donation" },

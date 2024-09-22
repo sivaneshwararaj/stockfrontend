@@ -99,6 +99,7 @@ const handleUpvote = async (event) => {
       'postId': postId,
       'commentId': commentId,
       'userId': data?.user?.id,
+      'path': 'upvote-comment'
   };
         
   upvoteButtonClicked = !upvoteButtonClicked;
@@ -115,7 +116,7 @@ const handleUpvote = async (event) => {
     } else {
       upvoteCounter--;
     }
-  const response = await fetch(data?.fastifyURL+'/upvote-comment', {
+  const response = await fetch('/api/fastify-post-data', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json"
@@ -133,6 +134,7 @@ const handleDownvote = async (event) => {
   const postData = {
                   'commentId': commentId,
                   'userId': data?.user?.id,
+                  'path': 'downvote-comment'
                   };
   
   downvoteButtonClicked = !downvoteButtonClicked;
@@ -151,7 +153,7 @@ const handleDownvote = async (event) => {
     }
   
 
-  const response = await fetch(data?.fastifyURL+'/downvote-comment', {
+  const response = await fetch('/api/fastify-post-data', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json"
@@ -184,12 +186,13 @@ const handleDownvote = async (event) => {
   const postData = {
     'userId': data?.user?.id,
     'commentId': comment?.id,
-    'commentUser': comment?.user
+    'commentUser': comment?.user,
+    'path': 'delete-comment'
     }
   
   
   
-  const response = await fetch(data?.fastifyURL+'/delete-comment', {
+  const response = await fetch('/api/fastify-post-data', {
     method: 'POST',
     headers: {
         "Content-Type": "application/json"

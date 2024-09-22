@@ -135,9 +135,9 @@ async function createWatchList(event) {
   for (const [key, value] of formData?.entries()) {
     postData[key] = value;
   }
-
+  postData['path'] = 'create-watchlist'
   try {
-    const response = await fetch(data?.fastifyURL + '/create-watchlist', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -201,9 +201,10 @@ async function editNameWatchList(event) {
   for (const [key, value] of formData.entries()) {
     postData[key] = value;
   }
-
+  postData['path'] = 'edit-name-watchlist';
+  
   try {
-    const response = await fetch(data?.fastifyURL + '/edit-name-watchlist', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -260,11 +261,11 @@ async function editNameWatchList(event) {
 async function deleteWatchList(event) {
   event.preventDefault(); // prevent the default form submission behavior
 
-  const postData = {'watchListId': displayWatchList?.id};
+  const postData = {'watchListId': displayWatchList?.id, 'path': 'delete-watchlist'};
 
   try {
     
-    const response = await fetch(data?.fastifyURL + '/delete-watchlist', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

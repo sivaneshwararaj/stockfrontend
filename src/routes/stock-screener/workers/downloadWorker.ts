@@ -64,9 +64,9 @@ const getStockScreenerData = async (rules, apiKey, apiURL) => {
 };
 
 onmessage = async (event) => {
-  const { ruleOfList, apiKey, apiURL } = event.data || {};
+  const { ruleOfList } = event.data || {};
 
-  const output = await getStockScreenerData(ruleOfList, apiKey, apiURL);
+  const output = await getStockScreenerData(ruleOfList);
 
   const stockScreenerData = output?.filter((item) =>
     Object?.values(item)?.every(

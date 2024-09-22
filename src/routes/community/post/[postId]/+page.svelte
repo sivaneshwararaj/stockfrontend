@@ -39,6 +39,7 @@
     const postData = {
                     'postId': postId,
                     'userId': data?.user?.id,
+                    'path': 'upvote',
                     };
           
     upvoteButtonClicked[postId] = !upvoteButtonClicked[postId];
@@ -58,7 +59,7 @@
 
     $postVote = {'id': postId, 'upvote': upvoteCounter[postId], 'downvote': downvoteCounter[postId], 'upvoteClicked': upvoteButtonClicked[postId], 'downvoteClicked': downvoteButtonClicked[postId]};
 
-    const response = await fetch(data?.fastifyURL+'/upvote', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -75,6 +76,7 @@
     const postData = {
                     'postId': postId,
                     'userId': data?.user?.id,
+                    'path': 'downvote',
                     };
     
     downvoteButtonClicked[postId] = !downvoteButtonClicked[postId];
@@ -94,7 +96,7 @@
     
     $postVote = {'id': postId, 'upvote': upvoteCounter[postId], 'downvote': downvoteCounter[postId], 'upvoteClicked': upvoteButtonClicked[postId], 'downvoteClicked': downvoteButtonClicked[postId]};
 
-    const response = await fetch(data?.fastifyURL+'/downvote', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -153,10 +155,11 @@
   
       const postData = {
           postId: data?.getPostId,
-          userId: data?.user?.id
+          userId: data?.user?.id,
+          path: 'delete-post'
       };
     
-    const response = await fetch(data?.fastifyURL+'/delete-post', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
               "Content-Type": "application/json"
@@ -207,7 +210,7 @@
     const postData = {'postId': data?.getPostId};
   
     // make the GET request to the endpoint
-    const response = await fetch(data?.fastifyURL+'/get-all-comments', {
+    const response = await fetch('/api/get-all-comments', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -232,7 +235,7 @@
       } else {
   
         // make the POST request to the endpoint
-        const response = await fetch(data?.fastifyURL + '/get-moderators', {
+        const response = await fetch('/api/get-moderators', {
           method: 'GET',
           headers: {
             "Content-Type": "application/json"

@@ -50,7 +50,6 @@ async function loadSearchData() {
       
     let userWatchList = data?.getUserWatchlist ?? [];
     let isTickerIncluded; 
-    let userPortfolio = data?.getUserPortfolio ?? [];
     let holdingShares = 0;
     let availableCash = 0;
     
@@ -155,9 +154,10 @@ async function toggleUserWatchlist(watchListId: string) {
       'userId': data?.user?.id,
       'watchListId': watchListId,
       'ticker': $cryptoTicker,
+      'path': 'update-watchlist'
     };
 
-    const response = await fetch(data?.fastifyURL + '/update-watchlist', {
+    const response = await fetch('/api/fastify-post-data', {
       method: 'POST',
       headers: {
          "Content-Type": "application/json"
@@ -188,23 +188,7 @@ async function toggleUserWatchlist(watchListId: string) {
 }
 
     
-async function fetchPortfolio()
-{
-  const postData = {'userId': data?.user?.id};
 
-    const response = await fetch(data?.fastifyURL+'/get-portfolio-data', {
-      method: 'POST',
-      headers: {
-       "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-    });
-
-    userPortfolio = (await response.json())?.items;
-
-}
-    
-    
 
 
 
@@ -280,10 +264,7 @@ async function websocketRealtimeData() {
 
 
 let LoginPopup;
-let BuyTrade;
-let SellTrade;
 let PriceAlert;
-let AddPortfolio;
 
     
 onMount(async () => {
@@ -390,27 +371,11 @@ $: {
   }
 }
 
-$: {
-  if(userPortfolio) {
-    availableCash = userPortfolio?.at(0)?.availableCash;
-    const userHoldingList = userPortfolio?.at(0)?.holdings || [];
 
-    const stockIndex = userHoldingList?.findIndex(stock => stock?.symbol === $cryptoTicker);
-    if (stockIndex !== -1)
-    {
-    
-    holdingShares = userHoldingList[stockIndex]['numberOfShares'];
-    }
-    else {
-        holdingShares = 0;
-    }
-  }
-}
 
 $: {
   if(typeof window !== 'undefined' && $traded && data?.user && $cryptoTicker?.length !== 0)
   {
-      fetchPortfolio();
       $traded = false;
   }
 }

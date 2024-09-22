@@ -2,7 +2,7 @@ import { cachedPosts } from "$lib/store";
 
 import { get } from "svelte/store";
 
-export const load = async ({ parent, params }) => {
+export const load = async ({ params, fetch }) => {
   async function getOnePost() {
     // Get the current value of cachedPosts
     const cachedValue = get(cachedPosts);
@@ -12,15 +12,14 @@ export const load = async ({ parent, params }) => {
       cachedValue?.posts?.find((item) => item?.id === params.postId) ?? {};
 
     // If the post is found in the cache, return it
-    if (Object.keys(output).length !== 0) {
+    if (Object?.keys(output)?.length !== 0) {
       return output;
     }
 
-    const { fastifyURL } = await parent();
     // If the post is not found in the cache, fetch it from the endpoint
     const postData = { postId: params.postId };
 
-    const response = await fetch(fastifyURL + "/get-one-post", {
+    const response = await fetch("/api/get-one-post", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,7 +30,7 @@ export const load = async ({ parent, params }) => {
     const result = await response.json();
 
     // Assuming the result contains an 'items' array
-    return result.items;
+    return result?.items;
   }
 
   const getPostId = async () => {

@@ -15,7 +15,7 @@ async function createPortfolio(event) {
 
   const postData = {'userId': data?.user?.id}
 
-  const response = await fetch(data?.fastifyURL+'/create-portfolio', {
+  const response = await fetch('/api/create-portfolio', {
       method: 'POST',
       headers: {
       "Content-Type": "application/json"
