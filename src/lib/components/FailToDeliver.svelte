@@ -203,7 +203,7 @@ function findLowestAndHighestPrice(data, lastDateStr) {
   
   
   $: {
-  if($assetType === 'stock' ? $stockTicker :$etfTicker && typeof window !== 'undefined') {
+  if($assetType === 'stock' ? $stockTicker : $etfTicker && typeof window !== 'undefined') {
     isLoaded=false;
     const ticker = $assetType === 'stock' ? $stockTicker :$etfTicker
     const asyncFunctions = [
@@ -224,7 +224,6 @@ function findLowestAndHighestPrice(data, lastDateStr) {
   }
   }
   
-  let charNumber = $screenWidth < 640 ? 20 : 40;
   
   </script>
     
@@ -322,8 +321,8 @@ function findLowestAndHighestPrice(data, lastDateStr) {
   
           <div class="w-full flex flex-col items-start mt-3">
             <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-                Using the latest FTD data, we divide it with the monthly average volume to determine that less than
-                <strong>{weightedFTD < 0.01 ? '< 0.01' : weightedFTD}%</strong> of shares failed to deliver.
+                Using the latest FTD data, we divide it with the monthly average volume to determine that
+                <strong>{weightedFTD < 0.01 ? 'less than < 0.01' : weightedFTD}%</strong> of shares failed to deliver.
             </div>
         </div>
 
