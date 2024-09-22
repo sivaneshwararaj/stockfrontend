@@ -86,8 +86,6 @@ rawData?.forEach(item => {
 
   // Convert the returnMap to an array of objects (cumulativeList) in the correct order
   cumulativeList = dates?.map(date => (returnMap[date]?.toFixed(1)));
-
-
   //console.log('Cumulative List:', cumulativeList);
   //console.log('Unique Dates:', dates);
 

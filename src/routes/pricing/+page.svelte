@@ -11,17 +11,17 @@ export let form;
 
 let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-let mode = false;
+//let mode = false;
 const emailAddress = 'support@stocknear.com';
 
+/*
 function toggleMode()
 {
     mode = !mode;
 }
-
+*/
 
 let LoginPopup;
-
 
 onMount(async () => {
   
@@ -55,12 +55,10 @@ async function purchasePlan(subscriptionType:string='') {
             subId = import.meta.env.VITE_LEMON_SQUEEZY_LIFE_TIME_ACCESS_ID
 
         }
-        else if(mode) {
-            subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_19_99_ID
-        }
         else {
-            subId = import.meta.env.VITE_LEMON_SQUEEZY_MONTHLY_1_99_ID
+            subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_ID
         }
+
         const isDarkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         const checkoutUrl =
             `https://stocknear.lemonsqueezy.com/checkout/buy/${subId}?` +
@@ -109,8 +107,6 @@ async function purchasePlan(subscriptionType:string='') {
 </svelte:head>
 
 
-
-
 <section class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 pb-40 m-auto">
     <div class="px-3">
         <div class="mx-auto text-center mb-8 ">
@@ -125,7 +121,7 @@ async function purchasePlan(subscriptionType:string='') {
                 </p>
             </div>
 
-            
+            <!--
             <div class="flex flex-row items-center justify-center mt-6 pb-5">
                 <span class="text-sm font-semibold text-white mr-3">
                     Pay Monthly
@@ -147,6 +143,7 @@ async function purchasePlan(subscriptionType:string='') {
                 </div>
               
             </div>
+            -->
             
          
         </div>
@@ -242,7 +239,7 @@ async function purchasePlan(subscriptionType:string='') {
 
             <!-- Pricing Card -->
             <div class="sm:order-2 rounded-lg box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]">
-                <div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right"><span class="text-white">Discount</span></div>
+                <!--<div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right"><span class="text-white">Discount</span></div>-->
 
                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row items-center bg-red-600 p-2">
                     <svg class="w-6 h-6 mr-2" fill="#D6D6DC" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" stroke=""><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>star-solid</title> <g id="Layer_2" data-name="Layer 2"> <g id="invisible_box" data-name="invisible box"> <rect width="48" height="48" fill="none"></rect> </g> <g id="icons_Q2" data-name="icons Q2"> <path d="M24,3a2.1,2.1,0,0,0-1.8,1.1L16.5,15.7,3.7,17.5A2.1,2.1,0,0,0,2.6,21l9.2,8.9L9.7,42.7A2,2,0,0,0,11.6,45l1-.2,11.4-6,11.4,6,1,.2a2,2,0,0,0,1.9-2.3L36.2,29.9,45.4,21a2.1,2.1,0,0,0-1.1-3.5L31.5,15.7,25.8,4.1A2.1,2.1,0,0,0,24,3Z"></path> </g> </g> </g></svg>
@@ -263,10 +260,16 @@ async function purchasePlan(subscriptionType:string='') {
                 <div class="flex flex-col  mb-6 items-center">
 
                     <div class="flex flex-row items-center">
-                        <span class="mr-2 text-4xl font-bold">{mode ? '$19.99' : '$1.99'}</span>
-                        <span class="text-white text-xl">{mode ? '/year' : '/month'}</span>
+                        <span class="mr-2 text-4xl font-bold">$1.99</span>
+                        <span class="text-white text-xl">/month</span>
                     </div>
-
+                    <div class="text-white">
+                        (Billed Annually)
+                    </div>
+                     <div class="flex items-center mt-2 text-[1rem] text-center">
+                          less than a
+                        <svg class="w-6 h-6 inline-block ml-2" viewBox="0 0 47.5 47.5" id="svg2" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs id="defs6"> <clipPath clipPathUnits="userSpaceOnUse" id="clipPath16"> <path d="M 0,38 38,38 38,0 0,0 0,38 Z" id="path18"></path> </clipPath> <clipPath clipPathUnits="userSpaceOnUse" id="clipPath40"> <path d="M 0,38 38,38 38,0 0,0 0,38 Z" id="path42"></path> </clipPath> </defs> <g id="g10" transform="matrix(1.25,0,0,-1.25,0,47.5)"> <g id="g12"> <g clip-path="url(#clipPath16)" id="g14"> <g id="g20" transform="translate(37,11)"> <path d="m 0,0 c 0,-5.522 -8.059,-10 -18,-10 -9.941,0 -18,4.478 -18,10 0,5.522 8.059,10 18,10 C -8.059,10 0,5.522 0,0" id="path22" style="fill:#99aab5;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g24" transform="translate(37,13)"> <path d="m 0,0 c 0,-5.522 -8.059,-10 -18,-10 -9.941,0 -18,4.478 -18,10 0,5.522 8.059,10 18,10 C -8.059,10 0,5.522 0,0" id="path26" style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g28" transform="translate(19,6)"> <path d="m 0,0 c -14.958,0 -17,15 -17,19 l 34,0 C 17,17 15.042,0 0,0" id="path30" style="fill:#f5f8fa;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g32" transform="translate(32.8818,30.0483)"> <path d="M 0,0 C -1.357,0.938 -3.103,1.694 -5.121,2.25 -3.246,2.826 -0.57,2.559 0,0 M 2.503,-2.692 C 4.945,7.43 -7.278,5.014 -9.701,3.106 c -1.34,0.149 -2.736,0.234 -4.181,0.234 -9.389,0 -17,-3.228 -17,-8.444 0,-5.216 7.611,-9.444 17,-9.444 9.389,0 17,4.228 17,9.444 0,0.862 -0.225,1.664 -0.615,2.412" id="path34" style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> </g> </g> <g id="g36"> <g clip-path="url(#clipPath40)" id="g38"> <g id="g44" transform="translate(34,24)"> <path d="m 0,0 c 0,-3.866 -6.716,-7 -15,-7 -8.284,0 -15,3.134 -15,7 0,3.866 6.716,7 15,7 C -6.716,7 0,3.866 0,0" id="path46" style="fill:#8a4b38;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g48" transform="translate(21,20)"> <path d="m 0,0 c -0.256,0 -0.512,0.098 -0.707,0.293 -2.337,2.337 -2.376,4.885 -0.125,8.262 0.739,1.109 0.9,2.245 0.478,3.377 -0.461,1.235 -1.438,1.996 -1.731,2.076 -0.553,0 -0.958,0.444 -0.958,0.996 C -3.043,15.557 -2.552,16 -2,16 -1.003,16 0.395,14.847 1.183,13.375 2.217,11.442 2.093,9.336 0.832,7.445 -1.129,4.503 -0.699,3.113 0.707,1.707 1.098,1.316 1.098,0.684 0.707,0.293 0.512,0.098 0.256,0 0,0" id="path50" style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g52" transform="translate(15,22)"> <path d="m 0,0 c -0.256,0 -0.512,0.098 -0.707,0.293 -2.337,2.337 -2.376,4.885 -0.125,8.262 0.727,1.091 0.894,2.082 0.494,2.947 -0.444,0.961 -1.431,1.469 -1.684,1.499 -0.552,0 -0.989,0.447 -0.989,0.999 0,0.553 0.459,1 1.011,1 0.997,0 2.584,-0.974 3.36,-2.423 C 1.841,11.678 2.413,9.816 0.832,7.445 -1.129,4.503 -0.699,3.113 0.707,1.707 1.098,1.316 1.098,0.684 0.707,0.293 0.512,0.098 0.256,0 0,0" id="path54" style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> </g> </g> </g> </g></svg>
+                    </div>
                     <!--
                     <div class="flex flex-col items-center">
                         <div class="flex flex-row items-center">
