@@ -60,7 +60,6 @@ let activeIdx = 0;
     let rawData = data?.getOptionsHistoricalData;
     let optionList = rawData?.slice(0,30);
     let optionChainList = data?.getOptionsChainData?.at(0)?.chain || [];
-    
 
     let totalVolume //= data?.getOptionsPlotData?.totalVolume;
     

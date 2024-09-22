@@ -139,7 +139,9 @@ const allRules = {
   shortRatio: { label: 'Short Ratio', step: [10,5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   shortFloatPercent: { label: 'Short % Float', step: ['50%','30%','20%','10%','5%','1%','0%'], category:'fund', defaultCondition: 'over', defaultValue: '0%' },
   shortOutStandingPercent: { label: 'Short % Shares', step: ['50%','30%','20%','10%','5%','1%','0%'], category:'fund', defaultCondition: 'over', defaultValue: '0%' },
-  failToDeliver: { label: 'Fail to Deliver', step: ['1M','500K','200K','100K','50K','10K','1K'], category: 'fund', defaultCondition: 'over', defaultValue: '1K' },
+  failToDeliver: { label: 'Fail to Deliver (FTD)', step: ['1M','500K','200K','100K','50K','10K','1K'], category: 'fund', defaultCondition: 'over', defaultValue: '1K' },
+  relativeFTD: { label: 'Relative FTD', step: ['300%','200%','100%','50%','20%','10%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '50%' },
+
   freeCashFlow: { label: 'Free Cash Flow', step: ['50B','10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   operatingCashFlow: { label: 'Operating Cash Flow', step: ['50B','10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   operatingCashFlowPerShare: { label: 'Operating Cash Flow / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
