@@ -1,7 +1,6 @@
 <script lang='ts'>
 import { screenWidth, numberOfUnreadNotification } from '$lib/store';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
 
@@ -9,7 +8,7 @@ export let data;
 
 let analystStats = data?.getAnalystStats;
 
-let rawData = data?.user?.tier !== "Pro" ? data?.getAnalystStats?.ratingsList?.slice(0, 5) : data?.getAnalystStats?.ratingsList;
+let rawData = data?.getAnalystStats?.ratingsList;
 let stockList = rawData?.slice(0,20) ?? [];
   
 let analystScore = analystStats?.analystScore;
@@ -150,7 +149,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 40;
                             <div class="flex flex-row items-center mt-1">
                                 {#each Array.from({ length: 5 }) as _, i}
                                 {#if i < Math.floor(analystScore)}
-                                    <svg class="w-5 h-5 text-[#FFA500]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                    <svg class="w-5 h-5 text-[#FBCE3C]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                                         <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
                                     </svg>
                                       {:else}
@@ -249,15 +248,50 @@ $: charNumber = $screenWidth < 640 ? 20 : 40;
                           <tbody>
                             {#each stockList as item, index}
     
-                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === stockList?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]">
     
                               <td class="text-sm sm:text-[1rem] text-start whitespace-nowrap">
-                                <div class="flex flex-col items-start ">
-                                  <a href={`/stocks/${item?.ticker}`} class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]">{item?.ticker} </a>
-                                  <span class="text-white"> {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name} </span>
-                              </div>
-                                  
+                                {#if index >= 5 && data?.user?.tier !== 'Pro'}
+                                  <a class="block relative" href="/pricing">
+                                    <span class="text-base font-semibold text-blue-link blur group-hover:blur-[6px]">
+                                      XXXX
+                                    </span>
+                                    
+                                    <div class="ml-px max-w-[130px] truncate text-sm text-default blur group-hover:blur-[6px] lg:max-w-[150px]">
+                                      XXXXXXXXXXXXXXXX
+                                    </div>
+                                    
+                                    <div class="absolute top-3 flex items-center">
+                                      <svg class="size-5 text-[#FBCE3C]" 
+                                          viewBox="0 0 20 20" 
+                                          fill="currentColor" 
+                                          style="max-width: 40px;">
+                                        <path fill-rule="evenodd" 
+                                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" 
+                                              clip-rule="evenodd">
+                                        </path>
+                                      </svg>
+                                      
+                                      <span class="ml-1 font-semibold text-muted group-hover:text-default">
+                                        Upgrade
+                                      </span>
+                                    </div>
+                                  </a>
+                                {:else}
+                                  <div class="flex flex-col items-start">
+                                    <a href={`/stocks/${item?.ticker}`} 
+                                      class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]">
+                                      {item?.ticker}
+                                    </a>
+                                    <span class="text-white">
+                                      {item?.name?.length > charNumber 
+                                        ? item?.name?.slice(0, charNumber) + "..." 
+                                        : item?.name}
+                                    </span>
+                                  </div>
+                                {/if}
                               </td>
+
                             
     
                               <td class="text-sm sm:text-[1rem] text-start whitespace-nowrap">
@@ -290,7 +324,6 @@ $: charNumber = $screenWidth < 640 ? 20 : 40;
                           </tbody>
                         </table>
                     </div>
-                    <UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>
 
     
                   </div>
