@@ -160,7 +160,7 @@ $: if ($assetType || $stockTicker || $etfTicker || $cryptoTicker) {
                   <tbody>
                     {#each (showFullStats ? signalList : signalList?.slice(0, 3)) as item,index}
                     <tr class="border-y border-gray-800 odd:bg-[#27272A] {index === 2 && !showFullStats && signalList?.length > 2 ? 'opacity-[0.3]' : '' }">
-                      <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap">
+                      <td class="text-white text-sm sm:text-[1rem] ">
                         {item?.name}
                       </td>
 

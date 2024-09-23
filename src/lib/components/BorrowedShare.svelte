@@ -2,7 +2,7 @@
   import { borrowedShareComponent, displayCompanyName, stockTicker, assetType, etfTicker, screenWidth, getCache, setCache} from '$lib/store';
   import InfoModal from '$lib/components/InfoModal.svelte';
   import { Chart } from 'svelte-echarts'
-  import { abbreviateNumber, formatDateRange } from "$lib/utils";
+  import { abbreviateNumber, formatDateRange, monthNames } from "$lib/utils";
 
   import { init, use } from 'echarts/core'
   import { LineChart } from 'echarts/charts'
@@ -50,22 +50,6 @@ function findLowestAndHighestFee(data, lastDateStr) {
 }
 
   
-  function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-  }
-  
   
   function getPlotOptions() {
     let dates = [];
@@ -89,7 +73,6 @@ function findLowestAndHighestFee(data, lastDateStr) {
         return accumulator + sum;
     }, 0);
 
-    const {unit, denominator } = normalizer(Math.max(...availableList) ?? 0)
   
     const option = {
     silent: true,
@@ -99,19 +82,26 @@ function findLowestAndHighestFee(data, lastDateStr) {
     },
     animation: false,
     grid: {
-        left: '2%',
-        right: '2%',
+        left: '3%',
+        right: '3%',
         bottom: '2%',
         top: '5%',
         containLabel: true
     },
-    xAxis:
-    {
+    xAxis: {
         type: 'category',
         boundaryGap: false,
         data: dates,
         axisLabel: {
-            color: '#fff',
+        color: '#fff',
+        formatter: function (value) {
+            // Assuming dates are in the format 'yyyy-mm-dd'
+            // Extract the month and day from the date string and convert the month to its abbreviated name
+            const dateParts = value.split('-');
+            const day = dateParts[2].substring(0); // Extracting the last two digits of the year
+            const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+            return `${day} ${monthNames[monthIndex]}`;
+        }
         }
     },
     yAxis: [
@@ -121,34 +111,18 @@ function findLowestAndHighestFee(data, lastDateStr) {
             show: false, // Disable x-axis grid lines
         },
         axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    value = Math.max(value, 0);
-                    return (value / denominator)?.toFixed(0) + unit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-        },
+          show: false // Hide y-axis labels
+       },
     },
-    {
-      type: 'value',
-      splitLine: {
+   { 
+        type: 'value',
+        splitLine: {
             show: false, // Disable x-axis grid lines
-      },
-      position: 'right',
-      axisLabel: {
-        color: '#fff',
-          formatter: function (value, index) {
-            if (index % 2 === 0) {
-              return value?.toFixed(1)+'%'
-            } else {
-                  return ''; // Hide this tick
-              }
-          }
-      }
+        },
+        position: 'right',
+        axisLabel: {
+          show: false // Hide y-axis labels
+       },
     },
     ],
     series: [

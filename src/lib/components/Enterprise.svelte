@@ -19,21 +19,7 @@
     let optionsData;
 
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}
+
 function getPlotOptions() {
     let dates = [];
     let enterpriseValue = [];
@@ -54,7 +40,6 @@ function getPlotOptions() {
 
     });
 
-    const {unit, denominator } = normalizer(Math.max(...enterpriseValue) ?? 0)
 
 
     const option = {
@@ -78,24 +63,17 @@ function getPlotOptions() {
             color: '#fff',
         }
         },
-        yAxis: [
-        {
-            type: 'value',
-            splitLine: {
+        yAxis: {
+        splitLine: {
             show: false, // Disable x-axis grid lines
-            },
-            axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value) {
-                //value = Math.max(value, 0);
-                return '$'+(value / denominator)?.toFixed(1) + unit; // Format value in millions
-                },
-            },
         },
-        
-        ],
+        axisLabel: {
+          show: false // Hide y-axis labels
+        },
+        },
     series: [
-        {
+        {   
+            name: 'Cash Equiv.',
             data: cashEquivalent,
             type: 'bar',
             itemStyle: {
@@ -103,6 +81,7 @@ function getPlotOptions() {
             }
         },
         {
+            name: 'Debt',
             data: addTotalDebt,
             type: 'bar',
             itemStyle: {
@@ -110,6 +89,7 @@ function getPlotOptions() {
             }
         },
         {
+            name: 'Market Cap',
             data: marketCapitalization,
             type: 'bar',
             itemStyle: {
@@ -117,6 +97,7 @@ function getPlotOptions() {
             }
         },
         {
+            name: 'Enterprise Value',
             data: enterpriseValue,
             type: 'bar',
             itemStyle: {

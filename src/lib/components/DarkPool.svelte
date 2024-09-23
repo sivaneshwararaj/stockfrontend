@@ -21,22 +21,6 @@
     let monthlyVolume;
     let avgMonthlyShort;
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}
-
 
 function findMonthlyValue(data, lastDateStr) {
     // Convert lastDateStr to Date object
@@ -90,7 +74,6 @@ function getPlotOptions() {
     const totalShort = shortVolumeList?.reduce((acc, sentiment) => acc + sentiment, 0);
     avgShortVolume = totalShort / shortVolumeList?.length;
 
-    const {unit, denominator } = normalizer(Math.max(...totalVolumeList) ?? 0)
 
     const option = {
     silent: true,
@@ -100,8 +83,8 @@ function getPlotOptions() {
     },
     animation: false,
     grid: {
-        left: '2%',
-        right: '2%',
+        left: '3%',
+        right: '3%',
         bottom: '2%',
         top: '5%',
         containLabel: true
@@ -115,23 +98,14 @@ function getPlotOptions() {
         }
     },
     yAxis: [
-    { 
-        type: 'value',
-        splitLine: {
+    {
+      type: 'value',
+      splitLine: {
             show: false, // Disable x-axis grid lines
-        },
-        axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    value = Math.max(value, 0);
-                    return (value / denominator)?.toFixed(1) + unit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-        },
+      },
+       axisLabel: {
+        show: false // Hide y-axis labels
+      }
     },
     ],
     series: [
@@ -280,7 +254,7 @@ $: {
                       <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                           <span>Date</span>
                       </td>
-                      <td class="px-[5px] py-1.5 whitespace-nowrap text-right font-medium xs:px-2.5 xs:py-2">
+                      <td class="text-sm sm:text-[1rem] px-[5px] py-1.5 whitespace-nowrap text-right font-medium xs:px-2.5 xs:py-2">
                         { formatDateRange(rawData?.slice(-1)?.at(0)?.date)}
                       </td>
                   </tr>

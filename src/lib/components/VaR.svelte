@@ -48,7 +48,7 @@ function getPlotOptions() {
     },
     animation: false,
     grid: {
-        left: '0%',
+        left: '2%',
         right: '2%',
         bottom: '2%',
         top: '5%',
@@ -75,16 +75,8 @@ function getPlotOptions() {
       splitLine: {
             show: false, // Disable x-axis grid lines
       },
-      
       axisLabel: {
-        color: '#fff',
-          formatter: function (value, index) {
-            if (index % 2 === 0) {
-              return value?.toFixed(0)+'%'
-            } else {
-                  return ''; // Hide this tick
-              }
-          }
+        show: false // Hide y-axis labels
       }
     }
     ],

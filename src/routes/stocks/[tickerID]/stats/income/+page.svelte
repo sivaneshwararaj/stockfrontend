@@ -238,7 +238,7 @@ function plotData()
             axisLabel: {
             color: '#fff', // Change label color to white
             formatter: function (value) {
-                return '$'+(value / denominator)?.toFixed(1) + unit; // Format value in millions
+                return (value / denominator)?.toFixed(1) + unit; // Format value in millions
                 },
             },
         },

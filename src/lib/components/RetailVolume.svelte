@@ -3,7 +3,7 @@
   import { retailVolumeComponent,displayCompanyName, stockTicker, assetType, etfTicker, screenWidth, getCache, setCache} from '$lib/store';
   import InfoModal from '$lib/components/InfoModal.svelte';
   import { Chart } from 'svelte-echarts'
-  import { abbreviateNumber, formatDateRange } from "$lib/utils";
+  import { abbreviateNumber, formatDateRange, monthNames } from "$lib/utils";
   import { init, use } from 'echarts/core'
   import { LineChart, BarChart } from 'echarts/charts'
   import { GridComponent, TooltipComponent } from 'echarts/components'
@@ -16,7 +16,6 @@
 
     let isLoaded = false;
 
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     let historyData = []
     let rawData = [];
@@ -55,21 +54,7 @@
 }
 
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}
+
 function getPlotOptions() {
     let dates = [];
     let tradingList = [];
@@ -94,7 +79,6 @@ function getPlotOptions() {
     const totalSentiment = sentimentList?.reduce((acc, sentiment) => acc + sentiment, 0);
     avgSentiment = totalSentiment / tradingList?.length > 1 ? 'Bullish' : 'Bearish';
 
-    const {unit, denominator } = normalizer(Math.max(...tradingList) ?? 0)
 
 
     const option = {
@@ -105,8 +89,8 @@ function getPlotOptions() {
         hideDelay: 100, // Set the delay in milliseconds
     },
     grid: {
-        left: '0%',
-        right: '0%',
+        left: '3%',
+        right: '3%',
         bottom: '0%',
         top: '5%',
         containLabel: true
@@ -128,47 +112,30 @@ function getPlotOptions() {
         }
     },
     yAxis: [
-    { 
-      name: 'Volume',
-      position: 'left',
-        type: 'value',
-        splitLine: {
-            show: false, // Disable x-axis grid lines
-        },
-        axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    value = Math.max(value, 0);
-                    return '$' + (value / denominator)?.toFixed(1) + unit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-        },
-    },
     {
       type: 'value',
       splitLine: {
             show: false, // Disable x-axis grid lines
       },
-      name: 'Sentiment',
-      position: 'right',
-      axisLabel: {
-        color: '#fff',
-          formatter: function (value, index) {
-            if (index % 2 === 0) {
-              return value?.toFixed(2); // Format the sentiment value
-            } else {
-                  return ''; // Hide this tick
-              }
-          }
+      
+       axisLabel: {
+        show: false // Hide y-axis labels
       }
-    }
+    },
+    { 
+        type: 'value',
+        splitLine: {
+            show: false, // Disable x-axis grid lines
+        },
+        position: 'right',
+        axisLabel: {
+          show: false // Hide y-axis labels
+       },
+    },
     ],
     series: [
-        {
+        { 
+            name: 'Volume [$]',
             data: tradingList,
             type: 'line',
             itemStyle: {
@@ -177,7 +144,7 @@ function getPlotOptions() {
             showSymbol: false
         },
         {
-            name: 'Sentiment',
+            name: 'Retail Sentiment',
             data: sentimentList,
             type: 'bar',
             yAxisIndex: 1,

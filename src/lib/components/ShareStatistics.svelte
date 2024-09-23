@@ -23,21 +23,6 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
     let optionsData;
 
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}
 function getPlotOptions() {
     let dates = [];
     let floatShares = [];
@@ -52,9 +37,6 @@ function getPlotOptions() {
     });
 
 
-    const {unit, denominator } = normalizer(Math.max(...floatShares) ?? 0)
-
-
     const option = {
     silent: true,
     animation: false,
@@ -63,8 +45,8 @@ function getPlotOptions() {
         hideDelay: 100, // Set the delay in milliseconds
     },
     grid: {
-        left: $screenWidth < 640 ? '1%' : '2%',
-        right: $screenWidth < 640 ? '0%' : '2%',
+        left: $screenWidth < 640 ? '3%' : '2%',
+        right: $screenWidth < 640 ? '3%' : '2%',
         bottom: $screenWidth < 640 ? '0%' : '2%',
         top: '5%',
         containLabel: true
@@ -80,27 +62,24 @@ function getPlotOptions() {
         {
             type: 'value',
             splitLine: {
-            show: false, // Disable x-axis grid lines
+                    show: false, // Disable x-axis grid lines
             },
+            
             axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value) {
-                value = Math.max(value, 0);
-                return (value / denominator)?.toFixed(1) + unit; // Format value in millions
-                },
+                show: false // Hide y-axis labels
+            }
             },
-        },
         
         ],
     series: [
-        {
+        {   name: 'Floating Shares',
             data: floatShares,
             type: 'bar',
             itemStyle: {
                 color: '#3B82F6' // Change bar color to white
             }
         },
-        {
+        {   name: 'Outstanding Shares',
             data: outstandingShares,
             type: 'bar',
             itemStyle: {

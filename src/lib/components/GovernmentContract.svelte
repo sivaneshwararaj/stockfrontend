@@ -156,7 +156,7 @@ use([BarChart, GridComponent, CanvasRenderer])
   
       const postData = {'ticker': ticker, path: 'government-contract'};
       // make the POST request to the endpoint
-      const response = await fetch('/ticker-data', {
+      const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
