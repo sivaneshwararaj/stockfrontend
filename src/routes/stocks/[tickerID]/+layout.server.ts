@@ -53,7 +53,6 @@ const fetchCommunitySentiment = async (pb, ticker, cookies) => {
   const output = await pb.collection("sentiment").getFullList({
     filter: `ticker="${ticker}" && created >= "${today}" && created < "${tomorrow}"`,
   });
-  console.log(output);
   return {
     alreadyVoted: cookieVote || null,
     sentimentData: output?.at(0) || {},
