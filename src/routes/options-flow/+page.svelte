@@ -738,7 +738,7 @@ async function addToWatchlist(itemId) {
   if(data?.user?.tier === 'Pro') {
     try {
       const postData = {
-      'itemId': itemId,
+      'itemIdList': [itemId],
       'id': optionsWatchlist?.id
     };
 

@@ -21,13 +21,13 @@ export const load = async ({ locals }) => {
           body: JSON.stringify(postData),
         });
         const output = await response.json();
-        return output;
+        return { id: watchList?.id, optionsList: output };
       } else {
-        return [];
+        return { id: "", optionsList: [] };
       }
     } catch (e) {
       console.error("Error fetching options watchlist or Benzinga data:", e);
-      return [];
+      return { id: "", optionsList: [] };
     }
   };
 

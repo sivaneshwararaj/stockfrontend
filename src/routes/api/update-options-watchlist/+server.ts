@@ -6,29 +6,43 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const { pb } = locals;
 
   let output;
+
   try {
+    // Ensure itemIdList is always an array.
+    const itemIdList = Array.isArray(data?.itemIdList)
+      ? data?.itemIdList
+      : [data?.itemIdList];
+
     const watchList = await pb.collection("optionsWatchlist").getOne(data?.id);
 
-    if (watchList?.optionsId?.includes(data?.itemId)) {
-      // Remove ticker from the watchlist.
+    // Check if all items in itemIdList are already in the watchlist.
+    const allItemsInWatchList = itemIdList.every((item) =>
+      watchList?.optionsId.includes(item)
+    );
+
+    if (allItemsInWatchList) {
+      // Remove tickers from the watchlist.
       const newTickerList = watchList?.optionsId.filter(
-        (item) => item !== data?.itemId
+        (item) => !itemIdList.includes(item)
       );
       output = await pb
         .collection("optionsWatchlist")
         .update(data?.id, { optionsId: newTickerList });
     } else {
-      // Add ticker to the watchlist.
-      const newTickerList = [...watchList?.optionsId, data?.itemId];
+      // Add new tickers to the watchlist.
+      const newTickerList = Array.from(
+        new Set([...watchList?.optionsId, ...itemIdList])
+      );
       output = await pb
         .collection("optionsWatchlist")
         .update(data?.id, { optionsId: newTickerList });
     }
   } catch (e) {
+    // Handle case where watchlist does not exist.
     output = await pb.collection("optionsWatchlist").create(
       serialize({
         user: locals?.user?.id,
-        optionsId: JSON.stringify([data?.itemId]),
+        optionsId: JSON.stringify(data?.itemIdList),
       })
     );
   }

@@ -1,22 +1,42 @@
 <script lang='ts'>
 import { numberOfUnreadNotification } from '$lib/store';
 
-import {screenWidth } from '$lib/store';
 //import MiniPlot from '$lib/components/MiniPlot.svelte';
 import { abbreviateNumber } from '$lib/utils';
 import { goto } from '$app/navigation';
 import ArrowLogo from "lucide-svelte/icons/move-up-right";
+import { onMount } from 'svelte';
+import toast from 'svelte-french-toast';
 
 let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
 
 
 export let data;
+let editMode = false;
+let numberOfChecked = 0;
+let deleteOptionsId = [];
 
     let isLoaded = false;
 
-let optionsWatchlist = data?.getOptionsWatchlist
+    function daysLeft(targetDate) {
+  const targetTime = new Date(targetDate).getTime();
+  const currentTime = new Date().getTime();
+  const difference = targetTime - currentTime;
 
+  const millisecondsPerDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math?.ceil(difference / millisecondsPerDay);
+
+  return daysLeft;
+}
+    
+let optionsWatchlist = data?.getOptionsWatchlist?.optionsList
+
+  
+  function reformatDate(dateString) {
+      return dateString.substring(5, 7) + '/' + dateString.substring(8) + '/' + dateString.substring(2, 4);
+  }
+  
     function formatDate(dateStr) {
       // Parse the input date string (YYYY-mm-dd)
       var date = new Date(dateStr);
@@ -53,7 +73,69 @@ let optionsWatchlist = data?.getOptionsWatchlist
     
       return formattedTimeString;
     }
-    
+
+async function handleFilter(optionsId) {
+
+  const filterSet = new Set(deleteOptionsId);
+
+  // Check if the new filter already exists in the list
+  if (filterSet?.has(optionsId)) {
+    // If it exists, remove it from the list
+    filterSet?.delete(optionsId);
+  } else {
+    // If it doesn't exist, add it to the list
+    filterSet?.add(optionsId);
+
+  }
+  deleteOptionsId = Array?.from(filterSet);
+  numberOfChecked = deleteOptionsId?.length;
+}
+
+
+    async function handleDelete() {
+
+    if (numberOfChecked === 0) {
+        toast.error(`You need to select symbols before you can delete them`, {
+            style: 'border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);',
+        });
+    } else if (data?.getOptionsWatchlist?.id?.length === 0) {
+        toast.error(`You need to select symbols before you can delete them`, {
+                    style: 'border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);',
+        });
+    } else {
+
+        optionsWatchlist = optionsWatchlist?.filter(item => !deleteOptionsId?.includes(item?.id));
+
+        optionsWatchlist = [...optionsWatchlist];
+
+        const postData = {
+        'itemIdList': deleteOptionsId,
+        'id': data?.getOptionsWatchlist?.id
+        };
+
+        const response = await fetch('/api/update-options-watchlist', {
+            method: 'POST',
+            headers: {
+             "Content-Type": "application/json"
+            },
+            body: JSON.stringify(postData)
+        });
+
+        deleteOptionsId = [];
+        numberOfChecked = 0;
+
+    }
+
+}
+
+
+onMount(async () => {
+    if(optionsWatchlist?.length !== 0) {
+        optionsWatchlist?.forEach((item) => {
+        item.dte = daysLeft(item?.date_expiration) }) 
+    };
+    isLoaded = true;
+})
 </script>
 
 
@@ -85,66 +167,42 @@ let optionsWatchlist = data?.getOptionsWatchlist
     
     
 <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
-          
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
-    <ul>
-      <li><a href="/" class="text-gray-300">Home</a></li>
-      <li class="text-gray-300">Options Watchlist</li>
-    </ul>
-  </div>
-          
+                    
   <div class="w-full overflow-hidden m-auto mt-5">
     
     <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden ">
         <div class="relative flex justify-center items-start overflow-hidden w-full">
 
 
-            <main class="w-full lg:w-3/4 lg:pr-5">
+            <main class="w-full">
 
 
-              <div class="w-full m-auto bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-  
-      <!-- Start Column -->
-      <div>
-        <div class="flex flex-row justify-center items-center">
-          <h1 class="text-4xl sm:text-5xl text-white font-bold mb-5">
-            Watchlist
-          </h1>
-        </div>
-
-        <span class="text-white text-md font-medium text-center flex justify-center items-center ">
-          Monitor the performance and recent updates of your favorite options.
-        </span>
-      </div>
-      <!-- End Column -->
-  
-      <!-- Start Column -->
-      <div class="relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0">
-        <svg class="w-40 -my-5" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="5" result="glow"/>
-              <feMerge>
-                <feMergeNode in="glow"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-          <path fill="#1E40AF" d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z" transform="translate(100 100)" filter="url(#glow)" />
-        </svg>
-        
-        <div class="z-1 absolute top-3 right-10 ">
-          <img class="w-24" src={cloudFrontUrl+"/assets/options_logo.png"} alt="logo" loading='lazy'>
-        </div>
-      </div>
-      <!-- End Column -->
-  
-    </div>
-  </div>
     
-
+    {#if isLoaded}
     {#if optionsWatchlist?.length !== 0}
+
+     <div class="flex flex-row justify-end items-center pr-4 sm:pr-0 pb-2">
+                {#if editMode}
+                <label on:click={handleDelete} class="cursor-pointer bg-[#27272A] sm:hover:bg-[#313131] duratiion-100 transition ease-in-out px-4 py-2 rounded-lg shadow-lg mr-3">
+                    <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"/></svg>
+                    <span class="ml-1 text-white text-sm">
+                        {numberOfChecked}
+                    </span>
+                </label>
+                {/if}
+                <label on:click={() => editMode = !editMode} class="cursor-pointer bg-[#27272A] sm:hover:bg-[#313131] duratiion-100 transition ease-in-out px-4 py-2 rounded-lg shadow-lg">
+                    <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1024 1024"><path fill="white" d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"/><path fill="white" d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"/></svg>
+                    {#if !editMode}
+                    <span class="ml-1 text-white text-sm">
+                        Edit
+                    </span>
+                    {:else}
+                    <span class="ml-1 text-white text-sm">
+                      Cancel
+                    </span>
+                    {/if}
+                </label>
+    </div>
 
     <!--Start Table-->
             <div class="w-screen sm:w-full rounded-lg overflow-hidden overflow-x-scroll no-scrollbar">
@@ -152,8 +210,10 @@ let optionsWatchlist = data?.getOptionsWatchlist
             <thead>
               <tr class="">
                 <td class="text-slate-200 font-semibold text-sm text-start">Time</td>
+                <td class="text-slate-200 font-semibold text-sm text-start">Symbol</td>
                 <td class="text-slate-200 font-semibold text-sm text-start">Date</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">Expiry</td>
+                <td class="text-slate-200 font-semibold text-sm text-end">DTE</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">Strike</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">C/P</td>
                 <td class="text-slate-200 font-semibold text-sm text-start">Sent.</td>
@@ -175,8 +235,17 @@ let optionsWatchlist = data?.getOptionsWatchlist
                   {formatTime(item?.time)}
                 </td>
 
+                <td on:click={() => handleFilter(item?.id)} class="flex flex-row items-center text-sm sm:text-[1rem] text-start">
+                    <input type="checkbox" checked={deleteOptionsId?.includes(item?.id) ?? false} class="{!editMode ? 'hidden' : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3" />
+                    <a class="inline-block  sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]" href={(!editMode && item?.underlying_type === 'stock') ? `/stocks/${item?.ticker}` : `/etf/${item?.ticker}`} on:click|stopPropagation>
+                        {item?.ticker}
+                    </a>
+                </td>
                 <td class="text-white text-sm sm:text-[1rem] text-start">
                   {formatDate(item?.date)}
+                </td>
+                <td class="text-white text-sm sm:text-[1rem] text-start">
+                  {reformatDate(item?.date_expiration)}
                 </td>
 
                 <td class="text-white text-sm sm:text-[1rem] text-end">
@@ -210,20 +279,20 @@ let optionsWatchlist = data?.getOptionsWatchlist
                 {abbreviateNumber(item?.cost_basis)}
               </td>
 
-              <td class="text-sm sm:text-[1rem] text-start {item?.type === 'Sweep' ? 'text-[#C6A755]' : 'text-[#976DB7]'}">
-                {item?.type}
+              <td class="text-sm sm:text-[1rem] text-start {item?.option_activity_type === 'Sweep' ? 'text-[#C6A755]' : 'text-[#976DB7]'}">
+                {item?.option_activity_type}
               </td>
 
 
 
-              <td class="text-white text-end">
+              <td class="text-white text-end text-sm sm:text-[1rem] text-end font-medium">
                   {new Intl.NumberFormat("en", {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0
                   }).format(item?.volume)}
               </td>
 
-              <td class="text-white text-end">
+              <td class="text-white text-end text-sm sm:text-[1rem] text-end font-medium">
                 {new Intl.NumberFormat("en", {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0
@@ -245,7 +314,7 @@ let optionsWatchlist = data?.getOptionsWatchlist
                 
         
         
-              </div>
+            </div>
             <!--End Table-->
     {:else}
    <div class="flex flex-col justify-center items-center m-auto pt-8">
@@ -274,59 +343,21 @@ let optionsWatchlist = data?.getOptionsWatchlist
         </div>
     {/if}
 
+    {:else}
+        <div class="flex justify-center items-center h-80">
+            <div class="relative">
+            <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <span class="loading loading-spinner loading-md"></span>
+            </label>
+            </div>
+        </div>
+        {/if}
+  
     
 
   </main>
 
 
-  <aside class="hidden lg:block relative fixed w-1/4 ml-4">        
-  
-    {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
-      <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
-          <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-              <h2 class="text-start text-xl font-semibold text-white ml-3">
-              Pro Subscription 🔥
-              </h2>
-              <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                  Upgrade now for unlimited access to all data and tools.
-              </span>
-          </div>
-      </div>
-      {/if}
-  
-    <div on:click={() => goto('/price-alert')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
-        <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-            <div class="w-full flex justify-between items-center p-3 mt-3">
-            <h2 class="text-start text-xl font-semibold text-white ml-3">
-            Price Alert ⏰
-            </h2>
-            <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
-            </div>
-            <span class="text-white p-3 ml-3 mr-3">
-                Customize your alerts to never miss out again
-            </span>
-        </div>
-    </div>
-  
-    <div on:click={() => goto('/stock-screener')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
-        <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-            <div class="w-full flex justify-between items-center p-3 mt-3">
-            <h2 class="text-start text-xl font-semibold text-white ml-3">
-            Stock Screener 🔎
-            </h2>
-            <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
-            </div>
-            <span class="text-white p-3 ml-3 mr-3">
-                Build your Stock Screener to find profitable stocks.
-            </span>
-        </div>
-    </div>
-  
-  </aside>
-  
   </div>
   </div>
   

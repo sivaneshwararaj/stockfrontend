@@ -507,11 +507,6 @@ if(watchList && isLoaded)
       Empty Watchlist
   </span>
 
-    
-    <svg  class="w-36 mt-6 sm:w-56" viewBox="0 0 148 69" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect opacity="0.1" width="148" height="69" rx="14" fill="white"></rect><rect opacity="0.1" x="8" y="8" width="63" height="24" rx="8" fill="white"></rect><rect opacity="0.1" x="77" y="8" width="63" height="24" rx="8" fill="white"></rect><rect opacity="0.1" x="8" y="36.5" width="63" height="24" rx="8" fill="white"></rect><rect opacity="0.1" x="77" y="37" width="63" height="24" rx="8" fill="white"></rect><rect opacity="0.2" x="17" y="15" width="22" height="4" fill="white"></rect><rect opacity="0.5" x="55" y="15" width="7" height="4" rx="2" fill="#E64141"></rect><rect opacity="0.5" x="124" y="15" width="7" height="4" rx="2" fill="#2DC97E"></rect><rect opacity="0.2" x="86" y="15" width="22" height="4" fill="white"></rect><rect opacity="0.2" x="17" y="43" width="22" height="4" fill="white"></rect><rect opacity="0.5" x="55" y="43" width="7" height="4" rx="2" fill="#2DC97E"></rect><rect opacity="0.5" x="124" y="43" width="7" height="4" rx="2" fill="#E64141"></rect><rect opacity="0.2" x="86" y="43" width="22" height="4" fill="white"></rect><rect opacity="0.1" x="17" y="21" width="45" height="4" fill="white"></rect><rect opacity="0.1" x="86" y="21" width="45" height="4" fill="white"></rect><rect opacity="0.1" x="17" y="49.5" width="45" height="4" fill="white"></rect><rect opacity="0.1" x="86" y="50" width="45" height="4" fill="white"></rect><rect x="6" y="6" width="8" height="8" rx="4" fill="#2C85FD"></rect><rect x="6" y="35" width="8" height="8" rx="4" fill="#2C85FD"></rect><rect x="76" y="6" width="8" height="8" rx="4" fill="#2C85FD"></rect><rect x="76" y="35" width="8" height="8" rx="4" fill="#2C85FD"></rect>
-    </svg>
-    
 
 
     <span class="text-white text-sm sm:text-lg pt-5 m-auto p-4 text-center">

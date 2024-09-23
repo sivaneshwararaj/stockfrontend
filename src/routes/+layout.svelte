@@ -653,7 +653,7 @@ $: {
               </DropdownMenu.Item>
               <DropdownMenu.Separator />
               <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
-                <a href="/watchlist">
+                <a href="/watchlist/stocks">
                   Watchlist
                 </a>
               </DropdownMenu.Item>
