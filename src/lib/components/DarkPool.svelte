@@ -109,7 +109,8 @@ function getPlotOptions() {
     },
     ],
     series: [
-        {
+        { 
+            name: 'Total Volume',
             data: totalVolumeList,
             type: 'line',
             itemStyle: {
@@ -118,12 +119,12 @@ function getPlotOptions() {
             showSymbol: false
         },
         {
-
+            name: 'Short Volume',
             data: shortVolumeList,
             type: 'line',
             areaStyle: {opacity: 1},
             itemStyle: {
-                color: '#3B82F6' // Change bar color to white
+                color: '#E11D48' // Change bar color to white
             },
             showSymbol: false
         },
@@ -232,7 +233,7 @@ $: {
         </div>
             <div class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center">
                 <div class="h-full transform -translate-x-1/2 " aria-hidden="true"></div>
-                <div class="w-3 h-3 bg-[#536FC5] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
+                <div class="w-3 h-3 bg-[#E11D48] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
                 <span class="mt-2 sm:mt-0 text-white text-xs sm:text-md sm:font-medium inline-block">
                 Short Volume
                 </span>

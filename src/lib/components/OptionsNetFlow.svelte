@@ -6,13 +6,12 @@
     import { BarChart } from 'echarts/charts'
     import { GridComponent, TooltipComponent } from 'echarts/components'
     import { CanvasRenderer } from 'echarts/renderers'
+    import { monthNames} from '$lib/utils';
 
     export let data;
     
     use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
 
-
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     let isLoaded = false;
    
@@ -21,25 +20,6 @@
     let optionsData;
     let sentiment;
 
-  
-  function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else if (Math?.abs(value) >= 1e4) {
-        return { unit: 'K', denominator: 1e4 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-  }
-  
   
   function getPlotOptions() {
     let dates = [];
@@ -59,7 +39,6 @@
     
     sentiment = netCallList?.slice(-1)?.at(0) > netPutList?.slice(-1)?.at(0) ? 'bullish' : 'bearish';
 
-    const {unit, denominator } = normalizer(Math.max(...netCallList) ?? 0)
 
     const option = {
     silent: true,
@@ -69,8 +48,8 @@
     },
     animation: false,
     grid: {
-        left: '1%',
-        right: '2%',
+        left: '3%',
+        right: '3%',
         bottom: '0%',
         top: '10%',
         containLabel: true
@@ -95,23 +74,15 @@
     }
 },
     yAxis: [
-    { 
-        type: 'value',
-        splitLine: {
+   {
+      type: 'value',
+      splitLine: {
             show: false, // Disable x-axis grid lines
-        },
-        axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    //value = Math.max(value, 0);
-                    return '$'+(value / denominator)?.toFixed(0) + unit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-        },
+      },
+      
+       axisLabel: {
+        show: false // Hide y-axis labels
+      }
     },
   
     ],
@@ -253,8 +224,7 @@
   
         </div>
   
-
-        
+      
         {/if}
   
         {:else}

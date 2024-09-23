@@ -94,7 +94,7 @@
       >
         <div
           class="circle"
-          style="left:{d.x}px;top:{d.y}px;width:{d.r * ballSize}px;height:{d.r * ballSize}px;background-color:{(index === 1 && d.data.id === 'puts') ? '#FF2F1F' : (index === 1 && d.data.id === 'calls') ? '#0FB307' : '#1E1E1E'}; border: 0px solid #000;"
+          style="left:{d.x}px;top:{d.y}px;width:{d.r * ballSize}px;height:{d.r * ballSize}px;background-color:{(index === 1 && d.data.id === 'puts') ? '#FF2F1F' : (index === 1 && d.data.id === 'calls') ? '#37C97D' : '#1E1E1E'}; border: 0px solid #000;"
         />
           <div
             class="text-group"

@@ -1,195 +1,155 @@
-<script lang ='ts'>
+<script lang="ts">
   import { abbreviateNumber } from "$lib/utils";
+  import { swapComponent, stockTicker, screenWidth, getCache, setCache } from '$lib/store';
+  import InfoModal from '$lib/components/InfoModal.svelte';
+  import { Chart } from 'svelte-echarts';
+  import { init, use } from 'echarts/core';
+  import { ScatterChart } from 'echarts/charts';
+  import { GridComponent, TooltipComponent } from 'echarts/components';
+  import { CanvasRenderer } from 'echarts/renderers';
+  export let data: any; // Add type for `data` if possible
 
-    import { swapComponent, stockTicker, screenWidth, getCache, setCache} from '$lib/store';
-    import InfoModal from '$lib/components/InfoModal.svelte';
-    import { Chart } from 'svelte-echarts'
+  use([ScatterChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
-    import { init, use } from 'echarts/core'
-    import { BarChart } from 'echarts/charts'
-   import { GridComponent, TooltipComponent } from 'echarts/components'
-   import { CanvasRenderer } from 'echarts/renderers';
-    export let data;
+  let isLoaded = false;
 
-    use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
-
-    let isLoaded = false;
-
-    const tabs = [
-    {
-      title: "Effective Date",
-    },
-    {
-      title: "Expiration Date",
-    }
+  const tabs = [
+    { title: "Effective Date" },
+    { title: "Expiration Date" },
   ];
 
   let activeIdx = 0;
 
-
-  function changeTab(index) {
+  function changeTab(index: number) {
     activeIdx = index;
     optionsData = getPlotOptions(activeIdx === 0 ? 'effectiveDate' : 'expirationDate');
   }
-  
-    let rawData = [];
-    let optionsData;
-    let avgNotionalAmount;
-    let avgNotionalQuantity;
+
+  let rawData: any[] = [];
+  let optionsData: any;
+  let avgNotionalAmount: number | undefined;
+  let avgNotionalQuantity: number | undefined;
 
 
-  function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e3 };
-  } else if (Math?.abs(value) >= 1e4) {
-        return { unit: 'K', denominator: 1e3 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-  }
-  
-  
-  function getPlotOptions(state) {
-
-    const combinedData = rawData?.map(item => ({
+  function getPlotOptions(state: 'effectiveDate' | 'expirationDate') {
+    const combinedData = rawData?.map((item) => ({
       date: state === 'effectiveDate' ? item['Effective Date'] : item['Expiration Date'],
       notionalAmount: item['Notional amount-Leg 1'],
-      notionalQuantity: item['Total notional quantity-Leg 1']
+      notionalQuantity: item['Total notional quantity-Leg 1'],
     }));
 
     // Group data by date and sum the values
     const groupedData = combinedData.reduce((acc, curr) => {
       const { date, notionalAmount, notionalQuantity } = curr;
 
-      // If the date already exists in the accumulator, sum up the values
       if (acc[date]) {
         acc[date].notionalAmount += notionalAmount;
         acc[date].notionalQuantity += notionalQuantity;
       } else {
-        // Otherwise, create a new entry for this date
         acc[date] = {
           date,
           notionalAmount,
-          notionalQuantity
+          notionalQuantity,
         };
       }
 
       return acc;
-    }, {});
+    }, {} as Record<string, any>);
 
-    // Convert the grouped data back to an array
     const result = Object.values(groupedData);
 
-    // Sort the result array based on the date
-    result?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
+    result?.sort((a, b) => new Date(a?.date).getTime() - new Date(b?.date).getTime());
 
-    // Separate the sorted data back into individual arrays
-    const dates = result?.map(item => item?.date);
-    const notionalAmount = result?.map(item => item?.notionalAmount);
-    const notionalQuantity = result?.map(item => item?.notionalQuantity);
+    const dates = result?.map((item) => item?.date);
+    const notionalAmount = result?.map((item) => item?.notionalAmount);
+    const notionalQuantity = result?.map((item) => item?.notionalQuantity);
 
-    // Compute the average of item?.traded
     const totalNotionalAmount = notionalAmount?.reduce((acc, item) => acc + item, 0);
     avgNotionalAmount = totalNotionalAmount / notionalAmount?.length;
 
     const totalNotionalQuantity = notionalQuantity?.reduce((acc, item) => acc + item, 0);
     avgNotionalQuantity = totalNotionalQuantity / notionalQuantity?.length;
 
-
-    
     const option = {
-    silent: true,
-    tooltip: {
+      silent: true,
+      tooltip: {
         trigger: 'axis',
-        hideDelay: 100, // Set the delay in milliseconds
-    },
-    animation: false,
-    grid: {
+        hideDelay: 100,
+      },
+      animation: false,
+      grid: {
         left: '3%',
         right: '3%',
         bottom: '0%',
         top: '10%',
-        containLabel: true
-    },
-    xAxis:
-    {
+        containLabel: true,
+      },
+      xAxis: {
         type: 'category',
         boundaryGap: false,
         data: dates,
         axisLabel: {
-            color: '#fff',
-        }
-    },
-    yAxis: [
-    {
-      type: 'value',
-      splitLine: {
-            show: false, // Disable x-axis grid lines
-      },
-      
-       axisLabel: {
-        show: false // Hide y-axis labels
-      }
-    },
-    { 
-        type: 'value',
-        splitLine: {
-            show: false, // Disable x-axis grid lines
+          color: '#fff',
         },
-        position: 'right',
-        axisLabel: {
-          show: false // Hide y-axis labels
-       },
-    },
-    ],
-    series: [
-            {
-              name: 'Notional Amount',
-                type: 'bar',
-                data: notionalAmount,
-                barWidth: '50%',
-                itemStyle: {
-                    color: '#8F54F4'
-                }
-            },
-            { 
-              name: 'Notional Quantity',
-                type: 'bar',
-                data: notionalQuantity,
-                barWidth: '50%',
-                yAxisIndex: 1,
-                itemStyle: {
-                    color: '#FF9E21'
-                }
-            }
-        ]
+      },
+      yAxis: [
+        {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          },
+        },
+        {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+          position: 'right',
+          axisLabel: {
+            show: false,
+          },
+        },
+      ],
+      series: [
+        {
+          name: 'Notional Amount',
+          type: 'scatter',
+          data: dates?.map((date, index) => [date, notionalAmount[index]]),
+          itemStyle: {
+            color: '#8F54F4',
+          },
+        },
+        {
+          name: 'Notional Quantity',
+          type: 'scatter',
+          data: dates?.map((date, index) => [date, notionalQuantity[index]]),
+          yAxisIndex: 1,
+          itemStyle: {
+            color: '#FF9E21',
+          },
+        },
+      ],
     };
-  
-  
-  return option;
+
+    return option;
   }
-  
- async function getSwapData(ticker) {
+
+  async function getSwapData(ticker: string) {
     const cachedData = getCache(ticker, 'getSwapData');
     if (cachedData) {
       rawData = cachedData;
     } else {
       try {
-        const postData = {ticker: ticker, path: 'swap-ticker'}
+        const postData = { ticker, path: 'swap-ticker' };
         const response = await fetch('/api/ticker-data', {
           method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(postData)
+          body: JSON.stringify(postData),
         });
         if (!response.ok) throw new Error('API request failed');
         rawData = await response.json();
@@ -199,7 +159,7 @@
         rawData = [];
       }
     }
-    $swapComponent = rawData?.length !== 0;
+    $swapComponent = rawData?.length !== 0; // Correct the use of `$`
   }
 
   $: if ($stockTicker && typeof window !== 'undefined') {
@@ -211,12 +171,10 @@
     });
   }
 
-
   $: charNumber = $screenWidth < 640 ? 20 : 40;
-  
 </script>
+
     
-<svelte:options immutable={true} />
 
 
   <section class="overflow-hidden text-white h-full pb-8">

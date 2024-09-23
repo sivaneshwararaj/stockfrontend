@@ -126,7 +126,8 @@ function findLowestAndHighestFee(data, lastDateStr) {
     },
     ],
     series: [
-        {
+        {   
+            name: 'Available Shares',
             data: availableList,
             type: 'line',
             itemStyle: {
@@ -135,6 +136,7 @@ function findLowestAndHighestFee(data, lastDateStr) {
             showSymbol: false
         },
         {
+            name: 'Fee [%]',
             data: feeList,
             type: 'line',
             areaStyle: {opacity: 1},
