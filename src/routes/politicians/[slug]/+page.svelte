@@ -81,7 +81,7 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
             // Handle default case if needed
             break;
     }
-    goto("/list/" + path);
+    return path;
 }
 
   
@@ -419,10 +419,12 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
                           </thead>
                           <tbody>
                             {#each rawData?.topSectors as item}
-                              {#each Object.entries(item) as [name, value]}
-                                <tr on:click={() => sectorSelector(name)} class="text-white cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#141417] border-b border-[#141417]">
-                                  <td class="text-blue-400 sm:hover:text-white duration-100 text-[1rem] whitespace-nowrap">
-                                    {name}
+                              {#each Object?.entries(item) as [name, value]}
+                                <tr class="text-white sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#141417] border-b border-[#141417]">
+                                  <td class="text-[1rem] whitespace-nowrap">
+                                    <a href={"/list/"+sectorSelector(name)} class="sm:hover:text-white text-blue-400">
+                                      {name}
+                                    </a>
                                   </td>
                                   <td class="text-white text-[1rem] whitespace-nowrap text-end">
                                     {value?.toFixed(2)}%
@@ -511,7 +513,7 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
                         </thead>
                         <tbody class="p-0">
                           {#each displayList as item}
-                              <tr on:click={() => goto(`/${item?.assetType === 'stock' ? 'stocks' : item?.assetType === 'etf' ? 'etf' : 'crypto'}/${item?.ticker}`)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A] cursor-pointer">
+                              <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A]">
                                 
                                 <td class="pb-3 border-b border-b-[#27272A] whitespace-nowrap">
                                   <div class="flex flex-row items-center">
@@ -519,7 +521,7 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
                                       <img style="clip-path: circle(50%);" class="avatar w-5 h-5" src={`https://financialmodelingprep.com/image-stock/${item?.ticker}.png`} alt="stock logo"/>
                                     </div>
                                     <div class="flex flex-col ml-2">
-                                      <span class="text-sm sm:text-[1rem] text-blue-400">{item?.ticker?.replace('_',' ')}</span>
+                                      <a href={`/${item?.assetType === 'stock' ? 'stocks' : item?.assetType === 'etf' ? 'etf' : 'crypto'}/${item?.ticker}`} class="text-sm sm:text-[1rem] sm:hover:text-white text-blue-400">{item?.ticker?.replace('_',' ')}</a>
                                       <span class="text-white text-sm">{item?.name?.length > 20 ? item?.name?.slice(0,20)+'...' : item?.name}</span>
                                     </div>
                                   </div>

@@ -33,11 +33,11 @@
     // Combine the data into an array of objects to keep them linked
     const combinedData = rawData?.history?.map(item => ({
         date: item?.paymentDate,
-        dividend: item?.adjDividend
+        dividend: item?.adjDividend?.toFixed(2)
     }));
 
     // Sort the combined data array based on the date
-    combinedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    combinedData.sort((a, b) => new Date(a?.date) - new Date(b?.date));
 
     // Separate the sorted data back into individual arrays
     const dates = combinedData.map(item => item.date);
@@ -51,7 +51,7 @@
       },
       animation: false,
           grid: {
-          left: '2%',
+          left: '3%',
           right: '3%',
           bottom: '10%',
           top: '10%',
@@ -69,24 +69,15 @@
         },
         yAxis: [
           {
-            type: 'value',
+          type: 'value',
+          splitLine: {
+                show: false, // Disable x-axis grid lines
+          },
+          
           axisLabel: {
-            color: '#fff',
-            },
-            splitLine: {
-              show: false, // Disable x-axis grid lines
-          },
-          },
-          {
-            type: 'value',
-            axisLabel: {
-              show: false,
-              formatter: '{value} %',
-            },
-            splitLine: {
-              show: false,
-            },
-          },
+            show: false // Hide y-axis labels
+          }
+    },
         ],
         series: [
           {
@@ -182,64 +173,68 @@
                           </div>
       
                         {#if rawData?.history?.length !== 0}
-                        <div class="mb-4 grid grid-cols-2 grid-rows-2 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-4 md:grid-rows-1">
-                          <div class="p-4 bp:p-5 sm:p-6">
-                              <div class="text-sm font-normal text-default xs:text-base">
-                                Dividend Yield
-                              </div> 
-                              <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
-                                {dividendYield !== '0.00' ? dividendYield : '0'}%
-                              </div> 
-                          </div>
-                          <div class="p-4 bp:p-5 sm:p-6">
-                              <div class="text-sm font-normal text-default xs:text-base">
-                                Annual Dividend
-                              </div> 
-                              <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
-                                ${annualDividend !== '0.00' ? annualDividend : '0'}
-                              </div> 
-                          </div>
-                          <div class="p-4 bp:p-5 sm:p-6 ">
-                              <div class="text-sm font-normal text-default xs:text-base">
-                                Ex-Dividend Date
-                              </div> 
-                              <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
-                                {new Date(exDividendDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
-                              </div> 
-                          </div>
-  
-                          <div class="p-4 bp:p-5 sm:p-6 ">
-                              <div class="text-sm font-normal text-default xs:text-base">
-                                Payout Frequency
-                              </div> 
-                              <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
-                                {payoutFrequency === 4 ? 'Quartely' : payoutFrequency === 2 ? 'Half-Yearly' : payoutFrequency === 1 ? 'Annually' : 'n/a'}
-                              </div> 
-                          </div>
-  
-                          <div class="p-4 bp:p-5 sm:p-6 ">
-                            <div class="text-sm font-normal text-default xs:text-base">
-                              Payout Ratio 
-                            </div> 
+                        
+                        <div class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-3 md:grid-rows-1 divide-x">
+                        <div class="p-4 bp:p-5 sm:p-6">
+                          <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]">
+                            Dividend Yield
+                          </label>   
                             <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
-                              {payoutRatio !== '0.00' ? payoutRatio : '0'}%
+                              {dividendYield !== '0.00' ? dividendYield : '0'}%
                             </div> 
                         </div>
-  
-                        <div class="p-4 bp:p-5 sm:p-6 ">
-                          <div class="text-sm font-normal text-default xs:text-base">
+                        <div class="p-4 bp:p-5 sm:p-6 border-l border-b border-contrast ">
+                          <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]">
+                            Annual Dividend
+                          </label>  
+            
+                            <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
+                             ${annualDividend !== '0.00' ? annualDividend : '0'}
+                            </div> 
+                        </div>
+                        <div class="p-4 bp:p-5 sm:p-6 border-r border-contrast ">
+                          <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]">
+                            Ex-Dividend Date
+                          </label>    
+                         
+                            <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
+                             {new Date(exDividendDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
+                            </div> 
+                        </div>
+
+                        <div class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast ">
+                          <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]">
+                            Payout Frequency
+                          </label>    
+                         
+                            <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
+                             {payoutFrequency === 4 ? 'Quartely' : payoutFrequency === 2 ? 'Half-Yearly' : payoutFrequency === 1 ? 'Annually' : 'n/a'}
+                            </div> 
+                        </div>
+                        <div class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast ">
+                          <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]">
+                            Payout Ratio 
+                          </label>    
+                         
+                            <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
+                             {payoutRatio !== '0.00' ? payoutRatio : '0'}%
+                            </div> 
+                        </div>
+                        <div class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast ">
+                          <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]">
                             Dividend Growth
-                          </div> 
-                          <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
-                            {dividendGrowth !== 'NaN' ? dividendGrowth+'%' : '-'}
-                          </div> 
-                      </div>
-  
-  
+                          </label>    
+                         
+                            <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
+                             {dividendGrowth !== 'NaN' ? dividendGrowth+'%' : '-'}
+                            </div> 
                         </div>
   
                            
-        
+                      </div>
+
+
+
                             <div class="flex flex-col sm:flex-row items-start sm:items-center w-full mt-14 mb-8">
           
                               <h3 class="text-xl text-white font-semibold ">
