@@ -16,7 +16,9 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
 
 
-export let data;
+export let data../$types.js;
+
+/*
 
 const rawData = data?.getMiniPlotsIndex;
 
@@ -43,7 +45,6 @@ function getCurrentDateFormatted() {
     return `${month} ${day}, ${year}`;
 }
 
-/*
 let priceDataSP500;
 let priceDataNasdaq;
 let priceDataDowJones;
@@ -370,7 +371,7 @@ onDestroy( () => {
     
 <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
           
-  <div class="text-sm sm:text-[1rem] breadcrumbs ">
+  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
       <li class="text-gray-300">Watchlist</li>
@@ -386,7 +387,7 @@ onDestroy( () => {
             <main class="w-full lg:w-3/4 lg:pr-5">
 
 
-              <div class="w-full  m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
+              <div class="w-full m-auto bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
   
       <!-- Start Column -->
@@ -397,14 +398,14 @@ onDestroy( () => {
           </h1>
         </div>
 
-        <span class="hidden sm:block text-white text-md font-medium text-center flex justify-center  items-center ">
+        <span class="text-white text-md font-medium text-center flex justify-center items-center ">
           Monitor the performance and recent updates of your favorite stocks.
         </span>
       </div>
       <!-- End Column -->
   
       <!-- Start Column -->
-      <div class="hidden sm:block relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0">
+      <div class="relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0">
         <svg class="w-40 -my-5" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <filter id="glow">

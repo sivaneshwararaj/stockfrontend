@@ -1,5 +1,5 @@
 export const load = async ({ locals, cookies }) => {
-  const { apiURL, apiKey } = locals;
+  const { apiURL, apiKey, pb, user } = locals;
 
   const getOptionsFlowFeed = async () => {
     // make the POST request to the endpoint
@@ -29,9 +29,28 @@ export const load = async ({ locals, cookies }) => {
     return output;
   };
 
+  const getOptionsWatchlist = async () => {
+    let output;
+    try {
+      output = (
+        await pb?.collection("optionsWatchlist").getFullList({
+          filter: `user="${user?.id}"`,
+        })
+      )?.at(0);
+      if (output === undefined) {
+        output = { optionsId: [] };
+      }
+    } catch (e) {
+      //console.log(e)
+      output = { optionsId: [] };
+    }
+    return output;
+  };
+
   // Make sure to return a promise
   return {
     getOptionsFlowFeed: await getOptionsFlowFeed(),
     getPredefinedCookieRuleOfList: await getPredefinedCookieRuleOfList(),
+    getOptionsWatchlist: await getOptionsWatchlist(),
   };
 };
