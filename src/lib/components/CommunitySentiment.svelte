@@ -90,7 +90,7 @@ $: {
               What do you think of {$stockTicker} today?
             </label>
             <span class="text-white text-sm sm:text-[1rem] mt-1">
-                The community is {upvote > downvote ? 'bullish' : upvote < downvote ? 'bearish' : 'neutral'} about {$displayCompanyName} today.
+                The community is {upvote > downvote ? 'bullish' : upvote < downvote ? 'bearish' : 'neutral'} about {$displayCompanyName} this week, , with {totalVote} total votes.
             </span>
             </div>
 

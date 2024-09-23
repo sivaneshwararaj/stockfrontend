@@ -46,14 +46,14 @@ const fetchWatchlist = async (pb, userId) => {
 const fetchCommunitySentiment = async (pb, ticker, cookies) => {
   const cookieVote = cookies.get(`community-sentiment-${ticker}`);
   const today = new Date().toISOString().split("T")[0];
-  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1))
+  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 7))
     .toISOString()
     .split("T")[0];
 
   const output = await pb.collection("sentiment").getFullList({
     filter: `ticker="${ticker}" && created >= "${today}" && created < "${tomorrow}"`,
   });
-
+  console.log(output);
   return {
     alreadyVoted: cookieVote || null,
     sentimentData: output?.at(0) || {},
