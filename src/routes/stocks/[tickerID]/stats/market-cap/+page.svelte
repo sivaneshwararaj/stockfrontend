@@ -332,7 +332,7 @@ async function plotData()
                             </h2>
 
 
-                            <ul class="text-[0.8rem] font-medium text-center w-56 pt-5 sm:pt-3 sm:w-56 mb-5 flex m-auto sm:justify-end items-center sm:ml-auto">
+                            <ul class="text-[0.8rem] font-medium text-center w-56 pt-5 sm:pt-3 sm:w-56 mb-5 flex m-auto sm:m-0 sm:justify-end items-center sm:ml-auto">
                                 <li class="w-full">
                                     <label on:click={() => changeTablePeriod('annual')} class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule === 'annual' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold border-r border-gray-600" aria-current="page">
                                       Annual

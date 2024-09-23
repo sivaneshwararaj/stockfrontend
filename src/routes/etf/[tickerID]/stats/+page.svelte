@@ -1122,8 +1122,8 @@
                 
           </div>
           {:else}
-            <h2 class=" mt-16 flex justify-center items-center text-3xl font-medium text-slate-700 mb-5 m-auto">
-              No data available
+            <h2 class="mt-16 flex justify-center items-center text-lg font-semibold text-white mb-5 m-auto">
+              Sorry for this ETF no data is available
           </h2>
           {/if}
           

@@ -1,14 +1,11 @@
 <script lang="ts">
-  import { etfTicker, cryptoTicker, numberOfUnreadNotification, displayCompanyName} from '$lib/store';
+  import { etfTicker, numberOfUnreadNotification, displayCompanyName} from '$lib/store';
 
-  import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
   import { screenWidth } from '$lib/store';
   import { abbreviateNumber, formatString } from '$lib/utils';
+  import { onMount } from 'svelte';
 
   export let data;
-  let notDestroyed = true;
   let rawData = data?.getETFHoldings;
   let holdings = rawData?.slice(0,50);
 
@@ -32,53 +29,29 @@
     });
   }
 
-function stockSelector(symbol)
-{
-  if(symbol?.length !== 0 && !['BTC', 'USD']?.includes(symbol))
-  {
-    goto("/stocks/"+symbol)
-  }
-  else if (symbol === 'BTC') {
-    cryptoTicker.update(value => 'BTCUSD');
-    goto("/crypto/BTCUSD")
-  }
-  
-}
-    
-async function infiniteHandler({ detail: { loaded, complete } }) 
-{
 
-  if (holdings?.length === rawData?.length && notDestroyed) {
-      complete();
-    } 
-    else if (notDestroyed) {
-      const nextIndex = holdings?.length;
-      const newHoldings = rawData?.slice(nextIndex, nextIndex + 50);
-      holdings = [...holdings, ...newHoldings];
-      loaded();
+
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && holdings?.length !== rawData?.length) {
+        const nextIndex = holdings?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        holdings = [...holdings, ...filteredNewResults];
     }
-}
-
-
-$: {
-  if ($page.url.pathname !== '/etf/'+$etfTicker+"/holdings") {
-    notDestroyed = false;
   }
-}
 
-let charNumber = 40;
+  onMount(() => {
 
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
 
+  })
 
-$: {
-  if($screenWidth < 640)
-  {
-    charNumber = 16;
-  }
-  else {
-    charNumber = 40;
-  }
-}
+$: charNumber = $screenWidth < 640 ? 20 : 30
+
 
 </script>
 
@@ -152,7 +125,7 @@ $: {
                               </td>
                               <td on:click={() => changeOrder('weights')} class="text-white border-b border-[#09090B] bg-[#09090B] font-semibold text-end text-sm sm:text-[1rem] whitespace-nowrap cursor-pointer">
                                 % Weight
-                                <svg class="w-5 h-5 inline-block {order === 'highToLow' && category === 'weights' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                <svg class="w-5 h-5 inline-block {order === 'highToLow' && category === 'weights' ? '' : 'rotate-180'}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                               </td>
                             </tr>
                           </thead>
@@ -160,17 +133,17 @@ $: {
                             {#each holdings as item}
                         <!-- row -->
                         {#if item?.asset !== null}
-                        <tr on:click={() => stockSelector(item?.asset)} class="w-full sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {item?.asset?.length !== 0 ? 'cursor-pointer' : ''}">
+                        <tr class="w-full sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]">
                           
-                          <td class="text-blue-400 text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B]">
-                            {item?.asset?.length !== 0 ? item?.asset : '-'}
+                          <td class="text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B]">
+                            <a href={item?.asset?.length !== 0 && !['BTC', 'USD'].includes(item?.asset) ? `/stocks/${item?.asset}` : item?.asset === 'BTC' ? '/crypto/BTCUSD' : '' } class="sm:hover:text-white text-blue-400">{item?.asset?.length !== 0 ? item?.asset : '-'}</a>
                           </td>
                           
                           <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B]">
                             {item?.name?.length > charNumber ? formatString(item?.name?.slice(0,charNumber)) + "..." : formatString(item?.name)}
                           </td>
             
-          
+    
               
                         <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B] text-end">
                           {abbreviateNumber(item?.sharesNumber)}
@@ -196,14 +169,12 @@ $: {
 
                   </div>
 
-                  <InfiniteLoading on:infinite={infiniteHandler} />
                 
-
         
         
                 {:else} 
                 <h2 class="pl-4 pr-4 flex justify-center items-center text-md sm:text-lg text-center text-slate-200">
-                  No holdings are available for {$displayCompanyName} 🧐.
+                  No holdings are available for {$displayCompanyName}.
                 </h2>
               
                 {/if}

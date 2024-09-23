@@ -4,9 +4,7 @@
   import republicanBackground from "$lib/images/bg-republican.png";
   import democraticBackground from "$lib/images/bg-democratic.png";
   import otherBackground from "$lib/images/bg-other.png";
-  import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 	import { getPartyForPoliticians } from '$lib/utils';
-  import { goto } from '$app/navigation';
 
 
   export let data;
@@ -55,20 +53,17 @@ const district = {
 }
 
 
-
-async function infiniteHandler({ detail: { loaded, complete } }) 
-{
-  if (senateTradingList?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = senateTradingList?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 20);
-      senateTradingList = [...senateTradingList, ...newArticles];
-      loaded();
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && senateTradingList?.length !== rawData?.length) {
+        const nextIndex = senateTradingList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+        senateTradingList = [...senateTradingList, ...filteredNewResults];
     }
-}
+  }
 
-
+  
 
 onMount(async () => {
 
@@ -104,6 +99,13 @@ onMount(async () => {
     senateTradingList = rawData.slice(0, 20) ?? [];
 
     isLoaded = true;
+
+     if(data?.user?.tier === 'Pro') {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+      }
 });
 </script>
 
@@ -168,7 +170,7 @@ onMount(async () => {
                         <div class="w-full grid grid-cols-2 sm:grid-cols-3 gap-y-3 lg:gap-y-3 gap-x-3 ">
         
                           <!--Start Buy/Sell-->  
-                          <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-2xl h-20">
+                          <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-lg h-20">
                             <div class="flex flex-col items-start">
                                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]">Buy/Sell</span>
                                 <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
@@ -195,7 +197,7 @@ onMount(async () => {
                         </div>
                         <!--End Buy/Sell-->
                         <!--Start Dem/Rep-->  
-                        <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-2xl h-20">
+                        <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-lg h-20">
                           <div class="flex flex-col items-start">
                               <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]">Dem/Rep</span>
                               <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
@@ -252,7 +254,7 @@ onMount(async () => {
                           </thead>
                           <tbody>
                             {#each senateTradingList as item}
-                            <tr on:click={() => goto(`/politicians/${item?.id}`)} class="odd:bg-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] cursor-pointer">
+                            <tr class="odd:bg-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]">
     
                               <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3 border-b border-b-[#09090B]">
                                 <div class="flex flex-row items-center">
@@ -261,7 +263,7 @@ onMount(async () => {
                                     <img style="clip-path: circle(50%);" class="avatar rounded-full w-7 sm:w-9" src={`${cloudFrontUrl}/assets/senator/${item?.representative?.replace(/\s+/g, "_")}.png`} loading="lazy"/>
                                   </div>
                                   <div class="flex flex-col ml-3">
-                                    <span class="">{item?.representative?.replace('_',' ')}</span>
+                                    <a href={`/politicians/${item?.id}`} class="sm:hover:text-white text-blue-400">{item?.representative?.replace('_',' ')}</a>
                                     <span class="">{item?.party}</span>
                                   </div>
                                 </div>
@@ -293,7 +295,6 @@ onMount(async () => {
                         
                     </div>
 
-                    <InfiniteLoading on:infinite={infiniteHandler} />
 
                       {:else}
                       <div class="relative w-full mt-10">
@@ -307,7 +308,7 @@ onMount(async () => {
                             {:else}
                               <img class="absolute -mt-4 w-[500px] m-auto " src={otherBackground} />
                             {/if}
-                            <div class="flex flex-col justify-center items-center rounded-2xl ">
+                            <div class="flex flex-col justify-center items-center rounded-lg ">
 
 
                               <div class="-mt-3 shadow-lg rounded-full border border-slate-600 w-20 h-20 relative {item?.party === 'Republican' ? 'bg-[#98272B]' : item?.party === 'Democratic' ? 'bg-[#295AC7]' : 'bg-[#20202E]'} flex items-center justify-center">
@@ -389,7 +390,6 @@ onMount(async () => {
                       </label>
                       {/if}
 
-                      <InfiniteLoading on:infinite={infiniteHandler} />
 
                       {/if}
       
