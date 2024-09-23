@@ -1,6 +1,6 @@
-export const load = async ({ parent, params }) => {
+export const load = async ({ locals, params }) => {
   const getAnalystTickerHistory = async () => {
-    const { apiURL, apiKey } = await parent();
+    const { apiURL, apiKey } = locals;
 
     const postData = {
       ticker: params.tickerID,

@@ -6,12 +6,12 @@
     import { Chart } from 'svelte-echarts'
 
     import { init, use } from 'echarts/core'
-    import { ScatterChart } from 'echarts/charts'
-   import { GridComponent } from 'echarts/components'
+    import { BarChart } from 'echarts/charts'
+   import { GridComponent, TooltipComponent } from 'echarts/components'
    import { CanvasRenderer } from 'echarts/renderers';
     export let data;
 
-    use([ScatterChart, GridComponent, CanvasRenderer])
+    use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
 
     let isLoaded = false;
 
@@ -59,21 +59,42 @@
   
   function getPlotOptions(state) {
 
-    // Combine the data into an array of objects to keep them linked
     const combinedData = rawData?.map(item => ({
-        date: state === 'effectiveDate' ? item['Effective Date'] : item['Expiration Date'],
-        notionalAmount: item['Notional amount-Leg 1'],
-        notionalQuantity: item['Total notional quantity-Leg 1']
+      date: state === 'effectiveDate' ? item['Effective Date'] : item['Expiration Date'],
+      notionalAmount: item['Notional amount-Leg 1'],
+      notionalQuantity: item['Total notional quantity-Leg 1']
     }));
 
-    // Sort the combined data array based on the date
-    combinedData?.sort((a, b) => new Date(a.date) - new Date(b.date));
+    // Group data by date and sum the values
+    const groupedData = combinedData.reduce((acc, curr) => {
+      const { date, notionalAmount, notionalQuantity } = curr;
+
+      // If the date already exists in the accumulator, sum up the values
+      if (acc[date]) {
+        acc[date].notionalAmount += notionalAmount;
+        acc[date].notionalQuantity += notionalQuantity;
+      } else {
+        // Otherwise, create a new entry for this date
+        acc[date] = {
+          date,
+          notionalAmount,
+          notionalQuantity
+        };
+      }
+
+      return acc;
+    }, {});
+
+    // Convert the grouped data back to an array
+    const result = Object.values(groupedData);
+
+    // Sort the result array based on the date
+    result?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
 
     // Separate the sorted data back into individual arrays
-    const dates = combinedData?.map(item => item?.date);
-    const notionalAmount = combinedData?.map(item => item?.notionalAmount);
-    const notionalQuantity = combinedData?.map(item => item?.notionalQuantity);
-
+    const dates = result?.map(item => item?.date);
+    const notionalAmount = result?.map(item => item?.notionalAmount);
+    const notionalQuantity = result?.map(item => item?.notionalQuantity);
 
     // Compute the average of item?.traded
     const totalNotionalAmount = notionalAmount?.reduce((acc, item) => acc + item, 0);
@@ -82,16 +103,18 @@
     const totalNotionalQuantity = notionalQuantity?.reduce((acc, item) => acc + item, 0);
     avgNotionalQuantity = totalNotionalQuantity / notionalQuantity?.length;
 
-    const {unit, denominator } = normalizer(Math.max(...notionalAmount) ?? 0)
 
-    const { unit: quantityUnit, denominator: quantityDenominator } = normalizer(Math.max(...notionalQuantity) ?? 0);
     
     const option = {
     silent: true,
+    tooltip: {
+        trigger: 'axis',
+        hideDelay: 100, // Set the delay in milliseconds
+    },
     animation: false,
     grid: {
-        left: '2%',
-        right: $screenWidth < 640 ? '2%' : '6%',
+        left: '3%',
+        right: '3%',
         bottom: '0%',
         top: '10%',
         containLabel: true
@@ -106,25 +129,16 @@
         }
     },
     yAxis: [
-    { 
-        type: 'value',
-        splitLine: {
+    {
+      type: 'value',
+      splitLine: {
             show: false, // Disable x-axis grid lines
-        },
-        axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    //value = Math.max(value, 0);
-                    return '$'+(value / denominator)?.toFixed(0) + unit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-        },
+      },
+      
+       axisLabel: {
+        show: false // Hide y-axis labels
+      }
     },
-    
     { 
         type: 'value',
         splitLine: {
@@ -132,35 +146,28 @@
         },
         position: 'right',
         axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    //value = Math.max(value, 0);
-                    return '#'+(value / quantityDenominator)?.toFixed(0) + quantityUnit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-        },
+          show: false // Hide y-axis labels
+       },
     },
     ],
     series: [
             {
-                type: 'scatter',
-                symbolSize: 8,
-                data: dates?.map((date, index) => [date, notionalAmount[index]]),
+              name: 'Notional Amount',
+                type: 'bar',
+                data: notionalAmount,
+                barWidth: '50%',
                 itemStyle: {
                     color: '#8F54F4'
                 }
             },
-            {
-                type: 'scatter',
-                symbolSize: 8,
-                data: dates?.map((date, index) => [date, notionalQuantity[index]]),
+            { 
+              name: 'Notional Quantity',
+                type: 'bar',
+                data: notionalQuantity,
+                barWidth: '50%',
                 yAxisIndex: 1,
                 itemStyle: {
-                    color: '#fff'
+                    color: '#FF9E21'
                 }
             }
         ]
