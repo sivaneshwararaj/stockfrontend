@@ -110,7 +110,7 @@ let activeIdx = 0;
 
                 <div class="bg-[#313131] w-52 sm:w-fit relative m-auto sm:m-0 sm:mr-auto flex sm:flex-wrap items-center justify-center rounded-lg p-1 -mt-3">
                     {#each tabs as item, i}
-                    <button
+                    <a  href={i === 0 ? '/watchlist/stocks' : '/watchlist/options'}
                         on:click={() => handleMode(i)}
                         class="group relative z-[1] rounded-full px-6 py-1 {activeIdx === i
                         ? 'z-0'
@@ -124,7 +124,7 @@ let activeIdx = 0;
                         <span class="relative text-[1rem] sm:text-lg block font-semibold duration-200 text-white">
                             {item.title}
                         </span>
-                    </button>
+                    </a>
                     {/each}
                     </div>
 
