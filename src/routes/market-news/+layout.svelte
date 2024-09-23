@@ -113,7 +113,7 @@ let activeIdx = 0;
   
 
 
-                <div class="bg-[#313131] w-fit relative mr-auto flex flex-wrap items-center justify-center rounded sm:rounded-lg p-1 -mt-3">
+                <div class="bg-[#313131] w-52 sm:w-fit relative m-auto sm:m-0 sm:mr-auto flex sm:flex-wrap items-center justify-center rounded-lg p-1 -mt-3">
                     {#each tabs as item, i}
                     <button
                         on:click={() => handleMode(i)}
