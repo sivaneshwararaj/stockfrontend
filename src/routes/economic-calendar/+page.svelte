@@ -419,7 +419,7 @@ function handleReset() {
                            
 
                             <td class="text-start text-white border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap">
-                              {item?.event?.length > 30 ? item?.event?.slice(0,30) + '...' : item?.event}
+                              {item?.event?.length > 40 ? item?.event?.slice(0,40) + '...' : item?.event}
                             </td>
                             
                           <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">

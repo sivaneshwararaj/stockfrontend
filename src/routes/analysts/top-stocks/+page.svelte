@@ -283,7 +283,7 @@ $: {
 
                               <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
                                 {#if Number(item?.upside) >= 0}
-                                  <span class="text-[#37C97D]">{Number(item?.upside)?.toFixed(2)}%</span>
+                                  <span class="text-[#37C97D]">+{Number(item?.upside)?.toFixed(2)}%</span>
                                 {:else}
                                   <span class="text-[#B84242]">{Number(item?.upside)?.toFixed(2)}%</span>
                                 {/if}

@@ -425,144 +425,10 @@
             <div class="relative flex justify-center items-center overflow-hidden w-full">
                 <main class="w-full">
   
-  
-                <div class="w-full pb-3">
-                  <div class="relative right-0 bg-[#09090B]">
-                    <ul class="relative grid grid-cols-2 sm:grid-cols-4 gap-y-3 gap-x-3 flex flex-wrap p-1 list-none rounded-[3px]">
-                      <li class="pl-3 py-1.5 flex-auto text-center bg-[#2E3238] rounded-[3px]">
-                        <label on:click={changeStructure}  class="cursor-pointer border flex items-center justify-center w-full px-0 py-1 mb-0 border-0 rounded-[3px] bg-inherit">
-                          <span class="text-sm font-medium text-white ml-3">
-                            Switch To: {displayStructure}
-                          </span>
-                          <svg class="ml-auto mr-5 h-4 w-4 inline-block transform transition-transform mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></svg>
-                        </label>
-                      </li>
-                      <li class="pl-3 py-1.5 flex-auto text-center bg-[#2E3238] rounded-[3px]">
-                        <label for="filterList" class="cursor-pointer border flex items-center justify-center w-full px-0 py-1 mb-0 border-0 rounded-[3px] bg-inherit">
-                          <span class="text-sm font-medium text-white ml-3">
-                            Filter
-                          </span>
-                          <svg class="ml-auto mr-5 h-4 w-4 inline-block transform transition-transform mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></svg>
-                        </label>
-                      </li>
-                      <li class="pl-3 py-1.5 flex-auto text-center bg-[#2E3238] rounded-[3px]">
-                        <label for="rowList" class="cursor-pointer border flex items-center justify-center w-full px-0 py-1 mb-0 border-0 rounded-[3px] bg-inherit">
-                          <span class="text-sm font-medium text-white ml-3">
-                            {displayRows} Rows
-                          </span>
-                          <svg class="ml-auto mr-5 h-4 w-4 inline-block transform transition-transform mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></svg>
-                        </label>
-                      </li>
-                      <!--
-                      <li class="pl-3 py-1.5 flex-auto text-center bg-[#2E3238] rounded-[3px]">
-                        <label for="exportDataModal" class="cursor-pointer border flex items-center justify-center w-full px-0 py-1 mb-0 border-0 rounded-[3px] bg-inherit">
-                          <span class="text-sm font-medium text-white ml-3">
-                            Export
-                          </span>
-                          <svg class="ml-auto mr-5 h-4 w-4 inline-block transform transition-transform mr-2 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></svg>
-                        </label>
-                      </li>
-                      -->
-                    </ul>
-                  </div>
-                </div>
-  
+
                   
                   <div class="w-full m-auto mt-4">
-                    {#if displayStructure === 'Card'}
-                      <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-5">
-                            {#each displayList as item}
-                              <label on:click={() => goto(`/politicians/${item?.id}`)} class="w-full cursor-pointer bg-[#141417] sm:hover:bg-[#000] transition-colors ease-in-out border sm:hover:border-[#000] {item?.party ==='Republican' ? 'sm:hover:shadow-[#80000D]' : 'sm:hover:shadow-[#1358C3]' } border-gray-800 shadow-md rounded-lg h-auto pb-4 pt-4 mb-7">
-                                <div class="flex flex-col relative">
-                                  {#if item?.party === 'Republican'}
-                                  <img class="absolute -mt-4 w-full m-auto rounded-lg" src={republicanBackground} />
-                                  {:else if item?.party === 'Democratic'}
-                                    <img class="absolute -mt-4 w-[500px] m-auto rounded-lg"  src={democraticBackground} />
-                                  {:else}
-                                    <img class="absolute -mt-4 w-[500px] m-auto rounded-lg" src={otherBackground} />
-                                  {/if}
-                                  <div class="flex flex-col justify-center items-center rounded-2xl ">
 
-
-                                    <div class="-mt-3 shadow-lg rounded-full border border-slate-600 w-20 h-20 relative {item?.party === 'Republican' ? 'republican-striped bg-[#98272B]' : item?.party === 'Democratic' ? 'democratic-striped bg-[#295AC7]' : 'bg-[#20202E]'} flex items-center justify-center">
-                                      <img style="clip-path: circle(50%);" class="rounded-full w-16" src={`${cloudFrontUrl}/assets/senator/${item?.representative?.replace(/\s+/g, "_")}.png`} loading="lazy"/>
-                                    </div>
-                                    <span class="text-white text-lg font-medium mt-2 mb-2">
-                                      {item?.representative?.replace('Dr','')}
-                                    </span>
-                                    <span class="text-white text-md mb-8">
-                                      {item?.party ?? 'n/a'} {#if item?.district !== undefined && item?.district?.length !== 0} / {item?.district} {/if}
-                                    </span>
-  
-                                  </div>
-  
-                                  <div class="flex flex-row items-center pr-4 pl-2">
-                                    <div on:click|stopPropagation={() => assetSelector(item?.ticker, item?.assetType)} class="cursor-pointer shake-ticker rounded-full w-10 h-10 relative bg-[#20202E] flex items-center justify-center">
-                                      <img style="clip-path: circle(50%);" class="w-6 h-6" src={item?.ticker?.length !== 0 ? `https://financialmodelingprep.com/image-stock/${item?.ticker}.png` : defaultLogo} loading="lazy"/>
-                                    </div>
-                                    <label on:click|stopPropagation={() => assetSelector(item?.ticker, item?.assetType)} class="cursor-pointer flex flex-col ml-2 w-40">
-                                      <span class="text-blue-400 text-sm">{item?.ticker ?? '-'}</span>
-                                      <span class="text-white font-medium text-sm">{item?.assetDescription.length > 20 ? formatString(item?.assetDescription.slice(0,20)) + "..." : formatString(item?.assetDescription)}</span>
-                                    </label>
-                
-                                    <div class="flex flex-col justify-end items-end ml-auto">
-                                      <span class="font-medium text-white">Owner</span>
-                                      <span class="text-white text-opacity-[0.8] text-sm text-end">
-                                        {item?.owner?.length !== 0 ? formatString(item?.owner) : '-'}
-                                      </span>
-                                    </div>
-                                  </div>
-  
-                                  <div class="w-full mt-5 mb-5" />
-              
-                                  <div class="flex flex-row items-center pr-4 pl-4">
-                                    <div class="flex flex-col w-40">
-                                      <span class="font-medium text-white">Transaction Date</span>
-                                      <span class="text-slate-300 text-sm">
-                                        {new Date(item?.transactionDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
-                                      </span>
-                                    </div>
-                
-                                    <div class="flex flex-col justify-end items-end ml-auto">
-                                      <span class="font-medium text-white">Disclosure Date</span>
-                                      <span class="text-white text-opacity-[0.8] text-sm text-end">
-                                        {new Date(item?.disclosureDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
-                                      </span>
-                                    </div>
-                                  </div>
-              
-                                  <div class="w-full mt-5 mb-5" />
-              
-                                  <div class="flex flex-row items-center pr-4 pl-4">
-                                    <div class="flex flex-col w-40">
-                                      <span class="font-medium text-white">Amount</span>
-                                      <span class="text-slate-300 text-sm font-medium">
-                                        {item?.amount?.replace("$1,000,001 - $5,000,000","$1Mio - $5Mio")}
-                                      </span>
-                                    </div>
-                
-                                    <div class="flex flex-col justify-end items-end ml-auto">
-                                      <span class="font-medium text-white">Type</span>
-                                      <span class="text-white text-md text-end">
-                                        {#if item?.type === 'Bought'}
-                                          <span class="text-[#37C97D]">Bought</span>
-                                        {:else if item?.type === 'Sold'}
-                                          <span class="text-[#FF2F1F]">Sold</span>
-                                        {/if}
-                                      </span>
-                                    </div>
-                                  </div>
-  
-                                </div>
-              
-              
-                              </label>
-                            {/each}
-  
-                            <!--<InfiniteLoading on:infinite={infiniteHandler} />-->
-                      </div>
-  
-                      {:else}
                       <div class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden">
                         <table class="table table-sm sm:table-md table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                           <thead>
@@ -603,9 +469,9 @@
                               </th>
                               
   
-                              <td on:click|stopPropagation={() => assetSelector(item?.ticker, item?.assetType)} class="cursor-pointer text-start whitespace-nowrap text-sm sm:text-[1rem] text-blue-400">
+                              <td class="cursor-pointer text-start whitespace-nowrap text-sm sm:text-[1rem] text-blue-400">
                                 <div class="flex flex-col items-start">
-                                  <span class="text-blue-400">{item?.ticker?.length !== 0 ? item?.ticker : '-'}</span>
+                                  <a href={item?.assetType === 'stock' ? `/stocks/${item?.ticker}` : item?.assetType === ('etf' || 'crypto') ? `/${item?.assetType}/${item?.ticker}` : '#'} class="sm:hover:text-white text-blue-400">{item?.ticker?.length !== 0 ? item?.ticker : '-'}</a>
                                   <span class="text-white">{item?.assetDescription.length > charNumber ? formatString(item?.assetDescription.slice(0,charNumber)) + "..." : formatString(item?.assetDescription)?.replace("- Common Stock", "")?.replace("Common Stock", "")}</span>
                                 </div>
                               </td>
@@ -634,7 +500,6 @@
                         </table>
                     </div>
                     <!--<InfiniteLoading on:infinite={infiniteHandler} />-->
-                      {/if}
 
                       <!--<UpgradeToPro data={data} title="Track the latest trades of corrupt US Politicians"/>-->
 

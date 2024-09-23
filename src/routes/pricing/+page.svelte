@@ -79,6 +79,11 @@ async function purchasePlan(subscriptionType:string='') {
 
 <svelte:head>
 
+<script type="text/javascript">
+  twq('event', 'tw-onuuu-onuuy', {
+  });
+</script>
+
 <meta charset="utf-8" />
 
 <meta name="viewport" content="width=device-width" />
