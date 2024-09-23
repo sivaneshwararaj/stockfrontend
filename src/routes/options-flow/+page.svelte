@@ -85,6 +85,7 @@ async function handleDeleteRule(state) {
       ruleOfList = [...ruleOfList]
       break; // Exit the loop after deleting the element
     }
+
   }
 
   if(ruleOfList?.length === 0)
@@ -98,6 +99,7 @@ async function handleDeleteRule(state) {
   
   displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
   shouldLoadWorker.set(true);
+  await saveCookieRuleOfList()
 }
       
 
@@ -1238,7 +1240,7 @@ $: {
                         let:index
                         let:style
                         {style}
-                        class="tr {index % 2 === 0 ? 'bg-[#27272A]' : 'bg-[#09090B]'}"
+                        class="tr cursor-pointer {index % 2 === 0 ? 'bg-[#27272A]' : 'bg-[#09090B]'}"
                       >
                         <!-- Row data -->
                          
