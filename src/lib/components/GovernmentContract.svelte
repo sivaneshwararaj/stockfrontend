@@ -96,31 +96,27 @@ use([BarChart, GridComponent, CanvasRenderer])
         },
         
         yAxis: [
-        {
-            type: 'value',
-            splitLine: {
-            show: false, // Disable x-axis grid lines
-            },
-            axisLabel: {
-            color: '#fff', // Change label color to white
-                formatter: function (value, index) {
-                    if(index % 2) {
-                        return '$'+(value / denominator)?.toFixed(1) + unit; // Format value in millions        
-                    } else {
-                        return ''
-                    }
-                },
-            },
-        },
-        {
-            type: 'value',
-            show: false,
-            splitLine: {
-                    show: false, // Disable x-axis grid lines
-            },
-            position: 'right',
-            
+         {
+          type: 'value',
+          splitLine: {
+                show: false, // Disable x-axis grid lines
           },
+          
+          axisLabel: {
+            show: false // Hide y-axis labels
+          }
+        },
+         {
+          type: 'value',
+          splitLine: {
+                show: false, // Disable x-axis grid lines
+          },
+          
+          axisLabel: {
+            show: false // Hide y-axis labels
+          },
+          position: 'right',
+        },
         ],
     series: [
         {

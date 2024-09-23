@@ -21,17 +21,6 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
     let displayMaxLobbying = 0;
     let displayYear = 'n/a';
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e3 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}
 
 
 function getPlotOptions() {
@@ -47,8 +36,6 @@ function getPlotOptions() {
     valueList?.push(item?.amount);
     });
 
-
-    const {unit, denominator } = normalizer(Math.max(...valueList) ?? 0)
 
     const option = {
     silent: true,
@@ -71,26 +58,25 @@ function getPlotOptions() {
         }
         },
         yAxis: [
-        {
-            type: 'value',
-            splitLine: {
-            show: false, // Disable x-axis grid lines
-            },
-            axisLabel: {
-            color: '#fff', // Change label color to white
-                formatter: function (value) {
-                return '$'+(value / denominator)?.toFixed(1) + unit; // Format value in millions
-                },
-            },
+         {
+          type: 'value',
+          splitLine: {
+                show: false, // Disable x-axis grid lines
+          },
+          
+          axisLabel: {
+            show: false // Hide y-axis labels
+          }
         },
         ],
     series: [
         {
-        data: valueList,
-        type: 'bar',
-        itemStyle: {
+          name: 'Spending [$]',
+          data: valueList,
+          type: 'bar',
+          itemStyle: {
             color: '#F8901E' // Change bar color to white
-        }
+          }
         }
     ]
     };
