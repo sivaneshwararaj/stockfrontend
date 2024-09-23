@@ -352,7 +352,7 @@ rawData?.forEach(item => {
                           Time to consider the "Inverse Cramer" strategy?
                         </Card.Description>
                       </Card.Header>
-                      <Card.Content class="w-full h-fit relative">
+                      <Card.Content class="w-full h-[170px] sm:h-fit relative">
                         <Lazy>
                             <div class="w-full h-[250px] absolute right-0 -top-14">
                             <Chart {init} options={optionGraphWinrate} class="chart" />
