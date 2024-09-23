@@ -8,10 +8,10 @@
   import InfoModal from "$lib/components/InfoModal.svelte";
 
   export let userTier;
+  export let revenueSegmentation = [];
 
   let isLoaded = false;
 
-  let revenueSegmentation = [];
 
   let data = [];
   let geographicList = [];
@@ -119,7 +119,7 @@
       $revenueSegmentationComponent = false;
     }
   }
-
+  /*
   const getRevenueSegmentation = async (ticker) => {
     // Get cached data for the specific tickerID
     const cachedData = getCache(ticker, "getRevenueSegmentation");
@@ -142,6 +142,7 @@
       setCache(ticker, revenueSegmentation, "getRevenueSegmentation");
     }
   };
+  */
 
   $: {
     if ($stockTicker && typeof window !== "undefined") {
@@ -151,16 +152,7 @@
       geographicList = [];
       totalProductRevenue = 0;
       totalGeographicRevenue = 0;
-      const ticker = $stockTicker;
-
-      const asyncFunctions = [getRevenueSegmentation(ticker)];
-      Promise.all(asyncFunctions)
-        .then((results) => {
-          prepareData(revenueSegmentation);
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
+      prepareData(revenueSegmentation);
       isLoaded = true;
     }
   }

@@ -3,9 +3,9 @@ import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
 export const load = async ({ locals, params }) => {
-  const getQuantStats = async () => {
-    const { apiKey, apiURL } = locals;
+  const { apiKey, apiURL } = locals;
 
+  const getQuantStats = async () => {
     const postData = {
       ticker: params.tickerID,
     };
@@ -25,9 +25,30 @@ export const load = async ({ locals, params }) => {
     return output;
   };
 
+  const getRevenueSegmentation = async () => {
+    const postData = {
+      ticker: params.tickerID,
+    };
+
+    // make the POST request to the endpoint
+    const response = await fetch(apiURL + "/revenue-segmentation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const output = await response.json();
+
+    return output;
+  };
+
   // Make sure to return a promise
   return {
     getQuantStats: await getQuantStats(),
+    getRevenueSegmentation: await getRevenueSegmentation(),
   };
 };
 

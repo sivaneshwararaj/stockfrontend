@@ -540,7 +540,7 @@ onMount( async() => {
 
 
 
-
+          <!--
           <div class="grid gap-4 sm:gap-8 sm:grid-cols-3 text-start">
             <Card.Root class="sm:col-span-2 overflow-x-scroll overflow-hidden overflow-y-scroll">
               <Card.Header class="flex flex-row items-center">
@@ -617,6 +617,9 @@ onMount( async() => {
               </Card.Content>
             </Card.Root>
           </div>
+          -->
+
+          
         </main>
       
         

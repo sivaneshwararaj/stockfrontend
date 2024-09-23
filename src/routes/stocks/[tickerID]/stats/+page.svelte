@@ -208,7 +208,7 @@ updateYearRange()
         <!--Start RevenueSegmentation-->
         <Lazy>
           <div class="w-full pt-10 sm:pb-6 sm:pt-6 m-auto {!$revenueSegmentationComponent ? 'hidden' : ''}">
-              <RevenueSegmentation userTier={data?.user?.tier} />
+              <RevenueSegmentation userTier={data?.user?.tier} revenueSegmentation={data?.getRevenueSegmentation}/>
           </div>
         </Lazy>
         <!--End RevenueSegmentation-->
