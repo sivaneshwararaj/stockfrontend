@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import {screenWidth, numberOfUnreadNotification, etfTicker, stockTicker, isOpen } from '$lib/store';
+  import {screenWidth, numberOfUnreadNotification, isOpen } from '$lib/store';
   import notifySound from '$lib/audio/options-flow-reader.mp3';
   //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import { abbreviateNumber,cn } from '$lib/utils';
@@ -27,6 +26,8 @@
 
   let displayRules = [];
   let filterQuery = '';
+  let animationClass = ''
+  let animationId = '';
   let socket: WebSocket | null = null; // Initialize socket as null
   
   let syncWorker: Worker | undefined;
@@ -748,7 +749,21 @@ async function addToWatchlist(itemId) {
         (item) => item !== itemId);
     } else {
       // Add ticker to the watchlist.
+      animationId = itemId
+      animationClass = 'heartbeat';
+      const removeAnimation = () => {
+        animationId = '';
+        animationClass = '';
+  	  };
       optionsWatchlist.optionsId = [...optionsWatchlist?.optionsId, itemId];
+      const heartbeatElement = document.getElementById(itemId);
+      if (heartbeatElement) {
+        // Only add listener if it's not already present
+        if (!heartbeatElement.classList.contains('animation-added')) {
+          heartbeatElement.addEventListener('animationend', removeAnimation);
+          heartbeatElement.classList.add('animation-added'); // Prevent re-adding listener
+        }
+      }
     }
     
 
@@ -761,7 +776,6 @@ async function addToWatchlist(itemId) {
     });
 
     optionsWatchlist.id = await response.json();
-    console.log(optionsWatchlist)
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -1300,8 +1314,8 @@ $: {
                           {displayedData[index]?.ticker}
                         </a>
 
-                        <div on:click|stopPropagation ={() => addToWatchlist(displayedData[index]?.id)} style="justify-content: center;" class="td {optionsWatchlist.optionsId?.includes(displayedData[index]?.id) ? 'text-[#FBCE3C]' : 'text-white'}">
-                          <svg class="w-5 h-5 inline-block cursor-pointer flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                        <div id={displayedData[index]?.id} on:click|stopPropagation ={() => addToWatchlist(displayedData[index]?.id)} style="justify-content: center;" class="td {optionsWatchlist.optionsId?.includes(displayedData[index]?.id) ? 'text-[#FBCE3C]' : 'text-white'}">
+                          <svg class="{displayedData[index]?.id === animationId ? animationClass : ''} w-5 h-5 inline-block cursor-pointer flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
                         </div>
 
                         <div style="justify-content: center;" class="td text-sm sm:text-[1rem] text-white text-start">
@@ -1697,4 +1711,33 @@ $: {
       white-space: nowrap;
       border-bottom: 1px solid #09090B;
   }
+
+.heartbeat
+{
+
+  animation: heartbeat-animation 0.3s;
+  animation-timing-function: ease-in-out;
+
+}
+
+@keyframes heartbeat-animation {
+  0% {
+    transform: rotate(0deg) scale(0.95);
+  }
+  25% {
+    transform: rotate(10deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(0deg) scale(1.2);
+  }
+  75% {
+    transform: rotate(-10deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(0deg) scale(0.95);
+  }
+}
+
+
+
 </style>
