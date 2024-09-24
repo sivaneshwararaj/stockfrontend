@@ -210,7 +210,7 @@ onMount(async () => {
             <thead>
               <tr class="">
                 <td class="text-slate-200 font-semibold text-sm text-start">Time</td>
-                <td class="text-slate-200 font-semibold text-sm text-start">Symbol</td>
+                <th class="text-slate-200 bg-[#09090B] font-semibold text-sm text-start">Symbol</th>
                 <td class="text-slate-200 font-semibold text-sm text-start">Date</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">Expiry</td>
                 <td class="text-slate-200 font-semibold text-sm text-end">DTE</td>
@@ -227,7 +227,7 @@ onMount(async () => {
               </tr>
             </thead>
             <tbody>
-              {#each optionsWatchlist as item}
+              {#each optionsWatchlist as item, index}
               <!-- row -->
               <tr class="odd:bg-[#27272A] border-b-[#09090B]">
                 
@@ -235,16 +235,18 @@ onMount(async () => {
                   {formatTime(item?.time)}
                 </td>
 
-                <td on:click={() => handleFilter(item?.id)} class="flex flex-row items-center text-sm sm:text-[1rem] text-start">
-                    <input type="checkbox" checked={deleteOptionsId?.includes(item?.id) ?? false} class="{!editMode ? 'hidden' : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3" />
+                <th on:click={() => handleFilter(item?.id)} class="{index % 2 ? 'bg-[#09090B]' : 'bg-[#27272A]'} font-normal text-sm sm:text-[1rem] text-start">
+                  <div class=" flex flex-row items-center">  
+                  <input type="checkbox" checked={deleteOptionsId?.includes(item?.id) ?? false} class="{!editMode ? 'hidden' : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3" />
                     {#if !editMode}
-                    <a class="inline-block  sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]" href={(item?.underlying_type === 'stock') ? `/stocks/${item?.ticker}` : `/etf/${item?.ticker}`} on:click|stopPropagation>
+                    <a class="inline-block sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]" href={(item?.underlying_type === 'stock') ? `/stocks/${item?.ticker}` : `/etf/${item?.ticker}`} on:click|stopPropagation>
                         {item?.ticker}
                     </a>
                     {:else}
                     <span class="text-blue-400 cursor-pointer">{item?.ticker}</span>
                     {/if}
-                </td>
+                    </div>
+                </th>
                 <td class="text-white text-sm sm:text-[1rem] text-start">
                   {formatDate(item?.date)}
                 </td>
