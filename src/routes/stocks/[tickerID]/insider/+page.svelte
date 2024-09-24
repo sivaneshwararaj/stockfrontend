@@ -106,11 +106,11 @@ const transactionStyles = {
      
 
 
-<section class="w-full bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0">
-  <div class="h-full overflow-hidden">
-      <div class="relative flex justify-center items-center overflow-hidden">
-            <div class="sm:p-7 w-full mt-2 sm:mt-0">
-                  <div class="mb-6">
+<section class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full">
+    <div class="flex justify-center m-auto h-full overflow-hidden w-full">
+        <div class="relative flex justify-center items-center overflow-hidden w-full">
+              <div class="xl:p-7 w-full m-auto mt-2">
+                    <div class="mb-6">
                       <h1 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
                           Insider Trading
                       </h1>
@@ -125,36 +125,6 @@ const transactionStyles = {
                             No trading history available for {$displayCompanyName}. Likely no insider trading has happened yet.
                           {/if}
                         </div>
-                        
-                        {#if insiderTradingList?.length !== 0}
-                        <!--
-                        <div class="text-white text-[1rem] text-center m-auto w-full pb-3">
-                          We can divide four types of insider transactions:
-                        
-                          <div class="flex flex-row items-center justify-center">
-                            Buy, Sell,
-                            
-                            <label for="grantInfo" class="ml-1 cursor-pointer font-medium">
-                              Grant
-                            </label>
-                            <InfoModal
-                              title={"Stock Grant"}
-                              content={"A stock grant occurs when a company compensates an employee by offering them equity, or when an insider gifts shares. In essence, the company grants ownership of shares, or an insider transfers shares. These grants may involve common stock shares, preferred shares, or another class of shares."}
-                              id={"grantInfo"}
-                            />
-                            <label for="exerciseInfo" class="ml-6 cursor-pointer font-medium">
-                              Exercise
-                            </label>
-                            <InfoModal
-                              title={"Exercise"}
-                              content={`Exercising an option involves the owner granting themselves the right to buy or sell a specific number of shares at a future date. Essentially, the owner converts the options into shares, which they can subsequently trade. When the owner opts to buy or sell the underlying instrument rather than letting the contract expire unused or closing the position, they are said to be "exercising the option."`}
-                              id={"exerciseInfo"}
-                            />.
-                            </div>
-                        
-                          </div>
-                          -->
-                        {/if}
 
                     </div>
       
@@ -162,55 +132,7 @@ const transactionStyles = {
 
                       {#if insiderTradingList?.length !== 0}
 
-                    <!--
-                    {#if Object?.keys(options)?.length !== 0}
-                      <div class="app w-full">
-                        <Chart {init} options={options} class="chart" />
-                      </div>
-
-
-                      <div class="grid grid-cols-3 sm:grid-cols-5 gap-y-6 sm:gap-y-4 sm:gap-4 flex-shrink-0 mx-auto mb-10 w-full">
-
-                        <div class="flex flex-col sm:flex-row items-center justify-center">
-                          <div class="h-full bg-gray-800 transform -translate-x-1/2 " aria-hidden="true"></div>
-                          <div class="flex-shrink-0 w-3 h-3 bg-[#fff] border-4 box-content border-gray-900 rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
-                          <span class="mt-2 sm:mt-0 text-white text-xs sm:text-[1rem] inline-block">
-                              Stock Price
-                          </span>
-                      </div>
-
-                        <div class="flex flex-col sm:flex-row items-center justify-center">
-                          <div class="h-full bg-gray-800 transform -translate-x-1/2 " aria-hidden="true"></div>
-                          <div class="flex-shrink-0 w-3 h-3 bg-[#0FC008] border-4 box-content border-gray-900 rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
-                          <span class="mt-2 sm:mt-0 text-white text-xs sm:text-[1rem] inline-block">
-                              Bought
-                          </span>
-                      </div>
-                        <div class="flex flex-col sm:flex-row items-center justify-center">
-                            <div class="h-full bg-gray-800 transform -translate-x-1/2 " aria-hidden="true"></div>
-                            <div class="flex-shrink-0 w-3 h-3 bg-[#FF2F1F] border-4 box-content border-gray-900 rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
-                            <span class="mt-2 sm:mt-0 text-white text-xs sm:text-[1rem] sm:font-medium inline-block">
-                                Sold
-                            </span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row items-center justify-center">
-                          <div class="h-full bg-gray-800 transform -translate-x-1/2 " aria-hidden="true"></div>
-                          <div class="flex-shrink-0 w-3 h-3 bg-[#8f95a1] border-4 box-content border-gray-900 rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
-                          <span class="mt-2 sm:mt-0 text-white text-xs sm:text-[1rem] inline-block">
-                              Grant
-                          </span>
-                      </div>
-                      <div class="flex flex-col sm:flex-row items-center justify-center">
-                        <div class="h-full bg-gray-800 transform -translate-x-1/2 " aria-hidden="true"></div>
-                        <div class="flex-shrink-0 w-3 h-3 bg-[#F8901E] border-4 box-content border-gray-900 rounded-full transform sm:-translate-x-1/2" aria-hidden="true"></div>
-                        <span class="mt-2 sm:mt-0 text-white text-xs sm:text-[1rem] inline-block">
-                            Exercise
-                        </span>
-                    </div>
-                    </div>
-
-                    {/if}
-                     -->
+               
 
                     
                     {#if Object?.keys(statistics)?.length !== 0 }

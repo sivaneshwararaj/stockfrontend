@@ -81,21 +81,6 @@ let activeIdx = 0;
     
     let displayTimePeriod = 'threeMonths'
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}
 
     function formatDate(dateStr) {
       // Parse the input date string (YYYY-mm-dd)
@@ -179,15 +164,26 @@ function plotData(callData, putData) {
             }
         ],
         yAxis: [
-        {
-            type: 'value',
-            splitLine: {
-                show: false,
-            },
-            axisLabel: {
-                show: false // Hide the y-axis label
-            }
-        }
+    {
+      type: 'value',
+      splitLine: {
+            show: false, // Disable x-axis grid lines
+      },
+      
+       axisLabel: {
+        show: false // Hide y-axis labels
+      }
+    },
+    { 
+        type: 'value',
+        splitLine: {
+            show: false, // Disable x-axis grid lines
+        },
+        position: 'right',
+        axisLabel: {
+          show: false // Hide y-axis labels
+       },
+    },
     ],
         series: [
             {
@@ -232,8 +228,6 @@ function getEXPlot(state) {
 
   });
 
-    const {unit, denominator } = normalizer(Math.max(...valueList) ?? 0)
-
 
     const option = {
     silent: true,
@@ -266,41 +260,25 @@ function getEXPlot(state) {
         }
     },
     yAxis: [
-      {
+    {
       type: 'value',
       splitLine: {
             show: false, // Disable x-axis grid lines
       },
-      position: 'left',
-      axisLabel: {
-        color: '#fff',
-          formatter: function (value, index) {
-            if (index % 2 === 0) {
-              return value?.toFixed(2); // Format the sentiment value
-            } else {
-                  return ''; // Hide this tick
-              }
-          }
+      
+       axisLabel: {
+        show: false // Hide y-axis labels
       }
     },
     { 
-      position: 'right',
         type: 'value',
         splitLine: {
             show: false, // Disable x-axis grid lines
         },
+        position: 'right',
         axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    value = Math.max(value, 0);
-                    return (value / denominator)?.toFixed(1) + unit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-        },
+          show: false // Hide y-axis labels
+       },
     },
     ],
     series: [
@@ -315,7 +293,7 @@ function getEXPlot(state) {
             showSymbol: false
         },
         {
-            name: 'GEX',
+            name: state?.toUpperCase(),
             data: valueList,
             type: 'bar',
             yAxisIndex: 1,
@@ -552,7 +530,7 @@ $: {
         <section class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full">
             <div class="flex justify-center m-auto h-full overflow-hidden w-full">
                 <div class="relative flex justify-center items-center overflow-hidden w-full">
-                      <div class="xl:p-7 w-full m-auto mt-2 sm:mt-0">
+                      <div class="xl:p-7 w-full m-auto mt-2 ">
                             <div class="mb-6">
                                 <h2 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
                                     Unsual Options Activity
