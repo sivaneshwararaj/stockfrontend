@@ -5,6 +5,7 @@
   import {
     getCache,
     setCache,
+    fomcImpactComponent,
     corporateLobbyingComponent,
     taRatingComponent,
     swapComponent,
@@ -1106,6 +1107,14 @@ async function exportData(timePeriod:string) {
             <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pt-6 {!$governmentContractComponent ? 'hidden' : ''}">
               {#await import("$lib/components/GovernmentContract.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
+              {/await}
+            </div>
+          </Lazy>
+
+          <Lazy>
+            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$fomcImpactComponent ? 'hidden' : ''}">
+              {#await import("$lib/components/FOMCImpact.svelte") then { default: Comp }}
+                <svelte:component this={Comp} />
               {/await}
             </div>
           </Lazy>
