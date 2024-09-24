@@ -40,13 +40,19 @@ export const load = async ({ locals, params }) => {
 
     let output = await response.json();
 
-    output = output?.map((item) => ({
-      ...item,
-      transactionType:
+    output = output?.reduce((acc, item) => {
+      const newTransactionType =
         typeof transactionTypeMap[item?.transactionType] === "function"
           ? transactionTypeMap[item?.transactionType](item)
-          : transactionTypeMap[item?.transactionType] || "n/a",
-    }));
+          : transactionTypeMap[item?.transactionType];
+
+      // Only include items with 'Bought' or 'Sold'
+      if (newTransactionType === "Bought" || newTransactionType === "Sold") {
+        acc.push({ ...item, transactionType: newTransactionType });
+      }
+
+      return acc;
+    }, []);
 
     return output;
   };
@@ -71,42 +77,9 @@ export const load = async ({ locals, params }) => {
     return output;
   };
 
-  async function historicalPrice() {
-    const postData = {
-      ticker: params.tickerID,
-      timePeriod: "max",
-    };
-
-    const response = await fetch(apiURL + "/historical-price", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": apiKey,
-      },
-      body: JSON.stringify(postData),
-    });
-
-    const output = (await response?.json()) ?? [];
-
-    //Adding this would create a bug hence I cant use the historicalPrice endpoint such as in +page.svelte but rather need to call
-    // it again without modification.
-    /*
-        output= (data) => map(({ time, open, high, low, close }) => ({ 
-            time: Date.parse(time), 
-            open, 
-            high, 
-            low, 
-            close 
-        }));
-        */
-
-    return output;
-  }
-
   // Make sure to return a promise
   return {
     getInsiderTrading: await getInsiderTrading(),
     getInsiderTradingStatistics: await getInsiderTradingStatistics(),
-    getHistoricalPrice: await historicalPrice(),
   };
 };

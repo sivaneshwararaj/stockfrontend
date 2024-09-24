@@ -1,18 +1,9 @@
 <script lang="ts">
 import { displayCompanyName, numberOfUnreadNotification, stockTicker } from '$lib/store';
-import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 import { formatString, abbreviateNumber } from '$lib/utils';
-import InfoModal from '$lib/components/InfoModal.svelte';
 import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-import { Chart } from 'svelte-echarts'
-import { init, use } from 'echarts/core'
-import { LineChart, BarChart } from 'echarts/charts'
-import { GridComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
-use([LineChart, BarChart, GridComponent, CanvasRenderer])
+import { onMount } from 'svelte';
 
-
-  import { onMount } from 'svelte';
 
 
   export let data;
@@ -25,20 +16,13 @@ use([LineChart, BarChart, GridComponent, CanvasRenderer])
   let buySharesPercentage = Math.floor(buyShares/(buyShares+soldShares)*100);
   let soldSharesPercentage = 100 - buySharesPercentage;
 
-  let options = {};
 
-  let rawData = [];
-  let insiderTradingList = [];
-  let dataPoints = [];
-  let dates = [];
-  let soldList = [];
-  let boughtList = [];
-  let grantList = [];
-  let exerciseList = [];
+  let rawData = data?.getInsiderTrading?.sort(
+    (a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate)
+  );
+  let insiderTradingList = rawData?.slice(0,20)
 
 
-  //Find Latest date to filter historicalPrice:
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   function backToTop() {
     window.scrollTo({
@@ -65,222 +49,32 @@ function extractOfficeInfo(inputString) {
     }
 }
 
-
-
-async function infiniteHandler({ detail: { loaded, complete } }) 
-{
-  if (insiderTradingList?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = insiderTradingList?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 20);
-      insiderTradingList = [...insiderTradingList, ...newArticles];
-      loaded();
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && insiderTradingList?.length !== rawData?.length) {
+        const nextIndex = insiderTradingList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+        insiderTradingList = [...insiderTradingList, ...filteredNewResults];
     }
-}
-
-
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
   }
-}
 
 
-let syncWorker: Worker | undefined = undefined;
-
-// Handling messages from the worker
-const handleMessage = async (event) => {
-    const finalData = event.data?.finalData
-
-    rawData = finalData?.rawData;
-    insiderTradingList = rawData?.slice(0,20) ?? [];
-    dataPoints = finalData?.dataPoints;
-    dates = finalData?.dates;
-    soldList = finalData?.barChartData?.sold;
-    grantList = finalData?.barChartData?.grant;
-    exerciseList = finalData?.barChartData?.exercise;
-    boughtList = finalData?.barChartData?.bought;
-
-    if(dataPoints?.length !== 0 && dates?.length !==0) {
-
-      const maxBought = Math.max(...boughtList) ?? 0;
-      const maxSold = Math.max(...soldList) ?? 0;
-      const maxGrant = Math.max(...grantList) ?? 0;
-      const maxExercise = Math.max(...exerciseList) ?? 0;
-
-      const maxAmongAll = Math.max(maxBought, maxSold, maxGrant, maxExercise);
-      const { unit, denominator } = normalizer(maxAmongAll);
-
-
-      options =  {
-        silent: true,
-        animation: false,
-      grid: {
-        left: '0%',
-        right: '2%',
-        top: '10%',
-        bottom: '10%',
-        containLabel: true,
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: dates,
-          axisLabel: {
-            color: '#fff',
-              formatter: function (value) {
-                  // Assuming dates are in the format 'yyyy-mm-dd'
-                  const dateParts = value.split('-');
-                  const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
-                  const year = parseInt(dateParts[0]);
-                  return `${monthNames[monthIndex]} ${year}`;
-              }
-          }
-      },
-      yAxis: [
-        {
-          type: 'value',
-          axisLabel: {
-            color: '#fff',
-            formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    return '$'+`${value}` // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-            }
-          },
-          splitLine: {
-              show: false, // Disable x-axis grid lines
-              },
-          },
-        {
-            type: 'value',
-            axisLabel: {
-              formatter: function (value, index) {
-                // Display every second tick
-                if (index % 2 === 0) {
-                    value = Math.max(value, 0);
-                    return (value / denominator)?.toFixed(0) + unit; // Format value in millions
-                } else {
-                    return ''; // Hide this tick
-                }
-              },
-            },
-            splitLine: {
-            show: false, // Disable x-axis grid lines
-            },
-        },
-        {
-            type: 'value',
-            axisLabel: {
-              formatter: '{value} %',
-            },
-            splitLine: {
-            show: false, // Disable x-axis grid lines
-            },
-        },
-        ],
-      series: [
-        {
-          name: 'Price',
-          type: 'line',
-          // prettier-ignore
-          data: dataPoints,
-          itemStyle: {
-            color: "#fff"
-          }
-          /*
-          markArea: {
-            data: markAreaData
-          }
-          */
-        },
-        {
-            name: '',
-            data: soldList,
-            type: 'bar',
-            areaStyle: {opacity: 1},
-            yAxisIndex: 1,
-            itemStyle: {
-            color: (params) => {
-                // Set color based on positive or negative value
-                return params.data >= 0 ? 'rgb(15, 192, 8)' : 'rgb(255, 47, 31)';
-            },
-            },
-        },
-        {
-            name: '',
-            data: boughtList,
-            type: 'bar',
-            areaStyle: {opacity: 1},
-            yAxisIndex: 1,
-            itemStyle: {
-            color: (params) => {
-                // Set color based on positive or negative value
-                return params.data >= 0 ? '#37C97D' : '';
-            },
-            },
-        },
-        {
-            name: '',
-            data: grantList,
-            type: 'bar',
-            yAxisIndex: 1,
-            areaStyle: {opacity: 1},
-            itemStyle: {
-            color: (params) => {
-                // Set color based on positive or negative value
-                return params.data >= 0 ? '#8f95a1' : '';
-            },
-            },
-        },
-        {
-            name: '',
-            data: exerciseList,
-            type: 'bar',
-            areaStyle: {opacity: 1},
-            yAxisIndex: 1,
-            itemStyle: {
-            color: (params) => {
-                // Set color based on positive or negative value
-                return params.data >= 0 ? '#F8901E' : '';
-            },
-            },
-        },
-      ]
+onMount(() => {
+  isLoaded = true;
+   window.addEventListener('scroll', handleScroll);
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
       };
-    }
-    isLoaded = true;
-
-};
-
-const loadWorker = async () => {
-  const SyncWorker = await import('./workers/insiderWorker?worker');
-  syncWorker = new SyncWorker.default();
-  syncWorker.postMessage({ message: data?.getInsiderTrading, historicalPrice: data?.getHistoricalPrice});
-  syncWorker.onmessage = handleMessage;
-
-
-};
-
-onMount(async() => {
-  await loadWorker()
-  
 })
 
-
-
+const transactionStyles = {
+    'Bought': { text: 'Bought', class: 'text-[#37C97D]', border: 'border-[#37C97D]' },
+    'Grant': { text: 'Grant', class: 'text-[#F8901E]', border: 'border-[#F8901E]'},
+    'Sold': { text: 'Sold', class: 'text-[#FF2F1F]', border: 'border-[#FF2F1F]'},
+    'Exercise': { text: 'Exercise', class: 'text-[#F8901E]', border: 'border-[#v]'},
+    'n/a': { text: 'n/a', class: 'text-gray-300'}
+  };
 
 </script>
 
@@ -333,6 +127,7 @@ onMount(async() => {
                         </div>
                         
                         {#if insiderTradingList?.length !== 0}
+                        <!--
                         <div class="text-white text-[1rem] text-center m-auto w-full pb-3">
                           We can divide four types of insider transactions:
                         
@@ -357,7 +152,8 @@ onMount(async() => {
                             />.
                             </div>
                         
-                        </div>
+                          </div>
+                          -->
                         {/if}
 
                     </div>
@@ -366,6 +162,7 @@ onMount(async() => {
 
                       {#if insiderTradingList?.length !== 0}
 
+                    <!--
                     {#if Object?.keys(options)?.length !== 0}
                       <div class="app w-full">
                         <Chart {init} options={options} class="chart" />
@@ -413,9 +210,11 @@ onMount(async() => {
                     </div>
 
                     {/if}
+                     -->
+
                     
                     {#if Object?.keys(statistics)?.length !== 0 }
-                    <h3 class="text-white text-xl font-semibold pt-5">
+                    <h3 class="text-white text-lg font-semibold pt-5">
                       Q{statistics?.quarter} {statistics?.year} Insider Statistics
                     </h3>
                      <!--Start Widget-->
@@ -521,10 +320,10 @@ onMount(async() => {
                             <thead>
                               <tr class="bg-[#09090B] shadow-md">
                                 <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
-                                  Person
+                                  Name
                                 </th>
                                 <th class="text-end bg-[#09090B] text-white text-[1rem] font-semibold">
-                                  Transaction Date
+                                  Date
                                 </th>
                                 <th class="text-end bg-[#09090B]  text-white text-[1rem] font-semibold">
                                   Shares
@@ -532,7 +331,7 @@ onMount(async() => {
                                 <th class="text-end bg-[#09090B]  text-white text-[1rem] font-semibold">
                                   Price
                                 </th>
-                                <th class="text-white font-semibold text-end text-[1rem]">Type</th>
+                                <th class="text-white font-semibold text-end text-[1rem]">Value</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -542,10 +341,10 @@ onMount(async() => {
                                 <td class="text-white text-sm sm:text-[1rem] border-b border-[#09090B] whitespace-nowrap">
                                   <div class="flex flex-col">
                                     <span class="">{formatString(item?.reportingName)?.replace('/de/','')}</span>
-                                    <span class="text-sm">{extractOfficeInfo(item?.typeOfOwner)}</span>
+                                    <span class="text-sm text-white/80">{extractOfficeInfo(item?.typeOfOwner)}</span>
                                   </div>
                                 </td>
-      
+                               
                                   <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]">
                                       {new Date(item?.transactionDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
                                   </td>
@@ -557,17 +356,17 @@ onMount(async() => {
                                     ${item?.price?.toFixed(2)}
                                   </td>
                                   <td class="font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]">
-                                    {#if item?.transactionType === 'Bought'}
-                                      <span class="text-[#37C97D]">Bought</span>
-                                    {:else if item?.transactionType === 'Grant'}
-                                      <span class="text-white">Grant</span>
-                                    {:else if item?.transactionType === 'Sold'}
-                                      <span class="text-[#FF2F1F]">Sold</span>
-                                    {:else if item?.transactionType === 'Exercise'}
-                                      <span class="text-[#F8901E]">Exercise</span>
-                                    {:else if item?.transactionType === 'n/a'}
+                                    
+                                   <div class="flex flex-row items-center justify-end">
+                                    {#if transactionStyles[item?.transactionType]}
+                                      <div class="{transactionStyles[item?.transactionType]?.class}">{abbreviateNumber(item?.securitiesTransacted * item?.price, true)}</div>
+                                      <div class="{transactionStyles[item?.transactionType]?.class} {transactionStyles[item?.transactionType]?.border} ml-2 px-1.5 py-1.5 border text-center rounded-lg text-xs font-semibold">
+                                        {transactionStyles[item?.transactionType].text}
+                                      </div>
+                                    {:else}
                                       <span class="text-gray-300">n/a</span>
                                     {/if}
+                                  </div>
                                   </td>
                               </tr>
                             {/each}
@@ -581,10 +380,6 @@ onMount(async() => {
                       <label on:click={backToTop} class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-slate-800 rounded-full">
                         Back to top
                       </label>
-                      {/if}
-
-                      {#if data?.user?.tier === 'Pro'}
-                        <InfiniteLoading on:infinite={infiniteHandler} />
                       {/if}
 
                       <UpgradeToPro data={data} title="Access {$displayCompanyName}'s insider transactions to track executive selling and purchasing activity"/>
