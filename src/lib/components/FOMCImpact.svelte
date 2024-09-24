@@ -1,5 +1,5 @@
 <script lang="ts">
-import { fomcImpactComponent, displayCompanyName, stockTicker, assetType, etfTicker, screenWidth, getCache, setCache } from '$lib/store';
+import { fomcImpactComponent, displayCompanyName, stockTicker, assetType, etfTicker, getCache, setCache } from '$lib/store';
 import InfoModal from '$lib/components/InfoModal.svelte';
 import { Chart } from 'svelte-echarts';
 import { init, use } from 'echarts/core';
@@ -122,14 +122,14 @@ const getFOMCImpact = async (ticker: string) => {
 };
 
 $: {
-   if($assetType === 'stock' ? $stockTicker :$etfTicker && typeof window !== 'undefined') {
+   if($assetType === 'stock' ? $stockTicker : $etfTicker && typeof window !== 'undefined') {
     isLoaded = false;
     showFullStats = false;
     tableList = []
-    const asyncFunctions = [getFOMCImpact($stockTicker)];
+    const asyncFunctions = [getFOMCImpact($assetType === 'stock' ? $stockTicker : $etfTicker)];
     Promise.all(asyncFunctions)
       .then(() => {
-        if (rawData?.length !== 0) {
+        if (Object?.keys(rawData)?.length !== 0) {
           optionsData = getPlotOptions();
         }
       })
