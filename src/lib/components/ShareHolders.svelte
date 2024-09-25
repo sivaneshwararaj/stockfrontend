@@ -3,7 +3,6 @@
 import { Chart } from 'svelte-echarts'
 import { shareholderComponent, stockTicker, getCache, setCache, displayCompanyName} from '$lib/store';
 import { formatString } from '$lib/utils';
-import { goto } from '$app/navigation';
 import { abbreviateNumber } from '$lib/utils';
 import InfoModal from '$lib/components/InfoModal.svelte';
 
@@ -335,7 +334,7 @@ let charNumber = 30;
                       <thead>
                         <tr>
                           <th class="text-white shadow-md font-semibold text-sm text-start bg-[#09090B]">Institute</th>
-                          <th class="text-white shadow-md font-semibold text-sm text-center bg-[#09090B]">Ownership</th>
+                          <th class="text-white shadow-md font-semibold text-sm text-end bg-[#09090B]">Ownership</th>
                           <th class="text-white shadow-md font-semibold text-sm text-end hidden sm:table-cell bg-[#09090B]">Shares</th>
                           <th class="text-white shadow-md font-semibold text-sm text-end hidden sm:table-cell bg-[#09090B]">Market Value</th>
                           <th class="text-white shadow-md font-semibold text-sm text-end  bg-[#09090B]">Portfolio</th>
@@ -344,13 +343,15 @@ let charNumber = 30;
                       <tbody>
                         {#each (showFullStats ? shareholderList?.slice(0,10) : shareholderList?.slice(0,3)) as item,index}
                         {#if item?.investorName?.length > 0}
-                        <tr on:click={() => goto('/hedge-funds/'+item?.cik)} class="border-y border-gray-800 odd:bg-[#27272A] {index === 2 && !showFullStats && shareholderList?.length > 3 ? 'opacity-[0.5]' : '' } sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] cursor-pointer">
+                        <tr class="border-y border-gray-800 odd:bg-[#27272A] {index === 2 && !showFullStats && shareholderList?.length > 3 ? 'opacity-[0.5]' : '' } sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]">
                          
-                            <td class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap">
-                             {item?.investorName?.length > charNumber ? formatString(item?.investorName?.slice(0,charNumber)) + "..." : formatString(item?.investorName)}
+                            <td class="font-medium text-sm sm:text-[1rem] whitespace-nowrap">
+                             <a href={'/hedge-funds/'+item?.cik} class="sm:hover:text-white text-blue-400">
+                                 {item?.investorName?.length > charNumber ? formatString(item?.investorName?.slice(0,charNumber)) + "..." : formatString(item?.investorName)}
+                            </a>
                             </td>
                         
-                            <td class="text-white text-center font-medium text-sm sm:text-[1rem] whitespace-nowrap">
+                            <td class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap">
                                 {item?.ownership <= 0.01 ? "< 0.01%" : item?.ownership?.toFixed(2)+'%'}
                             </td>
 
