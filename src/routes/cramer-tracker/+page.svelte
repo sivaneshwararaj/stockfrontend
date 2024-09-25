@@ -28,6 +28,56 @@ use([GaugeChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer])
   let cumulativeList = []
   let winRate;
 
+  function sectorSelector(sector) {
+    let path;
+    switch(sector) {
+        case 'Financials':
+            path = "financial-sector";
+            break;
+        case 'Healthcare':
+            path = "healthcare-sector";
+            break;
+        case 'Information Technology':
+            path = "technology-sector";
+            break;
+        case 'Technology':
+            path = "technology-sector";
+            break;
+        case 'Financial Services':
+            path = "financial-sector";
+            break;
+        case 'Industrials':
+            path = "industrials-sector";
+            break;
+        case 'Energy':
+            path = "energy-sector";
+            break;
+        case 'Utilities':
+            path = "utilities-sector";
+            break;
+        case 'Consumer Cyclical':
+            path = "consumer-cyclical-sector";
+            break;
+        case 'Real Estate':
+            path = "real-estate-sector";
+            break;
+        case 'Basic Materials':
+            path = "basic-materials-sector";
+            break;
+        case 'Communication Services':
+            path = "communication-services-sector";
+            break;
+        case 'Consumer Defensive':
+            path = "consumer-defensive-sector";
+            break;
+        default:
+            // Handle default case if needed
+            break;
+    }
+    return path
+}
+
+
 async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
@@ -384,7 +434,7 @@ rawData?.forEach(item => {
                               <th class="text-end bg-[#09090B] text-white text-[1rem] font-semibold">
                                 Return Since
                               </th>
-                              <th class="hidden xl:table-cell text-end bg-[#09090B] text-white text-[1rem] font-semibold">
+                              <th class=" text-end bg-[#09090B] text-white text-[1rem] font-semibold">
                                 Sector
                               </th>
                             </tr>
@@ -450,8 +500,10 @@ rawData?.forEach(item => {
                                 {item?.returnSince > 0 ? '+' : ''}{item?.returnSince}%
                               </td>
 
-                              <td class="hidden xl:table-cell text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
-                                {item?.sector}
+                              <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium">
+                                <a href={"/list/"+sectorSelector(item?.sector)} class="sm:hover:text-white text-blue-400">
+                                  {item?.sector}
+                                </a>
                               </td>
   
                             </tr>
