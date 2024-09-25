@@ -115,10 +115,6 @@ function changeTab(index) {
 }
 
 
-// Helper function to calculate percentage difference
-function calculatePercentageDifference(startPrice, endPrice) {
-  return ((endPrice - startPrice) / startPrice) * 100;
-}
 
 // Helper function to get the last day of the quarter for a given date
 function getQuarterEndDate(date) {
@@ -143,30 +139,25 @@ function addSpyPerformance(data, spyPriceData) {
     date: getQuarterEndDate(item.date)
   }));
 
-  // Get the starting price from the first date in data
-  const startDate = quarterData[0].date;
-  const startSpyPrice = spyPriceMap.get(startDate);
-
-  if (startSpyPrice === undefined) {
-    console.warn(`Starting price for date ${startDate} not found in spyPriceData. Setting initial spyPerformance to 0.`);
-  }
-
+  // Map the spy price for each quarter-end date with previous and next prices
   return quarterData?.map((item, index) => {
-    const spyPrice = spyPriceMap.get(item.date);
+    const currentSpyPrice = spyPriceMap.get(item.date);
+    const previousSpyPrice = index > 0 ? spyPriceMap.get(quarterData[index - 1]?.date) : null;
+    const nextSpyPrice = index < quarterData.length - 1 ? spyPriceMap.get(quarterData[index + 1]?.date) : null;
 
-    if (spyPrice === undefined) {
+    if (currentSpyPrice === undefined) {
       console.warn(`Price for date ${item.date} not found in spyPriceData. Skipping spyPerformance calculation for this date.`);
       return {
         ...item,
-        spyPerformance: index === 0 ? 0 : null // Use null or any indicator for missing data
+        previousSpyPrice: previousSpyPrice,
+        nextSpyPrice: nextSpyPrice
       };
     }
 
-    const spyPerformance = index === 0 ? 0 : calculatePercentageDifference(startSpyPrice, spyPrice);
-
     return {
       ...item,
-      spyPerformance
+      previousSpyPrice: previousSpyPrice,
+      nextSpyPrice: nextSpyPrice
     };
   });
 }
@@ -196,21 +187,6 @@ function formatToFY(dateString) {
   return `FY${fiscalYearString} Q${quarter}`;
 }
 
-
-  
-  function normalizer(value) {
-    if (Math?.abs(value) >= 1e12) {
-      return { unit: 'T', denominator: 1e12 };
-    } else if (Math?.abs(value) >= 1e9) {
-      return { unit: 'B', denominator: 1e9 };
-    } else if (Math?.abs(value) >= 1e6) {
-      return { unit: 'M', denominator: 1e6 };
-    } else if (Math?.abs(value) >= 1e5) {
-      return { unit: 'K', denominator: 1e5 };
-    } else {
-      return { unit: '', denominator: 1 };
-    }
-  }
 
 
   const plotTabs = [
@@ -249,10 +225,18 @@ async function handleMode(i) {
       const dates = updatedData?.map(item => formatToFY(item?.date));
 
       const hedgeFundPerformance = updatedData?.map(item => item?.performancePercentage?.toFixed(2))
-      const spyPerformance = updatedData?.map(item => item?.spyPerformance?.toFixed(2))
+      const spyPerformance = updatedData?.map(item => {
+        const { nextSpyPrice, previousSpyPrice } = item;
 
-      const { unit, denominator } = normalizer(Math.max(...hedgeFundPerformance) ?? 0);
+        // Check if both prices exist before performing the calculation
+        if (nextSpyPrice != null && previousSpyPrice != null && previousSpyPrice !== 0) {
+          const percentageChange = ((nextSpyPrice / previousSpyPrice - 1) * 100);
+          return +percentageChange.toFixed(2); // Return the result as a number
+        }
 
+        // Return null or a default value if prices are missing or invalid
+        return null;
+      });
 
     const option = {
       silent: true,
@@ -262,7 +246,7 @@ async function handleMode(i) {
         hideDelay: 100, // Set the delay in milliseconds
       },
       grid: {
-          left: $screenWidth < 640 ? '0.5%' : '0%',
+          left: $screenWidth < 640 ? '0.5%' : '2%',
           right: $screenWidth < 640 ? '1%' : '10%',
           bottom: '0%',
           containLabel: true
@@ -276,21 +260,19 @@ async function handleMode(i) {
           },
           yAxis: [
           {
-              type: 'value',
-              splitLine: {
-              show: false, // Disable x-axis grid lines
-              },
-              axisLabel: {
-              color: '#fff', // Change label color to white
-              formatter: function (value) {
-                  return value >= 0 ? +(value / denominator)?.toFixed(0) + unit+'%' : ''; // Format value in millions
-                  },
-              },
+            type: 'value',
+            splitLine: {
+                  show: false, // Disable x-axis grid lines
+            },
+            
+            axisLabel: {
+              show: false // Hide y-axis labels
+            }
           },
           ],
       series: [
             {
-              name: 'SPY',
+              name: 'SPY [%]',
               data: spyPerformance,
               type: 'bar',
               showSymbol: false,
@@ -298,7 +280,7 @@ async function handleMode(i) {
                       color: '#FF9E21' // Change bar color to white
                 },
             },
-            {  name: 'Hedge Fund',
+            {  name: 'Hedge Fund [%]',
               data: hedgeFundPerformance,
               type: 'bar',
               showSymbol: false,
@@ -325,8 +307,6 @@ async function handleMode(i) {
 
       const hedgeFundValue = data?.map(item => item?.marketValue)
 
-      const { unit, denominator } = normalizer(Math.max(...hedgeFundValue) ?? 0);
-
 
     const option = {
       silent: true,
@@ -336,7 +316,7 @@ async function handleMode(i) {
         hideDelay: 100, // Set the delay in milliseconds
       },
       grid: {
-          left: $screenWidth < 640 ? '0.5%' : '0%',
+          left: $screenWidth < 640 ? '0.5%' : '2%',
           right: $screenWidth < 640 ? '1%' : '10%',
           bottom: '0%',
           containLabel: true
@@ -350,20 +330,18 @@ async function handleMode(i) {
           },
           yAxis: [
           {
-              type: 'value',
-              splitLine: {
-              show: false, // Disable x-axis grid lines
-              },
-              axisLabel: {
-              color: '#fff', // Change label color to white
-              formatter: function (value) {
-                  return value >= 0 ? '$'+(value / denominator)?.toFixed(0) + unit : ''; // Format value in millions
-                  },
-              },
+            type: 'value',
+            splitLine: {
+                  show: false, // Disable x-axis grid lines
+            },
+            
+            axisLabel: {
+              show: false // Hide y-axis labels
+            }
           },
           ],
       series: [
-            {  name: 'Hedge Fund',
+            {  name: 'Market Value',
               data: hedgeFundValue,
               type: 'bar',
               showSymbol: false,
