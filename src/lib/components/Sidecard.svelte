@@ -11,7 +11,8 @@ export let stockDeck;
 export let lastPrice;
 export let similarstock;
 export let topETFHolder;
-export let analystRating
+export let analystRating;
+
 </script>
   
   

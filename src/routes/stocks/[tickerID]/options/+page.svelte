@@ -1034,14 +1034,14 @@ $: {
 
 
 
-              <td class="text-white text-end">
+              <td class="text-white text-end text-sm sm:text-[1rem]">
                   {new Intl.NumberFormat("en", {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0
                   }).format(item?.volume)}
               </td>
 
-              <td class="text-white text-end">
+              <td class="text-white text-end text-sm sm:text-[1rem]">
                 {new Intl.NumberFormat("en", {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0
