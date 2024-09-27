@@ -109,62 +109,63 @@ function handleTypeOfTrade(state:string)
     }
   }
 
-  async function toggleUserWatchlist(watchListId: string) {
-    try {
-      const watchlistIndex = userWatchList?.findIndex((item) => item?.id === watchListId);
+async function toggleUserWatchlist(watchListId: string) {
+  try {
+    isTickerIncluded = !isTickerIncluded;
 
-      
-      if (watchlistIndex !== -1) {
-          const tickerIndex = userWatchList[watchlistIndex]?.ticker?.indexOf($stockTicker);
-          
-          if (tickerIndex !== -1) {
-              // Remove the ticker if it exists
-              userWatchList[watchlistIndex]?.ticker?.splice(tickerIndex, 1);
-          } else {
-              // Add the ticker if it doesn't exist
-              userWatchList[watchlistIndex]?.ticker?.push($stockTicker);
-          }
+    const watchlistIndex = userWatchList?.findIndex(item => item?.id === watchListId);
+
+    if (watchlistIndex !== -1) {
+      const existingTickerIndex = userWatchList[watchlistIndex]?.ticker?.indexOf($stockTicker);
+
+      if (existingTickerIndex !== -1) {
+        // If the $stockTicker exists, remove it from the array
+        userWatchList[watchlistIndex]?.ticker?.splice(existingTickerIndex, 1);
       } else {
-        userWatchList.push({'title': 'Favorites', 'ticker': [$stockTicker]});
+        // If the $stockTicker doesn't exist, add it to the array
+        userWatchList[watchlistIndex]?.ticker?.push($stockTicker);
       }
 
-
-      const postData = {
-        'userId': data?.user?.id,
-        'watchListId': watchListId,
-        'ticker': $stockTicker,
-        'path': 'update-watchlist'
-      };
-
-      const response = await fetch('/api/fastify-post-data', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(postData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const output = (await response.json())?.items;
-      /*
-      if (watchlistIndex !== -1) {
-        userWatchList[watchlistIndex] = output;
-      } else {
-        userWatchList.push(output);
-      }
-        */
-
-
+      // Update the userWatchList
       userWatchList = [...userWatchList];
-      isTickerIncluded = !isTickerIncluded;
-    } catch (error) {
-      console.error("An error occurred:", error);
-      // Handle the error appropriately (e.g., show an error message to the user)
     }
+
+
+    const postData = {
+      'watchListId': watchListId,
+      'ticker': $stockTicker,
+    };
+
+    const response = await fetch('/api/update-watchlist', {
+      method: 'POST',
+      headers: {
+         "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const output = await response.json();
+
+    // Update the userWatchList with the response from the server
+    if( watchlistIndex !== -1)
+    {
+      userWatchList[watchlistIndex] = output;
+      userWatchList = [...userWatchList];
+    }
+    else {
+      userWatchList = [...userWatchList, output];
+    }
+
+  } catch (error) {
+    console.error('An error occurred:', error);
+    // Handle the error appropriately (e.g., show an error message to the user)
   }
+}
+   
 
 
 

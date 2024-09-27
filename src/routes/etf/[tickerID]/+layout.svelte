@@ -163,13 +163,11 @@ async function toggleUserWatchlist(watchListId: string) {
 
 
     const postData = {
-      'userId': data?.user?.id,
       'watchListId': watchListId,
       'ticker': $etfTicker,
-      'path': 'update-watchlist'
     };
 
-    const response = await fetch('/api/fastify-post-data', {
+    const response = await fetch('/api/update-watchlist', {
       method: 'POST',
       headers: {
          "Content-Type": "application/json"
@@ -181,7 +179,7 @@ async function toggleUserWatchlist(watchListId: string) {
       throw new Error('Network response was not ok');
     }
 
-    const output = (await response.json())?.items;
+    const output = await response.json();
 
     // Update the userWatchList with the response from the server
     if( watchlistIndex !== -1)
