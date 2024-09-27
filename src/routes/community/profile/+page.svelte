@@ -918,9 +918,6 @@ onDestroy(async () => {
                                     {['Active', 'Paid', 'On Trial', 'Cancelled']?.includes(subscriptionData?.status_formatted) ? subscriptionData?.product_name : data?.user?.freeTrial === true ? 'Free Trial Subscription' : 'Free Subscription'}
                                     {/if}
                                   </span>
-                                  <span class="text-sm text-white {subscriptionData?.status_formatted !== 'Active' ? 'hidden' : ''}">
-                                    {subscriptionData?.product_name?.includes('Monthly') ? 'billed every month' : 'billed every year'}
-                                  </span>
                                 </div>
                                 
                                 {#if subscriptionData?.status_formatted === 'Active' || subscriptionData?.status_formatted === 'On Trial'}
