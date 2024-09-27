@@ -937,7 +937,7 @@ onDestroy(async () => {
                                
 
                                 {:else if subscriptionData?.status_formatted === 'Cancelled'}
-                                <label for="reactivateSubscriptionModal" class="cursor-pointer text-white bg-[#75D377] bg-opacity-[0.5]  text-sm sm:text-[1rem] px-4 py-2 rounded-lg mt-5">
+                                <label for="reactivateSubscriptionModal" class="cursor-pointer text-white bg-purple-600 sm:hover:bg-purple-700 text-sm sm:text-[1rem] px-4 py-2 rounded-lg mt-5">
                                   Reactivate Subscription
                                 </label>
                                 {:else if subscriptionData?.status_formatted === 'Paid' && !subscriptionData?.first_order_item?.product_name === 'Pro Subscription (Lifetime Access'}

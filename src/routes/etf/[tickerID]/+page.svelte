@@ -7,9 +7,9 @@
     import { onDestroy, onMount } from 'svelte';    
     import ETFKeyInformation from '$lib/components/ETFKeyInformation.svelte';
     import Lazy from '$lib/components/Lazy.svelte';
-  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { convertTimestamp } from '$lib/utils';
+  import toast from 'svelte-french-toast';
 
     export let data;
     export let form;
@@ -717,37 +717,20 @@ async function initializePrice() {
   }
   
 
- async function exportPriceData(timePeriod: string) {
-    const cachedData = getCache($etfTicker, "exportPriceData" + timePeriod);
 
-    if (cachedData) {
-      return cachedData;
-    }
-    else {
-      const postData = {
-        ticker: $etfTicker,
-        timePeriod: timePeriod,
-      };
-
-      const response = await fetch("/api/export-price-data", {
+async function exportData() {
+  let exportList = [];
+  if(data?.user?.tier === 'Pro') {
+    const response = await fetch("/api/historical-price", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(postData),
+        body: JSON.stringify({ticker: $etfTicker, timePeriod: 'max'}),
       });
 
-      const output = await response?.json() ?? [];
+    exportList = await response.json();
 
-      setCache($etfTicker, output, "exportPriceData" + timePeriod);
-      return output;
-    }
-  }
-
-async function exportData(timePeriod:string) {
-  let exportList = [];
-  if(timePeriod === '1day') {
-    exportList = await exportPriceData(timePeriod);
     exportList = exportList?.map(({ time, open, high, low, close }) => ({
           date: time,
           open,
@@ -756,11 +739,6 @@ async function exportData(timePeriod:string) {
           close,
         }));
 
-  } else if (data?.user?.tier === 'Pro') {
-      exportList = await exportPriceData(timePeriod);
-  } else {
-    return
-  }
 
     const csvRows = [];
 
@@ -780,10 +758,17 @@ async function exportData(timePeriod:string) {
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    a.setAttribute('download', `${$etfTicker}_${timePeriod}.csv`);
+    a.setAttribute('download', `${$etfTicker}.csv`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+  } else {
+     toast.error('Only for Pro Members', {
+        style: 'border-radius: 200px; background: #333; color: #fff;'
+      });
+  }
+
   }
 </script>
 
@@ -952,50 +937,9 @@ async function exportData(timePeriod:string) {
                                   
                                     </Button>
 
-                                    <DropdownMenu.Root>
-                                        <DropdownMenu.Trigger asChild let:builder>
-                                          <Button  builders={[builder]}  class="ml-2 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
-                                            <span class="truncate text-white">Export</span>
-                                            <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                            </svg>
-                                          </Button>
-                                        </DropdownMenu.Trigger>
-                                        <DropdownMenu.Content class="w-fit h-fit max-h-72 overflow-y-auto scroller">
-                                          <DropdownMenu.Label class="text-gray-400">
-                                            Historical Stock Price
-                                          </DropdownMenu.Label>
-                                          <DropdownMenu.Separator />
-                                          <DropdownMenu.Group>
-                                            <!--
-                                              <DropdownMenu.Item on:click={exportData} class="cursor-pointer hover:bg-[#27272A]">
-                                              <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                                                1 min 
-                                              </DropdownMenu.Item>
-                                              <DropdownMenu.Item on:click={exportData} class="cursor-pointer hover:bg-[#27272A]">
-                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                                                5 min
-                                              </DropdownMenu.Item>
-                                              <DropdownMenu.Item on:click={exportData} class="cursor-pointer hover:bg-[#27272A]">
-                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                                                15 min
-                                              </DropdownMenu.Item>
-                                            -->
-                                              <DropdownMenu.Item on:click={() => exportData('30min')} class="cursor-pointer hover:bg-[#27272A]">
-                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                                                30 min
-                                              </DropdownMenu.Item>
-                                              <DropdownMenu.Item on:click={() => exportData('1hour')} class="cursor-pointer hover:bg-[#27272A]">
-                                                <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                                                1 hour
-                                              </DropdownMenu.Item>
-                                              <DropdownMenu.Item on:click={() => exportData('1day')} class="cursor-pointer hover:bg-[#27272A]">
-                                                1 day
-                                              </DropdownMenu.Item>
-                                          </DropdownMenu.Group>
-                                        </DropdownMenu.Content>
-                                      </DropdownMenu.Root>
-
+                                    <Button on:click={exportData} class="ml-2 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                      <span class="truncate text-white">Export</span>
+                                    </Button>
                                     
                                   </div>
                                   <!--End Time Interval-->
