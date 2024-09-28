@@ -334,10 +334,31 @@ $: {
 
 
     
+                         <ul class="text-[0.8rem] font-medium text-center w-56 sm:w-56 pb-6 flex justify-center sm:justify-end items-center m-auto sm:m-0 sm:ml-auto">
+                            <li class="w-full">
+                                <label on:click={() => filterRule = 'annual'} class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule === 'annual' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold border-r border-gray-600" aria-current="page">
+                                  Annual
+                                </label>
+                            </li>
+                            <li class="w-full">
+                              {#if data?.user?.tier === 'Pro'}
+                                <label on:click={() => filterRule = 'quartely'} class="cursor-pointer inline-block w-full py-2.5 {filterRule === 'quartely' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold text-white rounded-r-lg">
+                                  Quartely
+                                </label>
+                              {:else}
+                              <a href="/pricing" class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#2A303C] font-semibold text-white rounded-r-lg">
+                                <span class="">Quarterly</span>
+                                <svg class="ml-1 -mt-0.5 w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+                              </a>
+                              {/if}
+
+                            </li>
+                          </ul>
 
                    
                         <div class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center">
-    
+                            
+                            
                     
                             <label class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto">
                                 <input on:click={toggleMode} type="checkbox" checked={mode} value={mode} class="sr-only peer">
@@ -356,7 +377,7 @@ $: {
         
        
 
-                    <div class="flex w-full sm:w-[50%] md:block md:w-auto  sm:ml-auto">
+                    <div class="flex w-fit sm:w-[50%] md:block md:w-auto  sm:ml-auto">
                       <div class="relative inline-block text-left grow">
                           <DropdownMenu.Root>
                                 <DropdownMenu.Trigger asChild let:builder>
@@ -402,32 +423,13 @@ $: {
                             -->
                         </div>
 
-                        <ul class="text-[0.8rem] font-medium text-center w-56 pt-3 sm:w-56 mb-5 flex justify-center sm:justify-end items-center ml-auto">
-                            <li class="w-full">
-                                <label on:click={() => filterRule = 'annual'} class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule === 'annual' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold border-r border-gray-600" aria-current="page">
-                                  Annual
-                                </label>
-                            </li>
-                            <li class="w-full">
-                              {#if data?.user?.tier === 'Pro'}
-                                <label on:click={() => filterRule = 'quartely'} class="cursor-pointer inline-block w-full py-2.5 {filterRule === 'quartely' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold text-white rounded-r-lg">
-                                  Quartely
-                                </label>
-                              {:else}
-                              <a href="/pricing" class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#2A303C] font-semibold text-white rounded-r-lg">
-                                <span class="">Quarterly</span>
-                                <svg class="ml-1 -mt-0.5 w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                              </a>
-                              {/if}
-
-                            </li>
-                          </ul>
+                       
                             
 
                             {#if mode}
-                                <div class="w-full max-w-3xl">
+                                <div class="sm:w-full">
                                     <div class="relative">
-                                    <select class="select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
+                                    <select class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
                                         <option disabled>Choose an Income Variable</option>
                                         <option value="priceEarningsRatio" selected>PE Ratio</option>
                                         <option value="priceToSalesRatio">PS Ratio</option>

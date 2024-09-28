@@ -1,6 +1,8 @@
 <script lang="ts">
 import {numberOfUnreadNotification,displayCompanyName, stockTicker} from '$lib/store';
 import { abbreviateNumber } from '$lib/utils';
+import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+import { Button } from "$lib/components/shadcn/button/index.js";
 //import * as XLSX from 'xlsx';
 import { Chart } from 'svelte-echarts'
 
@@ -21,7 +23,7 @@ import { init, use } from 'echarts/core'
     let tableList = [];
     let filterRule = 'annual';
     let changePercentageYearAgo = 0;
-    let timePeriod = 'threeYears';
+    let timePeriod = '3Y';
 
 function computeYearOverYearChange(rawData) {
     if (rawData.length < 2) {
@@ -124,30 +126,15 @@ function changeTablePeriod(state:string) {
     })
 
 
-async function changeStatement(event)
+async function changeStatement(state)
 {
-    timePeriod = event.target.value;
+    timePeriod = state;
 
     optionsData = await plotData();
 }
             
            
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}  
 
 function filterDataByTimePeriod(rawData, timePeriod) {
     let dates = [];
@@ -157,31 +144,31 @@ function filterDataByTimePeriod(rawData, timePeriod) {
     // Calculate the date threshold based on the selected time period
     let thresholdDate;
     switch (timePeriod) {
-        case 'oneMonth':
+        case '1M':
             thresholdDate = new Date(now);
             thresholdDate.setMonth(now.getMonth() - 1);
             break;
-        case 'sixMonths':
+        case '6M':
             thresholdDate = new Date(now);
             thresholdDate.setMonth(now.getMonth() - 6);
             break;
-        case 'oneYear':
+        case '1Y':
             thresholdDate = new Date(now);
             thresholdDate.setFullYear(now.getFullYear() - 1);
             break;
-        case 'threeYears':
+        case '3Y':
             thresholdDate = new Date(now);
             thresholdDate.setFullYear(now.getFullYear() - 3);
             break;
-        case 'fiveYears':
+        case '5Y':
             thresholdDate = new Date(now);
             thresholdDate.setFullYear(now.getFullYear() - 5);
             break;
-        case 'tenYears':
+        case '10Y':
             thresholdDate = new Date(now);
             thresholdDate.setFullYear(now.getFullYear() - 10);
             break;
-        case 'max':
+        case 'Max':
         default:
             thresholdDate = new Date(0); // Set to the earliest possible date
             break;
@@ -204,8 +191,6 @@ async function plotData()
     
     const filteredData = filterDataByTimePeriod(rawData, timePeriod);
     
-    const {unit, denominator } = normalizer(Math.max(...filteredData?.marketCapList) ?? 0)
-
     const options = {
         animation: false,
         grid: {
@@ -223,24 +208,16 @@ async function plotData()
         type: 'category',
         },
         yAxis: [
-        {
+            {
             type: 'value',
             splitLine: {
-            show: false, // Disable x-axis grid lines
+                    show: false, // Disable x-axis grid lines
             },
+            
             axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value) {
-                return (value / denominator)?.toFixed(1) + unit; // Format value in millions
-                },
+                show: false // Hide y-axis labels
+            }
             },
-        },
-        {
-            type: 'value',
-            splitLine: {
-            show: false, // Disable x-axis grid lines
-            },
-        },
         ],
         series: [
         {
@@ -307,19 +284,52 @@ async function plotData()
                             </div>
     
                             
-                            <div class="w-full">
-                                <div class="relative flex justify-end">
-                                <select class="w-24 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]" on:change={changeStatement}>
-                                    <option disabled>Choose a Time Period</option>
-                                    <option value="oneMonth">1M</option>
-                                    <option value="sixMonths">6M</option>
-                                    <option value="oneYear">1Y</option>
-                                    <option value="threeYears" selected>3Y</option>
-                                    <option value="fiveYears">5Y</option>
-                                    <option value="tenYears">10Y</option>
-                                    <option value="max">Max</option>                                 
-                                </select>
-                                </div>
+        
+
+                             <div class="flex w-fit sm:w-[50%] md:block md:w-auto  sm:ml-auto">
+                            <div class="relative inline-block text-left grow">
+                                <DropdownMenu.Root>
+                                        <DropdownMenu.Trigger asChild let:builder>
+                                        <Button builders={[builder]}  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                            <span class="truncate text-white">{timePeriod}</span>
+                                            <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </Button>
+                                        </DropdownMenu.Trigger>
+                                        <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                                        <DropdownMenu.Label class="text-gray-400">
+                                            Select time frame
+                                        </DropdownMenu.Label>
+                                        <DropdownMenu.Separator />
+                                        <DropdownMenu.Group>
+                                            <DropdownMenu.Item on:click={() => changeStatement('1M')} class="cursor-pointer hover:bg-[#27272A]">
+                                                1 Month
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() => changeStatement('6M')} class="cursor-pointer hover:bg-[#27272A]">
+                                                6 Months
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() => changeStatement('1Y')} class="cursor-pointer hover:bg-[#27272A]">
+                                                1 Year
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() => changeStatement('3Y')} class="cursor-pointer hover:bg-[#27272A]">
+                                                3 Years
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() => changeStatement('5Y')} class="cursor-pointer hover:bg-[#27272A]">
+                                                5 Years
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() => changeStatement('10Y')} class="cursor-pointer hover:bg-[#27272A]">
+                                                10 Years
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() => changeStatement('Max')} class="cursor-pointer hover:bg-[#27272A]">
+                                                Max
+                                            </DropdownMenu.Item>
+                                        </DropdownMenu.Group>
+                                        </DropdownMenu.Content>
+                                    </DropdownMenu.Root>
+
+
+                                    </div>
                             </div>
                 
                             <div class="app w-full ">
