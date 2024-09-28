@@ -2,8 +2,7 @@
 <script lang ='ts'>
     import { displayCompanyName, trendAnalysisComponent, stockTicker, etfTicker, cryptoTicker, assetType, getCache, setCache} from '$lib/store';
     import InfoModal from '$lib/components/InfoModal.svelte';
-    //import Chart from '$lib/components/Chart.svelte';
-    //import Lazy from 'svelte-lazy';
+  
 
   let trendList = [];
   let isLoaded = false;

@@ -596,7 +596,7 @@ async function historicalPrice(timePeriod: string) {
 
 async function exportData() {
   let exportList = [];
-  if(data?.user?.tier === 'Pro') {
+  if(data?.user) {
     const response = await fetch("/api/historical-price", {
         method: "POST",
         headers: {
@@ -640,7 +640,7 @@ async function exportData() {
     document.body.removeChild(a);
 
   } else {
-     toast.error('Only for Pro Members', {
+     toast.error('Please Sign In', {
         style: 'border-radius: 200px; background: #333; color: #fff;'
       });
   }
