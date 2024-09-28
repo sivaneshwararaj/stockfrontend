@@ -1,6 +1,8 @@
 <script lang="ts">
 import {numberOfUnreadNotification,displayCompanyName, stockTicker} from '$lib/store';
 import { abbreviateNumber } from '$lib/utils';
+import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+import { Button } from "$lib/components/shadcn/button/index.js";
 //import * as XLSX from 'xlsx';
 import { Chart } from 'svelte-echarts'
 
@@ -159,11 +161,6 @@ const statementConfig = [
 ];
 
 
-let dropdownOpen = false; // State variable to control dropdown visibility
-
-function toggleDropdown() {
-dropdownOpen = !dropdownOpen;
-}
 
     
 function toggleMode()
@@ -180,21 +177,6 @@ displayStatement = event.target.value;
     
     
  
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-} 
 
 function plotData()
     {
@@ -236,7 +218,6 @@ function plotData()
         labelName =statementConfig[index]?.label;
     
     
-        const {unit, denominator } = normalizer(Math.max(...valueList) ?? 0)
     
     
         const options = {
@@ -255,25 +236,17 @@ function plotData()
         data: xList,
         type: 'category',
         },
-        yAxis: [
-        {
+       yAxis: [
+            {
             type: 'value',
             splitLine: {
-            show: false, // Disable x-axis grid lines
+                    show: false, // Disable x-axis grid lines
             },
+            
             axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value) {
-                return (value / denominator)?.toFixed(1) + unit; // Format value in millions
-                },
+                show: false // Hide y-axis labels
+            }
             },
-        },
-        {
-            type: 'value',
-            splitLine: {
-            show: false, // Disable x-axis grid lines
-            },
-        },
         ],
         series: [
         {
@@ -292,52 +265,6 @@ function plotData()
         return options;
     }
 
-/*
-const exportData = (format = 'csv') => {
-    const data = fullStatement;
-    if (!data || data.length === 0) {
-        return;
-    }
-
-    let properties = [
-        { key: "calendarYear", label: "Year" },
-    ];
-
-    for (let i = 0; i < statementConfig?.length; i++) {
-        properties.push({ key: statementConfig[i]?.propertyName, label: statementConfig[i]?.label })
-    }
-
-    // Helper function to handle special cases
-
-
-    // Create rows for CSV/Excel
-    let rows = data.map(item => properties?.map(property => item[property?.key] || 0));
-    
-    // Include headers
-    const headers = properties.map(prop => prop.label);
-    rows.unshift(headers);
-
-
-    // Check the format to export
-    if (format.toLowerCase() === 'csv') {
-        const csvContent = rows.map(row => row.join(",")).join("\n");
-        const blob = new Blob([csvContent], { type: "data:text/csv;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = $stockTicker.toLowerCase() + "-cashflow-statement.csv";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    } else if (format.toLowerCase() === 'excel') {
-        const worksheet = XLSX.utils.aoa_to_sheet(rows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Cashflow Statement");
-        XLSX.writeFile(workbook, `${$stockTicker.toLowerCase()}-cashflow-statement.xlsx`);
-    }
-};
-*/
 
 
 fullStatement = data?.getCashFlowStatement;
@@ -381,8 +308,6 @@ $: {
     }
 
 }
-
-
 
 
 </script>
@@ -442,45 +367,7 @@ $: {
 
     
 
-                
-                        <div class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center">
-    
-                    
-                            <label class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto">
-                                <input on:click={toggleMode} type="checkbox" checked={mode} value={mode} class="sr-only peer">
-                                <div class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"></div>
-                                {#if mode}
-                                <span class="ml-2 text-sm font-medium text-white">
-                                    Cool Mode
-                                </span>
-                                {:else}
-                                <span class="ml-2 text-sm font-medium text-white">
-                                    Boring Mode
-                                </span>
-                                {/if}
-                            </label>
-        
-        
-                            <label for="timeFrameModal" class="cursor-pointer bg-[#27272A] sm:hover:bg-[#313131] duration-100 transition ease-in-out px-4 py-1.5 rounded-lg shadow-md">
-                                <div class="flex flex-row items-center">
-                                    <span class="m-auto mr-0.5 text-white text-sm">{timeFrame}</span>
-                                    <svg class="inline-block w-4 h-4 ml-1 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="rotate(180 512 512)">                                        <path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></g></svg>
-                                </div>
-                            </label>
-
-
-                            <!--
-                            <label for="exportDataModal" class="ml-3 mr-2 sm:mr-0 cursor-pointer bg-[#09090B] sm:hover:bg-[#313131] duration-100 transition ease-in-out px-4 py-1.5 rounded-lg shadow-md">
-                                <div class="flex flex-row items-center">
-                                    <span class="m-auto mr-0.5 text-white text-sm">Export</span>
-                                    <svg class="inline-block w-4 h-4 ml-1 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="rotate(180 512 512)">                                        <path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></g></svg>
-                                </div>
-                            </label>
-                            -->
-
-                        </div>
-
-                        <ul class="text-[0.8rem] font-medium text-center w-56 pt-3 sm:w-56 mb-5 flex justify-center sm:justify-end items-center ml-auto">
+                         <ul class="text-[0.8rem] font-medium text-center w-56 sm:w-56 pb-6 flex justify-center sm:justify-end items-center m-auto sm:m-0 sm:ml-auto">
                             <li class="w-full">
                                 <label on:click={() => filterRule = 'annual'} class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule === 'annual' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold border-r border-gray-600" aria-current="page">
                                   Annual
@@ -500,13 +387,68 @@ $: {
 
                             </li>
                           </ul>
-                            
+                
+                        <div class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center">
+    
+                    
+                            <label class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto">
+                                <input on:click={toggleMode} type="checkbox" checked={mode} value={mode} class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"></div>
+                                {#if mode}
+                                <span class="ml-2 text-sm font-medium text-white">
+                                    Cool Mode
+                                </span>
+                                {:else}
+                                <span class="ml-2 text-sm font-medium text-white">
+                                    Boring Mode
+                                </span>
+                                {/if}
+                            </label>
+        
+        
+                          
+                <div class="flex w-fit sm:w-[50%] md:block md:w-auto  sm:ml-auto">
+                      <div class="relative inline-block text-left grow">
+                          <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild let:builder>
+                                  <Button builders={[builder]}  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                    <span class="truncate text-white">{timeFrame}</span>
+                                    <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                  </Button>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                                  <DropdownMenu.Label class="text-gray-400">
+                                    Select time frame
+                                  </DropdownMenu.Label>
+                                  <DropdownMenu.Separator />
+                                  <DropdownMenu.Group>
+                                      <DropdownMenu.Item on:click={() => timeFrame = '5Y'} class="cursor-pointer hover:bg-[#27272A]">
+                                        5 years
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => timeFrame = '10Y'} class="cursor-pointer hover:bg-[#27272A]">
+                                        10 years
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => timeFrame = 'MAX'} class="cursor-pointer hover:bg-[#27272A]">
+                                        Max
+                                      </DropdownMenu.Item>
+                                  </DropdownMenu.Group>
+                                </DropdownMenu.Content>
+                              </DropdownMenu.Root>
 
+
+                      </div>
+              </div>
+
+                        </div>
+
+                       
 
                     {#if mode}
-                        <div class="w-full max-w-3xl">
+                         <div class="sm:w-full">
                             <div class="relative">
-                            <select class="select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
+                            <select class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
                                 <option disabled>Choose an Cash Flow Variable</option>
                                 <option value="netIncome" selected>Net Income</option>
                                 <option value="depreciationAndAmortization">Depreciation & Amortization</option>

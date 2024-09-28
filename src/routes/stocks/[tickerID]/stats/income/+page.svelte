@@ -1,6 +1,8 @@
 <script lang="ts">
 import {numberOfUnreadNotification,displayCompanyName, stockTicker} from '$lib/store';
 import { abbreviateNumber } from '$lib/utils';
+import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+import { Button } from "$lib/components/shadcn/button/index.js";
 //import * as XLSX from 'xlsx';
 import { Chart } from 'svelte-echarts'
 
@@ -152,21 +154,6 @@ function changeStatement(event)
 }
 
 
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}  
         
 function plotData()
     {
@@ -210,8 +197,6 @@ function plotData()
 
     labelName = statementConfig[index]?.label;
     
-    
-    const {unit, denominator } = normalizer(Math.max(...valueList) ?? 0)
 
     const options = {
         animation: false,
@@ -229,25 +214,17 @@ function plotData()
         data: xList,
         type: 'category',
         },
-        yAxis: [
-        {
+         yAxis: [
+            {
             type: 'value',
             splitLine: {
-            show: false, // Disable x-axis grid lines
+                    show: false, // Disable x-axis grid lines
             },
+            
             axisLabel: {
-            color: '#fff', // Change label color to white
-            formatter: function (value) {
-                return (value / denominator)?.toFixed(1) + unit; // Format value in millions
-                },
+                show: false // Hide y-axis labels
+            }
             },
-        },
-        {
-            type: 'value',
-            splitLine: {
-            show: false, // Disable x-axis grid lines
-            },
-        },
         ],
         series: [
         {
@@ -266,52 +243,7 @@ function plotData()
     return options;
     }
     
-/*
-const exportData = (format = 'csv') => {
-    const data = fullStatement;
-    if (!data || data.length === 0) {
-        return;
-    }
 
-    let properties = [
-        { key: "calendarYear", label: "Year" },
-    ];
-
-    for (let i = 0; i < statementConfig?.length; i++) {
-        properties.push({ key: statementConfig[i]?.propertyName, label: statementConfig[i]?.label })
-    }
-
-    // Helper function to handle special cases
-
-
-    // Create rows for CSV/Excel
-    let rows = data?.map(item => properties?.map(property => item[property?.key] || 0));
-    
-    // Include headers
-    const headers = properties.map(prop => prop.label);
-    rows.unshift(headers);
-
-
-    // Check the format to export
-    if (format.toLowerCase() === 'csv') {
-        const csvContent = rows.map(row => row.join(",")).join("\n");
-        const blob = new Blob([csvContent], { type: "data:text/csv;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = $stockTicker.toLowerCase() + "-income-statement.csv";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    } else if (format.toLowerCase() === 'excel') {
-        const worksheet = XLSX.utils.aoa_to_sheet(rows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Income Statement");
-        XLSX.writeFile(workbook, `${$stockTicker.toLowerCase()}-income-statement.xlsx`);
-    }
-};
-*/
     
 const getCurrentYear = () => new Date()?.getFullYear();
 
@@ -391,7 +323,8 @@ $: {
                             </h1>
                         </div>
     
-    
+                        
+                        
                         <div class="grid grid-cols-1 gap-2">
                             <div class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">
                             
@@ -406,7 +339,26 @@ $: {
                             </div>
     
     
+                         <ul class="text-[0.8rem] font-medium text-center w-56 sm:w-56 pb-6 flex justify-center sm:justify-end items-center m-auto sm:m-0 sm:ml-auto">
+                            <li class="w-full">
+                                <label on:click={() => filterRule = 'annual'} class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule === 'annual' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold border-r border-gray-600" aria-current="page">
+                                  Annual
+                                </label>
+                            </li>
+                            <li class="w-full">
+                              {#if data?.user?.tier === 'Pro'}
+                                <label on:click={() => filterRule = 'quartely'} class="cursor-pointer inline-block w-full py-2.5 {filterRule === 'quartely' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold text-white rounded-r-lg">
+                                  Quartely
+                                </label>
+                              {:else}
+                              <a href="/pricing" class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#2A303C] font-semibold text-white rounded-r-lg">
+                                <span class="">Quarterly</span>
+                                <svg class="ml-1 -mt-0.5 w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
+                              </a>
+                              {/if}
 
+                            </li>
+                          </ul>
     
         
 
@@ -428,53 +380,50 @@ $: {
                             </label>
         
         
-                            <label for="timeFrameModal" class="cursor-pointer bg-[#27272A] sm:hover:bg-[#313131] duration-100 transition ease-in-out px-4 py-1.5 rounded-lg shadow-md">
-                                <div class="flex flex-row items-center">
-                                    <span class="m-auto mr-0.5 text-white text-sm">{timeFrame}</span>
-                                    <svg class="inline-block w-4 h-4 ml-1 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="rotate(180 512 512)">                                        <path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></g></svg>
-                                </div>
-                            </label>
+                             <div class="flex w-fit sm:w-[50%] md:block md:w-auto  sm:ml-auto">
+                      <div class="relative inline-block text-left grow">
+                          <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild let:builder>
+                                  <Button builders={[builder]}  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                    <span class="truncate text-white">{timeFrame}</span>
+                                    <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                  </Button>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                                  <DropdownMenu.Label class="text-gray-400">
+                                    Select time frame
+                                  </DropdownMenu.Label>
+                                  <DropdownMenu.Separator />
+                                  <DropdownMenu.Group>
+                                      <DropdownMenu.Item on:click={() => timeFrame = '5Y'} class="cursor-pointer hover:bg-[#27272A]">
+                                        5 years
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => timeFrame = '10Y'} class="cursor-pointer hover:bg-[#27272A]">
+                                        10 years
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => timeFrame = 'MAX'} class="cursor-pointer hover:bg-[#27272A]">
+                                        Max
+                                      </DropdownMenu.Item>
+                                  </DropdownMenu.Group>
+                                </DropdownMenu.Content>
+                              </DropdownMenu.Root>
 
 
-                            <!--
-                            <label for="exportDataModal" class="ml-3 mr-2 sm:mr-0 cursor-pointer bg-[#09090B] sm:hover:bg-[#313131] duration-100 transition ease-in-out px-4 py-1.5 rounded-lg shadow-md">
-                                <div class="flex flex-row items-center">
-                                    <span class="m-auto mr-0.5 text-white text-sm">Export</span>
-                                    <svg class="inline-block w-4 h-4 ml-1 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="rotate(180 512 512)">                                        <path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/></g></svg>
-                                </div>
-                            </label>
-                            -->
+                      </div>
+                    </div>
+
 
                         </div>
 
-                        <ul class="text-[0.8rem] font-medium text-center w-56 pt-3 sm:w-56 mb-5 flex justify-center sm:justify-end items-center ml-auto">
-                            <li class="w-full">
-                                <label on:click={() => filterRule = 'annual'} class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule === 'annual' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold border-r border-gray-600" aria-current="page">
-                                  Annual
-                                </label>
-                            </li>
-                            <li class="w-full">
-                              {#if data?.user?.tier === 'Pro'}
-                                <label on:click={() => filterRule = 'quartely'} class="cursor-pointer inline-block w-full py-2.5 {filterRule === 'quartely' ? 'bg-purple-600' : 'bg-[#2A303C]'} font-semibold text-white rounded-r-lg">
-                                  Quartely
-                                </label>
-                              {:else}
-                              <a href="/pricing" class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#2A303C] font-semibold text-white rounded-r-lg">
-                                <span class="">Quarterly</span>
-                                <svg class="ml-1 -mt-0.5 w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-                              </a>
-                              {/if}
-
-                            </li>
-                          </ul>
-                          
-    
+                    
             
     
                         {#if mode}
-                            <div class="w-full">
-                                <div class="relative">
-                                <select class="select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
+                        <div class="sm:w-full">
+                            <div class="relative">
+                            <select class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
                                     <option disabled>Choose an Cash Flow Variable</option>
                                     <option value="revenue" selected>Revenue</option>
                                     <option value="costOfRevenue">Cost of Revenue</option>
@@ -726,168 +675,6 @@ $: {
     
 
 
-  <!--Start TimeFrame-->
-  <input type="checkbox" id="timeFrameModal" class="modal-toggle" />
-      
-  <dialog id="timeFrameModal" class="modal modal-bottom sm:modal-middle ">
-  
-  
-    <label id="timeFrameModal" for="timeFrameModal"  class="cursor-pointer modal-backdrop bg-[#09090B] bg-opacity-[0.5]"></label>
-    
-    
-    <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-800">
-  
-  
-  
-    <label for="timeFrameModal" class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-[1.8rem] text-white">
-      ✕
-    </label>
-  
-      <div class="text-white">
-        
-        <h3 class="font-medium text-lg sm:text-xl mb-10">
-          Time Frame
-        </h3>
-          
-  
-        <div class="flex flex-col items-center w-full Max-w-3xl bg-[#09090B]">
-  
-  
-          <label for="timeFrameModal" on:click={() => timeFrame= '5Y'} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-  
-              <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {timeFrame === '5Y' ? 'ring-2 ring-[#04E000]' : ''}">
-                
-                <span class="ml-1 text-white font-medium mr-auto">
-                  5 years
-                </span>
-  
-                <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-                  {#if timeFrame === '5Y'}
-                    <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-                  {/if}
-                </div>
-  
-              </div>
-             
-          </label>
-  
-  
-          <label for="timeFrameModal" on:click={() => timeFrame='10Y'} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-  
-            <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {timeFrame === '10Y' ? 'ring-2 ring-[#04E000]' : ''}">
-              
-              <span class="ml-1 text-white font-medium mr-auto">
-                10 years
-              </span>
-
-              <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-                {#if timeFrame === '10Y'}
-                  <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-                {/if}
-              </div>
-
-            </div>
-           
-        </label>
-
-        <label for="timeFrameModal" on:click={() => timeFrame='Max'} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-  
-            <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {timeFrame === 'Max' ? 'ring-2 ring-[#04E000]' : ''}">
-              
-              <span class="ml-1 text-white font-medium mr-auto">
-                Max
-              </span>
-
-              <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-                {#if timeFrame === 'Max'}
-                  <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-                {/if}
-              </div>
-
-            </div>
-           
-        </label>
-
-    
-  
-        </div>
-         
-      </div>
-  
-  
-          
-        </div>
-    </dialog>
-  <!--End TimeFrame-->
-
-
-
-
-
-  <!--Start Export -->
-  <!--
-  <input type="checkbox" id="exportDataModal" class="modal-toggle" />
-      
-  <dialog id="exportDataModal" class="modal modal-bottom sm:modal-middle ">
-  
-  
-    <label id="exportDataModal" for="exportDataModal"  class="cursor-pointer modal-backdrop bg-[#09090B] bg-opacity-[0.5]"></label>
-    
-    
-    <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-800">
-  
-  
-      <div class="text-white">
-        
-        <h3 class="font-medium text-lg sm:text-xl mb-10">
-          Export
-        </h3>
-          
-  
-        <div class="flex flex-col items-center w-full Max-w-3xl bg-[#09090B]">
-  
-  
-          <label for="exportDataModal" on:click={() => exportData('excel')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-  
-              <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg">
-                
-                <span class="ml-1 text-white font-medium mr-auto">
-                  Export to Excel
-                </span>
-
-  
-              </div>
-             
-          </label>
-  
-  
-          <label for="exportDataModal" on:click={() => exportData('csv')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-  
-            <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg">
-              
-              <span class="ml-1 text-white font-medium mr-auto">
-                Export to CSV
-              </span>
-
-            </div>
-           
-        </label>
-
-  
-        </div>
-         
-      </div>
-  
-  
-          
-        </div>
-    </dialog>
-    -->
-  <!--End Export-->
-
-
-
-    
     <style>
         .app {
             height: 400px;
