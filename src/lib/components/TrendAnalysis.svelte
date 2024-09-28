@@ -71,7 +71,7 @@ $: {
       ];
       Promise.all(asyncFunctions)
           .then((results) => {
-            lastPrice = data?.getStockQuote?.price ?? "n/a";
+            lastPrice = data?.getStockQuote?.price?.toFixed(2) ?? "n/a";
             const sample = trendList?.filter(item => item?.label === displayData)?.at(0);
             flowSentiment = sample?.sentiment;
             accuracy = sample?.accuracy;
@@ -204,10 +204,7 @@ $: {
               <span class="font-medium">${lastPrice ?? 'n/a'}</span>.
             </div>
 
-          
-            
-    
-    
+
             {:else}
           <div class="flex justify-center items-center h-80">
             <div class="relative">
