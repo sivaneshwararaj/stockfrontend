@@ -286,7 +286,7 @@ async function plotData()
                             
         
 
-                             <div class="flex w-fit sm:w-[50%] md:block md:w-auto  sm:ml-auto">
+                             <div class="flex w-fit sm:w-[50%] md:block md:w-auto  ml-auto">
                             <div class="relative inline-block text-left grow">
                                 <DropdownMenu.Root>
                                         <DropdownMenu.Trigger asChild let:builder>

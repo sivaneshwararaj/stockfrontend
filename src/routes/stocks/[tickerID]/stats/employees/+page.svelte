@@ -1,12 +1,14 @@
 <script lang="ts">
 
   import {numberOfUnreadNotification, displayCompanyName, stockTicker} from '$lib/store';
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+import { Button } from "$lib/components/shadcn/button/index.js";
   import { Chart } from 'svelte-echarts'
   import { init, use } from 'echarts/core'
   import { BarChart } from 'echarts/charts'
-  import { GridComponent } from 'echarts/components'
+  import { GridComponent, TooltipComponent } from 'echarts/components'
   import { CanvasRenderer } from 'echarts/renderers'
-  use([BarChart, GridComponent, CanvasRenderer])
+  use([BarChart, GridComponent, TooltipComponent, CanvasRenderer])
 
   import { abbreviateNumber } from '$lib/utils';
 
@@ -78,19 +80,17 @@ function selectSortingMethod(state:string) {
       }
     },
     yAxis: [
-        {
+            {
             type: 'value',
-            axisLabel: {
-            color: '#fff',
-            formatter: '{value}',
-            },
             splitLine: {
-            show: false, // Disable x-axis grid lines
+                    show: false, // Disable x-axis grid lines
             },
-        },
+            
+            axisLabel: {
+                show: false // Hide y-axis labels
+            }
+            },
         ],
-      
-    
     series: [
 
       {
@@ -125,9 +125,7 @@ function selectSortingMethod(state:string) {
           const change =  (current - previous)  ;
           dateList?.push(employeeHistory[i]?.filingDate);
           changeList?.push(change);
-    
-         
-          
+   
       }
     
         
@@ -148,19 +146,17 @@ function selectSortingMethod(state:string) {
         }
       },
       yAxis: [
-        {
+            {
             type: 'value',
-            axisLabel: {
-            color: '#fff',
-            formatter: '{value}',
-            },
             splitLine: {
-            show: false, // Disable x-axis grid lines
+                    show: false, // Disable x-axis grid lines
             },
-        },
+            
+            axisLabel: {
+                show: false // Hide y-axis labels
+            }
+            },
         ],
-      
-      
       series: [
 
         {
@@ -210,9 +206,6 @@ function plotGrowth() {
           dateList?.push(employeeHistory[i]?.filingDate);
       }
 
-
-    
-        
       const options = {
         animation: false,
         grid: {
@@ -229,22 +222,21 @@ function plotGrowth() {
           color: '#fff'
         }
       },
-      yAxis: [
-        {
+     yAxis: [
+            {
             type: 'value',
-            axisLabel: {
-            color:'#fff',
-            formatter: '{value} %',
-            },
             splitLine: {
-            show: false, // Disable x-axis grid lines
+                    show: false, // Disable x-axis grid lines
             },
-        },
+            
+            axisLabel: {
+                show: false // Hide y-axis labels
+            }
+            },
         ],
-      
       series: [
           {
-              name: 'Growth (%)',
+              name: 'Growth [%]',
               data: growthList,
               type: 'bar',
               barWidth: '80%',
@@ -405,8 +397,7 @@ optionsGrowth = plotGrowth();
 
            
       
-                      
-      
+            
                       <div class="flex flex-row items-center w-full mt-10 mb-8">
       
                           <h1 class="text-xl text-white font-semibold ">
@@ -414,23 +405,40 @@ optionsGrowth = plotGrowth();
                           </h1>
       
       
-                          <div class="{employeeHistory?.length === 0 ? 'hidden' : ''} flex justify-end ml-auto items-center mr-2">
+                           <div class="flex w-fit sm:w-[50%] md:block md:w-auto ml-auto">
+                            <div class="relative inline-block text-left grow">
+                                <DropdownMenu.Root>
+                                        <DropdownMenu.Trigger asChild let:builder>
+                                        <Button builders={[builder]}  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                                            <span class="truncate text-white">{sortBy}</span>
+                                            <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </Button>
+                                        </DropdownMenu.Trigger>
+                                        <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                                        <DropdownMenu.Label class="text-gray-400">
+                                            Select Type
+                                        </DropdownMenu.Label>
+                                        <DropdownMenu.Separator />
+                                        <DropdownMenu.Group>
+                                            <DropdownMenu.Item on:click={() => sortBy = 'Total'} class="cursor-pointer hover:bg-[#27272A]">
+                                                Total
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() =>  sortBy = 'Change'} class="cursor-pointer hover:bg-[#27272A]">
+                                                Change
+                                            </DropdownMenu.Item>
+                                            <DropdownMenu.Item on:click={() =>  sortBy = 'Growth'} class="cursor-pointer hover:bg-[#27272A]">
+                                                Growth
+                                            </DropdownMenu.Item>
+                                        </DropdownMenu.Group>
+                                        </DropdownMenu.Content>
+                                    </DropdownMenu.Root>
 
-                                  <label for="sortByModal" class="cursor-pointer bg-[#27272A] sm:hover:bg-[#313131] duration-100 transition ease-in-out px-4 py-1.5 rounded-lg shadow-md">
-                                      <div class="flex flex-row">
-                                          <span class="text-sm  m-auto font-medium text-white">
-                                          {sortBy}
-                                          </span>
-                                          <svg class="inline-block w-4 h-4 ml-1 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                              <g transform="rotate(180 512 512)">
-                                                  <path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/>
-                                              </g>
-                                          </svg>
-                                      </div>
-                                  </label>
-                                  
-                          
-                              </div>
+
+                                    </div>
+                            </div>
+                      
                       </div>
                       
       
@@ -528,102 +536,6 @@ optionsGrowth = plotGrowth();
   
   
   
-
-
-<!--Start Sort By Modal-->
-<input type="checkbox" id="sortByModal" class="modal-toggle" />
-    
-<dialog id="sortByModal" class="modal modal-bottom sm:modal-middle ">
-
-
-  <label id="sortByModal" for="sortByModal"  class="cursor-pointer modal-backdrop bg-[#09090B] bg-opacity-[0.5]"></label>
-  
-  
-  <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-800">
-
-
-
-  <label for="sortByModal" class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-[1.8rem] text-white">
-    ✕
-  </label>
-
-    <div class="text-white">
-      
-      <h3 class="font-medium text-lg sm:text-xl mb-10">
-        Sort By
-      </h3>
-        
-
-      <div class="flex flex-col items-center w-full max-w-3xl bg-[#09090B]">
-        
-
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('Total')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Total' ? 'ring-2 ring-[#04E000]' : ''}">
-            
-            <span class="ml-1 text-white font-medium mr-auto">
-              Total
-            </span>
-
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'Total'}
-              <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-              {/if}
-            </div>
-
-          </div>
-         
-        </label>
-
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('Change')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-
-            <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Change' ? 'ring-2 ring-[#04E000]' : ''}">
-              
-              <span class="ml-1 text-white font-medium mr-auto">
-                Change
-              </span>
-
-              <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-                {#if sortBy === 'Change'}
-                  <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-                {/if}
-              </div>
-
-            </div>
-           
-        </label>
-
-
-
-
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('Growth')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Growth' ? 'ring-2 ring-[#04E000]' : ''}">
-            <span class="ml-1 text-white font-medium mr-auto">
-              Growth
-            </span>
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'Growth'}
-                <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-              {/if}
-            </div>
-          </div>
-        </label>
-
-
-
-      </div>
-       
-    </div>
-
-
-        
-      </div>
-  </dialog>
-<!--End Sort By Modal-->
-
 <style>
   .app {
       height: 400px;
