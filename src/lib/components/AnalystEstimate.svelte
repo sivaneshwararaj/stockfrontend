@@ -40,21 +40,6 @@ function findIndex(data) {
     displayData = event.target.value;
   }
 
-  function normalizer(value) {
-    if (Math?.abs(value) >= 1e18) {
-      return { unit: "Q", denominator: 1e18 };
-    } else if (Math?.abs(value) >= 1e12) {
-      return { unit: "T", denominator: 1e12 };
-    } else if (Math?.abs(value) >= 1e9) {
-      return { unit: "B", denominator: 1e9 };
-    } else if (Math?.abs(value) >= 1e6) {
-      return { unit: "M", denominator: 1e6 };
-    } else if (Math?.abs(value) >= 1e5) {
-      return { unit: "K", denominator: 1e5 };
-    } else {
-      return { unit: "", denominator: 1 };
-    }
-  }
 
   let tableDataActual = [];
   let tableDataForecast = [];
@@ -115,7 +100,6 @@ function findIndex(data) {
     }
 
     // Normalize the data if needed (not required in this case, but leaving it here for reference)
-    const { unit, denominator } = normalizer(Math.max(...valueList, ...avgList) ?? 0);
 
     const option = {
       silent: true,
@@ -139,23 +123,18 @@ function findIndex(data) {
           color: "#fff",
         },
       },
-      yAxis: {
-        type: "value",
+      yAxis: [
+      {
+        type: 'value',
         splitLine: {
-          show: false, // Disable x-axis grid lines
+              show: false, // Disable x-axis grid lines
         },
+        
         axisLabel: {
-          color: "#fff", // Change label color to white
-          formatter: function (value, index) {
-            // Display every second tick
-            if (index % 2 === 0) {
-              return (value / denominator)?.toFixed(0) + unit; // Format value in millions
-            } else {
-              return ""; // Hide this tick
-            }
-          },
-        },
+          show: false // Hide y-axis labels
+        }
       },
+      ],
       series: [
         {
           name: "Actual",

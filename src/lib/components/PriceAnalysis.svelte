@@ -37,7 +37,6 @@
     let r2Score;
     let mape;
     let priceSentiment = 'n/a';
-    let displayData = 'threeMonth';
     let lastPrice = 'n/a';
     let oneYearPricePrediction = 'n/a';
     let optionsData;
@@ -59,6 +58,10 @@ function getPlotOptions() {
     bottom: $screenWidth < 640 ? '0%' : '5%',
     containLabel: true
   },
+   tooltip: {
+        trigger: 'axis',
+        hideDelay: 100, // Set the delay in milliseconds
+    },
   xAxis: {
     type: 'category',
     boundaryGap: false,
@@ -75,17 +78,31 @@ function getPlotOptions() {
       }
     }
   },
-  yAxis: {
-    type: 'value',
-    splitLine: {
-      show: false,
-    },
-    axisLabel: {
-      color: '#fff',
-    }
-  },
-  series: [
+   yAxis: [
     {
+      type: 'value',
+      splitLine: {
+            show: false, // Disable x-axis grid lines
+      },
+      
+       axisLabel: {
+        show: false // Hide y-axis labels
+      }
+    },
+    ],
+  series: [
+      {
+      name: 'Stock Price',
+      data: historicalPrice,
+      showSymbol: false,
+      smooth: true,
+      type: 'line',
+      itemStyle: {
+            color: "#fff"
+        }
+    },
+    {
+      name: 'Upperband',
       data: upperBand,
       showSymbol: false,
       smooth: true,
@@ -98,6 +115,7 @@ function getPlotOptions() {
       }
     },
     {
+      name: 'Lowerband',
       data: lowerBand,
       showSymbol: false,
       smooth: true,
@@ -121,15 +139,6 @@ function getPlotOptions() {
         }
     },
     */
-    {
-      data: historicalPrice,
-      showSymbol: false,
-      smooth: true,
-      type: 'line',
-      itemStyle: {
-            color: "#fff"
-        }
-    }
   ]
 };
 

@@ -1,12 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { displayCompanyName, numberOfUnreadNotification, stockTicker } from '$lib/store';
-  import republicanBackground from "$lib/images/bg-republican.png";
-  import democraticBackground from "$lib/images/bg-democratic.png";
-  import otherBackground from "$lib/images/bg-other.png";
-  import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 	import { getPartyForPoliticians } from '$lib/utils';
-  import { goto } from '$app/navigation';
 
 
   export let data;
@@ -15,7 +10,6 @@
   let buySellRatio = 0;
   let partyRatio = 0
   let senateTradingList = [];
-  let displayStructure = 'Card';
   let isLoaded = false;
   let images = {};
 
@@ -28,47 +22,17 @@ function backToTop() {
     });
 }
 
-function changeStructure() {
-    if(displayStructure === 'Card') {
-      displayStructure = 'Table';
-    }
-    else {
-      displayStructure = 'Card';
+
+
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && senateTradingList?.length !== rawData?.length) {
+        const nextIndex = senateTradingList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+        senateTradingList = [...senateTradingList, ...filteredNewResults];
     }
   }
-
-
-const district = {
-  'Tommy_Tuberville': 'Alabama',
-  'Sheldon_Whitehouse': 'Rhode Island',
-  'Pat_Toomey': 'Pennsylvania',
-  'Tom_Carper': 'Delaware',
-  'Pat_Roberts': 'Kansas',
-  'Markwayne_Mullin': 'Oklahoma',
-  'Shelley_Capito': 'West Virginia',
-  'Jerry_Moran': 'Kansas',
-  'Dan_Sullivan': 'Alaska',
-  'Ron_Wyden': 'Oregon',
-  'John_Hickenlooper': 'Colorado',
-  'David_Perdue': 'Georgia',
-  'Kelly_Loeffler': 'Georgia',
-  'Bill_Cassidy': 'Louisiana',
-}
-
-
-
-async function infiniteHandler({ detail: { loaded, complete } }) 
-{
-  if (senateTradingList?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = senateTradingList?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 20);
-      senateTradingList = [...senateTradingList, ...newArticles];
-      loaded();
-    }
-}
-
 
 
 onMount(async () => {
@@ -105,6 +69,12 @@ onMount(async () => {
     senateTradingList = rawData.slice(0, 20) ?? [];
 
     isLoaded = true;
+
+     window.addEventListener('scroll', handleScroll);
+      return () => {
+          window.removeEventListener('scroll', handleScroll);
+      };
+
 });
 </script>
 
@@ -161,7 +131,7 @@ onMount(async () => {
       
                       {#if senateTradingList?.length !== 0}
 
-                      <h3 class="text-white text-xl font-semibold pt-5">
+                      <h3 class="text-white text-xl font-semibold ">
                         Congress Statistics
                       </h3>
                        <!--Start Widget-->
@@ -169,7 +139,7 @@ onMount(async () => {
                         <div class="w-full grid grid-cols-2 sm:grid-cols-3 gap-y-3 lg:gap-y-3 gap-x-3 ">
         
                           <!--Start Buy/Sell-->  
-                          <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-2xl h-20">
+                          <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20">
                             <div class="flex flex-col items-start">
                                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]">Buy/Sell</span>
                                 <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
@@ -196,7 +166,7 @@ onMount(async () => {
                         </div>
                         <!--End Buy/Sell-->
                         <!--Start Dem/Rep-->  
-                        <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-2xl h-20">
+                        <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20">
                           <div class="flex flex-col items-start">
                               <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]">Dem/Rep</span>
                               <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
@@ -227,14 +197,6 @@ onMount(async () => {
                       <!--End Widget-->
 
 
-                      <label on:click={changeStructure} class="sm:hidden w-24 sm:ml-3 mr-2 sm:mr-0 cursor-pointer bg-[#27272A] px-4 py-2 rounded-lg shadow-md">
-                        <span class="m-auto mr-0.5 text-white text-sm">
-                          Switch To: {displayStructure}
-                        </span>
-                      </label>
-  
-
-                      {#if displayStructure === 'Card'}
                       <div class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll">
                         <table class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                           <thead>
@@ -253,7 +215,7 @@ onMount(async () => {
                           </thead>
                           <tbody>
                             {#each senateTradingList as item}
-                            <tr on:click={() => goto(`/politicians/${item?.id}`)} class="odd:bg-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] cursor-pointer">
+                            <tr class="odd:bg-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]">
     
                               <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3 border-b border-b-[#09090B]">
                                 <div class="flex flex-row items-center">
@@ -262,7 +224,7 @@ onMount(async () => {
                                     <img style="clip-path: circle(50%);" class="avatar rounded-full w-7 sm:w-9" src={`${cloudFrontUrl}/assets/senator/${item?.representative?.replace(/\s+/g, "_")}.png`} loading="lazy"/>
                                   </div>
                                   <div class="flex flex-col ml-3">
-                                    <span class="">{item?.representative?.replace('_',' ')}</span>
+                                    <a href={`/politicians/${item?.id}`} class="sm:hover:text-white text-blue-400">{item?.representative?.replace('_',' ')}</a>
                                     <span class="">{item?.party}</span>
                                   </div>
                                 </div>
@@ -294,95 +256,7 @@ onMount(async () => {
                         
                     </div>
 
-                    <InfiniteLoading on:infinite={infiniteHandler} />
 
-                      {:else}
-                      <div class="relative w-full mt-10">
-                        {#each senateTradingList as item}
-                        <div class="w-full bg-[#09090B] border border-slate-800 shadow-lg h-auto pb-4 pt-4 mb-7">
-                          <div class="flex flex-col relative ">
-                            {#if item?.party === 'Republican'}
-                            <img class="absolute -mt-4 w-full m-auto " src={republicanBackground} />
-                            {:else if item?.party === 'Democratic'}
-                              <img class="absolute -mt-4 w-[500px] m-auto "  src={democraticBackground} />
-                            {:else}
-                              <img class="absolute -mt-4 w-[500px] m-auto " src={otherBackground} />
-                            {/if}
-                            <div class="flex flex-col justify-center items-center rounded-2xl ">
-
-
-                              <div class="-mt-3 shadow-lg rounded-full border border-slate-600 w-20 h-20 relative {item?.party === 'Republican' ? 'bg-[#98272B]' : item?.party === 'Democratic' ? 'bg-[#295AC7]' : 'bg-[#20202E]'} flex items-center justify-center">
-                                <img style="clip-path: circle(50%);" class="rounded-full w-16" src={`${cloudFrontUrl}/assets/senator/${item?.representative?.replace(/\s+/g, "_")}.png`} loading="lazy"/>
-                              </div>
-                              <span class="text-white text-lg font-medium mt-2 mb-2">
-                                {item?.representative?.replace('_',' ')}
-                              </span>
-                              <span class="text-white text-md mb-8">
-                                {item?.party ?? 'n/a'} / {district[item?.representative] ?? 'n/a'}
-                              </span>
-
-                            </div>
-
-                            <div class="flex flex-row items-center pr-4 pl-4">
-                             
-                              <div class="flex flex-col justify-start items-start">
-                                <span class="font-medium text-white">Owner</span>
-                                <span class="text-white text-opacity-[0.8] text-sm text-end">
-                                  {item?.owner?.length !== 0 ? item?.owner : '-'}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div class="border-1 border-b border-slate-800 w-full mt-5 mb-5" />
-        
-                            <div class="flex flex-row items-center pr-4 pl-4">
-                              <div class="flex flex-col w-40">
-                                <span class="font-medium text-white">Transaction Date</span>
-                                <span class="text-slate-300 text-sm">
-                                  {new Date(item?.transactionDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
-                                </span>
-                              </div>
-          
-                              <div class="flex flex-col justify-end items-end ml-auto">
-                                <span class="font-medium text-white">Disclosure Date</span>
-                                <span class="text-white text-opacity-[0.8] text-sm text-end">
-                                  {new Date(item?.disclosureDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
-                                </span>
-                              </div>
-                            </div>
-        
-                            <div class="border-1 border-b border-slate-800 w-full mt-5 mb-5" />
-        
-                            <div class="flex flex-row items-center pr-4 pl-4">
-                              <div class="flex flex-col w-40">
-                                <span class="font-medium text-white">Amount</span>
-                                <span class="text-slate-300 text-sm font-medium">
-                                  {item?.amount?.replace("$1,000,001 - $5,000,000","$1Mio - $5Mio")}
-                                </span>
-                              </div>
-          
-                              <div class="flex flex-col justify-end items-end ml-auto">
-                                <span class="font-medium text-slate-300 text-ends">Type</span>
-                                <span class="text-white font-medium text-end">
-                                  {#if item?.type === 'Bought'}
-                                  <span class="text-[#37C97D]">Bought</span>
-                                  {:else if item?.type === 'Sold'}
-                                  <span class="text-[#FF2F1F]">Sold</span>
-                                  {:else if item?.type === 'Exchange'}
-                                  <span class="text-[#C6A755]">Exchange</span>
-                                {/if}
-                                </span>
-                              </div>
-                            </div>
-
-                          </div>
-        
-        
-                        </div>
-                      {/each}
-
-
-                      </div>
 
                       {#if rawData?.length >= 20}
                       <label on:click={backToTop} class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-slate-800 rounded-full">
@@ -390,9 +264,6 @@ onMount(async () => {
                       </label>
                       {/if}
 
-                      <InfiniteLoading on:infinite={infiniteHandler} />
-
-                      {/if}
       
                       {:else} 
                       <h2 class="pl-4 pr-4 flex justify-center items-center text-md sm:text-lg text-center text-slate-200">
