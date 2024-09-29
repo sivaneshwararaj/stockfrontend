@@ -245,15 +245,15 @@ async function handleScroll() {
                                 {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
                             </td>
                             
-                             <td class="text-end text-sm sm:text-[1rem] font-medium text-white">
+                             <td class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap">
                               {abbreviateNumber(item?.marketCap)}
                             </td>
   
-                            <td class="text-end text-sm sm:text-[1rem] font-medium text-white">
+                            <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
                                 {item?.price}
                             </td>
       
-                            <td class="text-sm sm:text-[1rem] {item?.changesPercentage >= 0 ? 'text-[#30B170]' : 'text-[#FC2120]'} text-end">
+                            <td class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >= 0 ? 'text-[#30B170]' : 'text-[#FC2120]'} text-end">
                                 {item?.changesPercentage > 0 ? '+' : ''}{item?.changesPercentage}%
                               </td>
 
