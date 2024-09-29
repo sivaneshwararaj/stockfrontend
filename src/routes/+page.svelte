@@ -214,10 +214,10 @@ onMount( async() => {
           <Feedback data={data} />
         {/if}
         
-        <!--
+        
         <div class="text-center mb-10 relative w-fit flex justify-center m-auto">
-          <a href="/options-flow" class="text-white antialiased  bg-[#27272A] w-full px-4 py-2 rounded-lg m-auto font-medium text-[1rem] flex items-center">
-            <span class="text-white sm:hover:text-blue-400">Options Flow Filter</span>
+          <a href="/sentiment-tracker" class="text-white antialiased  bg-[#27272A] w-full px-4 py-2 rounded-lg m-auto font-medium text-[1rem] flex items-center">
+            <span class="text-white sm:hover:text-blue-400">Sentiment Tracker</span>
           </a>
           <div class="absolute top-[-1.2rem] -right-5 sm:-right-8 rotate-[7deg]">
             <span class="bg-[#FBCE3C] text-black text-sm sm:text-[0.9rem] rounded-xl font-semibold sm:me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
@@ -225,7 +225,7 @@ onMount( async() => {
             </span>
           </div>
         </div>
-      -->
+      
 
       <h1 class="hidden sm:block text-3xl lg:text-5xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto">
         Stock Analysis for
