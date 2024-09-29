@@ -271,7 +271,7 @@ async function handleScroll() {
                         </tbody>
                       </table>
                   </div>
-                    <UpgradeToPro data={data} title="Get the top 100 stocks that retail investors put their money on the market to never miss out the next hype"/>
+                    <UpgradeToPro data={data} title="Get the latest stock trends from social media to never miss out the next hype"/>
   
                 </div>
 
