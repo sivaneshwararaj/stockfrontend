@@ -41,13 +41,13 @@ const movingAverageConditions = {
 
 // Convert the input to a value or return it as-is if it's already an array
 function convertUnitToValue(
-  input: string | number | string[],
+  input: string | number | string[]
 ): number | string[] | string {
   if (Array.isArray(input)) return input;
   if (typeof input === "number") return input;
   if (typeof input !== "string") {
     throw new TypeError(
-      `Expected a string or number, but received ${typeof input}`,
+      `Expected a string or number, but received ${typeof input}`
     );
   }
   const lowerInput = input.toLowerCase();
@@ -60,6 +60,8 @@ function convertUnitToValue(
     "hold",
     "sell",
     "buy",
+    "strong buy",
+    "strong sell",
     "stock price", // Add "stock price" to non-numeric values
   ]);
   if (nonNumericValues.has(lowerInput)) return input;
@@ -106,7 +108,9 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
 
       // Handle categorical data like analyst ratings, sector, country
       else if (
-        ["analystRating", "sector", "industry", "country"].includes(rule.name)
+        ["analystRating", "score", "sector", "industry", "country"].includes(
+          rule.name
+        )
       ) {
         if (rule.value === "any") return true;
 
@@ -157,7 +161,7 @@ onmessage = async (event: MessageEvent) => {
 
   const filteredData = await filterStockScreenerData(
     stockScreenerData,
-    ruleOfList,
+    ruleOfList
   );
 
   postMessage({ message: "success", filteredData });

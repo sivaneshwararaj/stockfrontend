@@ -172,6 +172,7 @@ const allRules = {
   piotroskiScore: { label: 'Piotroski F-Score', step: [9,8,7,6,5,4,3,2,1], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
 
   analystRating: { label: 'Analyst Rating', step: ['Buy', 'Hold', 'Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  score: { label: 'AI Score', step: ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
   sector: { label: 'Sector', step: sectorList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
   industry: { label: 'Industry', step: industryList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
   country: { label: 'Country', step: listOfRelevantCountries, category: 'fund', defaultCondition: '', defaultValue: 'any' },
@@ -421,6 +422,7 @@ function handleAddRule() {
   
    switch (ruleName) {
       case 'analystRating':
+      case 'score':
       case 'sector':
       case 'industry':
       case 'country':
@@ -695,7 +697,7 @@ async function handleChangeValue(value) {
     } else {
       checkedItems.add(value);
     }
-  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','sector','industry','country']?.includes(ruleName)) {
+  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','score','sector','industry','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
     if (!Array.isArray(valueMappings[ruleName])) {
@@ -821,7 +823,7 @@ function handleInput(event) {
 
         if (searchQuery.length > 0) {
           
-          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList :  ['Buy','Hold','Sell'];
+          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList : ruleName === 'analystRating' ? ['Buy','Hold','Sell'] : ['Strong Buy','Hold','Sell','Strong Sell'];
             testList = rawList?.filter(item => {
                 const index = item?.toLowerCase();
                 // Check if country starts with searchQuery
@@ -1106,7 +1108,7 @@ function handleInput(event) {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country']?.includes(row?.rule)}
+                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','score','sector','industry','country']?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -1129,14 +1131,14 @@ function handleInput(event) {
                                   <input bind:value={searchQuery}
                                       on:input={handleInput}
                                       autocomplete="off"
-                                      class="{!['analystRating','sector','industry','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
+                                      class="{!['analystRating','score','sector','industry','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
                                       focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
                                       type="search" 
                                       placeholder="Search...">
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country']?.includes(row?.rule)}
+                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','score','sector','industry','country']?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -1157,7 +1159,7 @@ function handleInput(event) {
                                         </DropdownMenu.Item>     
                                       {/each}
                                     {:else}
-                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : ['Buy','Hold','Sell'])) as item}
+                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : ruleName === 'analystRating' ? ['Buy','Hold','Sell'] : ['Strong Buy','Buy','Hold','Sell','Strong Sell'])) as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
@@ -1399,7 +1401,7 @@ function handleInput(event) {
                         {#each displayRules as row (row?.rule)}
                           {#if row?.rule !== 'marketCap'}
                             <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
-                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','sector','industry','country','analystRating']?.includes(row?.rule)}
+                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','score','sector','industry','country']?.includes(row?.rule)}
                               {item[row?.rule]}
                               {:else if ['fundamentalAnalysis','trendAnalysis']?.includes(row?.rule)}
                               {item[row?.rule]?.accuracy}%
