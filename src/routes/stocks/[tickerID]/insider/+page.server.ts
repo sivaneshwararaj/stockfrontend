@@ -57,6 +57,7 @@ export const load = async ({ locals, params }) => {
     return output;
   };
 
+  /*
   const getInsiderTradingStatistics = async () => {
     const postData = {
       ticker: params.tickerID,
@@ -76,10 +77,11 @@ export const load = async ({ locals, params }) => {
 
     return output;
   };
+  */
 
   // Make sure to return a promise
   return {
     getInsiderTrading: await getInsiderTrading(),
-    getInsiderTradingStatistics: await getInsiderTradingStatistics(),
+    //getInsiderTradingStatistics: await getInsiderTradingStatistics(),
   };
 };

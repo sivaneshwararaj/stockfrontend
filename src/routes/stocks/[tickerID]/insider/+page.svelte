@@ -8,20 +8,58 @@ import { onMount } from 'svelte';
 
   export let data;
   let isLoaded = false;
-  let statistics = data?.getInsiderTradingStatistics ?? {};
+ 
 
-  let buySellRatio = statistics?.totalBought/statistics?.totalSold
-  let buyShares = statistics?.totalBought
-  let soldShares = statistics?.totalSold
-  let buySharesPercentage = Math.floor(buyShares/(buyShares+soldShares)*100);
-  let soldSharesPercentage = 100 - buySharesPercentage;
+  let statistics = {};
 
+
+  function calculateInsiderTradingStatistics(data) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const quarter = Math.floor(now.getMonth() / 3) + 1;
+
+  // Helper function to check if the transaction date is within the current quarter
+  const isInCurrentQuarter = (transactionDate) => {
+    const date = new Date(transactionDate);
+    return date.getFullYear() === year && Math.floor(date.getMonth() / 3) + 1 === quarter;
+  };
+
+  // Initialize statistics object
+  let statistics = {
+    soldShares: 0,
+    buyShares: 0,
+    buySharesPercentage: 0,
+    soldSharesPercentage: 0,
+    quarter: quarter,
+    year: year,
+  };
+
+  // Summing up bought and sold shares efficiently in a single loop
+  data.forEach(({ transactionType, securitiesTransacted, price, transactionDate }) => {
+    if (price > 0 && isInCurrentQuarter(transactionDate)) {
+      if (transactionType === "Sold") {
+        statistics.soldShares += securitiesTransacted;
+      } else if (transactionType === "Bought") {
+        statistics.buyShares += securitiesTransacted;
+      }
+    }
+  });
+
+  const totalShares = statistics.buyShares + statistics.soldShares;
+
+  if (totalShares > 0) {
+    statistics.buySharesPercentage = Math.floor((statistics.buyShares / totalShares) * 100);
+    statistics.soldSharesPercentage = 100 - statistics.buySharesPercentage;
+  }
+
+  return statistics;
+}
 
   let rawData = data?.getInsiderTrading?.sort(
     (a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate)
   );
-  let insiderTradingList = rawData?.slice(0,20)
 
+  let insiderTradingList = rawData?.slice(0,50)
 
 
   function backToTop() {
@@ -61,6 +99,9 @@ async function handleScroll() {
 
 
 onMount(() => {
+
+  statistics = calculateInsiderTradingStatistics(rawData);
+
   isLoaded = true;
    window.addEventListener('scroll', handleScroll);
       return () => {
@@ -148,7 +189,7 @@ const transactionStyles = {
                           <div class="flex flex-col items-start">
                               <span class="font-medium text-gray-200 text-sm sm:text-[1rem]">Buy/Sell</span>
                               <span class="text-start text-sm sm:text-[1rem] font-medium text-white">
-                                {buySellRatio?.toFixed(3) }
+                                {(statistics?.buyShares/statistics?.soldShares)?.toFixed(2) }
                               </span>
                           </div>
                           <!-- Circular Progress -->
@@ -158,12 +199,12 @@ const transactionStyles = {
                                 <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#3E3E3E]" stroke-width="3"></circle>
                                 <!-- Progress Circle inside a group with rotation -->
                                 <g class="origin-center -rotate-90 transform">
-                                  <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-blue-500" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={buySellRatio>= 1 ? 0 : 100-(buySellRatio*100)?.toFixed(2)}></circle>
+                                  <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-blue-500" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={statistics?.buyShares/statistics?.soldShares>= 1 ? 0 : 100-(statistics?.buyShares/statistics?.soldShares*100)?.toFixed(2)}></circle>
                                 </g>
                               </svg>
                               <!-- Percentage Text -->
                               <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                <span class="text-center text-white text-sm sm:text-[1rem]">{buySellRatio?.toFixed(2)}</span>
+                                <span class="text-center text-white text-sm sm:text-[1rem]">{(statistics?.buyShares/statistics?.soldShares)?.toFixed(2)}</span>
                               </div>
                             </div>
                           <!-- End Circular Progress -->
@@ -178,7 +219,7 @@ const transactionStyles = {
                               {new Intl.NumberFormat("en", {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0
-                            }).format(buyShares)}
+                            }).format(statistics?.buyShares)}
                             </span>
                         </div>
                         <!-- Circular Progress -->
@@ -188,12 +229,12 @@ const transactionStyles = {
                             <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#3E3E3E]" stroke-width="3"></circle>
                             <!-- Progress Circle inside a group with rotation -->
                             <g class="origin-center -rotate-90 transform">
-                              <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#00FC50]" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={100-buySharesPercentage}></circle>
+                              <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#00FC50]" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={100-statistics?.buySharesPercentage}></circle>
                             </g>
                           </svg>
                           <!-- Percentage Text -->
                           <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                            <span class="text-center text-white text-sm sm:text-[1rem]">{buySharesPercentage}%</span>
+                            <span class="text-center text-white text-sm sm:text-[1rem]">{statistics?.buySharesPercentage}%</span>
                           </div>
                         </div>
                         <!-- End Circular Progress -->
@@ -207,7 +248,7 @@ const transactionStyles = {
                               {new Intl.NumberFormat("en", {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0
-                            }).format(soldShares)}
+                            }).format(statistics?.soldShares)}
                             </span>
                         </div>
                         <!-- Circular Progress -->
@@ -217,12 +258,12 @@ const transactionStyles = {
                             <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#3E3E3E]" stroke-width="3"></circle>
                             <!-- Progress Circle inside a group with rotation -->
                             <g class="origin-center -rotate-90 transform">
-                              <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#EE5365]" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={100-soldSharesPercentage}></circle>
+                              <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#EE5365]" stroke-width="3" stroke-dasharray="100" stroke-dashoffset={100-statistics?.soldSharesPercentage}></circle>
                             </g>
                           </svg>
                           <!-- Percentage Text -->
                           <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                            <span class="text-center text-white text-sm sm:text-[1rem]">{soldSharesPercentage}%</span>
+                            <span class="text-center text-white text-sm sm:text-[1rem]">{statistics?.soldSharesPercentage}%</span>
                           </div>
                         </div>
                         <!-- End Circular Progress -->
@@ -258,6 +299,7 @@ const transactionStyles = {
                             </thead>
                             <tbody>
                               {#each (data?.user?.tier === 'Pro' ? insiderTradingList : insiderTradingList?.slice(0,3)) as item, index}
+                              {#if item?.price > 0}
                               <tr class="text-white odd:bg-[#27272A] {index+1 === insiderTradingList?.slice(0,3)?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
       
                                 <td class="text-white text-sm sm:text-[1rem] border-b border-[#09090B] whitespace-nowrap">
@@ -291,6 +333,7 @@ const transactionStyles = {
                                   </div>
                                   </td>
                               </tr>
+                              {/if}
                             {/each}
                             </tbody>
                           </table>

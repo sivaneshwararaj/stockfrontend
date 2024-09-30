@@ -1,15 +1,11 @@
 <script lang='ts'>
-  import { stockTicker, getCache, setCache, displayCompanyName, screenWidth, numberOfUnreadNotification } from '$lib/store';
-  import { page } from '$app/stores';
+  import { stockTicker, getCache, setCache, displayCompanyName, numberOfUnreadNotification } from '$lib/store';
     
   export let data;
   
   let chats = data?.getTranscripts?.chat ?? [];
   let date = data?.getTranscripts?.date;
-  
-  let notDestroyed = true;
-  
-  let charNumber = 20;
+    
   let displayQuarter = data?.quarter;
   let displayYear = data?.year;
   let quarter = displayQuarter;
@@ -61,17 +57,6 @@
       isLoaded = true;
   
     };
-  
-  
-  $: {
-      if($screenWidth < 640)
-      {
-      charNumber = 10;
-      }
-      else {
-      charNumber =20;
-      }
-  }
   
 
   </script>
