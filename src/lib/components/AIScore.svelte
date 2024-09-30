@@ -135,7 +135,7 @@
           <td class="text-sm sm:text-[1rem]">
            +60%
             </td>
-            <td class="text-sm sm:text-[1rem]">Buys</td>
+            <td class="text-sm sm:text-[1rem]">Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">7</td>
         </tr>
         <tr class="border-b border-slate-700 odd:bg-[#27272A]">
