@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { searchBarData, globalForm, screenWidth, openPriceAlert, currentPortfolioPrice, realtimePrice, isCrosshairMoveActive, currentPrice, priceIncrease, displayCompanyName, stockTicker, isOpen } from "$lib/store";
+  import { searchBarData, globalForm, scoreComponent, screenWidth, openPriceAlert, currentPortfolioPrice, realtimePrice, isCrosshairMoveActive, currentPrice, priceIncrease, displayCompanyName, stockTicker, isOpen } from "$lib/store";
 
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import { goto } from "$app/navigation";
@@ -540,8 +540,8 @@ async function toggleUserWatchlist(watchListId: string) {
                             </span>
                           </div>
 
-                          <div class="ml-auto {data?.getStockDeck?.at(0)?.score === (undefined || null) ? 'invisible' : ''}">
-                            <AIScore score={data?.getStockDeck?.at(0)?.score} />
+                          <div class="ml-auto {$scoreComponent === false ? 'invisible' : ''}">
+                            <AIScore score={data?.getStockDeck?.at(0)?.score} tier={data?.user?.tier}/>
                           </div>
 
 

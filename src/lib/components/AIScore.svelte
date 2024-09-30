@@ -1,8 +1,14 @@
 
 <script lang ="ts">
-
+  import { scoreComponent, stockTicker} from '$lib/store';
     export let score;
+    export let tier;
 
+    $: {
+      if( $stockTicker && typeof window !== 'undefined') {
+        $scoreComponent = score !== (undefined || null) ? true : false;
+      }
+    }
 </script>
     
     
@@ -34,23 +40,42 @@
                                         class="stroke-current {score >= 7 ? 'text-[#37C97D]' : score >=4 ? 'text-[#FF9E21]' : 'text-[#FF2F1F]'}" 
                                         stroke-width="3" 
                                         stroke-dasharray="100.48" 
-                                        stroke-dashoffset="{100.48 - (score / 10) * 100.48}">
+                                        stroke-dashoffset="{100.48 - ((tier === 'Pro' ? score : 0) / 10) * 100.48}">
                                     </circle>
                                 </g>
                                 <!-- Text in the middle -->
-                                <text x="18" y="21" text-anchor="middle" font-size="10" fill="#000">{score}</text>
+                                <text x="18" y="21" text-anchor="middle" font-size="10" fill="#000">{tier === 'Pro' ? score : 0}</text>
                             </svg>
 
                             <!-- Percentage Text -->
                             <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                              {#if tier === 'Pro'}
                                 <span class="text-center text-white text-xl font-semibold">
                                     {score}
                                 </span>
+                              {:else}
+                             <a class="block relative" href="/pricing">
+                                    <span class="text-base font-semibold text-blue-link blur group-hover:blur-[3px]">
+                                      XX
+                                    </span>
+                                    <div class="absolute top-1 flex items-center">
+                                      <svg class="size-5 text-[#FBCE3C]" 
+                                          viewBox="0 0 20 20" 
+                                          fill="currentColor" 
+                                          style="max-width: 40px;">
+                                        <path fill-rule="evenodd" 
+                                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" 
+                                              clip-rule="evenodd">
+                                        </path>
+                                      </svg>
+                                    </div>
+                                  </a>
+                              {/if}
                             </div>
                             </div>
                 
                     </div>
-                    <h4 class="text-center text-white text-sm mt-2 font-semibold">
+                    <h4 class="text-center text-white text-sm mt-1 font-semibold {tier === 'Pro' ? '': 'invisible'}">
                         {#if score === 10}
                             Strong Buy
                         {:else if score >=7}

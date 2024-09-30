@@ -102,6 +102,7 @@ export const dcfComponent = writable(<boolean>false);
 export const correlationComponent = writable(<boolean>false);
 export const corporateLobbyingComponent = writable(<boolean>false);
 export const fomcImpactComponent = writable(<boolean>false);
+export const scoreComponent = writable(<boolean>false);
 
 export const strategyId = writable(<string>"");
 export const articleId = writable(<string>"");
