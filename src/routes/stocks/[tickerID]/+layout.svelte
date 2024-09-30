@@ -7,6 +7,7 @@
   import toast from "svelte-french-toast";
   import Sidecard from "$lib/components/Sidecard.svelte";
   import Markethour from "$lib/components/Markethour.svelte";
+  import AIScore from "$lib/components/AIScore.svelte";
 
   export let data;
 
@@ -436,23 +437,24 @@ async function toggleUserWatchlist(watchListId: string) {
             </div>
             <!--End Mobile Navbar-->
 
-            <div class="pt-20 sm:pt-0 w-auto max-w-3xl lg:max-w-content 2xl:max-w-6xl px-3 sm:px-0">
+            <div class="pt-14 sm:pt-0 w-auto max-w-3xl lg:max-w-content 2xl:max-w-6xl px-3 sm:px-0">
               <div class="md:flex md:justify-between md:divide-x md:divide-slate-800">
                 <!-- Main content -->
                 <div class="pb-12 md:pb-20 w-full 2xl:max-w-5xl">
                   <div class="md:pr-6 lg:pr-10">
                     <!-----Start-Header-CandleChart-Indicators------>
 
-                    <div class="m-auto pl-0 sm:pl-4 overflow-hidden mb-5 md:mt-10">
-                      <div class="hidden sm:flex flex-row w-full justify-between items-center pb-10">
+                    <div class="m-auto pl-0 sm:pl-4 overflow-hidden mb-3 md:mt-10 xl:pr-7">
+                      <div class="hidden sm:flex flex-row w-full justify-between items-center ">
                         <Markethour />
-
+                        
+                        
                         <!--Start Watchlist-->
 
                         {#if data?.user}
                           <div class="flex flex-col ml-auto mr-2">
                             {#if userWatchList?.length !== 0}
-                              <div class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center">
+                              <div class="flex-shrink-0 rounded-full sm:hover:bg-white sm:hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center">
                                 <label for="addWatchListModal" class="cursor-pointer flex-shrink-0">
                                   {#if isTickerIncluded}
                                     <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
@@ -522,8 +524,8 @@ async function toggleUserWatchlist(watchListId: string) {
                       <!-- svelte-ignore a11y-click-events-have-key-events -->
                       <!-- svelte-ignore a11y-label-has-associated-control -->
 
-                      <div class="flex items-center w-full">
-                        <div class="flex flex-row justify-start items-center mb-5 mt-2">
+                      <div class="flex items-center w-full mt-3">
+                        <div class="flex flex-row justify-start w-full items-center ">
                           <!--<img class="rounded-full w-10 h-10" src={logoUrl} alt="" />-->
                           <div class="flex-shrink-0 rounded-full w-10 h-10 relative bg-[#141417] flex items-center justify-center border border-slate-800">
                             <img style="clip-path: circle(50%);" class="avatar w-6 h-6" src={`https://financialmodelingprep.com/image-stock/${$stockTicker?.toUpperCase()}.png`} alt=" " loading="lazy" />
@@ -537,34 +539,16 @@ async function toggleUserWatchlist(watchListId: string) {
                               {$displayCompanyName?.length > charNumber ? $displayCompanyName?.slice(0, charNumber) + "..." : $displayCompanyName}
                             </span>
                           </div>
+
+                          <div class="ml-auto {data?.getStockDeck?.at(0)?.score === (undefined || null) ? 'invisible' : ''}">
+                            <AIScore score={data?.getStockDeck?.at(0)?.score} />
+                          </div>
+
+
                         </div>
 
-                        <div class="ml-auto sm:hidden">
-                          <Markethour />
-                        </div>
+    
 
-                        <!--Start Trade-->
-                        <!--
-                                        <div class="hidden sm:flex ml-auto">
-                                        {#if holdingShares !== 0 && data?.user}
-                                        
-                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length !== 0 ? 'typeOfTrade' : ''}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-[#2A303C] border border-slate-800 normal-case cursor-pointer items-center">
-                                          <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M8 2.5a.5.5 0 0 0-1 0V7H2.5a.5.5 0 0 0 0 1H7v4.5a.5.5 0 0 0 1 0V8h4.5a.5.5 0 0 0 0-1H8z"/></svg>
-                                          <span class="text-white font-medium">
-                                            Portfolio
-                                          </span>
-                                        </label>
-                                        {:else}
-                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length === 0 ? 'addPortfolio' : 'buyTradeModal'}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-[#2A303C] border border-slate-800 normal-case  cursor-pointer items-center">
-                                          <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M8 2.5a.5.5 0 0 0-1 0V7H2.5a.5.5 0 0 0 0 1H7v4.5a.5.5 0 0 0 1 0V8h4.5a.5.5 0 0 0 0-1H8z"/></svg>
-                                          <span class="text-white font-medium">
-                                            Portfolio
-                                          </span>
-                                        </label>
-                                        {/if}
-                                      </div>
-                                      -->
-                        <!--End Trade-->
                       </div>
                     </div>
                     <!-----End-Header-CandleChart-Indicators------>
