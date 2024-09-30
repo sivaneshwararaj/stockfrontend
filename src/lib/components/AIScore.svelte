@@ -117,7 +117,7 @@
         <!-- row 1 -->
         <tr class="border-b border-slate-700 odd:bg-[#27272A]">
           <td class="text-sm sm:text-[1rem]">+80% </td>
-          <td class="text-sm sm:text-[1rem]">Strong Bullish</td>
+          <td class="text-sm sm:text-[1rem]">Strong Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">10</td>
         </tr>
         <!-- row 2 -->
