@@ -284,8 +284,8 @@ async function handleDeleteStrategy() {
           filteredData = [];
           displayResults = [];
         }
-        checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
         await updateStockScreenerData();
+        checkedItems = new Map(ruleOfList?.map(rule => [rule.name, new Set(rule.value)]));
     }
     else if ( output === 'failure')
     {
@@ -372,8 +372,9 @@ async function switchStrategy(item) {
      filteredData = [];
     displayResults = [];
   }
-  checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
   await updateStockScreenerData();
+  checkedItems = new Map(ruleOfList.map(rule => [rule.name, new Set(rule.value)]));
+
 }
 
 function changeRule(state: string)  
@@ -481,6 +482,11 @@ async function handleResetAll() {
   ruleName = '';
   filteredData = [];
   displayResults = [];
+  checkedItems = new Map(ruleOfList.map(rule => [rule.name, new Set(rule.value)]));
+  Object.keys(allRules).forEach(ruleName => {
+        ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
+        valueMappings[ruleName] = allRules[ruleName].defaultValue;
+      });
   await handleSave(false);
 }
 
@@ -504,7 +510,7 @@ async function handleDeleteRule(state) {
   {
     ruleName = '';
   }
-
+  //checkedItems = new Map(ruleOfList?.map(rule => [rule.name, new Set(rule.value)]));
   await handleSave(false);
 }
       
@@ -685,18 +691,30 @@ function changeRuleCondition(name: string, state: string) {
   ruleCondition[ruleName] = state;
 }
 
-let checkedItems = new Set(ruleOfList.flatMap(rule => rule.value));
+let checkedItems = new Map(
+  ruleOfList.map(rule => [rule.name, new Set(rule.value)])
+);
 
-function isChecked(item) {
-    return checkedItems.has(item);
-  }
+function isChecked(item, ruleName) {
+  return checkedItems.has(ruleName) && checkedItems.get(ruleName).has(item);
+}
+
 
 async function handleChangeValue(value) {
-  if (checkedItems.has(value)) {
-      checkedItems.delete(value);
+  if (checkedItems.has(ruleName)) {
+    const itemsSet = checkedItems.get(ruleName);
+    
+    if (itemsSet.has(value)) {
+      itemsSet.delete(value);  // Remove the value if it's already in the set
     } else {
-      checkedItems.add(value);
+      itemsSet.add(value);     // Add the value if it's not in the set
     }
+  } else {
+    // If the ruleName is not in checkedItems, create a new set for this rule
+    checkedItems.set(ruleName, new Set([value]));
+  }
+
+  console.log(checkedItems)
   if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','score','sector','industry','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
@@ -1152,7 +1170,7 @@ function handleInput(event) {
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                              <input type="checkbox" class="rounded" checked={isChecked(item)}>
+                                              <input type="checkbox" class="rounded" checked={isChecked(item, row?.rule)}>
                                               <span class="ml-2">{item}</span>
                                             </label>
                                           </div>
@@ -1163,7 +1181,7 @@ function handleInput(event) {
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                              <input type="checkbox" class="rounded" checked={isChecked(item)}>
+                                              <input type="checkbox" class="rounded" checked={isChecked(item, row?.rule)}>
                                               <span class="ml-2">{item}</span>
                                             </label>
                                           </div>
