@@ -1,7 +1,7 @@
 // Cache to store previous requests
 let cache = new Map();
 
-const getStockScreenerData = async (rules, apiKey, apiURL) => {
+const getStockScreenerData = async (rules) => {
   console.log("Checking cache and fetching new data if needed");
 
   // Extract the rule names

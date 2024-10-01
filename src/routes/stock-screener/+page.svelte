@@ -61,6 +61,7 @@ const allRules = {
   ema50: { label: 'EMA50', step: ['Stock Price > EMA50', 'EMA50 > EMA20', 'EMA50 > EMA100', 'EMA50 > EMA200'], category: 'ta', defaultValue: 'any' },
   ema100: { label: 'EMA100', step: ['Stock Price > EMA100', 'EMA100 > EMA20', 'EMA100 > EMA50', 'EMA100 > EMA200'], category: 'ta', defaultValue: 'any' },
   ema200: { label: 'EMA200', step: ['Stock Price > EMA200', 'EMA200 > EMA20', 'EMA200 > EMA50', 'EMA200 > EMA100'], category: 'ta', defaultValue: 'any' },
+  grahamNumber: { label: 'Graham Number', step: ['Price > Graham Number','Price < Graham Number'], defaultValue: 'any' },
   price: { label: 'Stock Price', step: [1000,500,400,300,200,150,100,80,60,50,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: 10 },
 
   change1W: { label: 'Price Change 1W', step: ['20%','10%','5%','1%','-1%','-5%','-10%','-20%'], category: 'ta', defaultCondition: 'over', defaultValue: '1%' },
@@ -72,6 +73,7 @@ const allRules = {
   marketCap: { label: 'Market Cap', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
   workingCapital: { label: 'Working Capital', step: ['20B','10B','5B','1B','500M','100M','50M','10M','1M','0'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
   totalAssets: { label: 'Total Assets', step: ['500B','200B','100B','50B','10B','1B','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
+  tangibleAssetValue: { label: 'Tangible Assets', step: ['500B','200B','100B','50B','10B','1B','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
   revenue: { label: 'Revenue', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
   growthRevenue: { label: 'Revenue Growth', step: ['200%','100%','50%','20%','10%','5%','1%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   costOfRevenue: { label: 'Cost of Revenue', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
@@ -131,6 +133,7 @@ const allRules = {
   debtRatio: { label: 'Debt Ratio', step: [1,0.5,0,-0.5,-1], category: 'fund', defaultCondition: 'over', defaultValue: -0.5 },
   returnOnAssets: { label: 'Return on Assets', step: [10,8,6,4,2,1,0,-2,-4,-6,-8,-10], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   returnOnEquity: { label: 'Return on Equity', step: [10,8,6,4,2,1,0,-2,-4,-6,-8,-10], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
+  returnOnTangibleAssets: { label: 'Return on Tangible Assets', step: [10,8,6,4,2,1,0,-2,-4,-6,-8,-10], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   enterpriseValue: { label: 'Enterprise Value', step: ['100B','50B','10B','1B','300M','100M','10M'], category: 'fund', defaultCondition: 'over', defaultValue: '10M' },
   freeCashFlowPerShare: { label: 'FCF / Share', step: [10,8,6,4,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   cashPerShare: { label: 'Cash / Share', step: [50,20,10,5,1,0,-1,-5,-10,-20,-50], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
@@ -145,6 +148,12 @@ const allRules = {
   freeCashFlow: { label: 'Free Cash Flow', step: ['50B','10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   operatingCashFlow: { label: 'Operating Cash Flow', step: ['50B','10B','1B','100M','10M','1M',0], category: 'fund', defaultCondition: 'over', defaultValue: '0' },
   operatingCashFlowPerShare: { label: 'Operating Cash Flow / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+  revenuePerShare: { label: 'Revenue / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+  netIncomePerShare: { label: 'Net Income / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+  shareholdersEquityPerShare: { label: 'Shareholders Equity / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+  interestDebtPerShare: { label: 'Interest Debt / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+  capexPerShare: { label: 'CapEx / Share', step: [50,40,30,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
+
   freeCashFlowMargin: { label: 'FCF Margin', step: ['80%','50%','20%','10%','5%','0%','-5%','-10%','-20%','-50%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
   totalDebt: { label: 'Total Debt', step: ['200B','100B','50B','10B','1B','100M','10M','1M'], category: 'fund', defaultCondition: 'over', defaultValue: '1M' },
   cashFlowToDebtRatio: { label: 'Cash Flow / Debt', step: [50,40,30,20,10,5,1], category: 'fund', defaultCondition: 'over', defaultValue: '1' },
@@ -432,6 +441,7 @@ function handleAddRule() {
       case 'ema100':
       case 'ema200':
       case 'sma20':
+      case 'grahamNumber':
       case 'sma50':
       case 'sma100':
       case 'sma200':
@@ -714,8 +724,7 @@ async function handleChangeValue(value) {
     checkedItems.set(ruleName, new Set([value]));
   }
 
-  console.log(checkedItems)
-  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','analystRating','score','sector','industry','country']?.includes(ruleName)) {
+  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','grahamNumber','analystRating','score','sector','industry','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
     if (!Array.isArray(valueMappings[ruleName])) {
@@ -1126,7 +1135,7 @@ function handleInput(event) {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','score','sector','industry','country']?.includes(row?.rule)}
+                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'grahamNumber','analystRating','score','sector','industry','country']?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -1156,7 +1165,7 @@ function handleInput(event) {
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'analystRating','score','sector','industry','country']?.includes(row?.rule)}
+                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'grahamNumber','analystRating','score','sector','industry','country']?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -1165,7 +1174,7 @@ function handleInput(event) {
                                         </button>
                                         </DropdownMenu.Item>      
                                       {/each}
-                                    {:else if ['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200']?.includes(row?.rule)}
+                                    {:else if ['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','grahamNumber']?.includes(row?.rule)}
                                       {#each row?.step as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
@@ -1353,11 +1362,7 @@ function handleInput(event) {
                           </td>
                           
                           <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
-                              {#if item?.symbol?.includes('.DE') || item?.symbol?.includes('.F')}
-                                €{item?.marketCap < 100 ? '< $100' : abbreviateNumber(item?.marketCap)}
-                              {:else}
-                                {item?.marketCap < 100 ? '< $100' : abbreviateNumber(item?.marketCap,true)}
-                              {/if}
+                                {item?.marketCap < 100 ? '< 100' : abbreviateNumber(item?.marketCap)}
                           </td>
 
                           <td class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]">
@@ -1369,7 +1374,7 @@ function handleInput(event) {
                           </td>
 
                           <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
-                            {item?.price < 0.01 ? '< $0.01' : item?.price?.toFixed(2)}
+                            {item?.price < 0.01 ? '< 0.01' : item?.price?.toFixed(2)}
                           </td>
 
                            <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
@@ -1414,7 +1419,7 @@ function handleInput(event) {
                           {item?.name?.length > charNumber ? item?.name?.slice(0, charNumber) + "..." : item?.name}
                         </td>
                         <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
-                          {abbreviateNumber(item?.marketCap, true)}
+                          {abbreviateNumber(item?.marketCap)}
                         </td>
                         {#each displayRules as row (row?.rule)}
                           {#if row?.rule !== 'marketCap'}

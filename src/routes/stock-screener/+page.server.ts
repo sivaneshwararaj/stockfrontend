@@ -3,7 +3,16 @@ import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
 // Define the EMA parameters to check
-const emaParameters = ["ema20", "ema50", "ema100", "ema200"];
+const emaParameters = [
+  "sma20",
+  "sma50",
+  "sma100",
+  "sma200",
+  "ema20",
+  "ema50",
+  "ema100",
+  "ema200",
+];
 // Function to check and add missing EMA parameters
 const ensureAllEmaParameters = (params) => {
   const includedEmaParameters = params.filter((param) =>

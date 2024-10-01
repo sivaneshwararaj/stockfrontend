@@ -37,6 +37,9 @@ const movingAverageConditions = {
   "SMA200 > SMA50": (item) => item.sma200 > item.sma50,
   "SMA200 > SMA100": (item) => item.sma200 > item.sma100,
   // Add additional SMA conditions here
+
+  "Price > Graham Number": (item) => item.price > item.grahamNumber,
+  "Price < Graham Number": (item) => item.price < item.grahamNumber,
 };
 
 // Convert the input to a value or return it as-is if it's already an array
@@ -130,6 +133,7 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
           "sma50",
           "sma100",
           "sma200",
+          "grahamnumber", //grahamNumber into lowerCase form
         ].includes(ruleName)
       ) {
         if (ruleValue === "any") return true;
@@ -138,7 +142,7 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
           if (movingAverageConditions[condition]) {
             if (!movingAverageConditions[condition](item)) return false;
           } else {
-            console.warn(`Unknown condition: ${condition}`);
+            //console.warn(`Unknown condition: ${condition}`);
           }
         }
 
