@@ -50,8 +50,6 @@
             break;
           }
         }
-      } else if (displayData === "6M") {
-        currentDataRow = sixMonthPrice?.slice(-1)?.at(0);
       }
 
       //currentDataRow = oneWeekPrice.slice(-1)[0]
@@ -701,11 +699,11 @@ afterUpdate(async () => {
                                       
                                       <div class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full">
                                           {#if $isCrosshairMoveActive }
-                                          ${displayLegend?.close}
+                                          {displayLegend?.close}
                                           {:else if !$isCrosshairMoveActive && $realtimePrice !== null}
-                                          ${$realtimePrice}
+                                          {$realtimePrice}
                                           {:else}
-                                          ${displayLegend?.close}
+                                          {displayLegend?.close}
                                           
                                           {/if}
                                             

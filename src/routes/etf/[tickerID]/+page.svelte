@@ -392,9 +392,6 @@ async function initializePrice() {
           }
         }
       }
-      else if (displayData === '6M') {
-        lastValue = sixMonthPrice?.slice(-1)?.at(0)?.close
-      }
       
 
       displayLastLogicalRangeValue = oneDayPrice?.length  === 0 && sixMonthPrice?.length !== 0 ? sixMonthPrice?.at(0)?.close : oneDayPrice?.at(0)?.close //previousClose;
@@ -674,7 +671,7 @@ async function initializePrice() {
   
         
         geographicList = data?.getCountryWeighting;
-        sectorList = data?.getETFProfile[0]?.sectorsList;
+        sectorList = data?.getETFProfile?.at(0)?.sectorsList;
         sectorList = sectorList?.sort(function(a,b) {
           return b?.exposure - a?.exposure;
         })
@@ -816,11 +813,11 @@ async function exportData() {
                                       
                                       <div class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full">
                                           {#if $isCrosshairMoveActive }
-                                          {$etfTicker?.includes('.DE') || $etfTicker?.includes('.F') ? `${displayLegend?.close}€` : ` $${displayLegend?.close}`}
+                                          {displayLegend?.close}
                                           {:else if !$isCrosshairMoveActive && $realtimePrice !== null}
-                                          {$etfTicker?.includes('.DE') || $etfTicker?.includes('.F') ? `${$realtimePrice}€` : ` $${$realtimePrice}`}
+                                          {$realtimePrice}
                                           {:else}
-                                          {$etfTicker?.includes('.DE') || $etfTicker?.includes('.F') ? `${displayLegend?.close}€` : ` $${displayLegend?.close}`}
+                                          {displayLegend?.close}
                                           
                                           {/if}
                                             
@@ -857,7 +854,7 @@ async function exportData() {
                                       <div class="ml-auto flex flex-col justify-end items-end ">
                                         <div class="flex flex-row items-center justify-end">
                                         <span class="text-white text-2xl font-bold">
-                                          ${prePostData?.price}
+                                          {prePostData?.price}
                                         </span>
                                         {#if prePostData?.changesPercentage >= 0}
                                         <span class="ml-1 items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm">({prePostData?.changesPercentage}%)</span> 
