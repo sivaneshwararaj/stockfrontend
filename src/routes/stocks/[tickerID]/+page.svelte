@@ -85,8 +85,6 @@
             break;
           }
         }
-      } else if (displayData === "6M") {
-        currentDataRow = sixMonthPrice?.slice(-1)?.at(0);
       }
 
       //currentDataRow = oneWeekPrice.slice(-1)[0]
@@ -685,11 +683,11 @@ async function exportData() {
             <div class="flex flex-col items-start justify-start w-full">
               <div class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full">
                 {#if $isCrosshairMoveActive}
-                  {$stockTicker?.includes(".DE") || $stockTicker?.includes(".PA") || $stockTicker?.includes(".F") ? `${displayLegend?.close}€` : ` $${displayLegend?.close}`}
+                  {displayLegend?.close}
                 {:else if !$isCrosshairMoveActive && $realtimePrice !== null}
-                  {$stockTicker?.includes(".DE") || $stockTicker?.includes(".PA") || $stockTicker?.includes(".F") ? `${$currentPortfolioPrice}€` : ` $${$currentPortfolioPrice}`}
+                  {$currentPortfolioPrice}
                 {:else}
-                  {$stockTicker?.includes(".DE") || $stockTicker?.includes(".PA") || $stockTicker?.includes(".F") ? `${displayLegend?.close}€` : ` $${displayLegend?.close}`}
+                  {displayLegend?.close}
                 {/if}
 
                 {#if $priceIncrease === true}
@@ -725,7 +723,7 @@ async function exportData() {
                 <div class="flex flex-col justify-end items-end">
                   <div class="flex flex-row items-center justify-end">
                     <span class="text-white text-lg sm:text-2xl font-bold">
-                      ${prePostData?.price}
+                      {prePostData?.price}
                     </span>
                     {#if prePostData?.changesPercentage >= 0}
                       <span class="ml-1 items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm">({prePostData?.changesPercentage}%)</span>
