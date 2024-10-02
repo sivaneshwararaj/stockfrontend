@@ -294,7 +294,11 @@ async function handleDeleteStrategy() {
           displayResults = [];
         }
         await updateStockScreenerData();
-        checkedItems = new Map(ruleOfList?.map(rule => [rule.name, new Set(rule.value)]));
+        checkedItems = new Map(
+          ruleOfList
+            ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+            ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
+        );
     }
     else if ( output === 'failure')
     {
@@ -382,7 +386,11 @@ async function switchStrategy(item) {
     displayResults = [];
   }
   await updateStockScreenerData();
-  checkedItems = new Map(ruleOfList.map(rule => [rule.name, new Set(rule.value)]));
+  checkedItems = new Map(
+    ruleOfList
+      ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+      ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
+  );
 
 }
 
@@ -492,7 +500,11 @@ async function handleResetAll() {
   ruleName = '';
   filteredData = [];
   displayResults = [];
-  checkedItems = new Map(ruleOfList.map(rule => [rule.name, new Set(rule.value)]));
+  checkedItems = new Map(
+    ruleOfList
+      ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+      ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
+  );
   Object.keys(allRules).forEach(ruleName => {
         ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
         valueMappings[ruleName] = allRules[ruleName].defaultValue;
@@ -520,7 +532,15 @@ async function handleDeleteRule(state) {
   {
     ruleName = '';
   }
-  //checkedItems = new Map(ruleOfList?.map(rule => [rule.name, new Set(rule.value)]));
+  checkedItems = new Map(
+    ruleOfList
+      ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+      ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
+  );
+  Object.keys(allRules).forEach(ruleName => {
+        ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
+        valueMappings[ruleName] = allRules[ruleName].defaultValue;
+      });
   await handleSave(false);
 }
       
@@ -702,7 +722,9 @@ function changeRuleCondition(name: string, state: string) {
 }
 
 let checkedItems = new Map(
-  ruleOfList.map(rule => [rule.name, new Set(rule.value)])
+  ruleOfList
+    ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+    ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
 );
 
 function isChecked(item, ruleName) {
