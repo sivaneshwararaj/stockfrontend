@@ -532,15 +532,6 @@ async function handleDeleteRule(state) {
   {
     ruleName = '';
   }
-  checkedItems = new Map(
-    ruleOfList
-      ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
-      ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
-  );
-  Object.keys(allRules).forEach(ruleName => {
-        ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
-        valueMappings[ruleName] = allRules[ruleName].defaultValue;
-      });
   await handleSave(false);
 }
       
@@ -817,14 +808,6 @@ async function popularStrategy(state: string) {
                 { condition: "under", name: "stochRSI", value: 40 },
                 { condition: "over", name: "marketCap", value: '1B' },
                 { condition: "under", name: "mfi", value: 40 }
-            ]
-        },
-        topAIStocks: {
-            name: 'Best AI Forecast',
-            rules: [
-                { condition: "over", name: "fundamentalAnalysis", value: '70%' },
-                { condition: "over", name: "trendAnalysis", value: '60%' },
-                { condition: "over", name: "marketCap", value: '1B' }
             ]
         },
         underValuedStocks: {
