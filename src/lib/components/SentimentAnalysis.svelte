@@ -1,16 +1,15 @@
 
 <script lang ='ts'>
-    import {sentimentComponent, displayCompanyName, stockTicker, etfTicker, cryptoTicker, assetType, getCache, setCache} from '$lib/store';
+    import {displayCompanyName} from '$lib/store';
     import InfoModal from '$lib/components/InfoModal.svelte';
 
-    let sentimentList = [];
-    let isLoaded = false;
     export let data;
-    
-    let oneMonthResult;
-    let outlook;
 
-    let oneYearResult;
+    let sentimentList = data?.getSentimentAnalysis;
+    
+    let oneMonthResult = sentimentList?.at(1)?.value;
+    let outlook = oneMonthResult > 5 ? 'Positive' : oneMonthResult < 5 ? 'Negative' : 'Neutral';
+    let oneYearResult = sentimentList?.at(-1)?.value;
 
     let dashedLinePosition = {
         '0': '-mt-[80px]',
@@ -25,58 +24,6 @@
         '9': '-mt-[190px]',
         '10': '-mt-[200px]',
     }
-
-const getSentimentAnalysis = async (ticker) => {
-    // Get cached data for the specific tickerID
-    const cachedData = getCache(ticker, 'getSentimentAnalysis');
-    if (cachedData) {
-      sentimentList = cachedData;
-    } else {
-
-      const postData = {'ticker': ticker, path: 'sentiment-analysis'};
-      // make the POST request to the endpoint
-      const response = await fetch('/api/ticker-data', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(postData)
-      });
-
-      sentimentList = await response?.json();
-
-      // Cache the data for this specific tickerID with a specific name 'getSentimentAnalysis'
-      setCache(ticker, sentimentList, 'getSentimentAnalysis');
-    }
-    if(sentimentList?.length !== 0) {
-        $sentimentComponent = true;
-    } else {
-        $sentimentComponent = false;
-    }
-};
-
-
-
-$: {
-    if($assetType === 'stock' ? $stockTicker : $assetType === 'etf' ? $etfTicker : $cryptoTicker && typeof window !== 'undefined') {
-        
-        isLoaded= false;
-        const ticker = $assetType === 'stock' ? $stockTicker : $assetType === 'etf' ? $etfTicker : $cryptoTicker;
-        const asyncFunctions = [
-        getSentimentAnalysis(ticker)
-        ];
-        Promise.all(asyncFunctions)
-            .then((results) => {
-                oneMonthResult = sentimentList?.at(1)?.value;
-                outlook = oneMonthResult > 5 ? 'Positive' : oneMonthResult < 5 ? 'Negative' : 'Neutral';
-                oneYearResult = sentimentList?.at(-1)?.value;
-            })
-            .catch((error) => {
-                console.error('An error occurred:', error);
-            });
-        isLoaded = true;
-    }
-}
 </script>
     
     
@@ -95,7 +42,6 @@ $: {
                 />
             </div>
 
-            {#if isLoaded}
             {#if sentimentList?.length !== 0}
             
 
@@ -216,26 +162,7 @@ $: {
               <!--End AI News Score-->
     
             
-              
-            {:else}
-            <div class="flex justify-center items-center h-80">
-            <div class="relative">
-                <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <span class="loading loading-spinner loading-md"></span>
-                </label>
-            </div>
-            </div>  
-            
             {/if}
-            {:else}
-          <div class="flex justify-center items-center h-80">
-            <div class="relative">
-              <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <span class="loading loading-spinner loading-md"></span>
-              </label>
-            </div>
-          </div>  
-          {/if}
 
 
         </main>

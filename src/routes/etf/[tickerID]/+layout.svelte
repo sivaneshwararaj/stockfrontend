@@ -120,11 +120,12 @@ async function loadSearchData() {
     scrollToItem(item);
   
     const sectionMap = {
-      'options': '/options',
-      'holdings': '/holdings',
-      'dividends': '/dividends',
-      'stats': '/stats',
-      'news': '/news',
+      options: '/options',
+      holdings: "/holdings",
+       forecast: "/forecast",
+      dividends: '/dividends',
+      stats: '/stats',
+      news: '/news',
     };
   
     if (state !== 'overview' && sectionMap[state]) {
@@ -419,6 +420,7 @@ $: {
       const parts = $page?.url?.pathname?.split('/');
       const sectionMap = {
         'stats': 'stats',
+        'forecast': 'forecast',
         'options': 'options',
         'holdings': 'holdings',
         'dividends': 'dividends',
@@ -669,6 +671,12 @@ $: {
                                                   Stats
                                                 </a>
                                                 <div class="{displaySection === 'stats' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]" />
+                                              </li>
+                                              <li class="cursor-pointer flex flex-col items-center">
+                                                <a href={`/etf/${$etfTicker}/forecast`} id="item10" on:click={() => (changeSection('forecast','item10'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'forecast' ? 'text-white ' : 'bg-[#09090B]'}" >
+                                                  Forecast
+                                                </a>
+                                                <div class="{displaySection === 'forecast' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]" />
                                               </li>
                                               <li class="cursor-pointer flex flex-col items-center">
                                                 <a href={`/etf/${$etfTicker}/options`} id="item3" on:click={() => (changeSection('options','item3'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'options' ? 'text-white ' : 'bg-[#09090B]'}" >

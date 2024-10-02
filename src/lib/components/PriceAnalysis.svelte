@@ -1,9 +1,9 @@
 
-<script lang ='ts'>
-  import { priceAnalysisComponent, displayCompanyName, stockTicker, etfTicker, cryptoTicker, assetType, screenWidth, getCache, setCache} from '$lib/store';
+<script lang ="ts">
+  import { displayCompanyName, screenWidth} from '$lib/store';
   import InfoModal from '$lib/components/InfoModal.svelte';
   import { Chart } from 'svelte-echarts'
-
+import { onMount } from 'svelte';
 
   import { init, use } from 'echarts/core'
   import { LineChart } from 'echarts/charts'
@@ -14,12 +14,10 @@
 
 
   export let data;
-
   let isLoaded = false;
 
-
-
-    let priceAnalysisDict = {};
+    let priceAnalysisDict = data?.getPriceAnalysis;
+    let lastPrice = data?.getStockQuote?.price ?? "n/a";
 
     const modalContent = `
     Our AI model, employing a Bayesian approach, predicts future prices by breaking down trends, seasonality, and holiday effects. It integrates uncertainty to offer forecasts with intervals.<br><br>
@@ -37,7 +35,6 @@
     let r2Score;
     let mape;
     let priceSentiment = 'n/a';
-    let lastPrice = 'n/a';
     let oneYearPricePrediction = 'n/a';
     let optionsData;
     
@@ -71,8 +68,8 @@ function getPlotOptions() {
       formatter: function (value) {
         // Assuming dates are in the format 'yyyy-mm-dd'
         // Extract the month and day from the date string and convert the month to its abbreviated name
-        const dateParts = value.split('-');
-        const year = dateParts[0].substring(2); // Extracting the last two digits of the year
+        const dateParts = value?.split('-');
+        const year = dateParts[0]?.substring(2); // Extracting the last two digits of the year
         const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
         return `${monthNames[monthIndex]} '${year}`;
       }
@@ -146,63 +143,14 @@ function getPlotOptions() {
 return option;
 }
 
-
-const getPriceAnalysis = async (ticker) => {
-    // Get cached data for the specific tickerID
-    const cachedData = getCache(ticker, 'getPriceAnalysis');
-    if (cachedData) {
-      priceAnalysisDict = cachedData;
-    } else {
-
-      const postData = {'ticker': ticker, path: 'price-analysis'};
-      // make the POST request to the endpoint
-      const response = await fetch('/api/ticker-data', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(postData)
-      });
-
-      priceAnalysisDict = await response.json();
-
-      // Cache the data for this specific tickerID with a specific name 'getPriceAnalysis'
-      setCache(ticker, priceAnalysisDict, 'getPriceAnalysis');
-    }
-
-  if(Object?.keys(priceAnalysisDict)?.length !== 0) {
-    $priceAnalysisComponent = true;
-  }
-  else {
-    $priceAnalysisComponent = false;
-  }
-};
-
-
-
-$: {
-  if(($assetType === 'stock' ? $stockTicker : $assetType === 'etf' ? $etfTicker : $cryptoTicker) && typeof window !== 'undefined') {
-    isLoaded = false;
-    lastPrice = data?.getStockQuote?.price ?? "n/a";
-    const ticker = $assetType === 'stock' ? $stockTicker : $assetType === 'etf' ? $etfTicker : $cryptoTicker;
-
-    const asyncFunctions = [
-      getPriceAnalysis(ticker)
-      ];
-      Promise.all(asyncFunctions)
-          .then((results) => {
-            oneYearPricePrediction = priceAnalysisDict?.meanResult?.slice(-1)?.at(0);          
-            mape = priceAnalysisDict?.mape;
-            r2Score = priceAnalysisDict?.r2Score;
-            priceSentiment = lastPrice < oneYearPricePrediction ? 'Bullish' : 'Bearish';
-            optionsData = getPlotOptions()
-          })
-          .catch((error) => {
-            console.error('An error occurred:', error);
-          });
-    isLoaded = true;
-  }
-}
+onMount(async () => {
+  oneYearPricePrediction = priceAnalysisDict?.meanResult?.slice(-1)?.at(0);          
+  mape = priceAnalysisDict?.mape;
+  r2Score = priceAnalysisDict?.r2Score;
+  priceSentiment = lastPrice < oneYearPricePrediction ? 'Bullish' : 'Bearish';
+  optionsData = await getPlotOptions()
+  isLoaded = true;
+})
 
 </script>
     
@@ -223,7 +171,6 @@ $: {
             </div>
     
             {#if isLoaded}
-
             {#if Object?.keys(priceAnalysisDict)?.length !== 0}
             <div class="w-full flex flex-col items-start">
                 <div class="text-white text-[1rem] mt-1 sm:mt-3 mb-1 w-full">
@@ -330,6 +277,7 @@ $: {
               </div>
             </div>  
             {/if}
+
 
         </main>
     </section>

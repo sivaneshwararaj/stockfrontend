@@ -3,7 +3,7 @@
   import {AreaSeries, Chart, PriceLine, CandlestickSeries} from 'svelte-lightweight-charts';
   
   import { TrackingModeExitMode } from 'lightweight-charts';
-  import {setCache, getCache, screenWidth, taRatingComponent, displayCompanyName, numberOfUnreadNotification, globalForm, priceAnalysisComponent, trendAnalysisComponent, sentimentComponent, varComponent, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, cryptoTicker} from '$lib/store';
+  import {setCache, getCache, screenWidth, taRatingComponent, displayCompanyName, numberOfUnreadNotification, globalForm, varComponent, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, cryptoTicker} from '$lib/store';
   import { onDestroy } from 'svelte';
   import CryptoKeyInformation from '$lib/components/CryptoKeyInformation.svelte';
   import Lazy from '$lib/components/Lazy.svelte';
@@ -1125,32 +1125,7 @@ afterUpdate(async () => {
 
                                
 
-             
-
-                                
-                                <Lazy>
-                                  <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$priceAnalysisComponent ? 'hidden' : ''}">
-                                  {#await import('$lib/components/PriceAnalysis.svelte') then {default: Comp}}
-                                    <svelte:component this={Comp} data={data} />
-                                  {/await}
-                                </div>
-                                </Lazy>
-
-                                <Lazy>
-                                  <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$trendAnalysisComponent ? 'hidden' : ''}">
-                                  {#await import('$lib/components/TrendAnalysis.svelte') then {default: Comp}}
-                                    <svelte:component this={Comp} data={data} />
-                                  {/await}
-                                </div>
-                                </Lazy>
-
-                                <Lazy>
-                                  <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$sentimentComponent ? 'hidden' : ''}">
-                                  {#await import('$lib/components/SentimentAnalysis.svelte') then {default: Comp}}
-                                    <svelte:component this={Comp} data={data} />
-                                  {/await}
-                                </div>
-                                </Lazy>
+      
                                 
                                 <Lazy>
                                   <div class="w-full sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$varComponent ? 'hidden' : ''}">

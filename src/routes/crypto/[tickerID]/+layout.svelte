@@ -110,8 +110,9 @@ function changeSection(state, item) {
   scrollToItem(item);
 
   const sectionMap = {
-    'stats': '/stats',
-    'news': '/news',
+    stats: "/stats",
+    forecast: "/forecast",
+    news: "/news",
   };
 
   if (state !== 'overview' && sectionMap[state]) {
@@ -377,18 +378,7 @@ $: {
     
 
 
-let charNumber = 12;
-
-$: {
-  if($screenWidth < 640)
-  {
-    charNumber = 12;
-  }
-  else {
-    charNumber = 25;
-  }
-}
-    
+$: charNumber = $screenWidth < 640 ? 12 : 25;
 
 $: {
   if($cryptoTicker && typeof window !== 'undefined' && $page.url.pathname === `/crypto/${$cryptoTicker}`)
@@ -403,6 +393,7 @@ $: {
       const parts = $page?.url?.pathname?.split('/');
       const sectionMap = {
         'stats': 'stats',
+        'forecast': 'forecast',
         'congress-trading': 'congress-trading',
         'news': 'news'
       };
@@ -636,6 +627,12 @@ $: {
                                             <li class="cursor-pointer flex flex-col items-center">
                                               <a href={`/crypto/${$cryptoTicker}/stats`} id="item2" on:click={() => (changeSection('stats','item2'))} class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'stats' ? 'text-white ' : 'bg-[#09090B]'}" >Stats</a>
                                               <div class="{displaySection === 'stats' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]" />
+                                            </li>
+                                            <li class="cursor-pointer flex flex-col items-center">
+                                              <a href={`/crypto/${$cryptoTicker}/forecast`} id="item2" on:click={() => (changeSection('forecast','item3'))} class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'forecast' ? 'text-white ' : 'bg-[#09090B]'}" >
+                                                Forecast
+                                              </a>
+                                              <div class="{displaySection === 'forecast' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]" />
                                             </li>
                                             <li class="cursor-pointer flex flex-col items-center">
                                               <a href={`/crypto/${$cryptoTicker}/congress-trading`} id="item7" on:click={() => (changeSection('congress-trading','item7'))} class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'congress-trading' ? 'text-white ' : 'bg-[#09090B]'}" >

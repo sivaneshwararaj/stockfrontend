@@ -1296,32 +1296,7 @@ async function exportData() {
                                     {/await}
                                   </div>
                                 </Lazy>
-
-
-                                <Lazy>
-                                  <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$priceAnalysisComponent ? 'hidden' : ''}">
-                                  {#await import('$lib/components/PriceAnalysis.svelte') then {default: Comp}}
-                                    <svelte:component this={Comp} data={data} />
-                                  {/await}
-                                </div>
-                                </Lazy>
-                                  
-                                <Lazy>
-                                  <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$trendAnalysisComponent ? 'hidden' : ''}">
-                                  {#await import('$lib/components/TrendAnalysis.svelte') then {default: Comp}}
-                                    <svelte:component this={Comp} data={data} />
-                                  {/await}
-                                </div>
-                                </Lazy>
-
-                                  <Lazy>
-                                    <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$sentimentComponent ? 'hidden' : ''}">
-                                    {#await import('$lib/components/SentimentAnalysis.svelte') then {default: Comp}}
-                                      <svelte:component this={Comp} data={data} />
-                                    {/await}
-                                  </div>
-                                  </Lazy>
-
+    
                                   <Lazy>
                                     <div class="w-full sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$varComponent ? 'hidden' : ''}">
                                     {#await import('$lib/components/VaR.svelte') then {default: Comp}}

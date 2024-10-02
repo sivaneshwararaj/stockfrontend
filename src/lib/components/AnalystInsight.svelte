@@ -1,12 +1,8 @@
 <script lang="ts">
-  import { analystInsightComponent, stockTicker, getCache, setCache } from "$lib/store";
+  import { stockTicker} from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
 
   export let data;
-
-  let isLoaded = false;
-
-  let rawData = {};
 
   function latestInfoDate(inputDate) {
     // Convert the input date string to milliseconds since epoch
@@ -25,47 +21,6 @@
     return differenceInDays <= 1;
   }
 
-  const getAnalystInsight = async (ticker) => {
-    // Get cached data for the specific tickerID
-    const cachedData = getCache(ticker, "getAnalystInsight");
-    if (cachedData) {
-      rawData = cachedData;
-    } else {
-      const postData = { ticker: ticker, path: 'analyst-insight' };
-      // make the POST request to the endpoint
-      const response = await fetch("/api/ticker-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-
-      rawData = await response.json();
-      // Cache the data for this specific tickerID with a specific name 'getAnalystInsight'
-      setCache(ticker, rawData, "getAnalystInsight");
-    }
-
-    if (Object?.keys(rawData)?.length !== 0) {
-      $analystInsightComponent = true;
-    } else {
-      $analystInsightComponent = false;
-    }
-  };
-
-  $: {
-    if ($stockTicker && typeof window !== "undefined") {
-      isLoaded = false;
-      const ticker = $stockTicker;
-      const asyncFunctions = [getAnalystInsight(ticker)];
-      Promise.all(asyncFunctions)
-        .then((results) => {})
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
-      isLoaded = true;
-    }
-  }
 </script>
 
 <section class="overflow-hidden text-white h-full pb-8">
@@ -87,8 +42,6 @@
       />
     </div>
 {#if data?.user?.tier === 'Pro'}
-      {#if isLoaded}
-        {#if Object?.keys(rawData)?.length !== 0}
           <div class="w-full flex flex-col items-start">
             <div class="text-white text-[1rem] mt-2 mb-2 w-full">The AI model summarizes the latest Wallstreet Analyst Insight Report and extracts key points for you, focusing on what matters most.</div>
           </div>
@@ -99,22 +52,22 @@
             <div class="relative">
               <div class="">
                 <div class="flex justify-center">
-                  <!--<div class="{rawData.changesPercentage >= 0 ? 'bg-[#37C97D]' : 'bg-[#FF2F1F]'} w-1.5 mb-5 rounded-l-xl" />-->
+                  <!--<div class="{data?.getAnalystInsight.changesPercentage >= 0 ? 'bg-[#37C97D]' : 'bg-[#FF2F1F]'} w-1.5 mb-5 rounded-l-xl" />-->
 
                   <!--Start Item-->
                   <div class="flex flex-row items-center w-full mb-6">
-                    <div class="w-full rounded-lg {latestInfoDate(rawData?.date) ? 'bg-[#F9AB00] bg-opacity-[0.1]' : 'bg-[#27272A]'} shadow-lg h-full pl-3 pt-2 pb-4">
+                    <div class="w-full rounded-lg {latestInfoDate(data?.getAnalystInsight?.date) ? 'bg-[#F9AB00] bg-opacity-[0.1]' : 'bg-[#27272A]'} shadow-lg h-full pl-3 pt-2 pb-4">
                       <div class="flex flex-col items-start">
                         <div class="flex flex-row items-start w-full pt-2">
-                          <span class="text-white text-[0.915rem] pl-2 italic">Last Report from {rawData.date}</span>
-                          {#if latestInfoDate(rawData.date)}
+                          <span class="text-white text-[0.915rem] pl-2 italic">Last Report from {data?.getAnalystInsight?.date}</span>
+                          {#if latestInfoDate(data?.getAnalystInsight?.date)}
                             <label class="bg-[#2D4F8A] text-white font-medium text-xs rounded-lg px-2 py-0.5 ml-3">New</label>
                           {/if}
                         </div>
 
                         <div class="flex flex-col w-full pt-3 pl-2 pr-2 sm:pr-4">
                           <span class="text-white text-[1rem]">
-                            {rawData?.insight}
+                            {data?.getAnalystInsight?.insight}
                           </span>
                         </div>
                       </div>
@@ -125,16 +78,6 @@
               </div>
             </div>
           </div>
-        {/if}
-      {:else}
-        <div class="flex justify-center items-center h-80">
-          <div class="relative">
-            <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <span class="loading loading-spinner loading-md"></span>
-            </label>
-          </div>
-        </div>
-      {/if}
        {:else}
         <div class="shadow-lg shadow-bg-[#000] bg-[#111112] sm:bg-opacity-[0.5] text-sm sm:text-[1rem] rounded-md w-full p-4 min-h-24 mt-4 text-white m-auto flex justify-center items-center text-center font-semibold">
             <svg class="mr-1.5 w-5 h-5 inline-block"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
