@@ -10,7 +10,6 @@
   import AIScore from "$lib/components/AIScore.svelte";
 
   export let data;
-
   $: $realtimePrice = data?.getStockQuote?.price?.toFixed(2);
 
   async function loadSearchData() {

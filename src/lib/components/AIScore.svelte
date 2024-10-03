@@ -1,16 +1,18 @@
+<script lang="ts">
+  import { scoreComponent, stockTicker } from '$lib/store';
+  
+  export let score;
+  export let tier;
 
-<script lang ="ts">
-  import { scoreComponent, stockTicker} from '$lib/store';
-    export let score;
-    export let tier;
-
-    $: {
-      if( $stockTicker && typeof window !== 'undefined') {
-        $scoreComponent = score !== (undefined || null) ? true : false;
-      }
+  // Use the correct reactive declaration
+  $: {
+    if ($stockTicker && typeof window !== 'undefined') {
+      // Correctly check if score is neither undefined nor null
+      $scoreComponent = score !== undefined && score !== null;
     }
+  }
 </script>
-    
+
     
     
     <section class="overflow-hidden text-white">
@@ -40,16 +42,16 @@
                                         class="stroke-current {score >= 7 ? 'text-[#37C97D]' : score >=4 ? 'text-[#FF9E21]' : 'text-[#FF2F1F]'}" 
                                         stroke-width="3" 
                                         stroke-dasharray="100.48" 
-                                        stroke-dashoffset="{100.48 - ((tier === 'Pro' ? score : 0) / 10) * 100.48}">
+                                        stroke-dashoffset="{100.48 - ((tier === 'Pro' || ['AAPL','NVDA','GOOGL','META','AMD']?.includes($stockTicker) ? score : 0) / 10) * 100.48}">
                                     </circle>
                                 </g>
                                 <!-- Text in the middle -->
-                                <text x="18" y="21" text-anchor="middle" font-size="10" fill="#000">{tier === 'Pro' ? score : 0}</text>
+                                <text x="18" y="21" text-anchor="middle" font-size="10" fill="#000">{tier === 'Pro' ||  ['AAPL','NVDA','GOOGL','META','AMD']?.includes($stockTicker) ? score : 0}</text>
                             </svg>
 
                             <!-- Percentage Text -->
                             <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                              {#if tier === 'Pro'}
+                              {#if tier === 'Pro' || ['AAPL','NVDA','GOOGL','META','AMD']?.includes($stockTicker) }
                                 <span class="text-center text-white text-xl font-semibold">
                                     {score}
                                 </span>
@@ -75,7 +77,7 @@
                             </div>
                 
                     </div>
-                    <h4 class="text-center text-white text-sm mt-1 font-semibold {tier === 'Pro' ? '': 'invisible'}">
+                    <h4 class="text-center text-white text-sm mt-1 font-semibold {tier === 'Pro' || ['AAPL','NVDA','GOOGL','META','AMD']?.includes($stockTicker) ? '': 'invisible'}">
                         {#if score === 10}
                             Strong Buy
                         {:else if score >=7}
