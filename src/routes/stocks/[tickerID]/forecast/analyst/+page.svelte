@@ -241,7 +241,7 @@ changeTab(0)
                           <div class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden">
                             <table class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                                 <thead class="">
-                                  <tr class="">
+                                  <tr class="border-b border-[#27272A]">
                                     <td class="text-white font-semibold text-[1rem] text-start">Analyst</td>
                                     <td class="text-white font-semibold text-[1rem] text-start">Rating</td>
                                     <td class="text-white font-semibold text-[1rem] text-end">Date</td>

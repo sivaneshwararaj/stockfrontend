@@ -141,7 +141,7 @@ $: {
    <div class="w-full overflow-x-scroll">
     <table class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto overflow-hidden">
       <thead>
-        <tr>
+        <tr class="border-b border-[#27272A]">
           <th class="text-white font-medium text-[1rem] text-start">IPO Date</th>
           <th class="text-white font-medium text-[1rem] text-start">Symbol</th>
           <th class="text-white font-medium text-[1rem]">Name</th>
@@ -216,7 +216,7 @@ $: {
   <div class="flex justify-center items-center h-80">
     <div class="relative">
     <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <span class="loading loading-spinner loading-md"></span>
+        <span class="loading loading-spinner loading-md text-gray-400"></span>
     </label>
     </div>
 </div>

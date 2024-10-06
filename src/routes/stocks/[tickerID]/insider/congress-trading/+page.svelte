@@ -200,7 +200,7 @@ onMount(async () => {
                       <div class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll">
                         <table class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                           <thead>
-                            <tr class="bg-[#09090B]">
+                            <tr class="bg-[#09090B] border-b border-[#27272A]">
                               <th class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold">
                                 Person
                               </th>
@@ -277,7 +277,7 @@ onMount(async () => {
                       <div class="flex justify-center items-center h-80">
                         <div class="relative">
                         <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            <span class="loading loading-spinner loading-md"></span>
+                            <span class="loading loading-spinner loading-md text-gray-400"></span>
                         </label>
                         </div>
                     </div>

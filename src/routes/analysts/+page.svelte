@@ -224,7 +224,7 @@ $: {
                   <div class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden">
                     <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                       <thead>
-                        <tr class="bg-[#09090B]">
+                        <tr class="bg-[#09090B] border-b border-[#27272A]">
                           <th on:click={() => { sortBy = 'rank'; changeOrder(order); }} class="cursor-pointer text-center bg-[#09090B] text-white text-[1rem] font-semibold">
                             Rank
                             <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'rank' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -260,7 +260,7 @@ $: {
                       <tbody>
                         {#each analytRatingList as item, index}
 
-                        <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === rawData?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
+                        <tr class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index+1 === rawData?.length && data?.user?.tier !== 'Pro' ? 'opacity-[0.1]' : ''}">
                           <td class="text-white text-sm sm:text-[1rem] font-semibold text-white text-center">
                             {item?.rank}
                           </td>
@@ -333,7 +333,7 @@ $: {
                   <div class="flex justify-center items-center h-80">
                     <div class="relative">
                     <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <span class="loading loading-spinner loading-md"></span>
+                        <span class="loading loading-spinner loading-md text-gray-400"></span>
                     </label>
                     </div>
                   </div>

@@ -376,7 +376,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
     <div class="w-full overflow-x-scroll no-scrollbar">
       <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]">
         <thead>
-          <tr>
+          <tr class="border-b border-[#27272A]">
             <th class="text-white font-semibold text-[1rem] whitespace-nowrap">Symbol</th>
             <th class="text-white font-semibold text-[1rem] whitespace-nowrap">Name</th>
             <th on:click={() => { sortBy = 'change'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-[1rem] text-end">
@@ -399,7 +399,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
         </thead>
         <tbody>
           {#each gainerLoserActive as item, index}
-          <tr on:click={() => goto("/stocks/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
+          <tr on:click={() => goto("/stocks/"+item?.symbol)} class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
     
           <td class="border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap">
              <a href={"/stocks/"+item?.symbol} class="sm:hover:text-white text-blue-400">
@@ -449,7 +449,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
   <div class="flex justify-center items-center h-80">
     <div class="relative">
     <label class="bg-[#09090B] rounded-lg h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <span class="loading loading-spinner loading-md"></span>
+        <span class="loading loading-spinner loading-md text-gray-400"></span>
     </label>
     </div>
 </div>

@@ -365,7 +365,7 @@ $: {
                   <div class="w-full overflow-x-scroll no-scrollbar">  
                     <table class="table table-sm table-compact rounded-none sm:rounded-md w-full border-[#09090B] m-auto mt-4 ">
                         <thead>
-                          <tr class="whitespace-nowrap">
+                          <tr class="whitespace-nowrap border-b border-[#27272A]">
                             <th class="text-white font-semibold text-sm">Symbol</th>
                             <th class="text-white font-semibold text-sm">Company Name</th>
                             <th class="text-white font-semibold text-sm">Market Cap</th>

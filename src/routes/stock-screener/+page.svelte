@@ -1145,7 +1145,7 @@ function handleInput(event) {
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
                                             <label on:click={() => changeRuleCondition(row?.rule, 'under')} class="cursor-pointer flex flex-row mr-2 justify-center items-center">
-                                              <input type="radio" class="radio checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2" 
+                                              <input type="radio" class="radio ring-0 checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2" 
                                                   checked={ruleCondition[row?.rule] === 'under'} name={row?.rule} />
                                               <span class="label-text text-white">Under</span> 
                                             </label>
@@ -1456,7 +1456,7 @@ function handleInput(event) {
                   <div class="flex justify-center items-center h-80">
                     <div class="relative">
                     <label class="bg-[#262626] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <span class="loading loading-spinner loading-md"></span>
+                        <span class="loading loading-spinner loading-md text-gray-400"></span>
                     </label>
                     </div>
                   </div>

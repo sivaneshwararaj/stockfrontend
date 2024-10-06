@@ -273,7 +273,7 @@ updateYearRange()
             <div class="flex flex-col justify-center items-center w-full m-auto overflow-x-scroll no-scrollbar">
               <table class="table table-sm table-pin-rows table-compact text-start w-full flex justify-start items-center w-full m-auto">
                 <thead>
-                  <tr class="bg-[#09090B] text-white text-sm">
+                  <tr class="bg-[#09090B] text-white text-sm ">
                     <th class="text-start text-sm sm:text-[1rem] font-semibold"> Metric </th>
                     <th class="text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold">
                       {$stockTicker}
@@ -282,7 +282,7 @@ updateYearRange()
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Cumulative Return </td>
                     <td class="text-white text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Cumulative Return %"] >= 0}
@@ -300,7 +300,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Compound Annual Growth Rate (CAGR) </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["CAGR %"] >= 0}
@@ -318,7 +318,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Sharpe </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Sharpe"]?.toFixed(2)}
@@ -328,7 +328,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A]">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Sortino </td>
                     <td class=" text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Sortino"]?.toFixed(2)}
@@ -338,7 +338,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Max Drawdown </td>
                     <td class="text-start text-white text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Max Drawdown"] >= 0}
@@ -356,7 +356,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Longest Drawdown Days </td>
                     <td class=" text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Longest DD Days"]}
@@ -366,7 +366,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Volatility (ann.) </td>
                     <td class=" text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Volatility (ann.) %"]}%
@@ -376,7 +376,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Correlation </td>
                     <td class=" text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Correlation"]}%
@@ -386,7 +386,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> R^2 </td>
                     <td class=" text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["R^2"]}
@@ -396,7 +396,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Calmar </td>
                     <td class=" text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Calmar"]}
@@ -406,7 +406,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Skew </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Skew"]?.toFixed(2)}
@@ -416,7 +416,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Kurtosis </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Kurtosis"]?.toFixed(2)}
@@ -426,7 +426,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-starttext-sm sm:text-[1rem] whitespace-nowrap"> Expected Daily </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Expected Daily %"] >= 0}
@@ -444,7 +444,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Expected Monthly </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Expected Monthly %"] >= 0}
@@ -462,7 +462,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Expected Yearly </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Expected Yearly %"] >= 0}
@@ -480,7 +480,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Kelly Criterion </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Kelly Criterion %"]}%
@@ -490,7 +490,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Risk of Ruin </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Risk of Ruin %"]}%
@@ -500,7 +500,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Daily Value-at-Risk </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Daily Value-at-Risk %"] >= 0}
@@ -518,7 +518,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Expected Shortfall (cVaR) </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Expected Shortfall (cVaR) %"] >= 0}
@@ -536,7 +536,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Max Consecutive Wins </td>
                     <td class="text-start text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Max Consecutive Wins"]}
@@ -546,7 +546,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"> Max Consecutive Losses </td>
                     <td class="text-start text-end text-sm sm:text-[1rem]">
                       {quantStats[$stockTicker?.toUpperCase()]["Max Consecutive Losses"]}
@@ -556,7 +556,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-starttext-sm sm:text-[1rem] whitespace-nowrap"> Gain/Pain Ratio </td>
                     <td class="text-start text-end text-sm sm:text-[1rem]">
                       {quantStats[$stockTicker?.toUpperCase()]["Gain/Pain Ratio"]?.toFixed(2)}
@@ -566,7 +566,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Gain/Pain (1M) </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Gain/Pain (1M)"]?.toFixed(2)}
@@ -576,7 +576,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Payoff Ratio </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Payoff Ratio"]?.toFixed(2)}
@@ -586,7 +586,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Profit Factor </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Profit Factor"]?.toFixed(2)}
@@ -596,7 +596,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Outlier Win Ratio </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Outlier Win Ratio"]?.toFixed(2)}
@@ -606,7 +606,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Outlier Loss Ratio </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Outlier Loss Ratio"]?.toFixed(2)}
@@ -616,7 +616,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> MTD </td>
                     <td class="text-start text-end text-sm sm:text-[1rem]">
                       {#if quantStats[$stockTicker?.toUpperCase()]["MTD %"] >= 0}
@@ -634,7 +634,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> 3M </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["3M %"] >= 0}
@@ -652,7 +652,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> 6M </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["6M %"] >= 0}
@@ -670,7 +670,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-starttext-sm sm:text-[1rem] whitespace-nowrap"> Best Day </td>
                     <td class="text-start text-end text-sm">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Best Day %"] >= 0}
@@ -688,7 +688,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Worst Day </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Worst Day %"] >= 0}
@@ -706,7 +706,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Best Month </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Best Month %"] >= 0}
@@ -724,7 +724,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Worst Month </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Worst Month %"] >= 0}
@@ -742,7 +742,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Best Year </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Best Year %"] >= 0}
@@ -760,7 +760,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Worst Year </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Worst Year %"] >= 0}
@@ -778,7 +778,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Avg. Drawdown </td>
                     <td class="text-start text-end ttext-sm sm:text-[1rem]">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Avg. Drawdown"] >= 0}
@@ -796,7 +796,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Avg. Drawdown Days </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Avg. Drawdown Days"]}
@@ -806,7 +806,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Recovery Factor </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Recovery Factor"]?.toFixed(2)}
@@ -816,7 +816,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Ulcer Index </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Ulcer Index"]?.toFixed(2)}
@@ -826,7 +826,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Avg. Up Month </td>
                     <td class="text-start text-end text-sm sm:text-[1rem]">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Avg. Up Month %"] >= 0}
@@ -844,7 +844,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Avg. Down Month </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {#if quantStats[$stockTicker?.toUpperCase()]["Avg. Down Month %"] >= 0}
@@ -862,7 +862,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Win Days </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Win Days %"]?.toFixed(2)}%
@@ -872,7 +872,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Win Month </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Win Month %"]?.toFixed(2)}%
@@ -882,7 +882,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Win Quarter </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Win Quarter %"]?.toFixed(2)}%
@@ -892,7 +892,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr class="text-white odd:bg-[#27272A] font-semibold">
+                  <tr class="text-white odd:bg-[#27272A] border-b border-[#27272A]">
                     <td class="text-start text-sm sm:text-[1rem] whitespace-nowrap"> Win Year </td>
                     <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap">
                       {quantStats[$stockTicker?.toUpperCase()]["Win Year %"]?.toFixed(2)}%

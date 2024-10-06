@@ -188,7 +188,7 @@ $: {
                     <div class="flex justify-start items-center w-full m-auto mt-6 overflow-x-scroll">
                     <table class="table table-sm table-compact w-full">
                       <thead>
-                        <tr>
+                        <tr class="border-b border-[#27272A]">
                           <th class="text-white font-semibold text-sm sm:text-[1rem] text-start bg-[#09090B]">Date</th>
                           <th class="text-white font-semibold text-sm sm:text-[1rem] text-end bg-[#09090B]">Previous</th>
                           <th class="text-white font-semibold text-sm sm:text-[1rem] text-end bg-[#09090B]">Forecast</th>

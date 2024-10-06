@@ -724,7 +724,7 @@ $: {
                                   {#if activeIdx === 0}
                                     <table class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto">
                                         <thead>
-                                          <tr class="">
+                                          <tr class="border-b border-[#27272A]">
                                             <td class="text-slate-200 font-semibold text-sm text-start">Date</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">% Change</td>
                                             <td class="text-slate-200 font-semibold text-sm text-end">P/C</td>
@@ -1062,7 +1062,7 @@ $: {
         <div class="m-auto flex justify-center items-center h-80">
             <div class="relative">
             <label class="bg-[#272727] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <span class="loading loading-spinner loading-md"></span>
+                <span class="loading loading-spinner loading-md text-gray-400"></span>
             </label>
             </div>
         </div>

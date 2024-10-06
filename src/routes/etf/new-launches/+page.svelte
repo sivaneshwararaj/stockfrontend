@@ -124,7 +124,7 @@ $: charNumber = $screenWidth < 640 ? 30 : 40
     <div class="w-full overflow-x-scroll">
     <table class="mt-5 table table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto overflow-hidden">
       <thead>
-        <tr>
+        <tr class="border-b border-[#27272A]">
           <th class="text-white font-semibold text-[1rem]">Inception</th>
           <th class="text-white font-semibold text-[1rem]">Symbol</th>
           <th class="text-white font-semibold text-[1rem] ">Fund Name</th>
