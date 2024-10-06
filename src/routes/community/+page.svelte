@@ -10,6 +10,8 @@
   import SkeletonLoading from '$lib/components/SkeletonLoading.svelte';
 	import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
   import communityBanner from '$lib/images/community_banner.jpg';
+  import * as Avatar from "$lib/components/shadcn/avatar/index.js";
+
   export let data;
   export let form;
 
@@ -609,18 +611,17 @@ $: {
                                         <div class="ml-12 avatar-group -space-x-6 rtl:space-x-reverse">
                                           {#each discordData?.members?.slice(0,5) as item, index}
                                             {#if index < 4}
-                                              <div class="avatar">
-                                                <div class="w-8">
-                                                  <img src={item['avatar_url']} />
-                                                </div>
-                                              </div>
-                                            {/if}
+                                            <Avatar.Root>
+                                            <Avatar.Image src={item['avatar_url']}  />
+                                            <Avatar.Fallback>CN</Avatar.Fallback>
+                                          </Avatar.Root>
+                                          {/if}
                                             {#if index >=4}
-                                            <div class="avatar placeholder">
-                                              <div class="w-8 bg-neutral text-sm text-white">
-                                                <span>+{discordData?.members?.length -4}</span>
-                                              </div>
+                                            <Avatar.Root class="bg-neutral relative">
+                                            <div class="w-8 h-8 flex-shrink-0 text-sm text-center text-white flex items-center justify-center">
+                                              <span class="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">+{discordData?.members?.length - 4}</span>
                                             </div>
+                                          </Avatar.Root>
                                             {/if}
                                           {/each}
                                         </div>

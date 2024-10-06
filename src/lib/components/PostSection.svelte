@@ -418,7 +418,7 @@ $: {
                   <!--Start PostType Text-->
                   <div class="flex flex-wrap md:flex-row container">
                     <div class="cursor-pointer flex items-start">
-                        <div class="flex-grow w-full sm:w-3/4 max-w-2xl break-all">
+                        <div class="flex-grow w-full sm:w-3/4 max-w-2xl break-all text-white">
   
                           
                         <div class="mt-2 flex flex-wrap sm:hover:text-[#0099FF] text-start text-[1.1rem] sm:text-xl font-semibold mb-2 flex-shrink w-fit break-normal">
@@ -471,7 +471,7 @@ $: {
                     <div class="flex flex-col sm:flex-row items-center sm:items-start pr-7 pb-2">
                       <div class="flex flex-col items-start w-full">
                         <!-- Post Title -->
-                        <h2 class="pl-3 pt-2 text-start sm:hover:text-[#0099FF] text-[1.1rem] sm:text-xl font-semibold w-full mb-1 pr-5 flex-shrink break-normal">
+                        <h2 class="pl-3 pt-2 text-white text-start sm:hover:text-[#0099FF] text-[1.1rem] sm:text-xl font-semibold w-full mb-1 pr-5 flex-shrink break-normal">
                           {posts?.title}
                         </h2>
                         <!-- Post Description -->
