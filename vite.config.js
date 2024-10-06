@@ -28,6 +28,11 @@ const config = {
           }
         },
       },
+      // Add dynamicRequireTargets to handle specific dynamic imports
+      dynamicRequireTargets: [
+        "node_modules/sharp/**/*",
+        // add other paths if necessary
+      ],
     },
     brotliSize: true, // Enable Brotli compression
   },
