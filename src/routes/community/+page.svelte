@@ -22,9 +22,9 @@
   let loading = true;
 
 
-  let moderators ;
-  let communityStats;
-  let discordData = [];
+  let moderators = data?.getModerators;
+  let communityStats = data?.getCommunityStats;
+  let discordData = data?.getDiscordWidget
   let posts = null;
   
 
@@ -62,58 +62,6 @@ async function infiniteHandler({ detail: { loaded, complete } })
 
 }
 
-
-1
-
-const getModerators = async () => {
-    let output;
-
-    // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getModerators');
-    if (cachedData) {
-      output = cachedData;
-    } else {
-
-      const response = await fetch('/api/get-moderators', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      output = (await response.json())?.items;
-
-      setCache('', output, 'getModerators');
-    }
-
-    return output;
-  };
-
-
-
-const getCommunityStats = async () => {
-    let output;
-    // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getCommunityStats');
-    if (cachedData) {
-      output = cachedData;
-    } else {
-
-      const response = await fetch('/api/get-community-stats', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      output = (await response.json())?.items;
-
-
-      setCache('', output, 'getCommunityStats');
-    }
-
-    return output;
-};
 
 
 
@@ -156,30 +104,6 @@ async function getPost() {
 }
 
 
-const getDiscordWidget = async () => {
-    let output;
-    // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getDiscordWidget');
-    if (cachedData) {
-      output = cachedData;
-    } else {
-
-      // make the POST request to the endpoint
-      const response = await fetch('https://discord.com/api/guilds/1165618982133436436/widget.json', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      output = await response.json();
-      setCache('', output, 'getDiscordWidget');
-    }
-
-    return output;
-};
-
-
 
 let LoginPopup;
 let BottomNavigation;
@@ -187,11 +111,8 @@ let BottomNavigation;
 onMount(async () => {
   if (Object?.keys($cachedPosts)?.length === 0) {
     // Only make API requests if cached posts are not available
-    [communityStats, moderators, posts, discordData] = await Promise.all([
-      getCommunityStats(),
-      getModerators(),
+    [posts] = await Promise.all([
       getPost(),
-      getDiscordWidget(),
       //getTickerMentioning(),
     ]);
 
@@ -201,9 +122,6 @@ onMount(async () => {
   else {
     // Use cached data if available
     posts = $cachedPosts?.posts;
-    communityStats = getCache('', 'getCommunityStats');
-    moderators = getCache('', 'getModerators');
-    discordData = getCache('','getDiscordWidget');
     //tickerMentioning = getCache('','getTickerMentioning');
   }
 

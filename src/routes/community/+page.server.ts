@@ -2,11 +2,73 @@ import { error, fail, redirect } from "@sveltejs/kit";
 import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
+export const load = async ({ locals, setHeaders }) => {
+  const { pb } = locals;
+
+  const getDiscordWidget = async () => {
+    // make the POST request to the endpoint
+    const response = await fetch(
+      "https://discord.com/api/guilds/1165618982133436436/widget.json",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const output = await response.json();
+
+    return output;
+  };
+
+  const getCommunityStats = async () => {
+    let output;
+    let totalUsers = 0;
+    let totalPosts = 0;
+    let totalComments = 0;
+
+    try {
+      totalUsers = (await pb.collection("users").getList(1, 1))?.totalItems;
+      totalPosts = (await pb.collection("posts").getList(1, 1))?.totalItems;
+      totalComments = (await pb.collection("comments").getList(1, 1))
+        ?.totalItems;
+
+      output = { totalUsers, totalPosts, totalComments };
+    } catch (e) {
+      console.error(e);
+      output = { totalUsers, totalPosts, totalComments };
+    }
+
+    return output;
+  };
+
+  const getModerators = async () => {
+    let output;
+    try {
+      output = await pb.collection("moderators").getFullList({
+        expand: "user",
+      });
+    } catch (e) {
+      output = [];
+    }
+    return output;
+  };
+
+  setHeaders({ "cache-control": "public, max-age=3000" });
+  // Make sure to return a promise
+  return {
+    getDiscordWidget: await getDiscordWidget(),
+    getCommunityStats: await getCommunityStats(),
+    getModerators: await getModerators(),
+  };
+};
+
 export const actions = {
   login: async ({ request, locals }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      loginUserSchema,
+      loginUserSchema
     );
 
     if (errors) {
@@ -40,7 +102,7 @@ export const actions = {
   register: async ({ locals, request }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      registerUserSchema,
+      registerUserSchema
     );
 
     if (errors) {
@@ -94,7 +156,7 @@ await locals.pb?.collection('users').update(
     const redirectURL = `${url.origin}/oauth`;
 
     const targetItem = authMethods.authProviders?.findIndex(
-      (item) => item?.name === providerSelected,
+      (item) => item?.name === providerSelected
     );
     //console.log("==================")
     //console.log(authMethods.authProviders)

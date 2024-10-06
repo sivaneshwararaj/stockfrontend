@@ -7,7 +7,7 @@
 
   import { onMount, onDestroy } from 'svelte';
   import {getImageURL, addDays } from '$lib/utils';
-  import {setCache, getCache, newAvatar, numberOfUnreadNotification, postIdDeleted } from '$lib/store';
+  import {newAvatar, numberOfUnreadNotification, postIdDeleted } from '$lib/store';
 
   import toast from 'svelte-french-toast';
 	import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
@@ -22,8 +22,7 @@
 
 
   let zodErrors = [];
-  let moderators;
-  let numberOfPosts = '-';
+  let moderators = data?.getModerators;
   let loading = true;
   let isLoaded = false;
   let errorAvatar;
@@ -33,7 +32,7 @@
   let errorPasswordConfirm = '';
   let subscriptionData = data?.getSubscriptionData;
   let isClicked = false;
-  let userStats = {'numberOfPosts': 0, 'numberOfComments': 0}
+  let userStats = data?.getUserStats ?? {'numberOfPosts': 0, 'numberOfComments': 0}
 
   const showPreview = (event) => {
     const target = event.target;
@@ -328,70 +327,11 @@ async function updatePassword(event) {
 }
 
 
-
-const getModerators = async () => {
-    let output;
-
-    // Get cached data for the specific tickerID
-    const cachedData = getCache('', 'getModerators');
-    if (cachedData) {
-      output = cachedData;
-    } else {
-
-      // make the POST request to the endpoint
-      const response = await fetch('/api/get-moderators', {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json"
-        },
-      });
-
-      output = (await response.json())?.items;
-
-      setCache('', output, 'getModerators');
-    }
-
-    return output;
-  };
-
-
   
 function isModerator(data, moderators) {
     return moderators?.some(moderator => data?.user?.id === moderator?.expand?.user?.id);
   }
   
-
-const getUserStats = async () => {
-  let output;
-
-  // Get cached data for the specific tickerID
-  const cachedData = getCache(data?.user?.id, 'getUserStats');
-  if (cachedData) {
-    output = cachedData;
-  } else {
-
-    const postData = {'userId': data?.user?.id, 'path': 'get-user-stats'};
-
-    // make the POST request to the endpoint
-    const response = await fetch('/api/fastify-post-data', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-    });
-
-    output = (await response.json())?.items;
-
-
-    setCache(data?.user?.id, output, 'getUserStats');
-  }
-
-  return output
-};
-
-
-
 
 let posts: any[] = [];
 
@@ -492,10 +432,8 @@ onMount(async () => {
 
   window.scrollTo(0, 0);
 
-  [posts, moderators, userStats] = await Promise.all([
+  [posts] = await Promise.all([
       getPost(),
-      getModerators(),
-      getUserStats(),
     ]);
 
   loading = false;

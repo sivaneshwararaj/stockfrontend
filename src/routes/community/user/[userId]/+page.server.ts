@@ -3,7 +3,9 @@ import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
 export const load = async ({ locals, params }) => {
-  if (params.userId === locals?.user?.id) {
+  const { pb, user } = locals;
+
+  if (params.userId === user?.id) {
     redirect(303, "/community/profile");
   }
 
@@ -11,8 +13,62 @@ export const load = async ({ locals, params }) => {
     return params.userId;
   };
 
+  const getModerators = async () => {
+    let output;
+    try {
+      output = await pb.collection("moderators").getFullList({
+        expand: "user",
+      });
+    } catch (e) {
+      output = [];
+    }
+    return output;
+  };
+
+  const getUserStats = async () => {
+    let output;
+
+    try {
+      const getNumberOfPosts = await pb.collection("posts").getList(1, 1, {
+        filter: `user="${params.userId}"`,
+      });
+      const numberOfPosts = getNumberOfPosts?.totalItems;
+
+      const getNumberOfComments = await pb
+        .collection("comments")
+        .getList(1, 1, {
+          filter: `user="${params.userId}"`,
+        });
+      const numberOfComments = getNumberOfComments?.totalItems;
+
+      output = { numberOfPosts, numberOfComments };
+    } catch (e) {
+      output = { numberOfPosts: 0, numberOfComments: 0 };
+    }
+
+    return output;
+  };
+
+  const getUserData = async () => {
+    let output;
+
+    try {
+      output = await pb.collection("users").getOne(params?.userId);
+    } catch (e) {
+      output = {
+        karma: 0,
+        username: "-",
+      };
+    }
+
+    return output;
+  };
+
   return {
     userId: await userId(),
+    getModerators: await getModerators(),
+    getUserStats: await getUserStats(),
+    getUserData: await getUserData(),
   };
 };
 
@@ -20,7 +76,7 @@ export const actions = {
   login: async ({ request, locals }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      loginUserSchema,
+      loginUserSchema
     );
 
     if (errors) {
@@ -54,7 +110,7 @@ export const actions = {
   register: async ({ locals, request }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
-      registerUserSchema,
+      registerUserSchema
     );
 
     if (errors) {
@@ -92,9 +148,7 @@ await locals.pb?.collection('users').update(
   },
 
   oauth2: async ({ url, locals, request, cookies }) => {
-    const authMethods = await locals?.pb
-      ?.collection("users")
-      ?.listAuthMethods();
+    const authMethods = await pb?.collection("users")?.listAuthMethods();
 
     const data = await request?.formData();
     const providerSelected = data?.get("provider");
@@ -108,7 +162,7 @@ await locals.pb?.collection('users').update(
     const redirectURL = `${url.origin}/oauth`;
 
     const targetItem = authMethods.authProviders?.findIndex(
-      (item) => item?.name === providerSelected,
+      (item) => item?.name === providerSelected
     );
     //console.log("==================")
     //console.log(authMethods.authProviders)

@@ -6,7 +6,7 @@
 
   import { onMount} from 'svelte';
   import {getImageURL } from '$lib/utils';
-  import {setCache, getCache, numberOfUnreadNotification } from '$lib/store';
+  import {numberOfUnreadNotification } from '$lib/store';
 
 	import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
 
@@ -15,13 +15,9 @@
   export let form;
   
 
-  let userData = {
-  "karma": 0,
-  "stockfinder": true,
-  "username": '-',
-}
+  let userData = data?.getUserData
 
-let userStats = {'numberOfPosts': 0, 'numberOfComments': 0}
+let userStats = data?.getUserStats ?? {'numberOfPosts': 0, 'numberOfComments': 0}
 
   let moderators;
   let showTab = 'post'
@@ -40,22 +36,6 @@ let seenPostId = [];
 let noPostMore = false;
 
 
-const getUserData = async() => {
-
-  const postData = {'userId': data?.userId, 'path': 'get-user-data'};
-
-  const response = await fetch('/api/fastify-post-data', {
-      method: 'POST',
-      headers: {
-          "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-      });
-
-  const output = (await response.json())?.items;
-  
-  return output;
-};
 
 async function infiniteHandler({ detail: { loaded, complete } }) 
 {
@@ -81,62 +61,6 @@ async function infiniteHandler({ detail: { loaded, complete } })
   }
 
 }
-
-
-
-const getUserStats = async () => {
-  let output;
-
-  // Get cached data for the specific tickerID
-  const cachedData = getCache(data?.userId, 'getUserStats');
-  if (cachedData) {
-    output = cachedData;
-  } else {
-
-    const postData = {'userId': data?.userId, 'path': 'get-user-stats'};
-
-    // make the POST request to the endpoint
-    const response = await fetch('/api/fastify-post-data', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData)
-    });
-
-    output = (await response.json())?.items;
-
-
-    setCache(data?.userId, output, 'getUserStats');
-  }
-
-  return output
-};
-
-
-const getModerators = async () => {
-  let output;
-
-  // Get cached data for the specific tickerID
-  const cachedData = getCache('', 'getModerators');
-  if (cachedData) {
-    output = cachedData;
-  } else {
-
-    const response = await fetch('/api/get-moderators', {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json"
-      },
-    });
-
-    output = (await response.json())?.items;
-
-    setCache('', output, 'getModerators');
-  }
-
-  return output;
-};
 
 
   
@@ -180,14 +104,11 @@ onMount(async () => {
 
   window.scrollTo(0, 0);
 
-  [posts, moderators, userData, userStats] = await Promise?.all([
+  [posts] = await Promise?.all([
       getPost(),
-      getModerators(),
-      getUserData(),
-      getUserStats(),
     ]);
-  console.log(moderators)
-  if(!data?.userData)
+
+    if(!data?.userData)
   {
     LoginPopup = (await import('$lib/components/LoginPopup.svelte')).default;
   }
