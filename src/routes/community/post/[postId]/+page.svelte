@@ -18,6 +18,9 @@
   export let data;
   export let form;
       
+  let moderators = data?.getModerators;
+  let comments = data?.getAllComments;
+  let numberOfComments = 0;
 
   let post = data?.getOnePost;
   let isScrolled = false;
@@ -189,66 +192,10 @@
   };
   
   
-  
-     
-  let numberOfComments = 0;
-  let comments = [];
-  //let replyComments = data?.allReplyComments?.items.reverse() || [];
-  
-  
       
-  let moderators;    
   let videoId = null;
   
   let loadTextEditor = false;
-  
-  
-  
-  async function getAllComments()
-  {
-  
-    const postData = {'postId': data?.getPostId};
-  
-    // make the GET request to the endpoint
-    const response = await fetch('/api/get-all-comments', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(postData),
-        });
-  
-    const output = (await response.json())?.items;
-  
-    return output;
-   
-  };
-  
-  
-  const getModerators = async () => {
-      let output;
-  
-      // Get cached data for the specific tickerID
-      const cachedData = getCache('', 'getModerators');
-      if (cachedData) {
-        output = cachedData;
-      } else {
-  
-        // make the POST request to the endpoint
-        const response = await fetch('/api/get-moderators', {
-          method: 'GET',
-          headers: {
-            "Content-Type": "application/json"
-          },
-        });
-  
-        output = (await response.json())?.items;
-  
-        setCache('', output, 'getModerators');
-      }
-  
-      return output;
-    };
   
   
     
@@ -293,12 +240,7 @@
       {
         LoginPopup = (await import('$lib/components/LoginPopup.svelte')).default;
       }
-  
-      [moderators, comments] = await Promise.all([
-        getModerators(),
-        getAllComments(),
-      ]);
-  
+
       numberOfComments = countAllComments(comments) || 0;
   
   if (post?.postType === 'link') {

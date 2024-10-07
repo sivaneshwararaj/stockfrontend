@@ -1,10 +1,10 @@
 import { pb } from "$lib/pocketbase";
 import { getCache, setCache } from "$lib/store";
 
-export const load = async ({ parent }) => {
+export const load = async () => {
   const getAllBlogPost = async () => {
     let output;
-    console.log(await parent());
+
     // Get cached data for the specific tickerID
     const cachedData = getCache("allBlogPost", "getAllBlogPost");
     if (cachedData) {
