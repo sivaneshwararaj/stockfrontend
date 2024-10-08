@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {etfTicker, screenWidth, displayCompanyName} from '$lib/store';
+    import {etfTicker, wsBidPrice, wsAskPrice, screenWidth, displayCompanyName} from '$lib/store';
     
     import { abbreviateNumber, formatETFName } from '$lib/utils';
     import { fade } from 'svelte/transition';
@@ -92,12 +92,12 @@ let showFullText = false;
             <table class="table table-sm table-compact">
               <tbody>
               
-                <tr class="text-white border-b border-[#27272A]">
-                  <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Bid</td>
-                  <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.bid}</td>
-                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Ask</td>
-                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.ask}</td>
-                </tr>
+                 <tr class="text-white border-b border-[#27272A]">
+                <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Bid</td>
+                <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{$wsBidPrice !== (0 || null) ? $wsBidPrice : data?.getStockQuote?.bid}</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Ask</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{$wsAskPrice !== (0 || null) ? $wsAskPrice : data?.getStockQuote?.ask}</td>
+              </tr>
                 <tr class="text-white border-b border-[#27272A]">
                   <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Provider</td>
                   <td on:click={() => goto(`/etf/etf-providers/${provider}`)} class="text-center sm:text-end text-blue-400 lg:hover:text-white cursor-pointer bg-[#000] lg:bg-[#09090B]">{formatETFName(provider)}</td>

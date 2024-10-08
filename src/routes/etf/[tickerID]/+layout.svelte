@@ -1,6 +1,6 @@
 <script lang='ts'>
 
-    import {searchBarData, globalForm, screenWidth, openPriceAlert, currentPortfolioPrice, realtimePrice, isCrosshairMoveActive, currentPrice, priceIncrease, displayCompanyName, traded, etfTicker, assetType, isOpen } from '$lib/store';
+    import {searchBarData, globalForm, screenWidth, openPriceAlert, currentPortfolioPrice, wsBidPrice, wsAskPrice, realtimePrice, isCrosshairMoveActive, currentPrice, priceIncrease, displayCompanyName, traded, etfTicker, assetType, isOpen } from '$lib/store';
 
     import { onMount, onDestroy, afterUpdate} from "svelte";
     import { goto } from '$app/navigation';
@@ -238,7 +238,9 @@ async function toggleUserWatchlist(watchListId: string) {
         //console.log('Received message:', data);
         try {
   
-          $realtimePrice = typeof JSON.parse(data)?.bp !== 'undefined' ? JSON.parse(data)?.bp : null;
+          $realtimePrice = typeof JSON.parse(data)?.lp !== "undefined" ? JSON.parse(data)?.lp : null;
+          $wsBidPrice = typeof JSON.parse(data)?.bp !== "undefined" ? JSON.parse(data)?.bp : null;
+          $wsAskPrice = typeof JSON.parse(data)?.ap !== "undefined" ? JSON.parse(data)?.ap : null;
           //console.log('Received message:', $realtimePrice);
   
   
@@ -329,7 +331,8 @@ async function toggleUserWatchlist(watchListId: string) {
        await websocketRealtimeData()
        console.log('connecting again')
      }
-  
+     $wsAskPrice = null;
+      $wsBidPrice = null;
    }
   
   });
@@ -348,6 +351,8 @@ async function toggleUserWatchlist(watchListId: string) {
     $currentPortfolioPrice = null;
     $currentPrice = null;
     $priceIncrease = null;
+    $wsAskPrice = null;
+    $wsBidPrice = null;
     $traded = false
     
   });

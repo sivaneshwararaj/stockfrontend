@@ -56,6 +56,8 @@ export const displayCompanyName = writable(<string>"");
 export const currentPrice = writable(<number>0);
 export const currentPortfolioPrice = writable(<number>0);
 export const realtimePrice = writable(<number>0);
+export const wsBidPrice = writable(<number>0);
+export const wsAskPrice = writable(<number>0);
 
 export const priceIncrease = writable(<boolean>false);
 export const isCrosshairMoveActive = writable(<boolean>true);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {stockTicker, screenWidth} from '$lib/store';
+  import {stockTicker, screenWidth, wsBidPrice, wsAskPrice} from '$lib/store';
 
   import { abbreviateNumber } from '$lib/utils';
   import { fade } from 'svelte/transition';
@@ -125,9 +125,9 @@ $: {
               -->
               <tr class="text-white border-b border-[#27272A]">
                 <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Bid</td>
-                <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.bid}</td>
+                <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{$wsBidPrice !== (0 || null) ? $wsBidPrice : data?.getStockQuote?.bid}</td>
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Ask</td>
-                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.ask}</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{$wsAskPrice !== (0 || null) ? $wsAskPrice : data?.getStockQuote?.ask}</td>
               </tr>
               <tr class="text-white border-b border-[#27272A]">
                 <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Mkt Cap</td>

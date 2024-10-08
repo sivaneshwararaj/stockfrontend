@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { searchBarData, globalForm, scoreComponent, screenWidth, openPriceAlert, currentPortfolioPrice, realtimePrice, isCrosshairMoveActive, currentPrice, priceIncrease, displayCompanyName, stockTicker, isOpen } from "$lib/store";
+  import { wsBidPrice, wsAskPrice, searchBarData, globalForm, scoreComponent, screenWidth, openPriceAlert, currentPortfolioPrice, realtimePrice, isCrosshairMoveActive, currentPrice, priceIncrease, displayCompanyName, stockTicker, isOpen } from "$lib/store";
 
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import { goto } from "$app/navigation";
@@ -193,9 +193,11 @@ async function toggleUserWatchlist(watchListId: string) {
         const data = event.data;
         //console.log('Received message:', data);
         try {
-          $realtimePrice = typeof JSON.parse(data)?.bp !== "undefined" ? JSON.parse(data)?.bp : null;
+          $realtimePrice = typeof JSON.parse(data)?.lp !== "undefined" ? JSON.parse(data)?.lp : null;
+          $wsBidPrice = typeof JSON.parse(data)?.bp !== "undefined" ? JSON.parse(data)?.bp : null;
+          $wsAskPrice = typeof JSON.parse(data)?.ap !== "undefined" ? JSON.parse(data)?.ap : null;
           //console.log('Received message:', $realtimePrice);
-
+          console.log(JSON.parse(data))
           if ($realtimePrice > previousRealtimePrice) {
             $priceIncrease = true;
             previousRealtimePrice = $realtimePrice;
@@ -253,6 +255,8 @@ async function toggleUserWatchlist(watchListId: string) {
         await websocketRealtimeData();
         console.log("connecting again");
       }
+       $wsAskPrice = null;
+      $wsBidPrice = null;
     }
   });
 
@@ -268,6 +272,8 @@ async function toggleUserWatchlist(watchListId: string) {
     $currentPortfolioPrice = null;
     $currentPrice = null;
     $priceIncrease = null;
+     $wsAskPrice = null;
+    $wsBidPrice = null;
     //$traded = false
   });
 
