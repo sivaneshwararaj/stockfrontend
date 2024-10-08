@@ -197,7 +197,7 @@ async function toggleUserWatchlist(watchListId: string) {
           $wsBidPrice = typeof JSON.parse(data)?.bp !== "undefined" ? JSON.parse(data)?.bp : null;
           $wsAskPrice = typeof JSON.parse(data)?.ap !== "undefined" ? JSON.parse(data)?.ap : null;
           //console.log('Received message:', $realtimePrice);
-          console.log(JSON.parse(data))
+
           if ($realtimePrice > previousRealtimePrice) {
             $priceIncrease = true;
             previousRealtimePrice = $realtimePrice;
