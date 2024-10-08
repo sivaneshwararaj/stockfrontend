@@ -124,6 +124,12 @@ $: {
               </tr>
               -->
               <tr class="text-white border-b border-[#27272A]">
+                <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Bid</td>
+                <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.bid}</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Ask</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.ask}</td>
+              </tr>
+              <tr class="text-white border-b border-[#27272A]">
                 <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Mkt Cap</td>
                 <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{abbreviateNumber(data?.getStockQuote?.marketCap,true)}</td>
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Vol</td>
@@ -155,14 +161,16 @@ $: {
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap ">Prev. Close</td>
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{data?.getStockQuote?.previousClose?.toFixed(2)}</td>
               </tr>
+              <!--
               {#if $screenWidth > 640}
               <tr class="text-white border-b border-[#27272A]">
-                <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Day's Range</td>
+                <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">1D-Range</td>
                 <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.dayLow?.toFixed(2)} - {data?.getStockQuote?.dayHigh?.toFixed(2)}</td>
-                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap ">52-Week Range</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap ">1Y-Range</td>
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{data?.getStockQuote?.yearLow?.toFixed(2)} - {data?.getStockQuote?.yearHigh?.toFixed(2)}</td>
               </tr>
               {/if}
+              -->
               <tr class="text-white border-b border-[#27272A]">
                 <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">EPS (ttm)</td>
                 <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.eps}</td>

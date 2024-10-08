@@ -92,7 +92,12 @@ let showFullText = false;
             <table class="table table-sm table-compact">
               <tbody>
               
-     
+                <tr class="text-white border-b border-[#27272A]">
+                  <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Bid</td>
+                  <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.bid}</td>
+                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Ask</td>
+                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.ask}</td>
+                </tr>
                 <tr class="text-white border-b border-[#27272A]">
                   <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Provider</td>
                   <td on:click={() => goto(`/etf/etf-providers/${provider}`)} class="text-center sm:text-end text-blue-400 lg:hover:text-white cursor-pointer bg-[#000] lg:bg-[#09090B]">{formatETFName(provider)}</td>
@@ -117,12 +122,14 @@ let showFullText = false;
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap ">Avg. Vol</td>
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{abbreviateNumber(avgVolume)}</td>
                 </tr>
+                <!--
                 <tr class="text-white border-b border-[#27272A]">
                   <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Open</td>
                   <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.open?.toFixed(2)}</td>
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap ">Prev. Close</td>
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{data?.getStockQuote?.previousClose?.toFixed(2)}</td>
                 </tr>
+              -->
                 <tr class="text-white border-b border-[#27272A]">
                   <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">EPS (ttm)</td>
                   <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.eps?.toFixed(2)}</td>
