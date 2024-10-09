@@ -1,216 +1,153 @@
-<script lang ='ts'>
-import { governmentContractComponent, displayCompanyName, stockTicker, screenWidth, getCache, setCache} from '$lib/store';
-import InfoModal from '$lib/components/InfoModal.svelte';
-import { Chart } from 'svelte-echarts'
-import { abbreviateNumber } from "$lib/utils";
+<script lang="ts">
+  import { governmentContractComponent, displayCompanyName, stockTicker, screenWidth, getCache, setCache } from '$lib/store';
+  import InfoModal from '$lib/components/InfoModal.svelte';
+  import { Chart } from 'svelte-echarts';
+  import { abbreviateNumber } from "$lib/utils";
 
-import { init, use } from 'echarts/core'
-import { BarChart } from 'echarts/charts'
-import { GridComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
-use([BarChart, GridComponent, CanvasRenderer])
+  import { init, use } from 'echarts/core';
+  import { BarChart } from 'echarts/charts';
+  import { GridComponent } from 'echarts/components';
+  import { CanvasRenderer } from 'echarts/renderers';
+  use([BarChart, GridComponent, CanvasRenderer]);
 
-    export let data;
-  
-    let isLoaded = false;
-  
-  
-    let rawData = [];
-    let optionsData;
-    let avgNumberOfContracts = 0;
-    let displayMaxContracts = 0;
-    let displayYear = 'n/a';
-    let totalAmount;
-    let totalContract;
+  let isLoaded = false;
+  let rawData = [];
+  let optionsData;
+  let avgNumberOfContracts = 0;
+  let displayMaxContracts = 0;
+  let displayYear = 'n/a';
+  let totalAmount;
+  let totalContract;
 
-  
-  function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e8) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else if (Math?.abs(value) >= 1e4) {
-        return { unit: 'K', denominator: 1e4 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-  }
-  
-  
   function getPlotOptions() {
     let dates = [];
     let amountList = [];
-    let numList = []
+    let numList = [];
 
-    // Iterate over the data and extract required information
-    rawData?.forEach(item => {
-    // Extract year and convert it to fiscal year format
-    const fiscalYear = "FY" + item?.year?.slice(2);
-    dates?.push(fiscalYear);
-
-    // Extract totalValue
-    amountList?.push(item?.amount);
-    numList?.push(item?.numOfContracts);
-
+    rawData?.forEach((item) => {
+      const fiscalYear = "FY" + item?.year?.slice(2);
+      dates?.push(fiscalYear);
+      amountList?.push(item?.amount);
+      numList?.push(item?.numOfContracts);
     });
-    
-   // Calculate total number of contracts
-   totalContract = rawData?.reduce((sum, item) => sum + item?.numOfContracts, 0)
-   totalAmount =  rawData?.reduce((sum, item) => sum + item?.amount, 0);
 
-   avgNumberOfContracts = Math.floor((totalContract)/rawData?.length);
-    const { year:yearWithMaxContracts, numOfContracts:maxContracts } = rawData?.reduce((max, contract) => contract?.numOfContracts > max?.numOfContracts ? contract : max, rawData?.at(0));
+    totalContract = rawData?.reduce((sum, item) => sum + item?.numOfContracts, 0);
+    totalAmount = rawData?.reduce((sum, item) => sum + item?.amount, 0);
+
+    avgNumberOfContracts = Math.floor(totalContract / rawData?.length);
+    const { year: yearWithMaxContracts, numOfContracts: maxContracts } = rawData?.reduce(
+      (max, contract) => (contract?.numOfContracts > max?.numOfContracts ? contract : max),
+      rawData?.at(0)
+    );
     displayYear = yearWithMaxContracts;
-    displayMaxContracts = maxContracts
-        
-    const {unit, denominator } = normalizer(Math.max(...amountList) ?? 0)
+    displayMaxContracts = maxContracts;
 
     const option = {
-    silent: true,
-    tooltip: {
+      silent: true,
+      tooltip: {
         trigger: 'axis',
         hideDelay: 100, // Set the delay in milliseconds
-    },
-    animation: false,
-    grid: {
-        left:'2%',
-        right:  $screenWidth < 640 ? '0%' : '2%',
+      },
+      animation: false,
+      grid: {
+        left: '2%',
+        right: $screenWidth < 640 ? '0%' : '2%',
         bottom: '0%',
         top: '10%',
-        containLabel: true
-    },
-    xAxis: {
+        containLabel: true,
+      },
+      xAxis: {
         data: dates,
         type: 'category',
         axisLabel: {
-            color: '#fff',
-        }
+          color: '#fff',
         },
-        
-        yAxis: [
-         {
+      },
+      yAxis: [
+        {
           type: 'value',
           splitLine: {
-                show: false, // Disable x-axis grid lines
+            show: false, // Disable x-axis grid lines
           },
-          
           axisLabel: {
-            show: false // Hide y-axis labels
-          }
+            show: false, // Hide y-axis labels
+          },
         },
-         {
+        {
           type: 'value',
           splitLine: {
-                show: false, // Disable x-axis grid lines
+            show: false, // Disable x-axis grid lines
           },
-          
           axisLabel: {
-            show: false // Hide y-axis labels
+            show: false, // Hide y-axis labels
           },
           position: 'right',
         },
-        ],
-    series: [
+      ],
+      series: [
         {
-        name: '# of Contracts',
-        data: numList,
-        type: 'line',
-        yAxisIndex: 1,
-        itemStyle: {
-            color: '#fff' // Change bar color to white
-        }
+          name: '# of Contracts',
+          data: numList,
+          type: 'line',
+          yAxisIndex: 1,
+          itemStyle: {
+            color: '#fff', // Change bar color to white
+          },
         },
         {
-        name: 'Amount',
-        data: amountList,
-        type: 'bar',
-        itemStyle: {
-            color: '#FF9E21' // Change bar color to white
-        }
+          name: 'Amount',
+          data: amountList,
+          type: 'bar',
+          itemStyle: {
+            color: '#FF9E21', // Change bar color to orange
+          },
         },
-    ]
+      ],
     };
-  
-  
-  return option;
+
+    return option;
   }
-  
+
   const getGovernmentContract = async (ticker) => {
-    // Get cached data for the specific tickerID
     const cachedData = getCache(ticker, 'getGovernmentContract');
     if (cachedData) {
       rawData = cachedData;
     } else {
-  
-      const postData = {'ticker': ticker, path: 'government-contract'};
-      // make the POST request to the endpoint
+      const postData = { ticker: ticker, path: 'government-contract' };
       const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(postData)
+        body: JSON.stringify(postData),
       });
-  
       rawData = await response?.json();
-      // Cache the data for this specific tickerID with a specific name 'getGovernmentContract'
       setCache(ticker, rawData, 'getGovernmentContract');
     }
-    
-    if(rawData?.length !== 0) {
-      $governmentContractComponent = true;
-    } else {
-      $governmentContractComponent = false;
-    }
+
+    governmentContractComponent.set(rawData?.length !== 0);
   };
-  
-  
 
   $: {
-  if($stockTicker && typeof window !== 'undefined') {
-    isLoaded=false;
-    const ticker = $stockTicker
-    const asyncFunctions = [
-      getGovernmentContract(ticker)
-      ];
+    if ($stockTicker && typeof window !== 'undefined') {
+      isLoaded = false;
+      const ticker = $stockTicker;
+      const asyncFunctions = [getGovernmentContract(ticker)];
+
       Promise.all(asyncFunctions)
-          .then((results) => {
-            if(rawData?.length !== 0) {
-                optionsData = getPlotOptions();
-            }
-          })
-          .catch((error) => {
-            console.error('An error occurred:', error);
-          });
-    isLoaded = true;
-  
+        .then(() => {
+          if (rawData?.length !== 0) {
+            optionsData = getPlotOptions();
+          }
+        })
+        .catch((error) => {
+          console.error('An error occurred:', error);
+        });
+      isLoaded = true;
+    }
   }
-  }
-  
-  let charNumber = 20;
-  
-  $: {
-  if($screenWidth < 640)
-  {
-    charNumber = 20;
-  }
-  else {
-    charNumber =40;
-  }
-  }
-    
-  
-  
-  </script>
-    
+</script>
+
     
     
   <section class="overflow-hidden text-white h-full pb-8">
@@ -227,7 +164,6 @@ use([BarChart, GridComponent, CanvasRenderer])
             />
         </div>
   
-        {#if data?.user?.tier === 'Pro'}
         {#if isLoaded}
   
         {#if rawData?.length !== 0}
@@ -280,12 +216,6 @@ use([BarChart, GridComponent, CanvasRenderer])
         </div>
         {/if}
   
-        {:else}
-        <div class="shadow-lg shadow-bg-[#000] bg-[#111112] sm:bg-opacity-[0.5] text-sm sm:text-[1rem] rounded-md w-full p-4 min-h-24 mt-4 text-white m-auto flex justify-center items-center text-center font-semibold">
-            <svg class="mr-1.5 w-5 h-5 inline-block"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
-            Unlock content with <a class="inline-block ml-2 text-blue-400 hover:sm:text-white" href="/pricing">Pro Subscription</a>
-          </div>
-        {/if}
   
     </main>
   </section>

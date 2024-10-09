@@ -1052,7 +1052,7 @@ async function exportData() {
           <Lazy>
             <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pt-6 {!$governmentContractComponent ? 'hidden' : ''}">
               {#await import("$lib/components/GovernmentContract.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
+                <svelte:component this={Comp} />
               {/await}
             </div>
           </Lazy>
