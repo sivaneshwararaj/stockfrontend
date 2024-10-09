@@ -8,7 +8,7 @@
   $: {
     if ($stockTicker && typeof window !== 'undefined') {
       // Correctly check if score is neither undefined nor null
-      $scoreComponent = score !== undefined && score !== null;
+      $scoreComponent = score !== undefined && score !== null && score !== 0;
     }
   }
 </script>
