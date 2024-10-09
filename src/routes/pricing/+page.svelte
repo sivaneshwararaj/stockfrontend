@@ -79,10 +79,6 @@ async function purchasePlan(subscriptionType:string='') {
 
 <svelte:head>
 
-<script type="text/javascript">
-  twq('event', 'tw-onuuu-onuuy', {
-  });
-</script>
 
 <meta charset="utf-8" />
 
@@ -113,8 +109,26 @@ async function purchasePlan(subscriptionType:string='') {
 
 
 <section class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 pb-40 m-auto">
+{#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
+  <div class="mb-5 -mt-10 sm:-mt-5 relative sm:rounded isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
+  <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
+    <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"></div>
+  </div>
+  <div class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
+    <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"></div>
+  </div>
+  <div class="w-full m-auto flex flex-col sm:flex-row justify-center items-center gap-x-4 gap-y-2">
+    <p class="text-[1rem] text-white">
+      <strong class="font-semibold text-lg text-[1rem] text-white">🎃 Limited Halloween Special</strong><svg viewBox="0 0 2 2" class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg>
+        Save <strong class="text-[#FBCE3C]">16%</strong> with Promo Code: <strong class="text-[#FBCE3C]">HALLOWEEN</strong>
+    </p>
+  </div>
+</div>
+{/if}
     <div class="px-3">
         <div class="mx-auto text-center mb-8 ">
+            
+            
             
             
             <h1 class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#E8BB28] to-purple-500 bg-clip-text text-transparent pb-4">

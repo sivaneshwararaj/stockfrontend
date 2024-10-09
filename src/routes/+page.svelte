@@ -206,7 +206,27 @@ onMount( async() => {
 
 
 <div class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B]">
-    
+  
+  {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
+  <div class="mb-5 relative isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
+  <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
+    <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"></div>
+  </div>
+  <div class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
+    <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"></div>
+  </div>
+  <div class="w-full m-auto flex flex-col sm:flex-row justify-center items-center gap-x-4 gap-y-2">
+    <p class="text-[1rem] text-white">
+      <strong class="font-semibold text-lg text-[1rem] text-white">🎃 Limited Halloween Special</strong><svg viewBox="0 0 2 2" class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg>
+      Save <strong class="text-[#FBCE3C]">16%</strong> on Pro Subscription and boost your investing game!
+    </p>
+    <a href="/pricing" class="flex-none rounded-full m-auto sm:m-0 px-3.5 py-1 text-[1rem] font-semibold text-black shadow-sm bg-[#FBCE3C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+      Get Pro Now <span aria-hidden="true">&rarr;</span>
+    </a>
+  </div>
+</div>
+{/if}
+
     <div class="flex flex-col m-auto justify-center items-center">
       <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10 ">                
       
@@ -214,7 +234,7 @@ onMount( async() => {
           <Feedback data={data} />
         {/if}
         
-        
+      <!--
         <div class="text-center mb-10 relative w-fit flex justify-center m-auto">
           <a href="/sentiment-tracker" class="text-white antialiased  bg-[#27272A] w-full px-4 py-2 rounded-lg m-auto font-medium text-[1rem] flex items-center">
             <span class="text-white sm:hover:text-blue-400">Sentiment Tracker</span>
@@ -225,7 +245,7 @@ onMount( async() => {
             </span>
           </div>
         </div>
-      
+      -->
 
       <h1 class="hidden sm:block text-3xl lg:text-5xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto">
         Stock Analysis for
