@@ -1586,8 +1586,6 @@ function handleInput(event) {
           New Strategy
         </h1>
 
-  
-  
       <form
         on:submit={createStrategy}
         method="POST"

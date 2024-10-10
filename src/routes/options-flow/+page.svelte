@@ -1394,58 +1394,60 @@ function sortData(key) {
                     >
                       <div slot="header" class="tr th sticky z-40 top-0">
                         <!-- Table headers -->
-                        <div on:click={() => sortData('time')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('time')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Time
-                          <svg class="w-4 h-4 inline-block {sortOrders['time'] === 'asc' ? 'rotate-180' : ''} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['time'] === 'asc' ? 'rotate-180' : ''} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('ticker')} class="td cursor-pointer select-none bg-[#161618] font-bold text-slate-300 text-xs text-start uppercase">
+                        <div on:click={() => sortData('ticker')} class="td cursor-pointer  select-none bg-[#161618] font-bold text-slate-300 text-xs text-start uppercase">
                           Symbol
-                          <svg class="w-4 h-4 inline-block {sortOrders['ticker'] === 'asc' ? 'rotate-180' : sortOrders['ticker'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['ticker'] === 'asc' ? 'rotate-180' : sortOrders['ticker'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div class="td bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">Save</div>
-                        <div on:click={() => sortData('expiry')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div class="td select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                          Save
+                        </div>
+                        <div on:click={() => sortData('expiry')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Expiry
-                          <svg class="w-4 h-4 inline-block {sortOrders['expiry'] === 'asc' ? 'rotate-180' : sortOrders['expiry'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['expiry'] === 'asc' ? 'rotate-180' : sortOrders['expiry'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                         <div on:click={() => sortData('dte')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                         <div on:click={() => sortData('dte')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           DTE
-                          <svg class="w-4 h-4 inline-block {sortOrders['dte'] === 'asc' ? 'rotate-180' : sortOrders['dte'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['dte'] === 'asc' ? 'rotate-180' : sortOrders['dte'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('strike')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('strike')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Strike
-                          <svg class="w-4 h-4 inline-block {sortOrders['strike'] === 'asc' ? 'rotate-180' : sortOrders['strike'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['strike'] === 'asc' ? 'rotate-180' : sortOrders['strike'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('callPut')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('callPut')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           C/P
-                          <svg class="w-4 h-4 inline-block {sortOrders['callPut'] === 'asc' ? 'rotate-180' : sortOrders['callPut'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['callPut'] === 'asc' ? 'rotate-180' : sortOrders['callPut'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('sentiment')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('sentiment')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Sent.
-                          <svg class="w-4 h-4 inline-block {sortOrders['sentiment'] === 'asc' ? 'rotate-180' : sortOrders['sentiment'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['sentiment'] === 'asc' ? 'rotate-180' : sortOrders['sentiment'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('spot')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('spot')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Spot
-                          <svg class="w-4 h-4 inline-block {sortOrders['spot'] === 'asc' ? 'rotate-180' : sortOrders['spot'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['spot'] === 'asc' ? 'rotate-180' : sortOrders['spot'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('price')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('price')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Price
-                          <svg class="w-4 h-4 inline-block {sortOrders['price'] === 'asc' ? 'rotate-180' : sortOrders['price'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['price'] === 'asc' ? 'rotate-180' : sortOrders['price'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('premium')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('premium')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Prem
-                          <svg class="w-4 h-4 inline-block {sortOrders['premium'] === 'asc' ? 'rotate-180' : sortOrders['premium'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['premium'] === 'asc' ? 'rotate-180' : sortOrders['premium'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('type')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('type')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Type
-                          <svg class="w-4 h-4 inline-block {sortOrders['type'] === 'asc' ? 'rotate-180' : sortOrders['type'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['type'] === 'asc' ? 'rotate-180' : sortOrders['type'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('vol')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('vol')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           Vol
-                          <svg class="w-4 h-4 inline-block {sortOrders['vol'] === 'asc' ? 'rotate-180' : sortOrders['vol'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['vol'] === 'asc' ? 'rotate-180' : sortOrders['vol'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
-                        <div on:click={() => sortData('oi')} class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
+                        <div on:click={() => sortData('oi')} class="td cursor-pointer  select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase">
                           OI
-                          <svg class="w-4 h-4 inline-block {sortOrders['oi'] === 'asc' ? 'rotate-180' : sortOrders['oi'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['oi'] === 'asc' ? 'rotate-180' : sortOrders['oi'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </div>
                       </div>
 
@@ -1833,7 +1835,7 @@ function sortData(key) {
   }
 
   .th > .td {
-      white-space: normal;
+      white-space: nowrap;
       justify-content: center;
   }
 
