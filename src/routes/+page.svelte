@@ -78,68 +78,7 @@ function convertTimestamp(unixTimestamp) {
     return formattedDate;
 }
 
-//const tickerGraphName = data?.getDashboard?.retailTracker?.map(item => item?.symbol) || [];
-//const tradedList = data?.getDashboard?.retailTracker?.map(item => item?.traded) || [];
 
-/*
-const optionsGraph = {
-  animation: false,
-  grid: {
-    left: '2%',
-    right: '3%',
-    bottom: '6%',
-    top: '0%',
-    containLabel: true
-  },
-  xAxis: {
-    type: 'value',
-    splitLine: {
-      show: false, // Disable x-axis grid lines
-    },
-    axisLabel: {
-      show: false // Hide x-axis labels
-    },
-    axisTick: {
-      show: false // Hide x-axis ticks
-    },
-    axisLine: {
-      show: false // Hide x-axis line
-    }
-  },
-  yAxis: {
-    type: 'category',
-    data: tickerGraphName,
-    inverse: true,
-    axisTick: {
-      show: false // Hide x-axis ticks
-    },
-    axisLabel: {
-        color: '#fff' // Set the y-axis label color to white
-    }
-  },
-  series: [
-    {
-      data: tradedList,
-      label: {
-        show: true,
-        position: 'inside',
-        formatter: function(params) {
-          return abbreviateNumber(params?.value,true);
-        },
-        fontWeight: 600,
-      },
-      type: 'bar',
-      showBackground: true,
-      backgroundStyle: {
-        color: 'rgba(180, 180, 180, 0.2)'
-      },
-      itemStyle: {
-        color: 'white'  // Bar color is white
-      }
-    }
-  ]
-};
-*/
 
 function latestInfoDate(inputDate) {
     // Convert the input date string to milliseconds since epoch
@@ -205,10 +144,10 @@ onMount( async() => {
 <svelte:options immutable={true}/>
 
 
-<div class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B]">
+<div class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B] mb-40">
   
   {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
-  <div class="mb-5 relative isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
+  <div class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
   <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
     <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"></div>
   </div>
@@ -453,7 +392,7 @@ onMount( async() => {
               </Card.Content>
             </Card.Root>
 
-              <Card.Root class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
+              <Card.Root class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[550px]">
                 <Card.Header class="flex flex-row items-center">
                   <div class="flex flex-col items-start w-full">
                     <div class="flex flex-row w-full items-center">
@@ -493,7 +432,7 @@ onMount( async() => {
                 </Card.Content>
               </Card.Root>
               
-              <Card.Root class="order-2 sm:order-3 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[400px]">
+              <Card.Root class="order-2 sm:order-3 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[550px]">
                 <Card.Header class="flex flex-row items-center">
                   <div class="flex flex-col items-start w-full">
                     <div class="flex flex-row w-full items-center">

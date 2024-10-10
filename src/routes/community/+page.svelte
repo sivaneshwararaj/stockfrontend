@@ -1,7 +1,7 @@
 <script lang='ts'>
   
   import { onMount,onDestroy } from 'svelte';
-  import { postVote, discordMembers, setCache, getCache, cachedPosts, currentPagePosition, numberOfUnreadNotification, postIdDeleted } from '$lib/store';
+  import { postVote, discordMembers, cachedPosts, goBackToPostId, numberOfUnreadNotification, postIdDeleted } from '$lib/store';
 
   import { afterNavigate } from '$app/navigation';
   import { base } from '$app/paths'
@@ -19,7 +19,7 @@
   let discordURL = import.meta.env.VITE_DISCORD_URL;
   
 
-  let loading = true;
+  let isLoaded = false;
 
 
   let moderators = data?.getModerators;
@@ -115,14 +115,11 @@ onMount(async () => {
       getPost(),
       //getTickerMentioning(),
     ]);
-
-      window.scrollTo(0, 0);
   }
 
   else {
     // Use cached data if available
     posts = $cachedPosts?.posts;
-    //tickerMentioning = getCache('','getTickerMentioning');
   }
 
   if(!data?.user)
@@ -132,7 +129,7 @@ onMount(async () => {
 
     BottomNavigation = (await import('$lib/components/BottomNavigation.svelte')).default;
 
-    loading = false;
+    isLoaded = true;
 
 });
 
@@ -140,6 +137,7 @@ onMount(async () => {
 onDestroy(async () => {
     $postIdDeleted ='';
     $postVote = {};
+    $goBackToPostId = '';
   });
 
 
@@ -148,7 +146,7 @@ onDestroy(async () => {
 let sortingPosts = $cachedPosts?.sortingPosts?.length > 0 ? $cachedPosts?.sortingPosts : 'hot';
 
 async function handleCategoryOfPosts(state) {
-  loading = true;
+  isLoaded = false;
   posts = [];
   currentPage = 1;
   postLoading = false;
@@ -158,12 +156,11 @@ async function handleCategoryOfPosts(state) {
   sortingPosts = state;
   $cachedPosts = {};
   posts = await getPost();
-  loading = false;
+  isLoaded = true;
 }
 
 
 
-let yPosition;
 let goBackToPosition = false;
 
 
@@ -230,6 +227,7 @@ $: {
 }
 
 
+
 $: {
   if($postVote && Object?.keys($postVote).length !== 0 && data?.user?.id)
   {
@@ -251,22 +249,27 @@ $: {
   }
 }
 
-$: {
-  if(yPosition)
-  {
-    $currentPagePosition = Math.floor(yPosition);
+
+  // Reactive statement to check and scroll to the target post
+$: if ($goBackToPostId?.length !== 0 && $cachedPosts?.posts?.length !== 0&& typeof window !== 'undefined') {
+    const postExists = $cachedPosts?.posts?.find(post => post?.id === $goBackToPostId);
+    isLoaded = false;
+    if (postExists) {
+      scrollToPost($goBackToPostId);
+      $goBackToPostId = '';
+    }
+    isLoaded = true;
   }
+
+function scrollToPost(postId) {
+  // Add a small delay to ensure DOM is updated
+  setTimeout(() => {
+    const targetDiv = document.getElementById(`post-${postId}`);
+    if (targetDiv) {
+       targetDiv.scrollIntoView(true);
+    }
+  }, 0);
 }
-
-$: {
-  if(goBackToPosition && typeof window !== 'undefined')
-  {
-    goBackToPosition = false;
-    window?.scrollTo({top: $currentPagePosition});
-
-  }
-}
-
 
 
 
@@ -293,14 +296,6 @@ $: {
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
     
-
-
-
-<svelte:window bind:scrollY={yPosition} />
-
-
-
-
 
 <body class="bg-[#09090B] sm:mt-5 max-w-3xl sm:max-w-screen-2xl">
 
@@ -329,7 +324,7 @@ $: {
                         <div class="sm:pt-6 pb-12 w-full">
                             <div class="lg:pr-5">
                                 <!--<CreateNewPost />-->
-                                <div class="{!loading? 'hidden' : ''}">
+                                <div class="{isLoaded ? 'hidden' : ''}">
                                   {#each Array(5) as _}
                                     <SkeletonLoading />
                                   {/each}
@@ -364,12 +359,12 @@ $: {
                                 </div>
                               <!--End choose Hot or New Posts-->
 
-                               {#if !loading}
+                               {#if isLoaded}
                         
                                 {#each posts as post}
                                 
                                 <div class="flex items-start w-full">
-                                    <div class="w-full m-auto">
+                                    <div id="post-{post.id}" class="w-full m-auto">
                                       <PostSection 
                                         data={data}
                                         posts= {post}
@@ -414,7 +409,7 @@ $: {
                         <!-- Sidebar -->
                         <aside class="hidden lg:inline-block h-sh lg:w-1/2 pt-[1.5rem] pr-0 lg:pr-2 xl:pr-0">
 
-                          {#if !loading}
+                          {#if isLoaded}
                           
                            <!-- Sidebar content -->
                             <div class="lg:pl-2 z-20 h-full">

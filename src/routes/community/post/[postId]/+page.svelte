@@ -9,7 +9,7 @@
   
   
   import { onMount, onDestroy } from 'svelte';
-  import {cachedPosts, postVote, screenWidth, scrollToComment, postIdDeleted, setCache, getCache, tagList, numberOfUnreadNotification, commentAdded, commentUpdated, commentIdDeleted } from '$lib/store';
+  import {cachedPosts, postVote, screenWidth, scrollToComment, postIdDeleted, goBackToPostId, tagList, numberOfUnreadNotification, commentAdded, commentUpdated, commentIdDeleted } from '$lib/store';
   import { goto, afterNavigate } from '$app/navigation';
   import { base } from '$app/paths'
   
@@ -31,7 +31,6 @@
   let upvoteCounter = {};
   let downvoteCounter = {};
   let userAlreadyVoted;
-  
   
   
   const handleUpvote = async (event) => {
@@ -293,6 +292,7 @@
       $commentIdDeleted = '';
       $scrollToComment = '';
       $postVote = {};
+      $goBackToPostId = data?.getPostId
   })
   
 

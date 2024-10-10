@@ -106,6 +106,7 @@ export const corporateLobbyingComponent = writable(<boolean>false);
 export const fomcImpactComponent = writable(<boolean>false);
 export const scoreComponent = writable(<boolean>false);
 
+export const goBackToPostId = writable(<string>"");
 export const strategyId = writable(<string>"");
 export const articleId = writable(<string>"");
 
