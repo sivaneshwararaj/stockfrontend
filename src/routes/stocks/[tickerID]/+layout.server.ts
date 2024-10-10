@@ -103,8 +103,6 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     getCommunitySentiment,
   ] = await Promise.all(promises);
 
-  setHeaders({ "cache-control": "public, max-age=300" });
-
   return {
     getSimilarStock,
     getStockDeck,

@@ -64,7 +64,7 @@ export const load = async ({ params, locals, setHeaders }) => {
 
   const promises = [
     ...endpoints.map((endpoint) =>
-      fetchData(apiURL, apiKey, endpoint, tickerID),
+      fetchData(apiURL, apiKey, endpoint, tickerID)
     ),
     fetchWatchlist(pb, user?.id),
     //fetchFromFastify(fastifyURL, '/get-portfolio-data', user?.id)
@@ -81,8 +81,6 @@ export const load = async ({ params, locals, setHeaders }) => {
     getOneDayPrice,
     getUserWatchlist,
   ] = await Promise.all(promises);
-
-  setHeaders({ "cache-control": "public, max-age=300" });
 
   return {
     getETFProfile,

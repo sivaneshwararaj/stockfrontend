@@ -52,7 +52,6 @@ export const load = async ({ locals }) => {
 
     const strategy = strategyList?.at(0);
     let getRuleOfList = strategy?.rules?.map((item) => item?.name) || [];
-
     // Ensure all required EMA parameters are included
     ensureAllEmaParameters(getRuleOfList);
 

@@ -31,6 +31,7 @@ export const POST = (async ({ request, locals }) => {
       serialize({
         user: user?.id,
         ticker: JSON.stringify([ticker]),
+        ruleOfList: JSON.stringify([]),
         title: "Favorites",
       })
     );

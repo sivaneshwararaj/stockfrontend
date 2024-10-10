@@ -6,8 +6,6 @@
   export let watchListId;
   export let indicatorList;
 
-  $: sortedList = indicatorList;
-
 
   let isLoaded = false;
   
@@ -92,7 +90,7 @@ $: {
               <tr class="border-b-[#09090B]">
                 <th class="text-white font-semibold text-sm">Symbol</th>
                 <th class="text-white font-semibold text-sm">Company</th>
-                {#each sortedList as item}
+                {#each indicatorList as item}
                   <th class="text-white font-semibold text-end text-sm">{item}</th>
                 {/each}
               </tr>

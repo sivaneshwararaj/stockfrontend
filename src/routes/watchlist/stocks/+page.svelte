@@ -1,12 +1,11 @@
 <script lang='ts'>
-import { numberOfUnreadNotification } from '$lib/store';
-//import { enhance } from '$app/forms';
+import { screenWidth, numberOfUnreadNotification, switchWatchList } from '$lib/store';
+import { formatDate, abbreviateNumber } from '$lib/utils';
 import toast from 'svelte-french-toast';
 import { onDestroy, onMount } from 'svelte';
 
 import Input from '$lib/components/Input.svelte';
 import WatchListCard from '$lib/components/WatchListCard.svelte';
-import {switchWatchList } from '$lib/store';
 import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
 import { Button } from "$lib/components/shadcn/button/index.js";
 import { writable } from 'svelte/store';
@@ -15,6 +14,8 @@ export let data;
 let searchQuery = '';
 let shouldLoadWorker = writable(false);
 
+let watchList: any[] = [];
+let news = [];
 
 let indicatorList = ['Volume', 'Market Cap', 'Price', 'Change', 'EPS', 'PE'];
 indicatorList = indicatorList.sort((a, b) => a.localeCompare(b));
@@ -35,7 +36,27 @@ const handleDownloadMessage = (event) => {
 const updateStockScreenerData = async () => {
     downloadWorker.postMessage({ indicatorList});
 };
- 
+
+
+async function getWatchlistData()
+{
+  const postData = {'watchListId': displayWatchList?.id}
+  
+
+  const response = await fetch('/api/get-watchlist', {
+      method: 'POST',
+      headers: {
+      "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+  });
+
+const output = await response?.json();
+
+watchList = output?.at(0);
+news = output[1];
+
+}
 
 async function createWatchList(event) {
   event.preventDefault(); // prevent the default form submission behavior
@@ -172,7 +193,8 @@ if(allList?.length !== 0)
     else {
       displayWatchList = '';
     }
-  
+    await getWatchlistData();
+    
     if (!downloadWorker) {
         const DownloadWorker = await import('./workers/downloadWorker?worker');
         downloadWorker = new DownloadWorker.default();
@@ -225,10 +247,24 @@ async function handleChangeValue(value) {
   } else {
     checkedItems?.add(value);     // Add the value if it's not in the Set
   }
+  
     indicatorList = [...indicatorList]
 }
 
 
+
+  
+$: charNumber = $screenWidth < 640 ? 15 : 20;
+
+$: {
+  if($switchWatchList && typeof window !== 'undefined')
+  {
+    isLoaded = false
+    getWatchlistData()
+    isLoaded = true;
+    $switchWatchList = false;
+  }
+}
 </script>
 
 
@@ -313,7 +349,7 @@ async function handleChangeValue(value) {
                       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
                         <div>Delete</div>
                     </label>
-
+                    <!--
                     <DropdownMenu.Root >
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button builders={[builder]}  class="ml-3 sm:ml-auto min-w-[110px] w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
@@ -351,6 +387,7 @@ async function handleChangeValue(value) {
                         </DropdownMenu.Group>
                       </DropdownMenu.Content>
                     </DropdownMenu.Root>
+                    -->
 
             </div>
     </div>
@@ -379,10 +416,136 @@ async function handleChangeValue(value) {
         </div>
         {:else}
 
-        <WatchListCard
-          watchListId={displayWatchList?.id}
-          indicatorList={indicatorList}
-        />
+        <!--Start Table of Watchlist-->
+      {#if watchList?.length !== 0}
+
+
+  
+      <div class="w-screen sm:w-full">
+
+        <div class="w-full overflow-x-scroll">
+          <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4 ">
+            <!-- head -->
+            <thead>
+              <tr class="border-b-[#09090B]">
+                <th class="text-white font-semibold text-sm">Symbol</th>
+                <th class="text-white font-semibold text-sm">Company</th>
+                {#each indicatorList as item}
+                {#if isChecked(item)}
+                  <th class="text-white font-semibold text-end text-sm">{item}</th>
+                {/if}
+                {/each}
+              </tr>
+            </thead>
+            <tbody class="p-0">
+              {#each watchList as item}
+              <!-- row -->
+              <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
+  
+                <td class="text-sm sm:text-[1rem] text-start border-b-[#09090B]">
+                  <a href={`/${item?.type === 'stock' ? 'stocks' : item?.type === 'etf' ? 'etf' : 'crypto'}/${item?.symbol}`} class="text-blue-400 sm:hover:text-white">
+                     {item?.symbol}
+                  </a>
+                </td>
+
+                <td class="text-white text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap">
+                {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
+                </td>
+
+                <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
+                  {item?.eps !== null ? item?.eps?.toFixed(2) : '-'}
+              </td>
+
+              <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
+                  {item?.pe !== null ? item?.pe?.toFixed(2) : '-'}
+              </td>
+
+              <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]">
+                {abbreviateNumber(item?.volume)}
+              </td>
+
+              <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]">
+                  {abbreviateNumber(item?.marketCap)}
+              </td>
+
+
+              <td class="border-b-[#09090B] text-sm sm:text-[1rem] text-end text-white whitespace-nowrap">
+                {item.price?.toFixed(2)}
+              </td>
+
+              <td class="border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
+                {#if item?.changesPercentage >=0}
+                <span class="text-[#37C97D]">+{item?.changesPercentage?.toFixed(2)}%</span>
+              {:else}
+                <span class="text-[#FF2F1F]">{item?.changesPercentage?.toFixed(2)}% </span> 
+              {/if}
+              </td>
+
+
+              </tr>
+              
+          
+
+
+              {/each}
+            </tbody>
+          </table>
+        </div>
+
+
+            
+            <div class="w-full m-auto border-b border-slate-800 mt-16 mb-16"></div>
+
+            <h2 class="text-start text-white ml-2 text-xl font-bold text-black mb-3 ">Latest News</h2>
+            <div class="relative text-gray-800 m-auto">
+              <div class="flex flex-wrap md:flex-row">
+                  {#each news as item}
+                
+                      <a href={item.url} target="_blank" class="cursor-pointer mb-10 w-full">
+                        <div class="flex-shrink-0 float-left">
+                          <img src={item?.image} class="float-left w-36 sm:w-40 rounded-xl ml-2 mr-4 mb-2" alt="news image" loading="lazy">
+                          <div class="absolute w-36 sm:w-40 ml-2 mr-4 mb-2 h-6 bg-[#0C0F17] bg-opacity-80 flex justify-center items-center">
+                            <p class="text-white italic text-xs">{(new URL(item?.url)).hostname.replace('www.','')}</p>
+                          </div>
+                        </div>
+                        <div class="flex-grow">
+                          <div class="text-sm text-white flex flex-row">
+                        
+                            <div class="rounded-full w-6 h-6 relative bg-gray-800 mr-1.5 mb-0.5">
+                              <img class="rounded-full w-4 h-4 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2" src={`https://financialmodelingprep.com/image-stock/${item.symbol}.png`} loading="lazy"/>
+                            </div>
+                            {item?.symbol} &centerdot; {formatDate(item?.publishedDate)} ago
+                          </div>
+                          <h2 class="text-start text-sm sm:text-md font-medium mb-2 flex-shrink text-white">{item.title}</h2>
+                          <p class="text-white text-sm sm:text-md p-2">
+                            {item?.text?.length > 250 ? item?.text?.slice(0,250) + "..." : item?.text}
+                          </p>
+                        </div>
+                      </a>
+                    {/each}
+               
+              </div>
+            </div>
+
+            
+
+
+      </div>
+  
+  {:else}
+  <div class="flex flex-col justify-center items-center m-auto pt-5">
+    <span class="text-white font-bold text-white text-xl sm:text-3xl">
+      Empty Watchlist
+  </span>
+
+
+
+    <span class="text-white text-sm sm:text-lg pt-5 m-auto p-4 text-center">
+      Fill it up with your favorite stocks and get realtime data and the latest news in one place!
+    </span>
+  </div>
+  {/if}
+        <!--End Table of Watchlist-->
         
         
         {/if}
@@ -446,7 +609,7 @@ async function handleChangeValue(value) {
 
             <input class="hidden" name='user' value={data?.user?.id} />
             <input class="hidden" name='ticker' value={JSON.stringify([])} />
-
+            <input class="hidden" name='ruleOfList' value={JSON.stringify([])} />
 
             <button type="submit" class="mt-10 btn bg-purple-600 sm:hover:bg-purple-700 btn-md w-full rounded-lg m-auto text-white font-bold text-md">
               Create List
