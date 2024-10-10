@@ -3,88 +3,17 @@ import { numberOfUnreadNotification } from '$lib/store';
 //import { enhance } from '$app/forms';
 import toast from 'svelte-french-toast';
 import { onDestroy, onMount } from 'svelte';
-import { Drawer } from "vaul-svelte";
 
 import Input from '$lib/components/Input.svelte';
 import WatchListCard from '$lib/components/WatchListCard.svelte';
 import {screenWidth, switchWatchList } from '$lib/store';
-//import MiniPlot from '$lib/components/MiniPlot.svelte';
-import { goto } from '$app/navigation';
-import ArrowLogo from "lucide-svelte/icons/move-up-right";
-
-let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+import { Button } from "$lib/components/shadcn/button/index.js";
 
 
 
 export let data;
 
-/*
-
-const rawData = data?.getMiniPlotsIndex;
-
-function getCurrentDateFormatted() {
-    // Get current date
-    let date = new Date();
-    
-    // If today is Saturday or Sunday, move to the previous Friday
-    if (date.getDay() === 6) { // Saturday
-        date.setDate(date.getDate() - 1);
-    } else if (date.getDay() === 0) { // Sunday
-        date.setDate(date.getDate() - 2);
-    }
-    
-    // Define months array for formatting
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
-    // Get formatted date components
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-    
-    // Return formatted date
-    return `${month} ${day}, ${year}`;
-}
-
-let priceDataSP500;
-let priceDataNasdaq;
-let priceDataDowJones;
-let priceDataRussel2000;
-
-let changeSP500, changeNasdaq, changeDowJones, changeRussel2000;
-let previousCloseSP500, previousCloseNasdaq, previousCloseDowJones, previousCloseRussel2000;
-// Assign values based on the symbol
-rawData?.forEach(({ symbol, priceData, changesPercentage, previousClose }) => {
-  switch (symbol) {
-    case "SPY":
-      priceDataSP500 = priceData?.map(({ time, value }) => ({ time: Date?.parse(time), value}));
-      priceDataSP500 = priceDataSP500?.filter(item => item.value !== 0 && item.value !== null && item.value !== undefined)
-      changeSP500 = changesPercentage;
-      previousCloseSP500 = previousClose;
-      break;
-    case "QQQ":
-      priceDataNasdaq = priceData?.map(({ time, value }) => ({ time: Date?.parse(time), value}));
-      priceDataNasdaq = priceDataNasdaq?.filter(item => item.value !== 0 && item.value !== null && item.value !== undefined)
-      changeNasdaq = changesPercentage;
-      previousCloseNasdaq = previousClose;
-      break;
-    case "DIA":
-      priceDataDowJones = priceData?.map(({ time, value }) => ({ time: Date?.parse(time), value}));
-      priceDataDowJones = priceDataDowJones?.filter(item => item.value !== 0 && item.value !== null && item.value !== undefined)
-      changeDowJones = changesPercentage
-      previousCloseDowJones = previousClose;
-      break;
-    case "IWM":
-      priceDataRussel2000 = priceData?.map(({ time, value }) => ({ time: Date?.parse(time), value}));
-      priceDataRussel2000 = priceDataRussel2000?.filter(item => item.value !== 0 && item.value !== null && item.value !== undefined)
-      changeRussel2000 = changesPercentage;
-      previousCloseRussel2000 = previousClose;
-      break;
-    default:
-      // Handle unknown symbol
-      break;
-  }
-});
-*/
 
     let isLoaded = false;
 
@@ -101,7 +30,7 @@ rawData?.forEach(({ symbol, priceData, changesPercentage, previousClose }) => {
   }
 
 async function handleDeleteList() {
-    const clicked = document.getElementById('deleteWatchList');
+    const clicked = document.getElementById('deleteWatchlist');
     clicked.dispatchEvent(new MouseEvent('click'));
     const unClicked = document.getElementById('settingsWatchListModal');
     unClicked.dispatchEvent(new MouseEvent('click'));
@@ -152,7 +81,7 @@ async function createWatchList(event) {
       });
 
       
-        const clicked = document.getElementById('addWatchList');
+        const clicked = document.getElementById('addWatchlist');
         clicked?.dispatchEvent(new MouseEvent('click'));
 
         const anchor = document.createElement('a');
@@ -259,7 +188,7 @@ async function editNameWatchList(event) {
 
 
 
-async function deleteWatchList(event) {
+async function deleteWatchlist(event) {
   event.preventDefault(); // prevent the default form submission behavior
 
   const postData = {'watchListId': displayWatchList?.id, 'path': 'delete-watchlist'};
@@ -291,7 +220,7 @@ async function deleteWatchList(event) {
       changeWatchList(displayWatchList);
 
 
-      const clicked = document.getElementById('deleteWatchList');
+      const clicked = document.getElementById('deleteWatchlist');
       clicked.dispatchEvent(new MouseEvent('click'));
        
       
@@ -337,6 +266,10 @@ onDestroy( () => {
 })
 
 
+function handleWatchlistModal() {
+  const closePopup = document.getElementById("addWatchlist");
+  closePopup?.dispatchEvent(new MouseEvent('click'))
+}
 
 
 </script>
@@ -369,7 +302,7 @@ onDestroy( () => {
         
     
     
-<section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
+<section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 ">
           
   <div class="w-full overflow-hidden m-auto mt-5">
     
@@ -381,66 +314,55 @@ onDestroy( () => {
 
 
     {#if isLoaded}
-    <!--
-    <div class="text-white text-xs sm:text-sm pb-5 sm:pb-2 pl-3 sm:pl-0">
-      Stock Indexes - {getCurrentDateFormatted()}
-    </div>
-
-    <div class="w-full -mt-4 sm:mt-0 mb-8 m-auto flex justify-start sm:justify-center items-center p-3 sm:p-0">
-      <div class="w-full grid grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-3 ">
-      <MiniPlot title="S&P500" priceData = {priceDataSP500} changesPercentage={changeSP500} previousClose={previousCloseSP500}/>
-      <MiniPlot title="Nasdaq" priceData = {priceDataNasdaq} changesPercentage={changeNasdaq} previousClose={previousCloseNasdaq}/>
-      <MiniPlot title="Dow" priceData = {priceDataDowJones} changesPercentage={changeDowJones} previousClose={previousCloseDowJones}/>
-      <MiniPlot title="Russel" priceData = {priceDataRussel2000} changesPercentage={changeRussel2000} previousClose={previousCloseRussel2000}/>
-      </div>
-    </div>
-    -->
-
-    {#if allList?.length !== 0}
-      <div class="flex flex-row items-center w-full">
-
-        <div class="flex flex-row items-center justify-between w-full">
-          <label for="allList" class="ml-2 cursor-pointer w-auto px-4 bg-[#27272A] sm:hover:bg-[#27272A] duratiion-100 transition ease-in-out flex justify-center items-center py-3 rounded-lg shadow-lg">
-            <span class="text-white text-md">
-              {displayWatchList?.title?.length > 10 ? displayWatchList?.title?.slice(0,10) + '...' : displayWatchList?.title}
-            </span>
-
-            <svg class="inline-block w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-              <g transform="rotate(180 512 512)">
-                  <path fill="#fff" d="m488.832 344.32l-339.84 356.672a32 32 0 0 0 0 44.16l.384.384a29.44 29.44 0 0 0 42.688 0l320-335.872l319.872 335.872a29.44 29.44 0 0 0 42.688 0l.384-.384a32 32 0 0 0 0-44.16L535.168 344.32a32 32 0 0 0-46.336 0z"/>
-              </g>
-          </svg>
-
-          </label>
 
 
-          <label for="settingsWatchListModal" class="ml-auto sm:ml-5 mr-3 sm:mr-auto  cursor-pointer">
-            <div class="rounded-full w-10 h-10 relative flex items-center justify-center">
-              <svg class="w-6 h-6 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                <path fill="#cacaca" d="M156 128a28 28 0 1 1-28-28a28 28 0 0 1 28 28ZM48 100a28 28 0 1 0 28 28a28 28 0 0 0-28-28Zm160 0a28 28 0 1 0 28 28a28 28 0 0 0-28-28Z"/>
-            </svg>
+     <div class="flex w-full sm:w-[50%] md:block md:w-auto px-2 sm:px-0">
+            <div class="hidden text-sm sm:text-[1rem] font-semibold text-white md:block sm:mb-2">
+                My Watchlist
             </div>
-          </label>
+            <div class="relative inline-block text-left w-fit flex flex-row items-center">
+                <DropdownMenu.Root >
+                      <DropdownMenu.Trigger asChild let:builder>
+                        <Button builders={[builder]}  class="min-w-[110px] w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                          <span class="truncate font-semibold text-white shadow-sm">{displayWatchList?.title !== undefined ? displayWatchList?.title : 'Create Watchlist'}</span>
+                          <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                          </svg>
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                        <DropdownMenu.Label class="text-gray-400">
+                          <DropdownMenu.Trigger asChild let:builder>
+                          <Button on:click={handleWatchlistModal} builders={[builder]} class="p-0 -mb-2 -mt-2 text-sm inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap text-base text-white bg-[#0909B] focus:outline-none sm:text-smaller">
+                              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                                  <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+                              </svg> 
+                              <div class="text-sm text-start">New Watchlist</div>
+                          </Button>
+                          </DropdownMenu.Trigger>
+                        </DropdownMenu.Label>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Group>
+                          {#each allList as item}
+                            <DropdownMenu.Item on:click={() => changeWatchList(item)} class="{item?.id === displayWatchList?.id ? 'bg-[#27272A]' : ''} cursor-pointer sm:hover:bg-[#27272A]">
+                              {item?.title} ({item?.ticker?.length})
+                            </DropdownMenu.Item>
+                          {/each}
+                        </DropdownMenu.Group>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
 
-        </div>
-      
+                    <label for="deleteWatchlist" class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
+                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
+                        <div>Delete</div>
+                    </label>
 
-          <label for="addWatchList" class="{$screenWidth < 640 || !data?.user ? 'hidden' : ''} cursor-pointer w-48 md:w-44 bg-[#27272A] sm:hover:bg-[#27272A] duratiion-100 transition ease-in-out flex justify-center items-center py-3 rounded-lg shadow-lg mr-2">
-            <svg class="w-5 h-5 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="M16 2A14.172 14.172 0 0 0 2 16a14.172 14.172 0 0 0 14 14a14.172 14.172 0 0 0 14-14A14.172 14.172 0 0 0 16 2Zm8 15h-7v7h-2v-7H8v-2h7V8h2v7h7Z"/><path fill="none" d="M24 17h-7v7h-2v-7H8v-2h7V8h2v7h7v2z"/></svg>
-            <span class="ml-1 text-white text-sm">New Watchlist</span>
-          </label>
-        
+            </div>
+    </div>
 
-      </div>
-      {:else}
-      <div class ="w-full m-auto flex justify-center items-center">
-        <label for="addWatchList" class="{$screenWidth < 640 || !data?.user ? 'hidden' : ''} light-box cursor-pointer w-48 md:w-44 bg-[#27272A] sm:hover:bg-[#27272A] duratiion-100 transition ease-in-out flex justify-center items-center py-3 rounded-lg shadow-lg">
-          <svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="M16 2A14.172 14.172 0 0 0 2 16a14.172 14.172 0 0 0 14 14a14.172 14.172 0 0 0 14-14A14.172 14.172 0 0 0 16 2Zm8 15h-7v7h-2v-7H8v-2h7V8h2v7h7Z"/><path fill="none" d="M24 17h-7v7h-2v-7H8v-2h7V8h2v7h7v2z"/></svg>
-          <span class="ml-2 text-white text-md">New Watchlist</span>
-        </label>
-      </div>
-      {/if}
 
+
+    
         {#if allList.length === 0}
         <div class="flex flex-col justify-center items-center m-auto pt-8">
             <span class="text-white font-bold text-white text-xl sm:text-3xl">
@@ -501,67 +423,13 @@ onDestroy( () => {
 
 
 <!--Start Create Watchlist Modal-->
-{#if $screenWidth < 640}
-<!-- Mobile modal using Drawer component -->
-<Drawer.Root>
-    <!-- Trigger button -->
-    <Drawer.Trigger>
-
-      <div class="{!data?.user ? 'hidden' : ''} sm:hidden fixed w-full h-16 max-w-3xl -right-5 bottom-3">
-        <div class="h-full max-w-3xl mx-auto">        
-          <div class="flex items-center justify-end mr-10">
-            <label class="inline-flex items-center justify-center w-14 h-14 border border-[#000] ring-[#000] bg-[#0DDE00] text-[0.95rem] font-bold rounded-full text-[#09090B]">
-              <svg class="w-8 h-8 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z"/></svg>
-            </label>
-          </div>
-        </div>
-      </div>
-
-    </Drawer.Trigger>
-
-    <Drawer.Portal>
-    <!-- Overlay for mobile modal -->
-    <Drawer.Overlay class="fixed inset-0 bg-black/40" />
-    
-    <!-- Mobile modal content -->
-    <Drawer.Content class="fixed bottom-0 left-0 right-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] bg-[#09090B]">
-        <!-- Modal content -->
-        <form on:submit={createWatchList}
-        class="space-y-2 pt-5 pb-5 flex-1 rounded-t-[10px] bg-[#09090B] p-4"
-        >
-        <div class="mx-auto mb-8 h-1.5 w-20 flex-shrink-0 rounded-full bg-[#404040]" />
-        <div class="flex flex-col items-center m-auto text-center mb-10">
-            <Drawer.Title class="text-white text-xl mb-2 font-medium">New Watchlist</Drawer.Title>
-                          
-              <Input
-              id="title"
-              type="text"
-              label="List Name"
-              errors=''
-              required={true}
-              />
-
-              <input class="hidden" name='user' value={data?.user?.id} />
-              <input class="hidden" name='ticker' value={JSON.stringify([])} />
-          
-              <Drawer.Close class="w-full max-w-lg mt-5 mb-5">
-                <button type="submit" class="cursor-pointer px-7 py-2 rounded-full bg-[#0DDE00] text-center text-black font-medium">
-                  Create
-                </button>
-              </Drawer.Close>
-        </div>
-        </form>
-    </Drawer.Content>
-    </Drawer.Portal>
-</Drawer.Root>
-{:else}
 
   <!-- Desktop modal using dialog component -->
-    <input type="checkbox" id="addWatchList" class="modal-toggle" />
+    <input type="checkbox" id="addWatchlist" class="modal-toggle" />
   
-    <dialog id="addWatchList" class="modal modal-middle">
+    <dialog id="addWatchlist" class="modal modal-bottom sm:modal-middle">
       <!-- Modal backdrop for desktop -->
-      <label for="addWatchList" class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
+      <label for="addWatchlist" class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
   
       <!-- Desktop modal content -->
       <div class="modal-box w-full bg-[#191919]">
@@ -570,7 +438,7 @@ onDestroy( () => {
           
           <form
             on:submit={createWatchList}
-            class="space-y-2 w-11/12 m-auto"
+            class="space-y-2 w-full m-auto"
             >
             <Input
             id="title"
@@ -584,16 +452,14 @@ onDestroy( () => {
             <input class="hidden" name='ticker' value={JSON.stringify([])} />
 
 
-            <button type="submit" class="mt-10 btn bg-purple-600 hover:bg-purple-500 btn-md w-full rounded-lg m-auto text-white font-bold text-md">
+            <button type="submit" class="mt-10 btn bg-purple-600 sm:hover:bg-purple-700 btn-md w-full rounded-lg m-auto text-white font-bold text-md">
               Create List
           </button>
         </form>
 
         </div>
       </div>
-    </dialog>
-  {/if}
-  
+    </dialog>  
 <!--End Create Watchlist Modal-->
 
 
@@ -707,125 +573,38 @@ onDestroy( () => {
     
 <!--Start Delete Strategy Modal-->
 
-<input type="checkbox" id="deleteWatchList" class="modal-toggle" />
-
-<dialog id="deleteWatchList" class="modal modal-bottom sm:modal-middle">
-
-
-  <label for="deleteWatchList"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
+  <!--Start Delete Strategy Modal-->
+  <input type="checkbox" id="deleteWatchlist" class="modal-toggle" />
+  
+  <dialog id="deleteWatchlist" class="modal modal-bottom sm:modal-middle">
   
   
-  <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-600 overflow-hidden">
-
-    <h3 class="font-bold text-xl mb-5 pt-5 text-white m-auto w-3/4 text-center">
-      Are you sure you want to delete the watchlist?
-    </h3>
-
-    <div class="modal-action w-full m-auto p-5 flex flex-col sm:flex-row items-center">
-        
-      <label on:click={deleteWatchList} class="sm:ml-3 btn bg-[#FF3131] hover:bg-[#ff4343] text-white btn-md w-full rounded-lg text-white font-bold text-md">
-        Proceed
+    <label for="deleteWatchlist"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
+    
+    
+    <div class="modal-box w-full bg-[#141417] border border-gray-800 overflow-hidden ">
+  
+      <h3 class="font-bold text-[1rem] text-center sm:text-lg flex justify-center items-center mt-10 text-white">
+        Are you sure you want to delete the watchlist?
+      </h3>
+  
+      <div class="modal-action w-full m-auto p-5 flex flex-col sm:flex-row items-center">
+         
+  
+      <label for="deleteWatchlist" on:click={deleteWatchlist} class="mt-5 btn bg-purple-600 hover:bg-purple-500 btn-md w-full rounded-lg m-auto text-white font-bold text-md">
+          Proceed
       </label>
 
-    </div>
 
-        
       </div>
-  </dialog>
+  
+          
+        </div>
+    </dialog>
+  
+  <!--End Delete Strategy Modal-->
 
 <!--End Delete Strategy Modal-->
     
     
 
-
-
-
-
-<!--Start View All List-->
-<input type="checkbox" id="allList" class="modal-toggle" />
-    
-<dialog id="allList" class="modal modal-bottom sm:modal-middle ">
-
-
-  <label id="allList" for="allList"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
-  
-  
-  <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-800">
-
-    <h3 class="text-white text-2xl font-bold">
-      Watchlists
-    </h3>
-
-  <label for="allList" class="cursor-pointer absolute right-5 top-5 bg-[#09090B] text-[1.8rem] text-white">
-    <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"/></svg>
-  </label>
-
-    <div class="text-white mt-10">
-
-      <div class="flex flex-col items-center w-full max-w-3xl bg-[#09090B]">
-
-        {#each allList as item}
-          <label for="allList" on:click={() => changeWatchList(item)} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-
-              <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {item === displayWatchList ? 'ring-2 ring-[#04E000]' : ''}">
-                
-                <div class="flex flex-col items-center w-full">
-                  <span class="ml-1 text-white font-medium mr-auto">
-                    {item?.title?.length > 40 ? item?.title?.slice(0,40) : item?.title}
-                  </span>
-                  <span class="ml-1 text-white text-opacity-40 text-sm font-medium mr-auto">
-                    {item?.ticker?.length} Companies
-                  </span>
-                </div>
-               
-
-                <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-                  {#if item === displayWatchList}
-                    <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-                  {/if}
-                </div>
-
-              </div>
-            
-          </label>
-        {/each}
-
-      </div>
-       
-    </div>
-
-
-        
-      </div>
-  </dialog>
-<!--End View All List-->
-    
-    
-    
-  
-<style lang="scss">
-
-.light-box {
-          --border-size: 2px;
-          --border-angle: 0turn;
-          background-image: conic-gradient(from var(--border-angle), #213, #112 50%, #213), conic-gradient(from var(--border-angle), transparent 20%, #08f, #f03);
-          background-size: calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)), cover;
-          background-position: center center;
-          background-repeat: no-repeat;
-        animation: bg-spin 3s linear infinite;
-        @keyframes bg-spin {
-          to {
-            --border-angle: 1turn;
-          }
-        }
-      }
-  
-      @property --border-angle {
-    syntax: "<angle>";
-    inherits: true;
-    initial-value: 0turn;
-  }
-  
-
-    </style>
-    

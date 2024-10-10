@@ -135,7 +135,6 @@ let activeIdx = 0;
 
                 <slot />
                 
-                <ScrollToTop />
                 
             </main>
 
