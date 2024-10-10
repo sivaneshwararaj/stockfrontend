@@ -4,7 +4,6 @@
   import { format, startOfWeek, addDays, addWeeks, subWeeks, differenceInWeeks } from 'date-fns'
   import { screenWidth,  numberOfUnreadNotification } from '$lib/store';
   import logo from '$lib/images/split_logo.png';
-  import ScrollToTop from '$lib/components/ScrollToTop.svelte';
   import { goto } from '$app/navigation';
   import { abbreviateNumber } from '$lib/utils';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
@@ -224,17 +223,7 @@
     }
   }
 
-  let charNumber = 20;
-    
-  $: {
-    if ($screenWidth < 640)
-    {
-      charNumber = 10;
-    }
-    else {
-      charNumber = 20;
-    }
-  }
+  
   
     
   </script>
@@ -379,30 +368,32 @@
                             <tr>
                               <th class="text-slate-200 font-semibold text-[1rem] text-start">Symbol</th>
                               <th class="text-slate-200 font-semibold whitespace-nowrap text-[1rem] text-start">Company Name</th>
-                              <th class="text-slate-200 font-semibold whitespace-nowrap text-[1rem] text-start">Earnings per Share</th>
-                              <th class="text-slate-200 font-semibold whitespace-nowrap text-[1rem] text-start">Market Cap</th>
+                              <th class="text-slate-200 font-semibold whitespace-nowrap text-[1rem] text-end">EPS</th>
+                              <th class="text-slate-200 font-semibold whitespace-nowrap text-[1rem] text-end">Market Cap</th>
                               <th class="text-slate-200 font-semibold whitespace-nowrap text-[1rem] text-end">Split</th>
                             </tr>
                           </thead>
                           <tbody>
                             {#each day as item}
                             <!-- row -->
-                            <tr on:click={() => goto("/stocks/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer">
+                            <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                               
-                              <td class="text-blue-400 text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
-                                {item?.symbol}
+                              <td class="text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
+                                <a href={"/stocks/"+item?.symbol} class="sm:hover:text-white text-blue-400">
+                                  {item?.symbol}
+                                </a>
                               </td>
 
                               <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
                                   {item?.name?.length > 40 ? item?.name?.slice(0,40) + "..." : item?.name}
                               </td>
           
-                            <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]">
+                            <td class="text-white text-sm text-end sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]">
                                 {item?.eps !== null ? item?.eps : '-'}
                             </td>
 
-                            <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]">
-                                {item?.marketCap !== null ? '$' + abbreviateNumber(item?.marketCap) : '-'}
+                            <td class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap font-medium border-b-[#09090B]">
+                                {item?.marketCap !== null ? abbreviateNumber(item?.marketCap) : '-'}
                             </td>
 
                             <td class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end mr-1 border-b-[#09090B]">

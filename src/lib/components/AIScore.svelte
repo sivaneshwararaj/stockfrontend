@@ -60,7 +60,7 @@
                                     <span class="text-base font-semibold text-blue-link blur group-hover:blur-[3px]">
                                       XX
                                     </span>
-                                    <div class="absolute top-1 flex items-center">
+                                    <div class="absolute top-0.5 flex items-center">
                                       <svg class="size-5 text-[#FBCE3C]" 
                                           viewBox="0 0 20 20" 
                                           fill="currentColor" 
