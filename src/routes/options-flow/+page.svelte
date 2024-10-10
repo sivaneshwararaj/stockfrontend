@@ -836,132 +836,100 @@ let sortOrders = {
 
 // Generalized sorting function
 function sortData(key) {
-    // Reset all other keys to 'none' except the current key
-    for (const k in sortOrders) {
-      if (k !== key) {
-        sortOrders[k] = 'none';
-      }
-    }
-
-    // Cycle through 'none', 'asc', 'desc' for the clicked key
-   if (key === 'time') {
-    // Only cycle between 'asc' and 'desc' for the 'time' key
-    if (sortOrders[key] === 'asc') {
-      sortOrders[key] = 'desc';
-    } else {
-      sortOrders[key] = 'asc';
-    }
-  } else {
-    // Cycle through 'none', 'asc', 'desc' for other keys
-    if (sortOrders[key] === 'none') {
-      sortOrders[key] = 'asc';
-    } else if (sortOrders[key] === 'asc') {
-      sortOrders[key] = 'desc';
-    } else {
-      sortOrders[key] = 'none';
+  // Reset all other keys to 'none' except the current key
+  for (const k in sortOrders) {
+    if (k !== key) {
+      sortOrders[k] = 'none';
     }
   }
 
+  // Cycle through 'none', 'asc', 'desc' for the clicked key
+  const orderCycle = ['none', 'asc', 'desc'];
+  const currentOrderIndex = orderCycle.indexOf(sortOrders[key]);
+  sortOrders[key] = orderCycle[(currentOrderIndex + 1) % orderCycle.length];
 
-    const sortOrder = sortOrders[key];
-    const originalData = filteredData?.length !==0 ? [...filteredData] : [...rawData];
-    if (sortOrder === 'none') {
-      // Reset to original data when 'none'
-      displayedData = originalData;
-    } else {
-      displayedData = [...originalData]?.sort((a, b) => {
-        if (key === 'time') {
-          // Handle time comparison
-          const timeA = new Date('1970-01-01T' + a.time).getTime();
-          const timeB = new Date('1970-01-01T' + b.time).getTime();
-          return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
-        } else if (key === 'ticker') {
-          // Handle alphabetical comparison for symbol
-          const tickerA = a.ticker.toUpperCase();
-          const tickerB = b.ticker.toUpperCase();
-          if (sortOrder === 'asc') {
-            return tickerA > tickerB ? 1 : -1;
-          } else {
-            return tickerA < tickerB ? 1 : -1;
-          }
-        } else if (key === 'expiry' || key==='dte') {
-          // Handle alphabetical comparison for symbol
-          const timeA = new Date (a?.date_expiration);
-          const timeB = new Date (b?.date_expiration);
-          return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
-        } else if (key === 'strike') {
-          // Handle numeric comparison for strike
-          const strikeA = parseFloat(a.strike_price); // Convert to float for comparison
-          const strikeB = parseFloat(b.strike_price);
-          return sortOrder === 'asc' ? strikeA - strikeB : strikeB - strikeA;
-          
-        } else if (key === 'spot') {
-          // Handle numeric comparison for strike
-          const strikeA = parseFloat(a.underlying_price); // Convert to float for comparison
-          const strikeB = parseFloat(b.underlying_price);
-          return sortOrder === 'asc' ? strikeA - strikeB : strikeB - strikeA;
-        } else if (key === 'price') {
-          // Handle numeric comparison for strike
-          const strikeA = parseFloat(a?.price); // Convert to float for comparison
-          const strikeB = parseFloat(b?.price);
-          return sortOrder === 'asc' ? strikeA - strikeB : strikeB - strikeA;
-        } else if (key === 'premium') {
-          // Handle numeric comparison for strike
-          const strikeA = parseFloat(a.cost_basis); // Convert to float for comparison
-          const strikeB = parseFloat(b.cost_basis);
-          return sortOrder === 'asc' ? strikeA - strikeB : strikeB - strikeA;
-        } else if (key === 'vol') {
-          // Handle numeric comparison for strike
-          const strikeA = parseFloat(a.volume); // Convert to float for comparison
-          const strikeB = parseFloat(b.volume);
-          return sortOrder === 'asc' ? strikeA - strikeB : strikeB - strikeA;
-        } else if (key === 'oi') {
-          // Handle numeric comparison for strike
-          const strikeA = parseFloat(a.open_interest); // Convert to float for comparison
-          const strikeB = parseFloat(b.open_interest);
-          return sortOrder === 'asc' ? strikeA - strikeB : strikeB - strikeA;
-        } else if (key === 'callPut') {
-          // Handle Call/Put sorting
-          const callPutA = a?.put_call?.toUpperCase(); // Normalize to uppercase
-          const callPutB = b?.put_call?.toUpperCase();
-          if (sortOrder === 'asc') {
-            return callPutA > callPutB ? 1 : -1;
-          } else {
-            return callPutA < callPutB ? 1 : -1;
-          }
-        } else if (key === 'sentiment') {
-          // Handle sentiment sorting
-          const sentimentOrder = {
-            'BULLISH': 1,
-            'NEUTRAL': 2,
-            'BEARISH': 3,
-          };
-          const sentimentA = sentimentOrder[a.sentiment?.toUpperCase()] || 4; // Fallback for undefined values
-          const sentimentB = sentimentOrder[b.sentiment?.toUpperCase()] || 4;
+  const sortOrder = sortOrders[key];
+  const originalData = filteredData?.length !== 0 ? [...filteredData] : [...rawData];
 
-          if (sortOrder === 'asc') {
-            return sentimentA - sentimentB;  // Ascending order
-          } else {
-            return sentimentB - sentimentA;  // Descending order
-          }
-        } else if (key === 'type') {
-          // Handle sentiment sorting
-          const sentimentOrder = {
-            'SWEEP': 1,
-            'TRADE': 2,
-          };
-          const sentimentA = sentimentOrder[a?.option_activity_type?.toUpperCase()] || 3; // Fallback for undefined values
-          const sentimentB = sentimentOrder[b?.option_activity_type?.toUpperCase()] || 3;
-
-          if (sortOrder === 'asc') {
-            return sentimentA - sentimentB;  // Ascending order
-          } else {
-            return sentimentB - sentimentA;  // Descending order
-          }
-        }
-      });
-    }
+  // Reset to original data when 'none'
+  if (sortOrder === 'none') {
+    displayedData = originalData;
+    return;
   }
+
+  const compareFunctions = {
+    time: (a, b) => {
+      const timeA = new Date('1970-01-01T' + a.time).getTime();
+      const timeB = new Date('1970-01-01T' + b.time).getTime();
+      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    },
+    ticker: (a, b) => {
+      const tickerA = a.ticker.toUpperCase();
+      const tickerB = b.ticker.toUpperCase();
+      return sortOrder === 'asc' ? tickerA.localeCompare(tickerB) : tickerB.localeCompare(tickerA);
+    },
+    expiry: (a, b) => {
+      const timeA = new Date(a.date_expiration);
+      const timeB = new Date(b.date_expiration);
+      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    },
+    dte: (a, b) => {
+      const timeA = new Date(a.date_expiration);
+      const timeB = new Date(b.date_expiration);
+      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    },
+    strike: (a, b) => {
+      const strikeA = parseFloat(a.strike_price);
+      const strikeB = parseFloat(b.strike_price);
+      return sortOrder === 'asc' ? strikeA - strikeB : strikeB - strikeA;
+    },
+    spot: (a, b) => {
+      const spotA = parseFloat(a.underlying_price);
+      const spotB = parseFloat(b.underlying_price);
+      return sortOrder === 'asc' ? spotA - spotB : spotB - spotA;
+    },
+    price: (a, b) => {
+      const priceA = parseFloat(a.price);
+      const priceB = parseFloat(b.price);
+      return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+    },
+    premium: (a, b) => {
+      const premiumA = parseFloat(a.cost_basis);
+      const premiumB = parseFloat(b.cost_basis);
+      return sortOrder === 'asc' ? premiumA - premiumB : premiumB - premiumA;
+    },
+    vol: (a, b) => {
+      const volA = parseFloat(a.volume);
+      const volB = parseFloat(b.volume);
+      return sortOrder === 'asc' ? volA - volB : volB - volA;
+    },
+    oi: (a, b) => {
+      const oiA = parseFloat(a.open_interest);
+      const oiB = parseFloat(b.open_interest);
+      return sortOrder === 'asc' ? oiA - oiB : oiB - oiA;
+    },
+    callPut: (a, b) => {
+      const callPutA = a.put_call?.toUpperCase();
+      const callPutB = b.put_call?.toUpperCase();
+      return sortOrder === 'asc' ? callPutA.localeCompare(callPutB) : callPutB.localeCompare(callPutA);
+    },
+    sentiment: (a, b) => {
+      const sentimentOrder = { 'BULLISH': 1, 'NEUTRAL': 2, 'BEARISH': 3 };
+      const sentimentA = sentimentOrder[a.sentiment?.toUpperCase()] || 4;
+      const sentimentB = sentimentOrder[b.sentiment?.toUpperCase()] || 4;
+      return sortOrder === 'asc' ? sentimentA - sentimentB : sentimentB - sentimentA;
+    },
+    type: (a, b) => {
+      const typeOrder = { 'SWEEP': 1, 'TRADE': 2 };
+      const typeA = typeOrder[a.option_activity_type?.toUpperCase()] || 3;
+      const typeB = typeOrder[b.option_activity_type?.toUpperCase()] || 3;
+      return sortOrder === 'asc' ? typeA - typeB : typeB - typeA;
+    },
+  };
+
+  // Sort using the appropriate comparison function
+  displayedData = originalData.sort(compareFunctions[key]);
+}
 
 </script>
          
