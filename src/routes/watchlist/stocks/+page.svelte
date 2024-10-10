@@ -6,37 +6,36 @@ import { onDestroy, onMount } from 'svelte';
 
 import Input from '$lib/components/Input.svelte';
 import WatchListCard from '$lib/components/WatchListCard.svelte';
-import {screenWidth, switchWatchList } from '$lib/store';
+import {switchWatchList } from '$lib/store';
 import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
 import { Button } from "$lib/components/shadcn/button/index.js";
-
-
+import { writable } from 'svelte/store';
 
 export let data;
+let searchQuery = '';
+let shouldLoadWorker = writable(false);
 
 
-    let isLoaded = false;
+let indicatorList = ['Volume', 'Market Cap', 'Price', 'Change', 'EPS', 'PE'];
+indicatorList = indicatorList.sort((a, b) => a.localeCompare(b));
 
-    let displayWatchList;
 
-    let allList = data?.getAllWatchlist;
-      
-  async function handleRenameList() {
-    const clicked = document.getElementById('editNameWatchList');
-    clicked.dispatchEvent(new MouseEvent('click'));
-    const unClicked = document.getElementById('settingsWatchListModal');
-    unClicked.dispatchEvent(new MouseEvent('click'));
+let isLoaded = false;
+let downloadWorker: Worker | undefined;
+let displayWatchList;
+let allList = data?.getAllWatchlist;
+  
 
-  }
+const handleDownloadMessage = (event) => {
+    stockScreenerData = event?.data?.stockScreenerData;
+    shouldLoadWorker.set(true);
 
-async function handleDeleteList() {
-    const clicked = document.getElementById('deleteWatchlist');
-    clicked.dispatchEvent(new MouseEvent('click'));
-    const unClicked = document.getElementById('settingsWatchListModal');
-    unClicked.dispatchEvent(new MouseEvent('click'));
+};
 
-  }
-    
+const updateStockScreenerData = async () => {
+    downloadWorker.postMessage({ indicatorList});
+};
+ 
 
 async function createWatchList(event) {
   event.preventDefault(); // prevent the default form submission behavior
@@ -104,90 +103,6 @@ async function createWatchList(event) {
 
 
 
-async function editNameWatchList(event) {
-  event.preventDefault(); // prevent the default form submission behavior
-
-  const formData = new FormData(event.target); // create a FormData object from the form
-
-  const title = formData.get('title');
-
-  if (!title || title?.length === 0) {
-    toast.error('Title cannot be empty!', {
-      style: 'border-radius: 200px; background: #333; color: #fff;',
-    });
-    return;
-  }
-
-  if (title?.length > 40) {
-    toast.error('Title is too long. Keep it simple and concise bruv!', {
-      style: 'border-radius: 200px; background: #333; color: #fff;',
-    });
-    return;
-  }
-
-  const postData = {};
-
-  // Iterate through the FormData entries and populate the object
-  for (const [key, value] of formData.entries()) {
-    postData[key] = value;
-  }
-  postData['path'] = 'edit-name-watchlist';
-  
-  try {
-    const response = await fetch('/api/fastify-post-data', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData),
-    }); // make a POST request to the server with the FormData object
-    const output = (await response.json())?.items;
-
-    if (output === 'success') {
-      toast.success('Watchlist renamed successfully!', {
-        style: 'border-radius: 200px; background: #333; color: #fff;',
-      });
-
-      for (const item of allList) {
-        if (item?.title === postData['title']) {
-          item.title = postData['title'];
-        }
-      }
-
-      // Initialize an index variable
-      let foundIndex = -1;
-      // Iterate through the list and replace "Short" with "Long"
-      allList?.forEach((item, index) => {
-        if (item?.title === displayWatchList?.title) {
-          item.title = postData?.title;
-          foundIndex = index; // Store the index where the title was found
-        }
-      });
-
-      allList = [...allList];
-      displayWatchList = allList[foundIndex]
-
-      const clicked = document.getElementById('editNameWatchList');
-      clicked.dispatchEvent(new MouseEvent('click'));
-       
-      
-    } else {
-      toast.error('Something went wrong. Please try again!', {
-        style: 'border-radius: 200px; background: #333; color: #fff;',
-      });
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    toast.error('An error occurred. Please try again later.', {
-      style: 'border-radius: 200px; background: #333; color: #fff;',
-    });
-  }
-}
-
-
-
-
-
 async function deleteWatchlist(event) {
   event.preventDefault(); // prevent the default form submission behavior
 
@@ -249,7 +164,7 @@ function changeWatchList(newWatchList)
 }
 
 
-onMount(() => {
+onMount(async () => {
 if(allList?.length !== 0)
     {
       displayWatchList = allList[0]
@@ -257,6 +172,13 @@ if(allList?.length !== 0)
     else {
       displayWatchList = '';
     }
+  
+    if (!downloadWorker) {
+        const DownloadWorker = await import('./workers/downloadWorker?worker');
+        downloadWorker = new DownloadWorker.default();
+        downloadWorker.onmessage = handleDownloadMessage;
+    }
+
 isLoaded = true;
 
 });
@@ -269,6 +191,41 @@ onDestroy( () => {
 function handleWatchlistModal() {
   const closePopup = document.getElementById("addWatchlist");
   closePopup?.dispatchEvent(new MouseEvent('click'))
+}
+
+let testList = [];
+
+function handleInput(event) {
+    searchQuery = event.target.value?.toLowerCase() || '';
+  
+    setTimeout(() => {
+        testList = [];
+
+        if (searchQuery.length > 0) {
+          
+          const rawList = indicatorList
+            testList = rawList?.filter(item => {
+                const index = item?.toLowerCase();
+                // Check if country starts with searchQuery
+                return index?.startsWith(searchQuery);
+            }) || [];
+        }
+    }, 50);
+}
+
+let checkedItems = new Set(indicatorList);
+
+function isChecked(item) {
+  return checkedItems?.has(item);
+}
+
+async function handleChangeValue(value) {
+  if (checkedItems.has(value)) {
+    checkedItems.delete(value);  // Remove the value if it's already in the Set
+  } else {
+    checkedItems?.add(value);     // Add the value if it's not in the Set
+  }
+    indicatorList = [...indicatorList]
 }
 
 
@@ -320,10 +277,10 @@ function handleWatchlistModal() {
             <div class="hidden text-sm sm:text-[1rem] font-semibold text-white md:block sm:mb-2">
                 My Watchlist
             </div>
-            <div class="relative inline-block text-left w-fit flex flex-row items-center">
+            <div class="relative inline-block text-left w-full flex flex-row items-center">
                 <DropdownMenu.Root >
                       <DropdownMenu.Trigger asChild let:builder>
-                        <Button builders={[builder]}  class="min-w-[110px] w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                        <Button builders={[builder]}  class="min-w-[110px] w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
                           <span class="truncate font-semibold text-white shadow-sm">{displayWatchList?.title !== undefined ? displayWatchList?.title : 'Create Watchlist'}</span>
                           <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
                               <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -357,6 +314,44 @@ function handleWatchlistModal() {
                         <div>Delete</div>
                     </label>
 
+                    <DropdownMenu.Root >
+                      <DropdownMenu.Trigger asChild let:builder>
+                        <Button builders={[builder]}  class="ml-3 sm:ml-auto min-w-[110px] w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                          <span class="truncate font-semibold text-white shadow-sm">
+                            Indicators
+                          </span>
+                          <svg class="-mr-1 ml-2 h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                          </svg>
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
+                        <div class="relative sticky z-40 focus:outline-none -top-1"
+                            tabindex="0" role="menu" style="">
+                        <input bind:value={searchQuery}
+                            on:input={handleInput}
+                            autocomplete="off"
+                            class="text-sm absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
+                            focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
+                            type="search" 
+                            placeholder="Search...">
+                        </div>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Group>
+                          {#each (searchQuery?.length !== 0 ? testList : indicatorList) as item}
+                            <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                            <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
+                              <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
+                                <input type="checkbox" class="rounded" checked={isChecked(item)}>
+                                <span class="ml-2">{item}</span>
+                              </label>
+                            </div>
+                          </DropdownMenu.Item>  
+                          {/each}
+                        </DropdownMenu.Group>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+
             </div>
     </div>
 
@@ -386,6 +381,7 @@ function handleWatchlistModal() {
 
         <WatchListCard
           watchListId={displayWatchList?.id}
+          indicatorList={indicatorList}
         />
         
         
@@ -464,112 +460,9 @@ function handleWatchlistModal() {
 
 
 
-    
 
 
 
-<!--Start Settings Watchlist Modal-->
-<input type="checkbox" id="settingsWatchListModal" class="modal-toggle" />
-
-<dialog id="settingsWatchListModal" class="modal modal-bottom sm:modal-middle">
-
-
-    <label for="settingsWatchListModal"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
-    
-    
-    <div class="modal-box w-full bg-[#09090B] pb-5">
-
-      <div class="flex flex-row items-center mb-8">
-        <h3 class="text-white text-2xl font-bold">
-        Settings
-        </h3>
-      </div>
-
-      <label on:click={handleRenameList} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5 mt-5">
-
-        <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg">
-          
-          <div class="flex flex-col items-center w-full">
-            <span class="ml-1 text-white font-medium mr-auto">
-              Rename List
-            </span>
-          </div>
-          <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="#CBD5FF" d="M15 3c1.296 0 2.496.41 3.477 1.11l-9.134 9.133a1 1 0 1 0 1.414 1.414l9.134-9.134A5.977 5.977 0 0 1 21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10Zm6.657-.657a1 1 0 0 1 0 1.414L19.89 5.523a6.035 6.035 0 0 0-1.414-1.414l1.766-1.766a1 1 0 0 1 1.414 0Z"/></g></svg>
-        </div>
-      
-    </label>
-
-
-    <label on:click={handleDeleteList} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5 mt-5">
-
-      <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg">
-        
-        <div class="flex flex-col items-center w-full">
-          <span class="ml-1 text-white font-medium mr-auto">
-            Delete List
-          </span>
-        </div>
-          <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="#CBD5FF" d="M20 5a1 1 0 1 1 0 2h-1l-.003.071l-.933 13.071A2 2 0 0 1 16.069 22H7.93a2 2 0 0 1-1.995-1.858l-.933-13.07A1.017 1.017 0 0 1 5 7H4a1 1 0 0 1 0-2h16Zm-6-3a1 1 0 1 1 0 2h-4a1 1 0 0 1 0-2h4Z"/></g></svg>
-      </div>    
-  </label>
-
-
-  </div>
-</dialog>
-
-<!--End Settings Watchlist Modal-->
-
-
-    
-
-
-<!--Start Edit Watchlist Modal-->
-
-<input type="checkbox" id="editNameWatchList" class="modal-toggle" />
-
-<dialog id="editNameWatchList" class="modal modal-bottom sm:modal-middle">
-
-
-    <label for="editNameWatchList"  class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"></label>
-    
-    
-    <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-600 " >
-
-    <div class="flex flex-row items-center">
-        <h3 class="text-white text-2xl font-bold">
-        Rename Watchlist
-        </h3>
-    </div>
-
-
-
-    <form
-        on:submit={editNameWatchList}
-        method="POST"
-        class="space-y-2 pt-5 pb-10"
-        >
-        <Input
-        id="title"
-        type="text"
-        label="New Name"
-        errors=''
-        required={true}
-        />
-
-        <input class="hidden" value={displayWatchList?.id} name ="watchListId"/>
-    
-        <button type="submit" class="mt-10 btn bg-purple-600 hover:bg-purple-500 btn-md w-full rounded-lg m-auto text-white font-bold text-md">
-            Update Name
-        </button>
-    </form>
-
-   
-        </div>
-    </dialog>
-
-<!--End Edit Watchlist Modal-->
-
-    
     
 <!--Start Delete Strategy Modal-->
 

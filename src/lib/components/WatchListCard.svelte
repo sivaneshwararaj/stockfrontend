@@ -1,105 +1,12 @@
 <script lang='ts'>
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
   import { switchWatchList, screenWidth } from '$lib/store';
   import { formatDate, abbreviateNumber } from '$lib/utils';
-  import InfoModal from '$lib/components/InfoModal.svelte';
   
   export let watchListId;
+  export let indicatorList;
 
-
-
-const sortTickersByName = (tickerList) => {
-  return tickerList.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return a?.symbol?.localeCompare(b?.symbol);
-    }
-    else {
-      return b?.symbol?.localeCompare(a?.symbol);
-    }
-    
-  });
-};
-
-const sortTickersByPrice = (tickerList) => {
-  return tickerList.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.price - a?.price;
-    }
-    else {
-      return a?.price - b?.price;
-    }
-     
-    });
-}
-
-const sortTickersByEPS = (tickerList) => {
-  return tickerList.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.eps - a?.eps;
-    }
-    else {
-      return a?.eps - b?.eps;
-    }
-     
-    });
-};
-
-const sortTickersByPE = (tickerList) => {
-  return tickerList.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.pe - a?.pe;
-    }
-    else {
-      return a?.pe - b?.pe;
-    }
-     
-    });
-};
-
-const sortTickersByVolume = (tickerList) => {
-  return tickerList.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.volume - a?.volume;
-    }
-    else {
-      return a?.volume - b?.volume;
-    }
-     
-    });
-};
-
-
-const sortTickersByMarketCap = (tickerList) => {
-  return tickerList.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.marketCap - a?.marketCap;
-    }
-    else {
-      return a?.marketCap - b?.marketCap;
-    }
-    });
-}
-
-const sortTickersByChange = (tickerList) => {
-  return tickerList.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.changesPercentage - a?.changesPercentage;
-    }
-    else {
-      return a?.changesPercentage - b?.changesPercentage;
-    }
-    });
-}
-
-  
+  $: sortedList = indicatorList;
 
 
   let isLoaded = false;
@@ -122,20 +29,10 @@ async function getWatchlistData()
 
 const output = await response?.json();
 
-try {
-  watchList = sortTickersByChange(output?.at(0));
-}
-catch(e) {
-  watchList = []
-}
-
+watchList = output?.at(0);
 news = output[1];
 
-
-
 }
-
-
 
 
 
@@ -152,125 +49,8 @@ onMount( async () => {
 
 
 
-let order = 'highToLow';
-
-function selectSortingMethod(state:string) {
   
-    order = 'highToLow';
-    
-    if(state === 'Change')
-    {
-      sortBy = state;
-      watchList = sortTickersByChange(watchList);
-    }
-
-    else if (state === 'Market Cap')
-    {
-      sortBy = state;
-      watchList = sortTickersByMarketCap(watchList);
-    }
-
-    else if (state === 'Price')
-    {
-      sortBy = state;
-      watchList = sortTickersByPrice(watchList);
-    }
-
-    else if (state === 'EPS')
-    {
-      sortBy = state;
-      watchList = sortTickersByEPS(watchList);
-    }
-
-    else if (state === 'PE Ratio')
-    {
-      sortBy = state;
-      watchList = sortTickersByPE(watchList);
-    }
-
-    else if (state === 'Volume')
-    {
-      sortBy = state;
-      watchList = sortTickersByVolume(watchList);
-    }
-
-   
-    else if (state === 'Name: A-Z')
-    {
-      sortBy = state;
-      watchList = sortTickersByName(watchList);
-    }
-}
-
-
-
-function changeOrder(state:string) {
-  if (state === 'highToLow')
-  {
-    order = 'lowToHigh';
-  }
-  else {
-    order = 'highToLow';
-  }
-}
-
-let sortBy = 'Change';
-let charNumber = 20;
-
-  
-$: {
-  if ($screenWidth < 640)
-  {
-    charNumber = 15;
-  }
-  else {
-    charNumber = 20;
-  }
-}
-
-
-
-
-$: {
-  if(order)
-  {
-    if(sortBy === 'Change')
-    {
-      watchList = sortTickersByChange(watchList);
-    }
-
-    else if (sortBy === 'Market Cap')
-    {
-      watchList = sortTickersByMarketCap(watchList);
-    }
-
-    else if (sortBy === 'Price')
-    {
-      watchList = sortTickersByPrice(watchList);
-    }
-    
-    else if (sortBy === 'EPS')
-    {
-      watchList = sortTickersByEPS(watchList);
-    }
-
-    else if (sortBy === 'PE Ratio')
-    {
-      watchList = sortTickersByPE(watchList);
-    }
-
-    else if (sortBy === 'Volume')
-    {
-      watchList = sortTickersByVolume(watchList);
-    }
-
-
-    else if (sortBy === 'Name: A-Z')
-    {
-      watchList = sortTickersByName(watchList);
-    } 
-  }
-}
+$: charNumber = $screenWidth < 640 ? 15 : 20;
 
 $: {
   if($switchWatchList && typeof window !== 'undefined')
@@ -278,8 +58,6 @@ $: {
     isLoaded = false
     getWatchlistData()
 
-  
-  
     isLoaded = true;
     $switchWatchList = false;
   }
@@ -311,15 +89,12 @@ $: {
           <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4 ">
             <!-- head -->
             <thead>
-              <tr class="">
+              <tr class="border-b-[#09090B]">
                 <th class="text-white font-semibold text-sm">Symbol</th>
                 <th class="text-white font-semibold text-sm">Company</th>
-                <th class="text-white font-semibold text-end text-sm">EPS</th>
-                <th class="text-white font-semibold text-end text-sm">PE Ratio</th>
-                <th class="text-white font-semibold text-end text-sm">Volume</th>
-                <th class="text-white font-semibold text-end text-sm">Market Cap</th>
-                <th class="text-white font-semibold text-end text-sm">Price</th>
-                <th class="text-white font-semibold text-end text-sm">Change</th>
+                {#each sortedList as item}
+                  <th class="text-white font-semibold text-end text-sm">{item}</th>
+                {/each}
               </tr>
             </thead>
             <tbody class="p-0">
@@ -448,155 +223,3 @@ $: {
 
 
 </section>
-
-
-
-
-
-
-
-<!--Start Sort By Modal-->
-<input type="checkbox" id="sortByModal" class="modal-toggle" />
-    
-<dialog id="sortByModal" class="modal modal-bottom sm:modal-middle ">
-
-
-  <label id="sortByModal" for="sortByModal"  class="cursor-pointer modal-backdrop bg-[#09090B] bg-opacity-[0.5]"></label>
-  
-  
-  <div class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-800">
-
-
-
-  <label for="sortByModal" class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-[1.8rem] text-white">
-    ✕
-  </label>
-
-    <div class="text-white">
-      
-      <h3 class="font-medium text-lg sm:text-xl mb-10">
-        Sort By
-      </h3>
-        
-
-      <div class="flex flex-col items-center w-full max-w-3xl bg-[#09090B]">
-
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('Change')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-
-            <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Change' ? 'ring-2 ring-[#04E000]' : ''}">
-              
-              <span class="ml-1 text-white font-medium mr-auto">
-                Daily Change in %
-              </span>
-
-              <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-                {#if sortBy === 'Change'}
-                  <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-                {/if}
-              </div>
-
-            </div>
-           
-        </label>
-
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('Price')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Price' ? 'ring-2 ring-[#04E000]' : ''}">
-            
-            <span class="ml-1 text-white font-medium mr-auto">
-              Price in $
-            </span>
-
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'Price'}
-              <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-              {/if}
-            </div>
-
-          </div>
-         
-        </label>
-
-    
-
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('Market Cap')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Market Cap' ? 'ring-2 ring-[#04E000]' : ''}">
-            <span class="ml-1 text-white font-medium mr-auto">
-              Market Cap
-            </span>
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'Market Cap'}
-                <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-              {/if}
-            </div>
-          </div>
-        </label>
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('EPS')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'EPS' ? 'ring-2 ring-[#04E000]' : ''}">
-            <span class="ml-1 text-white font-medium mr-auto">
-              Earnings per Share
-            </span>
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'EPS'}
-                <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-              {/if}
-            </div>
-          </div>
-        </label>
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('PE Ratio')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'PE Ratio' ? 'ring-2 ring-[#04E000]' : ''}">
-            <span class="ml-1 text-white font-medium mr-auto">
-              PE Ratio
-            </span>
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'PE Ratio'}
-                <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-              {/if}
-            </div>
-          </div>
-        </label>
-
-        <label for="sortByModal" on:click={() => selectSortingMethod('Volume')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Volume' ? 'ring-2 ring-[#04E000]' : ''}">
-            <span class="ml-1 text-white font-medium mr-auto">
-              Volume
-            </span>
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'Volume'}
-                <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-              {/if}
-            </div>
-          </div>
-        </label>
-
-    
-        <label for="sortByModal" on:click={() => selectSortingMethod('Name: A-Z')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-          <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-lg {sortBy === 'Name: A-Z' ? 'ring-2 ring-[#04E000]' : ''}">
-            <span class="ml-1 text-white font-medium mr-auto">
-              Name: A-Z
-            </span>
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if sortBy === 'Name: A-Z'}
-              <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero"> <path d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z" id="🎨-Color"> </path> </g> </g> </g></svg>
-            {/if}
-            </div>
-
-          </div>
-         
-        </label>
-
-
-      </div>
-       
-    </div>
-
-
-        
-      </div>
-  </dialog>
-<!--End Sort By Modal-->
