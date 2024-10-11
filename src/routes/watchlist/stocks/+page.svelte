@@ -383,6 +383,9 @@ $: {
                           {#each allList as item}
                             <DropdownMenu.Item on:click={() => changeWatchList(item)} class="{item?.id === displayWatchList?.id ? 'bg-[#27272A]' : ''} cursor-pointer sm:hover:bg-[#27272A]">
                               {item?.title} ({item?.ticker?.length})
+                              <label for="deleteWatchlist" class="ml-auto inline-block cursor-pointer text-white sm:hover:text-red-500" on:click|stopPropagation={(e) => e?.preventDefault()}>
+                                <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="max-width:40px"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                              </label>
                             </DropdownMenu.Item>
                           {/each}
                         </DropdownMenu.Group>
@@ -391,7 +394,7 @@ $: {
 
                     <label for="deleteWatchlist" class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
                       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
-                        <div>Delete</div>
+                        <div>Edit</div>
                     </label>
                     
                     <DropdownMenu.Root >
@@ -482,12 +485,12 @@ $: {
             <!-- head -->
             <thead>
               <tr class="border-b-[#09090B]">
-                <th class="text-white font-semibold text-sm">Symbol</th>
-                <th class="text-white font-semibold text-sm">Company</th>
+                <th class="text-white font-semibold text-sm sm:text-[1rem]">Symbol</th>
+                <th class="text-white font-semibold text-sm sm:text-[1rem]">Company</th>
 
                 {#each ruleOfList as item}
                   {#if isChecked(item?.name)}
-                    <th class="text-white font-semibold text-end text-sm">{item?.name}</th>
+                    <th class="text-white font-semibold text-end text-sm sm:text-[1rem]">{item?.name}</th>
                   {/if}
                 {/each}
               </tr>
@@ -659,7 +662,6 @@ $: {
 
             <input class="hidden" name='user' value={data?.user?.id} />
             <input class="hidden" name='ticker' value={JSON.stringify([])} />
-            <input class="hidden" name='ruleOfList' value={JSON.stringify([])} />
 
             <button type="submit" class="mt-10 btn bg-purple-600 sm:hover:bg-purple-700 btn-md w-full rounded-lg m-auto text-white font-bold text-md">
               Create List
