@@ -551,12 +551,12 @@ function search() {
             <div class="hidden text-sm sm:text-[1rem] font-semibold text-white md:block sm:mb-2">
                 My Watchlist
             </div>
-            <div class="{$screenWidth < 640 ? 'grid grid-cols-2' : ''} gap-x-3 gap-y-3 sm:gap-x-0 sm:gap-y-0 px-2 relative inline-block text-left w-full flex flex-col sm:flex-row items-center">
+            <div class="{$screenWidth < 640 ? 'grid grid-cols-2' : ''} gap-x-3 gap-y-3 sm:gap-x-0 sm:gap-y-0 px-2 sm:px-0 relative inline-block text-left w-full flex flex-col sm:flex-row items-center">
               <div class="order-0 w-full sm:w-fit">
                 <DropdownMenu.Root >
                       <DropdownMenu.Trigger asChild let:builder>
-                        <Button builders={[builder]}  class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-lg truncate">
-                          <span class="truncate font-semibold text-white shadow-sm">{displayWatchList?.title !== undefined ? displayWatchList?.title : 'Create Watchlist'}</span>
+                        <Button builders={[builder]}  class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate">
+                          <span class="truncate font-semibold text-white text-sm sm:text-[1rem]">{displayWatchList?.title !== undefined ? displayWatchList?.title : 'Create Watchlist'}</span>
                           <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
                               <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                           </svg>
@@ -576,7 +576,7 @@ function search() {
                         <DropdownMenu.Separator />
                         <DropdownMenu.Group>
                           {#each allList as item}
-                            <DropdownMenu.Item on:click={() => changeWatchList(item)} class="{item?.id === displayWatchList?.id ? 'bg-[#27272A]' : ''} cursor-pointer sm:hover:bg-[#27272A]">
+                            <DropdownMenu.Item on:click={() => changeWatchList(item)} class="text-sm sm:text-[1rem] {item?.id === displayWatchList?.id ? 'bg-[#27272A]' : ''} cursor-pointer sm:hover:bg-[#27272A]">
                               {item?.title} ({item?.ticker?.length})
                               <label for="deleteWatchlist" class="ml-auto inline-block cursor-pointer text-white sm:hover:text-red-500" on:click|capture={handleDeleteModal}>
                                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="max-width:40px"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -591,21 +591,21 @@ function search() {
               <div class="order-4 w-fit flex justify-end sm:ml-3">
                 <div class="flex flex-row items-center justify-end">
                      {#if editMode}
-                      <label on:click={handleDeleteTickers} class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
+                      <label on:click={handleDeleteTickers} class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white  bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
                           <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"/></svg>
                           <span class="ml-1 text-white text-sm">
                               {numberOfChecked}
                           </span>
                       </label>
                       {/if}
-                      <label on:click={handleEditMode} class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
+                      <label on:click={handleEditMode} class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 text-white bg-[#09090B] sm:hover:bg-[#27272A] ease-out sm:hover:text-red-500">
                         <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1024 1024"><path fill="white" d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"/><path fill="white" d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"/></svg>
                         {#if !editMode}
-                        <span class="ml-1 text-white text-sm">
+                        <span class="ml-1 text-white text-sm sm:text-[1rem]">
                             Edit Watchlist
                         </span>
                         {:else}
-                        <span class="ml-1 text-white text-sm">
+                        <span class="ml-1 text-white text-sm sm:text-[1rem]">
                           Cancel
                         </span>
                         {/if}
@@ -622,14 +622,14 @@ function search() {
                       </div>
                       <Combobox.Input 
                         on:click={loadSearchData}
-                        class="controls-input text-white bg-[#09090B] focus:outline-none border border-gray-600 rounded-lg placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs" 
+                        class="controls-input text-white bg-[#09090B] focus:outline-none border border-gray-600 rounded-md placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs" 
                         placeholder="Add new stock"
                         aria-label="Add new stock"
                       />
                     </div>
                     {#if inputValue?.length !== 0}
                     <Combobox.Content
-                      class="w-auto rounded-lg border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
+                      class="w-auto rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
                       sideOffset={8}
                     >
                       {#each filteredStocks as item}
@@ -658,8 +658,8 @@ function search() {
                   <div class="order-0  sm:order-4 w-full">
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild let:builder>
-                        <Button builders={[builder]}  class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-lg truncate">
-                          <span class="truncate font-semibold text-white shadow-sm">
+                        <Button builders={[builder]}  class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate">
+                          <span class="truncate font-semibold text-white text-sm sm:text-[1rem]">
                             Indicators
                           </span>
                           <svg class="-mr-1 ml-2 h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
@@ -931,7 +931,7 @@ function search() {
             <input class="hidden" name='user' value={data?.user?.id} />
             <input class="hidden" name='ticker' value={JSON.stringify([])} />
 
-            <button type="submit" class="mt-10 btn bg-purple-600 sm:hover:bg-purple-700 btn-md w-full rounded-lg m-auto text-white font-bold text-md">
+            <button type="submit" class="mt-10 btn bg-purple-600 sm:hover:bg-purple-700 btn-md w-full rounded-md m-auto text-white font-bold text-md">
               Create List
           </button>
         </form>
