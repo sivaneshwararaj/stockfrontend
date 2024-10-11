@@ -266,18 +266,34 @@ async function handleChangeValue(value) {
   allRows = [...allRows];
   ruleOfList = [...ruleOfList];
 
-  allRows = allRows
-    ?.filter(item => checkedItems.has(item.name) || !checkedItems.has(item.name))
-    ?.sort((a, b) => {
-      const isAChecked = checkedItems.has(a.name);
-      const isBChecked = checkedItems.has(b.name);
+const priorityItems = new Set(['AI Score', 'Revenue', 'Net Income', 'Free Cash Flow']);
 
-      // Sort checked items first
-      if (isAChecked !== isBChecked) return isAChecked ? -1 : 1;
+allRows = allRows
+  ?.filter(item => checkedItems.has(item.name) || !checkedItems.has(item.name))
+  ?.sort((a, b) => {
+    const isAChecked = checkedItems.has(a.name);
+    const isBChecked = checkedItems.has(b.name);
 
-      // Sort alphabetically if both are checked or both are unchecked
-      return a.name.localeCompare(b.name);
-    });
+    // Sort checked items first
+    if (isAChecked !== isBChecked) return isAChecked ? -1 : 1;
+
+    // Check if the user is not Pro
+    if (data?.user?.tier !== 'Pro') {
+      // Check if both items are priority items
+      const isAPriority = priorityItems.has(a.name);
+      const isBPriority = priorityItems.has(b.name);
+
+      // If both are priority items or both are not, sort alphabetically
+      if (isAPriority === isBPriority) return a.name.localeCompare(b.name);
+
+      // Move priority items to the bottom
+      return isAPriority ? 1 : -1;
+    }
+
+    // If the user is Pro, sort alphabetically
+    return a.name.localeCompare(b.name);
+  });
+
     
 }
 
