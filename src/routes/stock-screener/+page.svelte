@@ -689,6 +689,7 @@ $: {
   if (order) {
     const key = sortByKeys[sortBy]; // Use the mapping to get the key
     displayResults = sortItems(filteredData, key)?.slice(0, 50);
+
   }
 }
 
@@ -767,7 +768,6 @@ async function handleChangeValue(value) {
   }
 
 }
-
 
 
 

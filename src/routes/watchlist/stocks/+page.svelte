@@ -5,38 +5,52 @@ import toast from 'svelte-french-toast';
 import { onDestroy, onMount } from 'svelte';
 
 import Input from '$lib/components/Input.svelte';
-import WatchListCard from '$lib/components/WatchListCard.svelte';
 import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
 import { Button } from "$lib/components/shadcn/button/index.js";
-import { writable } from 'svelte/store';
 
 export let data;
 let searchQuery = '';
-let shouldLoadWorker = writable(false);
 
 let watchList: any[] = [];
 let news = [];
 
-let indicatorList = ['Volume', 'Market Cap', 'Price', 'Change', 'EPS', 'PE'];
-indicatorList = indicatorList.sort((a, b) => a.localeCompare(b));
+let allRows = [
+    { name: 'Volume', rule: 'volume' },
+    { name: 'Market Cap', rule: 'marketCap' },
+    { name: 'Price', rule: 'price' },
+    { name: 'Change', rule: 'changesPercentage' },
+    { name: 'EPS', rule: 'eps' },
+    { name: 'PE', rule: 'pe' },
+    { name: 'AI Score', rule: 'score' },
+    { name: 'Revenue', rule: 'revenue'},
+    { name: 'Net Income', rule: 'netIncome'},
+    { name: 'Free Cash Flow', rule: 'freeCashFlow'}
+];
+
+let ruleOfList = [
+    { name: 'Volume', rule: 'volume' },
+    { name: 'Market Cap', rule: 'marketCap' },
+    { name: 'Price', rule: 'price' },
+    { name: 'Change', rule: 'changesPercentage' },
+];
 
 
 let isLoaded = false;
-let downloadWorker: Worker | undefined;
+//let downloadWorker: Worker | undefined;
 let displayWatchList;
 let allList = data?.getAllWatchlist;
   
-
+/*
 const handleDownloadMessage = (event) => {
-    stockScreenerData = event?.data?.stockScreenerData;
-    shouldLoadWorker.set(true);
-
+  isLoaded = false;
+  watchList = event?.data?.watchlistData ?? [];
+  isLoaded = true;
 };
 
 const updateStockScreenerData = async () => {
-    downloadWorker.postMessage({ indicatorList});
+    downloadWorker.postMessage({ ruleOfList: ruleOfList, tickerList: watchList?.map(item => item?.symbol)});
 };
-
+*/
 
 async function getWatchlistData()
 {
@@ -53,9 +67,8 @@ async function getWatchlistData()
 
 const output = await response?.json();
 
-watchList = output?.at(0);
-news = output[1];
-
+  watchList = output?.data;
+  news = output?.news;
 }
 
 async function createWatchList(event) {
@@ -194,15 +207,16 @@ if(allList?.length !== 0)
       displayWatchList = '';
     }
     await getWatchlistData();
-    
+    /*
     if (!downloadWorker) {
         const DownloadWorker = await import('./workers/downloadWorker?worker');
         downloadWorker = new DownloadWorker.default();
         downloadWorker.onmessage = handleDownloadMessage;
     }
+        */
 
-isLoaded = true;
-
+  checkedItems = new Set(ruleOfList.map(item => item.name))
+  isLoaded = true;
 });
 
 onDestroy( () => {
@@ -225,9 +239,9 @@ function handleInput(event) {
 
         if (searchQuery.length > 0) {
           
-          const rawList = indicatorList
+          const rawList = allRows
             testList = rawList?.filter(item => {
-                const index = item?.toLowerCase();
+                const index = item?.name?.toLowerCase();
                 // Check if country starts with searchQuery
                 return index?.startsWith(searchQuery);
             }) || [];
@@ -235,7 +249,7 @@ function handleInput(event) {
     }, 50);
 }
 
-let checkedItems = new Set(indicatorList);
+let checkedItems;
 
 function isChecked(item) {
   return checkedItems?.has(item);
@@ -245,12 +259,27 @@ async function handleChangeValue(value) {
   if (checkedItems.has(value)) {
     checkedItems.delete(value);  // Remove the value if it's already in the Set
   } else {
-    checkedItems?.add(value);     // Add the value if it's not in the Set
+    checkedItems.add(value);      // Add the value if it's not in the Set
+      // Update ruleOfList based on checked items from indicatorList
   }
-  
-    indicatorList = [...indicatorList]
-}
+  ruleOfList = allRows.filter(item => checkedItems.has(item.name)); // Assuming each item has a `value` property
+  allRows = [...allRows];
+  ruleOfList = [...ruleOfList];
 
+  allRows = allRows
+    ?.filter(item => checkedItems.has(item.name) || !checkedItems.has(item.name))
+    ?.sort((a, b) => {
+      const isAChecked = checkedItems.has(a.name);
+      const isBChecked = checkedItems.has(b.name);
+
+      // Sort checked items first
+      if (isAChecked !== isBChecked) return isAChecked ? -1 : 1;
+
+      // Sort alphabetically if both are checked or both are unchecked
+      return a.name.localeCompare(b.name);
+    });
+    
+}
 
 
   
@@ -292,8 +321,7 @@ $: {
       
     
     
-        
-    
+
     
 <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 ">
           
@@ -309,7 +337,7 @@ $: {
     {#if isLoaded}
 
 
-     <div class="flex w-full sm:w-[50%] md:block md:w-auto px-2 sm:px-0">
+     <div class="flex w-full sm:w-[50%] md:w-auto px-2 sm:px-0 {!data?.user ? 'hidden' : 'md:block'}">
             <div class="hidden text-sm sm:text-[1rem] font-semibold text-white md:block sm:mb-2">
                 My Watchlist
             </div>
@@ -349,7 +377,7 @@ $: {
                       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
                         <div>Delete</div>
                     </label>
-                    <!--
+                    
                     <DropdownMenu.Root >
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button builders={[builder]}  class="ml-3 sm:ml-auto min-w-[110px] w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
@@ -374,20 +402,30 @@ $: {
                         </div>
                         <DropdownMenu.Separator />
                         <DropdownMenu.Group>
-                          {#each (searchQuery?.length !== 0 ? testList : indicatorList) as item}
-                            <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
-                            <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
-                              <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
-                                <input type="checkbox" class="rounded" checked={isChecked(item)}>
-                                <span class="ml-2">{item}</span>
-                              </label>
+                          {#each (searchQuery?.length !== 0 ? testList : allRows) as item}
+                            <DropdownMenu.Item class="sm:hover:bg-[#27272A]" >
+                            <div class="flex items-center">
+                              {#if (data?.user?.tier === 'Pro') || (item.rule !== 'revenue' && item.rule !== 'netIncome' && item.rule !== 'freeCashFlow' && item.rule !== 'score')}
+                                <label on:click|capture={(event) => { event.preventDefault(); handleChangeValue(item?.name) }} class="cursor-pointer text-white" for={item?.name}>
+                                  <input type="checkbox" class="rounded" checked={isChecked(item?.name)}>
+                                  <span class="ml-2">{item?.name}</span>
+                                </label>
+                              {:else}
+                                <a href="/pricing" class="cursor-pointer text-white">
+                                  <svg class="h-[18px] w-[18px] inline-block text-icon group-hover:text-dark-400" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                                  </svg>
+                                  <span class="ml-2">{item?.name}</span>
+                                </a>
+                              {/if}
+
                             </div>
                           </DropdownMenu.Item>  
                           {/each}
                         </DropdownMenu.Group>
                       </DropdownMenu.Content>
                     </DropdownMenu.Root>
-                    -->
+                    
 
             </div>
     </div>
@@ -430,64 +468,60 @@ $: {
               <tr class="border-b-[#09090B]">
                 <th class="text-white font-semibold text-sm">Symbol</th>
                 <th class="text-white font-semibold text-sm">Company</th>
-                {#each indicatorList as item}
-                {#if isChecked(item)}
-                  <th class="text-white font-semibold text-end text-sm">{item}</th>
-                {/if}
+
+                {#each ruleOfList as item}
+                  {#if isChecked(item?.name)}
+                    <th class="text-white font-semibold text-end text-sm">{item?.name}</th>
+                  {/if}
                 {/each}
               </tr>
             </thead>
             <tbody class="p-0">
               {#each watchList as item}
-              <!-- row -->
               <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
-  
                 <td class="text-sm sm:text-[1rem] text-start border-b-[#09090B]">
                   <a href={`/${item?.type === 'stock' ? 'stocks' : item?.type === 'etf' ? 'etf' : 'crypto'}/${item?.symbol}`} class="text-blue-400 sm:hover:text-white">
-                     {item?.symbol}
+                    {item?.symbol}
                   </a>
                 </td>
 
                 <td class="text-white text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap">
-                {item?.name?.length > charNumber ? item?.name?.slice(0,charNumber) + "..." : item?.name}
+                  {item?.name?.length > charNumber ? item?.name?.slice(0, charNumber) + "..." : item?.name}
                 </td>
+                {#each ruleOfList as row}
+                  {#if isChecked(row?.name)}
+                    <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
+                      {#if item?.[row?.rule] !== undefined}
+                        {#if ['marketCap', 'volume','revenue','netIncome','freeCashFlow'].includes(row?.rule)}
+                          {abbreviateNumber(item[row?.rule])}
+                        {:else if ['eps', 'pe', 'price','freeCashFlow'].includes(row?.rule)}
+                          {item[row?.rule] !== null ? item[row?.rule]?.toFixed(2) : '-'}
+                        {:else if ['changesPercentage'].includes(row?.rule)}
+                          {#if item[row?.rule] >= 0}
+                            <span class="text-[#37C97D]">+{item[row?.rule]?.toFixed(2)}%</span>
+                          {:else}
+                            <span class="text-[#FF2F1F]">{item[row?.rule]?.toFixed(2)}%</span> 
+                          {/if}
+                          {:else if "score" === row?.rule}
+                            {#if ['Strong Buy', 'Buy'].includes(item[row?.rule])}
+                              <span class="text-[#37C97D]">{item[row?.rule]}</span>
+                            {:else if ['Strong Sell', 'Sell'].includes(item[row?.rule])}
+                              <span class="text-[#FF2F1F]">{item[row?.rule]}</span>
+                            {:else if item[row?.rule] === 'Hold'}
+                              <span class="text-[#FFA838]">{item[row?.rule]}</span>
+                            {/if}
+                        {/if}
 
-                <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
-                  {item?.eps !== null ? item?.eps?.toFixed(2) : '-'}
-              </td>
-
-              <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
-                  {item?.pe !== null ? item?.pe?.toFixed(2) : '-'}
-              </td>
-
-              <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]">
-                {abbreviateNumber(item?.volume)}
-              </td>
-
-              <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]">
-                  {abbreviateNumber(item?.marketCap)}
-              </td>
-
-
-              <td class="border-b-[#09090B] text-sm sm:text-[1rem] text-end text-white whitespace-nowrap">
-                {item.price?.toFixed(2)}
-              </td>
-
-              <td class="border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                {#if item?.changesPercentage >=0}
-                <span class="text-[#37C97D]">+{item?.changesPercentage?.toFixed(2)}%</span>
-              {:else}
-                <span class="text-[#FF2F1F]">{item?.changesPercentage?.toFixed(2)}% </span> 
-              {/if}
-              </td>
-
+                      {:else}
+                        -
+                      {/if}
+                      
+                    </td>
+                  {/if}
+                {/each}
 
               </tr>
-              
-          
-
-
-              {/each}
+            {/each}
             </tbody>
           </table>
         </div>

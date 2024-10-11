@@ -1,11 +1,11 @@
 // Cache to store previous requests
 let cache = new Map();
 
-const getStockScreenerData = async (rules) => {
+const getWatchlistData = async (rules, tickerList) => {
   console.log("Checking cache and fetching new data if needed");
 
   // Extract the rule names
-  let getRuleOfList = rules?.map((rule) => rule.name) || [];
+  let getRuleOfList = rules?.map((rule) => rule.rule) || [];
 
   // Convert the rule set into a string key for the cache
   const ruleKey = JSON.stringify(getRuleOfList);
@@ -17,8 +17,8 @@ const getStockScreenerData = async (rules) => {
   }
 
   // Fetch new data if it's not in the cache
-  const postData = { ruleOfList: getRuleOfList };
-  const response = await fetch("/api/stock-screener-data", {
+  const postData = { ruleOfList: getRuleOfList, tickerList: tickerList };
+  const response = await fetch("/api/indicator-data", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const getStockScreenerData = async (rules) => {
   });
 
   const output = await response.json();
-
+  console.log(output);
   // Store the new data in the cache
   cache.set(ruleKey, output);
 
@@ -35,23 +35,10 @@ const getStockScreenerData = async (rules) => {
 };
 
 onmessage = async (event) => {
-  const { ruleOfList } = event.data || {};
+  const { ruleOfList, tickerList } = event.data || {};
+  const watchlistData = await getWatchlistData(ruleOfList, tickerList);
 
-  const output = await getStockScreenerData(ruleOfList);
-
-  const stockScreenerData = output?.filter((item) =>
-    Object?.values(item)?.every(
-      (value) =>
-        value !== null &&
-        value !== undefined &&
-        (typeof value !== "object" ||
-          Object.values(value)?.every(
-            (subValue) => subValue !== null && subValue !== undefined
-          ))
-    )
-  );
-
-  postMessage({ message: "success", stockScreenerData });
+  postMessage({ message: "success", watchlistData });
 };
 
 export {};
