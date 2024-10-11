@@ -507,7 +507,7 @@ $: {
                 {#each ruleOfList as row}
                   {#if isChecked(row?.name)}
                     <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
-                      {#if item?.[row?.rule] !== undefined}
+                      {#if item?.[row?.rule] !== undefined &&  item?.[row?.rule] !== null}
                         {#if ['marketCap', 'volume','revenue','netIncome','freeCashFlow'].includes(row?.rule)}
                           {abbreviateNumber(item[row?.rule])}
                         {:else if ['eps', 'pe', 'price','freeCashFlow'].includes(row?.rule)}
