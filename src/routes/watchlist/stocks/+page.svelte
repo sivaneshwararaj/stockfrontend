@@ -266,7 +266,7 @@ function changeWatchList(newWatchList)
 onMount(async () => {
 if(allList?.length !== 0)
     {
-      displayWatchList = allList[0]
+      displayWatchList = allList?.at(0)
     }
     else {
       displayWatchList = '';

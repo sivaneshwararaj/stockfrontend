@@ -33,6 +33,7 @@ export const load = async ({ locals }) => {
     try {
       const output = await pb.collection("watchlist").getFullList({
         filter: `user="${user?.id}"`,
+        sort: "-updated",
       });
 
       return output;
