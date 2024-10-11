@@ -1,5 +1,5 @@
 <script lang='ts'>
-import { screenWidth, numberOfUnreadNotification, switchWatchList } from '$lib/store';
+import { searchBarData, screenWidth, numberOfUnreadNotification, switchWatchList } from '$lib/store';
 import { formatDate, abbreviateNumber } from '$lib/utils';
 import toast from 'svelte-french-toast';
 import { onDestroy, onMount } from 'svelte';
@@ -7,6 +7,7 @@ import { onDestroy, onMount } from 'svelte';
 import Input from '$lib/components/Input.svelte';
 import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
 import { Button } from "$lib/components/shadcn/button/index.js";
+import { Combobox } from "bits-ui";
 
 export let data;
 let searchQuery = '';
@@ -40,6 +41,7 @@ let ruleOfList = [
 
 
 let isLoaded = false;
+let searchDataLoaded = false; // Flag to track data loading
 //let downloadWorker: Worker | undefined;
 let displayWatchList;
 let allList = data?.getAllWatchlist;
@@ -55,6 +57,25 @@ const updateStockScreenerData = async () => {
     downloadWorker.postMessage({ ruleOfList: ruleOfList, tickerList: watchList?.map(item => item?.symbol)});
 };
 */
+
+  
+async function loadSearchData() {
+  if ($searchBarData.length !== 0 || searchDataLoaded) return;
+  else {
+    searchDataLoaded = true;
+      // make the GET request to the endpoint
+      const response = await fetch('/api/searchbar-data', {
+    method: 'GET',
+    headers: {
+        "Content-Type": "application/json"
+    },
+    });
+
+    $searchBarData = await response.json();
+    
+  }
+}
+  
 
 async function getWatchlistData()
 {
@@ -262,6 +283,52 @@ async function handleDeleteTickers() {
 
 }
 
+async function handleAddTicker(event, ticker) {
+  event.preventDefault();
+  
+  // Ensure inputValue is reset
+  inputValue = '';
+
+  // Check if the ticker is already in the watchList; if not, add it
+  if (!watchList.includes(ticker)) {
+    watchList = [...watchList, ticker]; // Add ticker to watchlist
+  }
+
+  // Exit edit mode
+  editMode = false;
+
+  // Prepare the data to send to the API
+  const postData = {
+    'ticker': ticker,
+    'watchListId': displayWatchList?.id
+  };
+  
+  // Send the updated watchlist to the server
+  const response = await fetch('/api/update-watchlist', {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(postData)
+  });
+
+  // Update the allList with the new watchlist
+  allList = allList?.map(item => {
+    if (item?.id === displayWatchList?.id) {
+      return { ...item, tickers: watchList }; // Update tickers in the watchlist
+    }
+    return item; // Return unchanged item
+  });
+
+  // Refresh the displayWatchList with the updated watchlist
+  displayWatchList = allList.find(item => item?.id === displayWatchList?.id);
+
+  // Fetch the updated watchlist data (assuming this function refreshes the UI or state)
+  await getWatchlistData();
+}
+
+
+
 
 function changeWatchList(newWatchList)
 {
@@ -383,6 +450,60 @@ $: {
     $switchWatchList = false;
   }
 }
+
+ 
+  let inputValue = "";
+  let touchedInput = false;
+
+$: filteredStocks = inputValue ? search() : [];
+
+function search() {
+  const normalizedSearchQuery = inputValue.toLowerCase();
+
+  const filteredList = $searchBarData
+    .map(item => ({
+      ...item,
+      nameLower: item?.name?.toLowerCase(),
+      symbolLower: item?.symbol?.toLowerCase(),
+    }))
+    .filter(({ nameLower, symbolLower }) =>
+      nameLower.includes(normalizedSearchQuery) ||
+      symbolLower.includes(normalizedSearchQuery)
+    );
+
+  filteredList.sort((a, b) => {
+    const aSymbolLower = a.symbolLower;
+    const bSymbolLower = b.symbolLower;
+    const aNameLower = a.nameLower;
+    const bNameLower = b.nameLower;
+
+    // Check for exact symbol matches
+    const isExactMatchA = aSymbolLower === normalizedSearchQuery;
+    const isExactMatchB = bSymbolLower === normalizedSearchQuery;
+
+    if (isExactMatchA && !isExactMatchB) {
+      return -1; // Prioritize exact symbol match for A
+    } else if (!isExactMatchA && isExactMatchB) {
+      return 1; // Prioritize exact symbol match for B
+    }
+
+    const aSymbolIndex = aSymbolLower.indexOf(normalizedSearchQuery);
+    const bSymbolIndex = bSymbolLower.indexOf(normalizedSearchQuery);
+
+    const aNameIndex = aNameLower.indexOf(normalizedSearchQuery);
+    const bNameIndex = bNameLower.indexOf(normalizedSearchQuery);
+
+    // If no exact symbol match, prioritize based on the combined position in name and symbol
+    const positionComparison = (aSymbolIndex + aNameIndex) - (bSymbolIndex + bNameIndex);
+
+
+    return positionComparison;
+  });
+
+  // Limit results to 5
+  const resultList = filteredList?.slice(0, 5);
+  return resultList;
+}
 </script>
 
 
@@ -416,7 +537,7 @@ $: {
           
   <div class="w-full overflow-hidden m-auto mt-5">
     
-    <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden ">
+    <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
         <div class="relative flex justify-center items-start overflow-hidden w-full">
 
 
@@ -426,14 +547,15 @@ $: {
     {#if isLoaded}
 
 
-     <div class="flex w-full sm:w-[50%] md:w-auto px-2 sm:px-0 {!data?.user ? 'hidden' : 'md:block'}">
+     <div class="flex w-full sm:w-[50%] md:w-auto px-2 sm:px-0 mb-10 {!data?.user ? 'hidden' : 'md:block'}">
             <div class="hidden text-sm sm:text-[1rem] font-semibold text-white md:block sm:mb-2">
                 My Watchlist
             </div>
-            <div class="relative inline-block text-left w-full flex flex-row items-center">
+            <div class="{$screenWidth < 640 ? 'grid grid-cols-2' : ''} gap-x-3 gap-y-3 sm:gap-x-0 sm:gap-y-0 px-2 relative inline-block text-left w-full flex flex-col sm:flex-row items-center">
+              <div class="order-0 w-full sm:w-fit">
                 <DropdownMenu.Root >
                       <DropdownMenu.Trigger asChild let:builder>
-                        <Button builders={[builder]}  class="min-w-[110px] w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                        <Button builders={[builder]}  class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-lg truncate">
                           <span class="truncate font-semibold text-white shadow-sm">{displayWatchList?.title !== undefined ? displayWatchList?.title : 'Create Watchlist'}</span>
                           <svg class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
                               <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -463,21 +585,24 @@ $: {
                           {/each}
                         </DropdownMenu.Group>
                       </DropdownMenu.Content>
-                    </DropdownMenu.Root>
+                </DropdownMenu.Root>
+              </div>
 
+              <div class="order-4 w-fit flex justify-end sm:ml-3">
+                <div class="flex flex-row items-center justify-end">
                      {#if editMode}
-                      <label on:click={handleDeleteTickers} class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
+                      <label on:click={handleDeleteTickers} class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
                           <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"/></svg>
                           <span class="ml-1 text-white text-sm">
                               {numberOfChecked}
                           </span>
                       </label>
                       {/if}
-                      <label on:click={handleEditMode} class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
+                      <label on:click={handleEditMode} class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
                         <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1024 1024"><path fill="white" d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"/><path fill="white" d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"/></svg>
                         {#if !editMode}
                         <span class="ml-1 text-white text-sm">
-                            Edit
+                            Edit Watchlist
                         </span>
                         {:else}
                         <span class="ml-1 text-white text-sm">
@@ -485,10 +610,55 @@ $: {
                         </span>
                         {/if}
                     </label>
-                          
-                    <DropdownMenu.Root >
+                    </div>
+              </div>
+              <div class="order-2 sm:order-1 w-full sm:w-fit">
+                  <Combobox.Root items={filteredStocks} bind:inputValue bind:touchedInput>
+                    <div class="relative sm:ml-3 w-full">
+                      <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
+                        <svg class="h-4 w-4 text-icon xs:h-5 xs:w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" stroke="currentColor" viewBox="0 0 24 24" style="max-width: 40px" aria-hidden="true">
+                          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                      </div>
+                      <Combobox.Input 
+                        on:click={loadSearchData}
+                        class="controls-input text-white bg-[#09090B] focus:outline-none border border-gray-600 rounded-lg placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs" 
+                        placeholder="Add new stock"
+                        aria-label="Add new stock"
+                      />
+                    </div>
+                    {#if inputValue?.length !== 0}
+                    <Combobox.Content
+                      class="w-auto rounded-lg border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
+                      sideOffset={8}
+                    >
+                      {#each filteredStocks as item}
+                        <Combobox.Item
+                          class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-[#27272A]"
+                          value={item.symbol}
+                          label={item.name}
+                          on:click={() => handleAddTicker(event, item?.symbol)}
+                        >
+                        <div class="flex flex-col items-start">
+                          <span class="text-blue-400">{item?.symbol}</span>
+                          <span class="text-white">{item?.name}</span>
+                        </div>
+                        </Combobox.Item>
+                      {:else}
+                        <span class="block px-5 py-2 text-sm text-muted-foreground">
+                          No results found
+                        </span>
+                      {/each}
+                    </Combobox.Content>
+                    {/if}
+                  </Combobox.Root>
+              </div>
+                    
+
+                  <div class="order-0  sm:order-4 w-full">
+                    <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild let:builder>
-                        <Button builders={[builder]}  class="ml-3 sm:ml-auto min-w-[110px] w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
+                        <Button builders={[builder]}  class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-lg truncate">
                           <span class="truncate font-semibold text-white shadow-sm">
                             Indicators
                           </span>
@@ -533,7 +703,8 @@ $: {
                         </DropdownMenu.Group>
                       </DropdownMenu.Content>
                     </DropdownMenu.Root>
-                    
+                  </div>
+
 
             </div>
     </div>
@@ -542,7 +713,7 @@ $: {
 
     
         {#if allList.length === 0}
-        <div class="flex flex-col justify-center items-center m-auto pt-8">
+        <div class="flex flex-col justify-center items-center m-auto z-0">
             <span class="text-white font-bold text-white text-xl sm:text-3xl">
                 Empty Watchlist
             </span>
@@ -683,7 +854,7 @@ $: {
       </div>
   
   {:else}
-  <div class="flex flex-col justify-center items-center m-auto pt-5">
+  <div class="flex flex-col justify-center items-center m-auto pt-5 z-0">
     <span class="text-white font-bold text-white text-xl sm:text-3xl">
       Empty Watchlist
   </span>
