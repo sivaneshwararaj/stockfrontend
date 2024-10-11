@@ -284,11 +284,9 @@ async function handleDeleteTickers() {
 }
 
 async function handleAddTicker(event, ticker) {
-  event.preventDefault();
-  
   // Ensure inputValue is reset
-  inputValue = '';
-  // Check if the ticker is already in the watchList; if not, add it
+  
+  
 if (!watchList?.some(item => item?.symbol === ticker)) {
 } else {
   toast.error(`This symbol is already in your watchlist`, {
@@ -329,6 +327,10 @@ if (!watchList?.some(item => item?.symbol === ticker)) {
 
   // Fetch the updated watchlist data (assuming this function refreshes the UI or state)
   await getWatchlistData();
+
+  inputValue = '';
+  event?.preventDefault();
+
 }
 
 
@@ -642,7 +644,7 @@ function search() {
                           class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-[#27272A]"
                           value={item.symbol}
                           label={item.name}
-                          on:click={() => handleAddTicker(event, item?.symbol)}
+                          on:click={(e) => handleAddTicker(e,item?.symbol)}
                         >
                         <div class="flex flex-col items-start">
                           <span class="text-sm text-blue-400">{item?.symbol}</span>
@@ -650,7 +652,7 @@ function search() {
                         </div>
                         </Combobox.Item>
                       {:else}
-                        <span class="block px-5 py-2 text-sm text-muted-foreground">
+                        <span class="block px-5 py-2 text-sm text-white">
                           No results found
                         </span>
                       {/each}
