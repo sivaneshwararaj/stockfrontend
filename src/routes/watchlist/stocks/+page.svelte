@@ -289,7 +289,7 @@ async function handleAddTicker(event, ticker) {
   // Ensure inputValue is reset
   inputValue = '';
   // Check if the ticker is already in the watchList; if not, add it
-if (!watchList.some(item => item.symbol === ticker)) {
+if (!watchList?.some(item => item?.symbol === ticker)) {
 } else {
   toast.error(`This symbol is already in your watchlist`, {
     style: 'border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);',
@@ -557,6 +557,7 @@ function search() {
             </div>
             <div class="{$screenWidth < 640 ? 'grid grid-cols-2' : ''} gap-x-3 gap-y-3 sm:gap-x-0 sm:gap-y-0 px-2 sm:px-0 relative inline-block text-left w-full flex flex-col sm:flex-row items-center">
               <div class="order-0 w-full sm:w-fit">
+                
                 <DropdownMenu.Root >
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button builders={[builder]}  class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate">
@@ -592,7 +593,7 @@ function search() {
                 </DropdownMenu.Root>
               </div>
 
-              <div class="order-4 w-fit flex justify-end sm:ml-3">
+              <div class="order-4 w-fit flex justify-end sm:ml-3 {displayWatchList?.title === undefined ? 'hidden' : ''}">
                 <div class="flex flex-row items-center justify-end">
                      {#if editMode}
                       <label on:click={handleDeleteTickers} class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white  bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
@@ -616,7 +617,7 @@ function search() {
                     </label>
                     </div>
               </div>
-              <div class="order-2 sm:order-1 w-full sm:w-fit">
+              <div class="order-2 sm:order-1 w-full sm:w-fit {displayWatchList?.title === undefined ? 'hidden' : ''}">
                   <Combobox.Root items={filteredStocks} bind:inputValue bind:touchedInput>
                     <div class="relative sm:ml-3 w-full">
                       <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
@@ -633,7 +634,7 @@ function search() {
                     </div>
                     {#if inputValue?.length !== 0}
                     <Combobox.Content
-                      class="w-auto rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
+                      class="w-auto z-10 rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
                       sideOffset={8}
                     >
                       {#each filteredStocks as item}
@@ -644,8 +645,8 @@ function search() {
                           on:click={() => handleAddTicker(event, item?.symbol)}
                         >
                         <div class="flex flex-col items-start">
-                          <span class="text-blue-400">{item?.symbol}</span>
-                          <span class="text-white">{item?.name}</span>
+                          <span class="text-sm text-blue-400">{item?.symbol}</span>
+                          <span class="text-xs sm:text-sm text-white">{item?.name}</span>
                         </div>
                         </Combobox.Item>
                       {:else}
@@ -659,7 +660,7 @@ function search() {
               </div>
                     
 
-                  <div class="order-0  sm:order-4 w-full">
+                  <div class="order-0  sm:order-4 w-full {displayWatchList?.title === undefined ? 'hidden' : ''}">
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button builders={[builder]}  class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate">
