@@ -659,7 +659,7 @@ function search() {
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button builders={[builder]}  class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate">
-                          <span class="truncate font-semibold text-white text-sm sm:text-[1rem]">
+                          <span class="truncate text-white text-sm sm:text-[1rem]">
                             Indicators
                           </span>
                           <svg class="-mr-1 ml-2 h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
