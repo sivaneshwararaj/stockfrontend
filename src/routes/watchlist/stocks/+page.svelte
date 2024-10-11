@@ -288,11 +288,15 @@ async function handleAddTicker(event, ticker) {
   
   // Ensure inputValue is reset
   inputValue = '';
-
   // Check if the ticker is already in the watchList; if not, add it
-  if (!watchList.includes(ticker)) {
-    watchList = [...watchList, ticker]; // Add ticker to watchlist
-  }
+if (!watchList.some(item => item.symbol === ticker)) {
+} else {
+  toast.error(`This symbol is already in your watchlist`, {
+    style: 'border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);',
+  });
+  return
+}
+
 
   // Exit edit mode
   editMode = false;
