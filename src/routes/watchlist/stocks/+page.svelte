@@ -249,6 +249,14 @@ async function handleDeleteTickers() {
       
         deleteTickerList = [];
         numberOfChecked = 0;
+        allList = allList?.map(item => {
+          if (item?.id === displayWatchList?.id) {
+            return { ...item, ticker: watchList }; // Update ticker with watchlist
+          }
+          return item; // Return unchanged item if condition doesn't match
+        });
+
+        allList = [...allList];
 
     }
 
