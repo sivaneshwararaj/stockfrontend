@@ -10,9 +10,13 @@ import { Button } from "$lib/components/shadcn/button/index.js";
 
 export let data;
 let searchQuery = '';
+let editMode = false;
+let numberOfChecked = 0;
+let deleteTickerList = [];
 
 let watchList: any[] = [];
 let news = [];
+
 
 let allRows = [
     { name: 'Volume', rule: 'volume' },
@@ -136,6 +140,11 @@ async function createWatchList(event) {
 }
 
 
+function handleDeleteModal(event) {
+  event?.preventDefault();
+  const clicked = document.getElementById('deleteWatchlist');
+  clicked.dispatchEvent(new MouseEvent('click'));
+}
 
 async function deleteWatchlist(event) {
   event.preventDefault(); // prevent the default form submission behavior
@@ -186,8 +195,64 @@ async function deleteWatchlist(event) {
   }
 }
 
+function handleEditMode() {
+  if (editMode === true) {
+    deleteTickerList = [];
+    numberOfChecked = 0;
+  }
+  editMode = !editMode;
+}
+
+async function handleFilter(symbol) {
+
+  const filterSet = new Set(deleteTickerList);
+
+  // Check if the new filter already exists in the list
+  if (filterSet?.has(symbol)) {
+    // If it exists, remove it from the list
+    filterSet?.delete(symbol);
+  } else {
+    // If it doesn't exist, add it to the list
+    filterSet?.add(symbol);
+
+  }
+  deleteTickerList = Array?.from(filterSet);
+  numberOfChecked = deleteTickerList?.length;
+}
 
 
+async function handleDeleteTickers() {
+
+    if (numberOfChecked === 0) {
+        toast.error(`You need to select symbols before you can delete them`, {
+            style: 'border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);',
+        });
+    }
+    else {
+
+        watchList = watchList?.filter(item => !deleteTickerList?.includes(item?.symbol));
+
+        deleteTickerList = [...deleteTickerList];
+        editMode = false;
+        const postData = {
+            'ticker': watchList?.map(item => item?.symbol),
+            'watchListId': displayWatchList?.id
+        }
+      
+        const response = await fetch('/api/update-watchlist', {
+            method: 'POST',
+            headers: {
+             "Content-Type": "application/json"
+            },
+            body: JSON.stringify(postData)
+        });
+      
+        deleteTickerList = [];
+        numberOfChecked = 0;
+
+    }
+
+}
 
 
 function changeWatchList(newWatchList)
@@ -383,7 +448,7 @@ $: {
                           {#each allList as item}
                             <DropdownMenu.Item on:click={() => changeWatchList(item)} class="{item?.id === displayWatchList?.id ? 'bg-[#27272A]' : ''} cursor-pointer sm:hover:bg-[#27272A]">
                               {item?.title} ({item?.ticker?.length})
-                              <label for="deleteWatchlist" class="ml-auto inline-block cursor-pointer text-white sm:hover:text-red-500" on:click|stopPropagation={(e) => e?.preventDefault()}>
+                              <label for="deleteWatchlist" class="ml-auto inline-block cursor-pointer text-white sm:hover:text-red-500" on:click|capture={handleDeleteModal}>
                                 <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="max-width:40px"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                               </label>
                             </DropdownMenu.Item>
@@ -392,11 +457,27 @@ $: {
                       </DropdownMenu.Content>
                     </DropdownMenu.Root>
 
-                    <label for="deleteWatchlist" class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
-                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
-                        <div>Edit</div>
+                     {#if editMode}
+                      <label on:click={handleDeleteTickers} class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
+                          <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"/></svg>
+                          <span class="ml-1 text-white text-sm">
+                              {numberOfChecked}
+                          </span>
+                      </label>
+                      {/if}
+                      <label on:click={handleEditMode} class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500">
+                        <svg class="inline-block w-5 h-5" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1024 1024"><path fill="white" d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"/><path fill="white" d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"/></svg>
+                        {#if !editMode}
+                        <span class="ml-1 text-white text-sm">
+                            Edit
+                        </span>
+                        {:else}
+                        <span class="ml-1 text-white text-sm">
+                          Cancel
+                        </span>
+                        {/if}
                     </label>
-                    
+                          
                     <DropdownMenu.Root >
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button builders={[builder]}  class="ml-3 sm:ml-auto min-w-[110px] w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
@@ -498,10 +579,18 @@ $: {
             <tbody class="p-0">
               {#each watchList as item}
               <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
-                <td class="text-sm sm:text-[1rem] text-start border-b-[#09090B]">
+                
+                <td on:click={() => handleFilter(item?.symbol)} class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] flex flex-row items-center">
+                  <input type="checkbox" checked={deleteTickerList?.includes(item?.symbol) ?? false} class="{!editMode ? 'hidden' : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3" />
+                  {#if editMode}
+                  <label class="text-blue-400 sm:hover:text-white cursor-pointer">
+                    {item?.symbol}
+                  </label>
+                  {:else} 
                   <a href={`/${item?.type === 'stock' ? 'stocks' : item?.type === 'etf' ? 'etf' : 'crypto'}/${item?.symbol}`} class="text-blue-400 sm:hover:text-white">
                     {item?.symbol}
                   </a>
+                  {/if}
                 </td>
 
                 <td class="text-white text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap">
