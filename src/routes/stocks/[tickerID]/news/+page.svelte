@@ -104,7 +104,7 @@ function loadMoreData() {
 
                           <div class="grid grid-cols-1 gap-2 pb-5">
                           {#each newsList as item}
-                                <div class="w-fit flex flex-col bg-[#09090B] rounded-lg m-auto">
+                                <div class="w-full flex flex-col bg-[#09090B] rounded-lg m-auto">
                                     {#if videoId = checkIfYoutubeVideo(item.url)}
                                         <iframe
                                             class="w-full h-96 rounded-lg border border-gray-800"
@@ -114,9 +114,9 @@ function loadMoreData() {
                                             allowfullscreen
                                         ></iframe>
                                     {:else}
-                                        <a href={item?.url} rel="noopener noreferrer" target="_blank" class="w-fit border border-gray-800 rounded-lg">
-                                        <div class="flex-shrink-0 m-auto ">
-                                            <img src={item?.image} class="h-auto w-auto rounded-lg" alt="news image" loading="lazy">
+                                        <a href={item?.url} rel="noopener noreferrer" target="_blank" class="w-full border border-gray-800 rounded-lg">
+                                        <div class="flex-shrink-0 m-auto">
+                                            <img src={item?.image} class="h-auto w-full rounded-lg" alt="news image" loading="lazy">
                                         </div>
                                         </a>
                                     {/if}
