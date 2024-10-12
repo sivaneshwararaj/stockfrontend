@@ -317,13 +317,13 @@ const transactionStyles = {
                                       {abbreviateNumber(item?.securitiesTransacted)}
                                   </td>
                                   <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]">
-                                    ${item?.price?.toFixed(2)}
+                                    {item?.price?.toFixed(2)}
                                   </td>
                                   <td class="font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]">
                                     
                                    <div class="flex flex-row items-center justify-end">
                                     {#if transactionStyles[item?.transactionType]}
-                                      <div class="{transactionStyles[item?.transactionType]?.class}">{abbreviateNumber(item?.securitiesTransacted * item?.price, true)}</div>
+                                      <div class="{transactionStyles[item?.transactionType]?.class}">{abbreviateNumber(item?.securitiesTransacted * item?.price)}</div>
                                       <div class="{transactionStyles[item?.transactionType]?.class} {transactionStyles[item?.transactionType]?.border} ml-2 px-1.5 py-1.5 border text-center rounded-lg text-xs font-semibold">
                                         {transactionStyles[item?.transactionType].text}
                                       </div>

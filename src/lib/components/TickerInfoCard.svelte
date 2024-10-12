@@ -131,7 +131,7 @@ $: {
               </tr>
               <tr class="text-white border-b border-[#27272A]">
                 <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Mkt Cap</td>
-                <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{abbreviateNumber(data?.getStockQuote?.marketCap,true)}</td>
+                <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{abbreviateNumber(data?.getStockQuote?.marketCap)}</td>
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Vol</td>
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{abbreviateNumber(data?.getStockQuote?.volume)}</td>
               </tr>

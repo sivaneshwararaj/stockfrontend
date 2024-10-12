@@ -189,7 +189,7 @@
                           </label>  
             
                             <div class="mt-1 break-words font-semibold leading-8 text-light text-xl">
-                             ${annualDividend !== '0.00' ? annualDividend : '0'}
+                             {annualDividend !== '0.00' ? annualDividend : '0'}
                             </div> 
                         </div>
                         <div class="p-4 bp:p-5 sm:p-6 border-r border-contrast ">
@@ -279,7 +279,7 @@
                                         {new Date(item?.date)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
                                       </td>
                                       <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]">
-                                        ${item?.adjDividend?.toFixed(3)}
+                                        {item?.adjDividend?.toFixed(3)}
                                       </td>
                                       <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]">
                                         {item?.recordDate?.length !== 0 ? new Date(item?.recordDate)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' }) : 'n/a'}

@@ -55,7 +55,7 @@ export let similarstock;
                       <img style="clip-path: circle(50%);" class="w-6 h-6 rounded-full" src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`} loading="lazy"/>
                     </div>
                     <div class="flex flex-col ml-3 w-full">
-                      <span class="text-sm font-medium">{item?.symbol}</span>
+                      <span class="text-sm sm:text-[1rem] font-medium">{item?.symbol}</span>
                       <span class="text-white text-sm">
                         {#if typeof item?.name !== 'undefined'}
                           {item?.name?.length > 15 ? item?.name?.slice(0,15) + "..." : item?.name}
@@ -69,11 +69,11 @@ export let similarstock;
                   
                 </td>
             
-              <td class="text-white text-end font-semibold ">
-                {item?.marketCap !== null ? abbreviateNumber(item?.marketCap,true) : '-'}
+              <td class="text-white text-end text-sm sm:text-[1rem] ">
+                {item?.marketCap !== null ? abbreviateNumber(item?.marketCap) : '-'}
               </td>
             
-              <td class="text-white font-semibold text-end">
+              <td class="text-white text-sm sm:text-[1rem] text-end">
                 {item?.avgVolume !== null ? abbreviateNumber(item?.avgVolume) : '-'}
               </td>
               {/if}

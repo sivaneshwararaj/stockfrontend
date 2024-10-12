@@ -801,6 +801,12 @@ async function popularStrategy(state: string) {
                 { condition: "over", name: "marketCap", value: '100M' }
             ]
         },
+        topAIStocks: {
+          name : 'Top AI Stocks',
+          rules: [
+                { condition: "", name: "score", value: 'Strong Buy' },
+            ]
+        },
         momentumTAStocks: {
             name: 'Momentum TA Stocks',
             rules: [
@@ -953,7 +959,7 @@ function handleInput(event) {
                                         Top Shorted Stocks
                                       </DropdownMenu.Item>
                                       <DropdownMenu.Item on:click={() => popularStrategy('topAIStocks')} class="cursor-pointer hover:bg-[#27272A]">
-                                        Best AI Forecast
+                                        Top AI Stocks
                                       </DropdownMenu.Item>
                                       <DropdownMenu.Item on:click={() => popularStrategy('momentumTAStocks')} class="cursor-pointer hover:bg-[#27272A]">
                                         Momentum TA Stocks

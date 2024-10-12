@@ -95,7 +95,7 @@ if (data?.getAnalystEstimate?.length !== 0) {
               <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] font-semibold"> Revenue </label>
               <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
                 <div class="flex items-baseline text-2xl font-semibold text-white">
-                  {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg, true)}
+                  {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg)}
                 </div>
                 <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black">
                   <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeRevenue > 0 ? '' : 'rotate-180'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="max-width:40px" aria-hidden="true"
@@ -112,7 +112,7 @@ if (data?.getAnalystEstimate?.length !== 0) {
               <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] font-semibold"> Net Income </label>
               <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
                 <div class="flex items-baseline text-2xl font-semibold text-white">
-                  {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedNetIncomeAvg, true)}
+                  {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedNetIncomeAvg)}
                 </div>
                 <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black">
                   <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeNetIncome > 0 ? '' : 'rotate-180'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="max-width:40px" aria-hidden="true"
@@ -122,14 +122,14 @@ if (data?.getAnalystEstimate?.length !== 0) {
                 </div>
               </div>
               <div class="ml-0.5 mt-1.5 text-sm font-semibold text-white/60 lg:block">
-                from {abbreviateNumber(data?.getAnalystEstimate[index - 2]?.netIncome, true)}
+                from {abbreviateNumber(data?.getAnalystEstimate[index - 2]?.netIncome)}
               </div>
             </div>
             <div class="p-4 bp:p-5 sm:p-6 border-t border-contrast md:border-0">
               <label class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] font-semibold"> EBITDA </label>
               <div class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0">
                 <div class="flex items-baseline text-2xl font-semibold text-white">
-                  {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedEbitdaAvg, true)}
+                  {abbreviateNumber(data?.getAnalystEstimate[index - 1]?.estimatedEbitdaAvg)}
                 </div>
                 <div class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black">
                   <svg class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeEBITDA > 0 ? '' : 'rotate-180'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="max-width:40px" aria-hidden="true"
@@ -139,7 +139,7 @@ if (data?.getAnalystEstimate?.length !== 0) {
                 </div>
               </div>
               <div class="ml-0.5 mt-1.5 text-sm font-semibold text-white/60 lg:block">
-                from {abbreviateNumber(data?.getAnalystEstimate[index - 2]?.ebitda, true)}
+                from {abbreviateNumber(data?.getAnalystEstimate[index - 2]?.ebitda)}
               </div>
             </div>
             <div class="p-4 bp:p-5 sm:p-6 border-t border-contrast md:border-0 border-l border-contrast md:border-0">

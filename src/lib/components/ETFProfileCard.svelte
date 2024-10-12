@@ -41,7 +41,7 @@ let showFullText = false;
       holdingsCount = info?.holdingsCount;
       avgVolume = info?.avgVolume; 
       dividendYield = typeof data?.getStockDividend?.dividendYield !== 'undefined' ? data?.getStockDividend?.dividendYield?.toFixed(2)+'%' : '-'
-      payoutRatio = typeof data?.getStockDividend?.payoutRatio !== 'undefined' ? data?.getStockDividend?.payoutRatio?.toFixed(2)+'%' : '-'
+      payoutRatio = (typeof data?.getStockDividend?.payoutRatio !== 'undefined' && data?.getStockDividend?.payoutRatio !== null) ? data?.getStockDividend?.payoutRatio?.toFixed(2)+'%' : '-'
 
       provider = info?.etfProvider;
       country = info?.domicile ?? '-';
@@ -130,12 +130,6 @@ let showFullText = false;
                   <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{data?.getStockQuote?.previousClose?.toFixed(2)}</td>
                 </tr>
               -->
-                <tr class="text-white border-b border-[#27272A]">
-                  <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">EPS (ttm)</td>
-                  <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.eps?.toFixed(2)}</td>
-                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">PE Ratio (ttm)</td>
-                  <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.pe?.toFixed(2)}</td>
-                </tr>
                 <tr class="text-white border-b border-[#27272A]">
                   <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Dividend Yield</td>
                   <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{dividendYield}</td>

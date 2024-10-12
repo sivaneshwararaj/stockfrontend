@@ -10,7 +10,7 @@
     
       async function etfSelector(state)
       {
-        window?.scroll({ top: 0, left: 0, behavior: 'smooth' });
+        //window?.scroll({ top: 0, left: 0, behavior: 'smooth' });
         goto("/etf/"+state+"/")
       }
       
@@ -47,13 +47,13 @@
               </thead>
               <tbody>
                 {#each topETFHolder as item, index}
-                <tr on:click={() => etfSelector(item?.symbol)} class="sm:hover:text-white text-blue-400 cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
+                <tr class="sm:hover:text-white text-blue-400 sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]">
                   {#if index <=6}
                  
                     <td >
-                      <div class="flex flex-row items-center">
+                      <a href={"/etf/"+item?.symbol} class="flex flex-row items-center">
                         <div class="flex flex-col w-full">
-                          <span class="text-sm font-medium">{item?.symbol}</span>
+                          <span class="text-sm sm:text-[1rem]">{item?.symbol}</span>
                           <span class="text-white text-sm">
                             {#if typeof item?.name !== 'undefined'}
                               {item?.name?.length > 20 ? item?.name?.slice(0,20) + "..." : item?.name}
@@ -62,16 +62,16 @@
                             {/if}
                           </span>
                         </div>
-                      </div>
+                      </a>
                       
                       
                     </td>
                 
-                  <td class="text-white text-end font-semibold">
-                    {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets,true) : '-'}
+                  <td class="text-white text-end text-sm sm:text-[1rem]">
+                    {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets) : '-'}
                   </td>
                 
-                  <td class="text-white font-semibold text-end">
+                  <td class="text-white text-end text-sm sm:text-[1rem]">
                     {item?.weightPercentage !== null ? item?.weightPercentage?.toFixed(2) : '-'}%
                   </td>
                   {/if}
@@ -148,7 +148,7 @@
                   </td>
               
                 <td class="text-white text-end font-semibold ">
-                  {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets,true) : '-'}
+                  {item?.totalAssets !== null ? abbreviateNumber(item?.totalAssets) : '-'}
                 </td>
               
                 <td class="text-white font-semibold text-end">
