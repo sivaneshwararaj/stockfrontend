@@ -329,7 +329,7 @@ onMount( async() => {
                       <Table.Cell>
                         <a href={item?.underlying_type === 'stock' ? `/stocks/${item?.ticker}` : `/etf/${item?.ticker}`} class="text-sm sm:text-[1rem] font-medium text-blue-400 sm:hover:text-white transition duration-100">{item?.ticker}</a>
                       </Table.Cell>
-                      <Table.Cell class="text-right xl:table.-column text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">
+                      <Table.Cell class="text-right xl:table.-column text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FF2F1F]'}">
                         {abbreviateNumber(item?.cost_basis,true)}
                       </Table.Cell>
                       <Table.Cell class="text-right xl:table.-column text-sm sm:text-[1rem]">
@@ -338,7 +338,7 @@ onMount( async() => {
                       <Table.Cell class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white">
                         {abbreviateNumber(optionsMode === 'openInterest' ? item?.open_interest : item?.volume)}
                       </Table.Cell>
-                      <Table.Cell class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">
+                      <Table.Cell class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FF2F1F]'}">
                         {item?.put_call}
                       </Table.Cell>
                       

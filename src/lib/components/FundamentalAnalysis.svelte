@@ -106,7 +106,7 @@ $: {
                       <div class="flex flex-col items-start">
                           <span class="font-medium text-gray-200 text-sm">Quarter Sentiment</span>
                           {#if !deactivateContent}
-                          <span class="text-start text-[1rem] sm:text-lg font-semibold {flowSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FC2120]'}">{flowSentiment}</span>
+                          <span class="text-start text-[1rem] sm:text-lg font-semibold {flowSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FF2F1F]'}">{flowSentiment}</span>
                           {:else}
                           <a href="/pricing" class="text-blue-400 mt-1 hover:text-white font-medium text-sm flex justify-center items-center">
                             Unlock with Pro
@@ -182,7 +182,7 @@ $: {
             <div class="text-white text-[1rem] mt-4 sm:mt-7 ml-1">
               Over the next quarter the model forecasts a
               {#if !deactivateContent}
-              <span class="font-semibold {flowSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FC2120]'}">{flowSentiment}</span> price movement.
+              <span class="font-semibold {flowSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FF2F1F]'}">{flowSentiment}</span> price movement.
               {:else}
               <a href="/pricing" class="text-blue-400 mt-1 hover:text-white font-medium text-sm">
                 Unlock Prediction with Pro

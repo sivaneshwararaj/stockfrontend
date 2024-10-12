@@ -253,11 +253,11 @@ async function handleScroll() {
                                 {item?.price}
                             </td>
       
-                            <td class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >= 0 ? 'text-[#30B170]' : 'text-[#FC2120]'} text-end">
+                            <td class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >= 0 ? 'text-[#37C97D]' : 'text-[#FF2F1F]'} text-end">
                                 {item?.changesPercentage > 0 ? '+' : ''}{item?.changesPercentage}%
                               </td>
 
-                            <td class="text-end text-sm sm:text-[1rem] font-medium whitespace-nowrap {item?.sentiment >= 55 ? 'text-[#37C97D]' : item?.sentiment >= 50 ? 'text-[#E57C34]' : 'text-[#FC2120]'}">
+                            <td class="text-end text-sm sm:text-[1rem] font-medium whitespace-nowrap {item?.sentiment >= 55 ? 'text-[#37C97D]' : item?.sentiment >= 50 ? 'text-[#E57C34]' : 'text-[#FF2F1F]'}">
                               
                               <div class="flex flex-row items-center justify-end">
                                       <div class="">{item?.sentiment >= 80 ? 'Very Bullish' : item?.sentiment >= 55 ? 'Bullish' : item?.sentiment > 50 ? 'Mixed' : 'Bearish'}</div>

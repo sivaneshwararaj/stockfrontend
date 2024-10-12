@@ -184,7 +184,7 @@ onMount(async () => {
                   <div class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-lg h-20">
                       <div class="flex flex-col items-start">
                           <span class="font-medium text-gray-200 text-sm">Price Sentiment</span>
-                          <span class="text-start text-[1rem] sm:text-lg font-semibold {priceSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FC2120]'}">{priceSentiment}</span>
+                          <span class="text-start text-[1rem] sm:text-lg font-semibold {priceSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FF2F1F]'}">{priceSentiment}</span>
                       </div>
                   </div>
                   
@@ -258,7 +258,7 @@ onMount(async () => {
 
             <div class="text-white text-[1rem] mt-4 sm:mt-7 ml-1">
                 Over the next 12 months, the model predicts a
-                <span class="font-semibold {priceSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FC2120]'}">{priceSentiment}</span>
+                <span class="font-semibold {priceSentiment === 'Bullish' ? 'text-[#37C97D]' : 'text-[#FF2F1F]'}">{priceSentiment}</span>
                 trend, suggesting that the future price is expected to {priceSentiment === 'Bullish' ? 'surpass' : 'to be less than'} the previous price of
                 <span class="font-semibold">${lastPrice?.toFixed(2) ?? 'n/a'}</span>, with a mean value of <span class="font-semibold">${oneYearPricePrediction}</span>.
               </div>

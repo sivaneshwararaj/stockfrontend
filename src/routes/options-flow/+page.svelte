@@ -1206,7 +1206,7 @@ function sortData(key) {
               <div class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20">
                   <div class="flex flex-col items-start">
                       <span class="font-semibold text-gray-200 text-sm sm:text-[1rem] ">Flow Sentiment</span>
-                      <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : flowSentiment === 'Bearish' ? 'text-[#FC2120]' : flowSentiment === 'Neutral' ? 'text-[#FBCE3C]' : 'text-white'}">{flowSentiment}</span>
+                      <span class="text-start text-[1rem] font-semibold {flowSentiment === 'Bullish' ? 'text-[#00FC50]' : flowSentiment === 'Bearish' ? 'text-[#FF2F1F]' : flowSentiment === 'Neutral' ? 'text-[#FBCE3C]' : 'text-white'}">{flowSentiment}</span>
                   </div>
                   
               </div>
@@ -1485,11 +1485,11 @@ function sortData(key) {
                           {displayedData[index]?.strike_price}
                         </div>
 
-                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] {displayedData[index]?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-start">
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] {displayedData[index]?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FF2F1F]'} text-start">
                           {displayedData[index]?.put_call}
                         </div>
 
-                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] {displayedData[index]?.sentiment === 'Bullish' ? 'text-[#00FC50]' : displayedData[index]?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
+                        <div style="justify-content: center;" class="td text-sm sm:text-[1rem] {displayedData[index]?.sentiment === 'Bullish' ? 'text-[#00FC50]' : displayedData[index]?.sentiment === 'Bearish' ? 'text-[#FF2F1F]' : 'text-[#C6A755]'} text-start">
                           {displayedData[index]?.sentiment}
                         </div>
 

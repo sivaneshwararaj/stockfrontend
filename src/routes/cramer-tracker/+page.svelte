@@ -383,7 +383,7 @@ rawData?.forEach(item => {
                       <Card.Header class="flex flex-col items-start space-y-0 pb-2">
                         <Card.Title class="text-start text-xl sm:text-2xl font-semibold pb-2">Cumulative Return</Card.Title>
                         <Card.Description class="text-white text-sm pb-2">
-                          Following Jim Cramer's stock picks since {rawData?.slice(0)?.at(0)?.date}, would have yielded a <strong class="{cumulativeList?.slice(-1) > 0 ? 'text-[#00FC50]' : 'text-[#FC2120]'}">{cumulativeList?.slice(-1) > 0 ? '+' : ''}{cumulativeList?.slice(-1)}%</strong> cumulative return.
+                          Following Jim Cramer's stock picks since {rawData?.slice(0)?.at(0)?.date}, would have yielded a <strong class="{cumulativeList?.slice(-1) > 0 ? 'text-[#00FC50]' : 'text-[#FF2F1F]'}">{cumulativeList?.slice(-1) > 0 ? '+' : ''}{cumulativeList?.slice(-1)}%</strong> cumulative return.
                         </Card.Description>
                       </Card.Header>
                       <Card.Content class="w-full h-fit">
@@ -492,11 +492,11 @@ rawData?.forEach(item => {
                                 </td>
   
         
-                                <td class="text-sm sm:text-[1rem] whitespace-nowrap {(['Bullish', 'Buy'].includes(item?.sentiment) || item?.sentiment?.includes('Buy')) ? 'text-[#30B170]' : (['Bearish', 'Sell','Trim'].includes(item?.sentiment) || item?.sentiment?.includes('Sell') === 'Bearish') ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-center">
+                                <td class="text-sm sm:text-[1rem] whitespace-nowrap {(['Bullish', 'Buy'].includes(item?.sentiment) || item?.sentiment?.includes('Buy')) ? 'text-[#37C97D]' : (['Bearish', 'Sell','Trim'].includes(item?.sentiment) || item?.sentiment?.includes('Sell') === 'Bearish') ? 'text-[#FF2F1F]' : 'text-[#C6A755]'} text-center">
                                 {item?.sentiment}
                               </td>
 
-                              <td class="text-sm sm:text-[1rem] {item?.returnSince >= 0 ? 'text-[#30B170]' : 'text-[#FC2120]'} text-end">
+                              <td class="text-sm sm:text-[1rem] {item?.returnSince >= 0 ? 'text-[#37C97D]' : 'text-[#FF2F1F]'} text-end">
                                 {item?.returnSince > 0 ? '+' : ''}{item?.returnSince}%
                               </td>
 

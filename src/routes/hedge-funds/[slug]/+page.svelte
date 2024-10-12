@@ -926,7 +926,7 @@ onMount(async () => {
                                   </td>
 
                                   {#if changeAssetType === 'Stocks'}
-                                  <td class="text-center text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] {item?.changeInSharesNumberPercentage > 0 ? 'text-[#00FC50]' : item?.changeInSharesNumberPercentage < 0 ? 'text-[#FC2120]' : 'text-white'}">
+                                  <td class="text-center text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] {item?.changeInSharesNumberPercentage > 0 ? 'text-[#00FC50]' : item?.changeInSharesNumberPercentage < 0 ? 'text-[#FF2F1F]' : 'text-white'}">
                                     {item?.changeInSharesNumberPercentage !== 0 ? abbreviateNumber(item?.changeInSharesNumberPercentage?.toFixed(2))+'%' : '-'}
                                   </td>
 
@@ -944,7 +944,7 @@ onMount(async () => {
                                       ${item?.avgPricePaid}
                                   </td>
                                   {#if changeAssetType === 'Options'}
-                                  <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] {item?.putCallShare === 'CALL' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">
+                                  <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] {item?.putCallShare === 'CALL' ? 'text-[#00FC50]' : 'text-[#FF2F1F]'}">
                                     {formatString(item?.putCallShare)}
                                   </td>
                                   {/if}
@@ -1034,7 +1034,7 @@ onMount(async () => {
                               </td>
 
                               {#if changeAssetType === 'Stocks'}
-                              <td class="text-end text-sm font-semibold border-b border-b-[#09090B] {item?.changeInSharesNumberPercentage > 0 ? 'text-[#00FC50]' : item?.changeInSharesNumberPercentage < 0 ? 'text-[#FC2120]' : 'text-white'}">
+                              <td class="text-end text-sm font-semibold border-b border-b-[#09090B] {item?.changeInSharesNumberPercentage > 0 ? 'text-[#00FC50]' : item?.changeInSharesNumberPercentage < 0 ? 'text-[#FF2F1F]' : 'text-white'}">
                                 {item?.changeInSharesNumberPercentage !== 0 ? abbreviateNumber(item?.changeInSharesNumberPercentage?.toFixed(2))+'%' : '-'}
                               </td>
                               <td class="text-end text-sm font-semibold border-b border-b-[#09090B] text-white">
@@ -1050,7 +1050,7 @@ onMount(async () => {
                                   ${item?.avgPricePaid}
                               </td>
                               {#if changeAssetType === 'Options'}
-                              <td class="text-end text-sm font-semibold border-b border-b-[#09090B] {item?.putCallShare === 'CALL' ? 'text-[#00FC50]' : 'text-[#FC2120]'}">
+                              <td class="text-end text-sm font-semibold border-b border-b-[#09090B] {item?.putCallShare === 'CALL' ? 'text-[#00FC50]' : 'text-[#FF2F1F]'}">
                                 {formatString(item?.putCallShare)}
                               </td>
                               {/if}

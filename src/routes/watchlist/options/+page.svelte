@@ -262,11 +262,11 @@ onMount(async () => {
                   {item?.strike_price}
                 </td>
 
-                <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FC2120]'} text-start">
+                <td class="text-sm sm:text-[1rem] {item?.put_call === 'Calls' ? 'text-[#00FC50]' : 'text-[#FF2F1F]'} text-start">
                   {item?.put_call}
                 </td>
 
-                <td class="text-sm sm:text-[1rem] {item?.sentiment === 'Bullish' ? 'text-[#00FC50]' : item?.sentiment === 'Bearish' ? 'text-[#FC2120]' : 'text-[#C6A755]'} text-start">
+                <td class="text-sm sm:text-[1rem] {item?.sentiment === 'Bullish' ? 'text-[#00FC50]' : item?.sentiment === 'Bearish' ? 'text-[#FF2F1F]' : 'text-[#C6A755]'} text-start">
                   {item?.sentiment}
                 </td>
                  <td class="text-sm sm:text-[1rem] text-white text-start whitespace-nowrap">
