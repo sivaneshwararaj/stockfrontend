@@ -5,13 +5,12 @@ import logo from '$lib/images/top_winner_logo.png';
 import { abbreviateNumber } from '$lib/utils';
 import MiniPlot from '$lib/components/MiniPlot.svelte';
 import { onMount } from 'svelte';
-import * as Tabs from "$lib/components/shadcn/tabs/index.js";
 import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
 export let data;
 let isLoaded = false;
 const rawData = data?.getMiniPlotsIndex;
-
+let timePeriod = '1D'
 let priceDataSP500;
 let priceDataNasdaq;
 let priceDataDowJones;
@@ -81,109 +80,51 @@ rawData?.forEach(({ symbol, priceData, changesPercentage, previousClose }) => {
 
 
 let outputList = data?.getDailyGainerLoserActive;
-let gainerLoserActive = outputList?.gainers['1D']
-let displaySection = 'gainer'
-let order = 'highToLow';
-let sortBy = ''; // Default sorting by change percentage
-
+let gainerLoserActive = outputList?.gainers[timePeriod]
 
 let buttonText = 'Top Winners';
 
 
-function changeOrder(state:string) {
-    if (state === 'highToLow')
-    {
-      order = 'lowToHigh';
-    }
-    else {
-      order = 'highToLow';
-    }
-  }
-
-const sortByChange = (tickerList) => {
-    return tickerList?.sort(function(a, b) {
-      if(order === 'highToLow')
+const tabs = [
       {
-        return b?.changesPercentage - a?.changesPercentage;
-      }
-      else {
-        return a?.changesPercentage - b?.changesPercentage;
-      }
-       
-      });
-  }
-
-const sortByPrice = (tickerList) => {
-    return tickerList?.sort(function(a, b) {
-      if(order === 'highToLow')
+        title: "Gainers",
+      },
       {
-        return a?.price - b?.price;
-      }
-      else {
-        return b?.price - a?.price;
-      }
-       
-      });
-  }
-
-const sortByVolume = (tickerList) => {
-    return tickerList?.sort(function(a, b) {
-      if(order === 'highToLow')
+        title: "Losers",
+      },
       {
-        return b?.volume - a?.volume;
-      }
-      else {
-        return a?.volume - b?.volume;
-      }
-       
-      });
-  }
-
-const sortByMarketCap = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.marketCap - a?.marketCap;
-    }
-    else {
-      return a?.marketCap - b?.marketCap;
-    }
-  });
-}
-
+        title: "Active",
+      },
+    ];
   
-function changeSection(state) {
+let activeIdx = 0;
 
-    displaySection = state;
-    const timePeriod = '1D';
-    sortBy = '';
-    order = '';
-    
-    if (state === 'gainer')
+function changeSection(index) {
+    activeIdx = index;
+
+    if (index === 0)
     {
       gainerLoserActive = outputList?.gainers[timePeriod];
       buttonText = 'Top Winners'
     }
-    else if (state === 'loser')
+    else if (index === 1)
     {
       gainerLoserActive = outputList?.losers[timePeriod];
       buttonText = 'Top Losers'
     }
-    else if (state === 'active')
+    else if (index === 2)
     {
       gainerLoserActive = outputList?.active[timePeriod];
       buttonText = 'Most Active'
     }
-
-}
+} 
 
 
 
 function selectTimeInterval(event) {
-    sortBy = '';
-    order = '';
+
    
-    const timePeriod = event.target.value === 'oneDay' ? '1D' : event.target.value === 'oneWeek' ? '1W' : event.target.value === 'oneMonth' ? '1M' : event.target.value === 'threeMonths' ? '3M' : '6M';
+    timePeriod = event.target.value === 'oneDay' ? '1D' : event.target.value === 'oneWeek' ? '1W' : event.target.value === 'oneMonth' ? '1M' : event.target.value === 'threeMonths' ? '3M' : '6M';
 
 
     if (buttonText === 'Top Winners')
@@ -198,31 +139,95 @@ function selectTimeInterval(event) {
     {
       gainerLoserActive = outputList?.active[timePeriod];
     }
-    
   }
 
 onMount( () => {
   isLoaded = true;
 })
 
-  $: {
-  if(order)
-  {
-     
-    // Add this condition for market cap sorting
-    if (sortBy === 'marketCap') {
-      gainerLoserActive = sortByMarketCap(gainerLoserActive);
-    }
-    else if (sortBy === 'change') {
-      gainerLoserActive = sortByChange(gainerLoserActive);
-    }
-    else if (sortBy === 'price') {
-      gainerLoserActive = sortByPrice(gainerLoserActive);
-    }
-    else if (sortBy === 'volume') {
-      gainerLoserActive = sortByVolume(gainerLoserActive);
+
+let sortOrders = {
+  symbol: 'none',
+  name: 'none',
+  change: 'none',
+  price: 'none',
+  marketCap: 'none',
+  volume: 'none',
+};
+
+// Generalized sorting function
+function sortData(key) {
+  // Reset all other keys to 'none' except the current key
+  for (const k in sortOrders) {
+    if (k !== key) {
+      sortOrders[k] = 'none';
     }
   }
+
+  // Cycle through 'none', 'asc', 'desc' for the clicked key
+  const orderCycle = ['none', 'asc', 'desc'];
+  let originalData = [];
+
+  if (buttonText === 'Top Winners')
+    {
+      originalData = data?.getDailyGainerLoserActive?.gainers[timePeriod]
+    }
+    else if (buttonText === 'Top Losers')
+    {
+      originalData = data?.getDailyGainerLoserActive?.losers[timePeriod]
+    }
+    else if (buttonText === 'Most Active')
+    {
+      originalData = data?.getDailyGainerLoserActive?.active[timePeriod]
+    }
+
+  const currentOrderIndex = orderCycle.indexOf(sortOrders[key]);
+  sortOrders[key] = orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+
+  const sortOrder = sortOrders[key];
+
+  // Reset to original data when 'none' and stop further sorting
+  if (sortOrder === 'none') {
+    gainerLoserActive = [...originalData]; // Reset to original data (spread to avoid mutation)
+    return;
+  }
+
+  // Define comparison functions for each key
+  const compareFunctions = {
+    symbol: (a, b) => {
+      const symbolA = a.symbol.toUpperCase();
+      const symbolB = b.symbol.toUpperCase();
+      return sortOrder === 'asc' ? symbolA.localeCompare(symbolB) : symbolB.localeCompare(symbolA);
+    },
+    name: (a, b) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+    },
+    change: (a, b) => {
+      const numA = parseFloat(a?.changesPercentage);
+      const numB = parseFloat(b?.changesPercentage);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+    price: (a, b) => {
+      const numA = parseFloat(a?.price);
+      const numB = parseFloat(b?.price);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+    marketCap: (a, b) => {
+      const numA = parseFloat(a.marketCap);
+      const numB = parseFloat(b.marketCap);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+    volume: (a, b) => {
+      const numA = parseFloat(a.volume);
+      const numB = parseFloat(b.volume);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+  };
+
+  // Sort using the appropriate comparison function
+  gainerLoserActive = [...originalData].sort(compareFunctions[key]);
 }
 
 
@@ -319,7 +324,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
 
   {#if isLoaded}
 
-  <div class="text-white text-xs sm:text-sm pb-5 sm:pb-2 pl-3 sm:pl-0">
+  <div class="sm:hidden text-white text-xs sm:text-sm pb-5 sm:pb-2 pl-3 sm:pl-0">
     Stock Indexes - {getCurrentDateFormatted()}
   </div>
 
@@ -333,19 +338,30 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
   </div>
 
 
-    <div class="w-full m-auto mb-10 bg-[#09090B] pl-3 pr-3 sm:pl-0 sm:pr-0">
+    <div class="w-full m-auto mb-10 sm:mb-5 bg-[#09090B] pl-3 pr-3 sm:pl-0 sm:pr-0">
      
       
 
-        <div class="tabs flex flex-row justify-between sm:justify-start items-center w-full pl-3 pr-3 sm:pl-0 sm:pr-0">
-          <Tabs.Root value="gainers" class="w-[400px]">
-            <Tabs.List class="grid w-full grid-cols-3 bg-[#27272A]">
-              <Tabs.Trigger on:click={() => (changeSection('gainer'))} value="gainers">Gainers</Tabs.Trigger>
-              <Tabs.Trigger on:click={() => (changeSection('loser'))} value="losers">Losers</Tabs.Trigger>
-              <Tabs.Trigger on:click={() => (changeSection('active'))} value="active">Active</Tabs.Trigger>
-            </Tabs.List>
-          </Tabs.Root>
-        </div>
+        <div class="bg-[#313131] w-fit relative m-auto sm:m-0 sm:mr-auto flex sm:flex-wrap items-center justify-center rounded-lg p-1 -mt-3">
+          {#each tabs as item, i}
+          <label
+              on:click={() => (changeSection(i))}
+              class="cursor-pointer group relative z-[1] rounded-full px-6 py-1 {activeIdx === i
+              ? 'z-0'
+              : ''} "
+          >
+              {#if activeIdx === i}
+                  <div
+                  class="absolute inset-0 rounded-lg bg-purple-600"
+                  ></div>
+              {/if}
+              <span class="relative text-[1rem] sm:text-lg block font-semibold duration-200 text-white">
+                  {item.title}
+              </span>
+            </label>
+          {/each}
+          </div>
+
 
       </div>
 
@@ -377,29 +393,35 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
       <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]">
         <thead>
           <tr class="border-b border-[#27272A]">
-            <th class="text-white font-semibold text-[1rem] whitespace-nowrap">Symbol</th>
-            <th class="text-white font-semibold text-[1rem] whitespace-nowrap">Name</th>
-            <th on:click={() => { sortBy = 'change'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-[1rem] text-end">
+            <th on:click={() => sortData('symbol')} class="cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
+              Symbol
+              <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['symbol'] === 'asc' ? 'rotate-180' : sortOrders['symbol'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </th>
+            <th on:click={() => sortData('name')} class="cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
+              Name
+              <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['name'] === 'asc' ? 'rotate-180' : sortOrders['name'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </th>
+            <th on:click={() => sortData('change')} class="cursor-pointer select-none text-end text-white font-semibold text-[1rem] whitespace-nowrap">
               % Change
-              <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'change' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['change'] === 'asc' ? 'rotate-180' : sortOrders['change'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
             </th>
-            <th on:click={() => { sortBy = 'price'; changeOrder(order); }} class="cursor-pointer text-white font-semibold text-end text-[1rem]">
+            <th on:click={() => sortData('price')} class="cursor-pointer select-none text-end text-white font-semibold text-[1rem] whitespace-nowrap">
               Price
-              <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'price' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['price'] === 'asc' ? 'rotate-180' : sortOrders['price'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
             </th>
-            <th on:click={() => { sortBy = 'marketCap'; changeOrder(order); }} class="whitespace-nowrap cursor-pointer text-white font-semibold text-[1rem] text-end">
+           <th on:click={() => sortData('marketCap')} class="cursor-pointer select-none text-end text-white font-semibold text-[1rem] whitespace-nowrap">
               Market Cap
-              <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'marketCap' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['marketCap'] === 'asc' ? 'rotate-180' : sortOrders['marketCap'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
             </th>
-            <th on:click={() => { sortBy = 'volume'; changeOrder(order); }} class="cursor-pointer text-white font-semibold text-[1rem] text-end">
+            <th on:click={() => sortData('volume')} class="cursor-pointer select-none text-end text-white font-semibold text-[1rem] whitespace-nowrap">
               Volume
-              <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'volume' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['volume'] === 'asc' ? 'rotate-180' : sortOrders['volume'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
             </th>
           </tr>
         </thead>
         <tbody>
-          {#each gainerLoserActive as item, index}
-          <tr on:click={() => goto("/stocks/"+item?.symbol)} class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] cursor-pointer">
+          {#each gainerLoserActive as item}
+          <tr class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]">
     
           <td class="border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap">
              <a href={"/stocks/"+item?.symbol} class="sm:hover:text-white text-blue-400">
@@ -418,15 +440,15 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
               {/if}
           </td>
 
-          <td class="text-white font-semibold text-sm sm:text-[1rem] text-end border-b-[#09090B]">
-            ${item?.price?.toFixed(2)}
+          <td class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]">
+            {item?.price?.toFixed(2)}
           </td>
 
-          <td class="text-white text-sm sm:text-[1rem] font-semibold border-b-[#09090B] text-end">
-            {item?.marketCap !== null ? abbreviateNumber(item?.marketCap, true) : '-'}
+          <td class="text-white text-sm sm:text-[1rem] border-b-[#09090B] text-end">
+            {item?.marketCap !== null ? abbreviateNumber(item?.marketCap) : '-'}
           </td>
 
-          <td class="text-white text-sm sm:text-[1rem] font-semibold border-b-[#09090B] text-end">
+          <td class="text-white text-sm sm:text-[1rem] border-b-[#09090B] text-end">
             {item?.volume !== null ? abbreviateNumber(item?.volume) : '-'}
           </td>
 
@@ -482,7 +504,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
       <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
           <div class="w-full flex justify-between items-center p-3 mt-3">
           <h2 class="text-start text-xl font-semibold text-white ml-3">
-          Wallstreet Analyst
+          Top Analyst 📊
           </h2>
           <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
           </div>
@@ -496,7 +518,7 @@ $: charNumber = $screenWidth < 640 ? 20 : 30;
       <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
           <div class="w-full flex justify-between items-center p-3 mt-3">
           <h2 class="text-start text-xl font-semibold text-white ml-3">
-          Congress Trading
+          Congress Trading 🇺🇸
           </h2>
           <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
           </div>
