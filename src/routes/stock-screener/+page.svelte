@@ -180,7 +180,7 @@ const allRules = {
   altmanZScore: { label: 'Altman-Z-Score', step: [10,5,3,1], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
   piotroskiScore: { label: 'Piotroski F-Score', step: [9,8,7,6,5,4,3,2,1], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
 
-  analystRating: { label: 'Analyst Rating', step: ['Buy', 'Hold', 'Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  analystRating: { label: 'Analyst Rating', step: ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
   score: { label: 'AI Score', step: ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
   sector: { label: 'Sector', step: sectorList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
   industry: { label: 'Industry', step: industryList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
@@ -861,7 +861,7 @@ function handleInput(event) {
 
         if (searchQuery.length > 0) {
           
-          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList : ruleName === 'analystRating' ? ['Buy','Hold','Sell'] : ['Strong Buy','Hold','Sell','Strong Sell'];
+          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList : ruleName === 'analystRating' ? ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'] : ['Strong Buy','Hold','Sell','Strong Sell'];
             testList = rawList?.filter(item => {
                 const index = item?.toLowerCase();
                 // Check if country starts with searchQuery
@@ -1197,7 +1197,7 @@ function handleInput(event) {
                                         </DropdownMenu.Item>     
                                       {/each}
                                     {:else}
-                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : ruleName === 'analystRating' ? ['Buy','Hold','Sell'] : ['Strong Buy','Buy','Hold','Sell','Strong Sell'])) as item}
+                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : ruleName === 'analystRating' ? ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'] : ['Strong Buy','Buy','Hold','Sell','Strong Sell'])) as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
