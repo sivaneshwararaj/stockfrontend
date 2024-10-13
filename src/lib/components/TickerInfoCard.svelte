@@ -181,7 +181,7 @@ $: {
                 <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Shares Out.</td>
                 <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{abbreviateNumber(data?.getStockQuote?.sharesOutstanding)}</td>
                 <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap ">Forward PE</td>
-                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{forwardPE === undefined ? '-' : forwardPE}</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{(forwardPE === undefined || forwardPE === null)? '-' : forwardPE}</td>
               </tr>
             </tbody>
           </table>

@@ -2,20 +2,20 @@
 
 import {numberOfUnreadNotification, displayCompanyName, stockTicker, currentPortfolioPrice} from '$lib/store';
 import InfoModal from '$lib/components/InfoModal.svelte';
-import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
-
+import { onMount } from 'svelte';
 import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
 
 export let data;
 
 let analystRating = data?.getAnalystRating ?? {};
 
-let rawData = [];
+let rawData = data?.getAnalystTickerHistory ?? [];
 let historyList = []
 let priceTarget = 'n/a';
 let numOfAnalyst = 0;
 let consensusRating = 'n/a';
-let changesPercentage = 0;  
+let changesPercentage = 0;
+let isLoaded = false;
 
 const tabs = [
   {
@@ -41,27 +41,23 @@ function changeTab(index) {
     }
     if (activeIdx === 1) {
       rawData = data?.getAnalystTickerHistory?.filter(item => item?.analystScore >=4)
-      historyList = rawData?.slice(0,10)
+      historyList = rawData?.slice(0,30)
     }
     else {
       rawData = data?.getAnalystTickerHistory ?? [];
-      historyList = rawData?.slice(0,10)
+      historyList = rawData?.slice(0,30)
     }
 }
 
-async function infiniteHandler({ detail: { loaded, complete } }) 
-{
-if (historyList?.length === rawData?.length) {
-    complete();
-  } else {
-    const nextIndex = historyList?.length;
-    const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-    historyList = [...historyList, ...newArticles];
-    loaded();
+async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && historyList?.length !== rawData?.length) {
+        const nextIndex = historyList?.length;
+        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+        historyList = [...historyList, ...filteredNewResults];
+    }
   }
-}
-    
-
 
 function latestInfoDate(inputDate) {
     // Convert the input date string to milliseconds since epoch
@@ -80,8 +76,17 @@ function latestInfoDate(inputDate) {
     return differenceInDays <=4;
 }
 
+onMount(async () => {
+  isLoaded = false;
+  changeTab(0)
+  isLoaded = true;
 
-changeTab(0)
+  window.addEventListener('scroll', handleScroll);
+    return () => {
+    window.removeEventListener('scroll', handleScroll);
+  };
+
+})
 
 </script>
     
@@ -127,8 +132,8 @@ changeTab(0)
 
                     </div>
 
-            
-                {#if historyList?.length !== 0}
+            {#if isLoaded} 
+        
 
                 <div class="mb-4 grid grid-cols-2 grid-rows-2 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-4 md:grid-rows-1 md:divide-x">
                   <div class="p-4 bp:p-5 sm:p-6">
@@ -235,6 +240,8 @@ changeTab(0)
                         </div>
                         </div>
 
+                        {#if rawData?.length !== 0}
+                        
                         <div class="sm:w-full m-auto mt-10 ">
                       
                     
@@ -317,24 +324,28 @@ changeTab(0)
 
                           </div>
                         </div>
-                        {#if data?.user?.tier === 'Pro'}
-                        <InfiniteLoading on:infinite={infiniteHandler} />
-                        {/if}
 
-                        <UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>
-
-                    {:else}
-                    <div class="w-full flex justify-start items-center m-auto mt-10 mb-6">
-                        <div class="text-center w-fit text-gray-100 text-sm sm:text-[1rem] rounded-lg h-auto border border-slate-800 p-4">
-                        <svg class="w-5 h-5 inline-block sm:mr-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
-                            Wall Street analysts have not provided any ratings for  {$displayCompanyName}
+                        {:else}
+                        <div class="w-full flex justify-start items-center m-auto mt-10 mb-6">
+                            <div class="text-center w-fit text-gray-100 text-sm sm:text-[1rem] rounded-lg h-auto border border-slate-800 p-4">
+                            <svg class="w-5 h-5 inline-block sm:mr-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
+                               There are no top analyst ratings available for the past 12 months for {$displayCompanyName}
+                            </div>
                         </div>
-                    </div>
+                      {/if}
 
+
+                      <UpgradeToPro data={data} title="Get stock forecasts from Wall Street's highest rated professionals"/>
                     
-                    {/if}
-                    
-              
+              {:else}
+              <div class="flex justify-center items-center h-80">
+                  <div class="relative">
+                  <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <span class="loading loading-spinner loading-md text-gray-400"></span>
+                  </label>
+                  </div>
+              </div>
+              {/if}
 
 
               </div>
