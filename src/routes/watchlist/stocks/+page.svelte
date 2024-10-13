@@ -343,8 +343,18 @@ function changeWatchList(newWatchList)
 
 }
 
+function saveRules() {
+  localStorage.setItem('watchlist-ruleOfList', JSON.stringify(ruleOfList));
+}
+
 
 onMount(async () => {
+
+  const savedRules = localStorage.getItem('watchlist-ruleOfList');
+  if (savedRules) {
+    ruleOfList = JSON.parse(savedRules);
+  }
+
 if(allList?.length !== 0)
     {
       displayWatchList = allList?.at(0)
@@ -440,7 +450,7 @@ allRows = allRows
     return a.name.localeCompare(b.name);
   });
 
-    
+  saveRules()    
 }
 
 
