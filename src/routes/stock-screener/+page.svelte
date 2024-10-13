@@ -167,6 +167,9 @@ const allRules = {
   netProfitMargin: { label: 'Profit Margin', step: ['80%','60%','50%','20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   pretaxProfitMargin: { label: 'Pretax Margin', step: ['80%','60%','50%','20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   ebitdaMargin: { label: 'EBITDA Margin', step: ['80%','60%','50%','20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  longTermDebtToCapitalization: { label: 'Long Term Debt / Market Cap', step: ['80%','60%','50%','30%', '20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  shortTermDebtToCapitalization: { label: 'Short Term Debt / Market Cap', step: ['80%','60%','50%','30%', '20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
+  interestIncomeToCapitalization: { label: 'Interest Income / Market Cap', step: ['80%','60%','50%','30%', '20%','10%','5%','1%','0.5%'], category: 'fund', defaultCondition: 'over', defaultValue: '1%' },
   assetTurnover: { label: 'Asset Turnover', step: [5,3,2,1,0], category: 'fund', defaultCondition: 'over', defaultValue: 0 },
   earningsYield: { label: 'Earnings Yield', step: ['20%','15%','10%','5%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
   freeCashFlowYield: { label: 'FCF Yield', step: ['20%','15%','10%','5%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: '0%' },
@@ -835,7 +838,17 @@ async function popularStrategy(state: string) {
                 { condition: "over", name: "freeCashFlowPerShare", value: 2 },
                 { condition: "over", name: "freeCashFlowMargin", value: '50%' }
             ]
-        }
+        },
+        halalStocks: {  // New Strategy Added
+          name: 'Halal Stocks',
+          rules: [
+              { condition: "under", name: "shortTermDebtToCapitalization", value: "30%" },
+              { condition: "under", name: "interestIncomeToCapitalization", value: "30%" },
+              { condition: "under", name: "longTermDebtToCapitalization", value: "30%" },
+              { condition: "under", name: "interestDebtPerShare", value: 1 },
+              { condition: "under", name: "debtRatio", value: 0 }
+          ]
+      }
     };
 
     const strategy = strategies[state];
@@ -969,6 +982,9 @@ function handleInput(event) {
                                       </DropdownMenu.Item>
                                        <DropdownMenu.Item on:click={() => popularStrategy('strongCashFlow')} class="cursor-pointer hover:bg-[#27272A]">
                                         Strong Cash Flow
+                                      </DropdownMenu.Item>
+                                      <DropdownMenu.Item on:click={() => popularStrategy('halalStocks')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Halal Stocks
                                       </DropdownMenu.Item>  
                                   </DropdownMenu.Group>
                                 </DropdownMenu.Content>
@@ -1085,7 +1101,7 @@ function handleInput(event) {
                     <!--Start Added Rules-->
                     <div class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default">
                       <div class="text-white text-[1rem] relative">
-                        {row?.label?.replace('[%]', '')}
+                        <span class="">{row?.label?.length > 20 ? row?.label?.slice(0,20)?.replace('[%]', '') + '...' : row?.label?.replace('[%]', '')}</span>
                         <div class="sm:hidden relative inline-block">
                           <label for="mobileTooltip" on:click={() => getInfoText(row?.rule, row?.label?.replace('[%]', ''))} class="relative" role="tooltip">
                               <span class="absolute -right-[15px] -top-[3px] cursor-pointer p-1 text-gray-300 sm:hover:text-white">
@@ -1412,7 +1428,9 @@ function handleInput(event) {
                         <th class="text-white text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">Market Cap</th>
                         {#each displayRules as row (row?.rule)}
                           {#if row?.rule !== 'marketCap'}
-                            <th class="text-white text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">{row?.label}</th>
+                            <th class="text-white text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]">
+                              {row?.label?.length > 20 ? row?.label?.slice(0,20) + '...' : row?.label}
+                            </th>
                           {/if}
                         {/each}
                       </tr>
