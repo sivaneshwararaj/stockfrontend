@@ -420,6 +420,8 @@ function isChecked(item) {
 }
 
 function sortIndicatorCheckMarks(allRows) {
+  const priorityItems = new Set(['AI Score', 'Revenue', 'Net Income', 'Free Cash Flow']);
+
   return allRows.sort((a, b) => {
     const isAChecked = checkedItems.has(a.name);
     const isBChecked = checkedItems.has(b.name);
@@ -445,6 +447,7 @@ function sortIndicatorCheckMarks(allRows) {
 }
 
 
+
 async function handleChangeValue(value) {
   if (checkedItems.has(value)) {
     checkedItems.delete(value);  // Remove the value if it's already in the Set
@@ -456,7 +459,6 @@ async function handleChangeValue(value) {
   allRows = [...allRows];
   ruleOfList = [...ruleOfList];
 
-const priorityItems = new Set(['AI Score', 'Revenue', 'Net Income', 'Free Cash Flow']);
 
 allRows = sortIndicatorCheckMarks(allRows)
 
