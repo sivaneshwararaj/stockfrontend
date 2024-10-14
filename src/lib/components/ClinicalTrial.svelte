@@ -60,22 +60,6 @@ function handleViewData(trialData) {
   openPopup?.dispatchEvent(new MouseEvent('click'))
 
 }
-function normalizer(value) {
-  if (Math?.abs(value) >= 1e18) {
-    return { unit: 'Q', denominator: 1e18 };
-  } else if (Math?.abs(value) >= 1e12) {
-    return { unit: 'T', denominator: 1e12 };
-  } else if (Math?.abs(value) >= 1e9) {
-    return { unit: 'B', denominator: 1e9 };
-  } else if (Math?.abs(value) >= 1e6) {
-    return { unit: 'M', denominator: 1e6 };
-  } else if (Math?.abs(value) >= 1e5) {
-    return { unit: 'K', denominator: 1e5 };
-  } else {
-    return { unit: '', denominator: 1 };
-  }
-}
-
 
 function getPlotOptions() {
   let dates = [];
@@ -109,11 +93,9 @@ function getPlotOptions() {
     // Update valueList with the count of each fiscal year
     valueList = dates?.map(fiscalYear => fiscalYearCount[fiscalYear]);
 
-
-    const {unit, denominator } = normalizer(Math.max(...valueList) ?? 0)
-
     const option = {
     silent: true,
+    animation: false,
     tooltip: {
         trigger: 'axis',
         hideDelay: 100, // Set the delay in milliseconds
@@ -131,20 +113,17 @@ function getPlotOptions() {
             color: '#fff',
         }
         },
-        yAxis: [
-        {
-            type: 'value',
-            splitLine: {
+    yAxis: [
+    {
+      type: 'value',
+      splitLine: {
             show: false, // Disable x-axis grid lines
-            },
-            axisLabel: {
-            color: '#fff', // Change label color to white
-                formatter: function (value) {
-                return '#'+(value / denominator)?.toFixed(0) + unit; // Format value in millions
-                },
-            },
-        },
-        ],
+      },
+      axisLabel: {
+        show: false // Hide y-axis labels
+      }
+    }
+    ],
     series: [
         {
         name: '# of Trials',
@@ -264,13 +243,11 @@ let charNumber = 20;
 
 
 
-
+      <!--
         <h2 class="mt-10 mr-1 flex flex-row items-center text-white text-xl sm:text-2xl font-bold mb-3">
           Latest Information
         </h2>
 
-
-         
         <div class="rounded-lg sm:min-h-[330px]">
           <div class="w-full m-auto h-auto max-h-[500px] overflow-x-scroll sm:overflow-hidden sm:overflow-y-scroll scroller ">
           <table class="table table-sm table-compact table-pin-rows table-pin-cols w-full">
@@ -289,11 +266,9 @@ let charNumber = 20;
                   <td class="text-white font-medium whitespace-nowrap">
                    {item["Interventions"]?.length === 0 ? '-' : item["Interventions"]?.length > charNumber ? formatString(item["Interventions"]?.slice(0,charNumber)) + "..." : formatString(item["Interventions"])}
                   </td>
-                  <!--
                   <td class="text-white font-medium w-full text-start">
                     {item['Start Date'] === null ? 'n/a' : new Date(item["Start Date"])?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
                    </td>
-                  -->
               
                   <td class="text-white text-start font-medium">
                     {formatString(item['Study Status'])}
@@ -312,10 +287,9 @@ let charNumber = 20;
               {/each}
             </tbody>
           </table>
-
-  
         </div>
         </div>
+         -->
 
 
         {/if}
