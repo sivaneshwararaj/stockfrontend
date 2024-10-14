@@ -5,6 +5,7 @@
   import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import { onMount } from 'svelte';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import TableHeader from '$lib/components/Table/TableHeader.svelte';
 
   
     export let data;
@@ -36,82 +37,87 @@ window.addEventListener('scroll', handleScroll);
   };
 })
 
-let order = '';
-let sortBy = ''; // Default sorting by change percentage
 
-function changeOrder(state:string) {
-    if (state === 'highToLow')
-    {
-      order = 'lowToHigh';
+ let columns = [
+    { key: 'rank', label: 'Rank', align: 'left' },
+    { key: 'ticker', label: 'Symbol', align: 'left' },
+    { key: 'name', label: 'Name', align: 'left' },
+    { key: 'counter', label: 'Ratings Count', align: 'right' },
+    { key: 'priceTarget', label: 'Price Target', align: 'right' },
+    { key: 'price', label: 'Current Price', align: 'right' },
+    { key: 'marketCap', label: 'Market Cap', align: 'right' },
+    { key: 'upside', label: 'Upside', align: 'right' },
+  ];
+
+  let sortOrders = {
+    rank: { order: 'none', type: 'number' },
+    ticker: { order: 'none', type: 'string' },
+    name: { order: 'none', type: 'string' },
+    counter: { order: 'none', type: 'number' },
+    priceTarget: { order: 'none', type: 'number' },
+    price: { order: 'none', type: 'number' },
+    marketCap: { order: 'none', type: 'number' },
+    upside: { order: 'none', type: 'number' },
+  };
+
+   const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    let finalList = [];
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = 'none';
+      }
     }
-    else {
-      order = 'highToLow';
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ['none', 'asc', 'desc'];
+    const originalData = rawData?.slice(0, 40);
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === 'none') {
+      analytRatingList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      return;
     }
-  }
 
-const sortByRank = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.rank - a?.rank;
-    }
-    else {
-      return a?.rank - b?.rank;
-    }
-      
-    });
-}
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
 
-const sortByRatingCount = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.counter - a?.counter;
-    }
-    else {
-      return a?.counter - b?.counter;
-    }
-  });
-}
+      switch (type) {
+        case 'date':
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case 'string':
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === 'asc'
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case 'number':
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
 
-const sortByUpside = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.upside - a?.upside;
-    }
-    else {
-      return a?.upside - b?.upside;
-    }
-  });
-}
+      if (sortOrder === 'asc') {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
 
+    // Sort using the generic comparison function
+    analytRatingList = [...originalData].sort(compareValues);
+  };
 
-
-
-
-$: {
-  if(order)
-  {
-    if(sortBy === 'rank')
-    {
-      analytRatingList = sortByRank(rawData)?.slice(0,50);
-    }
-    else if(sortBy === 'ratingCount')
-    {
-      analytRatingList = sortByRatingCount(rawData)?.slice(0,50);
-    }
-    else if(sortBy === 'upside')
-    {
-      analytRatingList = sortByUpside(rawData)?.slice(0,50);
-    }
-    
-  }
-}
-
-
-
-  $: charNumber = $screenWidth < 640 ? 15 : 20;
+  $: charNumber = $screenWidth < 640 ? 30 : 20;
 
   
 
@@ -218,37 +224,7 @@ $: {
                     <div class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden">
                       <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                         <thead>
-                          <tr class="bg-[#09090B] border-b border-[#27272A]">
-                            <th on:click={() => { sortBy = 'rank'; changeOrder(order); }} class="cursor-pointer text-center bg-[#09090B] text-white text-[1rem] font-semibold">
-                              Rank
-                              <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'rank' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                            </th>
-                            <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
-                              Symbol
-                            </th>
-  
-                            <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
-                              Name
-                            </th>
-  
-                            <th on:click={() => { sortBy = 'ratingCount'; changeOrder(order); }} class="cursor-pointer text-end bg-[#09090B] text-white text-[1rem] font-semibold">
-                              Ratings Count
-                              <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'ratingCount' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                            </th>
-                            <th class="text-end bg-[#09090B] text-white text-[1rem] font-semibold">
-                                Price Target
-                            </th>
-                            <th class="text-end bg-[#09090B] text-white text-[1rem] font-semibold">
-                                Current Price
-                            </th>
-                            <th on:click={() => { sortBy = 'upside'; changeOrder(order); }} class="cursor-pointer text-end bg-[#09090B] text-white text-[1rem] font-semibold">
-                              Upside
-                              <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'upside' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                            </th>
-                            <th class="sm:hidden text-white font-semibold text-end text-[1rem]">
-                              Market Cap
-                            </th>
-                          </tr>
+                          <TableHeader {columns} {sortOrders} {sortData} />
                         </thead>
                         <tbody>
                           {#each analytRatingList as item, index}
@@ -274,11 +250,14 @@ $: {
                             </td>
 
                             <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
-                                ${item?.priceTarget?.toFixed(2)}
+                                {item?.priceTarget?.toFixed(2)}
                             </td>
                             
                             <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
-                                ${item?.price?.toFixed(2)}
+                                {item?.price?.toFixed(2)}
+                            </td>
+                            <td class="text-end font-medium text-white text-sm sm:text-[1rem] whitespace-nowrap">
+                                {item?.marketCap !== null ? abbreviateNumber(item?.marketCap) : '-'}
                             </td>
 
                               <td class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white">
@@ -287,10 +266,6 @@ $: {
                                 {:else}
                                   <span class="text-[#B84242]">{Number(item?.upside)?.toFixed(2)}%</span>
                                 {/if}
-                              </td>
-  
-                              <td class="sm:hidden text-end font-medium text-white text-sm">
-                                {item?.marketCap !== null ? abbreviateNumber(item?.marketCap,true) : '-'}
                               </td>
 
                           </tr>
