@@ -184,6 +184,7 @@ const allRules = {
   piotroskiScore: { label: 'Piotroski F-Score', step: [9,8,7,6,5,4,3,2,1], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
 
   analystRating: { label: 'Analyst Rating', step: ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  halalStocks: { label: 'Halal Stocks', step: ['Compliant', 'Non-Compliant'], defaultCondition: '', defaultValue: 'any' },
   score: { label: 'AI Score', step: ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
   sector: { label: 'Sector', step: sectorList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
   industry: { label: 'Industry', step: industryList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
@@ -299,7 +300,7 @@ async function handleDeleteStrategy() {
         await updateStockScreenerData();
         checkedItems = new Map(
           ruleOfList
-            ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+            ?.filter(rule => ["analystRating", "halalStocks", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
             ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
         );
     }
@@ -391,7 +392,7 @@ async function switchStrategy(item) {
   await updateStockScreenerData();
   checkedItems = new Map(
     ruleOfList
-      ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+      ?.filter(rule => ["analystRating", "halalStocks","sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
       ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
   );
 
@@ -443,6 +444,7 @@ function handleAddRule() {
   
    switch (ruleName) {
       case 'analystRating':
+      case 'halalStocks':
       case 'score':
       case 'sector':
       case 'industry':
@@ -505,7 +507,7 @@ async function handleResetAll() {
   displayResults = [];
   checkedItems = new Map(
     ruleOfList
-      ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+      ?.filter(rule => ["analystRating", "halalStocks","sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
       ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
   );
   Object.keys(allRules).forEach(ruleName => {
@@ -718,7 +720,7 @@ function changeRuleCondition(name: string, state: string) {
 
 let checkedItems = new Map(
   ruleOfList
-    ?.filter(rule => ["analystRating", "sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
+    ?.filter(rule => ["analystRating", "halalStocks","sector","country","score","industry","grahamNumber"]?.includes(rule.name)) // Only include specific rules
     ?.map(rule => [rule.name, new Set(rule.value)]) // Create Map from filtered rules
 );
 
@@ -741,7 +743,7 @@ async function handleChangeValue(value) {
     checkedItems.set(ruleName, new Set([value]));
   }
 
-  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','grahamNumber','analystRating','score','sector','industry','country']?.includes(ruleName)) {
+  if (['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200','grahamNumber','analystRating','halalStocks','score','sector','industry','country']?.includes(ruleName)) {
     // Ensure valueMappings[ruleName] is initialized as an array
     searchQuery = '';
     if (!Array.isArray(valueMappings[ruleName])) {
@@ -839,14 +841,11 @@ async function popularStrategy(state: string) {
                 { condition: "over", name: "freeCashFlowMargin", value: '50%' }
             ]
         },
-        halalStocks: {  // New Strategy Added
-          name: 'Halal Stocks',
+        bestHalalStocks: {  // New Strategy Added
+          name: 'Top Halal Stocks',
           rules: [
-              { condition: "under", name: "shortTermDebtToCapitalization", value: "30%" },
-              { condition: "under", name: "interestIncomeToCapitalization", value: "30%" },
-              { condition: "under", name: "longTermDebtToCapitalization", value: "30%" },
-              { condition: "under", name: "interestDebtPerShare", value: 1 },
-              { condition: "under", name: "debtRatio", value: 0 }
+              { condition: "", name: "halalStocks", value: 'Compliant' },
+              { condition: "over", name: "marketCap", value: '1B' },
           ]
       }
     };
@@ -874,7 +873,7 @@ function handleInput(event) {
 
         if (searchQuery.length > 0) {
           
-          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList : ruleName === 'analystRating' ? ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'] : ['Strong Buy','Hold','Sell','Strong Sell'];
+          const rawList = ruleName === 'country' ? listOfRelevantCountries : ruleName === 'sector' ? sectorList : ruleName === 'industry' ? industryList : (ruleName === 'analystRating' || ruleName === 'score') ? ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'] : ['Compliant', 'Non-Compliant'];
             testList = rawList?.filter(item => {
                 const index = item?.toLowerCase();
                 // Check if country starts with searchQuery
@@ -983,8 +982,8 @@ function handleInput(event) {
                                        <DropdownMenu.Item on:click={() => popularStrategy('strongCashFlow')} class="cursor-pointer hover:bg-[#27272A]">
                                         Strong Cash Flow
                                       </DropdownMenu.Item>
-                                      <DropdownMenu.Item on:click={() => popularStrategy('halalStocks')} class="cursor-pointer hover:bg-[#27272A]">
-                                        Halal Stocks
+                                      <DropdownMenu.Item on:click={() => popularStrategy('bestHalalStocks')} class="cursor-pointer hover:bg-[#27272A]">
+                                        Top Halal Stocks
                                       </DropdownMenu.Item>  
                                   </DropdownMenu.Group>
                                 </DropdownMenu.Content>
@@ -1162,7 +1161,7 @@ function handleInput(event) {
                                   </Button>
                                 </DropdownMenu.Trigger>
                                 <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'grahamNumber','analystRating','score','sector','industry','country']?.includes(row?.rule)}
+                                  {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'grahamNumber','analystRating','halalStocks','score','sector','industry','country']?.includes(row?.rule)}
                                   <DropdownMenu.Label class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]">
                                     <div class="flex items-center justify-start gap-x-1">
                                         <div class="relative inline-block flex flex-row items-center justify-center">
@@ -1185,14 +1184,14 @@ function handleInput(event) {
                                   <input bind:value={searchQuery}
                                       on:input={handleInput}
                                       autocomplete="off"
-                                      class="{!['analystRating','score','sector','industry','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
+                                      class="{!['analystRating','halalStocks','score','sector','industry','country']?.includes(row?.rule) ? 'hidden' : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
                                       focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
                                       type="search" 
                                       placeholder="Search...">
                                   </div>
                                   {/if}
                                   <DropdownMenu.Group class="min-h-10 mt-2">
-                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'grahamNumber','analystRating','score','sector','industry','country']?.includes(row?.rule)}
+                                    {#if !['sma20','sma50','sma100','sma200','ema20', 'ema50', 'ema100', 'ema200', 'grahamNumber','analystRating','halalStocks','score','sector','industry','country']?.includes(row?.rule)}
                                       {#each row?.step as newValue}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
 
@@ -1213,7 +1212,7 @@ function handleInput(event) {
                                         </DropdownMenu.Item>     
                                       {/each}
                                     {:else}
-                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : ruleName === 'analystRating' ? ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'] : ['Strong Buy','Buy','Hold','Sell','Strong Sell'])) as item}
+                                      {#each (testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : (row?.rule === 'country' ? listOfRelevantCountries : row?.rule === 'sector' ? sectorList : row?.rule === 'industry' ? industryList : (ruleName === 'analystRating' || ruleName === 'score') ? ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'] : ['Compliant', 'Non-Compliant'])) as item}
                                         <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
                                           <div class="flex items-center" on:click|capture={(event) => event.preventDefault()}>
                                             <label on:click={() => {handleChangeValue(item)}} class="cursor-pointer text-white" for={item}>
@@ -1453,7 +1452,7 @@ function handleInput(event) {
                         {#each displayRules as row (row?.rule)}
                           {#if row?.rule !== 'marketCap'}
                             <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
-                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','score','sector','industry','country']?.includes(row?.rule)}
+                              {#if  ['ema20', 'ema50', 'ema100', 'ema200', 'analystRating','halalStocks','score','sector','industry','country']?.includes(row?.rule)}
                               {item[row?.rule]}
                               {:else if ['fundamentalAnalysis','trendAnalysis']?.includes(row?.rule)}
                               {item[row?.rule]?.accuracy}%

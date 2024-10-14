@@ -65,7 +65,9 @@ function convertUnitToValue(
     "buy",
     "strong buy",
     "strong sell",
-    "stock price", // Add "stock price" to non-numeric values
+    "compliant",
+    "non-compliant",
+    "stock price",
   ]);
   if (nonNumericValues.has(lowerInput)) return input;
 
@@ -111,9 +113,14 @@ async function filterStockScreenerData(stockScreenerData, ruleOfList) {
 
       // Handle categorical data like analyst ratings, sector, country
       else if (
-        ["analystRating", "score", "sector", "industry", "country"].includes(
-          rule.name
-        )
+        [
+          "analystRating",
+          "halalStocks",
+          "score",
+          "sector",
+          "industry",
+          "country",
+        ].includes(rule.name)
       ) {
         if (rule.value === "any") return true;
 
