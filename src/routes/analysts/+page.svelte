@@ -34,94 +34,77 @@ window.addEventListener('scroll', handleScroll);
 })
 
 
-let order = '';
-let sortBy = ''; // Default sorting by change percentage
 
-function changeOrder(state:string) {
-    if (state === 'highToLow')
-    {
-      order = 'lowToHigh';
-    }
-    else {
-      order = 'highToLow';
+
+let sortOrders = {
+  rank: 'none',
+  successRate: 'none',
+  avgReturn: 'none',
+  totalRatings: 'none',
+  lastRating: 'none',
+};
+
+// Generalized sorting function
+function sortData(key) {
+  // Reset all other keys to 'none' except the current key
+  for (const k in sortOrders) {
+    if (k !== key) {
+      sortOrders[k] = 'none';
     }
   }
 
-const sortByRank = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.rank - a?.rank;
-    }
-    else {
-      return a?.rank - b?.rank;
-    }
-      
-    });
-}
+  // Cycle through 'none', 'asc', 'desc' for the clicked key
+  const orderCycle = ['none', 'asc', 'desc'];
+  const originalData = rawData?.slice(0,40)
 
-const sortBySuccessRate = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.successRate - a?.successRate;
-    }
-    else {
-      return a?.successRate - b?.successRate;
-    }
-  });
-}
+  const currentOrderIndex = orderCycle.indexOf(sortOrders[key]);
+  sortOrders[key] = orderCycle[(currentOrderIndex + 1) % orderCycle.length];
 
-const sortByAvgReturn = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.avgReturn - a?.avgReturn;
-    }
-    else {
-      return a?.avgReturn - b?.avgReturn;
-    }
-  });
-}
+  const sortOrder = sortOrders[key];
 
-const sortByTotalRatings = (tickerList) => {
-  return tickerList?.sort(function(a, b) {
-    if(order === 'highToLow')
-    {
-      return b?.totalRatings - a?.totalRatings;
-    }
-    else {
-      return a?.totalRatings - b?.totalRatings;
-    }
-  });
-}
-
-
-
-
-$: {
-  if(order)
-  {
-    if(sortBy === 'rank')
-    {
-      analytRatingList = sortByRank(rawData)?.slice(0,50);
-    }
-    else if(sortBy === 'successRate')
-    {
-      analytRatingList = sortBySuccessRate(rawData)?.slice(0,50);
-    }
-    else if(sortBy === 'avgReturn')
-    {
-      analytRatingList = sortByAvgReturn(rawData)?.slice(0,50);
-    }
-    else if(sortBy === 'totalRatings')
-    {
-      analytRatingList = sortByTotalRatings(rawData)?.slice(0,50);
-    }
-    
+  // Reset to original data when 'none' and stop further sorting
+  if (sortOrder === 'none') {
+    analytRatingList = [...originalData]; // Reset to original data (spread to avoid mutation)
+    return;
   }
-}
 
+  // Define comparison functions for each key
+  const compareFunctions = {
+    rank: (a, b) => {
+      const numA = parseFloat(a?.rank);
+      const numB = parseFloat(b?.rank);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+    analystName: (a, b) => {
+      const nameA = a?.analystName.toUpperCase();
+      const nameB = b?.analystName.toUpperCase();
+      return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+    },
+    successRate: (a, b) => {
+      const numA = parseFloat(a?.successRate);
+      const numB = parseFloat(b?.successRate);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+    avgReturn: (a, b) => {
+      const numA = parseFloat(a?.avgReturn);
+      const numB = parseFloat(b?.avgReturn);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+    totalRatings: (a, b) => {
+      const numA = parseFloat(a.totalRatings);
+      const numB = parseFloat(b.totalRatings);
+      return sortOrder === 'asc' ? numA - numB : numB - numA;
+    },
+    lastRating: (a, b) => {
+      const timeA = new Date(a?.lastRating);
+      const timeB = new Date(b?.lastRating);
+      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    },
+  };
+
+  // Sort using the appropriate comparison function
+  analytRatingList = [...originalData].sort(compareFunctions[key]);
+}
 
       
 </script>
@@ -225,34 +208,35 @@ $: {
                     <table class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                       <thead>
                         <tr class="bg-[#09090B] border-b border-[#27272A]">
-                          <th on:click={() => { sortBy = 'rank'; changeOrder(order); }} class="cursor-pointer text-center bg-[#09090B] text-white text-[1rem] font-semibold">
+                          <th on:click={() => sortData('rank')} class="cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
                             Rank
-                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'rank' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['rank'] === 'asc' ? 'rotate-180' : sortOrders['rank'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                           </th>
-                          <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
+                          <th on:click={() => sortData('analystName')} class="cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
                             Analyst
+                            <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['analystName'] === 'asc' ? 'rotate-180' : sortOrders['analystName'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                           </th>
 
-              
-                          <th on:click={() => { sortBy = 'successRate'; changeOrder(order); }} class="cursor-pointer text-end bg-[#09090B] text-white text-[1rem] font-semibold">
+                          <th on:click={() => sortData('successRate')} class="text-end cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
                             Success Rate
-                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'successRate' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['successRate'] === 'asc' ? 'rotate-180' : sortOrders['successRate'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                           </th>
-                          <th on:click={() => { sortBy = 'avgReturn'; changeOrder(order); }} class="cursor-pointer text-end bg-[#09090B] text-white text-[1rem] font-semibold">
-                            Avg. return
-                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'avgReturn' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                          <th on:click={() => sortData('avgReturn')} class="text-end cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
+                            Avg. Return
+                            <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['avgReturn'] === 'asc' ? 'rotate-180' : sortOrders['avgReturn'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                           </th>
-                          <th on:click={() => { sortBy = 'totalRatings'; changeOrder(order); }} class="cursor-pointer text-white font-semibold text-end text-[1rem]">
+                          <th on:click={() => sortData('totalRatings')} class="text-end cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
                             Total Ratings
-                            <svg class="w-5 h-5 inline-block {order === 'highToLow' && sortBy === 'totalRatings' ? 'rotate-180' : ''}" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['totalRatings'] === 'asc' ? 'rotate-180' : sortOrders['totalRatings'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                           </th>
                           <!--
                           <th class="text-end bg-[#09090B] text-white text-[1rem] font-semibold">
                             Main Sector
                           </th>
                           -->
-                          <th class="text-white font-semibold  text-end text-[1rem]">
+                          <th on:click={() => sortData('lastRating')} class="text-end cursor-pointer select-none text-white font-semibold text-[1rem] whitespace-nowrap">
                             Last Rating
+                            <svg class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['lastRating'] === 'asc' ? 'rotate-180' : sortOrders['lastRating'] === 'desc' ? '' : 'hidden'} " viewBox="0 0 20 20" fill="currentColor" style="max-width:50px"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                           </th>
                          
                         </tr>
