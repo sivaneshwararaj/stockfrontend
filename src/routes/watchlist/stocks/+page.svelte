@@ -345,16 +345,24 @@ function changeWatchList(newWatchList)
 }
 
 function saveRules() {
-  localStorage.setItem('watchlist-ruleOfList', JSON.stringify(ruleOfList));
+  try {
+    localStorage?.setItem('watchlist-ruleOfList', JSON?.stringify(ruleOfList));
+  } catch(e) {
+    console.log('Failed saving indicator rules: ', e)
+  }
 }
 
 
 onMount(async () => {
-
-  const savedRules = localStorage.getItem('watchlist-ruleOfList');
-  if (savedRules) {
-    ruleOfList = JSON.parse(savedRules);
+  try {
+    const savedRules = localStorage?.getItem('watchlist-ruleOfList');
+    if (savedRules) {
+      ruleOfList = JSON.parse(savedRules);
+    }
+  } catch(e) {
+    console.log(ey)
   }
+
   checkedItems = new Set(ruleOfList.map(item => item.name))
   allRows = sortIndicatorCheckMarks(allRows)
 
