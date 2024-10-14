@@ -517,31 +517,32 @@ async function handleResetAll() {
   await handleSave(false);
 }
 
+
 async function handleDeleteRule(state) {
   selectedPopularStrategy = '';
-  for (let i = 0; i < ruleOfList.length; i++) {
-    if (ruleOfList[i].name === state) {
-      ruleOfList.splice(i, 1); // Remove the element at index i from the ruleOfList
-      ruleOfList = [...ruleOfList]
-      break; // Exit the loop after deleting the element
-    }
+
+  // Find the index of the rule to be deleted
+  const index = ruleOfList?.findIndex(rule => rule.name === state);
+  
+  if (index !== -1) {
+    // Remove the element at the found index
+    ruleOfList?.splice(index, 1);
   }
 
-  if(ruleOfList?.length === 0)
-  {
+  if (ruleOfList?.length === 0) {
     ruleName = '';
     filteredData = [];
     displayResults = [];
-  }
-  else if (state === ruleName)
-  {
+  } else if (state === ruleName) {
     ruleName = '';
   }
+  // Only create a new array if there are remaining rules
+  ruleOfList = [...ruleOfList];
+  await updateStockScreenerData();
   await handleSave(false);
 }
-      
 
-
+    
   
 async function handleScroll() {
   const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -632,7 +633,7 @@ async function handleSave(printToast) {
           }
         }
        
-      isSaved = true;
+      //isSaved = true;
     }
    
   }  
