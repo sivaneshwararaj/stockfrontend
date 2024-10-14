@@ -6,7 +6,6 @@ const getWatchlistData = async (rules, tickerList) => {
 
   // Extract the rule names
   let getRuleOfList = rules?.map((rule) => rule.rule) || [];
-
   // Convert the rule set into a string key for the cache
   const ruleKey = JSON.stringify(getRuleOfList);
 
@@ -27,7 +26,6 @@ const getWatchlistData = async (rules, tickerList) => {
   });
 
   const output = await response.json();
-  console.log(output);
   // Store the new data in the cache
   cache.set(ruleKey, output);
 

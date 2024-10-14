@@ -4,8 +4,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const data = await request.json();
   const { apiURL, apiKey } = locals;
 
-  const postData = { watchListId: data?.watchListId, ruleOfList: data?.ruleOfList };
-  const response = await fetch(apiURL + "/get-watchlist", {
+  const postData = { tickerList: data?.tickerList, ruleOfList: data?.ruleOfList };
+  const response = await fetch(apiURL + "/indicator-data", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

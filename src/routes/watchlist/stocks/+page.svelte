@@ -30,7 +30,15 @@ let allRows = [
     { name: 'AI Score', rule: 'score' },
     { name: 'Revenue', rule: 'revenue'},
     { name: 'Net Income', rule: 'netIncome'},
-    { name: 'Free Cash Flow', rule: 'freeCashFlow'}
+    { name: 'Free Cash Flow', rule: 'freeCashFlow'},
+    { name: 'Industry', rule: 'industry'},
+    { name: 'Sector', rule: 'sector'},
+    { name: 'Price Change 1W', rule: 'change1W' },
+    { name: 'Price Change 1M', rule: 'change1M' },
+    { name: 'Price Change 3M', rule: 'change3M' },
+    { name: 'Price Change 6M', rule: 'change6M' },
+    { name: 'Price Change 1Y', rule: 'change1Y' },
+
 ];
 
 let ruleOfList = [
@@ -40,14 +48,20 @@ let ruleOfList = [
     { name: 'Change', rule: 'changesPercentage' },
 ];
 
+const excludedRules = new Set(['volume', 'price', 'changesPercentage', 'eps']);
+const proOnlyItems = new Set(
+      allRows
+          ?.filter(item => !excludedRules?.has(item?.rule))  // Exclude the items based on the rule
+          ?.map(item => item?.name)  // Map the remaining items to their names
+  );
 
 let isLoaded = false;
 let searchDataLoaded = false; // Flag to track data loading
-//let downloadWorker: Worker | undefined;
+let downloadWorker: Worker | undefined;
 let displayWatchList;
 let allList = data?.getAllWatchlist;
   
-/*
+
 const handleDownloadMessage = (event) => {
   isLoaded = false;
   watchList = event?.data?.watchlistData ?? [];
@@ -57,7 +71,7 @@ const handleDownloadMessage = (event) => {
 const updateStockScreenerData = async () => {
     downloadWorker.postMessage({ ruleOfList: ruleOfList, tickerList: watchList?.map(item => item?.symbol)});
 };
-*/
+
 
   
 async function loadSearchData() {
@@ -80,9 +94,8 @@ async function loadSearchData() {
 
 async function getWatchlistData()
 {
-  const postData = {'watchListId': displayWatchList?.id}
-  
 
+  const postData = {'watchListId': displayWatchList?.id, 'ruleOfList': ruleOfList?.map(item => item?.rule)}
   const response = await fetch('/api/get-watchlist', {
       method: 'POST',
       headers: {
@@ -358,9 +371,14 @@ onMount(async () => {
     const savedRules = localStorage?.getItem('watchlist-ruleOfList');
     if (savedRules) {
       ruleOfList = JSON.parse(savedRules);
+      if (data?.user?.tier !== 'Pro') {
+        //Check if user was Pro Member and has past checks of previous paywalled features. If so remove them from the ruleOfList
+        ruleOfList = ruleOfList.filter(item => excludedRules.has(item?.rule)); // Use Set to filter
+        console.log(ruleOfList)
+      }
     }
   } catch(e) {
-    console.log(ey)
+    console.log(e)
   }
 
   checkedItems = new Set(ruleOfList.map(item => item.name))
@@ -374,13 +392,14 @@ if(allList?.length !== 0)
       displayWatchList = '';
     }
     await getWatchlistData();
-    /*
+  
     if (!downloadWorker) {
         const DownloadWorker = await import('./workers/downloadWorker?worker');
         downloadWorker = new DownloadWorker.default();
         downloadWorker.onmessage = handleDownloadMessage;
     }
-        */
+    
+    
 
   isLoaded = true;
 });
@@ -420,19 +439,18 @@ function isChecked(item) {
 }
 
 function sortIndicatorCheckMarks(allRows) {
-  const priorityItems = new Set(['AI Score', 'Revenue', 'Net Income', 'Free Cash Flow']);
 
   return allRows.sort((a, b) => {
-    const isAChecked = checkedItems.has(a.name);
-    const isBChecked = checkedItems.has(b.name);
+    const isAChecked = checkedItems.has(a?.name);
+    const isBChecked = checkedItems.has(b?.name);
 
     // Sort checked items first
     if (isAChecked !== isBChecked) return isAChecked ? -1 : 1;
 
     // Check if the user is not Pro
     if (data?.user?.tier !== 'Pro') {
-      const isAPriority = priorityItems.has(a.name);
-      const isBPriority = priorityItems.has(b.name);
+      const isAPriority = proOnlyItems.has(a?.name);
+      const isBPriority = proOnlyItems.has(b?.name);
 
       // If both are priority items or both are not, sort alphabetically
       if (isAPriority === isBPriority) return a.name.localeCompare(b.name);
@@ -459,9 +477,8 @@ async function handleChangeValue(value) {
   allRows = [...allRows];
   ruleOfList = [...ruleOfList];
 
-
-allRows = sortIndicatorCheckMarks(allRows)
-
+  await updateStockScreenerData()
+  allRows = sortIndicatorCheckMarks(allRows)
   saveRules()    
 }
 
@@ -712,7 +729,7 @@ function search() {
                           {#each (searchQuery?.length !== 0 ? testList : allRows) as item}
                             <DropdownMenu.Item class="sm:hover:bg-[#27272A]" >
                             <div class="flex items-center">
-                              {#if (data?.user?.tier === 'Pro') || (item.rule !== 'revenue' && item.rule !== 'netIncome' && item.rule !== 'freeCashFlow' && item.rule !== 'score')}
+                              {#if (data?.user?.tier === 'Pro') || excludedRules?.has(item?.rule)}
                                 <label on:click|capture={(event) => { event.preventDefault(); handleChangeValue(item?.name) }} class="cursor-pointer text-white" for={item?.name}>
                                   <input type="checkbox" class="rounded" checked={isChecked(item?.name)}>
                                   <span class="ml-2">{item?.name}</span>
@@ -810,9 +827,11 @@ function search() {
                       {#if item?.[row?.rule] !== undefined &&  item?.[row?.rule] !== null}
                         {#if ['marketCap', 'volume','revenue','netIncome','freeCashFlow'].includes(row?.rule)}
                           {abbreviateNumber(item[row?.rule])}
+                        {:else if ['industry','sector'].includes(row?.rule)}
+                          {item[row?.rule] !== null ? item[row?.rule] : '-'}
                         {:else if ['eps', 'pe', 'price','freeCashFlow'].includes(row?.rule)}
                           {item[row?.rule] !== null ? item[row?.rule]?.toFixed(2) : '-'}
-                        {:else if ['changesPercentage'].includes(row?.rule)}
+                        {:else if ['changesPercentage','change1W','change1M','change3M','change6M','change1Y','change3Y'].includes(row?.rule)}
                           {#if item[row?.rule] >= 0}
                             <span class="text-[#37C97D]">+{item[row?.rule]?.toFixed(2)}%</span>
                           {:else}
