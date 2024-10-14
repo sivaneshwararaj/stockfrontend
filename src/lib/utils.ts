@@ -73,6 +73,62 @@ export const flyAndScale = (
   };
 };
 
+export const sortTableData = (key, displayList, rawData, sortOrders) => {
+  // Reset all other keys to 'none' except the current key
+  for (const k in sortOrders) {
+    if (k !== key) {
+      sortOrders[k].order = "none";
+    }
+  }
+
+  // Cycle through 'none', 'asc', 'desc' for the clicked key
+  const orderCycle = ["none", "asc", "desc"];
+  const originalData = rawData?.slice(0, 40);
+  const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+  sortOrders[key].order =
+    orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+  const sortOrder = sortOrders[key].order;
+
+  // Reset to original data when 'none' and stop further sorting
+  if (sortOrder === "none") {
+    analytRatingList = [...originalData]; // Reset to original data (spread to avoid mutation)
+    return;
+  }
+
+  // Define a generic comparison function
+  const compareValues = (a, b) => {
+    const { type } = sortOrders[key];
+    let valueA, valueB;
+
+    switch (type) {
+      case "date":
+        valueA = new Date(a[key]);
+        valueB = new Date(b[key]);
+        break;
+      case "string":
+        valueA = a[key].toUpperCase();
+        valueB = b[key].toUpperCase();
+        return sortOrder === "asc"
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
+      case "number":
+      default:
+        valueA = parseFloat(a[key]);
+        valueB = parseFloat(b[key]);
+        break;
+    }
+
+    if (sortOrder === "asc") {
+      return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+    } else {
+      return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+    }
+  };
+
+  // Sort using the generic comparison function
+  analytRatingList = [...originalData].sort(compareValues);
+};
+
 export const formatDateRange = (lastDateStr) => {
   // Convert lastDateStr to Date object
   const lastDate = new Date(lastDateStr);
