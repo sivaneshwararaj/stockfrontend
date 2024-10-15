@@ -22,11 +22,14 @@ let checkedItems;
 
 let allRows = [
     { name: 'Volume', rule: 'volume', type: 'int'},
+    { name: 'Avg. Volume', rule: 'avgVolume', type: 'int'},
     { name: 'Market Cap', rule: 'marketCap', type: 'int'},
     { name: 'Price', rule: 'price', type: 'float'},
     { name: 'Change', rule: 'changesPercentage', type: 'percentSign'},
     { name: 'EPS', rule: 'eps', type: 'float'},
     { name: 'PE', rule: 'pe', type: 'float'},
+    { name: 'PB Ratio', rule: 'priceToBookRatio', type: 'float'},
+    { name: 'PS Ratio', rule: 'priceToSalesRatio', type: 'float'},
     { name: 'AI Score', rule: 'score', type: 'rating'},
     { name: 'Revenue', rule: 'revenue', type: 'int'},
     { name: 'EBITDA', rule: 'ebitda', type: 'int'},
@@ -63,11 +66,23 @@ let allRows = [
     { name: 'Piotroski F-Score', rule: 'piotroskiScore', type: 'float'},
     { name: 'Total Liabilities', rule: 'totalLiabilities', type: 'int'},
     { name: 'Short Ratio', rule: 'shortRatio', type: 'int'},
+    { name: 'Short Interest', rule: 'sharesShort', type: 'int'},
+    { name: 'Short % Float', rule: 'shortFloatPercent', type: 'percent'},
+    { name: 'Short % Shares', rule: 'shortOutStandingPercent', type: 'percent'},
     { name: 'FCF Yield', rule: 'freeCashFlowYield', type: 'percent'},
     { name: 'Employees', rule: 'employees', type: 'int'},
     { name: 'Debt Ratio', rule: 'debtRatio', type: 'float'},
     { name: 'Debt / Equity', rule: 'debtEquityRatio', type: 'int'},
     { name: 'Profit Margin', rule: 'netProfitMargin', type: 'percent'},
+    { name: 'FTD Shares', rule: 'failToDeliver', type: 'int'},
+    { name: 'Interest Income', rule: 'interestIncome', type: 'int'},
+    { name: 'Operating Income', rule: 'operatingIncome', type: 'int'},
+    { name: 'Operating Income Growth', rule: 'growthOperatingIncome', type: 'percentSign'},
+    { name: 'Research & Development', rule: 'researchAndDevelopmentExpenses', type: 'int'},
+    { name: 'Shares Outstanding', rule: 'sharesOutStanding', type: 'int'},
+    { name: 'Profit Per Employee', rule: 'profitPerEmployee', type: 'int'},
+    { name: 'Revenue Per Employee', rule: 'revenuePerEmployee', type: 'int'},
+    { name: 'Institutional Ownership', rule: 'institutionalOwnership', type: 'percent'},
 ];
 
 
