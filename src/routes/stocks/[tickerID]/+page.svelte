@@ -24,7 +24,6 @@
     shareStatisticsComponent,
     enterpriseComponent,
     darkPoolComponent,
-    retailVolumeComponent,
     shareholderComponent,
     isCrosshairMoveActive,
     realtimePrice,
@@ -1142,14 +1141,6 @@ async function exportData() {
           <Lazy>
             <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$darkPoolComponent ? 'hidden' : ''}">
               {#await import("$lib/components/DarkPool.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
-            </div>
-          </Lazy>
-
-          <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$retailVolumeComponent ? 'hidden' : ''}">
-              {#await import("$lib/components/RetailVolume.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
             </div>

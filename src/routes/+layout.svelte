@@ -482,9 +482,11 @@ $: {
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/cramer-tracker" class="text-start w-full text-[1rem] text-white ml-4 mt-2">Jim Cramer Tracker</a>
                           </Button>
+                          <!--
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/most-retail-volume" class="text-start w-full text-[1rem] text-white ml-4 mt-4">Retail Trader Tracker</a>
                           </Button>
+                          -->
                           <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
                             <a href="/reddit-tracker" class="text-start w-full text-[1rem] text-white ml-4 mt-4">Reddit Tracker</a>
                           </Button>
@@ -824,7 +826,7 @@ $: {
                       <Accordion.Content class="border-l border-gray-500 ml-2 mt-5">
                         <div class="flex flex-col items-start">
                           <a href="/cramer-tracker" class="text-[1rem] text-white ml-4 mt-4">Jim Cramer Tracker</a>
-                          <a href="/most-retail-volume" class="text-[1rem] text-white ml-4 mt-4">Retail Trader Tracker</a>
+                          <!--<a href="/most-retail-volume" class="text-[1rem] text-white ml-4 mt-4">Retail Trader Tracker</a>-->
                           <a href="/reddit-tracker" class="text-[1rem] text-white ml-4 mt-4">Reddit Tracker</a>
                           <a href="/corporate-lobbying-tracker" class="text-[1rem] text-white ml-4 mt-4">Lobbying Tracker</a>
                           <a href="/sentiment-tracker" class="text-[1rem] text-white ml-4 mt-4">Sentiment Tracker</a>

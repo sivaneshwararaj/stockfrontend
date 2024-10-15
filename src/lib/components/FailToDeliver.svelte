@@ -1,160 +1,139 @@
-<script lang ='ts'>
-  import { failToDeliverComponent, displayCompanyName, stockTicker, assetType, etfTicker, screenWidth, getCache, setCache} from '$lib/store';
+<script lang='ts'>
+  import { failToDeliverComponent, displayCompanyName, stockTicker, assetType, etfTicker, screenWidth, getCache, setCache } from '$lib/store';
   import InfoModal from '$lib/components/InfoModal.svelte';
-  import { Chart } from 'svelte-echarts'
+  import { Chart } from 'svelte-echarts';
   import { abbreviateNumber, formatDateRange, monthNames } from "$lib/utils";
 
-  import { init, use } from 'echarts/core'
-  import { LineChart } from 'echarts/charts'
-  import { GridComponent, TooltipComponent } from 'echarts/components'
-  import { CanvasRenderer } from 'echarts/renderers'
+  import { init, use } from 'echarts/core';
+  import { LineChart } from 'echarts/charts';
+  import { GridComponent, TooltipComponent } from 'echarts/components';
+  import { CanvasRenderer } from 'echarts/renderers';
 
   export let data;
-  
-  use([LineChart, GridComponent, TooltipComponent, CanvasRenderer])
 
-    let isLoaded = false;
+  use([LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
-  
-    let rawData = [];
-    let optionsData;
-    let avgFailToDeliver;
-    let lowestPrice;
-    let highestPrice;
-    let weightedFTD;
+  let isLoaded = false;
+  let rawData = [];
+  let optionsData;
+  let avgFailToDeliver;
+  let lowestPrice;
+  let highestPrice;
+  let weightedFTD;
 
-
-function findLowestAndHighestPrice(data, lastDateStr) {
-    // Convert lastDateStr to Date object
+  function findLowestAndHighestPrice(data, lastDateStr) {
     const lastDate = new Date(lastDateStr);
-  
-    // Set the first date to the beginning of the month of lastDate
     const firstDate = new Date(lastDate.getFullYear(), lastDate.getMonth(), 1);
-  
-    // Filter data to include only prices within the specified month period
+
     const filteredData = data?.filter(item => {
-        const currentDate = new Date(item?.date);
-        return currentDate >= firstDate && currentDate <= lastDate;
+      const currentDate = new Date(item?.date);
+      return currentDate >= firstDate && currentDate <= lastDate;
     });
-    	
-    // Extract prices from filtered data
+
     let prices = filteredData?.map(item => parseFloat(item.price));
 
-    // Find the lowest and highest prices
     lowestPrice = Math.min(...prices);
     highestPrice = Math.max(...prices);
-}
+  }
 
-  
-  
   function getPlotOptions() {
     let dates = [];
     let priceList = [];
     let failToDeliverList = [];
-    // Iterate over the data and extract required information
-    rawData?.forEach(item => {
-  
-    dates?.push(item?.date);
-    priceList?.push(item?.price);
-    failToDeliverList?.push(item?.failToDeliver)
-    });
-    
-    // Find the lowest and highest prices
-    findLowestAndHighestPrice(rawData, rawData?.slice(-1)?.at(0)?.date)
 
-    // Compute the average of item?.traded
+    rawData?.forEach(item => {
+      dates?.push(item?.date);
+      priceList?.push(item?.price);
+      failToDeliverList?.push(item?.failToDeliver);
+    });
+
+    findLowestAndHighestPrice(rawData, rawData?.slice(-1)?.at(0)?.date);
+
     const totalNumber = failToDeliverList?.reduce((acc, item) => acc + item, 0);
     avgFailToDeliver = (totalNumber / failToDeliverList?.length)?.toFixed(0);
 
-
     const option = {
-    silent: true,
-    tooltip: {
+      silent: true,
+      tooltip: {
         trigger: 'axis',
-        hideDelay: 100, // Set the delay in milliseconds
-    },
-    animation: false,
-    grid: {
+        hideDelay: 100,
+      },
+      animation: false,
+      grid: {
         left: '3%',
         right: '3%',
         bottom: '2%',
         top: '5%',
         containLabel: true
-    },
-    xAxis: {
+      },
+      xAxis: {
         type: 'category',
         boundaryGap: false,
         data: dates,
         axisLabel: {
-        color: '#fff',
-        formatter: function (value) {
-            // Assuming dates are in the format 'yyyy-mm-dd'
-            // Extract the month and day from the date string and convert the month to its abbreviated name
+          color: '#fff',
+          formatter: function (value) {
             const dateParts = value.split('-');
-            const day = dateParts[2].substring(0); // Extracting the last two digits of the year
-            const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+            const day = dateParts[2].substring(0);
+            const monthIndex = parseInt(dateParts[1]) - 1;
             return `${day} ${monthNames[monthIndex]}`;
+          }
         }
-        }
-    },
-    yAxis: [
-    {
-      type: 'value',
-      splitLine: {
-            show: false, // Disable x-axis grid lines
       },
-      
-       axisLabel: {
-        show: false // Hide y-axis labels
-      }
-    },
-    { 
-        type: 'value',
-        splitLine: {
-            show: false, // Disable x-axis grid lines
+      yAxis: [
+        {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          }
         },
-        position: 'right',
-        axisLabel: {
-          show: false // Hide y-axis labels
-       },
-    },
-    ],
-    series: [
-        {   name: 'Price',
-            data: priceList,
-            type: 'line',
-            itemStyle: {
-                color: '#fff' // Change bar color to white
-            },
-            showSymbol: false
+        {
+          type: 'value',
+          splitLine: {
+            show: false,
+          },
+          position: 'right',
+          axisLabel: {
+            show: false,
+          },
         },
-        { 
+      ],
+      series: [
+        {
+          name: 'Price',
+          data: priceList,
+          type: 'line',
+          itemStyle: {
+            color: '#fff',
+          },
+          showSymbol: false,
+        },
+        {
           name: 'FTD Shares',
-            data: failToDeliverList,
-            type: 'line',
-            areaStyle: {opacity: 1},
-            yAxisIndex: 1,
-            itemStyle: {
-                color: '#E11D48' // Change bar color to white
-            },
-            showSymbol: false
+          data: failToDeliverList,
+          type: 'line',
+          areaStyle: { opacity: 1 },
+          yAxisIndex: 1,
+          itemStyle: {
+            color: '#E11D48',
+          },
+          showSymbol: false,
         },
-    ]
+      ]
     };
-  
-  
-  return option;
+
+    return option;
   }
-  
+
   const getFailToDeliver = async (ticker) => {
-    // Get cached data for the specific tickerID
     const cachedData = getCache(ticker, 'getFailToDeliver');
     if (cachedData) {
       rawData = cachedData;
     } else {
-  
-      const postData = {'ticker': ticker, path: 'fail-to-deliver'};
-      // make the POST request to the endpoint
+      const postData = { 'ticker': ticker, path: 'fail-to-deliver' };
       const response = await fetch('/api/ticker-data', {
         method: 'POST',
         headers: {
@@ -162,46 +141,33 @@ function findLowestAndHighestPrice(data, lastDateStr) {
         },
         body: JSON.stringify(postData)
       });
-  
+
       rawData = await response.json();
-      // Cache the data for this specific tickerID with a specific name 'getFailToDeliver'
       setCache(ticker, rawData, 'getFailToDeliver');
     }
-    
-    if(rawData?.length !== 0) {
-      $failToDeliverComponent = true;
-    } else {
-      $failToDeliverComponent = false;
-    }
+
+    failToDeliverComponent.set(rawData?.length !== 0);
   };
-  
-  
+
   $: {
-  if($assetType === 'stock' ? $stockTicker : $etfTicker && typeof window !== 'undefined') {
-    isLoaded=false;
-    const ticker = $assetType === 'stock' ? $stockTicker :$etfTicker
-    const asyncFunctions = [
-      getFailToDeliver(ticker)
-      ];
-      Promise.all(asyncFunctions)
-          .then((results) => {
-            if(rawData?.length !== 0) {
-              weightedFTD = ((rawData?.slice(-1)?.at(0)?.failToDeliver/data?.getStockQuote?.avgVolume) * 100)?.toFixed(2);
-              optionsData = getPlotOptions()
-            }
-          })
-          .catch((error) => {
-            console.error('An error occurred:', error);
-          });
-    isLoaded = true;
-  
+    const ticker = $assetType === 'stock' ? $stockTicker : $etfTicker;
+    if (ticker && typeof window !== 'undefined') {
+      isLoaded = false;
+      Promise.all([getFailToDeliver(ticker)])
+        .then(() => {
+          if (rawData?.length !== 0) {
+            weightedFTD = ((rawData?.slice(-1)?.at(0)?.failToDeliver / data?.getStockQuote?.avgVolume) * 100)?.toFixed(2);
+            optionsData = getPlotOptions();
+          }
+        })
+        .catch((error) => {
+          console.error('An error occurred:', error);
+        });
+      isLoaded = true;
+    }
   }
-  }
-  
-  
-  </script>
-    
-    
+</script>
+
     
     
   <section class="overflow-hidden text-white h-full pb-8">
@@ -278,7 +244,7 @@ function findLowestAndHighestPrice(data, lastDateStr) {
                           <span>Price Range</span>
                       </td>
                       <td class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2">
-                        {'$'+lowestPrice+'-'+'$'+highestPrice}
+                        {lowestPrice+'-'+highestPrice}
                       </td>
                   </tr>
                   <tr class="border-y border-gray-800 odd:bg-[#27272A]">

@@ -3,7 +3,7 @@
   import {AreaSeries, Chart, PriceLine, CandlestickSeries} from 'svelte-lightweight-charts';
   
     import { TrackingModeExitMode } from 'lightweight-charts';
-    import {getCache, setCache, taRatingComponent,fomcImpactComponent, failToDeliverComponent, optionsNetFlowComponent, optionComponent, sentimentComponent, varComponent, retailVolumeComponent, trendAnalysisComponent, priceAnalysisComponent, assetType, screenWidth, globalForm, numberOfUnreadNotification, displayCompanyName, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, clientSideCache, etfTicker, isOpen,  isBeforeMarketOpen, isWeekend} from '$lib/store';
+    import {getCache, setCache, taRatingComponent,fomcImpactComponent, failToDeliverComponent, optionsNetFlowComponent, optionComponent, sentimentComponent, varComponent, trendAnalysisComponent, priceAnalysisComponent, assetType, screenWidth, globalForm, numberOfUnreadNotification, displayCompanyName, isCrosshairMoveActive, realtimePrice, priceIncrease, currentPortfolioPrice, currentPrice, clientSideCache, etfTicker, isOpen,  isBeforeMarketOpen, isWeekend} from '$lib/store';
     import { onDestroy, onMount } from 'svelte';    
     import ETFKeyInformation from '$lib/components/ETFKeyInformation.svelte';
     import Lazy from '$lib/components/Lazy.svelte';
@@ -1353,14 +1353,8 @@ async function exportData() {
                                       </div>  
                                       <!--End SectorSegmentation -->
                                       
-                                      <Lazy>
-                                        <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$retailVolumeComponent ? 'hidden' : ''}">
-                                        {#await import('$lib/components/RetailVolume.svelte') then {default: Comp}}
-                                          <svelte:component this={Comp} data={data}/>
-                                        {/await}
-                                      </div>
-                                      </Lazy>
                                       
+
           
                                       <Lazy>
                                         <div class="w-full pt-10 m-auto sm:pl-6 sm:pb-6 sm:pt-6 rounded-2xl {!$taRatingComponent ? 'hidden' : ''}">
