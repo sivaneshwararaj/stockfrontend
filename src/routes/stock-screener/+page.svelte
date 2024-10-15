@@ -184,6 +184,10 @@ const allRules = {
   piotroskiScore: { label: 'Piotroski F-Score', step: [9,8,7,6,5,4,3,2,1], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
 
   analystRating: { label: 'Analyst Rating', step: ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
+  analystCounter: { label: 'Analyst Count', step: ['40','30','20','10','5','0'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
+  priceTarget: { label: 'Price Target', step: ['1000','500','100','10','5','1'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
+  upside: { label: 'Price Target Upside [%]', step: ['100%','50%','20%','10%','5%','0%'], category: 'fund', defaultCondition: 'over', defaultValue: 'any' },
+
   halalStocks: { label: 'Halal Stocks', step: ['Compliant', 'Non-Compliant'], defaultCondition: '', defaultValue: 'any' },
   score: { label: 'AI Score', step: ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'], category: 'fund', defaultCondition: '', defaultValue: 'any' },
   sector: { label: 'Sector', step: sectorList, category: 'fund', defaultCondition: '', defaultValue: 'any' },
