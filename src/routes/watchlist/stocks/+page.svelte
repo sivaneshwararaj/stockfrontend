@@ -11,7 +11,7 @@ import { Combobox } from "bits-ui";
 
 export let data;
 
-let currentWatchlistLocalStorage = '1.0'; // Increment this whenever the structure of allRows changes
+let currentWatchlistLocalStorage = '1.1'; // Increment this whenever the structure of allRows changes
 
 let searchQuery = '';
 let editMode = false;
@@ -76,7 +76,7 @@ let ruleOfList = [
     { name: 'Volume', rule: 'volume', type: 'int' },
     { name: 'Market Cap', rule: 'marketCap', type: 'int' },
     { name: 'Price', rule: 'price', type: 'float' },
-    { name: 'Change', rule: 'changesPercentage', type: 'percent' },
+    { name: 'Change', rule: 'changesPercentage', type: 'percentSign' },
 ];
 
 const excludedRules = new Set(['volume', 'price', 'changesPercentage', 'eps']);
@@ -385,7 +385,7 @@ async function handleResetAll() {
     { name: 'Volume', rule: 'volume', type: 'int' },
     { name: 'Market Cap', rule: 'marketCap', type: 'int' },
     { name: 'Price', rule: 'price', type: 'float' },
-    { name: 'Change', rule: 'changesPercentage', type: 'percent' },
+    { name: 'Change', rule: 'changesPercentage', type: 'percentSign' },
   ];
   ruleOfList = [...ruleOfList];
   checkedItems = new Set(ruleOfList.map(item => item.name));
