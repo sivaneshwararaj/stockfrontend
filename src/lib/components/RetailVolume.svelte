@@ -28,6 +28,11 @@
 
 
   function findMonthlyValue(data, lastDateStr) {
+    if (!data || !data.sentiment) {
+        console.error("Sentiment is undefined or missing in the data:", data);
+        $retailVolumeComponent = false;
+        return; // Or return a default value if necessary
+    }
     // Convert lastDateStr to Date object
     const lastDate = new Date(lastDateStr);
     // Set the first date to the beginning of the month of lastDate

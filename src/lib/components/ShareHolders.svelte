@@ -36,15 +36,14 @@ let showFullStats = false;
 
 
 const plotPieChart = () => {
-
+  if(rawData?.ownershipPercent !== undefined) {
     shareholderList = shareholderList?.filter(item => item?.ownership <= 100);
     topHolders = 0;
     otherOwner = 0;
     institutionalOwner = rawData?.ownershipPercent > 100 ? 99.99 : rawData?.ownershipPercent;
 
     otherOwner = institutionalOwner === 0 ? 0 : (100-institutionalOwner);
-    topHolders = shareholderList?.slice(0,10)?.reduce((total, shareholder) => total + shareholder.ownership, 0);
-
+    topHolders = shareholderList?.slice(0,10)?.reduce((total, shareholder) => total + shareholder?.ownership, 0);
 
     const options = {
         animation: false,
@@ -81,6 +80,8 @@ const plotPieChart = () => {
 
 
     return options;
+  } else return null;
+    
 }
 
 const getShareholders = async (ticker) => {
@@ -185,31 +186,32 @@ let charNumber = 30;
                       }).format(rawData?.investorsHolding)}</span> Hedge Funds hold a total of <span class="font-semibold">{abbreviateNumber(rawData?.numberOf13Fshares)}</span> {$displayCompanyName} shares, with a combined investment of <span class="font-semibold">{abbreviateNumber(rawData?.totalInvested, true)}</span>.
                     </div>
 
-              
-                    <div class="flex flex-row items-center sm:-mt-5">
-                        <div class="app w-56">
-                            <Chart {init} options={optionsPieChart} class="chart w-full" />
-                        </div>
-                        
-                        <div class="flex flex-col items-center  sm:pt-0 m-auto">
+                    {#if optionsPieChart !== null}
+                      <div class="flex flex-row items-center sm:-mt-5">
+                          <div class="app w-56">
+                              <Chart {init} options={optionsPieChart} class="chart w-full" />
+                          </div>
+                          
+                          <div class="flex flex-col items-center  sm:pt-0 m-auto">
 
-                            <div class="flex flex-row items-center mr-auto mb-5">
-                                <div class="h-full transform -translate-x-1/2 " aria-hidden="true"></div>
-                                <div class="w-4 h-4 bg-[#F8901E] border-4 box-content border-[#27272A] rounded-full transform -translate-x-1/2" aria-hidden="true"></div>
-                                <span class="text-white text-sm sm:text-[1rem] font-medium inline-block">
-                                    Others: {otherOwner >= 99.99 ? 99.99 : otherOwner?.toFixed(2)}%
-                                </span>
-                            </div>
-        
-                            <div class="flex flex-row items-center mr-auto">
-                                <div class="h-full transform -translate-x-1/2 " aria-hidden="true"></div>
-                                <div class="w-4 h-4 bg-[#5470C6] border-4 box-content border-[#27272A] rounded-full transform -translate-x-1/2" aria-hidden="true"></div>
-                                <span class="text-white text-sm sm:text-[1rem] font-medium inline-block">
-                                    Institutions: {institutionalOwner <= 0.01 ? "< 0.01%" : institutionalOwner?.toFixed(2)+'%'}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                              <div class="flex flex-row items-center mr-auto mb-5">
+                                  <div class="h-full transform -translate-x-1/2 " aria-hidden="true"></div>
+                                  <div class="w-4 h-4 bg-[#F8901E] border-4 box-content border-[#27272A] rounded-full transform -translate-x-1/2" aria-hidden="true"></div>
+                                  <span class="text-white text-sm sm:text-[1rem] font-medium inline-block">
+                                      Others: {otherOwner >= 99.99 ? 99.99 : otherOwner?.toFixed(2)}%
+                                  </span>
+                              </div>
+          
+                              <div class="flex flex-row items-center mr-auto">
+                                  <div class="h-full transform -translate-x-1/2 " aria-hidden="true"></div>
+                                  <div class="w-4 h-4 bg-[#5470C6] border-4 box-content border-[#27272A] rounded-full transform -translate-x-1/2" aria-hidden="true"></div>
+                                  <span class="text-white text-sm sm:text-[1rem] font-medium inline-block">
+                                      Institutions: {institutionalOwner <= 0.01 ? "< 0.01%" : institutionalOwner?.toFixed(2)+'%'}
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                    {/if}
                 </div>
 
                 {#if putCallRatio !== 0}
