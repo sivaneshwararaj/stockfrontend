@@ -11,8 +11,6 @@ import { Combobox } from "bits-ui";
 
 export let data;
 
-let currentWatchlistLocalStorage = '1.1'; // Increment this whenever the structure of allRows changes
-
 let searchQuery = '';
 let editMode = false;
 let numberOfChecked = 0;
@@ -69,6 +67,7 @@ let allRows = [
     { name: 'Employees', rule: 'employees', type: 'int'},
     { name: 'Debt Ratio', rule: 'debtRatio', type: 'float'},
     { name: 'Debt / Equity', rule: 'debtEquityRatio', type: 'int'},
+    { name: 'Profit Margin', rule: 'netProfitMargin', type: 'percent'},
 ];
 
 
@@ -404,7 +403,6 @@ function saveRules() {
   try {
     // Save the version along with the rules
     localStorage?.setItem('watchlist-ruleOfList', JSON?.stringify(ruleOfList));
-    localStorage?.setItem('watchlist-ruleOfList-version', currentWatchlistLocalStorage); // Save the current version
   } catch (e) {
     console.log('Failed saving indicator rules: ', e);
   }
@@ -413,20 +411,29 @@ function saveRules() {
 onMount(async () => {
   try {
     const savedRules = localStorage?.getItem('watchlist-ruleOfList');
-    const savedVersion = localStorage?.getItem('watchlist-ruleOfList-version');
-
-    // If the version doesn't match, reset the local storage
-    if (savedVersion !== currentWatchlistLocalStorage) {
-      localStorage?.removeItem('watchlist-ruleOfList'); // Clear old data
-      localStorage?.setItem('watchlist-ruleOfList-version', currentWatchlistLocalStorage); // Save new version
-      localStorage?.setItem('watchlist-ruleOfList', JSON?.stringify(ruleOfList)); // Save new rules
-    } else if (savedRules) {
-      ruleOfList = JSON.parse(savedRules);
+    
+    if (savedRules) {
+      const parsedRules = JSON.parse(savedRules);
+      
+      // Compare and update ruleOfList based on allRows
+      ruleOfList = parsedRules.map(rule => {
+        const matchingRow = allRows.find(row => row.name === rule.name);
+        if (matchingRow && matchingRow.type !== rule.type) {
+          return { ...rule, type: matchingRow.type };
+        }
+        return rule;
+      });
 
       // Check for the user's tier and filter out paywalled features
       if (data?.user?.tier !== 'Pro') {
-        ruleOfList = ruleOfList.filter(item => excludedRules.has(item?.rule)); // Use Set to filter
+        ruleOfList = ruleOfList.filter(item => excludedRules.has(item?.rule));
       }
+
+      // Save the updated ruleOfList back to localStorage
+      localStorage?.setItem('watchlist-ruleOfList', JSON.stringify(ruleOfList));
+    } else {
+      // If no saved rules, initialize with the current ruleOfList
+      localStorage?.setItem('watchlist-ruleOfList', JSON.stringify(ruleOfList));
     }
 
     // Update checked items and sort the indicators
@@ -441,6 +448,7 @@ onMount(async () => {
     }
 
     await getWatchlistData();
+
     // Initialize the download worker if not already done
     if (!downloadWorker) {
       const DownloadWorker = await import('./workers/downloadWorker?worker');
@@ -449,7 +457,6 @@ onMount(async () => {
     }
 
     isLoaded = true;
-
   } catch (e) {
     console.log(e);
   }
