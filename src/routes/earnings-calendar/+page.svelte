@@ -364,40 +364,46 @@ $: {
                 <table class="table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4 ">
                     <thead>
                       <tr class="whitespace-nowrap">
-                        <th class="text-start text-slate-200 font-semibold text-sm">Symbol</th>
-                        <th class="text-start text-slate-200 font-semibold text-sm">Company Name</th>
-                        <th class="text-slate-200 font-semibold text-sm">Market Cap</th>
-                        <th class="text-slate-200 font-semibold text-sm text-end">Revenue Estimate</th>
-                        <th class="text-slate-200 font-semibold text-sm text-end">EPS Estimate</th>
-                        <th class="text-slate-200 font-semibold text-sm text-end text-end">Earnings Time</th>
+                        <th class="text-start text-white font-semibold text-sm">Symbol</th>
+                        <th class="text-start text-white font-semibold text-sm">Company Name</th>
+                        <th class="text-white font-semibold text-sm text-end">Market Cap</th>
+                        <th class="text-white font-semibold text-sm text-end">Revenue Estimate</th>
+                        <th class="text-white font-semibold text-sm text-end">EPS Estimate</th>
+                        <th class="text-white font-semibold text-sm text-end text-end">Earnings Time</th>
                       </tr>
                     </thead>
                     <tbody>
                       {#each day as item, index}
                       <!-- row -->
-                      <tr on:click={() => goto("/stocks/"+item?.symbol)} class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] cursor-pointer">
+                      <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]">
                         
                         <td class="text-blue-400 border-b-[#09090B] text-start text-sm sm:text-[1rem]">
-                          {item?.symbol}
+                          <a href={"/stocks/"+item?.symbol} class="sm:hover:text-white text-blue-400">{item?.symbol}</a>
                         </td>
 
                         <td class="text-white whitespace-nowrap text-sm sm:text-[1rem] border-b-[#09090B]">
                           {item?.name.length > 20 ? item?.name?.slice(0,20) + "..." : item?.name}
                         </td>
 
-                    <td class="text-white border-b-[#09090B] text-center text-sm sm:text-[1rem]">
-                      {item?.marketCap !== null ? '$' + abbreviateNumber(item?.marketCap) : '-'}
+                    <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem]">
+                      {item?.marketCap !== null ? abbreviateNumber(item?.marketCap) : '-'}
                     </td>
 
-                    <td class="text-white text-end  border-b-[#09090B] text-sm sm:text-[1rem]">
+                    <td class="text-white text-end border-b-[#09090B] text-sm sm:text-[1rem]">
                       <div class="flex flex-row items-center justify-end">
                         <span>
-                          {item?.revenueEstimated !== null ? '$' + abbreviateNumber(item?.revenueEstimated) : '-'}
+                          {(item?.revenueEst !== null) ? abbreviateNumber(item?.revenueEst) : '-'}
                         </span>
-                        {#if item?.revenueEstimated !== null && item?.revenue !== null}
-                        <span class="ml-1 {item?.revenueEstimated/item?.revenue-1 > 0 ? 'text-[#22C55E]' : 'text-[#FF2F1F]'}">
-                          {`(${((item?.revenueEstimated/item?.revenue-1)*100)?.toFixed(2)}%)`}
-                        </span>
+                        {#if item?.revenueEst !== null && item?.revenueEst !== null}
+                          {#if (item?.revenueEst/item?.revenuePrior-1) >= 0}
+                          <span class="ml-1 text-[#22C55E]">
+                            +{((item?.revenueEst/item?.revenuePrior-1)*100)?.toFixed(2)}%
+                          </span>
+                          {:else}
+                          <span class="ml-1 text-[#FF2F1F]">
+                            {((item?.revenueEst/item?.revenuePrior-1)*100)?.toFixed(2)}%
+                          </span>
+                          {/if}
                         {/if}
                       </div>
                     </td>
@@ -405,19 +411,25 @@ $: {
                     <td class="text-white text-end border-b-[#09090B] text-sm sm:text-[1rem]">
                       <div class="flex flex-row items-center justify-end">
                         <span>
-                          {item?.epsEstimated !== null ? '$' + abbreviateNumber(item?.epsEstimated) : '-'}
+                          {item?.epsEst !== null ? item?.epsEst?.toFixed(2) : '-'}
                         </span>
-                        {#if item?.epsEstimated !== null && item?.eps !== null}
-                        <span class="ml-1 {item?.epsEstimated/item?.eps-1 > 0 ? 'text-[#22C55E]' : 'text-[#FF2F1F]'}">
-                          {`(${((item?.epsEstimated/item?.eps-1)*100)?.toFixed(2)}%)`}
-                        </span>
+                        {#if item?.epsEst !== null && item?.epsPrior !== null}
+                          {#if (item?.epsEst/item?.epsPrior-1) >= 0}
+                          <span class="ml-1 text-[#22C55E]">
+                            +{((item?.epsEst/item?.epsPrior-1)*100)?.toFixed(2)}%
+                          </span>
+                          {:else}
+                          <span class="ml-1 text-[#FF2F1F]">
+                            {((item?.epsEst/item?.epsPrior-1)*100)?.toFixed(2)}%
+                          </span>
+                          {/if}
                         {/if}
                       </div>
                     </td>
 
 
                     <td class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap">
-                      {#if item?.time === 'amc'}
+                      {#if item?.release === 'amc'}
                       <svg class="w-4 h-4 inline-block mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#70A1EF" d="M232.13 143.64a6 6 0 0 0-6-1.49a90.07 90.07 0 0 1-112.27-112.3a6 6 0 0 0-7.49-7.48a102.88 102.88 0 0 0-51.89 36.31a102 102 0 0 0 142.84 142.84a102.88 102.88 0 0 0 36.31-51.89a6 6 0 0 0-1.5-5.99m-42 48.29a90 90 0 0 1-126-126a90.9 90.9 0 0 1 35.52-28.27a102.06 102.06 0 0 0 118.69 118.69a90.9 90.9 0 0 1-28.24 35.58Z"/></svg>
                       After Close
                       {:else}
