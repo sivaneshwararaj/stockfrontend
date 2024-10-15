@@ -10,6 +10,9 @@ import { Button } from "$lib/components/shadcn/button/index.js";
 import { Combobox } from "bits-ui";
 
 export let data;
+
+let currentWatchlistLocalStorage = '1.0'; // Increment this whenever the structure of allRows changes
+
 let searchQuery = '';
 let editMode = false;
 let numberOfChecked = 0;
@@ -19,33 +22,61 @@ let watchList: any[] = [];
 let news = [];
 let checkedItems;
 
-
 let allRows = [
-    { name: 'Volume', rule: 'volume' },
-    { name: 'Market Cap', rule: 'marketCap' },
-    { name: 'Price', rule: 'price' },
-    { name: 'Change', rule: 'changesPercentage' },
-    { name: 'EPS', rule: 'eps' },
-    { name: 'PE', rule: 'pe' },
-    { name: 'AI Score', rule: 'score' },
-    { name: 'Revenue', rule: 'revenue'},
-    { name: 'Net Income', rule: 'netIncome'},
-    { name: 'Free Cash Flow', rule: 'freeCashFlow'},
-    { name: 'Industry', rule: 'industry'},
-    { name: 'Sector', rule: 'sector'},
-    { name: 'Price Change 1W', rule: 'change1W' },
-    { name: 'Price Change 1M', rule: 'change1M' },
-    { name: 'Price Change 3M', rule: 'change3M' },
-    { name: 'Price Change 6M', rule: 'change6M' },
-    { name: 'Price Change 1Y', rule: 'change1Y' },
-
+    { name: 'Volume', rule: 'volume', type: 'int'},
+    { name: 'Market Cap', rule: 'marketCap', type: 'int'},
+    { name: 'Price', rule: 'price', type: 'float'},
+    { name: 'Change', rule: 'changesPercentage', type: 'percentSign'},
+    { name: 'EPS', rule: 'eps', type: 'float'},
+    { name: 'PE', rule: 'pe', type: 'float'},
+    { name: 'AI Score', rule: 'score', type: 'rating'},
+    { name: 'Revenue', rule: 'revenue', type: 'int'},
+    { name: 'EBITDA', rule: 'ebitda', type: 'int'},
+    { name: 'Net Income', rule: 'netIncome', type: 'int'},
+    { name: 'FCF', rule: 'freeCashFlow', type: 'int'},
+    { name: 'Industry', rule: 'industry', type: 'str'},
+    { name: 'Sector', rule: 'sector', type: 'str'},
+    { name: 'Price Change 1W', rule: 'change1W', type: 'percentSign'},
+    { name: 'Price Change 1M', rule: 'change1M', type: 'percentSign'},
+    { name: 'Price Change 3M', rule: 'change3M', type: 'percentSign'},
+    { name: 'Price Change 6M', rule: 'change6M',type: 'percentSign'},
+    { name: 'Price Change 1Y', rule: 'change1Y', type: 'percentSign'},
+    { name: 'Enterprise Value', rule: 'enterpriseValue', type: 'int'},
+    { name: 'Forward PE', rule: 'forwardPE', type: 'float'},
+    { name: 'Forward PS', rule: 'forwardPS', type: 'float'},
+    { name: 'Dividend Yield', rule: 'dividendYield', type: 'percent'},
+    { name: 'Current Ratio', rule: 'currentRatio', type: 'float'},
+    { name: 'Quick Ratio', rule: 'quickRatio', type: 'float'},
+    { name: 'Analyst Rating', rule: 'analystRating', type: 'rating'},
+    { name: 'Country', rule: 'country', type: 'str'},
+    { name: 'Gross Profit', rule: 'grossProfit', type: 'int'},
+    { name: 'Revenue Growth', rule: 'growthRevenue', type: 'percentSign'},
+    { name: 'Gross Profit Growth', rule: 'growthGrossProfit', type: 'percentSign'},
+    { name: 'Net Income Growth', rule: 'growthNetIncome', type: 'percentSign'},
+    { name: 'EBITDA Growth', rule: 'growthEBITDA', type: 'percentSign'},
+    { name: 'EPS Growth', rule: 'growthEPS', type: 'percentSign'},
+    { name: 'Total Debt', rule: 'totalDebt', type: 'int'},
+    { name: 'Return on Assets', rule: 'returnOnAssets', type: 'int'},
+    { name: 'Return on Equity', rule: 'returnOnEquity', type: 'int'},
+    { name: 'Value-at-Risk', rule: 'var', type: 'percentSign'},
+    { name: 'Asset Turnover', rule: 'assetTurnover', type: 'int'},
+    { name: 'Earnings Yield', rule: 'earningsYield', type: 'percent'},
+    { name: 'Altman-Z-Score Yield', rule: 'altmanZScore', type: 'float'},
+    { name: 'Piotroski F-Score', rule: 'piotroskiScore', type: 'float'},
+    { name: 'Total Liabilities', rule: 'totalLiabilities', type: 'int'},
+    { name: 'Short Ratio', rule: 'shortRatio', type: 'int'},
+    { name: 'FCF Yield', rule: 'freeCashFlowYield', type: 'percent'},
+    { name: 'Employees', rule: 'employees', type: 'int'},
+    { name: 'Debt Ratio', rule: 'debtRatio', type: 'float'},
+    { name: 'Debt / Equity', rule: 'debtEquityRatio', type: 'int'},
 ];
 
+
 let ruleOfList = [
-    { name: 'Volume', rule: 'volume' },
-    { name: 'Market Cap', rule: 'marketCap' },
-    { name: 'Price', rule: 'price' },
-    { name: 'Change', rule: 'changesPercentage' },
+    { name: 'Volume', rule: 'volume', type: 'int' },
+    { name: 'Market Cap', rule: 'marketCap', type: 'int' },
+    { name: 'Price', rule: 'price', type: 'float' },
+    { name: 'Change', rule: 'changesPercentage', type: 'percent' },
 ];
 
 const excludedRules = new Set(['volume', 'price', 'changesPercentage', 'eps']);
@@ -348,7 +379,19 @@ if (!watchList?.some(item => item?.symbol === ticker)) {
 }
 
 
-
+async function handleResetAll() {
+  searchQuery = '';
+  ruleOfList = [
+    { name: 'Volume', rule: 'volume', type: 'int' },
+    { name: 'Market Cap', rule: 'marketCap', type: 'int' },
+    { name: 'Price', rule: 'price', type: 'float' },
+    { name: 'Change', rule: 'changesPercentage', type: 'percent' },
+  ];
+  ruleOfList = [...ruleOfList];
+  checkedItems = new Set(ruleOfList.map(item => item.name));
+  allRows = sortIndicatorCheckMarks(allRows);
+  saveRules()
+}
 
 function changeWatchList(newWatchList)
 {
@@ -359,49 +402,57 @@ function changeWatchList(newWatchList)
 
 function saveRules() {
   try {
+    // Save the version along with the rules
     localStorage?.setItem('watchlist-ruleOfList', JSON?.stringify(ruleOfList));
-  } catch(e) {
-    console.log('Failed saving indicator rules: ', e)
+    localStorage?.setItem('watchlist-ruleOfList-version', currentWatchlistLocalStorage); // Save the current version
+  } catch (e) {
+    console.log('Failed saving indicator rules: ', e);
   }
 }
-
 
 onMount(async () => {
   try {
     const savedRules = localStorage?.getItem('watchlist-ruleOfList');
-    if (savedRules) {
+    const savedVersion = localStorage?.getItem('watchlist-ruleOfList-version');
+
+    // If the version doesn't match, reset the local storage
+    if (savedVersion !== currentWatchlistLocalStorage) {
+      localStorage?.removeItem('watchlist-ruleOfList'); // Clear old data
+      localStorage?.setItem('watchlist-ruleOfList-version', currentWatchlistLocalStorage); // Save new version
+      localStorage?.setItem('watchlist-ruleOfList', JSON?.stringify(ruleOfList)); // Save new rules
+    } else if (savedRules) {
       ruleOfList = JSON.parse(savedRules);
+
+      // Check for the user's tier and filter out paywalled features
       if (data?.user?.tier !== 'Pro') {
-        //Check if user was Pro Member and has past checks of previous paywalled features. If so remove them from the ruleOfList
         ruleOfList = ruleOfList.filter(item => excludedRules.has(item?.rule)); // Use Set to filter
-        console.log(ruleOfList)
       }
     }
-  } catch(e) {
-    console.log(e)
-  }
 
-  checkedItems = new Set(ruleOfList.map(item => item.name))
-  allRows = sortIndicatorCheckMarks(allRows)
+    // Update checked items and sort the indicators
+    checkedItems = new Set(ruleOfList.map(item => item.name));
+    allRows = sortIndicatorCheckMarks(allRows);
 
-if(allList?.length !== 0)
-    {
-      displayWatchList = allList?.at(0)
-    }
-    else {
+    // Display the first watchlist if available
+    if (allList?.length !== 0) {
+      displayWatchList = allList?.at(0);
+    } else {
       displayWatchList = '';
     }
-    await getWatchlistData();
-  
-    if (!downloadWorker) {
-        const DownloadWorker = await import('./workers/downloadWorker?worker');
-        downloadWorker = new DownloadWorker.default();
-        downloadWorker.onmessage = handleDownloadMessage;
-    }
-    
-    
 
-  isLoaded = true;
+    await getWatchlistData();
+    // Initialize the download worker if not already done
+    if (!downloadWorker) {
+      const DownloadWorker = await import('./workers/downloadWorker?worker');
+      downloadWorker = new DownloadWorker.default();
+      downloadWorker.onmessage = handleDownloadMessage;
+    }
+
+    isLoaded = true;
+
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 onDestroy( () => {
@@ -704,51 +755,64 @@ function search() {
                   <div class="order-0  sm:order-4 w-full {displayWatchList?.title === undefined ? 'hidden' : ''}">
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild let:builder>
-                        <Button builders={[builder]}  class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate">
-                          <span class="truncate text-white text-sm sm:text-[1rem]">
-                            Indicators
-                          </span>
+                        <Button builders={[builder]} class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate">
+                          <span class="truncate text-white text-sm sm:text-[1rem]">Indicators</span>
                           <svg class="-mr-1 ml-2 h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px" aria-hidden="true">
-                              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                           </svg>
                         </Button>
                       </DropdownMenu.Trigger>
-                      <DropdownMenu.Content class="w-56 h-fit max-h-72 overflow-y-auto scroller">
-                        <div class="relative sticky z-40 focus:outline-none -top-1"
-                            tabindex="0" role="menu" style="">
-                        <input bind:value={searchQuery}
-                            on:input={handleInput}
-                            autocomplete="off"
-                            class="text-sm absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200 
-                            focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300" 
-                            type="search" 
-                            placeholder="Search...">
-                        </div>
-                        <DropdownMenu.Separator />
-                        <DropdownMenu.Group>
-                          {#each (searchQuery?.length !== 0 ? testList : allRows) as item}
-                            <DropdownMenu.Item class="sm:hover:bg-[#27272A]" >
-                            <div class="flex items-center">
-                              {#if (data?.user?.tier === 'Pro') || excludedRules?.has(item?.rule)}
-                                <label on:click|capture={(event) => { event.preventDefault(); handleChangeValue(item?.name) }} class="cursor-pointer text-white" for={item?.name}>
-                                  <input type="checkbox" class="rounded" checked={isChecked(item?.name)}>
-                                  <span class="ml-2">{item?.name}</span>
-                                </label>
-                              {:else}
-                                <a href="/pricing" class="cursor-pointer text-white">
-                                  <svg class="h-[18px] w-[18px] inline-block text-icon group-hover:text-dark-400" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px">
-                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
-                                  </svg>
-                                  <span class="ml-2">{item?.name}</span>
-                                </a>
-                              {/if}
 
-                            </div>
-                          </DropdownMenu.Item>  
+                      <DropdownMenu.Content class="w-60 max-h-[400px] overflow-y-auto scroller relative">
+                        <!-- Search Input -->
+                        <div class="sticky fixed -top-1 z-40 bg-[#09090B] p-2 border-b border-gray-600">
+                          <div class="relative w-full">
+                            <!-- Input Field -->
+                            <input bind:value={searchQuery} on:input={handleInput} autocomplete="off" autofocus=""
+                              class="text-sm w-full border-0 bg-[#09090B] focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8" 
+                              type="text" placeholder="">
+                              
+                            <!-- Clear Button - Shown only when searchQuery has input -->
+                            {#if searchQuery?.length > 0}
+                              <button on:click={() => searchQuery = ''} aria-label="Clear" title="Clear" tabindex="0" class="absolute right-2 top-1/2 transform -translate-y-1/2">
+                                <svg class="h-5 w-5 text-icon cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                              </button>
+                            {/if}
+                          </div>
+                        </div>
+                        <!-- Dropdown items -->
+                        <DropdownMenu.Group class="pb-2"> <!-- Added padding to avoid overlapping with Reset button -->
+                          {#each (searchQuery?.length !== 0 ? testList : allRows) as item}
+                            <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                              <div class="flex items-center">
+                                {#if (data?.user?.tier === 'Pro') || excludedRules?.has(item?.rule)}
+                                  <label on:click|capture={(event) => { event.preventDefault(); handleChangeValue(item?.name) }} class="cursor-pointer text-white" for={item?.name}>
+                                    <input type="checkbox" class="rounded" checked={isChecked(item?.name)}>
+                                    <span class="ml-2">{item?.name}</span>
+                                  </label>
+                                {:else}
+                                  <a href="/pricing" class="cursor-pointer text-white">
+                                    <svg class="h-[18px] w-[18px] inline-block text-icon group-hover:text-dark-400" viewBox="0 0 20 20" fill="currentColor" style="max-width:40px">
+                                      <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span class="ml-2">{item?.name}</span>
+                                  </a>
+                                {/if}
+                              </div>
+                            </DropdownMenu.Item>
                           {/each}
                         </DropdownMenu.Group>
+                        <!-- Reset Selection button -->
+                        <div class="sticky -bottom-1 bg-[#09090B] z-50 p-2 border-t border-gray-600 w-full">
+                          <label on:click={handleResetAll} class="w-full sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer">
+                            Reset Selection
+                          </label>
+                        </div>
                       </DropdownMenu.Content>
                     </DropdownMenu.Root>
+
                   </div>
 
 
@@ -825,19 +889,21 @@ function search() {
                   {#if isChecked(row?.name)}
                     <td class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]">
                       {#if item?.[row?.rule] !== undefined &&  item?.[row?.rule] !== null}
-                        {#if ['marketCap', 'volume','revenue','netIncome','freeCashFlow'].includes(row?.rule)}
+                        {#if row?.type === 'int'}
                           {abbreviateNumber(item[row?.rule])}
-                        {:else if ['industry','sector'].includes(row?.rule)}
+                        {:else if row?.type === 'str'}
                           {item[row?.rule] !== null ? item[row?.rule] : '-'}
-                        {:else if ['eps', 'pe', 'price','freeCashFlow'].includes(row?.rule)}
+                        {:else if row?.type === 'float'}
                           {item[row?.rule] !== null ? item[row?.rule]?.toFixed(2) : '-'}
-                        {:else if ['changesPercentage','change1W','change1M','change3M','change6M','change1Y','change3Y'].includes(row?.rule)}
+                        {:else if row?.type === 'percent'}
+                          {item[row?.rule] !== null ? item[row?.rule]?.toFixed(2)+'%' : '-'}
+                        {:else if row?.type === 'percentSign'}
                           {#if item[row?.rule] >= 0}
                             <span class="text-[#37C97D]">+{item[row?.rule]?.toFixed(2)}%</span>
                           {:else}
                             <span class="text-[#FF2F1F]">{item[row?.rule]?.toFixed(2)}%</span> 
                           {/if}
-                          {:else if "score" === row?.rule}
+                          {:else if row?.type === 'rating'}
                             {#if ['Strong Buy', 'Buy'].includes(item[row?.rule])}
                               <span class="text-[#37C97D]">{item[row?.rule]}</span>
                             {:else if ['Strong Sell', 'Sell'].includes(item[row?.rule])}
