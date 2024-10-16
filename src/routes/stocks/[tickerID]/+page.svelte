@@ -1,7 +1,12 @@
 <script lang="ts">
-  import { AreaSeries, Chart, PriceLine, CandlestickSeries } from "svelte-lightweight-charts";
-
-  import { TrackingModeExitMode } from "lightweight-charts";
+  import {
+    AreaSeries,
+    Chart,
+    PriceLine,
+    CandlestickSeries,
+  } from "svelte-lightweight-charts";
+  import { DateTime } from "luxon";
+  import { TrackingModeExitMode, ColorType } from "lightweight-charts";
   import {
     getCache,
     setCache,
@@ -42,11 +47,10 @@
 
   import CommunitySentiment from "$lib/components/CommunitySentiment.svelte";
   import Lazy from "$lib/components/Lazy.svelte";
-  import { convertTimestamp } from '$lib/utils';
+  import { convertTimestamp } from "$lib/utils";
   import { Button } from "$lib/components/shadcn/button/index.js";
-  import toast from 'svelte-french-toast';
+  import toast from "svelte-french-toast";
 
-  
   export let data;
   export let form;
 
@@ -87,10 +91,23 @@
       }
 
       //currentDataRow = oneWeekPrice.slice(-1)[0]
-      if(!$isCrosshairMoveActive && $realtimePrice !== null) {
-        change = (($realtimePrice/previousClose-1)*100)?.toFixed(2)
+      if (!$isCrosshairMoveActive && $realtimePrice !== null) {
+        change = (($realtimePrice / previousClose - 1) * 100)?.toFixed(2);
       } else {
-        change = displayData === "1D" ? (((currentDataRow?.close ?? currentDataRow?.value) / previousClose - 1) * 100)?.toFixed(2) : (((currentDataRow?.close ?? currentDataRow?.value) / displayLastLogicalRangeValue - 1) * 100)?.toFixed(2);
+        change =
+          displayData === "1D"
+            ? (
+                ((currentDataRow?.close ?? currentDataRow?.value) /
+                  previousClose -
+                  1) *
+                100
+              )?.toFixed(2)
+            : (
+                ((currentDataRow?.close ?? currentDataRow?.value) /
+                  displayLastLogicalRangeValue -
+                  1) *
+                100
+              )?.toFixed(2);
       }
 
       const date = new Date(currentDataRow?.time);
@@ -104,19 +121,27 @@
       };
 
       //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      const formattedDate = displayData === "1D" || displayData === "1W" || displayData === "1M"
-      ? date.toLocaleString("en-US", options)
-      : date.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
+      const formattedDate =
+        displayData === "1D" || displayData === "1W" || displayData === "1M"
+          ? date.toLocaleString("en-US", options)
+          : date.toLocaleDateString("en-US", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
 
-      const safeFormattedDate = formattedDate === "Invalid Date" ? convertTimestamp(data?.getStockQuote?.timestamp) : formattedDate;
+      const safeFormattedDate =
+        formattedDate === "Invalid Date"
+          ? convertTimestamp(data?.getStockQuote?.timestamp)
+          : formattedDate;
       displayLegend = {
-        close: currentDataRow?.value === '-' && currentDataRow?.close === undefined 
-            ? data?.getStockQuote?.price 
+        close:
+          currentDataRow?.value === "-" && currentDataRow?.close === undefined
+            ? data?.getStockQuote?.price
             : (currentDataRow?.close ?? currentDataRow?.value),
         date: safeFormattedDate,
-        change: change
-    };
-
+        change: change,
+      };
     }
   }
 
@@ -126,7 +151,8 @@
     if ($stockTicker && typeof window !== "undefined") {
       // add a check to see if running on client-side
       if ($realtimePrice !== null && $realtimePrice !== 0) {
-        $realtimePrice = $realtimePrice !== 0 ? $realtimePrice : data?.getStockQuote?.price;
+        $realtimePrice =
+          $realtimePrice !== 0 ? $realtimePrice : data?.getStockQuote?.price;
         $currentPortfolioPrice = $realtimePrice;
       } else if (oneDayPrice?.length !== 0) {
         const length = oneDayPrice?.length;
@@ -202,6 +228,7 @@
       case "1Y":
         displayData = "1Y";
         await historicalPrice("one-year");
+
         if (oneYearPrice?.length !== 0) {
           displayLastLogicalRangeValue = oneYearPrice?.at(0)?.close;
           lastValue = oneYearPrice.slice(-1)?.at(0)?.close;
@@ -226,9 +253,16 @@
       default:
         return;
     }
-    colorChange = lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
-    topColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.2)" : "rgb(16, 219, 6, 0.2)";
-    bottomColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.001)" : "rgb(16, 219, 6, 0.001)";
+    colorChange =
+      lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
+    topColorChange =
+      lastValue < displayLastLogicalRangeValue
+        ? "rgb(255, 47, 31, 0.2)"
+        : "rgb(16, 219, 6, 0.2)";
+    bottomColorChange =
+      lastValue < displayLastLogicalRangeValue
+        ? "rgb(255, 47, 31, 0.001)"
+        : "rgb(16, 219, 6, 0.001)";
 
     fitContentChart();
 
@@ -248,7 +282,7 @@
   let oneYearPrice = [];
   let maxPrice = [];
 
-async function historicalPrice(timePeriod: string) {
+  async function historicalPrice(timePeriod: string) {
     const cachedData = getCache($stockTicker, "historicalPrice" + timePeriod);
     if (cachedData) {
       switch (timePeriod) {
@@ -290,7 +324,7 @@ async function historicalPrice(timePeriod: string) {
 
       const mapData = (data) =>
         data?.map(({ time, open, high, low, close }) => ({
-          time: Date.parse(time),
+          time: Date?.parse(time + "Z") / 1000,
           open,
           high,
           low,
@@ -318,13 +352,11 @@ async function historicalPrice(timePeriod: string) {
           default:
             console.log(`Unsupported time period: ${timePeriod}`);
         }
-
         setCache($stockTicker, mappedData, "historicalPrice" + timePeriod);
       } catch (e) {
         console.log(e);
       }
     }
-
   }
 
   async function initializePrice() {
@@ -344,7 +376,8 @@ async function historicalPrice(timePeriod: string) {
         close: item?.close !== null ? item?.close : NaN,
       }));
 
-      displayData = oneDayPrice?.length === 0 && sixMonthPrice?.length !== 0 ? "6M" : "1D";
+      displayData =
+        oneDayPrice?.length === 0 && sixMonthPrice?.length !== 0 ? "6M" : "1D";
       //lastValue = oneDayPrice[oneDayPrice?.length - 1]?.value;
       if (displayData === "1D") {
         const length = oneDayPrice?.length;
@@ -358,13 +391,23 @@ async function historicalPrice(timePeriod: string) {
         lastValue = sixMonthPrice?.slice(-1)?.at(0)?.close;
       }
 
-      displayLastLogicalRangeValue = oneDayPrice?.length === 0 && sixMonthPrice?.length !== 0 ? sixMonthPrice?.at(0)?.close : oneDayPrice?.at(0)?.close; //previousClose;
+      displayLastLogicalRangeValue =
+        oneDayPrice?.length === 0 && sixMonthPrice?.length !== 0
+          ? sixMonthPrice?.at(0)?.close
+          : oneDayPrice?.at(0)?.close; //previousClose;
 
       //colorChange = lastValue < displayLastLogicalRangeValue ? "#CC3636" : "#367E18";
 
-      colorChange = lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
-      topColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.2)" : "rgb(16, 219, 6, 0.2)";
-      bottomColorChange = lastValue < displayLastLogicalRangeValue ? "rgb(255, 47, 31, 0.001)" : "rgb(16, 219, 6, 0.001)";
+      colorChange =
+        lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
+      topColorChange =
+        lastValue < displayLastLogicalRangeValue
+          ? "rgb(255, 47, 31, 0.2)"
+          : "rgb(16, 219, 6, 0.2)";
+      bottomColorChange =
+        lastValue < displayLastLogicalRangeValue
+          ? "rgb(255, 47, 31, 0.001)"
+          : "rgb(16, 219, 6, 0.001)";
     } catch (e) {
       console.log(e);
     }
@@ -372,7 +415,7 @@ async function historicalPrice(timePeriod: string) {
 
   async function getPrePostQuote() {
     if (!$isOpen) {
-      const postData = { ticker: $stockTicker, path: 'pre-post-quote' };
+      const postData = { ticker: $stockTicker, path: "pre-post-quote" };
       const response = await fetch("/api/ticker-data", {
         method: "POST",
         headers: {
@@ -399,7 +442,13 @@ async function historicalPrice(timePeriod: string) {
   }
 
   async function handleCrosshairMove({ detail: param }) {
-    if (param?.time && !isNaN(param?.seriesData?.get(lineLegend)?.close ?? param?.seriesData?.get(lineLegend)?.value)) {
+    if (
+      param?.time &&
+      !isNaN(
+        param?.seriesData?.get(lineLegend)?.close ??
+          param?.seriesData?.get(lineLegend)?.value,
+      )
+    ) {
       $isCrosshairMoveActive = true;
       try {
         let graphData;
@@ -407,23 +456,37 @@ async function historicalPrice(timePeriod: string) {
 
         const price = graphData?.close ?? graphData?.value;
         const dateObj = graphData?.time;
-        const date = new Date(dateObj);
-
+        const date = new Date(dateObj * 1000);
         const options = {
           day: "2-digit",
           month: "short",
           year: "numeric",
           hour: "numeric",
           minute: "2-digit",
+          timeZone: "UTC",
         };
-
+        console.log(date);
         //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })?.replace(/\//g, '.');
 
-        const formattedDate = displayData === "1D" || displayData === "1W" || displayData === "1M" ? date.toLocaleString("en-US", options) : date.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
+        const formattedDate =
+          displayData === "1D" || displayData === "1W" || displayData === "1M"
+            ? date.toLocaleString("en-US", options)
+            : date.toLocaleDateString("en-US", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              });
 
-        const change = ((price / displayLastLogicalRangeValue - 1) * 100)?.toFixed(2);
+        const change = (
+          (price / displayLastLogicalRangeValue - 1) *
+          100
+        )?.toFixed(2);
 
-        displayLegend = { close: price?.toFixed(2), date: formattedDate, change: change };
+        displayLegend = {
+          close: price?.toFixed(2),
+          date: formattedDate,
+          change: change,
+        };
       } catch (error) {
         //pass;
       }
@@ -477,14 +540,49 @@ async function historicalPrice(timePeriod: string) {
   };
 
   //===============================================//
+  function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
+    const formatOptions = {
+      timeZone: "UTC",
+    };
 
-  const options = {
+    switch (tickMarkType) {
+      case 0: // TickMarkType.Year:
+        formatOptions.year = "numeric";
+        break;
+      case 1: // TickMarkType.Month:
+        formatOptions.month = "short";
+        break;
+      case 2: // TickMarkType.DayOfMonth:
+        formatOptions.day = "numeric";
+        break;
+      case 3: // TickMarkType.Time:
+        formatOptions.hour12 = false;
+        formatOptions.hour = "2-digit";
+        formatOptions.minute = "2-digit";
+        break;
+      case 4: // TickMarkType.TimeWithSeconds:
+        formatOptions.hour12 = false;
+        formatOptions.hour = "2-digit";
+        formatOptions.minute = "2-digit";
+        formatOptions.second = "2-digit";
+        break;
+      default:
+      // ensureNever(tickMarkType);
+    }
+
+    const date = new Date(timePoint.timestamp * 1000);
+    return new Intl.DateTimeFormat(locale, formatOptions).format(date);
+  }
+
+  $: options = {
     width: width,
     height: height,
     layout: {
       background: {
+        type: ColorType.Solid,
         color: "#09090B",
       },
+      textColor: "#d1d4dc",
     },
     grid: {
       vertLines: {
@@ -497,20 +595,30 @@ async function historicalPrice(timePeriod: string) {
       },
     },
     crosshair: {
-      // hide the horizontal crosshair line
       horzLine: {
-        visible: false,
-        labelVisible: false,
+        visible: true,
       },
-      // hide the vertical crosshair label
       vertLine: {
-        labelVisible: false,
+        labelVisible: true,
         style: 0,
       },
     },
+    priceScale: {
+      autoScale: true,
+      scaleMargins: {
+        top: 0.3,
+        bottom: 0.25,
+      },
+    },
     rightPriceScale: {
-      visible: false,
-      borderColor: "rgba(197, 203, 206, 0.8)",
+      scaleMargins: {
+        top: 0.3,
+        bottom: 0.25,
+        borderVisible: false,
+      },
+      visible: true,
+      borderVisible: false,
+      mode: 1, // Keeps price scale fixed
     },
     leftPriceScale: {
       visible: false,
@@ -518,6 +626,8 @@ async function historicalPrice(timePeriod: string) {
     },
     handleScale: {
       mouseWheel: false,
+      pinch: false, // Disables scaling via pinch gestures
+      axisPressedMouseMove: false, // Disables scaling by dragging the axis with the mouse
     },
     handleScroll: {
       mouseWheel: false,
@@ -526,11 +636,21 @@ async function historicalPrice(timePeriod: string) {
       pressedMouseMove: false,
     },
     timeScale: {
-      borderColor: "#FFFFFF",
-      textColor: "#FFFFFF",
-      visible: false,
+      borderColor: "#fff",
+      textColor: "#fff",
+      borderVisible: false,
+      visible: true,
       fixLeftEdge: true,
       fixRightEdge: true,
+      timeVisible: ["1D", "1W", "1M"].includes(displayData),
+      secondsVisible: false,
+      tickMarkFormatter: (time, tickMarkType, locale) => {
+        return defaultTickMarkFormatter(
+          { timestamp: time },
+          tickMarkType,
+          locale,
+        );
+      },
     },
   };
 
@@ -553,9 +673,8 @@ async function historicalPrice(timePeriod: string) {
     "1M": oneMonthPrice,
     "6M": sixMonthPrice,
     "1Y": oneYearPrice,
-    "MAX": maxPrice,
+    MAX: maxPrice,
   };
-
 
   $: {
     if ($stockTicker && typeof window !== "undefined") {
@@ -589,59 +708,54 @@ async function historicalPrice(timePeriod: string) {
     }
   }
 
- 
-
-async function exportData() {
-  let exportList = [];
-  if(data?.user) {
-    const response = await fetch("/api/historical-price", {
+  async function exportData() {
+    let exportList = [];
+    if (data?.user) {
+      const response = await fetch("/api/historical-price", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ticker: $stockTicker, timePeriod: 'max'}),
+        body: JSON.stringify({ ticker: $stockTicker, timePeriod: "max" }),
       });
 
-    exportList = await response.json();
+      exportList = await response.json();
 
-    exportList = exportList?.map(({ time, open, high, low, close }) => ({
-          date: time,
-          open,
-          high,
-          low,
-          close,
-        }));
+      exportList = exportList?.map(({ time, open, high, low, close }) => ({
+        date: time,
+        open,
+        high,
+        low,
+        close,
+      }));
 
+      const csvRows = [];
 
-    const csvRows = [];
+      // Add headers row
+      csvRows.push("time,open,high,low,close");
 
-    // Add headers row
-    csvRows.push('time,open,high,low,close');
+      // Add data rows
+      for (const row of exportList) {
+        const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close}`;
+        csvRows.push(csvRow);
+      }
 
-    // Add data rows
-    for (const row of exportList) {
-      const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close}`;
-      csvRows.push(csvRow);
+      // Create CSV blob and trigger download
+      const csv = csvRows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.setAttribute("hidden", "");
+      a.setAttribute("href", url);
+      a.setAttribute("download", `${$stockTicker}.csv`);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      toast.error("Please Sign In", {
+        style: "border-radius: 200px; background: #333; color: #fff;",
+      });
     }
-
-    // Create CSV blob and trigger download
-    const csv = csvRows.join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.setAttribute('hidden', '');
-    a.setAttribute('href', url);
-    a.setAttribute('download', `${$stockTicker}.csv`);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-  } else {
-     toast.error('Please Sign In', {
-        style: 'border-radius: 200px; background: #333; color: #fff;'
-      });
-  }
-
   }
 </script>
 
@@ -653,18 +767,33 @@ async function exportData() {
     {$displayCompanyName} ({$stockTicker}) Stock Price, Quote & News · stocknear
   </title>
 
-  <meta name="description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`} />
+  <meta
+    name="description"
+    content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+  />
   <!-- Other meta tags -->
-  <meta property="og:title" content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`} />
-  <meta property="og:description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`} />
+  <meta
+    property="og:title"
+    content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`}
+  />
+  <meta
+    property="og:description"
+    content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+  />
   <!--<meta property="og:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`} />
-  <meta name="twitter:description" content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`} />
+  <meta
+    name="twitter:title"
+    content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`}
+  />
+  <meta
+    name="twitter:description"
+    content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+  />
   <!--<meta name="twitter:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -680,7 +809,9 @@ async function exportData() {
 
           <div class="flex flex-row items-start w-full sm:pl-6 mt-4">
             <div class="flex flex-col items-start justify-start w-full">
-              <div class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full">
+              <div
+                class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full"
+              >
                 {#if $isCrosshairMoveActive}
                   {displayLegend?.close}
                 {:else if !$isCrosshairMoveActive && $realtimePrice !== null}
@@ -690,30 +821,62 @@ async function exportData() {
                 {/if}
 
                 {#if $priceIncrease === true}
-                  <div style="background-color: green;" class="inline-block pulse rounded-full w-3 h-3 ml-2"></div>
+                  <div
+                    style="background-color: green;"
+                    class="inline-block pulse rounded-full w-3 h-3 ml-2"
+                  ></div>
                 {:else if $priceIncrease === false}
-                  <div style="background-color: red;" class="inline-block pulse rounded-full w-3 h-3 ml-2"></div>
+                  <div
+                    style="background-color: red;"
+                    class="inline-block pulse rounded-full w-3 h-3 ml-2"
+                  ></div>
                 {/if}
               </div>
 
               <div class="flex flex-row items-center w-full">
                 {#if displayLegend?.change >= 0}
-                  <svg class="inline-block w-5 h-5 mt-0.5 -mr-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                  <svg
+                    class="inline-block w-5 h-5 mt-0.5 -mr-0.5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
                     ><g id="evaArrowUpFill0"
-                      ><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#37C97D" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z" /></g></g
+                      ><g id="evaArrowUpFill1"
+                        ><path
+                          id="evaArrowUpFill2"
+                          fill="#37C97D"
+                          d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"
+                        /></g
+                      ></g
                     ></svg
                   >
-                  <span class="items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm">+{displayLegend?.change}%</span>
+                  <span
+                    class="items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm"
+                    >+{displayLegend?.change}%</span
+                  >
                 {:else if displayLegend?.change < 0}
-                  <svg class="inline-block w-5 h-5 mt-0.5 -mr-0.5 rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                  <svg
+                    class="inline-block w-5 h-5 mt-0.5 -mr-0.5 rotate-180"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
                     ><g id="evaArrowUpFill0"
-                      ><g id="evaArrowUpFill1"><path id="evaArrowUpFill2" fill="#FF2F1F" d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z" /></g></g
+                      ><g id="evaArrowUpFill1"
+                        ><path
+                          id="evaArrowUpFill2"
+                          fill="#FF2F1F"
+                          d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"
+                        /></g
+                      ></g
                     ></svg
                   >
-                  <span class="items-center justify-start text-[#FF2F1F] font-medium text-xs sm:text-sm">{displayLegend?.change}% </span>
+                  <span
+                    class="items-center justify-start text-[#FF2F1F] font-medium text-xs sm:text-sm"
+                    >{displayLegend?.change}%
+                  </span>
                 {/if}
 
-                <span class="ml-3 text-white text-xs sm:text-sm">{displayLegend?.date}</span>
+                <span class="ml-3 text-white text-xs sm:text-sm"
+                  >{displayLegend?.date}</span
+                >
               </div>
             </div>
 
@@ -725,15 +888,26 @@ async function exportData() {
                       {prePostData?.price}
                     </span>
                     {#if prePostData?.changesPercentage >= 0}
-                      <span class="ml-1 items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm">({prePostData?.changesPercentage}%)</span>
+                      <span
+                        class="ml-1 items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm"
+                        >({prePostData?.changesPercentage}%)</span
+                      >
                     {:else if prePostData?.changesPercentage < 0}
-                      <span class="ml-1 items-center justify-start text-[#FF2F1F] font-medium text-xs sm:text-sm">({prePostData?.changesPercentage}%)</span>
+                      <span
+                        class="ml-1 items-center justify-start text-[#FF2F1F] font-medium text-xs sm:text-sm"
+                        >({prePostData?.changesPercentage}%)</span
+                      >
                     {/if}
                   </div>
                   {#if $isBeforeMarketOpen && !$isOpen && !$isWeekend}
-                    <div class="flex flex-row items-center justify-end text-white text-[0.65rem] sm:text-sm font-normal text-end w-24">
+                    <div
+                      class="flex flex-row items-center justify-end text-white text-[0.65rem] sm:text-sm font-normal text-end w-24"
+                    >
                       <span>Pre-market:</span>
-                      <svg class="ml-1 w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
+                      <svg
+                        class="ml-1 w-4 h-4 inline-block"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
                         ><path
                           fill="#EA9703"
                           d="M120 40V16a8 8 0 0 1 16 0v24a8 8 0 0 1-16 0m72 88a64 64 0 1 1-64-64a64.07 64.07 0 0 1 64 64m-16 0a48 48 0 1 0-48 48a48.05 48.05 0 0 0 48-48M58.34 69.66a8 8 0 0 0 11.32-11.32l-16-16a8 8 0 0 0-11.32 11.32Zm0 116.68l-16 16a8 8 0 0 0 11.32 11.32l16-16a8 8 0 0 0-11.32-11.32M192 72a8 8 0 0 0 5.66-2.34l16-16a8 8 0 0 0-11.32-11.32l-16 16A8 8 0 0 0 192 72m5.66 114.34a8 8 0 0 0-11.32 11.32l16 16a8 8 0 0 0 11.32-11.32ZM48 128a8 8 0 0 0-8-8H16a8 8 0 0 0 0 16h24a8 8 0 0 0 8-8m80 80a8 8 0 0 0-8 8v24a8 8 0 0 0 16 0v-24a8 8 0 0 0-8-8m112-88h-24a8 8 0 0 0 0 16h24a8 8 0 0 0 0-16"
@@ -741,9 +915,14 @@ async function exportData() {
                       >
                     </div>
                   {:else}
-                    <div class="flex flex-row items-center justify-end text-white text-[0.65rem] sm:text-sm font-normal text-end w-28">
+                    <div
+                      class="flex flex-row items-center justify-end text-white text-[0.65rem] sm:text-sm font-normal text-end w-28"
+                    >
                       <span>Post-market:</span>
-                      <svg class="ml-1 w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
+                      <svg
+                        class="ml-1 w-4 h-4 inline-block"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 256 256"
                         ><path
                           fill="#70A1EF"
                           d="M232.13 143.64a6 6 0 0 0-6-1.49a90.07 90.07 0 0 1-112.27-112.3a6 6 0 0 0-7.49-7.48a102.88 102.88 0 0 0-51.89 36.31a102 102 0 0 0 142.84 142.84a102.88 102.88 0 0 0 36.31-51.89a6 6 0 0 0-1.5-5.99m-42 48.29a90 90 0 0 1-126-126a90.9 90.9 0 0 1 35.52-28.27a102.06 102.06 0 0 0 118.69 118.69a90.9 90.9 0 0 1-28.24 35.58Z"
@@ -757,51 +936,139 @@ async function exportData() {
           </div>
           <!-----End-Header-CandleChart-Indicators------>
           <!--Start Time Interval-->
-          <div class="hidden sm:flex flex-row items-center pl-1 sm:pl-6 w-full mt-4">
+          <div
+            class="hidden sm:flex flex-row items-center pl-1 sm:pl-6 w-full mt-4"
+          >
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1D")} class="text-sm font-medium text-gray-400 {displayData === '1D' ? 'text-white ' : 'bg-[#09090B]'}"> 1D </button>
-              <div class="{displayData === '1D' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full" />
+              <button
+                on:click={() => changeData("1D")}
+                class="text-sm font-medium text-gray-400 {displayData === '1D'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1D
+              </button>
+              <div
+                class="{displayData === '1D'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1W")} class="w-full text-sm font-medium text-gray-400 {displayData === '1W' ? 'text-white ' : 'bg-[#09090B]'}"> 1W </button>
-              <div class="{displayData === '1W' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("1W")}
+                class="w-full text-sm font-medium text-gray-400 {displayData ===
+                '1W'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1W
+              </button>
+              <div
+                class="{displayData === '1W'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1M")} class="text-sm font-medium text-gray-400 {displayData === '1M' ? 'text-white ' : 'bg-[#09090B]'}"> 1M </button>
-              <div class="{displayData === '1M' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("1M")}
+                class="text-sm font-medium text-gray-400 {displayData === '1M'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1M
+              </button>
+              <div
+                class="{displayData === '1M'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("6M")} class="text-sm font-medium text-gray-400 {displayData === '6M' ? 'text-white ' : 'bg-[#09090B]'}"> 6M </button>
-              <div class="{displayData === '6M' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("6M")}
+                class="text-sm font-medium text-gray-400 {displayData === '6M'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                6M
+              </button>
+              <div
+                class="{displayData === '6M'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1Y")} class="text-sm font-medium text-gray-400 {displayData === '1Y' ? 'text-white ' : 'bg-[#09090B]'}"> 1Y </button>
-              <div class="{displayData === '1Y' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("1Y")}
+                class="text-sm font-medium text-gray-400 {displayData === '1Y'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1Y
+              </button>
+              <div
+                class="{displayData === '1Y'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
 
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("MAX")} class="text-sm font-medium text-gray-400 {displayData === 'MAX' ? 'text-white ' : 'bg-[#09090B]'}"> MAX </button>
-              <div class="{displayData === 'MAX' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("MAX")}
+                class="text-sm font-medium text-gray-400 {displayData === 'MAX'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                MAX
+              </button>
+              <div
+                class="{displayData === 'MAX'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
 
-
-            <Button on:click={changeChartType} class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
-               {#if displayChartType === "line"}
-                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z" /></svg>
+            <Button
+              on:click={changeChartType}
+              class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+            >
+              {#if displayChartType === "line"}
+                <svg
+                  class="w-6 h-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  ><path
+                    fill="white"
+                    d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z"
+                  /></svg
+                >
               {:else}
-                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5L9 10l4 6l8-9.5" /></svg>
+                <svg
+                  class="w-6 h-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  ><path
+                    fill="none"
+                    stroke="white"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M3 16.5L9 10l4 6l8-9.5"
+                  /></svg
+                >
               {/if}
-             
-              </Button>
+            </Button>
 
-              <Button on:click={exportData} class="ml-2 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate">
-                <span class="truncate text-white">Export</span>
-              </Button>
-
-
-
-
-
+            <Button
+              on:click={exportData}
+              class="ml-2 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+            >
+              <span class="truncate text-white">Export</span>
+            </Button>
           </div>
           <!--End Time Interval-->
 
@@ -809,141 +1076,206 @@ async function exportData() {
           <!-- Start Graph -->
 
           {#if output !== null}
-            <div class="w-full sm:pl-7 ml-auto max-w-5xl mb-10">
+            <div class="w-full sm:pl-7 ml-auto max-w-5xl mb-10 mt-5">
               {#if dataMapping[displayData]?.length === 0}
-                <div class="mt-20 flex h-[240px] justify-center items-center mb-20 m-auto">
-                    <div class="text-white p-5 mt-5 w-fit m-auto rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-[1rem]">
-                      <svg class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
-                      No {displayData} chart data available
+                <div
+                  class="mt-20 flex h-[240px] justify-center items-center mb-20 m-auto"
+                >
+                  <div
+                    class="text-white p-5 mt-5 w-fit m-auto rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-[1rem]"
+                  >
+                    <svg
+                      class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 256 256"
+                      ><path
+                        fill="#a474f6"
+                        d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+                      /></svg
+                    >
+                    No {displayData} chart data available
                   </div>
                 </div>
               {:else}
-                <Chart {...options} autoSize={true} ref={(ref) => (chart = ref)} on:crosshairMove={handleCrosshairMove}>
+                <Chart
+                  {...options}
+                  autoSize={true}
+                  ref={(ref) => (chart = ref)}
+                  on:crosshairMove={handleCrosshairMove}
+                >
                   {#if displayData === "1D"}
                     {#if displayChartType === "line"}
                       <AreaSeries
-                        data={oneDayPrice?.map(({ time, close }) => ({ time, value: close }))}
+                        data={oneDayPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
                         lineWidth={1.5}
-                        priceScaleId="left"
+                        priceScaleId="right"
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        crosshairMarkerVisible={false}
                         ref={handleSeriesReference}
                         priceLineVisible={false}
                         lastPriceAnimation={1}
                       >
-                        <PriceLine price={oneDayPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                        <PriceLine
+                          price={oneDayPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
                       </AreaSeries>
                     {:else}
-                      <CandlestickSeries data={oneDayPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
-                        <PriceLine price={oneDayPrice?.at(0)?.close} lineWidth={1} color="#fff" />
-                      </CandlestickSeries>
+                      <CandlestickSeries
+                        data={oneDayPrice}
+                        ref={handleSeriesReference}
+                      ></CandlestickSeries>
                     {/if}
                   {:else if displayData === "1W"}
                     {#if displayChartType === "line"}
                       <AreaSeries
-                        data={oneWeekPrice?.map(({ time, close }) => ({ time, value: close }))}
+                        data={oneWeekPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
                         lineWidth={1.5}
-                        priceScaleId="left"
+                        priceScaleId="right"
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        crosshairMarkerVisible={false}
                         ref={handleSeriesReference}
                         priceLineVisible={false}
                         lastPriceAnimation={1}
                       >
-                        <PriceLine price={oneWeekPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                        <PriceLine
+                          price={oneWeekPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
                       </AreaSeries>
                     {:else}
-                      <CandlestickSeries data={oneWeekPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
-                        <PriceLine price={oneWeekPrice?.at(0)?.close} lineWidth={1} color="#fff" />
-                      </CandlestickSeries>
+                      <CandlestickSeries
+                        data={oneWeekPrice}
+                        ref={handleSeriesReference}
+                      ></CandlestickSeries>
                     {/if}
                   {:else if displayData === "1M"}
                     {#if displayChartType === "line"}
                       <AreaSeries
-                        data={oneMonthPrice?.map(({ time, close }) => ({ time, value: close }))}
+                        data={oneMonthPrice?.map(({ time, close }) => ({
+                          time: time,
+                          value: close,
+                        }))}
                         lineWidth={1.5}
-                        priceScaleId="left"
+                        priceScaleId="right"
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        crosshairMarkerVisible={false}
                         ref={handleSeriesReference}
                         priceLineVisible={false}
                         lastPriceAnimation={1}
                       >
-                        <PriceLine price={oneMonthPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                        <PriceLine
+                          price={oneMonthPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
                       </AreaSeries>
                     {:else}
-                      <CandlestickSeries data={oneMonthPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
-                        <PriceLine price={oneMonthPrice?.at(0)?.close} lineWidth={1} color="#fff" />
-                      </CandlestickSeries>
+                      <CandlestickSeries
+                        data={oneMonthPrice}
+                        ref={handleSeriesReference}
+                      ></CandlestickSeries>
                     {/if}
                   {:else if displayData === "6M"}
                     {#if displayChartType === "line"}
                       <AreaSeries
-                        data={sixMonthPrice?.map(({ time, close }) => ({ time, value: close }))}
+                        data={sixMonthPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
                         lineWidth={1.5}
-                        priceScaleId="left"
+                        priceScaleId="right"
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        crosshairMarkerVisible={false}
                         ref={handleSeriesReference}
                         priceLineVisible={false}
                         lastPriceAnimation={1}
                       >
-                        <PriceLine price={sixMonthPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                        <PriceLine
+                          price={sixMonthPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
                       </AreaSeries>
                     {:else}
-                      <CandlestickSeries data={sixMonthPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
-                        <PriceLine price={sixMonthPrice?.at(0)?.close} lineWidth={1} color="#fff" />
-                      </CandlestickSeries>
+                      <CandlestickSeries
+                        data={sixMonthPrice}
+                        ref={handleSeriesReference}
+                      ></CandlestickSeries>
                     {/if}
                   {:else if displayData === "1Y"}
                     {#if displayChartType === "line"}
                       <AreaSeries
-                        data={oneYearPrice?.map(({ time, close }) => ({ time, value: close }))}
+                        data={oneYearPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
                         lineWidth={1.5}
-                        priceScaleId="left"
+                        priceScaleId="right"
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        crosshairMarkerVisible={false}
                         ref={handleSeriesReference}
                         priceLineVisible={false}
                         lastPriceAnimation={1}
                       >
-                        <PriceLine price={oneYearPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                        <PriceLine
+                          price={oneYearPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
                       </AreaSeries>
                     {:else}
-                      <CandlestickSeries data={oneYearPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
-                        <PriceLine price={oneYearPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                      <CandlestickSeries
+                        data={oneYearPrice}
+                        ref={handleSeriesReference}
+                      >
+                        <PriceLine
+                          price={oneYearPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
                       </CandlestickSeries>
                     {/if}
                   {:else if displayData === "MAX"}
                     {#if displayChartType === "line"}
                       <AreaSeries
-                        data={maxPrice?.map(({ time, close }) => ({ time, value: close }))}
+                        data={maxPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
                         lineWidth={1.5}
-                        priceScaleId="left"
+                        priceScaleId="right"
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        crosshairMarkerVisible={false}
                         ref={handleSeriesReference}
                         priceLineVisible={false}
                         lastPriceAnimation={1}
                       >
-                        <PriceLine price={maxPrice?.at(0)?.close} lineWidth={1} color="#fff" />
+                        <PriceLine
+                          price={maxPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
                       </AreaSeries>
                     {:else}
-                      <CandlestickSeries data={maxPrice} crosshairMarkerVisible={false} ref={handleSeriesReference} priceLineVisible={false}>
-                        <PriceLine price={maxPrice?.at(0)?.close} lineWidth={1} color="#fff" />
-                      </CandlestickSeries>
+                      <CandlestickSeries
+                        data={maxPrice}
+                        ref={handleSeriesReference}
+                      ></CandlestickSeries>
                     {/if}
                   {/if}
                 </Chart>
@@ -951,10 +1283,15 @@ async function exportData() {
             </div>
           {:else}
             <!-- else output not loaded yet-->
-            <div class="flex justify-center w-full sm:w-[650px] h-80 sm:w-[600px] items-center">
+            <div
+              class="flex justify-center w-full sm:w-[650px] h-80 sm:w-[600px] items-center"
+            >
               <div class="relative">
-                <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <span class="loading loading-spinner loading-md text-gray-400"></span>
+                <label
+                  class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                >
+                  <span class="loading loading-spinner loading-md text-gray-400"
+                  ></span>
                 </label>
               </div>
             </div>
@@ -964,29 +1301,96 @@ async function exportData() {
           <!--Start Time Interval-->
           <div class="pl-1 w-screen sm:hidden flex flex-row items-center">
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1D")} class="text-sm font-medium text-gray-400 {displayData === '1D' ? 'text-white ' : 'bg-[#09090B]'}"> 1D </button>
-              <div class="{displayData === '1D' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full" />
+              <button
+                on:click={() => changeData("1D")}
+                class="text-sm font-medium text-gray-400 {displayData === '1D'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1D
+              </button>
+              <div
+                class="{displayData === '1D'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1W")} class="w-full text-sm font-medium text-gray-400 {displayData === '1W' ? 'text-white ' : 'bg-[#09090B]'}"> 1W </button>
-              <div class="{displayData === '1W' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("1W")}
+                class="w-full text-sm font-medium text-gray-400 {displayData ===
+                '1W'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1W
+              </button>
+              <div
+                class="{displayData === '1W'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1M")} class="text-sm font-medium text-gray-400 {displayData === '1M' ? 'text-white ' : 'bg-[#09090B]'}"> 1M </button>
-              <div class="{displayData === '1M' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("1M")}
+                class="text-sm font-medium text-gray-400 {displayData === '1M'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1M
+              </button>
+              <div
+                class="{displayData === '1M'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("6M")} class="text-sm font-medium text-gray-400 {displayData === '6M' ? 'text-white ' : 'bg-[#09090B]'}"> 6M </button>
-              <div class="{displayData === '6M' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("6M")}
+                class="text-sm font-medium text-gray-400 {displayData === '6M'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                6M
+              </button>
+              <div
+                class="{displayData === '6M'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("1Y")} class="text-sm font-medium text-gray-400 {displayData === '1Y' ? 'text-white ' : 'bg-[#09090B]'}"> 1Y </button>
-              <div class="{displayData === '1Y' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("1Y")}
+                class="text-sm font-medium text-gray-400 {displayData === '1Y'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                1Y
+              </button>
+              <div
+                class="{displayData === '1Y'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
 
             <div class="flex flex-col items-center mr-4">
-              <button on:click={() => changeData("MAX")} class="text-sm font-medium text-gray-400 {displayData === 'MAX' ? 'text-white ' : 'bg-[#09090B]'}"> MAX </button>
-              <div class="{displayData === 'MAX' ? `bg-[${colorChange}]` : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]" />
+              <button
+                on:click={() => changeData("MAX")}
+                class="text-sm font-medium text-gray-400 {displayData === 'MAX'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
+                MAX
+              </button>
+              <div
+                class="{displayData === 'MAX'
+                  ? `bg-[${colorChange}]`
+                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+              />
             </div>
           </div>
           <!--End Time Interval-->
@@ -1000,7 +1404,11 @@ async function exportData() {
 
             <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
               <Lazy>
-                <h3 class="cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold">Key Information</h3>
+                <h3
+                  class="cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
+                >
+                  Key Information
+                </h3>
                 {#await import("$lib/components/StockKeyInformation.svelte") then { default: Comp }}
                   <svelte:component this={Comp} {data} />
                 {/await}
@@ -1008,24 +1416,53 @@ async function exportData() {
             </div>
           {/if}
 
-          <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(data?.getEarningsSurprise || {})?.length !== 0 ? '' : 'hidden'}">
+          <div
+            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+              data?.getEarningsSurprise || {},
+            )?.length !== 0
+              ? ''
+              : 'hidden'}"
+          >
             <EarningsSurprise {data} />
           </div>
 
-          <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(data?.getNextEarnings || {})?.length !== 0 ? '' : 'hidden'}">
+          <div
+            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+              data?.getNextEarnings || {},
+            )?.length !== 0
+              ? ''
+              : 'hidden'}"
+          >
             <NextEarnings {data} />
           </div>
 
-          <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(data?.getDividendAnnouncement || {})?.length !== 0 ? '' : 'hidden'}">
+          <div
+            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+              data?.getDividendAnnouncement || {},
+            )?.length !== 0
+              ? ''
+              : 'hidden'}"
+          >
             <DividendAnnouncement {data} />
           </div>
 
-          <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(data?.getBullBearSay || {})?.length !== 0 ? '' : 'hidden'}">
+          <div
+            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+              data?.getBullBearSay || {},
+            )?.length !== 0
+              ? ''
+              : 'hidden'}"
+          >
             <BullBearSay {data} />
           </div>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data?.getWhyPriceMoved?.length !== 0 ? '' : 'hidden'}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data
+                ?.getWhyPriceMoved?.length !== 0
+                ? ''
+                : 'hidden'}"
+            >
               {#await import("$lib/components/WIIM.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1033,7 +1470,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$clinicalTrialComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$clinicalTrialComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/ClinicalTrial.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1041,7 +1482,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$varComponent ? 'hidden' : ''}">
+            <div
+              class="w-full sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$varComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/VaR.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1049,7 +1494,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pt-6 {!$governmentContractComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pt-6 {!$governmentContractComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/GovernmentContract.svelte") then { default: Comp }}
                 <svelte:component this={Comp} />
               {/await}
@@ -1057,7 +1506,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$fomcImpactComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$fomcImpactComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/FOMCImpact.svelte") then { default: Comp }}
                 <svelte:component this={Comp} />
               {/await}
@@ -1065,7 +1518,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$corporateLobbyingComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$corporateLobbyingComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/CorporateLobbying.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1073,7 +1530,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$swapComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$swapComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/Swap.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1081,7 +1542,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$enterpriseComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$enterpriseComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/Enterprise.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1089,7 +1554,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$optionComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$optionComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/OptionsData.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1097,7 +1566,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$optionsNetFlowComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$optionsNetFlowComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/OptionsNetFlow.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1115,7 +1588,11 @@ async function exportData() {
                                   -->
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$failToDeliverComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$failToDeliverComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/FailToDeliver.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1123,7 +1600,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$borrowedShareComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$borrowedShareComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/BorrowedShare.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1131,7 +1612,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$marketMakerComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$marketMakerComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/MarketMaker.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1139,7 +1624,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$darkPoolComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$darkPoolComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/DarkPool.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1147,7 +1636,11 @@ async function exportData() {
           </Lazy>
 
           <Lazy>
-            <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$shareStatisticsComponent ? 'hidden' : ''}">
+            <div
+              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$shareStatisticsComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/ShareStatistics.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1156,7 +1649,11 @@ async function exportData() {
 
           <!--Start Shareholders-->
           <Lazy>
-            <div class="w-full sm:pl-6 sm:pb-6 sm:pt-6 m-auto mb-5 {!$shareholderComponent ? 'hidden' : ''}">
+            <div
+              class="w-full sm:pl-6 sm:pb-6 sm:pt-6 m-auto mb-5 {!$shareholderComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/ShareHolders.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1165,7 +1662,11 @@ async function exportData() {
           <!--End Shareholders-->
 
           <Lazy>
-            <div class="w-full pt-10 m-auto sm:pl-6 sm:pb-6 sm:pt-6 rounded-2xl {!$taRatingComponent ? 'hidden' : ''}">
+            <div
+              class="w-full pt-10 m-auto sm:pl-6 sm:pb-6 sm:pt-6 rounded-2xl {!$taRatingComponent
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/TARating.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
@@ -1190,7 +1691,13 @@ async function exportData() {
                                   -->
 
           <Lazy>
-            <div class="w-full pt-10 sm:pl-6 sm:pb-6 sm:pt-6 m-auto {data?.getStockDeck?.at(0)?.stockSplits?.length === 0 ? 'hidden' : ''}">
+            <div
+              class="w-full pt-10 sm:pl-6 sm:pb-6 sm:pt-6 m-auto {data?.getStockDeck?.at(
+                0,
+              )?.stockSplits?.length === 0
+                ? 'hidden'
+                : ''}"
+            >
               {#await import("$lib/components/StockSplits.svelte") then { default: Comp }}
                 <svelte:component this={Comp} stockDeck={data?.getStockDeck} />
               {/await}
