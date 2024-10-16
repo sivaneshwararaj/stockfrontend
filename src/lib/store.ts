@@ -44,6 +44,7 @@ export const clearCache = () => {
 };
 
 export const showCookieConsent = writable(<boolean>false);
+export const shouldUpdatePriceChart = writable(<boolean>false);
 
 export const executiveClicked = writable(<boolean>false);
 export const secFilingsClicked = writable(<boolean>false);
@@ -76,6 +77,7 @@ export const loginData = writable({});
 
 export const replyCommentClicked = writable({});
 export const editCommentClicked = writable({});
+export const priceChartData = writable({});
 
 export const fundamentalAnalysisComponent = writable(<boolean>false);
 export const priceAnalysisComponent = writable(<boolean>false);

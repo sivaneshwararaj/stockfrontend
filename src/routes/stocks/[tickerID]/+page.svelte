@@ -1,6 +1,10 @@
 <script lang="ts">
   import { AreaSeries, Chart, PriceLine } from "svelte-lightweight-charts";
-  import { TrackingModeExitMode, ColorType } from "lightweight-charts";
+  import {
+    TrackingModeExitMode,
+    ColorType,
+    CrosshairMode,
+  } from "lightweight-charts";
   import {
     getCache,
     setCache,
@@ -32,8 +36,10 @@
     isOpen,
     isBeforeMarketOpen,
     isWeekend,
+    shouldUpdatePriceChart,
+    priceChartData,
   } from "$lib/store";
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import BullBearSay from "$lib/components/BullBearSay.svelte";
   import NextEarnings from "$lib/components/NextEarnings.svelte";
   import EarningsSurprise from "$lib/components/EarningsSurprise.svelte";
@@ -370,7 +376,6 @@
         low: item?.low !== null ? item?.low : NaN,
         close: item?.close !== null ? item?.close : NaN,
       }));
-
       displayData =
         oneDayPrice?.length === 0 && sixMonthPrice?.length !== 0 ? "6M" : "1D";
       //lastValue = oneDayPrice[oneDayPrice?.length - 1]?.value;
@@ -659,6 +664,7 @@
   onDestroy(async () => {
     $priceIncrease = null;
     $globalForm = [];
+    shouldUpdatePriceChart.set(false);
   });
 
   $: dataMapping = {
@@ -673,6 +679,7 @@
   $: {
     if ($stockTicker && typeof window !== "undefined") {
       // add a check to see if running on client-side
+      shouldUpdatePriceChart.set(false);
       oneDayPrice = [];
       oneWeekPrice = [];
       oneMonthPrice = [];
@@ -751,6 +758,65 @@
       });
     }
   }
+
+  function updateClosePrice(data, extendPriceChart) {
+    const newDateParsedUTC = Date?.parse(extendPriceChart?.time + "Z") / 1000; // Parse the incoming time
+    const closePrice = extendPriceChart?.price; // Store the close price for easier reference
+    let foundMatch = false;
+    let lastNonNullCloseIndex = null;
+
+    // Iterate through data to find the right time slot
+    for (let i = 0; i < data.length; i++) {
+      // Check if the timestamp matches
+      if (data[i].time === newDateParsedUTC) {
+        data[i].close = closePrice; // Update the existing close price
+        foundMatch = true;
+        break; // Exit loop once matched
+      }
+      // Keep track of the last non-null close price
+      if (data[i].close !== null) {
+        lastNonNullCloseIndex = i;
+      }
+    }
+
+    // If no matching timestamp was found, add new data
+    if (!foundMatch) {
+      // Only update the last non-null close if it exists
+      if (lastNonNullCloseIndex !== null) {
+        data[lastNonNullCloseIndex].close = closePrice; // Update with the latest close price
+      } else {
+        // If there's no previous close data, add a new entry
+        data.push({ time: newDateParsedUTC, close: closePrice }); // Add new data
+      }
+    }
+
+    return data; // Return updated data
+  }
+
+  onMount(() => {
+    // Subscribe to the store
+    shouldUpdatePriceChart.subscribe(async (value) => {
+      if (
+        value &&
+        chart !== null &&
+        $realtimePrice !== null &&
+        oneDayPrice?.length > 0 &&
+        $priceChartData?.time !== null &&
+        $priceChartData?.price !== null
+      ) {
+        // Create a new array and update oneDayPrice to trigger reactivity
+        const updatedPrice = updateClosePrice(oneDayPrice, $priceChartData);
+        oneDayPrice = [...updatedPrice]; // Reassign the updated array to trigger reactivity
+        try {
+          chart?.update(oneDayPrice); // Update the chart with the new prices
+        } catch (e) {
+          // Handle error if chart update fails
+          //console.error("Chart update error:", e);
+        }
+        shouldUpdatePriceChart.set(false); // Reset the update flag
+      }
+    });
+  });
 </script>
 
 <svelte:head>
@@ -1068,11 +1134,12 @@
                 <Chart
                   {...options}
                   autoSize={true}
-                  ref={(ref) => (chart = ref)}
+                  ref={(api) => (chart = api)}
                   on:crosshairMove={handleCrosshairMove}
                 >
                   {#if displayData === "1D"}
                     <AreaSeries
+                      reactive={true}
                       data={oneDayPrice?.map(({ time, close }) => ({
                         time,
                         value: close,
