@@ -207,36 +207,24 @@ function handleTypeOfTrade(state:string)
         const data = event.data;
         //console.log('Received message:', data);
         try {
-          $realtimePrice =
-            typeof JSON.parse(data)?.lp !== "undefined"
-              ? JSON.parse(data)?.lp
-              : null;
-          $wsBidPrice =
-            typeof JSON.parse(data)?.bp !== "undefined"
-              ? JSON.parse(data)?.bp
-              : null;
-          $wsAskPrice =
-            typeof JSON.parse(data)?.ap !== "undefined"
-              ? JSON.parse(data)?.ap
-              : null;
-          //console.log("Received message:", JSON.parse(data));
-          $priceChartData = {
-            time:
-              typeof JSON.parse(data)?.time !== "undefined"
-                ? JSON.parse(data)?.time
-                : null,
-            price:
-              typeof JSON.parse(data)?.lp !== "undefined"
-                ? Number(JSON.parse(data)?.lp)
-                : null,
-          };
-          //console.log($priceChartData);
-          shouldUpdatePriceChart.set(true);
-          if ($realtimePrice > previousRealtimePrice) {
-            $priceIncrease = true;
-            previousRealtimePrice = $realtimePrice;
-          } else if ($realtimePrice < previousRealtimePrice) {
-            $priceIncrease = false;
+          const parsedData = JSON.parse(data);
+          const { type, lp, time, bp, ap } = parsedData || {};
+
+          if (type === "T") {
+            $realtimePrice = lp;
+            $priceChartData = {
+              time: time,
+              price: Number(lp),
+            };
+            shouldUpdatePriceChart.set(true);
+          } else if (type === "Q") {
+            $wsBidPrice = bp;
+            $wsAskPrice = ap;
+          }
+
+          // Update price increase state
+          if ($realtimePrice !== previousRealtimePrice) {
+            $priceIncrease = $realtimePrice > previousRealtimePrice;
             previousRealtimePrice = $realtimePrice;
           }
 

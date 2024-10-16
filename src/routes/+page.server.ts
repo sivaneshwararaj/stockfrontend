@@ -2,7 +2,7 @@ import { error, fail, redirect } from "@sveltejs/kit";
 import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
-export const load = async ({ locals, setHeaders }) => {
+export const load = async ({ locals }) => {
   const { apiKey, apiURL } = locals;
 
   const getDashboard = async () => {
@@ -15,8 +15,6 @@ export const load = async ({ locals, setHeaders }) => {
     });
 
     const output = await response?.json();
-
-    setHeaders({ "cache-control": "public, max-age=300" });
 
     return output;
   };
