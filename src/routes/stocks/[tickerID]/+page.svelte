@@ -1,11 +1,5 @@
 <script lang="ts">
-  import {
-    AreaSeries,
-    Chart,
-    PriceLine,
-    CandlestickSeries,
-  } from "svelte-lightweight-charts";
-  import { DateTime } from "luxon";
+  import { AreaSeries, Chart, PriceLine } from "svelte-lightweight-charts";
   import { TrackingModeExitMode, ColorType } from "lightweight-charts";
   import {
     getCache,
@@ -53,8 +47,6 @@
 
   export let data;
   export let form;
-
-  let displayChartType = "line";
 
   let prePostData = {};
   let communitySentiment = {};
@@ -605,9 +597,11 @@
     crosshair: {
       horzLine: {
         visible: true,
+        labelBackgroundColor: "#7E3AF2",
       },
       vertLine: {
         labelVisible: true,
+        labelBackgroundColor: "#7E3AF2",
         style: 0,
       },
     },
@@ -666,14 +660,6 @@
     $priceIncrease = null;
     $globalForm = [];
   });
-
-  function changeChartType() {
-    if (displayChartType === "line") {
-      displayChartType = "candlestick";
-    } else {
-      displayChartType = "line";
-    }
-  }
 
   $: dataMapping = {
     "1D": oneDayPrice,
@@ -950,7 +936,8 @@
             <div class="flex flex-col items-center mr-4">
               <button
                 on:click={() => changeData("1D")}
-                class="text-sm font-medium text-gray-400 {displayData === '1D'
+                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
+                '1D'
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
               >
@@ -965,7 +952,7 @@
             <div class="flex flex-col items-center mr-4">
               <button
                 on:click={() => changeData("1W")}
-                class="w-full text-sm font-medium text-gray-400 {displayData ===
+                class="w-full text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
                 '1W'
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
@@ -981,7 +968,7 @@
             <div class="flex flex-col items-center mr-4">
               <button
                 on:click={() => changeData("1M")}
-                class="text-sm font-medium text-gray-400 {displayData === '1M'
+                class="text-sm font-medium {displayData === '1M'
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
               >
@@ -996,7 +983,8 @@
             <div class="flex flex-col items-center mr-4">
               <button
                 on:click={() => changeData("6M")}
-                class="text-sm font-medium text-gray-400 {displayData === '6M'
+                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
+                '6M'
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
               >
@@ -1011,7 +999,8 @@
             <div class="flex flex-col items-center mr-4">
               <button
                 on:click={() => changeData("1Y")}
-                class="text-sm font-medium text-gray-400 {displayData === '1Y'
+                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
+                '1Y'
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
               >
@@ -1027,7 +1016,8 @@
             <div class="flex flex-col items-center mr-4">
               <button
                 on:click={() => changeData("MAX")}
-                class="text-sm font-medium text-gray-400 {displayData === 'MAX'
+                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
+                'MAX'
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
               >
@@ -1041,39 +1031,8 @@
             </div>
 
             <Button
-              on:click={changeChartType}
-              class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
-            >
-              {#if displayChartType === "line"}
-                <svg
-                  class="w-6 h-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  ><path
-                    fill="white"
-                    d="M7 20v-2H5V6h2V4h2v2h2v12H9v2zm8 0v-5h-2V8h2V4h2v4h2v7h-2v5z"
-                  /></svg
-                >
-              {:else}
-                <svg
-                  class="w-6 h-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  ><path
-                    fill="none"
-                    stroke="white"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M3 16.5L9 10l4 6l8-9.5"
-                  /></svg
-                >
-              {/if}
-            </Button>
-
-            <Button
               on:click={exportData}
-              class="ml-2 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+              class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
             >
               <span class="truncate text-white">Export</span>
             </Button>
@@ -1084,7 +1043,7 @@
           <!-- Start Graph -->
 
           {#if output !== null}
-            <div class="w-full sm:pl-7 ml-auto max-w-5xl mb-10 mt-5">
+            <div class="w-full sm:pl-7 ml-auto max-w-5xl mb-10 sm:mt-10">
               {#if dataMapping[displayData]?.length === 0}
                 <div
                   class="mt-20 flex h-[240px] justify-center items-center mb-20 m-auto"
@@ -1112,179 +1071,125 @@
                   on:crosshairMove={handleCrosshairMove}
                 >
                   {#if displayData === "1D"}
-                    {#if displayChartType === "line"}
-                      <AreaSeries
-                        data={oneDayPrice?.map(({ time, close }) => ({
-                          time,
-                          value: close,
-                        }))}
-                        lineWidth={1.5}
-                        priceScaleId="right"
-                        lineColor={colorChange}
-                        topColor={topColorChange}
-                        bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
-                        priceLineVisible={false}
-                        lastPriceAnimation={1}
-                      >
-                        <PriceLine
-                          price={oneDayPrice?.at(0)?.close}
-                          lineWidth={1}
-                          color="#fff"
-                        />
-                      </AreaSeries>
-                    {:else}
-                      <CandlestickSeries
-                        data={oneDayPrice}
-                        ref={handleSeriesReference}
-                      ></CandlestickSeries>
-                    {/if}
+                    <AreaSeries
+                      data={oneDayPrice?.map(({ time, close }) => ({
+                        time,
+                        value: close,
+                      }))}
+                      lineWidth={1.5}
+                      priceScaleId="right"
+                      lineColor={colorChange}
+                      topColor={topColorChange}
+                      bottomColor={bottomColorChange}
+                      ref={handleSeriesReference}
+                      priceLineVisible={false}
+                    >
+                      <PriceLine
+                        price={oneDayPrice?.at(0)?.close}
+                        lineWidth={1}
+                        color="#fff"
+                      />
+                    </AreaSeries>
                   {:else if displayData === "1W"}
-                    {#if displayChartType === "line"}
-                      <AreaSeries
-                        data={oneWeekPrice?.map(({ time, close }) => ({
-                          time,
-                          value: close,
-                        }))}
-                        lineWidth={1.5}
-                        priceScaleId="right"
-                        lineColor={colorChange}
-                        topColor={topColorChange}
-                        bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
-                        priceLineVisible={false}
-                        lastPriceAnimation={1}
-                      >
-                        <PriceLine
-                          price={oneWeekPrice?.at(0)?.close}
-                          lineWidth={1}
-                          color="#fff"
-                        />
-                      </AreaSeries>
-                    {:else}
-                      <CandlestickSeries
-                        data={oneWeekPrice}
-                        ref={handleSeriesReference}
-                      ></CandlestickSeries>
-                    {/if}
+                    <AreaSeries
+                      data={oneWeekPrice?.map(({ time, close }) => ({
+                        time,
+                        value: close,
+                      }))}
+                      lineWidth={1.5}
+                      priceScaleId="right"
+                      lineColor={colorChange}
+                      topColor={topColorChange}
+                      bottomColor={bottomColorChange}
+                      ref={handleSeriesReference}
+                      priceLineVisible={false}
+                    >
+                      <PriceLine
+                        price={oneWeekPrice?.at(0)?.close}
+                        lineWidth={1}
+                        color="#fff"
+                      />
+                    </AreaSeries>
                   {:else if displayData === "1M"}
-                    {#if displayChartType === "line"}
-                      <AreaSeries
-                        data={oneMonthPrice?.map(({ time, close }) => ({
-                          time: time,
-                          value: close,
-                        }))}
-                        lineWidth={1.5}
-                        priceScaleId="right"
-                        lineColor={colorChange}
-                        topColor={topColorChange}
-                        bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
-                        priceLineVisible={false}
-                        lastPriceAnimation={1}
-                      >
-                        <PriceLine
-                          price={oneMonthPrice?.at(0)?.close}
-                          lineWidth={1}
-                          color="#fff"
-                        />
-                      </AreaSeries>
-                    {:else}
-                      <CandlestickSeries
-                        data={oneMonthPrice}
-                        ref={handleSeriesReference}
-                      ></CandlestickSeries>
-                    {/if}
+                    <AreaSeries
+                      data={oneMonthPrice?.map(({ time, close }) => ({
+                        time: time,
+                        value: close,
+                      }))}
+                      lineWidth={1.5}
+                      priceScaleId="right"
+                      lineColor={colorChange}
+                      topColor={topColorChange}
+                      bottomColor={bottomColorChange}
+                      ref={handleSeriesReference}
+                      priceLineVisible={false}
+                    >
+                      <PriceLine
+                        price={oneMonthPrice?.at(0)?.close}
+                        lineWidth={1}
+                        color="#fff"
+                      />
+                    </AreaSeries>
                   {:else if displayData === "6M"}
-                    {#if displayChartType === "line"}
-                      <AreaSeries
-                        data={sixMonthPrice?.map(({ time, close }) => ({
-                          time,
-                          value: close,
-                        }))}
-                        lineWidth={1.5}
-                        priceScaleId="right"
-                        lineColor={colorChange}
-                        topColor={topColorChange}
-                        bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
-                        priceLineVisible={false}
-                        lastPriceAnimation={1}
-                      >
-                        <PriceLine
-                          price={sixMonthPrice?.at(0)?.close}
-                          lineWidth={1}
-                          color="#fff"
-                        />
-                      </AreaSeries>
-                    {:else}
-                      <CandlestickSeries
-                        data={sixMonthPrice}
-                        ref={handleSeriesReference}
-                      ></CandlestickSeries>
-                    {/if}
+                    <AreaSeries
+                      data={sixMonthPrice?.map(({ time, close }) => ({
+                        time,
+                        value: close,
+                      }))}
+                      lineWidth={1.5}
+                      priceScaleId="right"
+                      lineColor={colorChange}
+                      topColor={topColorChange}
+                      bottomColor={bottomColorChange}
+                      ref={handleSeriesReference}
+                      priceLineVisible={false}
+                    >
+                      <PriceLine
+                        price={sixMonthPrice?.at(0)?.close}
+                        lineWidth={1}
+                        color="#fff"
+                      />
+                    </AreaSeries>
                   {:else if displayData === "1Y"}
-                    {#if displayChartType === "line"}
-                      <AreaSeries
-                        data={oneYearPrice?.map(({ time, close }) => ({
-                          time,
-                          value: close,
-                        }))}
-                        lineWidth={1.5}
-                        priceScaleId="right"
-                        lineColor={colorChange}
-                        topColor={topColorChange}
-                        bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
-                        priceLineVisible={false}
-                        lastPriceAnimation={1}
-                      >
-                        <PriceLine
-                          price={oneYearPrice?.at(0)?.close}
-                          lineWidth={1}
-                          color="#fff"
-                        />
-                      </AreaSeries>
-                    {:else}
-                      <CandlestickSeries
-                        data={oneYearPrice}
-                        ref={handleSeriesReference}
-                      >
-                        <PriceLine
-                          price={oneYearPrice?.at(0)?.close}
-                          lineWidth={1}
-                          color="#fff"
-                        />
-                      </CandlestickSeries>
-                    {/if}
+                    <AreaSeries
+                      data={oneYearPrice?.map(({ time, close }) => ({
+                        time,
+                        value: close,
+                      }))}
+                      lineWidth={1.5}
+                      priceScaleId="right"
+                      lineColor={colorChange}
+                      topColor={topColorChange}
+                      bottomColor={bottomColorChange}
+                      ref={handleSeriesReference}
+                      priceLineVisible={false}
+                    >
+                      <PriceLine
+                        price={oneYearPrice?.at(0)?.close}
+                        lineWidth={1}
+                        color="#fff"
+                      />
+                    </AreaSeries>
                   {:else if displayData === "MAX"}
-                    {#if displayChartType === "line"}
-                      <AreaSeries
-                        data={maxPrice?.map(({ time, close }) => ({
-                          time,
-                          value: close,
-                        }))}
-                        lineWidth={1.5}
-                        priceScaleId="right"
-                        lineColor={colorChange}
-                        topColor={topColorChange}
-                        bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
-                        priceLineVisible={false}
-                        lastPriceAnimation={1}
-                      >
-                        <PriceLine
-                          price={maxPrice?.at(0)?.close}
-                          lineWidth={1}
-                          color="#fff"
-                        />
-                      </AreaSeries>
-                    {:else}
-                      <CandlestickSeries
-                        data={maxPrice}
-                        ref={handleSeriesReference}
-                      ></CandlestickSeries>
-                    {/if}
+                    <AreaSeries
+                      data={maxPrice?.map(({ time, close }) => ({
+                        time,
+                        value: close,
+                      }))}
+                      lineWidth={1.5}
+                      priceScaleId="right"
+                      lineColor={colorChange}
+                      topColor={topColorChange}
+                      bottomColor={bottomColorChange}
+                      ref={handleSeriesReference}
+                      priceLineVisible={false}
+                    >
+                      <PriceLine
+                        price={maxPrice?.at(0)?.close}
+                        lineWidth={1}
+                        color="#fff"
+                      />
+                    </AreaSeries>
                   {/if}
                 </Chart>
               {/if}
