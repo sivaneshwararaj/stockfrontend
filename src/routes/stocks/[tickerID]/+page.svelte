@@ -369,7 +369,7 @@
       output = [...data?.getOneDayPrice] ?? [];
 
       oneDayPrice = output?.map((item) => ({
-        time: Date.parse(item?.time),
+        time: Date?.parse(item?.time + "Z") / 1000,
         open: item?.open !== null ? item?.open : NaN,
         high: item?.high !== null ? item?.high : NaN,
         low: item?.low !== null ? item?.low : NaN,
@@ -465,7 +465,6 @@
           minute: "2-digit",
           timeZone: "UTC",
         };
-        console.log(date);
         //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })?.replace(/\//g, '.');
 
         const formattedDate =
@@ -556,18 +555,18 @@
         formatOptions.day = "numeric";
         break;
       case 3: // TickMarkType.Time:
-        formatOptions.hour12 = false;
-        formatOptions.hour = "2-digit";
-        formatOptions.minute = "2-digit";
+        formatOptions.hour12 = true; // Use 12-hour clock
+        formatOptions.hour = "numeric"; // Use numeric hour without leading zero
+        formatOptions.minute = "2-digit"; // Always show minutes with leading zero
         break;
       case 4: // TickMarkType.TimeWithSeconds:
-        formatOptions.hour12 = false;
-        formatOptions.hour = "2-digit";
-        formatOptions.minute = "2-digit";
-        formatOptions.second = "2-digit";
+        formatOptions.hour12 = true; // Use 12-hour clock
+        formatOptions.hour = "numeric"; // Use numeric hour without leading zero
+        formatOptions.minute = "2-digit"; // Always show minutes with leading zero
+        formatOptions.second = "2-digit"; // Always show seconds with leading zero
         break;
       default:
-      // ensureNever(tickMarkType);
+      // Ensure this default case handles unexpected tickMarkType values
     }
 
     const date = new Date(timePoint.timestamp * 1000);
