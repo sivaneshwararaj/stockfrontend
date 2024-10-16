@@ -968,7 +968,8 @@
             <div class="flex flex-col items-center mr-4">
               <button
                 on:click={() => changeData("1M")}
-                class="text-sm font-medium {displayData === '1M'
+                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
+                '1M'
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
               >
