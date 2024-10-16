@@ -110,7 +110,7 @@
               )?.toFixed(2);
       }
 
-      const date = new Date(currentDataRow?.time);
+      const date = new Date(currentDataRow?.time * 1000);
 
       const options = {
         day: "2-digit",
@@ -118,6 +118,7 @@
         year: "numeric",
         hour: "numeric",
         minute: "2-digit",
+        timeZone: "UTC",
       };
 
       //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
@@ -324,7 +325,9 @@
 
       const mapData = (data) =>
         data?.map(({ time, open, high, low, close }) => ({
-          time: Date?.parse(time + "Z") / 1000,
+          time: ["1D", "1W", "1M"]?.includes(displayData)
+            ? Date?.parse(time + "Z") / 1000
+            : time,
           open,
           high,
           low,
@@ -456,7 +459,9 @@
 
         const price = graphData?.close ?? graphData?.value;
         const dateObj = graphData?.time;
-        const date = new Date(dateObj * 1000);
+        const date = ["1D", "1W", "1M"]?.includes(displayData)
+          ? new Date(dateObj * 1000)
+          : new Date(dateObj);
         const options = {
           day: "2-digit",
           month: "short",
@@ -568,9 +573,13 @@
       default:
       // Ensure this default case handles unexpected tickMarkType values
     }
-
-    const date = new Date(timePoint.timestamp * 1000);
-    return new Intl.DateTimeFormat(locale, formatOptions).format(date);
+    if ([3, 4]?.includes(tickMarkType)) {
+      const date = new Date(timePoint?.timestamp * 1000);
+      return new Intl.DateTimeFormat(locale, formatOptions)?.format(date);
+    } else {
+      const date = new Date(timePoint?.timestamp);
+      return new Intl.DateTimeFormat(locale, formatOptions)?.format(date);
+    }
   }
 
   $: options = {
