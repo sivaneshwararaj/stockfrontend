@@ -14,6 +14,10 @@ const pages = [
   { title: "/heatmaps" },
   { title: "/donation" },
   //{title: "/portfolio"},
+  { title: "/sentiment-tracker" },
+  { title: "/industry" },
+  { title: "/industry/sectors" },
+  { title: "/industry/all" },
   { title: "/newsletter" },
   { title: "/options-flow" },
   { title: "/ipos" },
@@ -130,7 +134,7 @@ const sitemap = (
   posts,
   articles,
   stocks,
-  pages
+  pages,
 ) => `<?xml version="1.0" encoding="UTF-8" ?>
 <urlset
   xmlns="https://www.sitemaps.org/schemas/sitemap/0.9"
@@ -146,7 +150,7 @@ const sitemap = (
   <url>
     <loc>${website}${page.title}</loc>
   </url>
-  `
+  `,
     )
     .join("")}
   ${stocks
@@ -157,7 +161,7 @@ const sitemap = (
           ? "/stocks/"
           : ticker.type === "ETF"
             ? "/etf/"
-            : "/stocks/";
+            : "/crypto/";
       return `
     <url>
       <loc>${website}${path}${ticker.id}</loc>
@@ -171,7 +175,7 @@ const sitemap = (
   <url>
     <loc>${website}/blog/article/${article.id}</loc>
   </url>
-  `
+  `,
     )
     .join("")}
   ${posts
@@ -180,7 +184,7 @@ const sitemap = (
   <url>
     <loc>${website}/community/post/${post.id}</loc>
   </url>
-  `
+  `,
     )
     .join("")}
 </urlset>`;
