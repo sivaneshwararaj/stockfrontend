@@ -211,15 +211,15 @@ function handleTypeOfTrade(state:string)
           const { type, lp, time, bp, ap } = parsedData || {};
 
           if (type === "T") {
-            $realtimePrice = lp;
+            $realtimePrice = typeof lp !== "undefined" ? lp : null;
             $priceChartData = {
-              time: time,
-              price: Number(lp),
+              time: typeof time !== "undefined" ? time : null,
+              price: typeof lp !== "undefined" ? Number(lp) : null,
             };
             shouldUpdatePriceChart.set(true);
           } else if (type === "Q") {
-            $wsBidPrice = bp;
-            $wsAskPrice = ap;
+            $wsBidPrice = typeof bp !== "undefined" ? bp : null;
+            $wsAskPrice = typeof ap !== "undefined" ? ap : null;
           }
 
           // Update price increase state

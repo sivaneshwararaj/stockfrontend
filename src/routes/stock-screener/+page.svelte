@@ -347,6 +347,13 @@
       defaultCondition: "over",
       defaultValue: "10M",
     },
+    revenueGrowthYears: {
+      label: "Revenue Growth Years",
+      step: ["10", "5", "3", "1"],
+      category: "fund",
+      defaultCondition: "over",
+      defaultValue: "any",
+    },
     growthRevenue: {
       label: "Revenue Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
