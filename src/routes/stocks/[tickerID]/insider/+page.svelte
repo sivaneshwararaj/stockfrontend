@@ -9,6 +9,9 @@
   import { onMount } from "svelte";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+
+
   export let data;
   let isLoaded = false;
 
@@ -147,6 +150,81 @@
     "n/a": { text: "n/a", class: "text-gray-300" },
   };
 
+
+  let columns = [
+    { key: "reportingName", label: "Name", align: "left" },
+    { key: "transactionDate", label: "Date", align: "right" },
+    { key: "securitiesTransacted", label: "Shares", align: "right" },
+    { key: "price", label: "Price", align: "right" },
+    { key: "value", label: "Value", align: "right" },
+  ];
+
+  let sortOrders = {
+    reportingName: { order: "none", type: "string" },
+    transactionDate: { order: "none", type: "date" },
+    securitiesTransacted: { order: "none", type: "number" },
+    price: { order: "none", type: "number" },
+    value: { order: "none", type: "number" },
+  };
+
+
+    const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = rawData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      insiderTradingList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    insiderTradingList = [...originalData].sort(compareValues);
+  };
 
 $: {
     if((year || quarter ) && typeof window !== 'undefined') {
@@ -535,33 +613,9 @@ $: {
               <table
                 class="table table-sm table-pin-rows table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
               >
-                <thead>
-                  <tr class="bg-[#09090B] shadow-md">
-                    <th
-                      class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
-                    >
-                      Name
-                    </th>
-                    <th
-                      class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-                    >
-                      Date
-                    </th>
-                    <th
-                      class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-                    >
-                      Shares
-                    </th>
-                    <th
-                      class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-                    >
-                      Price
-                    </th>
-                    <th class="text-white font-semibold text-end text-[1rem]"
-                      >Value</th
-                    >
-                  </tr>
-                </thead>
+               <thead>
+                    <TableHeader {columns} {sortOrders} {sortData} />
+                  </thead>
                 <tbody>
                   {#each data?.user?.tier === "Pro" ? insiderTradingList : insiderTradingList?.slice(0, 3) as item, index}
                     {#if item?.price > 0}
@@ -622,7 +676,7 @@ $: {
                                   ?.class}
                               >
                                 {abbreviateNumber(
-                                  item?.securitiesTransacted * item?.price,
+                                  item?.value,
                                 )}
                               </div>
                               <div

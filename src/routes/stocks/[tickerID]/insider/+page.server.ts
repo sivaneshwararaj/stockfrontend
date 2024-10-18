@@ -48,7 +48,11 @@ export const load = async ({ locals, params }) => {
 
       // Only include items with 'Bought' or 'Sold'
       if (newTransactionType === "Bought" || newTransactionType === "Sold") {
-        acc.push({ ...item, transactionType: newTransactionType });
+        acc.push({
+          ...item,
+          transactionType: newTransactionType,
+          value: item?.securitiesTransacted * item?.price, // new key 'value'
+        });
       }
 
       return acc;
