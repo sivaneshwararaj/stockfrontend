@@ -431,7 +431,9 @@ async function websocketRealtimeData() {
             if(newData?.length > rawData?.length) {
               rawData = newData;
               displayedData = rawData;
-              audio?.play();
+              if(!muted) {
+                audio?.play();
+              }
             }
           }
 
