@@ -316,7 +316,7 @@ let rawData = data?.getOptionsFlowFeed?.filter(item =>
   let highestOpenInterestTicker;
   
   let audio;
-  let muted = true;
+  let muted = false;
   let newIncomingData = false;
   let previousCallVolume = 0; //This is needed to play the sound only if it changes.
   let notFound = false;
@@ -431,15 +431,20 @@ async function websocketRealtimeData() {
             if(newData?.length > rawData?.length) {
               rawData = newData;
               displayedData = rawData;
+              audio?.play();
             }
           }
 
           if (ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
             shouldLoadWorker.set(true);
           }
+
+          /*
           if (previousCallVolume !== displayCallVolume && !muted && audio) {
             audio?.play();
           }
+          */
+
         } catch (e) {
           console.error('Error processing WebSocket message:', e);
         }
