@@ -5,20 +5,9 @@
     import ArrowLogo from "lucide-svelte/icons/move-up-right";
     import * as Card from "$lib/components/shadcn/card/index.ts";
 
-    import { Chart } from 'svelte-echarts'
-import Lazy from '$lib/components/Lazy.svelte';
-
-import { init, use } from 'echarts/core'
-import { GaugeChart, LineChart,} from 'echarts/charts'
-import { GridComponent, TooltipComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
-use([GaugeChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer])
-
-  
     
   export let data;
-  let optionGraphWinrate;
-  let optionGraphReturn;
+
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
@@ -115,164 +104,10 @@ function computeWinRate(data) {
 }
 
 
-function getPlotOptions() {
-let dates = [];
-const returnMap = {};
 
-// Iterate over the data and sum the returnSince values for each unique date
-rawData?.forEach(item => {
-  const { date, returnSince } = item;
-
-  if (returnMap[date]) {
-    returnMap[date] += returnSince; // Add to the existing return
-  } else {
-    returnMap[date] = returnSince; // Initialize the return for this date
-    dates.push(date); // Save the unique date in the dates array
-  }
-});
-
-// Sort dates in ascending order (earliest date first, latest date last)
-  dates?.sort((a, b) => new Date(a) - new Date(b));
-
-  // Convert the returnMap to an array of objects (cumulativeList) in the correct order
-  cumulativeList = dates?.map(date => (returnMap[date]?.toFixed(1)));
-  //console.log('Cumulative List:', cumulativeList);
-  //console.log('Unique Dates:', dates);
-
-  const optionCumulativeReturn = {
-    silent: true,
-    animation: false,
-    tooltip: {
-        trigger: 'axis',
-        hideDelay: 100, // Set the delay in milliseconds
-    },
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '0%',
-    top: $screenWidth < 640 ? '20%' : '10%',
-    containLabel: true
-  },
-  xAxis: [
-    {
-      type: 'category',
-      boundaryGap: false,
-      splitLine: {
-            show: false, // Disable x-axis grid lines
-      },
-      data: dates,
-      axisLabel: {
-        show: false // Hide x-axis labels
-      }
-    }
-  ],
-  yAxis: [
-    {
-      type: 'value',
-      splitLine: {
-            show: false, // Disable x-axis grid lines
-      },
-      axisLabel: {
-        show: false // Hide y-axis labels
-      }
-    },
-  ],
-  series: [
-    {
-      name: 'Cumulative Returns [%]',
-      type: 'line',
-      smooth: true,
-      lineStyle: {
-        width: 0
-      },
-      showSymbol: false,
-      areaStyle: {
-        opacity: 1,
-        color: '#3B82F6'
-      },
-      data: cumulativeList
-    },
-  ]
-};
-
-  const optionWinrate = {
-  silent: true,
-  animation: false,
-  series: [
-    {
-      type: 'gauge',
-      startAngle: 180,
-      endAngle: 0,
-      center: ['50%', '75%'],
-      radius: '90%',
-      min: 0,
-      max: 1,
-      splitNumber: 3,
-      axisLine: {
-        lineStyle: {
-          width: 15,
-          color: [
-            [0.3, '#F71F4F'],
-            [0.7, '#FFA838'],
-            [1, '#20AE54']
-          ]
-        }
-      },
-      pointer: {
-        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
-        length: '15%',
-        width: 10,
-        offsetCenter: [0, '-60%'],
-        itemStyle: {
-          color: 'auto'
-        }
-      },
-      axisTick: {
-        length: 0,
-      },
-      splitLine: {
-        length: 0,
-      },
-      axisLabel: {
-        formatter: function (value) {
-          return '';
-        }
-      },
-      title: {
-        offsetCenter: [0, '5%'],
-        fontSize: 14,
-         color: '#fff',
-      },
-      detail: {
-        fontSize: 22,
-        offsetCenter: [0, '-20%'],
-        valueAnimation: true,
-        formatter: function (value) {
-          return (value * 100)?.toFixed(0)+ '%';
-        },
-        color: 'inherit'
-      },
-      data: [
-        {
-          value: winRate,
-          name: 'Winrate'
-        }
-      ]
-    }
-  ]
-};
-
-
-  return {optionCumulativeReturn, optionWinrate};
-  }
-  
 
   onMount(() => {
     winRate = computeWinRate(rawData);
-
-      const {optionCumulativeReturn, optionWinrate} = getPlotOptions()
-      optionGraphReturn = optionCumulativeReturn;
-      optionGraphWinrate = optionWinrate;
 
       isLoaded = true;
       window.addEventListener('scroll', handleScroll);
@@ -376,44 +211,28 @@ rawData?.forEach(item => {
                   </div>
   
                   {#if isLoaded}
-  
                   
-                    <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:gap-8 px-3 sm:px-0">
-                     <Card.Root class="bg-[#141417]">
-                      <Card.Header class="flex flex-col items-start space-y-0 pb-2">
-                        <Card.Title class="text-start text-xl sm:text-2xl font-semibold pb-2">Cumulative Return</Card.Title>
-                        <Card.Description class="text-white text-sm pb-2">
-                          Following Jim Cramer's stock picks since {rawData?.slice(0)?.at(0)?.date}, would have yielded a <strong class="{cumulativeList?.slice(-1) > 0 ? 'text-[#00FC50]' : 'text-[#FF2F1F]'}">{cumulativeList?.slice(-1) > 0 ? '+' : ''}{cumulativeList?.slice(-1)}%</strong> cumulative return.
-                        </Card.Description>
-                      </Card.Header>
-                      <Card.Content class="w-full h-fit">
-                        <Lazy>
-                            <div class="w-full h-[150px] ">
-                            <Chart {init} options={optionGraphReturn} class="chart" />
-                          </div>
-                        </Lazy>
-                      </Card.Content>
-                    </Card.Root>
-                    <Card.Root class="bg-[#141417] ">
-                      <Card.Header class="flex flex-col items-start space-y-0 pb-2">
-                        <Card.Title class="text-start text-xl sm:text-2xl font-semibold pb-2">Winrate</Card.Title>
-                        <Card.Description class="text-white text-sm pb-2">
-                          Cramer was accurate in <strong>{(winRate*100)?.toFixed(0)}%</strong> of his last {rawData?.length} forecasts.
-                          Time to consider the "Inverse Cramer" strategy?
-                        </Card.Description>
-                      </Card.Header>
-                      <Card.Content class="w-full h-[170px] sm:h-fit relative">
-                        <Lazy>
-                            <div class="w-full h-[250px] absolute right-0 -top-14">
-                            <Chart {init} options={optionGraphWinrate} class="chart" />
-                          </div>
-                        </Lazy>
-                      </Card.Content>
-                    </Card.Root>
-
-                
+                 <div
+                    class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5"
+                  >
+                    <svg
+                      class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 256 256"
+                    >
+                      <path
+                        fill="#a474f6"
+                        d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+                      />
+                    </svg>
+                    <span>
+                      Jim Cramer was accurate in <strong>{(winRate * 100)?.toFixed(0)}%</strong> of his last {rawData?.length} forecasts. 
+                      Is it time to consider the "Inverse Cramer" strategy?
+                    </span>
                   </div>
 
+
+                  
          
                   <div class="w-screen sm:w-full m-auto mt-20 sm:mt-10">
                       
@@ -422,19 +241,19 @@ rawData?.forEach(item => {
                         <table class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto">
                           <thead>
                             <tr class="bg-[#09090B] border-b border-[#27272A]">
-                              <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
+                              <th class="text-start bg-[#09090B] text-white text-sm sm:text-[1rem] font-semibold">
                                 Company Name
                               </th>
-                              <th class="text-start bg-[#09090B] text-white text-[1rem] font-semibold">
+                              <th class="text-start bg-[#09090B] text-white text-sm sm:text-[1rem] font-semibold">
                                 Date
                               </th>
-                              <th class="text-center bg-[#09090B] text-white text-[1rem] font-semibold">
+                              <th class="text-center bg-[#09090B] text-white text-sm sm:text-[1rem] font-semibold">
                                 Sentiment
                               </th>
-                              <th class="text-end bg-[#09090B] text-white text-[1rem] font-semibold">
+                              <th class="text-end bg-[#09090B] text-white text-sm sm:text-[1rem] font-semibold">
                                 Return Since
                               </th>
-                              <th class=" text-end bg-[#09090B] text-white text-[1rem] font-semibold">
+                              <th class=" text-end bg-[#09090B] text-white text-sm sm:text-[1rem] font-semibold">
                                 Sector
                               </th>
                             </tr>
