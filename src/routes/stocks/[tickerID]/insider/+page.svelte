@@ -188,7 +188,7 @@
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      insiderTradingList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      insiderTradingList = [...originalData]?.slice(0,50); // Reset to original data (spread to avoid mutation)
       return;
     }
 
@@ -223,7 +223,7 @@
     };
 
     // Sort using the generic comparison function
-    insiderTradingList = [...originalData].sort(compareValues);
+    insiderTradingList = [...originalData].sort(compareValues)?.slice(0,50);
   };
 
 $: {
