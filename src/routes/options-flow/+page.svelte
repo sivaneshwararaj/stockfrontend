@@ -344,6 +344,12 @@ let rawData = data?.getOptionsFlowFeed?.filter(item =>
   {
       if ($isOpen) {
         mode = !mode;
+        if(mode === true && selectedDate !== undefined) {
+            selectedDate = undefined;
+            rawData = data?.getOptionsFlowFeed
+            displayedData =  [...rawData];
+            shouldLoadWorker.set(true);
+        }
       }
       else {
         toast.error(`Market is closed`, {
@@ -422,7 +428,10 @@ async function websocketRealtimeData() {
             newData.forEach((item) => {
               item.dte = daysLeft(item?.date_expiration);
             });
-            rawData = newData;
+            if(newData?.length > rawData?.length) {
+              rawData = newData;
+              displayedData = rawData;
+            }
           }
 
           if (ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
@@ -510,11 +519,11 @@ async function saveCookieRuleOfList() {
     }    
 
     isLoaded = true;
-    /*
+    
     if ($isOpen) {
       await websocketRealtimeData();
     }
-    */
+    
 
     
 
@@ -667,6 +676,8 @@ function calculateStats(data) {
 const getHistoricalFlow = async () => {
   // Create a delay using setTimeout wrapped in a Promise
   if(data?.user?.tier === 'Pro') {
+
+    mode = false;
     isLoaded = false;
 
     displayRules = allRows?.filter(row => ruleOfList.some(rule => rule.name === row.rule));
