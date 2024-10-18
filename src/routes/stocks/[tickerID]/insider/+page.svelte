@@ -7,18 +7,20 @@
   import { formatString, abbreviateNumber } from "$lib/utils";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { onMount } from "svelte";
-
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import { Button } from "$lib/components/shadcn/button/index.js";
   export let data;
   let isLoaded = false;
 
   let statistics = {};
   let buySellRatio = 0;
+  const now = new Date();
+  let year = now.getFullYear();
+  let quarter = Math.floor(now.getMonth() / 3) + 1;
+  let yearRange = [];
 
-  function calculateInsiderTradingStatistics(data) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const quarter = Math.floor(now.getMonth() / 3) + 1;
 
+  function calculateInsiderTradingStatistics(data, year, quarter) {
     // Helper function to check if the transaction date is within the current quarter
     const isInCurrentQuarter = (transactionDate) => {
       const date = new Date(transactionDate);
@@ -68,7 +70,6 @@
   );
 
   let insiderTradingList = rawData?.slice(0, 50);
-
   function backToTop() {
     window.scrollTo({
       top: 0,
@@ -102,11 +103,23 @@
   }
 
   onMount(() => {
-    statistics = calculateInsiderTradingStatistics(rawData);
+    statistics = calculateInsiderTradingStatistics(rawData, year, quarter);
     buySellRatio =
       statistics?.soldShares !== 0
-        ? (statistics?.buyShares / statistics?.soldShares)?.toFixed(2)
+        ? statistics?.buyShares / statistics?.soldShares
         : 0;
+
+    yearRange = Array.from(
+      new Set(
+        rawData?.map((item) =>
+          (new Date(item?.transactionDate))?.getFullYear(),
+        ),
+      ),
+    )?.sort((a, b) => b - a);
+    if (yearRange?.length > 0) {
+      year = yearRange?.slice(0)?.at(0);
+    }
+
     isLoaded = true;
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -133,6 +146,17 @@
     },
     "n/a": { text: "n/a", class: "text-gray-300" },
   };
+
+
+$: {
+    if((year || quarter ) && typeof window !== 'undefined') {
+      statistics = calculateInsiderTradingStatistics(rawData, year, quarter);
+      buySellRatio =
+        statistics?.soldShares !== 0
+          ? statistics?.buyShares / statistics?.soldShares
+          : 0;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -212,6 +236,97 @@
         {#if isLoaded}
           {#if insiderTradingList?.length !== 0}
             {#if Object?.keys(statistics)?.length !== 0}
+              <div class="flex w-fit sm:w-[50%] md:block md:w-auto ml-auto">
+                <div class="relative inline-block text-left grow">
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild let:builder>
+                      <Button
+                        builders={[builder]}
+                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                      >
+                        <span class="truncate text-white">Year: {year}</span>
+                        <svg
+                          class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          style="max-width:40px"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </Button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content
+                      class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                    >
+                      <DropdownMenu.Label class="text-gray-400">
+                        Select Year
+                      </DropdownMenu.Label>
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Group>
+                        {#each yearRange as index}
+                          <DropdownMenu.Item
+                            on:click={() => (year = index)}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            {index}
+                          </DropdownMenu.Item>
+                        {/each}
+                      </DropdownMenu.Group>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
+                </div>
+                <div class="relative inline-block text-left grow ml-3">
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild let:builder>
+                      <Button
+                        builders={[builder]}
+                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                      >
+                        <span class="truncate text-white"
+                          >Quarter: Q{quarter}</span
+                        >
+                        <svg
+                          class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          style="max-width:40px"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </Button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content
+                      class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                    >
+                      <DropdownMenu.Label class="text-gray-400">
+                        Select Quarter
+                      </DropdownMenu.Label>
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Group>
+                        {#each [1,2,3,4] as index}
+                        <DropdownMenu.Item
+                          on:click={() => (quarter = index)}
+                          class="cursor-pointer hover:bg-[#27272A]"
+                        >
+                          Q{index}
+                        </DropdownMenu.Item>
+                        {/each}
+                      </DropdownMenu.Group>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
+                </div>
+              </div>
+
               <h3 class="text-white text-lg font-semibold pt-5">
                 Q{statistics?.quarter}
                 {statistics?.year} Insider Statistics
@@ -235,7 +350,9 @@
                       <span
                         class="text-start text-sm sm:text-[1rem] font-medium text-white"
                       >
-                        {buySellRatio}
+                        {buySellRatio > 0
+                          ? buySellRatio?.toFixed(1)
+                          : buySellRatio}
                       </span>
                     </div>
                     <!-- Circular Progress -->
@@ -276,7 +393,7 @@
                       >
                         <span
                           class="text-center text-white text-sm sm:text-[1rem]"
-                          >{buySellRatio}%</span
+                          >{(buySellRatio * 100)?.toFixed(0)}%</span
                         >
                       </div>
                     </div>

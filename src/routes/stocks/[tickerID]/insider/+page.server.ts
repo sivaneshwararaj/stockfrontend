@@ -53,7 +53,6 @@ export const load = async ({ locals, params }) => {
 
       return acc;
     }, []);
-
     return output;
   };
 
