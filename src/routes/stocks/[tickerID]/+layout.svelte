@@ -113,7 +113,7 @@ function handleTypeOfTrade(state:string)
       insider: "/insider",
       options: "/options",
       dividends: "/dividends",
-      fundamental: "/stats",
+      stats: "/stats",
       forecast: "/forecast",
       news: "/news",
     };
@@ -333,8 +333,9 @@ function handleTypeOfTrade(state:string)
     if ($page.url.pathname) {
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
-        stats: "fundamental",
+        stats: "stats",
         options: "options",
+        metrics: "metrics",
         insider: "insider",
         dividends: "dividends",
         forecast: "forecast",
@@ -763,7 +764,7 @@ function handleTypeOfTrade(state:string)
                     <div
                       class="-ml-2 sm:ml-4 w-screen sm:w-full {$screenWidth <
                       640
-                        ? 'overflow-auto scrollbar'
+                        ? 'overflow-auto scrollbar '
                         : ''} mb-2"
                     >
                       <ul
@@ -784,26 +785,44 @@ function handleTypeOfTrade(state:string)
                           <div
                             class="{displaySection === 'overview'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4.2rem]"
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/stats`}
                             id="item2"
-                            on:click={() =>
-                              changeSection("fundamental", "item2")}
+                            on:click={() => changeSection("stats", "item2")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'fundamental'
+                            'stats'
                               ? 'text-white '
-                              : 'bg-[#09090B]'}">Fundamental</a
+                              : 'bg-[#09090B]'}">Stats</a
                           >
                           <div
-                            class="{displaySection === 'fundamental'
+                            class="{displaySection === 'stats'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.8rem]"
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
                           />
                         </li>
+                        {#if $stockTicker?.toLowerCase() === "nvda"}
+                          <li class="cursor-pointer flex flex-col items-center">
+                            <a
+                              href={`/stocks/${$stockTicker}/metrics`}
+                              id="item2"
+                              on:click={() => changeSection("metrics", "item6")}
+                              class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                              'metrics'
+                                ? 'text-white '
+                                : 'bg-[#09090B]'}">Metrics</a
+                            >
+
+                            <div
+                              class="{displaySection === 'metrics'
+                                ? 'bg-[#75D377]'
+                                : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.8rem]"
+                            />
+                          </li>
+                        {/if}
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/forecast`}
@@ -819,7 +838,7 @@ function handleTypeOfTrade(state:string)
                           <div
                             class="{displaySection === 'forecast'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -837,7 +856,7 @@ function handleTypeOfTrade(state:string)
                           <div
                             class="{displaySection === 'options'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -855,7 +874,7 @@ function handleTypeOfTrade(state:string)
                           <div
                             class="{displaySection === 'insider'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -873,7 +892,7 @@ function handleTypeOfTrade(state:string)
                           <div
                             class="{displaySection === 'dividends'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -891,7 +910,7 @@ function handleTypeOfTrade(state:string)
                           <div
                             class="{displaySection === 'news'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.8rem]"
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
                           />
                         </li>
                       </ul>
