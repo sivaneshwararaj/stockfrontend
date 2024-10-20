@@ -11,17 +11,20 @@ import { init, use } from 'echarts/core'
   import { onMount } from 'svelte';
   use([LineChart, BarChart, GridComponent,TooltipComponent, CanvasRenderer])
 
-  
+
+
 
     export let data;
     
     let isLoaded = false;
     let optionsData;
 
-    let rawData = data?.getHistoricalMarketCap || [];
+    let rawData =  [{'date': '2024-06-30', 'value': [26272000000, 2880000000, 454000000, 346000000, 88000000], 'valueGrowth': [16.44, 8.8, 6.32, 5.17, 12.82]}, {'date': '2024-03-31', 'value': [22563000000, 2647000000, 427000000, 329000000, 78000000], 'valueGrowth': [55.46, -7.32, 2.64, 26.05, 6.85]}, {'date': '2023-09-30', 'value': [14514000000, 2856000000, 416000000, 261000000, 73000000], 'valueGrowth': [40.6, 14.88, 9.76, 3.16, 10.61]}, {'date': '2023-06-30', 'value': [10323000000, 2486000000, 379000000, 253000000, 66000000], 'valueGrowth': [324.81, -41.97, -83.08, -14.24, -77.7]}, {'date': '2022-09-30', 'value': [3833000000, 1574000000, 200000000, 251000000, 73000000], 'valueGrowth': [0.71, -22.92, -59.68, 14.09, -47.86]}, {'date': '2022-06-30', 'value': [3806000000, 2042000000, 496000000, 220000000, 140000000], 'valueGrowth': [1.49, -43.59, -20.26, 59.42, -11.39]}, {'date': '2022-03-31', 'value': [3750000000, 3620000000, 622000000, 138000000, 158000000], 'valueGrowth': [27.72, 12.39, 7.8, 2.22, -32.48]}, {'date': '2021-09-30', 'value': [2936000000, 3221000000, 577000000, 135000000, 234000000], 'valueGrowth': [24.09, 5.23, 11.18, -11.18, -42.79]}, {'date': '2021-06-30', 'value': [2366000000, 3061000000, 519000000, 152000000, 409000000], 'valueGrowth': [15.53, 10.91, 39.52, -1.3, 25.08]}, {'date': '2021-03-31', 'value': [2048000000, 2760000000, 372000000, 154000000, 327000000], 'valueGrowth': [7.79, 21.53, 57.63, 23.2, 68.56]}, {'date': '2020-09-30', 'value': [1900000000, 2271000000, 236000000, 125000000, 194000000], 'valueGrowth': [8.45, 37.3, 16.26, 12.61, 32.88]}, {'date': '2020-06-30', 'value': [1752000000, 1654000000, 203000000, 111000000, 146000000], 'valueGrowth': [53.55, 23.53, -33.88, -28.39, 5.8]}, {'date': '2020-03-31', 'value': [1141000000, 1339000000, 307000000, 155000000, 138000000], 'valueGrowth': [57.16, -19.29, -5.25, -4.32, -3.5]}, {'date': '2019-09-30', 'value': [726000000, 1659000000, 324000000, 162000000, 143000000], 'valueGrowth': [10.84, 26.35, 11.34, -22.49, 28.83]}, {'date': '2019-06-30', 'value': [655000000, 1313000000, 291000000, 209000000, 111000000], 'valueGrowth': [-6.56, -23.8, 15.94, 44.14, -71.32]}, {'date': '2018-03-31', 'value': [701000000, 1723000000, 251000000, 145000000, 387000000], 'valueGrowth': [null, null, null, null, null]}];
+    
+    
+    let dataset = []
     let tableList = [];
 
-    let changePercentageYearAgo = 0;
 
 
 function convertToTitleCase(str) {
@@ -33,20 +36,17 @@ function convertToTitleCase(str) {
 }
 
 
-    onMount(async () => {
-        optionsData= await plotData()
-        tableList = rawData;
-        tableList?.sort((a, b) => new Date(b?.date) - new Date(a?.date));
-        isLoaded = true;
-    })
 
 
-
-async function plotData()
+function plotData()
     {
-    
-    const filteredData = rawData
-    
+        const plotDataset = [...dataset]?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
+        const xData = plotDataset?.map(item => item?.date);
+        let valueList = [];
+        for (let i = 0; i < plotDataset?.length; i++) {
+        valueList.push(plotDataset[i]?.value);
+        }
+
     const options = {
         animation: false,
         grid: {
@@ -60,7 +60,7 @@ async function plotData()
         axisLabel: {
             color: '#fff',
         },
-        data: filteredData?.dates,
+        data: xData,
         type: 'category',
         },
         yAxis: [
@@ -77,8 +77,8 @@ async function plotData()
         ],
         series: [
         {
-            name: 'Mkt Cap',
-            data: filteredData?.marketCapList,
+            name: 'Revenue',
+            data: valueList,
             type: 'line',
             areaStyle: {opacity: 0.2},
             smooth: true,
@@ -96,9 +96,39 @@ async function plotData()
     
 
 
+$: {
+    if($stockTicker && data?.getParams && typeof window !== 'undefined') {
+        console.log('yes')
+        isLoaded = false;
+        dataset = [];
+        tableList= [];
+
+        dataset = rawData?.map(entry => ({
+            date: entry.date,
+            value: data?.getParams === 'data-center' ? entry?.value[0]
+                : data?.getParams === 'gaming' ? entry?.value[1]
+                : data?.getParams === 'visualization' ? entry?.value[2]
+                : data?.getParams === 'automotive' ? entry?.value[3]
+                : data?.getParams === 'oem-other' ? entry?.value[4]
+                : null,
+            
+            valueGrowth: data?.getParams === 'data-center' ? entry?.valueGrowth[0]
+                : data?.getParams === 'gaming' ? entry?.valueGrowth[1]
+                : data?.getParams === 'visualization' ?  entry?.valueGrowth[2]
+                : data?.getParams === 'automotive' ? entry?.valueGrowth[3]
+                : data?.getParams === 'oem-other' ? entry?.valueGrowth[4]
+                : null
+        }));
 
 
-    
+
+        tableList = [...dataset];
+
+        tableList = tableList?.sort((a, b) => new Date(b?.date) - new Date(a?.date));
+        optionsData= plotData()
+        isLoaded = true;
+    }
+}
 </script>
                     
     
@@ -134,11 +164,7 @@ async function plotData()
     
                         {#if rawData?.length !== 0}
                         <div class="grid grid-cols-1 gap-2">
-                            <div class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]">
-                                <svg class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"/></svg>
-                                {$displayCompanyName} has a market cap of {abbreviateNumber(data?.getStockQuote?.marketCap,true)} as of {(new Date())?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}. Its market cap has {changePercentageYearAgo > 0 ? 'increased' : changePercentageYearAgo < 0 ? 'decreased' : 'unchanged'} by {abbreviateNumber(changePercentageYearAgo?.toFixed(2))}% in one year.
-                            </div>
-    
+                          
                             
     
                             <div class="app w-full ">
@@ -168,28 +194,28 @@ async function plotData()
                                         <tr class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer">
                                         
                                             <td class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]">
-                                            {item?.date}
+                                            {new Date(item?.date ?? null)?.toLocaleString('en-US', {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            year: 'numeric',
+                                            })}
                                             </td>
 
                                             <td class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]">
-                                            {abbreviateNumber(item?.marketCap)}
+                                            {abbreviateNumber(item?.value)}
                                             </td>
 
                                             <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]">
-                                                {#if index+1-tableList?.length === 0}
-                                                -
-                                                {:else}
-                                                {#if (item?.marketCap- tableList[index+1]?.marketCap) > 0}
+                                                {#if item?.valueGrowth > 0}
                                                 <span class="text-[#37C97D]">
-                                                  +{(((item?.marketCap-tableList[index+1]?.marketCap) / item?.marketCap) * 100 )?.toFixed(2)}%
+                                                  +{(item?.valueGrowth)?.toFixed(2)}%
                                                 </span>
-                                                {:else if (item?.marketCap - tableList[index+1]?.marketCap ) < 0}
+                                                {:else if item?.valueGrowth < 0}
                                                 <span class="text-[#FF2F1F]">
-                                                  -{(Math?.abs((tableList[index+1]?.marketCap - item?.marketCap) / item?.marketCap) * 100 )?.toFixed(2)}%
+                                                  {(item?.valueGrowth)?.toFixed(2)}%
                                                 </span>
                                                 {:else}
                                                 -
-                                                {/if}
                                                 {/if}
                                             </td>
 
