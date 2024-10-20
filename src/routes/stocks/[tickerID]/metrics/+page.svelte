@@ -204,7 +204,9 @@
                       <td
                         class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
                       >
-                        {abbreviateNumber(value)}
+                        {value !== null && value !== 0 && value !== undefined
+                          ? abbreviateNumber(value)
+                          : "-"}
                       </td>
                     {/each}
                   </tr>
@@ -222,7 +224,9 @@
                             ? 'text-[#FF2F1F]'
                             : 'text-white'} font-medium border-b border-[#09090B]"
                       >
-                        {growthValue > 0 ? "+" : ""}{growthValue !== null
+                        {growthValue > 0 ? "+" : ""}{growthValue !== null &&
+                        growthValue !== 0 &&
+                        growthValue !== undefined
                           ? growthValue?.toFixed(2) + "%"
                           : "-"}
                       </td>
