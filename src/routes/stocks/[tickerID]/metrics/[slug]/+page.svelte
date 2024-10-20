@@ -12,10 +12,14 @@
   import { LineChart, BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-  import { onMount } from "svelte";
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
+
+  const names =
+    data?.getBusinessMetrics?.revenue?.names?.map((name) =>
+      name?.toLowerCase()?.replace(/[ &]+/g, "-"),
+    ) || [];
 
   let isLoaded = false;
   let optionsData;
@@ -95,34 +99,12 @@
       isLoaded = false;
       dataset = [];
       tableList = [];
-
+      // Find the index of the current getParams value in the names array
+      const index = names?.indexOf(data.getParams);
       dataset = rawData?.map((entry) => ({
         date: entry.date,
-        value:
-          data?.getParams === "data-center"
-            ? entry?.value[0]
-            : data?.getParams === "gaming"
-              ? entry?.value[1]
-              : data?.getParams === "visualization"
-                ? entry?.value[2]
-                : data?.getParams === "automotive"
-                  ? entry?.value[3]
-                  : data?.getParams === "oem-other"
-                    ? entry?.value[4]
-                    : null,
-
-        valueGrowth:
-          data?.getParams === "data-center"
-            ? entry?.valueGrowth[0]
-            : data?.getParams === "gaming"
-              ? entry?.valueGrowth[1]
-              : data?.getParams === "visualization"
-                ? entry?.valueGrowth[2]
-                : data?.getParams === "automotive"
-                  ? entry?.valueGrowth[3]
-                  : data?.getParams === "oem-other"
-                    ? entry?.valueGrowth[4]
-                    : null,
+        value: index !== -1 ? entry.value[index] : null,
+        valueGrowth: index !== -1 ? entry.valueGrowth[index] : null,
       }));
 
       tableList = [...dataset];
@@ -130,6 +112,7 @@
       tableList = tableList?.sort(
         (a, b) => new Date(b?.date) - new Date(a?.date),
       );
+
       optionsData = plotData();
       isLoaded = true;
     }

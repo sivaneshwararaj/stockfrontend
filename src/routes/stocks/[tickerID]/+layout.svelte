@@ -804,7 +804,7 @@ function handleTypeOfTrade(state:string)
                               : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
                           />
                         </li>
-                        {#if $stockTicker?.toLowerCase() === "nvda"}
+                        {#if ["nvda", "aapl", "gme"]?.includes($stockTicker?.toLowerCase())}
                           <li class="cursor-pointer flex flex-col items-center">
                             <a
                               href={`/stocks/${$stockTicker}/metrics`}
