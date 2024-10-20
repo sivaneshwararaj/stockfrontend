@@ -644,7 +644,7 @@
     },
 
     pe: {
-      label: "PE Ratio",
+      label: "Price / Earnings (ttm)",
       step: [50, 40, 30, 20, 10, 5, 1],
       category: "fund",
       defaultCondition: "over",
