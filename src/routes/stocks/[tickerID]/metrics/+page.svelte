@@ -125,18 +125,22 @@
                     <th
                       class="whitespace-nowrap odd:bg-[#27272A] text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
                     >
-                      <a
-                        href={getHref(name)}
-                        class="sm:hover:text-blue-400 cursor-pointer underline underline-offset-4"
-                      >
+                      {#if index < 3}
+                        <a
+                          href={getHref(name)}
+                          class="sm:hover:text-blue-400 cursor-pointer underline underline-offset-4"
+                        >
+                          {name} Revenue
+                        </a>
+                      {:else}
                         {name} Revenue
-                      </a></th
-                    >
+                      {/if}
+                    </th>
                     {#each categoryValues[index] as value}
                       <td
                         class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
                       >
-                        {abbreviateNumber(value)}
+                        {value !== null ? abbreviateNumber(value) : "-"}
                       </td>
                     {/each}
                   </tr>

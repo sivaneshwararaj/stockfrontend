@@ -63,7 +63,7 @@
           <ul
             class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2"
           >
-            {#each subsectionTitles as title}
+            {#each subsectionTitles?.slice(0,4) as title}
               {@const sectionKey = title
                 .toLowerCase()
                 .replace(/ & /g, "-")
