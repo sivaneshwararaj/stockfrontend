@@ -8,23 +8,26 @@
 
   export let data;
 
-  const names = data?.getBusinessMetrics?.revenue?.names;
+  const names = data?.getBusinessMetrics?.revenue?.names || [];
   const subsectionTitles = ["Overview", ...names];
 
   const sectionMap = Object.fromEntries(
-    subsectionTitles.map((title) => {
-      const key = title.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-");
+    subsectionTitles?.map((title) => {
+      const key = title
+        ?.toLowerCase()
+        ?.replace(/ & /g, "-")
+        ?.replace(/ /g, "-");
       return [key, key === "overview" ? "" : key];
     }),
   );
 
-  const dataset = data?.getBusinessMetrics?.revenue?.history;
+  const dataset = data?.getBusinessMetrics?.revenue?.history || [];
 
-  const geographicDataset = data?.getBusinessMetrics?.geographic?.history;
+  const geographicDataset = data?.getBusinessMetrics?.geographic?.history || [];
 
-  const revenueNames = data?.getBusinessMetrics?.revenue?.names;
+  const revenueNames = data?.getBusinessMetrics?.revenue?.names || [];
 
-  const geographicNames = data?.getBusinessMetrics?.geographic?.names;
+  const geographicNames = data?.getBusinessMetrics?.geographic?.names || [];
 
   const xData = dataset?.map((item) => item?.date);
   const geographicXData = geographicDataset?.map((item) => item?.date);
@@ -90,7 +93,7 @@
       class="relative flex justify-center items-center overflow-hidden w-full"
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-        {#if data?.getAnalystEstimate?.length !== 0}
+        {#if revenueNames?.length !== 0 || geographicNames?.length !== 0}
           <h2 class="mt-5 text-xl sm:text-2xl text-gray-200 font-bold mb-4">
             {$displayCompanyName} Revenue Breakdown
           </h2>
@@ -169,95 +172,97 @@
             </table>
           </div>
 
-          <h2 class="mt-10 text-xl sm:text-2xl text-gray-200 font-bold mb-4">
-            Revenue by Geography
-          </h2>
+          {#if geographicNames?.length !== 0}
+            <h2 class="mt-10 text-xl sm:text-2xl text-gray-200 font-bold mb-4">
+              Revenue by Geography
+            </h2>
 
-          <div
-            class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
-          >
-            <table
-              class="table table-sm shaodow table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+            <div
+              class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
             >
-              <thead>
-                <tr>
-                  <th
-                    class="bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm sm:text-[1rem] text-start"
-                    >Quarter</th
-                  >
-                  {#each geographicXData as item}
-                    <td
-                      class="z-20 bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm text-center bg-[#09090B]"
-                      >{new Date(item ?? null)?.toLocaleString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}</td
+              <table
+                class="table table-sm shaodow table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+              >
+                <thead>
+                  <tr>
+                    <th
+                      class="bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm sm:text-[1rem] text-start"
+                      >Quarter</th
                     >
+                    {#each geographicXData as item}
+                      <td
+                        class="z-20 bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm text-center bg-[#09090B]"
+                        >{new Date(item ?? null)?.toLocaleString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}</td
+                      >
+                    {/each}
+                  </tr>
+                </thead>
+                <tbody class="shadow-md">
+                  {#each geographicNames as name, index}
+                    <tr
+                      class="bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]"
+                    >
+                      <th
+                        class="text-white whitespace-nowrap odd:bg-[#27272A] text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
+                        >{name} Revenue</th
+                      >
+                      {#each geographiCategoryValues[index] as value}
+                        <td
+                          class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                        >
+                          {value !== null && value !== 0 && value !== undefined
+                            ? abbreviateNumber(value)
+                            : "-"}
+                        </td>
+                      {/each}
+                    </tr>
+                    <tr class="bg-[#09090B] border-b-[#09090B]">
+                      <th
+                        class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                      >
+                        <span class="ml-2">{name} Revenue Growth</span>
+                      </th>
+                      {#each geographicGrowthValues[index] as growthValue}
+                        <td
+                          class="text-sm sm:text-[1rem] text-end {growthValue >
+                          0
+                            ? 'text-[#37C97D]'
+                            : growthValue < 0
+                              ? 'text-[#FF2F1F]'
+                              : 'text-white'} font-medium border-b border-[#09090B]"
+                        >
+                          {growthValue > 0 ? "+" : ""}{growthValue !== null &&
+                          growthValue !== 0 &&
+                          growthValue !== undefined
+                            ? growthValue?.toFixed(2) + "%"
+                            : "-"}
+                        </td>
+                      {/each}
+                    </tr>
                   {/each}
-                </tr>
-              </thead>
-              <tbody class="shadow-md">
-                {#each geographicNames as name, index}
-                  <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]">
-                    <th
-                      class="text-white whitespace-nowrap odd:bg-[#27272A] text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
-                      >{name} Revenue</th
-                    >
-                    {#each geographiCategoryValues[index] as value}
-                      <td
-                        class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
-                      >
-                        {value !== null && value !== 0 && value !== undefined
-                          ? abbreviateNumber(value)
-                          : "-"}
-                      </td>
-                    {/each}
-                  </tr>
-                  <tr class="bg-[#09090B] border-b-[#09090B]">
-                    <th
-                      class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
-                    >
-                      <span class="ml-2">{name} Revenue Growth</span>
-                    </th>
-                    {#each geographicGrowthValues[index] as growthValue}
-                      <td
-                        class="text-sm sm:text-[1rem] text-end {growthValue > 0
-                          ? 'text-[#37C97D]'
-                          : growthValue < 0
-                            ? 'text-[#FF2F1F]'
-                            : 'text-white'} font-medium border-b border-[#09090B]"
-                      >
-                        {growthValue > 0 ? "+" : ""}{growthValue !== null &&
-                        growthValue !== 0 &&
-                        growthValue !== undefined
-                          ? growthValue?.toFixed(2) + "%"
-                          : "-"}
-                      </td>
-                    {/each}
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
+          {/if}
         {:else}
           <div
-            class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+            class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
           >
             <svg
-              class="w-6 h-6 mr-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              ><path
+                fill="#a474f6"
+                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+              /></svg
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 12l-2 2m0-2l2-2m2 2h6m-6 0H6"
-              />
-            </svg>
-            <p class="font-medium">No estimates available.</p>
+            Currently, there are no business metrics available for {$stockTicker}.
+            We're working to add more data soon!
           </div>
         {/if}
       </div>

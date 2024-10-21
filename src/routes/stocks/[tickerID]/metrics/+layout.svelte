@@ -4,12 +4,15 @@
 
   export let data;
 
-  const names = data?.getBusinessMetrics?.revenue?.names;
+  const names = data?.getBusinessMetrics?.revenue?.names || [];
   const subsectionTitles = ["Overview", ...names];
 
   const sectionMap = Object.fromEntries(
-    subsectionTitles.map((title) => {
-      const key = title.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-");
+    subsectionTitles?.map((title) => {
+      const key = title
+        ?.toLowerCase()
+        ?.replace(/ & /g, "-")
+        ?.replace(/ /g, "-");
       return [key, key === "overview" ? "" : key];
     }),
   );
@@ -63,7 +66,7 @@
           <ul
             class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2"
           >
-            {#each subsectionTitles?.slice(0,4) as title}
+            {#each subsectionTitles?.slice(0, 4) as title}
               {@const sectionKey = title
                 .toLowerCase()
                 .replace(/ & /g, "-")
