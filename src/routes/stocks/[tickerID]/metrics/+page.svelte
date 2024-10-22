@@ -105,7 +105,7 @@
             class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
           >
             <table
-              class="table table-sm shaodow table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+              class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
             >
               <thead>
                 <tr>
@@ -114,13 +114,13 @@
                     >Quarter</th
                   >
                   {#each xData as item}
-                    <td
+                    <th
                       class="z-20 bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm text-center bg-[#09090B]"
                       >{new Date(item ?? null)?.toLocaleString("en-US", {
                         month: "short",
                         day: "numeric",
                         year: "numeric",
-                      })}</td
+                      })}</th
                     >
                   {/each}
                 </tr>
@@ -151,11 +151,11 @@
                     {/each}
                   </tr>
                   <tr class="bg-[#09090B] border-b-[#09090B]">
-                    <th
+                    <td
                       class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
                     >
                       <span class="ml-2">{name} Revenue Growth</span>
-                    </th>
+                    </td>
                     {#each growthValues[index] as growthValue}
                       <td
                         class="text-sm sm:text-[1rem] text-end {growthValue > 0
@@ -184,7 +184,7 @@
               class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
             >
               <table
-                class="table table-sm shaodow table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
               >
                 <thead>
                   <tr>
@@ -193,13 +193,13 @@
                       >Quarter</th
                     >
                     {#each geographicXData as item}
-                      <td
+                      <th
                         class="z-20 bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm text-center bg-[#09090B]"
                         >{new Date(item ?? null)?.toLocaleString("en-US", {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
-                        })}</td
+                        })}</th
                       >
                     {/each}
                   </tr>
@@ -214,21 +214,21 @@
                         >{name} Revenue</th
                       >
                       {#each geographiCategoryValues[index] as value}
-                        <td
+                        <th
                           class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
                         >
                           {value !== null && value !== 0 && value !== undefined
                             ? abbreviateNumber(value)
                             : "-"}
-                        </td>
+                        </th>
                       {/each}
                     </tr>
                     <tr class="bg-[#09090B] border-b-[#09090B]">
-                      <th
+                      <td
                         class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
                       >
                         <span class="ml-2">{name} Revenue Growth</span>
-                      </th>
+                      </td>
                       {#each geographicGrowthValues[index] as growthValue}
                         <td
                           class="text-sm sm:text-[1rem] text-end {growthValue >
