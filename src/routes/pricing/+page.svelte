@@ -109,6 +109,8 @@ async function purchasePlan(subscriptionType:string='') {
 
 
 <section class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 pb-40 m-auto">
+
+    <!--
 {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
   <div class="mb-5 -mt-10 sm:-mt-5 relative sm:rounded isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
   <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
@@ -125,6 +127,9 @@ async function purchasePlan(subscriptionType:string='') {
   </div>
 </div>
 {/if}
+
+-->
+
     <div class="px-3">
         <div class="mx-auto text-center mb-8 ">
             
