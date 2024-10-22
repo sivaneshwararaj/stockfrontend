@@ -47,10 +47,15 @@
     const plotDataset = [...dataset]?.sort(
       (a, b) => new Date(a?.date) - new Date(b?.date),
     );
-    const xData = plotDataset?.map((item) => item?.date);
+    const xData = plotDataset
+      ?.filter((item) => item?.value !== null) // Filter out items where value is null
+      .map((item) => item?.date); // Map to the date property
+
     let valueList = [];
     for (let i = 0; i < plotDataset?.length; i++) {
-      valueList.push(plotDataset[i]?.value);
+      if (plotDataset[i]?.value !== null) {
+        valueList.push(plotDataset[i]?.value);
+      }
     }
 
     const options = {
@@ -213,7 +218,9 @@
                           <td
                             class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                           >
-                            {item?.value !== null ? abbreviateNumber(item?.value) : '-'}
+                            {item?.value !== null
+                              ? abbreviateNumber(item?.value)
+                              : "-"}
                           </td>
 
                           <td
