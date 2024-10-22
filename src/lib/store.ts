@@ -49,7 +49,7 @@ export const shouldUpdatePriceChart = writable(<boolean>false);
 export const executiveClicked = writable(<boolean>false);
 export const secFilingsClicked = writable(<boolean>false);
 
-export const discordMembers = writable(<Number>308);
+export const discordMembers = writable(<Number>380);
 
 export const newAvatar = writable(<string>"");
 

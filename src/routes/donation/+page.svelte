@@ -149,7 +149,7 @@ let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
                 Become a sponsor to stocknear
             </h2>
             <p class="text-white mb-5 text-[1rem]">
-               If you believe in our mission and want to support us beyond your Pro Subscription, consider buying me a coffee through Ko-fi. Every contribution, no matter the size, makes a significant impact on our ability to serve you and the retail investor community. 
+               If you believe in our mission and want to support us beyond your Pro Subscription, please support us via GitHub Sponsors. Every contribution, no matter the size, makes a significant impact on our ability to serve you and the retail investor community. 
                 <br>
                 <br>
                 <a href="https://github.com/sponsors/stocknear" rel="noopener noreferrer" target="_blank" class="text-blue-400 sm:hover:text-white">Sponsor us here</a> 
