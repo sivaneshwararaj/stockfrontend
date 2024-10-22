@@ -11,8 +11,11 @@
     subsectionTitles?.map((title) => {
       const key = title
         ?.toLowerCase()
-        ?.replace(/ & /g, "-")
-        ?.replace(/ /g, "-");
+        ?.replace(/&/g, "") // Remove & symbol
+        ?.replace(/\s+/g, "-") // Replace spaces with dash
+        ?.replace(/-{2,}/g, "-") // Replace multiple dashes with single dash
+        ?.replace(/^-|-$/g, "") // Remove leading/trailing dashes
+        ?.trim();
       return [key, key === "overview" ? "" : key];
     }),
   );
@@ -68,9 +71,12 @@
           >
             {#each subsectionTitles?.slice(0, 4) as title}
               {@const sectionKey = title
-                .toLowerCase()
-                .replace(/ & /g, "-")
-                .replace(/ /g, "-")}
+                ?.toLowerCase()
+                ?.replace(/&/g, "") // Remove & symbol
+                ?.replace(/\s+/g, "-") // Replace spaces with dash
+                ?.replace(/-{2,}/g, "-") // Replace multiple dashes with single dash
+                ?.replace(/^-|-$/g, "") // Remove leading/trailing dashes
+                ?.trim()}
               <li class="cursor-pointer flex flex-col items-center">
                 <a
                   href={getHref(sectionKey)}

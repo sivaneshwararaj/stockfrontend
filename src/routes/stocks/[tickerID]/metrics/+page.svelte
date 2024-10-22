@@ -9,18 +9,21 @@
   export let data;
 
   const names = data?.getBusinessMetrics?.revenue?.names || [];
+
   const subsectionTitles = ["Overview", ...names];
 
   const sectionMap = Object.fromEntries(
     subsectionTitles?.map((title) => {
       const key = title
         ?.toLowerCase()
-        ?.replace(/ & /g, "-")
-        ?.replace(/ /g, "-");
+        ?.replace(/&/g, "") // Remove & symbol
+        ?.replace(/\s+/g, "-") // Replace spaces with dash
+        ?.replace(/-{2,}/g, "-") // Replace multiple dashes with single dash
+        ?.replace(/^-|-$/g, "") // Remove leading/trailing dashes
+        ?.trim();
       return [key, key === "overview" ? "" : key];
     }),
   );
-
   const dataset = data?.getBusinessMetrics?.revenue?.history || [];
 
   const geographicDataset = data?.getBusinessMetrics?.geographic?.history || [];

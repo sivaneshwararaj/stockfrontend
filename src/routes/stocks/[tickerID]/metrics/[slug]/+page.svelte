@@ -18,7 +18,13 @@
 
   const names =
     data?.getBusinessMetrics?.revenue?.names?.map((name) =>
-      name?.toLowerCase()?.replace(/[ &]+/g, "-"),
+      name
+        ?.toLowerCase()
+        ?.replace(/&/g, "") // Remove & symbol
+        ?.replace(/\s+/g, "-") // Replace spaces with dash
+        ?.replace(/-{2,}/g, "-") // Replace multiple dashes with single dash
+        ?.replace(/^-|-$/g, "") // Remove leading/trailing dashes
+        ?.trim(),
     ) || [];
 
   let isLoaded = false;
