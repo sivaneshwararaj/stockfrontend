@@ -213,7 +213,7 @@
                           <td
                             class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                           >
-                            {abbreviateNumber(item?.value)}
+                            {item?.value !== null ? abbreviateNumber(item?.value) : '-'}
                           </td>
 
                           <td
