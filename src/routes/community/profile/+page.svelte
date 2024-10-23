@@ -8,6 +8,7 @@
   import { onMount, onDestroy } from 'svelte';
   import {getImageURL, addDays } from '$lib/utils';
   import {newAvatar, numberOfUnreadNotification, postIdDeleted } from '$lib/store';
+  import defaultAvatar from "$lib/images/default_avatar.png";
 
   import toast from 'svelte-french-toast';
 	import InfiniteLoading from '$lib/components/InfiniteLoading.svelte';
@@ -523,8 +524,8 @@ onDestroy(async () => {
                   hidden
                   on:change={showPreview}
                 />
-                <label for="avatar" class="avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full hover:cursor-pointer">
-                  <label for="avatar" class="absolute z-10 -bottom-0.5 -right-0.5 hover:cursor-pointer">
+                <label for="avatar" class="avatar w-20 h-20 sm:w-24 sm:h-24 rounded-full sm:hover:cursor-pointer">
+                  <label for="avatar" class="absolute z-10 -bottom-0.5 -right-0.5 sm:hover:cursor-pointer">
                     <span class="btn btn-circle btn-sm btn-secondary">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24"><path fill="white" d="m14.06 9l.94.94L5.92 19H5v-.92L14.06 9m3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75Z"/></svg>
                     </span>
@@ -532,7 +533,7 @@ onDestroy(async () => {
                     <img style="clip-path: circle(50%);" class="w-24 bg-slate-300 border border-slate-400 rounded-full inline-block "
                     src={data?.user?.avatar
                         ? getImageURL(data?.user?.collectionId, data?.user?.id, data?.user?.avatar)
-                        : `https://avatar.vercel.sh/${data?.user?.username}`} 
+                        : defaultAvatar} 
                         alt="User avatar"
                         id="avatar-preview"
                       />
