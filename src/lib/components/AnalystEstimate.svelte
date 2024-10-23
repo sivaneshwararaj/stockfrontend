@@ -332,9 +332,9 @@ function findIndex(data) {
               <table class="table table-sm shaodow table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]">
                 <thead class="">
                   <tr class="">
-                    <th class="bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm sm:text-[1rem] text-start">Year</th>
+                    <th class="bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-start">Year</th>
                     {#each xData as item}
-                      <td class="z-20 bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm sm:text-[1rem] text-center bg-[#09090B]">{"FY" + item}</td>
+                      <td class="z-20 bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-end bg-[#09090B]">{"FY" + item}</td>
                     {/each}
                   </tr>
                 </thead>
