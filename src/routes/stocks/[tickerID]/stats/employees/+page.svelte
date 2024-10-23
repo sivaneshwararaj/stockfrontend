@@ -572,22 +572,22 @@
               <thead>
                 <tr>
                   <th
-                    class="text-start border-b border-[#09090B] bg-[#09090B] text-white text-[1rem] whitespace-nowrap font-semibiold"
+                    class="text-start border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
                   >
                     Date
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-[1rem] whitespace-nowrap font-semibiold"
+                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
                   >
                     Employees
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-[1rem] whitespace-nowrap font-semibiold"
+                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
                   >
                     Change
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-[1rem] whitespace-nowrap font-semibiold"
+                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
                   >
                     Growth
                   </th>
