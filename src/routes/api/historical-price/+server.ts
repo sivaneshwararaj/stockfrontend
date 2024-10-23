@@ -5,7 +5,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const { apiURL, apiKey } = locals;
 
   const postData = { ticker: data?.ticker, timePeriod: data?.timePeriod };
-  const response = await fetch(apiURL + "/export-price-data", {
+  const response = await fetch(apiURL + "/historical-price", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
