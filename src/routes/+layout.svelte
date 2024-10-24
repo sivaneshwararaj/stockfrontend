@@ -625,11 +625,19 @@ const handleTwitchMessage = (event) => {
                               >Jim Cramer Tracker</a
                             >
                           </Button>
-                          <!--
-                          <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
-                            <a href="/most-retail-volume" class="text-start w-full text-[1rem] text-white ml-4 mt-4">Retail Trader Tracker</a>
+
+                          <Button
+                            builders={[builder]}
+                            type="submit"
+                            class="w-full bg-[#141417] hover:bg-[#141417]"
+                          >
+                            <a
+                              href="/insider-tracker"
+                              class="text-start w-full text-[1rem] text-white ml-4 mt-4"
+                              >Insider Tracker</a
+                            >
                           </Button>
-                          -->
+
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -1098,7 +1106,11 @@ const handleTwitchMessage = (event) => {
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Jim Cramer Tracker</a
                           >
-                          <!--<a href="/most-retail-volume" class="text-[1rem] text-white ml-4 mt-4">Retail Trader Tracker</a>-->
+                          <a
+                            href="/insider-tracker"
+                            class="text-[1rem] text-white ml-4 mt-4"
+                            >Insider Tracker</a
+                          >
                           <a
                             href="/reddit-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"
