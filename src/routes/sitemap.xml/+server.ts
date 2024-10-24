@@ -15,6 +15,7 @@ const pages = [
   { title: "/donation" },
   //{title: "/portfolio"},
   { title: "/sentiment-tracker" },
+  { title: "/insider-tracker" },
   { title: "/industry" },
   { title: "/industry/sectors" },
   { title: "/industry/all" },

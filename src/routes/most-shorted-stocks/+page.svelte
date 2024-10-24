@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
@@ -249,7 +248,6 @@
                   <tbody>
                     {#each stockList as item, index}
                       <tr
-                        on:click={() => goto(`/stocks/${item?.symbol}`)}
                         class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index +
                           1 ===
                           stockList?.length && data?.user?.tier !== 'Pro'
@@ -330,10 +328,10 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              on:click={() => goto("/pricing")}
               class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
             >
-              <div
+              <a
+                href={"/pricing"}
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -345,15 +343,17 @@
                 <span class="text-white p-3 ml-3 mr-3">
                   Upgrade now for unlimited access to all data and tools
                 </span>
-              </div>
+              </a>
             </div>
           {/if}
 
           <div
-            on:click={() => goto("/analysts")}
             class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href={"/analysts"}
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Top Analyst 📊
@@ -363,14 +363,16 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Get the latest top Wall Street analyst ratings
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/analysts/top-stocks")}
             class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href={"/analysts/top-stocks"}
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Top Stocks Picks ⭐
@@ -380,7 +382,7 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Get the latest top Wall Street analyst ratings.
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>

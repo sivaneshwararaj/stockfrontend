@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { numberOfUnreadNotification } from '$lib/store';
-  import { sortTableData } from '$lib/utils';
-  import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
-  import ArrowLogo from 'lucide-svelte/icons/move-up-right';
-  import TableHeader from '$lib/components/Table/TableHeader.svelte';
+  import { numberOfUnreadNotification } from "$lib/store";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+  import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   export let data;
 
@@ -28,28 +26,28 @@
 
   onMount(async () => {
     isLoaded = true;
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   });
 
   let columns = [
-    { key: 'rank', label: 'Rank', align: 'left' },
-    { key: 'analystName', label: 'Analyst', align: 'left' },
-    { key: 'successRate', label: 'Success Rate', align: 'right' },
-    { key: 'avgReturn', label: 'Avg. Return', align: 'right' },
-    { key: 'totalRatings', label: 'Total Ratings', align: 'right' },
-    { key: 'lastRating', label: 'Last Rating', align: 'right' },
+    { key: "rank", label: "Rank", align: "left" },
+    { key: "analystName", label: "Analyst", align: "left" },
+    { key: "successRate", label: "Success Rate", align: "right" },
+    { key: "avgReturn", label: "Avg. Return", align: "right" },
+    { key: "totalRatings", label: "Total Ratings", align: "right" },
+    { key: "lastRating", label: "Last Rating", align: "right" },
   ];
 
   let sortOrders = {
-    rank: { order: 'none', type: 'number' },
-    analystName: { order: 'none', type: 'string' },
-    successRate: { order: 'none', type: 'number' },
-    avgReturn: { order: 'none', type: 'number' },
-    totalRatings: { order: 'none', type: 'number' },
-    lastRating: { order: 'none', type: 'date' },
+    rank: { order: "none", type: "number" },
+    analystName: { order: "none", type: "string" },
+    successRate: { order: "none", type: "number" },
+    avgReturn: { order: "none", type: "number" },
+    totalRatings: { order: "none", type: "number" },
+    lastRating: { order: "none", type: "date" },
   };
 
   const sortData = (key) => {
@@ -57,12 +55,12 @@
     let finalList = [];
     for (const k in sortOrders) {
       if (k !== key) {
-        sortOrders[k].order = 'none';
+        sortOrders[k].order = "none";
       }
     }
 
     // Cycle through 'none', 'asc', 'desc' for the clicked key
-    const orderCycle = ['none', 'asc', 'desc'];
+    const orderCycle = ["none", "asc", "desc"];
     const originalData = rawData?.slice(0, 40);
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
@@ -70,7 +68,7 @@
     const sortOrder = sortOrders[key].order;
 
     // Reset to original data when 'none' and stop further sorting
-    if (sortOrder === 'none') {
+    if (sortOrder === "none") {
       analytRatingList = [...originalData]; // Reset to original data (spread to avoid mutation)
       return;
     }
@@ -81,24 +79,24 @@
       let valueA, valueB;
 
       switch (type) {
-        case 'date':
+        case "date":
           valueA = new Date(a[key]);
           valueB = new Date(b[key]);
           break;
-        case 'string':
+        case "string":
           valueA = a[key].toUpperCase();
           valueB = b[key].toUpperCase();
-          return sortOrder === 'asc'
+          return sortOrder === "asc"
             ? valueA.localeCompare(valueB)
             : valueB.localeCompare(valueA);
-        case 'number':
+        case "number":
         default:
           valueA = parseFloat(a[key]);
           valueB = parseFloat(b[key]);
           break;
       }
 
-      if (sortOrder === 'asc') {
+      if (sortOrder === "asc") {
         return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
       } else {
         return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
@@ -114,7 +112,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Top
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
     Wall Street Stock Analysts · stocknear
   </title>
   <meta
@@ -214,7 +212,7 @@
                 <div class="z-1 absolute top-4">
                   <img
                     class="w-36 ml-2"
-                    src={cloudFrontUrl + '/assets/analyst_logo.png'}
+                    src={cloudFrontUrl + "/assets/analyst_logo.png"}
                     alt="logo"
                     loading="lazy"
                   />
@@ -255,7 +253,7 @@
                         >
                           <div class="flex flex-col items-start">
                             <a
-                              href={'/analysts/' + item?.analystId}
+                              href={"/analysts/" + item?.analystId}
                               class="sm:hover:text-white text-blue-400 font-medium"
                               >{item?.analystName}
                             </a>
@@ -339,15 +337,15 @@
                         >
                           {item?.lastRating !== null
                             ? new Date(item?.lastRating)?.toLocaleString(
-                                'en-US',
+                                "en-US",
                                 {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                  daySuffix: '2-digit',
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                  daySuffix: "2-digit",
                                 },
                               )
-                            : 'n/a'}
+                            : "n/a"}
                         </td>
                       </tr>
                     {/each}
@@ -355,11 +353,11 @@
                 </table>
               </div>
 
-                <UpgradeToPro
-                  {data}
-                  title="Get stock forecasts from Wall Street's highest rated professionals"
-                />
-              {:else}
+              <UpgradeToPro
+                {data}
+                title="Get stock forecasts from Wall Street's highest rated professionals"
+              />
+            {:else}
               <div class="flex justify-center items-center h-80">
                 <div class="relative">
                   <label
@@ -375,12 +373,12 @@
           </div>
         </main>
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
+          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              on:click={() => goto('/pricing')}
               class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
             >
-              <div
+              <a
+                href={"/pricing"}
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -392,15 +390,17 @@
                 <span class="text-white p-3 ml-3 mr-3">
                   Upgrade now for unlimited access to all data and tools
                 </span>
-              </div>
+              </a>
             </div>
           {/if}
 
           <div
-            on:click={() => goto('/analysts/top-stocks')}
             class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href={"/analysts/top-stocks"}
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Top Stocks Picks ⭐
@@ -410,14 +410,16 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Get the latest top Wall Street analyst ratings.
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto('/most-shorted-stocks')}
             class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href={"/most-shorted-stocks"}
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Top Shorted Stocks 🍋
@@ -427,7 +429,7 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Never miss out another short squeeze
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>
