@@ -18,9 +18,11 @@
   const tabs = [
     {
       title: "Stocks",
+      path: "/watchlist/stocks",
     },
     {
       title: "Options",
+      path: "/watchlist/options",
     },
   ];
 
@@ -124,8 +126,7 @@
           >
             {#each tabs as item, i}
               <a
-                href={i === 0 ? "/watchlist/stocks" : "/watchlist/options"}
-                on:click={() => handleMode(i)}
+                href={item?.path}
                 class="group relative z-[1] rounded-full px-6 py-1 {activeIdx ===
                 i
                   ? 'z-0'
