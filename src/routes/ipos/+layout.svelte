@@ -188,8 +188,6 @@
             </ul>
           </div>
 
-          <div class="border-b mt-4 border-slate-700" />
-
           <slot />
         </main>
 

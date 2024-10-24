@@ -78,11 +78,11 @@
   $: charNumber = $screenWidth < 640 ? 20 : 40;
 </script>
 
-<section class="w-full overflow-hidden m-auto">
+<section class="w-full overflow-hidden m-auto px-3 sm:px-0">
   {#if isLoaded}
     <div class="flex flex-col justify-center items-center">
       <div
-        class="mt-0 sm:mt-5 mb-2 w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 font-medium border border-gray-800 sm:rounded-lg h-auto p-5"
+        class="mt-5 mb-2 w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 font-medium border border-gray-800 rounded-md h-auto p-5"
       >
         <svg
           class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -96,9 +96,7 @@
         There have been {totalIPOs} IPOs on the US stock market in {year}.
       </div>
 
-      <div
-        class="mr-auto flex flex-col jusitfy-start items-start ml-2 mb-5 mt-5"
-      >
+      <div class="mr-auto flex flex-col jusitfy-start items-start mb-5 mt-5">
         <div class="text-white text-sm sm:text-[1rem] font-medium mr-2">
           Select Time period
         </div>
@@ -126,6 +124,11 @@
       </div>
 
       {#if rawData?.length !== 0}
+        <h2
+          class="text-white text-xl font- text-start mt-5 w-full font-semibold"
+        >
+          {rawData?.length} IPOs
+        </h2>
         <div class="w-full overflow-x-scroll">
           <table
             class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto overflow-hidden"
