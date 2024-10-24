@@ -458,7 +458,7 @@
           </div>
 
           <div
-            on:click={() => goto("/insider-tracker")}
+            on:click={() => goto("/sentiment-tracker")}
             class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
