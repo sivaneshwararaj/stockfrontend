@@ -87,7 +87,7 @@ let allBlogPosts = data?.getAllBlogPost;
     <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
       <ul>
         <li><a href="/" class="text-gray-300">Home</a></li>
-        <li class="text-gray-300">Top Shorted Stocks</li>
+        <li class="text-gray-300">Blog Posts</li>
       </ul>
     </div>
             

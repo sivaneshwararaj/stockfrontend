@@ -792,7 +792,7 @@ const handleTwitchMessage = (event) => {
                     <Card.Title>Upgrade to Pro</Card.Title>
                     <Card.Description>
                       {#if !data?.user || data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
-                        Get unlimit access to all features
+                        Get unlimited access to all features
                       {/if}
                     </Card.Description>
                   </Card.Header>
