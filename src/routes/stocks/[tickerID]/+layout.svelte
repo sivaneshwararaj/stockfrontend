@@ -894,23 +894,6 @@ function handleTypeOfTrade(state:string)
                               : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
                           />
                         </li>
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}/news`}
-                            on:click={() => changeSection("news")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'news'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}"
-                          >
-                            News
-                          </a>
-                          <div
-                            class="{displaySection === 'news'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
-                          />
-                        </li>
                       </ul>
                     </div>
 

@@ -76,11 +76,12 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     "/next-earnings",
     "/earnings-surprise",
     "/dividend-announcement",
+    "/stock-news",
   ];
 
   const promises = [
     ...endpoints.map((endpoint) =>
-      fetchData(apiURL, apiKey, endpoint, tickerID)
+      fetchData(apiURL, apiKey, endpoint, tickerID),
     ),
     fetchWatchlist(pb, user?.id),
     //fetchFromFastify(fastifyURL, '/get-portfolio-data', user?.id),
@@ -99,6 +100,7 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     getNextEarnings,
     getEarningsSurprise,
     getDividendAnnouncement,
+    getNews,
     getUserWatchlist,
     getCommunitySentiment,
   ] = await Promise.all(promises);
@@ -115,6 +117,7 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     getNextEarnings,
     getEarningsSurprise,
     getDividendAnnouncement,
+    getNews,
     getUserWatchlist,
     getCommunitySentiment,
     companyName: cleanString(getStockDeck?.at(0)?.companyName),
