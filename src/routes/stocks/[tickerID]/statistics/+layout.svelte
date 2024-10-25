@@ -43,7 +43,7 @@
   class="w-auto max-w-5xl bg-[#09090B] overflow-hidden text-black h-full mb-40"
 >
   <div class="m-auto h-full overflow-hidden">
-    <main class="w-fit sm:w-full sm:max-w-2xl">
+    <main class="w-full">
       <div class="m-auto">
         <div
           class="-ml-2 sm:ml-8 w-screen sm:w-full {$screenWidth < 640

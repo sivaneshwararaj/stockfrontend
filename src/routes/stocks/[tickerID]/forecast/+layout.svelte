@@ -13,9 +13,14 @@
       analyst: "analyst",
     };
 
-    const foundSection = parts?.find((part) => Object?.values(sectionMap)?.includes(part));
+    const foundSection = parts?.find((part) =>
+      Object?.values(sectionMap)?.includes(part),
+    );
 
-    displaySubSection = Object?.keys(sectionMap)?.find((key) => sectionMap[key] === foundSection) || "overview";
+    displaySubSection =
+      Object?.keys(sectionMap)?.find(
+        (key) => sectionMap[key] === foundSection,
+      ) || "overview";
   }
 
   function changeSubSection(state) {
@@ -39,7 +44,10 @@
 
   const unsubscribe = page.subscribe(($page) => {
     const splitRoute = $page.url.pathname.split("/");
-    const routeState = splitRoute[splitRoute.length - 1] !== "forecast" ? splitRoute[splitRoute.length - 1] : "overview";
+    const routeState =
+      splitRoute[splitRoute.length - 1] !== "forecast"
+        ? splitRoute[splitRoute.length - 1]
+        : "overview";
 
     changeSubSection(routeState);
   });
@@ -49,37 +57,70 @@
   });
 </script>
 
-<section class="w-auto max-w-5xl bg-[#09090B] overflow-hidden text-black h-full mb-40">
+<section
+  class="w-auto max-w-5xl bg-[#09090B] overflow-hidden text-black h-full mb-40"
+>
   <div class="m-auto h-full overflow-hidden">
-    <main class="w-fit sm:w-full sm:max-w-2xl">
+    <main class="w-full">
       <div class="m-auto">
-        <div class="-ml-2 sm:ml-8 w-screen sm:w-full {$screenWidth < 640 ? 'overflow-auto scrollbar' : 'no-scrollbar'} mb-2">
-          <ul class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2">
+        <div
+          class="-ml-2 sm:ml-8 w-screen sm:w-full {$screenWidth < 640
+            ? 'overflow-auto scrollbar'
+            : 'no-scrollbar'} mb-2"
+        >
+          <ul
+            class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2"
+          >
             <li class="cursor-pointer flex flex-col items-center">
               <a
                 href={`/stocks/${$stockTicker}/forecast`}
                 on:click={() => changeSubSection("overview")}
-                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection === 'overview' ? 'text-white ' : 'bg-[#09090B]'}"
+                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
+                'overview'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
               >
                 Overview
               </a>
-              <div class="{displaySubSection === 'overview' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]" />
+              <div
+                class="{displaySubSection === 'overview'
+                  ? 'bg-[#75D377]'
+                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
+              />
             </li>
             <li class="cursor-pointer flex flex-col items-center">
-              <a href={`/stocks/${$stockTicker}/forecast/ai`} on:click={() => changeSubSection("ai")} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection === 'ai' ? 'text-white ' : 'bg-[#09090B]'}">
+              <a
+                href={`/stocks/${$stockTicker}/forecast/ai`}
+                on:click={() => changeSubSection("ai")}
+                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
+                'ai'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
+              >
                 AI
               </a>
-              <div class="{displaySubSection === 'ai' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]" />
+              <div
+                class="{displaySubSection === 'ai'
+                  ? 'bg-[#75D377]'
+                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
+              />
             </li>
             <li class="cursor-pointer flex flex-col items-center">
               <a
                 href={`/stocks/${$stockTicker}/forecast/analyst`}
                 on:click={() => changeSubSection("analyst")}
-                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection === 'analyst' ? 'text-white ' : 'bg-[#09090B]'}"
+                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
+                'analyst'
+                  ? 'text-white '
+                  : 'bg-[#09090B]'}"
               >
                 Analysts
               </a>
-              <div class="{displaySubSection === 'analyst' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]" />
+              <div
+                class="{displaySubSection === 'analyst'
+                  ? 'bg-[#75D377]'
+                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
+              />
             </li>
           </ul>
         </div>

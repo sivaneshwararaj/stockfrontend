@@ -11,7 +11,6 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
-
   export let data;
   let isLoaded = false;
 
@@ -21,7 +20,6 @@
   let year = now.getFullYear();
   let quarter = Math.floor(now.getMonth() / 3) + 1;
   let yearRange = [];
-
 
   function calculateInsiderTradingStatistics(data, year, quarter) {
     // Helper function to check if the transaction date is within the current quarter
@@ -114,9 +112,7 @@
 
     yearRange = Array.from(
       new Set(
-        rawData?.map((item) =>
-          (new Date(item?.transactionDate))?.getFullYear(),
-        ),
+        rawData?.map((item) => new Date(item?.transactionDate)?.getFullYear()),
       ),
     )?.sort((a, b) => b - a);
     if (yearRange?.length > 0) {
@@ -150,7 +146,6 @@
     "n/a": { text: "n/a", class: "text-gray-300" },
   };
 
-
   let columns = [
     { key: "reportingName", label: "Name", align: "left" },
     { key: "transactionDate", label: "Date", align: "right" },
@@ -167,8 +162,7 @@
     value: { order: "none", type: "number" },
   };
 
-
-    const sortData = (key) => {
+  const sortData = (key) => {
     // Reset all other keys to 'none' except the current key
     for (const k in sortOrders) {
       if (k !== key) {
@@ -188,7 +182,7 @@
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      insiderTradingList = [...originalData]?.slice(0,50); // Reset to original data (spread to avoid mutation)
+      insiderTradingList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
       return;
     }
 
@@ -223,11 +217,11 @@
     };
 
     // Sort using the generic comparison function
-    insiderTradingList = [...originalData].sort(compareValues)?.slice(0,50);
+    insiderTradingList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
 
-$: {
-    if((year || quarter ) && typeof window !== 'undefined') {
+  $: {
+    if ((year || quarter) && typeof window !== "undefined") {
       statistics = calculateInsiderTradingStatistics(rawData, year, quarter);
       buySellRatio =
         statistics?.soldShares !== 0
@@ -276,14 +270,14 @@ $: {
 </svelte:head>
 
 <section
-  class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full"
+  class="w-full bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0"
 >
-  <div class="flex justify-center m-auto h-full overflow-hidden w-full">
+  <div class="w-full flex h-full overflow-hidden">
     <div
-      class="relative flex justify-center items-center overflow-hidden w-full"
+      class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="xl:p-7 w-full m-auto mt-2">
-        <div class="mb-6">
+      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+        <div class="w-full mb-6">
           <h1 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
             Insider Trading
           </h1>
@@ -391,13 +385,13 @@ $: {
                       </DropdownMenu.Label>
                       <DropdownMenu.Separator />
                       <DropdownMenu.Group>
-                        {#each [1,2,3,4] as index}
-                        <DropdownMenu.Item
-                          on:click={() => (quarter = index)}
-                          class="cursor-pointer hover:bg-[#27272A]"
-                        >
-                          Q{index}
-                        </DropdownMenu.Item>
+                        {#each [1, 2, 3, 4] as index}
+                          <DropdownMenu.Item
+                            on:click={() => (quarter = index)}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            Q{index}
+                          </DropdownMenu.Item>
                         {/each}
                       </DropdownMenu.Group>
                     </DropdownMenu.Content>
@@ -613,9 +607,9 @@ $: {
               <table
                 class="table table-sm table-pin-rows table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
               >
-               <thead>
-                    <TableHeader {columns} {sortOrders} {sortData} />
-                  </thead>
+                <thead>
+                  <TableHeader {columns} {sortOrders} {sortData} />
+                </thead>
                 <tbody>
                   {#each data?.user?.tier === "Pro" ? insiderTradingList : insiderTradingList?.slice(0, 3) as item, index}
                     {#if item?.price > 0}
@@ -675,9 +669,7 @@ $: {
                                 class={transactionStyles[item?.transactionType]
                                   ?.class}
                               >
-                                {abbreviateNumber(
-                                  item?.value,
-                                )}
+                                {abbreviateNumber(item?.value)}
                               </div>
                               <div
                                 class="{transactionStyles[item?.transactionType]

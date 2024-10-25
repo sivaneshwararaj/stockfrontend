@@ -105,6 +105,7 @@ function handleTypeOfTrade(state:string)
       dividends: "/dividends",
       statistics: "/statistics",
       forecast: "/forecast",
+      financials: "/financials",
       news: "/news",
     };
 
@@ -759,7 +760,7 @@ function handleTypeOfTrade(state:string)
                         : ''} mb-2"
                     >
                       <ul
-                        class="pr-4 sm:pr-0 w-screen sm:w-full overflow-x-scroll font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
+                        class="pr-4 sm:pr-0 w-screen overflow-x-scroll font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
                       >
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
