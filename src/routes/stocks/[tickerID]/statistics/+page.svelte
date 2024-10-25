@@ -213,7 +213,7 @@ updateYearRange()
                       ><span>Shares Outstanding</span>
                     </td>
                     <td
-                      class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="3,194,640,415">3.19B</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
@@ -221,7 +221,7 @@ updateYearRange()
                       ><span>Shares Change (YoY)</span>
                     </td>
                     <td
-                      class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="0.309%">+0.31%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
@@ -229,7 +229,7 @@ updateYearRange()
                       ><span>Shares Change (QoQ)</span>
                     </td>
                     <td
-                      class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="0.460%">+0.46%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
@@ -237,7 +237,7 @@ updateYearRange()
                       ><span>Owned by Insiders (%)</span>
                     </td>
                     <td
-                      class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="12.963%">12.96%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
@@ -245,7 +245,7 @@ updateYearRange()
                       ><span>Owned by Institutions (%)</span>
                     </td>
                     <td
-                      class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="45.989%">45.99%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
@@ -253,7 +253,7 @@ updateYearRange()
                       ><span>Float</span>
                     </td>
                     <td
-                      class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="2,777,647,654">2.78B</td
                     >
                   </tr></tbody
