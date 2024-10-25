@@ -98,22 +98,12 @@ function handleTypeOfTrade(state:string)
 }
 */
 
-  function scrollToItem(itemId) {
-    const item = document.getElementById(itemId);
-    if (item) {
-      item.scrollIntoView({ behavior: "smooth" });
-      window.scrollTo(0, 0);
-    }
-  }
-
-  function changeSection(state, item) {
-    scrollToItem(item);
-
+  function changeSection(state) {
     const sectionMap = {
       insider: "/insider",
       options: "/options",
       dividends: "/dividends",
-      stats: "/stats",
+      statistics: "/statistics",
       forecast: "/forecast",
       news: "/news",
     };
@@ -333,7 +323,8 @@ function handleTypeOfTrade(state:string)
     if ($page.url.pathname) {
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
-        stats: "stats",
+        statistics: "statistics",
+        financials: "financials",
         options: "options",
         metrics: "metrics",
         insider: "insider",
@@ -768,13 +759,12 @@ function handleTypeOfTrade(state:string)
                         : ''} mb-2"
                     >
                       <ul
-                        class="pr-4 sm:pr-0 w-screen font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
+                        class="pr-4 sm:pr-0 w-screen sm:w-full overflow-x-scroll font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
                       >
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}`}
-                            id="item1"
-                            on:click={() => changeSection("overview", "item1")}
+                            on:click={() => changeSection("overview")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'overview'
                               ? 'text-white '
@@ -790,16 +780,30 @@ function handleTypeOfTrade(state:string)
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
-                            href={`/stocks/${$stockTicker}/stats`}
-                            id="item2"
-                            on:click={() => changeSection("stats", "item2")}
+                            href={`/stocks/${$stockTicker}/financials`}
+                            on:click={() => changeSection("financials")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'stats'
+                            'financials'
                               ? 'text-white '
-                              : 'bg-[#09090B]'}">Stats</a
+                              : 'bg-[#09090B]'}">Financials</a
                           >
                           <div
-                            class="{displaySection === 'stats'
+                            class="{displaySection === 'financials'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
+                          />
+                        </li>
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/stocks/${$stockTicker}/statistics`}
+                            on:click={() => changeSection("statistics")}
+                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'statistics'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}">Statistics</a
+                          >
+                          <div
+                            class="{displaySection === 'statistics'
                               ? 'bg-[#75D377]'
                               : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
                           />
@@ -808,8 +812,7 @@ function handleTypeOfTrade(state:string)
                           <li class="cursor-pointer flex flex-col items-center">
                             <a
                               href={`/stocks/${$stockTicker}/metrics`}
-                              id="item2"
-                              on:click={() => changeSection("metrics", "item6")}
+                              on:click={() => changeSection("metrics")}
                               class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                               'metrics'
                                 ? 'text-white '
@@ -826,8 +829,7 @@ function handleTypeOfTrade(state:string)
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/forecast`}
-                            id="item3"
-                            on:click={() => changeSection("forecast", "item3")}
+                            on:click={() => changeSection("forecast")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'forecast'
                               ? 'text-white '
@@ -844,8 +846,7 @@ function handleTypeOfTrade(state:string)
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/options`}
-                            id="item3"
-                            on:click={() => changeSection("options", "item3")}
+                            on:click={() => changeSection("options")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'options'
                               ? 'text-white '
@@ -862,8 +863,7 @@ function handleTypeOfTrade(state:string)
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/insider`}
-                            id="item4"
-                            on:click={() => changeSection("insider", "item4")}
+                            on:click={() => changeSection("insider")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'insider'
                               ? 'text-white '
@@ -880,8 +880,7 @@ function handleTypeOfTrade(state:string)
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/dividends`}
-                            id="item5"
-                            on:click={() => changeSection("dividends", "item5")}
+                            on:click={() => changeSection("dividends")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'dividends'
                               ? 'text-white '
@@ -898,8 +897,7 @@ function handleTypeOfTrade(state:string)
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/news`}
-                            id="item7"
-                            on:click={() => changeSection("news", "item7")}
+                            on:click={() => changeSection("news")}
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'news'
                               ? 'text-white '

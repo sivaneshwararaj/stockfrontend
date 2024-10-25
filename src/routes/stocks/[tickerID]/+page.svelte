@@ -6,6 +6,7 @@
     setCache,
     fomcImpactComponent,
     corporateLobbyingComponent,
+    revenueSegmentationComponent,
     taRatingComponent,
     swapComponent,
     governmentContractComponent,
@@ -1582,6 +1583,18 @@
 
           <Lazy>
             <div
+              class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$revenueSegmentationComponent
+                ? 'hidden'
+                : ''}"
+            >
+              {#await import("$lib/components/RevenueSegmentation.svelte") then { default: Comp }}
+                <svelte:component this={Comp} />
+              {/await}
+            </div>
+          </Lazy>
+
+          <Lazy>
+            <div
               class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$clinicalTrialComponent
                 ? 'hidden'
                 : ''}"
@@ -1654,18 +1667,6 @@
 
           <Lazy>
             <div
-              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$enterpriseComponent
-                ? 'hidden'
-                : ''}"
-            >
-              {#await import("$lib/components/Enterprise.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
-            </div>
-          </Lazy>
-
-          <Lazy>
-            <div
               class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$optionComponent
                 ? 'hidden'
                 : ''}"
@@ -1688,16 +1689,6 @@
             </div>
           </Lazy>
 
-          <!--
-                                  <Lazy>
-                                    <div class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$impliedVolatilityComponent ? 'hidden' : ''}">
-                                      {#await import('$lib/components/ImpliedVolatility.svelte') then {default: Comp}}
-                                        <svelte:component this={Comp} data={data} />
-                                      {/await}
-                                    </div>
-                                  </Lazy>
-                                  -->
-
           <Lazy>
             <div
               class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$failToDeliverComponent
@@ -1709,32 +1700,6 @@
               {/await}
             </div>
           </Lazy>
-          <!--
-          <Lazy>
-            <div
-              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$borrowedShareComponent
-                ? 'hidden'
-                : ''}"
-            >
-              {#await import("$lib/components/BorrowedShare.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
-            </div>
-          </Lazy>
-          -->
-          <!--
-          <Lazy>
-            <div
-              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$marketMakerComponent
-                ? 'hidden'
-                : ''}"
-            >
-              {#await import("$lib/components/MarketMaker.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
-            </div>
-          </Lazy>
-          -->
 
           <Lazy>
             <div
@@ -1743,18 +1708,6 @@
                 : ''}"
             >
               {#await import("$lib/components/DarkPool.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
-            </div>
-          </Lazy>
-
-          <Lazy>
-            <div
-              class="w-full mt-10 sm:mt-5 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {!$shareStatisticsComponent
-                ? 'hidden'
-                : ''}"
-            >
-              {#await import("$lib/components/ShareStatistics.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
               {/await}
             </div>
@@ -1782,37 +1735,6 @@
             >
               {#await import("$lib/components/TARating.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
-              {/await}
-            </div>
-          </Lazy>
-
-          <!--
-                                  <Lazy>
-                                  <div class="w-full pt-10 sm:pl-6 sm:pb-6 sm:pt-6 m-auto {!$dcfComponent ? 'hidden' : ''}">
-                                    {#await import('$lib/components/DCF.svelte') then {default: Comp}}
-                                      <svelte:component this={Comp} data={data}/>
-                                    {/await}
-                                  </div>
-                                </Lazy>
-  
-                                  <!--
-                                  <div class="w-full m-auto pt-10 sm:pl-6 sm:pb-6 sm:pt-6 {!$correlationComponent ? 'hidden' : ''}">
-                                    {#await import('$lib/components/Correlation.svelte') then {default: Comp}}
-                                      <svelte:component this={Comp} data={data}/>
-                                    {/await}
-                                  </div>
-                                  -->
-
-          <Lazy>
-            <div
-              class="w-full pt-10 sm:pl-6 sm:pb-6 sm:pt-6 m-auto {data?.getStockDeck?.at(
-                0,
-              )?.stockSplits?.length === 0
-                ? 'hidden'
-                : ''}"
-            >
-              {#await import("$lib/components/StockSplits.svelte") then { default: Comp }}
-                <svelte:component this={Comp} stockDeck={data?.getStockDeck} />
               {/await}
             </div>
           </Lazy>
