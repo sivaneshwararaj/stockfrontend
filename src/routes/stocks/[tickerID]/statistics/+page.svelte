@@ -134,7 +134,7 @@ updateYearRange()
                 Total Valuation
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 Tesla has a market cap or net worth of $832.14 billion. The
                 enterprise value is $812.05 billion.
@@ -169,7 +169,7 @@ updateYearRange()
                 Important Dates
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The last earnings date was Wednesday, October 23, 2024, after
                 market close.
@@ -201,7 +201,7 @@ updateYearRange()
                 Share Statistics
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 Tesla has 3.19 billion shares outstanding. The number of shares
                 has increased by 0.31% in one year.
@@ -265,7 +265,7 @@ updateYearRange()
                 Valuation Ratios
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The trailing PE ratio is 71.41 and the forward PE ratio is
                 86.99. Tesla's PEG ratio is 5.94.
@@ -344,7 +344,7 @@ updateYearRange()
                 Enterprise Valuation
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The stock's EV/EBITDA ratio is 61.31, with an EV/FCF ratio of
                 224.95.
@@ -400,7 +400,7 @@ updateYearRange()
                 Financial Position
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The company has a current ratio of 1.84, with a Debt / Equity
                 ratio of 0.18.
@@ -464,7 +464,7 @@ updateYearRange()
                 Financial Efficiency
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 Return on equity (ROE) is 20.39% and return on invested capital
                 (ROIC) is 6.96%.
@@ -573,7 +573,7 @@ updateYearRange()
                 Stock Price Statistics
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The stock price has increased by +22.82% in the last 52 weeks.
                 The beta is 2.30, so Tesla's price volatility has been higher
@@ -638,7 +638,7 @@ updateYearRange()
                 Short Selling Information
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The latest short interest is 74.33 million, so 2.33% of the
                 outstanding shares have been sold short.
@@ -694,7 +694,7 @@ updateYearRange()
                 Income Statement
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 In the last 12 months, Tesla had revenue of $97.15 billion and
                 earned $12.74 billion in profits. Earnings per share was $3.65.
@@ -783,7 +783,7 @@ updateYearRange()
                 Balance Sheet
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The company has $33.65 billion in cash and $12.78 billion in
                 debt, giving a net cash position of $20.87 billion or $6.53 per
@@ -862,7 +862,7 @@ updateYearRange()
                 Cash Flow
               </h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 In the last 12 months, operating cash flow was $14.48 billion
                 and capital expenditures -$10.87 billion, giving a free cash
@@ -915,7 +915,7 @@ updateYearRange()
             <div>
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">Margins</h2>
               <p
-                class="mb-4 px-0.5 text-base leading-relaxed text-white dark:text-dark-200 xs:text-[1.05rem] lg:leading-normal"
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 Gross margin is 18.23%, with operating and profit margins of
                 8.38% and 13.07%.

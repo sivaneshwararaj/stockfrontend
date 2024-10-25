@@ -9,6 +9,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     quarter: data?.quarter,
     year: data?.year,
   };
+
   const response = await fetch(apiURL + "/earnings-call-transcripts", {
     method: "POST",
     headers: {
