@@ -117,11 +117,11 @@ updateYearRange()
 </svelte:head>
 
 <section class="text-white w-full">
-  <div class="sm:p-7 m-auto mt-7 sm:mt-0">
+  <div class="sm:pb-7 sm:pt-7 sm:pl-7 m-auto mt-7 sm:mt-0">
     <div class="mb-6">
       {#if Object?.keys(quantStats)?.length !== 0}
         <div
-          class="space-y-5 xs:space-y-6 lg:grid xl:grid-cols-2 xl:space-x-10 lg:space-y-0"
+          class="space-y-5 xs:space-y-6 lg:grid 2xl:grid-cols-2 lg:space-x-6 2xl:space-x-10 lg:space-y-0"
         >
           <div class="flex flex-col space-y-5 xs:space-y-6 lg:space-y-8">
             <div

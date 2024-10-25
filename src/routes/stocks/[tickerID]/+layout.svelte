@@ -104,6 +104,7 @@ function handleTypeOfTrade(state:string)
       options: "/options",
       dividends: "/dividends",
       statistics: "/statistics",
+      metrics: "metrics",
       forecast: "/forecast",
       financials: "/financials",
       news: "/news",
@@ -754,13 +755,10 @@ function handleTypeOfTrade(state:string)
 
                     <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-[#09090B]"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
                     <div
-                      class="-ml-2 sm:ml-4 w-screen sm:w-full {$screenWidth <
-                      640
-                        ? 'overflow-auto scrollbar '
-                        : ''} mb-2"
+                      class="-ml-2 sm:ml-4 w-screen sm:w-full overflow-x-scroll mb-2"
                     >
                       <ul
-                        class="pr-4 sm:pr-0 w-screen overflow-x-scroll font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
+                        class="pr-4 w-fit overflow-x-scroll font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
                       >
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
