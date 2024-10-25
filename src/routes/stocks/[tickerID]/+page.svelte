@@ -10,11 +10,9 @@
     swapComponent,
     governmentContractComponent,
     optionsNetFlowComponent,
-    borrowedShareComponent,
     clinicalTrialComponent,
     optionComponent,
     failToDeliverComponent,
-    marketMakerComponent,
     screenWidth,
     displayCompanyName,
     numberOfUnreadNotification,
@@ -46,8 +44,7 @@
   import { convertTimestamp } from "$lib/utils";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
-
-  import toast from "svelte-french-toast";
+  import { goto } from "$app/navigation";
 
   export let data;
   export let form;
@@ -708,49 +705,52 @@
   }
 
   async function exportData(timePeriod: string) {
-    let exportList = [];
+    if (data?.user?.tier === "Pro") {
+      let exportList = [];
 
-    const response = await fetch("/api/export-price-data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ticker: $stockTicker, timePeriod: timePeriod }),
-    });
+      const response = await fetch("/api/export-price-data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ticker: $stockTicker, timePeriod: timePeriod }),
+      });
 
-    exportList = await response.json();
+      exportList = await response.json();
 
-    exportList = exportList?.map(({ time, open, high, low, close, date }) => ({
-      date: timePeriod === "max" ? time : date, // Use 'time' if timePeriod is "max", otherwise use 'date'
-      open,
-      high,
-      low,
-      close,
-    }));
+      exportList = exportList?.map(
+        ({ time, open, high, low, close, date }) => ({
+          date: timePeriod === "max" ? time : date, // Use 'time' if timePeriod is "max", otherwise use 'date'
+          open,
+          high,
+          low,
+          close,
+        }),
+      );
 
-    const csvRows = [];
+      const csvRows = [];
 
-    // Add headers row
-    csvRows.push("time,open,high,low,close");
+      // Add headers row
+      csvRows.push("time,open,high,low,close");
 
-    // Add data rows
-    for (const row of exportList) {
-      const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close}`;
-      csvRows.push(csvRow);
-    }
+      // Add data rows
+      for (const row of exportList) {
+        const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close}`;
+        csvRows.push(csvRow);
+      }
 
-    // Create CSV blob and trigger download
-    const csv = csvRows.join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.setAttribute("hidden", "");
-    a.setAttribute("href", url);
-    a.setAttribute("download", `${$stockTicker}_${timePeriod}.csv`);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    /*
+      // Create CSV blob and trigger download
+      const csv = csvRows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.setAttribute("hidden", "");
+      a.setAttribute("href", url);
+      a.setAttribute("download", `${$stockTicker}_${timePeriod}.csv`);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      /*
     if (data?.user) {
       const response = await fetch("/api/historical-price", {
         method: "POST",
@@ -800,6 +800,9 @@
       });
     }
       */
+    } else {
+      goto("/pricing");
+    }
   }
 
   function updateClosePrice(data, extendPriceChart) {
@@ -1189,37 +1192,35 @@
                       on:click={() => exportData("30min")}
                       class="cursor-pointer hover:bg-[#27272A]"
                     >
-                      <!--<svg
-                      class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
-                        ? 'hidden'
-                        : ''}"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      ><path
-                        fill="#A3A3A3"
-                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                      /></svg
-                    >
-                      -->
+                      <svg
+                        class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
+                          ? 'hidden'
+                          : ''}"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="#A3A3A3"
+                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                        /></svg
+                      >
+
                       30 min
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
                       on:click={() => exportData("1hour")}
                       class="cursor-pointer hover:bg-[#27272A]"
                     >
-                      <!--
-                    <svg
-                      class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
-                        ? 'hidden'
-                        : ''}"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      ><path
-                        fill="#A3A3A3"
-                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                      /></svg
-                    >
-                      -->
+                      <svg
+                        class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
+                          ? 'hidden'
+                          : ''}"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="#A3A3A3"
+                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                        /></svg
+                      >
                       1 hour
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
