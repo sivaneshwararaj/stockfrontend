@@ -698,13 +698,10 @@
               <div
                 class="w-full rounded-none sm:rounded-lg m-auto overflow-x-auto"
               >
-                <table class="table w-full">
+                <table class="table table-sm table-compact w-full">
                   <thead>
                     <tr class="text-white">
-                      <td
-                        class="text-start text-sm sm:text-[1rem] font-bold pr-10"
-                        >Year</td
-                      >
+                      <td class="text-start text-sm font-semibold">Year</td>
                       {#each ratios as item}
                         {#if filterRule === "annual"}
                           <td

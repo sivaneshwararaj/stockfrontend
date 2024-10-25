@@ -121,7 +121,7 @@ updateYearRange()
     <div class="mb-6">
       {#if Object?.keys(quantStats)?.length !== 0}
         <div
-          class="space-y-5 xs:space-y-6 lg:grid 2xl:grid-cols-2 lg:space-x-6 2xl:space-x-10 lg:space-y-0"
+          class="space-y-5 xs:space-y-6 lg:grid 2xl:grid-cols-2 2xl:space-x-10 lg:space-y-0"
         >
           <div class="flex flex-col space-y-5 xs:space-y-6 lg:space-y-8">
             <div
@@ -164,38 +164,7 @@ updateYearRange()
                 >
               </table>
             </div>
-            <div>
-              <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
-                Important Dates
-              </h2>
-              <p
-                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
-              >
-                The last earnings date was Wednesday, October 23, 2024, after
-                market close.
-              </p>
-              <table class="w-full">
-                <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Earnings Date</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="Oct 23, 2024">Oct 23, 2024</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Ex-Dividend Date</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="n/a">n/a</td
-                    >
-                  </tr></tbody
-                >
-              </table>
-            </div>
+
             <div>
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
                 Share Statistics
@@ -568,7 +537,7 @@ updateYearRange()
             </div>
           </div>
           <div class="flex flex-col space-y-5 xs:space-y-6 lg:space-y-8">
-            <div>
+            <div class="mt-9 2xl:mt-0">
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
                 Stock Price Statistics
               </h2>

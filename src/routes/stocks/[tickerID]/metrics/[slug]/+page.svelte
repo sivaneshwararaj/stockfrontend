@@ -169,80 +169,78 @@
             </div>
 
             {#if rawData?.length !== 0}
-              <div class="grid grid-cols-1 gap-2">
-                <div class="app w-full">
-                  <Chart {init} options={optionsData} class="chart" />
-                </div>
+              <div class="app w-full">
+                <Chart {init} options={optionsData} class="chart" />
+              </div>
 
-                <h2 class="mt-10 text-xl text-gray-200 font-bold">History</h2>
+              <h2 class="mt-10 text-xl text-gray-200 font-bold">History</h2>
 
-                <div class="w-full overflow-x-scroll">
-                  <table
-                    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
-                  >
-                    <thead>
-                      <tr class="border border-slate-800">
-                        <th
-                          class="text-white font-semibold text-start text-sm sm:text-[1rem]"
-                          >Quarter</th
+              <div class="w-full overflow-x-scroll">
+                <table
+                  class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                >
+                  <thead>
+                    <tr class="border border-slate-800">
+                      <th
+                        class="text-white font-semibold text-start text-sm sm:text-[1rem]"
+                        >Quarter</th
+                      >
+                      <th
+                        class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                        >Value</th
+                      >
+                      <th
+                        class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                        >% Change</th
+                      >
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {#each tableList as item}
+                      <!-- row -->
+                      <tr
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                      >
+                        <td
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                         >
-                        <th
-                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                          >Value</th
+                          {new Date(item?.date ?? null)?.toLocaleString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            },
+                          )}
+                        </td>
+
+                        <td
+                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                         >
-                        <th
-                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                          >% Change</th
+                          {item?.value !== null
+                            ? abbreviateNumber(item?.value)
+                            : "-"}
+                        </td>
+
+                        <td
+                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
                         >
+                          {#if item?.valueGrowth > 0}
+                            <span class="text-[#37C97D]">
+                              +{item?.valueGrowth?.toFixed(2)}%
+                            </span>
+                          {:else if item?.valueGrowth < 0}
+                            <span class="text-[#FF2F1F]">
+                              {item?.valueGrowth?.toFixed(2)}%
+                            </span>
+                          {:else}
+                            -
+                          {/if}
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {#each tableList as item, index}
-                        <!-- row -->
-                        <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
-                        >
-                          <td
-                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
-                          >
-                            {new Date(item?.date ?? null)?.toLocaleString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              },
-                            )}
-                          </td>
-
-                          <td
-                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
-                          >
-                            {item?.value !== null
-                              ? abbreviateNumber(item?.value)
-                              : "-"}
-                          </td>
-
-                          <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
-                          >
-                            {#if item?.valueGrowth > 0}
-                              <span class="text-[#37C97D]">
-                                +{item?.valueGrowth?.toFixed(2)}%
-                              </span>
-                            {:else if item?.valueGrowth < 0}
-                              <span class="text-[#FF2F1F]">
-                                {item?.valueGrowth?.toFixed(2)}%
-                              </span>
-                            {:else}
-                              -
-                            {/if}
-                          </td>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
+                    {/each}
+                  </tbody>
+                </table>
               </div>
             {:else}
               <h2

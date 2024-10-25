@@ -823,7 +823,7 @@
                   <thead>
                     <tr class="text-white">
                       <td
-                        class="text-start bg-[#09090B] text-white text-sm sm:text-[1rem] font-bold pr-10"
+                        class="text-start bg-[#09090B] text-white text-sm font-semibold pr-10"
                         >Year</td
                       >
                       {#each balanceSheet as balance}

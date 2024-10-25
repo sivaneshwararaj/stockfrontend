@@ -750,11 +750,10 @@
               <div
                 class="w-full rounded-none sm:rounded-lg m-auto overflow-x-auto"
               >
-                <table class="table w-full">
+                <table class="table table-sm table-compact w-full">
                   <thead>
                     <tr class="text-white">
-                      <td
-                        class="text-start text-white text-sm sm:text-[1rem] font-semibold"
+                      <td class="text-start text-white text-sm font-semibold"
                         >Year</td
                       >
                       {#each cashFlow as cash}
@@ -909,7 +908,7 @@
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
+                        class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Sales Maturities Of Investments</td
                       >
                       {#each cashFlow as cash}
