@@ -8,6 +8,7 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   //import * as XLSX from 'xlsx';
+  import { goto } from "$app/navigation";
   import { Chart } from "svelte-echarts";
 
   import { init, use } from "echarts/core";
@@ -242,50 +243,54 @@
   }
 
   const exportData = (format = "csv") => {
-    // Add headers row
-    const csvRows = [];
+    if (data?.user?.tier === "Pro") {
+      // Add headers row
+      const csvRows = [];
 
-    csvRows.push("Date,Market Cap,Growth");
+      csvRows.push("Date,Market Cap,Growth");
 
-    // Add data rows
-    tableList?.forEach((item, index) => {
-      const date = item.date;
-      const marketCap = item.marketCap;
+      // Add data rows
+      tableList?.forEach((item, index) => {
+        const date = item.date;
+        const marketCap = item.marketCap;
 
-      // Calculate growth percentage
-      let growth = "-";
-      if (index + 1 < tableList.length) {
-        if (item.marketCap - tableList[index + 1].marketCap > 0) {
-          growth = `+${(
-            ((item.marketCap - tableList[index + 1].marketCap) /
-              item.marketCap) *
-            100
-          ).toFixed(2)}%`;
-        } else if (item.marketCap - tableList[index + 1].marketCap < 0) {
-          growth = `-${(
-            Math.abs(
-              (tableList[index + 1].marketCap - item.marketCap) /
-                item.marketCap,
-            ) * 100
-          ).toFixed(2)}%`;
+        // Calculate growth percentage
+        let growth = "-";
+        if (index + 1 < tableList.length) {
+          if (item.marketCap - tableList[index + 1].marketCap > 0) {
+            growth = `+${(
+              ((item.marketCap - tableList[index + 1].marketCap) /
+                item.marketCap) *
+              100
+            ).toFixed(2)}%`;
+          } else if (item.marketCap - tableList[index + 1].marketCap < 0) {
+            growth = `-${(
+              Math.abs(
+                (tableList[index + 1].marketCap - item.marketCap) /
+                  item.marketCap,
+              ) * 100
+            ).toFixed(2)}%`;
+          }
         }
-      }
 
-      const csvRow = `${date},${marketCap},${growth}`;
-      csvRows.push(csvRow);
-    });
+        const csvRow = `${date},${marketCap},${growth}`;
+        csvRows.push(csvRow);
+      });
 
-    // Create CSV blob and trigger download
-    const csv = csvRows.join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.setAttribute("hidden", "");
-    a.setAttribute("href", url);
-    a.setAttribute("download", `${$stockTicker}_market_cap.csv`);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+      // Create CSV blob and trigger download
+      const csv = csvRows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.setAttribute("hidden", "");
+      a.setAttribute("href", url);
+      a.setAttribute("download", `${$stockTicker}_market_cap.csv`);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      goto("/pricing");
+    }
   };
 </script>
 
@@ -447,6 +452,17 @@
                     class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
                   >
                     <span class="truncate text-white">Download</span>
+                    <svg
+                      class="{data?.user?.tier === 'Pro'
+                        ? 'hidden'
+                        : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="#A3A3A3"
+                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                      /></svg
+                    >
                   </Button>
                 </div>
 

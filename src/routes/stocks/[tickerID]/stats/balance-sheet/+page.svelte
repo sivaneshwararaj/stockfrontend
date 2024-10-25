@@ -8,6 +8,7 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { abbreviateNumber } from "$lib/utils";
+  import { goto } from "$app/navigation";
   //import * as XLSX from 'xlsx';
 
   import { init, use } from "echarts/core";
@@ -332,53 +333,54 @@
   };
 
   const exportFundamentalData = (format = "csv") => {
-    const data = fullStatement;
-    if (!data || data.length === 0) {
-      return;
-    }
+    if (data?.user?.tier === "Pro") {
+      const data = fullStatement;
+      if (!data || data.length === 0) {
+        return;
+      }
 
-    let properties = [
-      {
-        key: filterRule === "annual" ? "calendarYear" : "date",
-        label: filterRule === "annual" ? "Year" : "Quarter",
-      },
-    ];
+      let properties = [
+        {
+          key: filterRule === "annual" ? "calendarYear" : "date",
+          label: filterRule === "annual" ? "Year" : "Quarter",
+        },
+      ];
 
-    for (let i = 0; i < statementConfig?.length; i++) {
-      properties.push({
-        key: statementConfig[i]?.propertyName,
-        label: statementConfig[i]?.label,
-      });
-    }
+      for (let i = 0; i < statementConfig?.length; i++) {
+        properties.push({
+          key: statementConfig[i]?.propertyName,
+          label: statementConfig[i]?.label,
+        });
+      }
 
-    // Helper function to handle special cases
+      // Helper function to handle special cases
 
-    // Create rows for CSV/Excel
-    let rows = data.map((item) =>
-      properties?.map((property) => item[property?.key] || 0),
-    );
+      // Create rows for CSV/Excel
+      let rows = data.map((item) =>
+        properties?.map((property) => item[property?.key] || 0),
+      );
 
-    // Include headers
-    const headers = properties.map((prop) => prop.label);
-    rows.unshift(headers);
+      // Include headers
+      const headers = properties.map((prop) => prop.label);
+      rows.unshift(headers);
 
-    // Check the format to export
-    if (format.toLowerCase() === "csv") {
-      const csvContent = rows?.map((row) => row.join(",")).join("\n");
-      const blob = new Blob([csvContent], {
-        type: "data:text/csv;charset=utf-8",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download =
-        $stockTicker.toLowerCase() +
-        `${filterRule === "annual" ? "_annual" : "_quarter"}_balance_sheet_statement.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } /*else if (format.toLowerCase() === "excel") {
+      // Check the format to export
+      if (format.toLowerCase() === "csv") {
+        const csvContent = rows.map((row) => row.join(",")).join("\n");
+        const blob = new Blob([csvContent], {
+          type: "data:text/csv;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download =
+          $stockTicker.toLowerCase() +
+          `${filterRule === "annual" ? "_annual" : "_quarter"}_cashflow_statement.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } /*else if (format.toLowerCase() === "excel") {
       const worksheet = XLSX.utils.aoa_to_sheet(rows);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Ratios Statement");
@@ -389,6 +391,9 @@
       
     }
       */
+    } else {
+      goto("/pricing");
+    }
   };
 
   $: {
@@ -623,6 +628,17 @@
                   class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
                 >
                   <span class="truncate text-white">Download</span>
+                  <svg
+                    class="{data?.user?.tier === 'Pro'
+                      ? 'hidden'
+                      : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    ><path
+                      fill="#A3A3A3"
+                      d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                    /></svg
+                  >
                 </Button>
               </div>
             </div>
