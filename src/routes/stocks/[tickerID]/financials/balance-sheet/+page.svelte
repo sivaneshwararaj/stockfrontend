@@ -27,7 +27,7 @@
 
   let displayStatement = "cashAndCashEquivalents";
 
-  let mode = true;
+  let mode = false;
   let timeFrame = "10Y";
 
   const statementConfig = [
@@ -819,23 +819,23 @@
               <div
                 class="w-full rounded-none sm:rounded-lg m-auto overflow-x-auto"
               >
-                <table class="table w-full">
+                <table class="table table-sm table-compact w-full">
                   <thead>
                     <tr class="text-white">
                       <td
-                        class="text-start border-r border-[#191E24] bg-[#09090B] text-white text-sm sm:text-[1rem] font-bold pr-10"
+                        class="text-start bg-[#09090B] text-white text-sm sm:text-[1rem] font-bold pr-10"
                         >Year</td
                       >
                       {#each balanceSheet as balance}
                         {#if filterRule === "annual"}
                           <td
-                            class="bg-[#09090B] font-semibold pr-5 sm:pr-14 text-sm"
+                            class="bg-[#09090B] font-semibold text-sm text-end"
                           >
                             {"FY" + balance?.calendarYear?.slice(-2)}
                           </td>
                         {:else}
                           <td
-                            class="bg-[#09090B] font-semibold pr-5 sm:pr-14 text-sm"
+                            class="bg-[#09090B] font-semibold text-sm text-end"
                           >
                             {"FY" +
                               balance?.calendarYear?.slice(-2) +
@@ -850,356 +850,320 @@
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Cash & Equivalents</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.cashAndCashEquivalents,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Short-Term Investments</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.shortTermInvestments,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.shortTermInvestments)}</td
                         >
                       {/each}
                     </tr>
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Long-Term Investments</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.longTermInvestments,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.longTermInvestments)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Long-Term Assets</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.otherNonCurrentAssets,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.otherNonCurrentAssets)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Receivables</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.netReceivables, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.netReceivables)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Inventory</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.inventory, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.inventory)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Current Assets</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.otherCurrentAssets,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.otherCurrentAssets)}</td
                         >
                       {/each}
                     </tr>
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Current Assets</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.totalCurrentAssets,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.totalCurrentAssets)}</td
                         >
                       {/each}
                     </tr>
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Property, Plant & Equipment</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.propertyPlantEquipmentNet,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Goodwill & Intangibles</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.goodwillAndIntangibleAssets,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Long-Term Assets</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.totalNonCurrentAssets,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.totalNonCurrentAssets)}</td
                         >
                       {/each}
                     </tr>
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Assets</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.totalAssets, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.totalAssets)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Account Payables</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.accountPayables, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.accountPayables)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Deferred Revenue</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.deferredRevenue, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.deferredRevenue)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Short-Term Debt</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.shortTermDebt, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.shortTermDebt)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Current Liabilities</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.otherCurrentLiabilities,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Current Liabilities</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.totalCurrentLiabilities,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Long-Term Debt</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.longTermDebt, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.longTermDebt)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Long-Term Liabilities</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.otherNonCurrentLiabilities,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Long-Term Liabilities</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.totalNonCurrentLiabilities,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Liabilities</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.totalLiabilities,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.totalLiabilities)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Debt</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.totalDebt, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.totalDebt)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Common Stock</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(balance?.commonStock, true)}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.commonStock)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Retained Earnings</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.retainedEarnings,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.retainedEarnings)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Comprehensive Income</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.accumulatedOtherComprehensiveIncomeLoss,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Shareholders' Equity</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
+                        <td class=" text-sm sm:text-[1rem] text-end">
                           {abbreviateNumber(
                             balance?.totalStockholdersEquity,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Total Investments</td
                       >
                       {#each balanceSheet as balance}
-                        <td class=" text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            balance?.totalInvestments,
-                            true,
-                          )}</td
+                        <td class=" text-sm sm:text-[1rem] text-end">
+                          {abbreviateNumber(balance?.totalInvestments)}</td
                         >
                       {/each}
                     </tr>

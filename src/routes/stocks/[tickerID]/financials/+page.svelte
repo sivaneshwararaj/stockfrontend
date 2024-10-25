@@ -28,7 +28,7 @@
   let filterRule = "annual";
   let displayStatement = "revenue";
 
-  let mode = true;
+  let mode = false;
   let timeFrame = "10Y";
 
   onMount(async () => {
@@ -716,23 +716,23 @@
                 <div
                   class="w-full rounded-none sm:rounded-lg m-auto overflow-x-auto"
                 >
-                  <table class="table w-full">
+                  <table class="table table-sm table-compact w-full">
                     <thead>
                       <tr class="text-white">
                         <td
-                          class="text-start border-r border-[#191E24] bg-[#09090B] text-white text-sm font-semibold pr-10"
+                          class="text-start bg-[#09090B] text-white text-sm font-semibold pr-10"
                           >Year</td
                         >
                         {#each income as cash}
                           {#if filterRule === "annual"}
                             <td
-                              class="bg-[#09090B] font-semibold pr-5 sm:pr-14 text-sm"
+                              class="bg-[#09090B] font-semibold text-sm text-end"
                             >
                               {"FY" + cash?.calendarYear?.slice(-2)}
                             </td>
                           {:else}
                             <td
-                              class="bg-[#09090B] font-semibold pr-5 sm:pr-14 text-sm"
+                              class="bg-[#09090B] font-semibold text-sm text-end"
                             >
                               {"FY" +
                                 cash?.calendarYear?.slice(-2) +
@@ -747,144 +747,139 @@
                       <!-- row -->
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Revenue</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.revenue, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.revenue)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Cost of Revenue</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.costOfRevenue, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.costOfRevenue)}</td
                           >
                         {/each}
                       </tr>
                       <!-- row -->
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Gross Profit</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.grossProfit, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.grossProfit)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Selling, General & Admin</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
+                          <td class=" text-sm sm:text-[1rem] text-end">
                             {abbreviateNumber(
                               cash?.sellingGeneralAndAdministrativeExpenses,
-                              true,
                             )}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Research & Development</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
+                          <td class=" text-sm sm:text-[1rem] text-end">
                             {abbreviateNumber(
                               cash?.researchAndDevelopmentExpenses,
-                              true,
                             )}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Other Expenses</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.otherExpenses, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.otherExpenses)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Operating Expenses</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(
-                              cash?.operatingExpenses,
-                              true,
-                            )}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.o)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Interest Expense</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.interestExpense, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.interestExpense)}</td
                           >
                         {/each}
                       </tr>
                       <!-- row -->
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Pretax Income</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.incomeBeforeTax, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.incomeBeforeTax)}</td
                           >
                         {/each}
                       </tr>
                       <!-- row -->
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Income Tax</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.incomeTaxExpense, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.incomeTaxExpense)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Net Income</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.netIncome, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.netIncome)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Shares Outstanding (Basic)</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
+                          <td class=" text-sm sm:text-[1rem] text-end">
                             {abbreviateNumber(cash?.weightedAverageShsOut)}</td
                           >
                         {/each}
@@ -892,11 +887,11 @@
                       <!-- row -->
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >Shares Outstanding (Diluted)</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
+                          <td class=" text-sm sm:text-[1rem] text-end">
                             {abbreviateNumber(
                               cash?.weightedAverageShsOutDil,
                             )}</td
@@ -905,48 +900,45 @@
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >EPS (Basic)</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
+                          <td class=" text-sm sm:text-[1rem] text-end">
                             {cash?.eps?.toFixed(2)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >EPS (Diluted)</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
+                          <td class=" text-sm sm:text-[1rem] text-end">
                             {cash?.epsdiluted?.toFixed(2)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
                           >EBITDA</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(cash?.ebitda, true)}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.ebitda)}</td
                           >
                         {/each}
                       </tr>
                       <tr class="text-white odd:bg-[#27272A]">
                         <td
-                          class="text-start border-r border-[#191E24] text-white text-xs sm:text-sm"
+                          class="text-start border-r whitespace-nowrap border-[#191E24] text-white text-sm sm:text-[1rem]"
                           >Depreciation & Amortization</td
                         >
                         {#each income as cash}
-                          <td class=" text-xs sm:text-sm">
-                            {abbreviateNumber(
-                              cash?.depreciationAndAmortization,
-                              true,
-                            )}</td
+                          <td class=" text-sm sm:text-[1rem] text-end">
+                            {abbreviateNumber(cash?.depreciation)}</td
                           >
                         {/each}
                       </tr>

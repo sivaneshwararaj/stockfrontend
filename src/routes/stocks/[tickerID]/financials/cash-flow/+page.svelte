@@ -25,7 +25,7 @@
   let filterRule = "annual";
   let displayStatement = "netIncome";
 
-  let mode = true;
+  let mode = false;
   let tableList = [];
 
   let timeFrame = "10Y";
@@ -754,19 +754,19 @@
                   <thead>
                     <tr class="text-white">
                       <td
-                        class="text-start border-r border-[#191E24] text-white text-sm sm:text-[1rem] font-bold pr-10"
+                        class="text-start text-white text-sm sm:text-[1rem] font-semibold"
                         >Year</td
                       >
                       {#each cashFlow as cash}
                         {#if filterRule === "annual"}
                           <td
-                            class="bg-[#09090B] font-semibold pr-5 sm:pr-14 text-sm"
+                            class="bg-[#09090B] font-semibold text-end text-sm"
                           >
                             {"FY" + cash?.calendarYear?.slice(-2)}
                           </td>
                         {:else}
                           <td
-                            class="bg-[#09090B] font-semibold pr-5 sm:pr-14 text-sm"
+                            class="bg-[#09090B] font-semibold text-end text-sm"
                           >
                             {"FY" +
                               cash?.calendarYear?.slice(-2) +
@@ -781,25 +781,24 @@
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Net Income</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.netIncome, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.netIncome)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Depreciation & Amortization</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
+                        <td class="text-end text-sm sm:text-[1rem]">
                           {abbreviateNumber(
                             cash?.depreciationAndAmortization,
-                            true,
                           )}</td
                         >
                       {/each}
@@ -807,78 +806,68 @@
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Stock-Based Compensation</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            cash?.stockBasedCompensation,
-                            true,
-                          )}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.stockBasedCompensation)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Working Capital</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            cash?.otherWorkingCapital,
-                            true,
-                          )}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.otherWorkingCapital)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Non-Cash Items</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.otherNonCashItems, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.otherNonCashItems)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Deferred Income Tax</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.deferredIncomeTax, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.deferredIncomeTax)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Change in Working Capital</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            cash?.changeInWorkingCapital,
-                            true,
-                          )}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.changeInWorkingCapital)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Operating Cash Flow</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
+                        <td class="text-end text-sm sm:text-[1rem]">
                           {abbreviateNumber(
                             cash?.netCashProvidedByOperatingActivities,
-                            true,
                           )}</td
                         >
                       {/each}
@@ -886,51 +875,47 @@
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Capital Expenditures</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.capitalExpenditure, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.capitalExpenditure)}</td
                         >
                       {/each}
                     </tr>
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Acquisitions</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.acquisitionsNet, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.acquisitionsNet)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Purchase of Investments</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            cash?.purchasesOfInvestments,
-                            true,
-                          )}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.purchasesOfInvestments)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Sales Maturities Of Investments</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
+                        <td class="text-end text-sm sm:text-[1rem]">
                           {abbreviateNumber(
                             cash?.salesMaturitiesOfInvestments,
-                            true,
                           )}</td
                         >
                       {/each}
@@ -938,115 +923,104 @@
                     <!-- row -->
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Investing Acitivies</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            cash?.otherInvestingActivites,
-                            true,
-                          )}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.otherInvestingActivites)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Investing Cash Flow</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
+                        <td class="text-end text-sm sm:text-[1rem]">
                           {abbreviateNumber(
                             cash?.netCashUsedForInvestingActivites,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Debt Repayment</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.debtRepayment, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.debtRepayment)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Common Stock Repurchased</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            cash?.commonStockRepurchased,
-                            true,
-                          )}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.commonStockRepurchased)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Dividend Paid</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.dividendsPaid, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.dividendsPaid)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Other Financial Acitivies</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(
-                            cash?.otherFinancingActivites,
-                            true,
-                          )}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.otherFinancingActivites)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Financial Cash Flow</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
+                        <td class="text-end text-sm sm:text-[1rem]">
                           {abbreviateNumber(
                             cash?.netCashUsedProvidedByFinancingActivities,
-                            true,
                           )}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Net Cash Flow</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.netChangeInCash, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.netChangeInCash)}</td
                         >
                       {/each}
                     </tr>
                     <tr class="text-white odd:bg-[#27272A]">
                       <td
-                        class="text-start border-r border-[#191E24] text-xs sm:text-sm"
+                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                         >Free Cash Flow</td
                       >
                       {#each cashFlow as cash}
-                        <td class="text-xs sm:text-sm">
-                          {abbreviateNumber(cash?.freeCashFlow, true)}</td
+                        <td class="text-end text-sm sm:text-[1rem]">
+                          {abbreviateNumber(cash?.freeCashFlow)}</td
                         >
                       {/each}
                     </tr>
