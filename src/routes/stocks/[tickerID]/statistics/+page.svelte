@@ -118,12 +118,31 @@
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Float</span>
+                      ><span>Shares Floating</span>
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="2,777,647,654"
                       >{abbreviateNumber(rawData?.floatShares)}</td
+                    >
+                  </tr>
+                  <tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Failed to Deliver (FTD) Shares</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="2,777,647,654"
+                      >{abbreviateNumber(rawData?.failToDeliver)}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>FTD / Avg. Volume</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="2,777,647,654"
+                      >{abbreviateNumber(rawData?.relativeFTD)}%</td
                     >
                   </tr></tbody
                 >
@@ -489,7 +508,7 @@
             </div>
           </div>
           <div class="flex flex-col space-y-5 xs:space-y-6 lg:space-y-8">
-            <div class="mt-9 2xl:mt-0">
+            <div class="mt-0 sm:mt-9 2xl:mt-0">
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
                 Stock Price Statistics
               </h2>
