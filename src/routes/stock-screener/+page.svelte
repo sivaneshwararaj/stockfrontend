@@ -841,6 +841,13 @@
       defaultCondition: "over",
       defaultValue: "0",
     },
+    interestCoverage: {
+      label: "Interest Coverage",
+      step: [10, 5, 3, 2, 1, 0],
+
+      defaultCondition: "over",
+      defaultValue: "0",
+    },
     sharesShort: {
       label: "Short Interest",
       step: ["50M", "20M", "10M", "5M", "1M", "500K"],
@@ -1014,6 +1021,20 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+    },
+    sharesQoQ: {
+      label: "Shares Change (QoQ)",
+      step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
+
+      defaultCondition: "over",
+      defaultValue: "1%",
+    },
+    sharesYoY: {
+      label: "Shares Change (YoY)",
+      step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
+
+      defaultCondition: "over",
+      defaultValue: "1%",
     },
     grossProfitMargin: {
       label: "Gross Margin",
