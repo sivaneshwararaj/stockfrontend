@@ -5,13 +5,13 @@ import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 export const load = async ({ locals, params }) => {
   const { apiKey, apiURL } = locals;
 
-  const getQuantStats = async () => {
+  const getStatistics = async () => {
     const postData = {
       ticker: params.tickerID,
     };
 
     // make the POST request to the endpoint
-    const response = await fetch(apiURL + "/get-quant-stats", {
+    const response = await fetch(apiURL + "/statistics", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export const load = async ({ locals, params }) => {
 
   // Make sure to return a promise
   return {
-    getQuantStats: await getQuantStats(),
+    getStatistics: await getStatistics(),
   };
 };
 

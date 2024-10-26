@@ -8,48 +8,12 @@
   import { abbreviateNumber } from "$lib/utils";
 
   export let data;
+  let rawData = data?.getStatistics ?? {};
 
   let companyName = $displayCompanyName
     ?.replace("Inc.", "")
     ?.replace(".com", "");
   let quantStats = {};
-
-  /*
-let progressDayPriceValue = 0;
-let progressYearPriceValue = 0;
-let totalDuration = 500;
-           
-async function updateDayRange() {
-
-const interval = 10; // interval between each update in ms
-const increment = (currentPrice / (totalDuration / interval));
-
-if (progressDayPriceValue < currentPrice) {
-    progressDayPriceValue = progressDayPriceValue + increment;
-    setTimeout(updateDayRange, interval);
-}
-};
-
-
-async function updateYearRange() {
-
-const interval = 10; // interval between each update in ms
-const increment = (currentPrice / (totalDuration / interval));
-
-if (progressYearPriceValue < currentPrice) {
-    progressYearPriceValue = progressYearPriceValue + increment;
-    setTimeout(updateYearRange, interval);
-}
-};
-        
-*/
-
-  quantStats = data?.getQuantStats ?? {};
-
-  /*
-updateDayRange()
-updateYearRange()
-*/
 </script>
 
 <svelte:head>
@@ -93,7 +57,7 @@ updateYearRange()
 <section class="text-white w-full">
   <div class="sm:pb-7 sm:pt-7 sm:pl-7 m-auto mt-7 sm:mt-0">
     <div class="mb-6">
-      {#if Object?.keys(quantStats)?.length !== 0}
+      {#if Object?.keys(rawData)?.length !== 0}
         <div
           class="space-y-5 xs:space-y-6 lg:grid 2xl:grid-cols-2 2xl:space-x-10 lg:space-y-0"
         >
@@ -113,8 +77,9 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                {companyName} has 3.19 billion shares outstanding. The number of
-                shares has increased by 0.31% in one year.
+                {companyName} has {abbreviateNumber(rawData?.sharesOutStanding)}
+                shares outstanding. The number of shares has increased by {rawData?.sharesYoY}%
+                in one year.
               </p>
               <table class="w-full">
                 <tbody
@@ -124,7 +89,8 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="3,194,640,415">3.19B</td
+                      title="3,194,640,415"
+                      >{abbreviateNumber(rawData?.sharesOutStanding)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -132,7 +98,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.309%">+0.31%</td
+                      title="0.309%">{rawData?.sharesYoY}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -140,7 +106,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.460%">+0.46%</td
+                      title="0.460%">{rawData?.sharesQoQ}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -148,7 +114,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="45.989%">45.99%</td
+                      title="45.989%">{rawData?.institutionalOwnership}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -156,7 +122,8 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="2,777,647,654">2.78B</td
+                      title="2,777,647,654"
+                      >{abbreviateNumber(rawData?.floatShares)}</td
                     >
                   </tr></tbody
                 >
@@ -169,8 +136,10 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                The latest short interest is 74.33 million, so 2.33% of the
-                outstanding shares have been sold short.
+                The latest short interest is {abbreviateNumber(
+                  rawData?.sharesShort,
+                )}, so {rawData?.shortOutStandingPercent}% of the outstanding
+                shares have been sold short.
               </p>
               <table class="w-full">
                 <tbody
@@ -180,15 +149,8 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="74,332,630">74.33M</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Short Previous Month</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="77,219,507">77.22M</td
+                      title="74,332,630"
+                      >{abbreviateNumber(rawData?.sharesShort)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -196,7 +158,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="2.327%">2.33%</td
+                      >{rawData?.shortOutStandingPercent}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -204,7 +166,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="2.676%">2.68%</td
+                      >{rawData?.shortFloatPercent}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -212,7 +174,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.930">0.93</td
+                      >{rawData?.shortRatio}</td
                     >
                   </tr></tbody
                 >
@@ -225,8 +187,9 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                The trailing PE ratio is 71.41 and the forward PE ratio is
-                86.99. {companyName}'s PEG ratio is 5.94.
+                The PE ratio is {rawData?.priceEarningsRatio} and the forward PE
+                ratio is {rawData?.forwardPE}. {companyName}'s PEG ratio is
+                {rawData?.peg}.
               </p>
 
               <table class="w-full">
@@ -237,7 +200,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="71.411">71.41</td
+                      >{rawData?.priceEarningsRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -245,7 +208,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="86.986">86.99</td
+                      >{rawData?.forwardPE}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -253,7 +216,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="8.552">8.55</td
+                      >{rawData?.priceToSalesRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -261,7 +224,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="7.500">7.50</td
+                      >{rawData?.forwardPS}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -269,7 +232,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="11.945">11.95</td
+                      >{rawData?.priceToBookRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -277,7 +240,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="230.510">230.51</td
+                      >{rawData?.priceToFreeCashFlowsRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -285,7 +248,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="5.941">5.94</td
+                      >{rawData?.peg}</td
                     >
                   </tr></tbody
                 >
@@ -304,7 +267,9 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                {$displayCompanyName} has an Enterprise Value (EV) of 11.2B.
+                {$displayCompanyName} has an Enterprise Value (EV) of {abbreviateNumber(
+                  rawData?.enterpriseValue,
+                )}.
               </p>
               <table class="w-full">
                 <tbody
@@ -314,7 +279,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="63.73">63.73</td
+                      >{rawData?.evEarnings}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -322,7 +287,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="8.36">8.36</td
+                      >{rawData?.evSales}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -330,7 +295,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="61.31">61.31</td
+                      >{rawData?.evEBITDA}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -338,7 +303,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="99.76">99.76</td
+                      >{rawData?.evEBIT}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -346,7 +311,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="224.95">224.95</td
+                      >{rawData?.evFCF}</td
                     >
                   </tr></tbody
                 >
@@ -359,8 +324,8 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                The company has a current ratio of 1.84, with a Debt / Equity
-                ratio of 0.18.
+                The company has a current ratio of {rawData?.currentRatio}, with
+                a Debt / Equity ratio of {rawData?.debtEquityRatio}.
               </p>
               <table class="w-full">
                 <tbody
@@ -370,7 +335,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="1.844">1.84</td
+                      >{rawData?.currentRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -378,7 +343,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="1.214">1.21</td
+                      >{rawData?.quickRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -386,23 +351,25 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.18">0.18</td
+                      >{rawData?.debtEquityRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Debt / EBITDA</span>
+                      ><span>Total Debt / Capitalization</span>
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.87">0.87</td
+                      >{abbreviateNumber(
+                        rawData?.totalDebtToCapitalization,
+                      )}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Debt / FCF</span>
+                      ><span>Cash Flow / Debt</span>
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="3.54">3.54</td
+                      >{rawData?.cashFlowToDebtRatio}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -410,7 +377,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="25.841">25.84</td
+                      >{rawData?.interestCoverage}</td
                     >
                   </tr></tbody
                 >
@@ -423,8 +390,8 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                Return on equity (ROE) is 20.39% and return on invested capital
-                (ROIC) is 6.96%.
+                Return on equity (ROE) is {rawData?.returnOnEquity}% and return
+                on capital (ROIC) is {rawData?.returnOnInvestedCapital}%.
               </p>
               <table class="w-full">
                 <tbody
@@ -434,7 +401,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="20.389%">20.39%</td
+                      >{rawData?.returnOnEquity}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -442,7 +409,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="4.759%">4.76%</td
+                      >{rawData?.returnOnAssets}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -450,7 +417,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="6.961%">6.96%</td
+                      >{rawData?.returnOnInvestedCapital}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -458,7 +425,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="691,592">$691,592</td
+                      >{abbreviateNumber(rawData?.revenuePerEmployee, true)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -466,7 +433,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="90,715">$90,715</td
+                      >{abbreviateNumber(rawData?.profitPerEmployee, true)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -477,7 +444,7 @@ updateYearRange()
                     >
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="140,473">140,473</td
+                      title="140,473">{abbreviateNumber(rawData?.employees)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -485,7 +452,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.909">0.91</td
+                      >{rawData?.assetTurnover}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -493,7 +460,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="5.624">5.62</td
+                      >{rawData?.inventoryTurnover}</td
                     >
                   </tr></tbody
                 >
@@ -509,7 +476,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="-4.35B">-4.35B</td
+                      >{abbreviateNumber(rawData?.incomeTaxExpense)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -517,7 +484,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="n/a">n/a</td
+                      >{rawData?.effectiveTaxRate}</td
                     >
                   </tr></tbody
                 >
@@ -532,19 +499,21 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                The stock price has increased by +22.82% in the last 52 weeks.
-                The beta is 2.30, so {companyName}'s price volatility has been
-                higher than the market average.
+                The stock price has increased by {rawData?.change1Y}% in the
+                last 52 weeks. The beta is {rawData?.beta}, so {companyName}'s
+                price volatility has been {rawData?.beta > 0
+                  ? "higher"
+                  : "lower"} than the market average.
               </p>
               <table class="w-full">
                 <tbody
                   ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Beta (5Y)</span>
+                      ><span>Beta</span>
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="2.297">2.30</td
+                      >{rawData?.beta}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -552,7 +521,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="22.82%">+22.82%</td
+                      >{rawData?.change1Y}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -560,7 +529,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="229.468">229.47</td
+                      >{rawData?.sma50}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -568,7 +537,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="201.395">201.40</td
+                      >{rawData?.sma200}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -576,7 +545,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="64.905">64.91</td
+                      >{rawData?.rsi}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -584,7 +553,7 @@ updateYearRange()
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="79,477,783">79,477,783</td
+                      >{abbreviateNumber(rawData?.avgVolume)}</td
                     >
                   </tr></tbody
                 >
