@@ -711,6 +711,13 @@
       defaultCondition: "over",
       defaultValue: "1%",
     },
+    annualPriceChange: {
+      label: "52-Week Price Change",
+      step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
+
+      defaultCondition: "over",
+      defaultValue: "1%",
+    },
     var: {
       label: "Value-at-Risk",
       step: ["-1%", "-5%", "-10%", "-15%", "-20%"],
@@ -747,6 +754,13 @@
 
       defaultCondition: "over",
       defaultValue: -0.5,
+    },
+    inventoryTurnover: {
+      label: "Inventory Turnover",
+      step: [200, 100, 50, 20, 10, 5, 3, 2, 1, 0],
+
+      defaultCondition: "over",
+      defaultValue: "0",
     },
     returnOnAssets: {
       label: "Return on Assets",
@@ -1024,6 +1038,20 @@
     },
     ebitdaMargin: {
       label: "EBITDA Margin",
+      step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
+
+      defaultCondition: "over",
+      defaultValue: "1%",
+    },
+    ebitMargin: {
+      label: "EBIT Margin",
+      step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
+
+      defaultCondition: "over",
+      defaultValue: "1%",
+    },
+    operatingMargin: {
+      label: "Operating Margin",
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
