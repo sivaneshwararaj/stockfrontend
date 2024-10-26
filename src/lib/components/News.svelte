@@ -138,7 +138,9 @@
                 >
                   {item?.title}
                   <p class="text-white text-sm mt-2 font-normal">
-                    {item?.text}
+                    {item?.text?.length > 200
+                      ? item?.text?.slice(0, 200) + "..."
+                      : item?.text}
                   </p>
                 </a>
               </div>

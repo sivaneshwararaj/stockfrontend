@@ -366,10 +366,7 @@ function handleTypeOfTrade(state:string)
                   <div
                     class="flex-1 flex-shrink-0 flex flex-row items-center justify-between -mt-2"
                   >
-                    <label
-                      on:click={() => goto("/")}
-                      class="ml-2 cursor-pointer"
-                    >
+                    <a href="/" class="ml-2 cursor-pointer">
                       <svg
                         class="w-5 h-5 inline-block"
                         xmlns="http://www.w3.org/2000/svg"
@@ -381,7 +378,7 @@ function handleTypeOfTrade(state:string)
                           /></g
                         ></svg
                       >
-                    </label>
+                    </a>
 
                     <div
                       class={!isScrolled
@@ -395,10 +392,7 @@ function handleTypeOfTrade(state:string)
                       </span>
                       <span class="text-white font-medium text-sm">
                         {#if $currentPortfolioPrice !== null && $currentPortfolioPrice !== 0}
-                          {$stockTicker?.includes(".DE") ||
-                          $stockTicker?.includes(".F")
-                            ? `${$currentPortfolioPrice}€`
-                            : ` $${$currentPortfolioPrice}`}
+                          {$currentPortfolioPrice}
                         {:else}
                           {data?.getStockQuote?.price}
                         {/if}

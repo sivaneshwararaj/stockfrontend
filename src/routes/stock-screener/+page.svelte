@@ -711,13 +711,6 @@
       defaultCondition: "over",
       defaultValue: "1%",
     },
-    annualPriceChange: {
-      label: "52-Week Price Change",
-      step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
-
-      defaultCondition: "over",
-      defaultValue: "1%",
-    },
     var: {
       label: "Value-at-Risk",
       step: ["-1%", "-5%", "-10%", "-15%", "-20%"],

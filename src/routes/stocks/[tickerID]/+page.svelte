@@ -1497,22 +1497,20 @@
             <CommunitySentiment {communitySentiment} />
           </div>
 
-          {#if $screenWidth <= 1022}
-            <!--BUG: Dont remove since when changing ETF symbol display freezes-->
+          <!--BUG: Dont remove since when changing ETF symbol display freezes-->
 
-            <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
-              <Lazy>
-                <h3
-                  class="cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
-                >
-                  Key Information
-                </h3>
-                {#await import("$lib/components/StockKeyInformation.svelte") then { default: Comp }}
-                  <svelte:component this={Comp} {data} />
-                {/await}
-              </Lazy>
-            </div>
-          {/if}
+          <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
+            <Lazy>
+              <h3
+                class="cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
+              >
+                Key Information
+              </h3>
+              {#await import("$lib/components/StockKeyInformation.svelte") then { default: Comp }}
+                <svelte:component this={Comp} {data} />
+              {/await}
+            </Lazy>
+          </div>
 
           <div
             class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
