@@ -27,6 +27,6 @@ export let analystRating;
 
 <!--<ESGCard stockDeck={stockDeck} />-->
 
-<SimilarTickerCard similarstock={similarstock}/>
+<!--<SimilarTickerCard similarstock={similarstock}/>-->
 
-<TopETFTickerHolder topETFHolder={topETFHolder}/>
+<!--<TopETFTickerHolder topETFHolder={topETFHolder}/>-->
