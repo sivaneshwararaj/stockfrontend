@@ -800,6 +800,12 @@
       defaultCondition: "over",
       defaultValue: 0,
     },
+    evFCF: {
+      label: "EV / FCF",
+      step: [50, 20, 10, 5, 1, 0],
+      defaultCondition: "over",
+      defaultValue: 0,
+    },
     freeCashFlowPerShare: {
       label: "FCF / Share",
       step: [10, 8, 6, 4, 2, 1, 0],
