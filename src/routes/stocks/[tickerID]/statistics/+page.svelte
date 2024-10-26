@@ -437,10 +437,7 @@
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><a
-                        class="dothref text-default"
-                        href="/stocks/tsla/employees/">Employee Count</a
-                      ></td
+                      ><span>Employee Count</span></td
                     >
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
@@ -567,21 +564,22 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                In the last 12 months, {companyName} had revenue of $97.15 billion
-                and earned $12.74 billion in profits. Earnings per share was $3.65.
+                In the last 12 months, {companyName} had revenue of {abbreviateNumber(
+                  rawData?.revenue,
+                  true,
+                )}
+                and earned {abbreviateNumber(rawData?.netIncome, true)} in profits.
+                Earnings per share was ${rawData?.eps}.
               </p>
               <table class="w-full">
                 <tbody
                   ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><a
-                        class="dothref text-default"
-                        href="/stocks/tsla/revenue/">Revenue</a
-                      ></td
+                      ><span>Revenue</span></td
                     >
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="97,150,000,000">97.15B</td
+                      >{abbreviateNumber(rawData?.revenue)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -589,7 +587,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="17,709,000,000">17.71B</td
+                      >{abbreviateNumber(rawData?.grossProfit)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -597,15 +595,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="8,140,000,000">8.14B</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Pretax Income</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="7,605,000,000">7.61B</td
+                      >{abbreviateNumber(rawData?.operatingIncome)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -613,7 +603,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="12,743,000,000">12.74B</td
+                      >{abbreviateNumber(rawData?.netIncome)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -621,7 +611,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="13,244,000,000">13.24B</td
+                      >{abbreviateNumber(rawData?.ebitda)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -629,7 +619,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="8,140,000,000">8.14B</td
+                      >{abbreviateNumber(rawData?.ebit)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -637,7 +627,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="3.648">$3.65</td
+                      >{rawData?.eps}</td
                     >
                   </tr></tbody
                 >
@@ -656,9 +646,14 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                The company has $33.65 billion in cash and $12.78 billion in
-                debt, giving a net cash position of $20.87 billion or $6.53 per
-                share.
+                The company has {abbreviateNumber(
+                  rawData?.cashAndCashEquivalents,
+                  true,
+                )} in cash and {abbreviateNumber(rawData?.totalDebt, true)} in debt,
+                giving a net cash position of {abbreviateNumber(
+                  rawData?.cashAndCashEquivalents - rawData?.totalDebt,
+                  true,
+                )}.
               </p>
               <table class="w-full">
                 <tbody
@@ -668,7 +663,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="33,648,000,000">33.65B</td
+                      >{abbreviateNumber(rawData?.cashAndCashEquivalents)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -676,7 +671,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="12,783,000,000">12.78B</td
+                      >{abbreviateNumber(rawData?.totalDebt)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -684,31 +679,26 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="20,865,000,000">20.87B</td
+                      title="20,865,000,000"
+                      >{abbreviateNumber(
+                        rawData?.cashAndCashEquivalents - rawData?.totalDebt,
+                      )}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Net Cash Per Share</span>
+                      ><span>Retained Earnings</span>
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="6.531">$6.53</td
+                      >{abbreviateNumber(rawData?.retainedEarnings)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Equity (Book Value)</span>
+                      ><span>Total Assets</span>
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="70,710,000,000">70.71B</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Book Value Per Share</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="21.806">21.81</td
+                      >{abbreviateNumber(rawData?.totalAssets)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -716,7 +706,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="25,802,000,000">25.80B</td
+                      >{abbreviateNumber(rawData?.workingCapital)}</td
                     >
                   </tr></tbody
                 >
@@ -735,9 +725,17 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                In the last 12 months, operating cash flow was $14.48 billion
-                and capital expenditures -$10.87 billion, giving a free cash
-                flow of $3.61 billion.
+                In the last 12 months, operating cash flow was {abbreviateNumber(
+                  rawData?.operatingCashFlow,
+                  true,
+                )}
+                and capital expenditures {abbreviateNumber(
+                  rawData?.capitalExpenditure,
+                  true,
+                )}, giving a free cash flow of {abbreviateNumber(
+                  rawData?.freeCashFlow,
+                  true,
+                )}.
               </p>
               <table class="w-full">
                 <tbody
@@ -747,7 +745,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="14,479,000,000">14.48B</td
+                      >{abbreviateNumber(rawData?.operatingCashFlow)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -755,7 +753,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="-10,869,000,000">-10.87B</td
+                      >{abbreviateNumber(rawData?.capitalExpenditure)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -763,7 +761,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="3,610,000,000">3.61B</td
+                      >{abbreviateNumber(rawData?.freeCashFlow)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -771,7 +769,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="1.130">$1.13</td
+                      >{rawData?.freeCashFlowPerShare}</td
                     >
                   </tr></tbody
                 >
@@ -788,8 +786,8 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                Gross margin is 18.23%, with operating and profit margins of
-                8.38% and 13.07%.
+                Gross margin is {rawData?.grossProfitMargin}%, with operating
+                and profit margins of {rawData?.operatingProfitMargin}% and {rawData?.netProfitMargin}%.
               </p>
               <table class="w-full">
                 <tbody
@@ -799,7 +797,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="18.229%">18.23%</td
+                      >{rawData?.grossProfitMargin}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -807,7 +805,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="8.379%">8.38%</td
+                      >{rawData?.operatingProfitMargin}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -815,7 +813,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="8.662%">8.66%</td
+                      >{rawData?.pretaxProfitMargin}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -823,7 +821,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="13.075%">13.07%</td
+                      >{rawData?.netProfitMargin}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -831,7 +829,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="13.633%">13.63%</td
+                      >{rawData?.ebitdaMargin}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -839,7 +837,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="8.379%">8.38%</td
+                      >{rawData?.ebitMargin}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -847,7 +845,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="1.801%">1.80%</td
+                      >{rawData?.freeCashFlowMargin}%</td
                     >
                   </tr></tbody
                 >
