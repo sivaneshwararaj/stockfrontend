@@ -1,44 +1,18 @@
 <script lang="ts">
-  import Lazy from "$lib/components/Lazy.svelte";
-  import ReturnCard from "$lib/components/ReturnCard.svelte";
   import {
     numberOfUnreadNotification,
     displayCompanyName,
     screenWidth,
     stockTicker,
-    revenueSegmentationComponent,
   } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
 
   export let data;
 
+  let companyName = $displayCompanyName
+    ?.replace("Inc.", "")
+    ?.replace(".com", "");
   let quantStats = {};
-
-  // Function to check if a date is today or yesterday, adjusting for weekends
-  function ongoingDD(dateString: string) {
-    const date = new Date(dateString);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    // Adjust today to Friday if it's Saturday or Sunday
-    if (today.getDay() === 6) {
-      // Saturday
-      today.setDate(today.getDate() - 1); // Set to Friday
-    } else if (today.getDay() === 0) {
-      // Sunday
-      today.setDate(today.getDate() - 2); // Set to Friday
-    }
-
-    return (
-      (date.getDate() === today.getDate() &&
-        date.getMonth() === today.getMonth() &&
-        date.getFullYear() === today.getFullYear()) ||
-      (date.getDate() === yesterday.getDate() &&
-        date.getMonth() === yesterday.getMonth() &&
-        date.getFullYear() === yesterday.getFullYear())
-    );
-  }
 
   /*
 let progressDayPriceValue = 0;
@@ -127,42 +101,9 @@ updateYearRange()
             <div
               class="-mb-2 flex items-start justify-between border-b border-gray-500 md:-mb-4"
             >
-              <h1 class="mb-3 text-2xl font-bold">Tesla Statistics</h1>
-            </div>
-            <div>
-              <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
-                Total Valuation
-              </h2>
-              <p
-                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
-              >
-                Tesla has a market cap or net worth of $832.14 billion. The
-                enterprise value is $812.05 billion.
-              </p>
-              <table class="w-full">
-                <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><a
-                        class="dothref text-default"
-                        href="/stocks/tsla/market-cap/">Market Cap</a
-                      ></td
-                    >
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="832,139,935,299">832.14B</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Enterprise Value</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="812,053,935,299">812.05B</td
-                    >
-                  </tr></tbody
-                >
-              </table>
+              <h1 class="mb-3 text-2xl font-bold">
+                {companyName} Statistics
+              </h1>
             </div>
 
             <div>
@@ -172,8 +113,8 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                Tesla has 3.19 billion shares outstanding. The number of shares
-                has increased by 0.31% in one year.
+                {companyName} has 3.19 billion shares outstanding. The number of
+                shares has increased by 0.31% in one year.
               </p>
               <table class="w-full">
                 <tbody
@@ -203,14 +144,6 @@ updateYearRange()
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Owned by Insiders (%)</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="12.963%">12.96%</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Owned by Institutions (%)</span>
                     </td>
                     <td
@@ -231,13 +164,69 @@ updateYearRange()
             </div>
             <div>
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
+                Short Selling Information
+              </h2>
+              <p
+                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
+              >
+                The latest short interest is 74.33 million, so 2.33% of the
+                outstanding shares have been sold short.
+              </p>
+              <table class="w-full">
+                <tbody
+                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Short Interest</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="74,332,630">74.33M</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Short Previous Month</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="77,219,507">77.22M</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Short % of Shares Out</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="2.327%">2.33%</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Short % of Float</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="2.676%">2.68%</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Short Ratio (days to cover)</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="0.930">0.93</td
+                    >
+                  </tr></tbody
+                >
+              </table>
+            </div>
+            <div>
+              <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
                 Valuation Ratios
               </h2>
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The trailing PE ratio is 71.41 and the forward PE ratio is
-                86.99. Tesla's PEG ratio is 5.94.
+                86.99. {companyName}'s PEG ratio is 5.94.
               </p>
 
               <table class="w-full">
@@ -315,8 +304,7 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                The stock's EV/EBITDA ratio is 61.31, with an EV/FCF ratio of
-                224.95.
+                {$displayCompanyName} has an Enterprise Value (EV) of 11.2B.
               </p>
               <table class="w-full">
                 <tbody
@@ -545,8 +533,8 @@ updateYearRange()
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The stock price has increased by +22.82% in the last 52 weeks.
-                The beta is 2.30, so Tesla's price volatility has been higher
-                than the market average.
+                The beta is 2.30, so {companyName}'s price volatility has been
+                higher than the market average.
               </p>
               <table class="w-full">
                 <tbody
@@ -602,62 +590,7 @@ updateYearRange()
                 >
               </table>
             </div>
-            <div>
-              <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
-                Short Selling Information
-              </h2>
-              <p
-                class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
-              >
-                The latest short interest is 74.33 million, so 2.33% of the
-                outstanding shares have been sold short.
-              </p>
-              <table class="w-full">
-                <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Short Interest</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="74,332,630">74.33M</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Short Previous Month</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="77,219,507">77.22M</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Short % of Shares Out</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="2.327%">2.33%</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Short % of Float</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="2.676%">2.68%</td
-                    >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
-                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
-                      ><span>Short Ratio (days to cover)</span>
-                    </td>
-                    <td
-                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.930">0.93</td
-                    >
-                  </tr></tbody
-                >
-              </table>
-            </div>
+
             <div>
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
                 Income Statement
@@ -665,8 +598,8 @@ updateYearRange()
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                In the last 12 months, Tesla had revenue of $97.15 billion and
-                earned $12.74 billion in profits. Earnings per share was $3.65.
+                In the last 12 months, {companyName} had revenue of $97.15 billion
+                and earned $12.74 billion in profits. Earnings per share was $3.65.
               </p>
               <table class="w-full">
                 <tbody
