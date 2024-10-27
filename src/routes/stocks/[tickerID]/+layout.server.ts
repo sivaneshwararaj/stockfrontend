@@ -43,23 +43,6 @@ const fetchWatchlist = async (pb, userId) => {
   return output;
 };
 
-const fetchCommunitySentiment = async (pb, ticker, cookies) => {
-  const cookieVote = cookies.get(`community-sentiment-${ticker}`);
-  const today = new Date().toISOString().split("T")[0];
-  const pastNDays = new Date(new Date().setDate(new Date().getDate() - 7))
-    .toISOString()
-    .split("T")[0];
-
-  const output = await pb.collection("sentiment").getFullList({
-    filter: `ticker="${ticker}" && created < "${today}" && created >= "${pastNDays}"`,
-  });
-
-  return {
-    alreadyVoted: cookieVote || null,
-    sentimentData: output?.at(0) || {},
-  };
-};
-
 export const load = async ({ params, locals, cookies, setHeaders }) => {
   const { apiURL, apiKey, pb, user } = locals;
   const { tickerID } = params;
@@ -84,8 +67,6 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
       fetchData(apiURL, apiKey, endpoint, tickerID),
     ),
     fetchWatchlist(pb, user?.id),
-    //fetchFromFastify(fastifyURL, '/get-portfolio-data', user?.id),
-    fetchCommunitySentiment(pb, tickerID, cookies),
   ];
 
   const [
@@ -102,7 +83,6 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     getDividendAnnouncement,
     getNews,
     getUserWatchlist,
-    getCommunitySentiment,
   ] = await Promise.all(promises);
 
   return {
@@ -119,7 +99,6 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
     getDividendAnnouncement,
     getNews,
     getUserWatchlist,
-    getCommunitySentiment,
     companyName: cleanString(getStockDeck?.at(0)?.companyName),
   };
 };

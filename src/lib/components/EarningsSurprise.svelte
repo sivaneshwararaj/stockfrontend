@@ -5,7 +5,8 @@
   export let data;
 
   let rawData = {};
-
+  let epsRatio = 0;
+  let revenueRatio = 0;
   function latestInfoDate(inputDate) {
     // Convert the input date string to milliseconds since epoch
     const inputDateMs = Date?.parse(inputDate);
@@ -28,6 +29,14 @@
   $: {
     if ($stockTicker && typeof window !== "undefined") {
       rawData = data?.getEarningsSurprise;
+      epsRatio = (
+        ((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) *
+        100
+      )?.toFixed(2);
+      revenueRatio = (
+        (rawData?.revenue / rawData?.revenuePrior - 1) *
+        100
+      )?.toFixed(2);
     }
   }
 </script>
@@ -80,14 +89,12 @@
             Math.abs(rawData?.revenueSurprise),
             true,
           )}, with
-          <strong
-            >{((rawData?.revenue / rawData?.revenuePrior - 1) * 100)?.toFixed(
-              2,
-            )}%</strong
+          <span
+            class="font-semibold {revenueRatio > 0
+              ? 'text-[#00FC50]'
+              : 'text-[#FF2F1F]'}">{revenueRatio}%</span
           >
-          YoY {rawData?.revenue / rawData?.revenuePrior - 1 < 0
-            ? "decline"
-            : "growth"}.
+          YoY {revenueRatio < 0 ? "decline" : "growth"}.
         </li>
         <li
           class="ml-[20px] sm:ml-[30px]"
@@ -97,18 +104,12 @@
           {rawData?.epsSurprise > 0 ? "exceeds" : "misses"} estimates by ${rawData?.epsSurprise?.toFixed(
             2,
           )}, with
-          <strong
-            >{(
-              ((rawData?.eps - rawData?.epsPrior) /
-                Math.abs(rawData?.epsPrior)) *
-              100
-            )?.toFixed(2)}%</strong
+          <span
+            class="font-semibold {epsRatio > 0
+              ? 'text-[#00FC50]'
+              : 'text-[#FF2F1F]'}">{epsRatio}%</span
           >
-          YoY {(rawData?.eps - rawData?.epsPrior) /
-            Math.abs(rawData?.epsPrior) <
-          0
-            ? "decline"
-            : "growth"}.
+          YoY {epsRatio < 0 ? "decline" : "growth"}.
         </li>
       </div>
     </div>

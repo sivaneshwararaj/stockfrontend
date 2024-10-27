@@ -1,6 +1,5 @@
 <script lang="ts">
   import { stockTicker, displayCompanyName } from "$lib/store";
-  import InfoModal from "$lib/components/InfoModal.svelte";
   export let data;
 
   let rawData = {};
@@ -39,17 +38,11 @@
         <div class="flex flex-row justify-start mr-auto items-center">
           <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
           <div class="flex flex-row items-center">
-            <label
-              for="dividendAnnouncement"
-              class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+            <h3
+              class="mr-1 flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
             >
               Dividend Announcement
-            </label>
-            <InfoModal
-              title={"Dividend Announcement"}
-              content={`Dividend announcements are company declarations of cash or stock distributions to shareholders, usually reflecting profit and providing investment returns.`}
-              id={"dividendAnnouncement"}
-            />
+            </h3>
           </div>
         </div>
       </div>
@@ -57,7 +50,7 @@
       <div
         class="text-white text-[1rem] {latestInfoDate(rawData?.date)
           ? 'bg-[#F9AB00] bg-opacity-[0.1] p-3 rounded-lg'
-          : 'bg-[#09090B] pl-1'} "
+          : 'bg-[#09090B] pl-1'}"
       >
         <div class="mt-1">
           {$displayCompanyName} has announced its upcoming dividend details on {new Date(
@@ -70,52 +63,62 @@
           })}:
         </div>
 
-        <li
-          class="ml-[20px] sm:ml-[30px]"
-          style="color: #fff; line-height: 22px; margin-top:20px; margin-bottom: 15px; list-style-type: disc;"
-        >
-          <span class="font-bold">Dividend:</span> ${rawData?.dividend} per share
-          ({rawData?.dividend / rawData?.dividendPrior - 1 > 0 ? "+" : ""}{(
-            (rawData?.dividend / rawData?.dividendPrior - 1) *
-            100
-          )?.toFixed(2)}% YoY)
-        </li>
-        <li
-          class="ml-[20px] sm:ml-[30px]"
-          style="color: #fff; line-height: 22px; margin-top:0px; margin-bottom: 15px; list-style-type: disc;"
-        >
-          <span class="font-bold">Dividend Yield:</span>
-          {rawData?.dividendYield?.toFixed(2)}%
-        </li>
-        <li
-          class="ml-[20px] sm:ml-[30px]"
-          style="color: #fff; line-height: 22px; margin-top:0px; margin-bottom: 15px; list-style-type: disc;"
-        >
-          <span class="font-bold">Ex-Dividend Date:</span>
-          {new Date(rawData?.exDividendDate)?.toLocaleString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            daySuffix: "2-digit",
-          })}
-        </li>
+        <!-- Added grid container -->
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mt-5">
+          <!-- First column -->
+          <div>
+            <li
+              class="ml-[20px]"
+              style="color: #fff; line-height: 22px; margin-bottom: 15px; list-style-type: disc;"
+            >
+              <span class="font-bold">Dividend:</span> ${rawData?.dividend} per share
+              ({rawData?.dividend / rawData?.dividendPrior - 1 > 0 ? "+" : ""}{(
+                (rawData?.dividend / rawData?.dividendPrior - 1) *
+                100
+              )?.toFixed(2)}% YoY)
+            </li>
+            <li
+              class="ml-[20px]"
+              style="color: #fff; line-height: 22px; margin-bottom: 15px; list-style-type: disc;"
+            >
+              <span class="font-bold">Dividend Yield:</span>
+              {rawData?.dividendYield?.toFixed(2)}%
+            </li>
+          </div>
 
-        <li
-          class="ml-[20px] sm:ml-[30px]"
-          style="color: #fff; line-height: 22px; margin-top:0px; margin-bottom: 15px; list-style-type: disc;"
-        >
-          <span class="font-bold">Payable Date:</span>
-          {new Date(rawData?.payableDate)?.toLocaleString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            daySuffix: "2-digit",
-          })}
-        </li>
+          <!-- Second column -->
+          <div>
+            <li
+              class="ml-[20px]"
+              style="color: #fff; line-height: 22px; margin-bottom: 15px; list-style-type: disc;"
+            >
+              <span class="font-bold">Ex-Dividend Date:</span>
+              {new Date(rawData?.exDividendDate)?.toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                daySuffix: "2-digit",
+              })}
+            </li>
+            <li
+              class="ml-[20px]"
+              style="color: #fff; line-height: 22px; margin-bottom: 15px; list-style-type: disc;"
+            >
+              <span class="font-bold">Payable Date:</span>
+              {new Date(rawData?.payableDate)?.toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                daySuffix: "2-digit",
+              })}
+            </li>
+          </div>
+        </ul>
 
+        <!-- Keep the Record Date outside the grid as a full-width item -->
         <li
-          class="ml-[20px] sm:ml-[30px]"
-          style="color: #fff; line-height: 22px; margin-top:0px; margin-bottom: 15px; list-style-type: disc;"
+          class="ml-[20px]"
+          style="color: #fff; line-height: 22px; margin-bottom: 15px; list-style-type: disc;"
         >
           <span class="font-bold">Record Date:</span>
           {new Date(rawData?.recordDate)?.toLocaleString("en-US", {

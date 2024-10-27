@@ -25,7 +25,6 @@
   import EarningsSurprise from "$lib/components/EarningsSurprise.svelte";
   import DividendAnnouncement from "$lib/components/DividendAnnouncement.svelte";
 
-  import CommunitySentiment from "$lib/components/CommunitySentiment.svelte";
   import Lazy from "$lib/components/Lazy.svelte";
   import { convertTimestamp } from "$lib/utils";
   import { Button } from "$lib/components/shadcn/button/index.js";
@@ -36,7 +35,6 @@
   export let form;
 
   let prePostData = {};
-  let communitySentiment = {};
 
   $: previousClose = data?.getStockQuote?.previousClose;
 
@@ -668,10 +666,7 @@
       oneYearPrice = [];
       maxPrice = [];
       prePostData = {};
-      communitySentiment = {};
       output = null;
-
-      communitySentiment = data?.getCommunitySentiment;
 
       const asyncFunctions = [getPrePostQuote()];
 
@@ -1651,10 +1646,10 @@
                 </div>
               </div>
               <div>
-                <h2 class="mb-2" data-svelte-h="svelte-avjv7o">
+                <h2 class="mb-2 text-white text-2xl font-semibold">
                   Analyst Forecast
                 </h2>
-                <p class="mb-4" data-test="overview-forecast-intro">
+                <p class="mb-4 text-gray-200">
                   According to 40 analysts, the average rating for NVDA stock is
                   "Strong Buy." The 12-month stock price forecast is $145.84,
                   which is an increase of 3.04% from the latest price.
@@ -1688,9 +1683,6 @@
               <div class="lg:sticky lg:top-20"></div>
             </div>
             <div class="w-full">
-              <div class="w-full mt-14 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
-                <CommunitySentiment {communitySentiment} />
-              </div>
               <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
                 <Lazy>
                   <h3
@@ -1705,7 +1697,7 @@
               </div>
 
               <div
-                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getEarningsSurprise || {},
                 )?.length !== 0
                   ? ''
@@ -1715,7 +1707,7 @@
               </div>
 
               <div
-                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getNextEarnings || {},
                 )?.length !== 0
                   ? ''
@@ -1725,7 +1717,7 @@
               </div>
 
               <div
-                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getDividendAnnouncement || {},
                 )?.length !== 0
                   ? ''
@@ -1735,7 +1727,7 @@
               </div>
 
               <div
-                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getBullBearSay || {},
                 )?.length !== 0
                   ? ''
@@ -1746,7 +1738,7 @@
 
               <Lazy>
                 <div
-                  class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data
+                  class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {data
                     ?.getWhyPriceMoved?.length !== 0
                     ? ''
                     : 'hidden'}"

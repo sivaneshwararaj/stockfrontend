@@ -1,6 +1,5 @@
 <script lang="ts">
   import { stockTicker, displayCompanyName } from "$lib/store";
-  import InfoModal from "$lib/components/InfoModal.svelte";
   import { abbreviateNumber } from "$lib/utils";
   export let data;
 
@@ -39,17 +38,11 @@
         <div class="flex flex-row justify-start mr-auto items-center">
           <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
           <div class="flex flex-row items-center">
-            <label
-              for="nextEarningsInfo"
-              class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+            <h3
+              class="mr-1 flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
             >
               Next Earnings Release
-            </label>
-            <InfoModal
-              title={"Next Earnings"}
-              content={`Earnings represent a company's net profit after expenses, taxes, and costs. Reported quarterly, they show financial health, including revenue and EPS, influencing stock prices and investor decisions.`}
-              id={"nextEarningsInfo"}
-            />
+            </h3>
           </div>
         </div>
       </div>
@@ -73,13 +66,19 @@
         <br />Analysts project revenue of
         <strong>{abbreviateNumber(rawData?.revenueEst, true)}</strong>,
         reflecting a
-        <strong>{revenueRatio}%</strong> YoY {revenueRatio > 0
-          ? "growth"
-          : revenueRatio < 0
-            ? "shrinking"
-            : ""} and earnings per share of
+        <span
+          class="font-semibold {revenueRatio > 0
+            ? 'text-[#00FC50]'
+            : 'text-[#FF2F1F]'} ">{abbreviateNumber(revenueRatio)}%</span
+        >
+        YoY {revenueRatio > 0 ? "growth" : revenueRatio < 0 ? "shrinking" : ""} and
+        earnings per share of
         <strong>{rawData?.epsEst}</strong>, making a
-        <strong>{epsRatio}%</strong>
+        <span
+          class="font-semibold {epsRatio > 0
+            ? 'text-[#00FC50]'
+            : 'text-[#FF2F1F]'} ">{epsRatio}%</span
+        >
         {epsRatio > 0 ? "increase" : epsRatio < 0 ? "decrease" : ""} YoY.
       </div>
     </div>
