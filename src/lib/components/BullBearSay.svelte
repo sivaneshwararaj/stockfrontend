@@ -73,7 +73,7 @@
 
       <!--Start Header-->
       <div
-        class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 -mt-2"
+        class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 -mt-2"
       >
         {#each tabs as item, i}
           <button
@@ -83,7 +83,7 @@
               : ''} "
           >
             {#if activeIdx === i}
-              <div class="absolute inset-0 rounded-lg bg-purple-600"></div>
+              <div class="absolute inset-0 rounded-md bg-purple-600"></div>
             {/if}
             <span
               class="relative text-sm block font-medium duration-200 text-white"
@@ -112,7 +112,7 @@
         <label
           class="{latestInfoDate(rawData?.date)
             ? ''
-            : 'hidden'} bg-purple-600 mr-2 text-white font-medium not-italic text-xs rounded-lg px-2 py-0.5"
+            : 'hidden'} bg-purple-600 mr-2 text-white font-medium not-italic text-xs rounded-md px-2 py-0.5"
           >New</label
         >
         Updated {rawData?.date}
@@ -130,7 +130,7 @@
             <p class="pr-1">{rawData?.bearSays}</p>
           {:else}
             <div
-              class="shadow-lg shadow-bg-[#000] bg-[#111112] sm:bg-opacity-[0.5] text-sm sm:text-[1rem] rounded-md w-full p-4 min-h-24 mt-4 text-white m-auto flex justify-center items-center text-center font-semibold"
+              class="bg-[#111112] sm:bg-opacity-[0.5] text-sm sm:text-[1rem] rounded-md w-full p-4 min-h-24 mt-4 text-white m-auto flex justify-center items-center text-center font-semibold"
             >
               <svg
                 class="mr-1.5 w-5 h-5 inline-block"

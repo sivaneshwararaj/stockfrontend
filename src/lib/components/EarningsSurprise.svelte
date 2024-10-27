@@ -1,6 +1,5 @@
 <script lang="ts">
   import { stockTicker, displayCompanyName } from "$lib/store";
-  import InfoModal from "$lib/components/InfoModal.svelte";
   import { abbreviateNumber } from "$lib/utils";
   export let data;
 
@@ -49,17 +48,11 @@
         <div class="flex flex-row justify-start mr-auto items-center">
           <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
           <div class="flex flex-row items-center">
-            <label
-              for="earningsSurprise"
-              class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+            <h3
+              class="mr-1 flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
             >
               Earnings Surprise
-            </label>
-            <InfoModal
-              title={"Earnings Surprise"}
-              content={`The earnings surprise is when a company's actual EPS differs from analysts' forecasts. Positive surprises boost stock prices; negative ones can lower them.`}
-              id={"earningsSurprise"}
-            />
+            </h3>
           </div>
         </div>
       </div>

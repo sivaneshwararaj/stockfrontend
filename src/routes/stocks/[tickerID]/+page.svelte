@@ -20,10 +20,13 @@
   } from "$lib/store";
   import { onDestroy, onMount } from "svelte";
   import BullBearSay from "$lib/components/BullBearSay.svelte";
+  import WIIM from "$lib/components/WIIM.svelte";
+
   import News from "$lib/components/News.svelte";
   import NextEarnings from "$lib/components/NextEarnings.svelte";
   import EarningsSurprise from "$lib/components/EarningsSurprise.svelte";
   import DividendAnnouncement from "$lib/components/DividendAnnouncement.svelte";
+  import Sidecard from "$lib/components/Sidecard.svelte";
 
   import Lazy from "$lib/components/Lazy.svelte";
   import { convertTimestamp } from "$lib/utils";
@@ -1579,123 +1582,12 @@
           <!--End Graph-->
 
           <div class="mt-6 flex flex-row gap-x-14 items-start w-full">
-            <div class="space-y-6 lg:order-2 lg:pt-1 w-[40%] ml-auto">
-              <div class="px-0.5 lg:px-0">
-                <h2 class="mb-2 text-2xl text-white font-semibold">
-                  About {$stockTicker}
-                </h2>
-                <p class="text-gray-200">
-                  NVIDIA Corporation provides graphics and compute and
-                  networking solutions in the United States, Taiwan, China, Hong
-                  Kong, and internationally. The Graphics segment offers GeForce
-                  GPUs for gaming and PCs, the GeForce NOW game streaming
-                  service and related infrastructure, and solutions for gaming
-                  platforms; Quadro/NVIDIA RTX GPUs for enterprise workstation
-                  graphics; virtual GPU or vGPU software for cloud-based visual
-                  and virtual computing; automotive platforms for infotainment
-                  systems; and Omniverse software for building and operating
-                  metaverse a... <a
-                    href="/stocks/nvda/company/"
-                    title="View company profile"
-                    tabindex="-1">[Read more]</a
-                  >
-                </p>
-                <div
-                  class="mt-3 grid grid-cols-2 gap-3"
-                  data-test="overview-profile-values"
-                >
-                  <div class="col-span-1 text-gray-200">
-                    <span class="block font-semibold">Industry</span>
-                    <a
-                      href="/stocks/industry/semiconductors/"
-                      class="dothref text-default">Semiconductors</a
-                    >
-                  </div>
-                  <div class="col-span-1 text-gray-200">
-                    <span class="block font-semibold">Sector</span>
-                    <a
-                      href="/stocks/sector/technology/"
-                      class="dothref text-default">Technology</a
-                    >
-                  </div>
-                  <div class="col-span-1 text-gray-200">
-                    <span class="block font-semibold">IPO Date</span>
-                    <span>Jan 22, 1999</span>
-                  </div>
-                  <div class="col-span-1 text-gray-200">
-                    <span class="block font-semibold">Employees</span>
-                    <a
-                      href="/stocks/nvda/employees/"
-                      class="dothref text-default">29,600</a
-                    >
-                  </div>
-                  <div class="col-span-1 text-gray-200">
-                    <span class="block font-semibold">Stock Exchange</span>
-                    <span>NASDAQ</span>
-                  </div>
-                  <div class="col-span-1 text-gray-200">
-                    <span class="block font-semibold">Ticker Symbol</span>
-                    <span>{$stockTicker}</span>
-                  </div>
-                  <div class="col-span-1 whitespace-nowrap text-gray-200">
-                    <span class="block font-semibold">Website</span>
-                    <a href="https://www.nvidia.com" target="_blank"
-                      >https://www.nvidia.com</a
-                    >
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h2 class="mb-2 text-white text-2xl font-semibold">
-                  Analyst Forecast
-                </h2>
-                <p class="mb-4 text-gray-200">
-                  According to 40 analysts, the average rating for NVDA stock is
-                  "Strong Buy." The 12-month stock price forecast is $145.84,
-                  which is an increase of 3.04% from the latest price.
-                </p>
-                <div
-                  data-test="overview-forecast-targetchart"
-                  class="border border-gray-600 p-2 xs:p-3"
-                >
-                  <div
-                    class="m-auto mb-2 text-center text-xl font-semibold text-default"
-                    data-svelte-h="svelte-5xi68b"
-                  >
-                    Price Target
-                  </div>
-                  <div
-                    class="mb-0.5 text-center text-4xl font-semibold text-green-vivid"
-                  >
-                    $145.84
-                  </div>
-                  <div class="mb-1.5 text-center text-xl">(3.04% upside)</div>
-                  <div
-                    class="py-1 text-center text-lg font-semibold text-default"
-                  >
-                    Analyst Consensus: <span
-                      class="font-bold text-green-default">Strong Buy</span
-                    >
-                  </div>
-                  <div></div>
-                </div>
-              </div>
+            <div class="space-y-6 lg:order-2 lg:pt-1 w-[45%] ml-auto">
+              <Sidecard {data} />
               <div class="lg:sticky lg:top-20"></div>
             </div>
-            <div class="w-full">
-              <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
-                <Lazy>
-                  <h3
-                    class="cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
-                  >
-                    Key Information
-                  </h3>
-                  {#await import("$lib/components/StockKeyInformation.svelte") then { default: Comp }}
-                    <svelte:component this={Comp} {data} />
-                  {/await}
-                </Lazy>
-              </div>
 
+            <div class="w-full">
               <div
                 class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getEarningsSurprise || {},
@@ -1736,18 +1628,14 @@
                 <BullBearSay {data} />
               </div>
 
-              <Lazy>
-                <div
-                  class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {data
-                    ?.getWhyPriceMoved?.length !== 0
-                    ? ''
-                    : 'hidden'}"
-                >
-                  {#await import("$lib/components/WIIM.svelte") then { default: Comp }}
-                    <svelte:component this={Comp} {data} />
-                  {/await}
-                </div>
-              </Lazy>
+              <div
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {data
+                  ?.getWhyPriceMoved?.length !== 0
+                  ? ''
+                  : 'hidden'}"
+              >
+                <WIIM {data} />
+              </div>
 
               <div
                 class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data

@@ -72,7 +72,7 @@
         info?.description ??
         "A detailed description of the company is not yet available.";
       website = info?.website;
-      snippet = description?.slice(0, 150) + "...";
+      snippet = description?.slice(0, 250) + "...";
       forwardPE = info?.forwardPE;
       beta = info?.beta !== undefined ? info?.beta?.toFixed(2) : "-";
     }

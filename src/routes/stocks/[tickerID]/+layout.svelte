@@ -20,7 +20,6 @@
   } from "$lib/store";
 
   import { onMount, onDestroy, afterUpdate } from "svelte";
-  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
   import Sidecard from "$lib/components/Sidecard.svelte";
@@ -62,8 +61,6 @@
   let displaySection = "";
 
   let stockDeck;
-  let similarstock = [];
-  let topETFHolder = [];
 
   function shareContent(url) {
     if (navigator.share) {
@@ -298,8 +295,7 @@ function handleTypeOfTrade(state:string)
     ) {
       // add a check to see if running on client-side
       stockDeck = data?.getStockDeck;
-      similarstock = data?.getSimilarStock;
-      topETFHolder = data?.getTopETFHolder;
+
       $currentPortfolioPrice = data?.getStockQuote?.price;
     }
   }
@@ -893,54 +889,6 @@ function handleTypeOfTrade(state:string)
                     <!--End Main Content-->
                   </div>
                 </div>
-
-                <aside
-                  class="hidden w-fit max-w-xl xl:w-[120px] md:pt-10 pb-12 md:pb-20"
-                >
-                  <div class="sm:pl-10">
-                    <!--Start Company Info -->
-                    <Sidecard
-                      {data}
-                      {stockDeck}
-                      lastPrice={data?.getStockQuote?.price}
-                      analystRating={data?.getAnalystRating}
-                      {similarstock}
-                      {topETFHolder}
-                    />
-                    <!--End Company Info -->
-                  </div>
-                </aside>
-                <!--
-                        {#if $screenWidth < 640 && MobileStockNavbar}
-                          <MobileStockNavbar 
-                            logoUrl={logoUrl}
-                            holdingShares={holdingShares}
-                            userPortfolio={userPortfolio}
-                            stockDeck={stockDeck}
-                            similarstock={similarstock}
-                            data={data}
-                          />
-                        {/if}
-                        -->
-
-                <!--
-                        <div class="sm:hidden fixed z-20 bottom-8 sm:bottom-10 right-5">
-                          <div class="h-full mx-auto">        
-                            <div class="flex items-center justify-end">
-                              {#if holdingShares !== 0 && data?.user}
-                              <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length !== 0 ? 'typeOfTrade' : ''}" class="inline-flex items-center justify-center w-32 h-11 border border-[#000] ring-[#000] bg-[#0DDE00] text-[0.95rem] font-medium rounded-full text-[#09090B]">
-                                Invest
-                              </label>
-                              {:else}
-                              <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length === 0 ? 'addPortfolio' : 'buyTradeModal'}"
-                              class="inline-flex items-center justify-center w-32 h-11 border border-[#000] ring-[#000] bg-[#0DDE00] text-[0.95rem] font-medium rounded-full text-[#09090B]">
-                                Invest
-                              </label>
-                              {/if}
-                            </div>
-                          </div>
-                        </div>
-                      -->
               </div>
             </div>
           </div>

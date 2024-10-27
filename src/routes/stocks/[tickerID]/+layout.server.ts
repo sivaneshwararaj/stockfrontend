@@ -43,18 +43,16 @@ const fetchWatchlist = async (pb, userId) => {
   return output;
 };
 
-export const load = async ({ params, locals, cookies, setHeaders }) => {
+export const load = async ({ params, locals }) => {
   const { apiURL, apiKey, pb, user } = locals;
   const { tickerID } = params;
 
   const endpoints = [
-    "/similar-stocks",
     "/stockdeck",
     "/analyst-summary-rating",
     "/stock-quote",
     "/bull-bear-say",
     "/wiim",
-    "/top-etf-ticker-holder",
     "/one-day-price",
     "/next-earnings",
     "/earnings-surprise",
@@ -70,13 +68,11 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
   ];
 
   const [
-    getSimilarStock,
     getStockDeck,
     getAnalystRating,
     getStockQuote,
     getBullBearSay,
     getWhyPriceMoved,
-    getTopETFHolder,
     getOneDayPrice,
     getNextEarnings,
     getEarningsSurprise,
@@ -86,13 +82,11 @@ export const load = async ({ params, locals, cookies, setHeaders }) => {
   ] = await Promise.all(promises);
 
   return {
-    getSimilarStock,
     getStockDeck,
     getAnalystRating,
     getStockQuote,
     getBullBearSay,
     getWhyPriceMoved,
-    getTopETFHolder,
     getOneDayPrice,
     getNextEarnings,
     getEarningsSurprise,
