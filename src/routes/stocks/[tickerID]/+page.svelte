@@ -41,6 +41,7 @@
   $: previousClose = data?.getStockQuote?.previousClose;
 
   //============================================//
+  const intervals = ["1D", "1W", "1M", "1Y", "MAX"];
 
   let chart = null;
   async function checkChart() {
@@ -1033,104 +1034,6 @@
           <div
             class="hidden sm:flex flex-row items-center pl-1 sm:pl-6 w-full mt-4"
           >
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1D")}
-                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
-                '1D'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1D
-              </button>
-              <div
-                class="{displayData === '1D'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1W")}
-                class="w-full text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
-                '1W'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1W
-              </button>
-              <div
-                class="{displayData === '1W'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1M")}
-                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
-                '1M'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1M
-              </button>
-              <div
-                class="{displayData === '1M'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("6M")}
-                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
-                '6M'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                6M
-              </button>
-              <div
-                class="{displayData === '6M'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1Y")}
-                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
-                '1Y'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1Y
-              </button>
-              <div
-                class="{displayData === '1Y'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("MAX")}
-                class="text-sm font-medium sm:hover:text-white text-gray-400 {displayData ===
-                'MAX'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                MAX
-              </button>
-              <div
-                class="{displayData === 'MAX'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-
             {#if !$stockTicker.includes(".")}
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild let:builder>
@@ -1228,7 +1131,7 @@
           <!-- Start Graph -->
 
           {#if output !== null}
-            <div class="w-full sm:pl-7 ml-auto max-w-5xl mb-10 sm:mt-10">
+            <div class="w-full sm:pl-7 mb-10 sm:mt-10">
               {#if dataMapping[displayData]?.length === 0}
                 <div
                   class="mt-20 flex h-[240px] justify-center items-center mb-20 m-auto"
@@ -1249,141 +1152,423 @@
                   </div>
                 </div>
               {:else}
-                <Chart
-                  {...options}
-                  autoSize={true}
-                  ref={(api) => (chart = api)}
-                  on:crosshairMove={handleCrosshairMove}
-                >
-                  {#if displayData === "1D"}
-                    <AreaSeries
-                      reactive={true}
-                      data={oneDayPrice?.map(({ time, close }) => ({
-                        time,
-                        value: close,
-                      }))}
-                      lineWidth={1.5}
-                      priceScaleId="right"
-                      lineColor={colorChange}
-                      topColor={topColorChange}
-                      bottomColor={bottomColorChange}
-                      ref={handleSeriesReference}
-                      priceLineVisible={false}
+                <div class="mt-4 lg:flex lg:flex-row lg:gap-x-4 w-full">
+                  <div
+                    class="order-2 sm:order-1 flex flex-row space-x-2 tiny:space-x-3 xs:space-x-4"
+                  >
+                    <table
+                      class="w-[50%] text-sm text-white tiny:text-small lg:w-full lg:min-w-[210px]"
                     >
-                      <PriceLine
-                        price={oneDayPrice?.at(0)?.close}
-                        lineWidth={1}
-                        color="#fff"
-                      />
-                    </AreaSeries>
-                  {:else if displayData === "1W"}
-                    <AreaSeries
-                      data={oneWeekPrice?.map(({ time, close }) => ({
-                        time,
-                        value: close,
-                      }))}
-                      lineWidth={1.5}
-                      priceScaleId="right"
-                      lineColor={colorChange}
-                      topColor={topColorChange}
-                      bottomColor={bottomColorChange}
-                      ref={handleSeriesReference}
-                      priceLineVisible={false}
+                      <tbody
+                        ><tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            ><a
+                              href="/stocks/nvda/market-cap/"
+                              class="dothref text-white">Bid</a
+                            ></td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >20</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            ><a
+                              href="/stocks/nvda/market-cap/"
+                              class="dothref text-white">Market Cap</a
+                            ></td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >3.47T</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            ><a
+                              href="/stocks/nvda/revenue/"
+                              class="dothref text-white">Revenue (ttm)</a
+                            ></td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >96.31B</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Net Income (ttm)</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >53.01B</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Shares Out <span class="relative" role="tooltip"
+                              ><span
+                                class="absolute -right-[13px] -top-[3px] cursor-pointer p-1 text-gray-300 hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-300"
+                                ><svg
+                                  class="h-[9px] w-[9px]"
+                                  viewBox="0 0 4 16"
+                                  fill="currentColor"
+                                  style="max-width:20px"
+                                  ><path
+                                    d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
+                                  ></path></svg
+                                ></span
+                              ></span
+                            >
+                          </td>
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >24.53B</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >EPS (ttm)</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >2.13</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >PE Ratio (ttm)</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >66.37</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Forward PE</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >41.66</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            ><a
+                              href="/stocks/nvda/dividend/"
+                              class="dothref text-white">Dividend</a
+                            ></td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >$0.04 (0.03%)</td
+                          ></tr
+                        >
+                      </tbody>
+                    </table>
+                    <table
+                      class="w-[48%] text-sm text-white tiny:text-small lg:w-auto lg:min-w-[210px]"
+                      data-test="overview-quote"
                     >
-                      <PriceLine
-                        price={oneWeekPrice?.at(0)?.close}
-                        lineWidth={1}
-                        color="#fff"
-                      />
-                    </AreaSeries>
-                  {:else if displayData === "1M"}
-                    <AreaSeries
-                      data={oneMonthPrice?.map(({ time, close }) => ({
-                        time: time,
-                        value: close,
-                      }))}
-                      lineWidth={1.5}
-                      priceScaleId="right"
-                      lineColor={colorChange}
-                      topColor={topColorChange}
-                      bottomColor={bottomColorChange}
-                      ref={handleSeriesReference}
-                      priceLineVisible={false}
+                      <tbody
+                        ><tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Ask</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >20</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Volume</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >203,385,650</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Open</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >140.94</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Previous Close</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >140.41</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Day's Range</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >140.80 - 144.06</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >52-Week Range</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >39.23 - 144.42</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Beta</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >1.67</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Analysts</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >Strong Buy</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Price Target</td
+                          >
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >145.84 (+3.04%)</td
+                          ></tr
+                        >
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="order-1 sm:order-2 grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
+                  >
+                    <div
+                      class="flex items-center justify-between py-1 sm:pt-0.5"
                     >
-                      <PriceLine
-                        price={oneMonthPrice?.at(0)?.close}
-                        lineWidth={1}
-                        color="#fff"
-                      />
-                    </AreaSeries>
-                  {:else if displayData === "6M"}
-                    <AreaSeries
-                      data={sixMonthPrice?.map(({ time, close }) => ({
-                        time,
-                        value: close,
-                      }))}
-                      lineWidth={1.5}
-                      priceScaleId="right"
-                      lineColor={colorChange}
-                      topColor={topColorChange}
-                      bottomColor={bottomColorChange}
-                      ref={handleSeriesReference}
-                      priceLineVisible={false}
+                      <div class="hide-scroll overflow-x-auto">
+                        <ul
+                          class="flex space-x-[3px] whitespace-nowrap pl-0.5 xs:space-x-1"
+                        >
+                          {#each intervals as interval}
+                            <li>
+                              <button
+                                on:click={() => changeData(interval)}
+                                class="px-1 py-1 text-smaller xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
+                              >
+                                <span
+                                  class="block {displayData === interval
+                                    ? 'text-white'
+                                    : 'text-gray-400'}">{interval}</span
+                                >
+                                <div
+                                  class="{displayData === interval
+                                    ? `bg-[${colorChange}] `
+                                    : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
+                                />
+                              </button>
+                            </li>
+                          {/each}
+                        </ul>
+                      </div>
+                      <div
+                        class="flex shrink flex-row space-x-1 pr-1 text-smaller sm:text-base"
+                      >
+                        <span class="text-green-vivid before:content-['+']"
+                          >0.80%</span
+                        > <span class="hidden text-faded sm:block">(1D)</span>
+                      </div>
+                    </div>
+                    <Chart
+                      {...options}
+                      autoSize={true}
+                      ref={(api) => (chart = api)}
+                      on:crosshairMove={handleCrosshairMove}
                     >
-                      <PriceLine
-                        price={sixMonthPrice?.at(0)?.close}
-                        lineWidth={1}
-                        color="#fff"
-                      />
-                    </AreaSeries>
-                  {:else if displayData === "1Y"}
-                    <AreaSeries
-                      data={oneYearPrice?.map(({ time, close }) => ({
-                        time,
-                        value: close,
-                      }))}
-                      lineWidth={1.5}
-                      priceScaleId="right"
-                      lineColor={colorChange}
-                      topColor={topColorChange}
-                      bottomColor={bottomColorChange}
-                      ref={handleSeriesReference}
-                      priceLineVisible={false}
-                    >
-                      <PriceLine
-                        price={oneYearPrice?.at(0)?.close}
-                        lineWidth={1}
-                        color="#fff"
-                      />
-                    </AreaSeries>
-                  {:else if displayData === "MAX"}
-                    <AreaSeries
-                      data={maxPrice?.map(({ time, close }) => ({
-                        time,
-                        value: close,
-                      }))}
-                      lineWidth={1.5}
-                      priceScaleId="right"
-                      lineColor={colorChange}
-                      topColor={topColorChange}
-                      bottomColor={bottomColorChange}
-                      ref={handleSeriesReference}
-                      priceLineVisible={false}
-                    >
-                      <PriceLine
-                        price={maxPrice?.at(0)?.close}
-                        lineWidth={1}
-                        color="#fff"
-                      />
-                    </AreaSeries>
-                  {/if}
-                </Chart>
+                      {#if displayData === "1D"}
+                        <AreaSeries
+                          reactive={true}
+                          data={oneDayPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneDayPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "1W"}
+                        <AreaSeries
+                          data={oneWeekPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneWeekPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "1M"}
+                        <AreaSeries
+                          data={oneMonthPrice?.map(({ time, close }) => ({
+                            time: time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneMonthPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "6M"}
+                        <AreaSeries
+                          data={sixMonthPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={sixMonthPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "1Y"}
+                        <AreaSeries
+                          data={oneYearPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneYearPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "MAX"}
+                        <AreaSeries
+                          data={maxPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={maxPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {/if}
+                    </Chart>
+                  </div>
+                </div>
               {/if}
             </div>
           {:else}
             <!-- else output not loaded yet-->
             <div
-              class="flex justify-center w-full sm:w-[650px] h-80 sm:w-[600px] items-center"
+              class="flex justify-center w-full sm:w-[650px] h-80 items-center"
             >
               <div class="relative">
                 <label
@@ -1397,115 +1582,14 @@
           {/if}
 
           <!--End Graph-->
-          <!--Start Time Interval-->
-          <div class="pl-1 w-screen sm:hidden flex flex-row items-center">
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1D")}
-                class="text-sm font-medium text-gray-400 {displayData === '1D'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1D
-              </button>
-              <div
-                class="{displayData === '1D'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1W")}
-                class="w-full text-sm font-medium text-gray-400 {displayData ===
-                '1W'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1W
-              </button>
-              <div
-                class="{displayData === '1W'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1M")}
-                class="text-sm font-medium text-gray-400 {displayData === '1M'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1M
-              </button>
-              <div
-                class="{displayData === '1M'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("6M")}
-                class="text-sm font-medium text-gray-400 {displayData === '6M'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                6M
-              </button>
-              <div
-                class="{displayData === '6M'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("1Y")}
-                class="text-sm font-medium text-gray-400 {displayData === '1Y'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                1Y
-              </button>
-              <div
-                class="{displayData === '1Y'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
 
-            <div class="flex flex-col items-center mr-4">
-              <button
-                on:click={() => changeData("MAX")}
-                class="text-sm font-medium text-gray-400 {displayData === 'MAX'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                MAX
-              </button>
-              <div
-                class="{displayData === 'MAX'
-                  ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
-              />
-            </div>
-          </div>
-          <!--End Time Interval-->
-
-          <div class="w-full mt-14 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
-            <CommunitySentiment {communitySentiment} />
-          </div>
-
-          <!--BUG: Dont remove since when changing ETF symbol display freezes-->
-          <div class="mt-6 lg:grid lg:grid-cols-2 lg:gap-x-10 w-full">
-            <div class="space-y-6 lg:order-2 lg:pt-1 w-96 ml-auto">
+          <div class="mt-6 flex flex-row gap-x-14 items-start w-full">
+            <div class="space-y-6 lg:order-2 lg:pt-1 w-[40%] ml-auto">
               <div class="px-0.5 lg:px-0">
-                <h2 class="mb-2" data-test="overview-profile-header">
-                  About NVDA
+                <h2 class="mb-2 text-2xl text-white font-semibold">
+                  About {$stockTicker}
                 </h2>
-                <p data-test="overview-profile-description">
+                <p class="text-gray-200">
                   NVIDIA Corporation provides graphics and compute and
                   networking solutions in the United States, Taiwan, China, Hong
                   Kong, and internationally. The Graphics segment offers GeForce
@@ -1525,542 +1609,46 @@
                   class="mt-3 grid grid-cols-2 gap-3"
                   data-test="overview-profile-values"
                 >
-                  <div class="col-span-1">
+                  <div class="col-span-1 text-gray-200">
                     <span class="block font-semibold">Industry</span>
                     <a
                       href="/stocks/industry/semiconductors/"
                       class="dothref text-default">Semiconductors</a
                     >
                   </div>
-                  <div class="col-span-1">
+                  <div class="col-span-1 text-gray-200">
                     <span class="block font-semibold">Sector</span>
                     <a
                       href="/stocks/sector/technology/"
                       class="dothref text-default">Technology</a
                     >
                   </div>
-                  <div class="col-span-1">
+                  <div class="col-span-1 text-gray-200">
                     <span class="block font-semibold">IPO Date</span>
                     <span>Jan 22, 1999</span>
                   </div>
-                  <div class="col-span-1">
+                  <div class="col-span-1 text-gray-200">
                     <span class="block font-semibold">Employees</span>
                     <a
                       href="/stocks/nvda/employees/"
                       class="dothref text-default">29,600</a
                     >
                   </div>
-                  <div class="col-span-1">
+                  <div class="col-span-1 text-gray-200">
                     <span class="block font-semibold">Stock Exchange</span>
                     <span>NASDAQ</span>
                   </div>
-                  <div class="col-span-1">
+                  <div class="col-span-1 text-gray-200">
                     <span class="block font-semibold">Ticker Symbol</span>
-                    <span>NVDA</span>
+                    <span>{$stockTicker}</span>
                   </div>
-                  <div class="col-span-1">
+                  <div class="col-span-1 whitespace-nowrap text-gray-200">
                     <span class="block font-semibold">Website</span>
                     <a href="https://www.nvidia.com" target="_blank"
                       >https://www.nvidia.com</a
                     >
                   </div>
                 </div>
-                <a href="/stocks/nvda/company/" class="button mt-4 w-full"
-                  >Full Company Profile</a
-                >
-              </div>
-              <div>
-                <h2 data-svelte-h="svelte-11uexdp">Financial Performance</h2>
-                <p data-test="overview-performance-intro" class="mb-3">
-                  In 2023, NVIDIA's revenue was $60.92 billion, an increase of
-                  125.85% compared to the previous year's $26.97 billion.
-                  Earnings were $29.76 billion, an increase of 581.32%.
-                </p>
-                <div>
-                  <div
-                    class="h-72 rounded-sm border border-default"
-                    data-test="overview-performance-chart"
-                    data-highcharts-chart="0"
-                    style="overflow: hidden;"
-                  >
-                    <div
-                      id="highcharts-wge0tn7-0"
-                      style="position: relative; overflow: hidden; width: 336px; height: 288px; text-align: left; line-height: normal; z-index: 0; user-select: none; touch-action: manipulation; outline: none; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; left: 0.0999756px; top: 0.400024px;"
-                      dir="ltr"
-                      class="highcharts-container"
-                    >
-                      <svg
-                        version="1.1"
-                        class="highcharts-root"
-                        style="font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 12px;"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="336"
-                        height="288"
-                        viewBox="0 0 336 288"
-                        role="img"
-                        aria-label=""
-                        ><desc>Created with Highcharts 10.3.3</desc><defs
-                          ><clipPath id="highcharts-wge0tn7-1-"
-                            ><rect
-                              x="0"
-                              y="0"
-                              width="278"
-                              height="198"
-                              fill="none"
-                            ></rect></clipPath
-                          ><clipPath id="highcharts-wge0tn7-7-"
-                            ><rect
-                              x="0"
-                              y="0"
-                              width="278"
-                              height="198"
-                              fill="none"
-                            ></rect></clipPath
-                          ></defs
-                        ><rect
-                          fill="transparent"
-                          class="highcharts-background"
-                          x="0"
-                          y="0"
-                          width="336"
-                          height="288"
-                          rx="0"
-                          ry="0"
-                        ></rect><rect
-                          fill="none"
-                          class="highcharts-plot-background"
-                          x="10"
-                          y="51"
-                          width="278"
-                          height="198"
-                        ></rect><g
-                          class="highcharts-grid highcharts-xaxis-grid"
-                          data-z-index="1"
-                          ><path
-                            fill="none"
-                            stroke="#e6e6e6"
-                            stroke-width="0"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 65.5 51 L 65.5 249"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e6e6e6"
-                            stroke-width="0"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 120.5 51 L 120.5 249"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e6e6e6"
-                            stroke-width="0"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 176.5 51 L 176.5 249"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e6e6e6"
-                            stroke-width="0"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 231.5 51 L 231.5 249"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e6e6e6"
-                            stroke-width="0"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 287.5 51 L 287.5 249"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e6e6e6"
-                            stroke-width="0"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 9.5 51 L 9.5 249"
-                            opacity="1"
-                          ></path></g
-                        ><g
-                          class="highcharts-grid highcharts-yaxis-grid"
-                          data-z-index="1"
-                          ><path
-                            fill="none"
-                            stroke="#e5e5e5"
-                            stroke-width="1"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 10 249.5 L 288 249.5"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e5e5e5"
-                            stroke-width="1"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 10 183.5 L 288 183.5"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e5e5e5"
-                            stroke-width="1"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 10 117.5 L 288 117.5"
-                            opacity="1"
-                          ></path><path
-                            fill="none"
-                            stroke="#e5e5e5"
-                            stroke-width="1"
-                            stroke-dasharray="none"
-                            data-z-index="1"
-                            class="highcharts-grid-line"
-                            d="M 10 50.5 L 288 50.5"
-                            opacity="1"
-                          ></path></g
-                        ><rect
-                          fill="none"
-                          class="highcharts-plot-border"
-                          data-z-index="1"
-                          stroke="#cccccc"
-                          stroke-width="0"
-                          x="10"
-                          y="51"
-                          width="278"
-                          height="198"
-                        ></rect><g
-                          class="highcharts-axis highcharts-xaxis"
-                          data-z-index="2"
-                          ><path
-                            fill="none"
-                            class="highcharts-axis-line"
-                            stroke="#ccd6eb"
-                            stroke-width="1"
-                            data-z-index="7"
-                            d="M 10 249.5 L 288 249.5"
-                          ></path></g
-                        ><g
-                          class="highcharts-axis highcharts-yaxis"
-                          data-z-index="2"
-                          ><path
-                            fill="none"
-                            class="highcharts-axis-line"
-                            stroke="#ccd6eb"
-                            stroke-width="0"
-                            data-z-index="7"
-                            d="M 288 51 L 288 249"
-                          ></path></g
-                        ><g class="highcharts-series-group" data-z-index="3"
-                          ><g
-                            class="highcharts-series highcharts-series-0 highcharts-column-series highcharts-tracker"
-                            data-z-index="0.1"
-                            opacity="1"
-                            transform="translate(10,51) scale(1 1)"
-                            clip-path="url(#highcharts-wge0tn7-7-)"
-                            ><rect
-                              x="4.5"
-                              y="169.5"
-                              width="21"
-                              height="29"
-                              fill="#2C6288"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point"
-                            ></rect><rect
-                              x="60.5"
-                              y="154.5"
-                              width="21"
-                              height="44"
-                              fill="#2C6288"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point"
-                            ></rect><rect
-                              x="115.5"
-                              y="127.5"
-                              width="21"
-                              height="71"
-                              fill="#2C6288"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point"
-                            ></rect><rect
-                              x="171.5"
-                              y="127.5"
-                              width="21"
-                              height="71"
-                              fill="#2C6288"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point"
-                            ></rect><rect
-                              x="227.5"
-                              y="37.5"
-                              width="21"
-                              height="161"
-                              fill="#2C6288"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point"
-                            ></rect></g
-                          ><g
-                            class="highcharts-markers highcharts-series-0 highcharts-column-series"
-                            data-z-index="0.1"
-                            opacity="1"
-                            transform="translate(10,51) scale(1 1)"
-                            clip-path="none"
-                          ></g><g
-                            class="highcharts-series highcharts-series-1 highcharts-column-series highcharts-tracker"
-                            data-z-index="0.1"
-                            opacity="1"
-                            transform="translate(10,51) scale(1 1)"
-                            clip-path="url(#highcharts-wge0tn7-7-)"
-                          ></g><g
-                            class="highcharts-markers highcharts-series-1 highcharts-column-series"
-                            data-z-index="0.1"
-                            opacity="1"
-                            transform="translate(10,51) scale(1 1)"
-                            clip-path="none"
-                          ></g><g
-                            class="highcharts-series highcharts-series-2 highcharts-column-series highcharts-tracker"
-                            data-z-index="0.1"
-                            opacity="1"
-                            transform="translate(10,51) scale(1 1)"
-                            clip-path="url(#highcharts-wge0tn7-7-)"
-                            ><rect
-                              x="29.5"
-                              y="191.5"
-                              width="21"
-                              height="7"
-                              fill="#00853E"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point highcharts-color-0"
-                            ></rect><rect
-                              x="85.5"
-                              y="187.5"
-                              width="21"
-                              height="11"
-                              fill="#00853E"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point highcharts-color-1"
-                            ></rect><rect
-                              x="141.5"
-                              y="172.5"
-                              width="21"
-                              height="26"
-                              fill="#00853E"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point highcharts-color-2"
-                            ></rect><rect
-                              x="196.5"
-                              y="186.5"
-                              width="21"
-                              height="12"
-                              fill="#00853E"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point highcharts-color-3"
-                            ></rect><rect
-                              x="252.5"
-                              y="119.5"
-                              width="21"
-                              height="79"
-                              fill="#00853E"
-                              stroke="#e5e5e5"
-                              stroke-width="1"
-                              opacity="1"
-                              class="highcharts-point highcharts-color-4"
-                            ></rect></g
-                          ><g
-                            class="highcharts-markers highcharts-series-2 highcharts-column-series"
-                            data-z-index="0.1"
-                            opacity="1"
-                            transform="translate(10,51) scale(1 1)"
-                            clip-path="none"
-                          ></g></g
-                        ><text
-                          x="168"
-                          text-anchor="middle"
-                          class="highcharts-title"
-                          data-z-index="4"
-                          style="color: rgb(51, 51, 51); font-size: 18px; fill: rgb(51, 51, 51);"
-                          y="24"
-                        ></text><text
-                          x="168"
-                          text-anchor="middle"
-                          class="highcharts-subtitle"
-                          data-z-index="4"
-                          style="color: rgb(102, 102, 102); fill: rgb(102, 102, 102);"
-                          y="24"
-                        ></text><text
-                          x="10"
-                          text-anchor="start"
-                          class="highcharts-caption"
-                          data-z-index="4"
-                          style="color: rgb(102, 102, 102); fill: rgb(102, 102, 102);"
-                          y="285"
-                        ></text><g
-                          class="highcharts-legend highcharts-no-tooltip"
-                          data-z-index="7"
-                          transform="translate(74,10)"
-                          ><rect
-                            fill="none"
-                            class="highcharts-legend-box"
-                            rx="0"
-                            ry="0"
-                            stroke="#999999"
-                            stroke-width="0"
-                            x="0"
-                            y="0"
-                            width="188"
-                            height="29"
-                          ></rect><g data-z-index="1"
-                            ><g
-                              ><g
-                                class="highcharts-legend-item highcharts-column-series highcharts-color-undefined highcharts-series-0"
-                                data-z-index="1"
-                                transform="translate(8,3)"
-                                ><text
-                                  x="20"
-                                  style="color: rgb(50, 50, 50); cursor: pointer; font-size: 15px; font-weight: normal; fill: rgb(50, 50, 50);"
-                                  text-anchor="start"
-                                  data-z-index="2"
-                                  y="18">Revenue</text
-                                ><rect
-                                  x="0"
-                                  y="4"
-                                  width="15"
-                                  height="15"
-                                  fill="#2C6288"
-                                  class="highcharts-point"
-                                  data-z-index="3"
-                                ></rect></g
-                              ><g
-                                class="highcharts-legend-item highcharts-column-series highcharts-color-undefined highcharts-series-1"
-                                data-z-index="1"
-                                transform="translate(104.23333358764648,3)"
-                                ><text
-                                  x="20"
-                                  y="18"
-                                  style="color: rgb(50, 50, 50); cursor: pointer; font-size: 15px; font-weight: normal; fill: rgb(50, 50, 50);"
-                                  text-anchor="start"
-                                  data-z-index="2">Earnings</text
-                                ><rect
-                                  x="0"
-                                  y="4"
-                                  width="15"
-                                  height="15"
-                                  fill="#00853E"
-                                  class="highcharts-point"
-                                  data-z-index="3"
-                                ></rect></g
-                              ></g
-                            ></g
-                          ></g
-                        ><g
-                          class="highcharts-axis-labels highcharts-xaxis-labels"
-                          data-z-index="7"
-                          ><text
-                            x="37.8"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
-                            text-anchor="middle"
-                            transform="translate(0,0)"
-                            y="269"
-                            opacity="1">2019</text
-                          ><text
-                            x="93.4"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
-                            text-anchor="middle"
-                            transform="translate(0,0)"
-                            y="269"
-                            opacity="1">2020</text
-                          ><text
-                            x="149"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
-                            text-anchor="middle"
-                            transform="translate(0,0)"
-                            y="269"
-                            opacity="1">2021</text
-                          ><text
-                            x="204.6"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
-                            text-anchor="middle"
-                            transform="translate(0,0)"
-                            y="269"
-                            opacity="1">2022</text
-                          ><text
-                            x="260.2"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
-                            text-anchor="middle"
-                            transform="translate(0,0)"
-                            y="269"
-                            opacity="1">2023</text
-                          ></g
-                        ><g
-                          class="highcharts-axis-labels highcharts-yaxis-labels"
-                          data-z-index="7"
-                          ><text
-                            x="303"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
-                            text-anchor="start"
-                            transform="translate(0,0)"
-                            y="254"
-                            opacity="1">0</text
-                          ><text
-                            x="303"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
-                            text-anchor="start"
-                            transform="translate(0,0)"
-                            y="188"
-                            opacity="1">25B</text
-                          ><text
-                            x="303"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
-                            text-anchor="start"
-                            transform="translate(0,0)"
-                            y="122"
-                            opacity="1">50B</text
-                          ><text
-                            x="303"
-                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
-                            text-anchor="start"
-                            transform="translate(0,0)"
-                            y="56"
-                            opacity="1">75B</text
-                          ></g
-                        ></svg
-                      >
-                    </div>
-                  </div>
-                </div>
-                <a href="/stocks/nvda/financials/" class="button mt-4 w-full"
-                  >Financial Statements</a
-                >
               </div>
               <div>
                 <h2 class="mb-2" data-svelte-h="svelte-avjv7o">
@@ -2073,7 +1661,7 @@
                 </p>
                 <div
                   data-test="overview-forecast-targetchart"
-                  class="border border-default p-2 xs:p-3"
+                  class="border border-gray-600 p-2 xs:p-3"
                 >
                   <div
                     class="m-auto mb-2 text-center text-xl font-semibold text-default"
@@ -2096,13 +1684,13 @@
                   </div>
                   <div></div>
                 </div>
-                <a href="/stocks/nvda/forecast/" class="button mt-4 w-full"
-                  >Stock Forecasts</a
-                >
               </div>
               <div class="lg:sticky lg:top-20"></div>
             </div>
             <div class="w-full">
+              <div class="w-full mt-14 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
+                <CommunitySentiment {communitySentiment} />
+              </div>
               <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
                 <Lazy>
                   <h3
