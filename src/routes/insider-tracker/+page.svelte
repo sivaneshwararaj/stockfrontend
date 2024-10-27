@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
@@ -190,7 +189,7 @@
                   <h1
                     class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
                   >
-                    Insider Tracker
+                    Unusual Insider Tracker
                   </h1>
                 </div>
 
@@ -254,8 +253,9 @@
                   d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                 /></svg
               >
-              We update our data in realtime to provide you with the latest insider
-              trading based on SEC files.
+              We update our data in real time to bring you the latest insights on
+              unusual insider trading, sourced from SEC filings with a minimum transaction
+              value of $100,000.
             </div>
 
             <div class="w-screen sm:w-full m-auto mt-20 sm:mt-10">
@@ -369,10 +369,10 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              on:click={() => goto("/pricing")}
               class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
             >
-              <div
+              <a
+                href="/pricing"
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -384,15 +384,17 @@
                 <span class="text-white p-3 ml-3 mr-3">
                   Upgrade now for unlimited access to all data and tools.
                 </span>
-              </div>
+              </a>
             </div>
           {/if}
 
           <div
-            on:click={() => goto("/sentiment-tracker")}
             class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/sentiment-tracker"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Sentiment Tracker <svg
@@ -422,14 +424,16 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Follow the latest trends in realtime on social media
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/reddit-tracker")}
             class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/reddit-tracker"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Reddit Tracker 🚀
@@ -439,7 +443,7 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Get the latest trends of r/Wallstreetbets
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>
