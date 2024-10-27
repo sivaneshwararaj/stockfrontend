@@ -359,7 +359,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] overflow-hidden text-white h-full pb-40 sm:mb-0">
+<section class="bg-[#09090B] overflow-hidden text-white h-full">
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -890,7 +890,7 @@
                         >Return on Assets (ROA)</td
                       >
                       {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem]"
+                        <td class="text-sm sm:text-[1rem] text-end"
                           >{(item?.returnOnAssets * 100)?.toFixed(2)}%</td
                         >
                       {/each}

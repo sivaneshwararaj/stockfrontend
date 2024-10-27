@@ -1499,95 +1499,686 @@
           </div>
 
           <!--BUG: Dont remove since when changing ETF symbol display freezes-->
+          <div class="mt-6 lg:grid lg:grid-cols-2 lg:gap-x-10 w-full">
+            <div class="space-y-6 lg:order-2 lg:pt-1 w-96 ml-auto">
+              <div class="px-0.5 lg:px-0">
+                <h2 class="mb-2" data-test="overview-profile-header">
+                  About NVDA
+                </h2>
+                <p data-test="overview-profile-description">
+                  NVIDIA Corporation provides graphics and compute and
+                  networking solutions in the United States, Taiwan, China, Hong
+                  Kong, and internationally. The Graphics segment offers GeForce
+                  GPUs for gaming and PCs, the GeForce NOW game streaming
+                  service and related infrastructure, and solutions for gaming
+                  platforms; Quadro/NVIDIA RTX GPUs for enterprise workstation
+                  graphics; virtual GPU or vGPU software for cloud-based visual
+                  and virtual computing; automotive platforms for infotainment
+                  systems; and Omniverse software for building and operating
+                  metaverse a... <a
+                    href="/stocks/nvda/company/"
+                    title="View company profile"
+                    tabindex="-1">[Read more]</a
+                  >
+                </p>
+                <div
+                  class="mt-3 grid grid-cols-2 gap-3"
+                  data-test="overview-profile-values"
+                >
+                  <div class="col-span-1">
+                    <span class="block font-semibold">Industry</span>
+                    <a
+                      href="/stocks/industry/semiconductors/"
+                      class="dothref text-default">Semiconductors</a
+                    >
+                  </div>
+                  <div class="col-span-1">
+                    <span class="block font-semibold">Sector</span>
+                    <a
+                      href="/stocks/sector/technology/"
+                      class="dothref text-default">Technology</a
+                    >
+                  </div>
+                  <div class="col-span-1">
+                    <span class="block font-semibold">IPO Date</span>
+                    <span>Jan 22, 1999</span>
+                  </div>
+                  <div class="col-span-1">
+                    <span class="block font-semibold">Employees</span>
+                    <a
+                      href="/stocks/nvda/employees/"
+                      class="dothref text-default">29,600</a
+                    >
+                  </div>
+                  <div class="col-span-1">
+                    <span class="block font-semibold">Stock Exchange</span>
+                    <span>NASDAQ</span>
+                  </div>
+                  <div class="col-span-1">
+                    <span class="block font-semibold">Ticker Symbol</span>
+                    <span>NVDA</span>
+                  </div>
+                  <div class="col-span-1">
+                    <span class="block font-semibold">Website</span>
+                    <a href="https://www.nvidia.com" target="_blank"
+                      >https://www.nvidia.com</a
+                    >
+                  </div>
+                </div>
+                <a href="/stocks/nvda/company/" class="button mt-4 w-full"
+                  >Full Company Profile</a
+                >
+              </div>
+              <div>
+                <h2 data-svelte-h="svelte-11uexdp">Financial Performance</h2>
+                <p data-test="overview-performance-intro" class="mb-3">
+                  In 2023, NVIDIA's revenue was $60.92 billion, an increase of
+                  125.85% compared to the previous year's $26.97 billion.
+                  Earnings were $29.76 billion, an increase of 581.32%.
+                </p>
+                <div>
+                  <div
+                    class="h-72 rounded-sm border border-default"
+                    data-test="overview-performance-chart"
+                    data-highcharts-chart="0"
+                    style="overflow: hidden;"
+                  >
+                    <div
+                      id="highcharts-wge0tn7-0"
+                      style="position: relative; overflow: hidden; width: 336px; height: 288px; text-align: left; line-height: normal; z-index: 0; user-select: none; touch-action: manipulation; outline: none; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; left: 0.0999756px; top: 0.400024px;"
+                      dir="ltr"
+                      class="highcharts-container"
+                    >
+                      <svg
+                        version="1.1"
+                        class="highcharts-root"
+                        style="font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-size: 12px;"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="336"
+                        height="288"
+                        viewBox="0 0 336 288"
+                        role="img"
+                        aria-label=""
+                        ><desc>Created with Highcharts 10.3.3</desc><defs
+                          ><clipPath id="highcharts-wge0tn7-1-"
+                            ><rect
+                              x="0"
+                              y="0"
+                              width="278"
+                              height="198"
+                              fill="none"
+                            ></rect></clipPath
+                          ><clipPath id="highcharts-wge0tn7-7-"
+                            ><rect
+                              x="0"
+                              y="0"
+                              width="278"
+                              height="198"
+                              fill="none"
+                            ></rect></clipPath
+                          ></defs
+                        ><rect
+                          fill="transparent"
+                          class="highcharts-background"
+                          x="0"
+                          y="0"
+                          width="336"
+                          height="288"
+                          rx="0"
+                          ry="0"
+                        ></rect><rect
+                          fill="none"
+                          class="highcharts-plot-background"
+                          x="10"
+                          y="51"
+                          width="278"
+                          height="198"
+                        ></rect><g
+                          class="highcharts-grid highcharts-xaxis-grid"
+                          data-z-index="1"
+                          ><path
+                            fill="none"
+                            stroke="#e6e6e6"
+                            stroke-width="0"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 65.5 51 L 65.5 249"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e6e6e6"
+                            stroke-width="0"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 120.5 51 L 120.5 249"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e6e6e6"
+                            stroke-width="0"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 176.5 51 L 176.5 249"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e6e6e6"
+                            stroke-width="0"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 231.5 51 L 231.5 249"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e6e6e6"
+                            stroke-width="0"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 287.5 51 L 287.5 249"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e6e6e6"
+                            stroke-width="0"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 9.5 51 L 9.5 249"
+                            opacity="1"
+                          ></path></g
+                        ><g
+                          class="highcharts-grid highcharts-yaxis-grid"
+                          data-z-index="1"
+                          ><path
+                            fill="none"
+                            stroke="#e5e5e5"
+                            stroke-width="1"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 10 249.5 L 288 249.5"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e5e5e5"
+                            stroke-width="1"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 10 183.5 L 288 183.5"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e5e5e5"
+                            stroke-width="1"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 10 117.5 L 288 117.5"
+                            opacity="1"
+                          ></path><path
+                            fill="none"
+                            stroke="#e5e5e5"
+                            stroke-width="1"
+                            stroke-dasharray="none"
+                            data-z-index="1"
+                            class="highcharts-grid-line"
+                            d="M 10 50.5 L 288 50.5"
+                            opacity="1"
+                          ></path></g
+                        ><rect
+                          fill="none"
+                          class="highcharts-plot-border"
+                          data-z-index="1"
+                          stroke="#cccccc"
+                          stroke-width="0"
+                          x="10"
+                          y="51"
+                          width="278"
+                          height="198"
+                        ></rect><g
+                          class="highcharts-axis highcharts-xaxis"
+                          data-z-index="2"
+                          ><path
+                            fill="none"
+                            class="highcharts-axis-line"
+                            stroke="#ccd6eb"
+                            stroke-width="1"
+                            data-z-index="7"
+                            d="M 10 249.5 L 288 249.5"
+                          ></path></g
+                        ><g
+                          class="highcharts-axis highcharts-yaxis"
+                          data-z-index="2"
+                          ><path
+                            fill="none"
+                            class="highcharts-axis-line"
+                            stroke="#ccd6eb"
+                            stroke-width="0"
+                            data-z-index="7"
+                            d="M 288 51 L 288 249"
+                          ></path></g
+                        ><g class="highcharts-series-group" data-z-index="3"
+                          ><g
+                            class="highcharts-series highcharts-series-0 highcharts-column-series highcharts-tracker"
+                            data-z-index="0.1"
+                            opacity="1"
+                            transform="translate(10,51) scale(1 1)"
+                            clip-path="url(#highcharts-wge0tn7-7-)"
+                            ><rect
+                              x="4.5"
+                              y="169.5"
+                              width="21"
+                              height="29"
+                              fill="#2C6288"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point"
+                            ></rect><rect
+                              x="60.5"
+                              y="154.5"
+                              width="21"
+                              height="44"
+                              fill="#2C6288"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point"
+                            ></rect><rect
+                              x="115.5"
+                              y="127.5"
+                              width="21"
+                              height="71"
+                              fill="#2C6288"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point"
+                            ></rect><rect
+                              x="171.5"
+                              y="127.5"
+                              width="21"
+                              height="71"
+                              fill="#2C6288"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point"
+                            ></rect><rect
+                              x="227.5"
+                              y="37.5"
+                              width="21"
+                              height="161"
+                              fill="#2C6288"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point"
+                            ></rect></g
+                          ><g
+                            class="highcharts-markers highcharts-series-0 highcharts-column-series"
+                            data-z-index="0.1"
+                            opacity="1"
+                            transform="translate(10,51) scale(1 1)"
+                            clip-path="none"
+                          ></g><g
+                            class="highcharts-series highcharts-series-1 highcharts-column-series highcharts-tracker"
+                            data-z-index="0.1"
+                            opacity="1"
+                            transform="translate(10,51) scale(1 1)"
+                            clip-path="url(#highcharts-wge0tn7-7-)"
+                          ></g><g
+                            class="highcharts-markers highcharts-series-1 highcharts-column-series"
+                            data-z-index="0.1"
+                            opacity="1"
+                            transform="translate(10,51) scale(1 1)"
+                            clip-path="none"
+                          ></g><g
+                            class="highcharts-series highcharts-series-2 highcharts-column-series highcharts-tracker"
+                            data-z-index="0.1"
+                            opacity="1"
+                            transform="translate(10,51) scale(1 1)"
+                            clip-path="url(#highcharts-wge0tn7-7-)"
+                            ><rect
+                              x="29.5"
+                              y="191.5"
+                              width="21"
+                              height="7"
+                              fill="#00853E"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point highcharts-color-0"
+                            ></rect><rect
+                              x="85.5"
+                              y="187.5"
+                              width="21"
+                              height="11"
+                              fill="#00853E"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point highcharts-color-1"
+                            ></rect><rect
+                              x="141.5"
+                              y="172.5"
+                              width="21"
+                              height="26"
+                              fill="#00853E"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point highcharts-color-2"
+                            ></rect><rect
+                              x="196.5"
+                              y="186.5"
+                              width="21"
+                              height="12"
+                              fill="#00853E"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point highcharts-color-3"
+                            ></rect><rect
+                              x="252.5"
+                              y="119.5"
+                              width="21"
+                              height="79"
+                              fill="#00853E"
+                              stroke="#e5e5e5"
+                              stroke-width="1"
+                              opacity="1"
+                              class="highcharts-point highcharts-color-4"
+                            ></rect></g
+                          ><g
+                            class="highcharts-markers highcharts-series-2 highcharts-column-series"
+                            data-z-index="0.1"
+                            opacity="1"
+                            transform="translate(10,51) scale(1 1)"
+                            clip-path="none"
+                          ></g></g
+                        ><text
+                          x="168"
+                          text-anchor="middle"
+                          class="highcharts-title"
+                          data-z-index="4"
+                          style="color: rgb(51, 51, 51); font-size: 18px; fill: rgb(51, 51, 51);"
+                          y="24"
+                        ></text><text
+                          x="168"
+                          text-anchor="middle"
+                          class="highcharts-subtitle"
+                          data-z-index="4"
+                          style="color: rgb(102, 102, 102); fill: rgb(102, 102, 102);"
+                          y="24"
+                        ></text><text
+                          x="10"
+                          text-anchor="start"
+                          class="highcharts-caption"
+                          data-z-index="4"
+                          style="color: rgb(102, 102, 102); fill: rgb(102, 102, 102);"
+                          y="285"
+                        ></text><g
+                          class="highcharts-legend highcharts-no-tooltip"
+                          data-z-index="7"
+                          transform="translate(74,10)"
+                          ><rect
+                            fill="none"
+                            class="highcharts-legend-box"
+                            rx="0"
+                            ry="0"
+                            stroke="#999999"
+                            stroke-width="0"
+                            x="0"
+                            y="0"
+                            width="188"
+                            height="29"
+                          ></rect><g data-z-index="1"
+                            ><g
+                              ><g
+                                class="highcharts-legend-item highcharts-column-series highcharts-color-undefined highcharts-series-0"
+                                data-z-index="1"
+                                transform="translate(8,3)"
+                                ><text
+                                  x="20"
+                                  style="color: rgb(50, 50, 50); cursor: pointer; font-size: 15px; font-weight: normal; fill: rgb(50, 50, 50);"
+                                  text-anchor="start"
+                                  data-z-index="2"
+                                  y="18">Revenue</text
+                                ><rect
+                                  x="0"
+                                  y="4"
+                                  width="15"
+                                  height="15"
+                                  fill="#2C6288"
+                                  class="highcharts-point"
+                                  data-z-index="3"
+                                ></rect></g
+                              ><g
+                                class="highcharts-legend-item highcharts-column-series highcharts-color-undefined highcharts-series-1"
+                                data-z-index="1"
+                                transform="translate(104.23333358764648,3)"
+                                ><text
+                                  x="20"
+                                  y="18"
+                                  style="color: rgb(50, 50, 50); cursor: pointer; font-size: 15px; font-weight: normal; fill: rgb(50, 50, 50);"
+                                  text-anchor="start"
+                                  data-z-index="2">Earnings</text
+                                ><rect
+                                  x="0"
+                                  y="4"
+                                  width="15"
+                                  height="15"
+                                  fill="#00853E"
+                                  class="highcharts-point"
+                                  data-z-index="3"
+                                ></rect></g
+                              ></g
+                            ></g
+                          ></g
+                        ><g
+                          class="highcharts-axis-labels highcharts-xaxis-labels"
+                          data-z-index="7"
+                          ><text
+                            x="37.8"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
+                            text-anchor="middle"
+                            transform="translate(0,0)"
+                            y="269"
+                            opacity="1">2019</text
+                          ><text
+                            x="93.4"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
+                            text-anchor="middle"
+                            transform="translate(0,0)"
+                            y="269"
+                            opacity="1">2020</text
+                          ><text
+                            x="149"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
+                            text-anchor="middle"
+                            transform="translate(0,0)"
+                            y="269"
+                            opacity="1">2021</text
+                          ><text
+                            x="204.6"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
+                            text-anchor="middle"
+                            transform="translate(0,0)"
+                            y="269"
+                            opacity="1">2022</text
+                          ><text
+                            x="260.2"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 12px; fill: rgb(50, 50, 50);"
+                            text-anchor="middle"
+                            transform="translate(0,0)"
+                            y="269"
+                            opacity="1">2023</text
+                          ></g
+                        ><g
+                          class="highcharts-axis-labels highcharts-yaxis-labels"
+                          data-z-index="7"
+                          ><text
+                            x="303"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
+                            text-anchor="start"
+                            transform="translate(0,0)"
+                            y="254"
+                            opacity="1">0</text
+                          ><text
+                            x="303"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
+                            text-anchor="start"
+                            transform="translate(0,0)"
+                            y="188"
+                            opacity="1">25B</text
+                          ><text
+                            x="303"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
+                            text-anchor="start"
+                            transform="translate(0,0)"
+                            y="122"
+                            opacity="1">50B</text
+                          ><text
+                            x="303"
+                            style="color: rgb(50, 50, 50); cursor: default; font-size: 14px; fill: rgb(50, 50, 50);"
+                            text-anchor="start"
+                            transform="translate(0,0)"
+                            y="56"
+                            opacity="1">75B</text
+                          ></g
+                        ></svg
+                      >
+                    </div>
+                  </div>
+                </div>
+                <a href="/stocks/nvda/financials/" class="button mt-4 w-full"
+                  >Financial Statements</a
+                >
+              </div>
+              <div>
+                <h2 class="mb-2" data-svelte-h="svelte-avjv7o">
+                  Analyst Forecast
+                </h2>
+                <p class="mb-4" data-test="overview-forecast-intro">
+                  According to 40 analysts, the average rating for NVDA stock is
+                  "Strong Buy." The 12-month stock price forecast is $145.84,
+                  which is an increase of 3.04% from the latest price.
+                </p>
+                <div
+                  data-test="overview-forecast-targetchart"
+                  class="border border-default p-2 xs:p-3"
+                >
+                  <div
+                    class="m-auto mb-2 text-center text-xl font-semibold text-default"
+                    data-svelte-h="svelte-5xi68b"
+                  >
+                    Price Target
+                  </div>
+                  <div
+                    class="mb-0.5 text-center text-4xl font-semibold text-green-vivid"
+                  >
+                    $145.84
+                  </div>
+                  <div class="mb-1.5 text-center text-xl">(3.04% upside)</div>
+                  <div
+                    class="py-1 text-center text-lg font-semibold text-default"
+                  >
+                    Analyst Consensus: <span
+                      class="font-bold text-green-default">Strong Buy</span
+                    >
+                  </div>
+                  <div></div>
+                </div>
+                <a href="/stocks/nvda/forecast/" class="button mt-4 w-full"
+                  >Stock Forecasts</a
+                >
+              </div>
+              <div class="lg:sticky lg:top-20"></div>
+            </div>
+            <div class="w-full">
+              <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
+                <Lazy>
+                  <h3
+                    class="cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
+                  >
+                    Key Information
+                  </h3>
+                  {#await import("$lib/components/StockKeyInformation.svelte") then { default: Comp }}
+                    <svelte:component this={Comp} {data} />
+                  {/await}
+                </Lazy>
+              </div>
 
-          <div class="w-full mt-10 m-auto sm:p-6 lg:hidden">
-            <Lazy>
-              <h3
-                class="cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
+              <div
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                  data?.getEarningsSurprise || {},
+                )?.length !== 0
+                  ? ''
+                  : 'hidden'}"
               >
-                Key Information
-              </h3>
-              {#await import("$lib/components/StockKeyInformation.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
-            </Lazy>
-          </div>
+                <EarningsSurprise {data} />
+              </div>
 
-          <div
-            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
-              data?.getEarningsSurprise || {},
-            )?.length !== 0
-              ? ''
-              : 'hidden'}"
-          >
-            <EarningsSurprise {data} />
-          </div>
+              <div
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                  data?.getNextEarnings || {},
+                )?.length !== 0
+                  ? ''
+                  : 'hidden'}"
+              >
+                <NextEarnings {data} />
+              </div>
 
-          <div
-            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
-              data?.getNextEarnings || {},
-            )?.length !== 0
-              ? ''
-              : 'hidden'}"
-          >
-            <NextEarnings {data} />
-          </div>
+              <div
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                  data?.getDividendAnnouncement || {},
+                )?.length !== 0
+                  ? ''
+                  : 'hidden'}"
+              >
+                <DividendAnnouncement {data} />
+              </div>
 
-          <div
-            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
-              data?.getDividendAnnouncement || {},
-            )?.length !== 0
-              ? ''
-              : 'hidden'}"
-          >
-            <DividendAnnouncement {data} />
-          </div>
+              <div
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
+                  data?.getBullBearSay || {},
+                )?.length !== 0
+                  ? ''
+                  : 'hidden'}"
+              >
+                <BullBearSay {data} />
+              </div>
 
-          <div
-            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {Object?.keys(
-              data?.getBullBearSay || {},
-            )?.length !== 0
-              ? ''
-              : 'hidden'}"
-          >
-            <BullBearSay {data} />
-          </div>
+              <Lazy>
+                <div
+                  class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data
+                    ?.getWhyPriceMoved?.length !== 0
+                    ? ''
+                    : 'hidden'}"
+                >
+                  {#await import("$lib/components/WIIM.svelte") then { default: Comp }}
+                    <svelte:component this={Comp} {data} />
+                  {/await}
+                </div>
+              </Lazy>
 
-          <Lazy>
-            <div
-              class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data
-                ?.getWhyPriceMoved?.length !== 0
-                ? ''
-                : 'hidden'}"
-            >
-              {#await import("$lib/components/WIIM.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
+              <div
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data
+                  ?.getNews?.length !== 0
+                  ? ''
+                  : 'hidden'}"
+              >
+                <News {data} />
+              </div>
             </div>
-          </Lazy>
-
-          <div
-            class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data
-              ?.getNews?.length !== 0
-              ? ''
-              : 'hidden'}"
-          >
-            <News {data} />
           </div>
-          <!--
-          <Lazy>
-            <div
-              class="w-full sm:pl-6 sm:pb-6 sm:pt-6 m-auto mb-5 {!$shareholderComponent
-                ? 'hidden'
-                : ''}"
-            >
-              {#await import("$lib/components/ShareHolders.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}
-            </div>
-          </Lazy>
-          -->
-          <!--End Shareholders-->
         </div>
       </div>
     </div>

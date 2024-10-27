@@ -43,9 +43,7 @@
   }
 </script>
 
-<section
-  class="w-auto max-w-5xl bg-[#09090B] overflow-hidden text-black h-full mb-40"
->
+<section class="w-auto bg-[#09090B] overflow-hidden text-black h-full">
   <div class="m-auto h-full overflow-hidden">
     <main class="w-full">
       <div class="m-auto">

@@ -39,20 +39,15 @@
     });
   }
 
-  function selectSortingMethod(state: string) {
-    sortBy = state;
-  }
-
   function plotTotal() {
     let dateList = [];
     let employeeList = [];
-    let growthList = [];
 
     for (let i = 0; i < employeeHistory?.length; i++) {
       const current = employeeHistory[i]?.employeeCount;
       //const previousDividend = i === 0 ? 0 : employeeHistory[i - 1]?.dividend;
 
-      dateList?.push(employeeHistory[i]?.filingDate);
+      dateList?.push(employeeHistory[i]?.filingDate?.slice(0, 4));
       employeeList?.push(current);
 
       //const growthRate = ( (currentDividend - previousDividend) / previousDividend ) ;
@@ -74,6 +69,10 @@
         type: "category",
         axisLabel: {
           color: "#fff",
+          interval: 0, // Show all labels
+          rotate: 45, // Rotate labels for better readability
+          fontSize: 12, // Adjust font size if needed
+          margin: 10,
         },
       },
       yAxis: [
@@ -93,7 +92,6 @@
           name: "Total Employees",
           data: employeeList,
           type: "bar",
-          barWidth: "80%",
           smooth: true,
         },
       ],
@@ -112,9 +110,8 @@
     for (let i = 0; i < employeeHistory?.length; i++) {
       const current = employeeHistory[i]?.employeeCount;
       const previous = i === 0 ? 0 : employeeHistory[i - 1]?.employeeCount;
-
       const change = current - previous;
-      dateList?.push(employeeHistory[i]?.filingDate);
+      dateList?.push(employeeHistory[i]?.filingDate?.slice(0, 4));
       changeList?.push(change);
     }
 
@@ -132,6 +129,9 @@
         type: "category",
         axisLabel: {
           color: "#fff",
+          interval: 0, // Show all labels
+          rotate: 45, // Rotate labels for better readability
+          fontSize: 12, // Adjust font size if needed
         },
       },
       yAxis: [
@@ -140,7 +140,6 @@
           splitLine: {
             show: false, // Disable x-axis grid lines
           },
-
           axisLabel: {
             show: false, // Hide y-axis labels
           },
@@ -154,7 +153,6 @@
           barWidth: "80%",
           smooth: true,
           itemStyle: {
-            // Define colors based on positive/negative values
             color: function (params) {
               return params.data >= 0 ? "#22C55E" : "#F71F4F";
             },
@@ -184,7 +182,7 @@
         growthList?.push(0); // Pushing null if the growth calculation is not possible
       }
 
-      dateList?.push(employeeHistory[i]?.filingDate);
+      dateList?.push(employeeHistory[i]?.filingDate?.slice(0, 4));
     }
 
     const options = {
@@ -201,6 +199,10 @@
         type: "category",
         axisLabel: {
           color: "#fff",
+          interval: 0, // Show all labels
+          rotate: 45, // Rotate labels for better readability
+          fontSize: 12, // Adjust font size if needed
+          margin: 10,
         },
       },
       yAxis: [
@@ -588,22 +590,22 @@
               <thead>
                 <tr>
                   <th
-                    class="text-start border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
+                    class="text-start border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Date
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
+                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Employees
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
+                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Change
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibiold"
+                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Growth
                   </th>
@@ -630,16 +632,20 @@
                     <td
                       class="text-end border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >
-                      {abbreviateNumber(
-                        item?.employeeCount -
-                          historyList[index + 1]?.employeeCount,
-                      )}
+                      {#if Number(item?.employeeCount - historyList[index + 1]?.employeeCount)}
+                        {new Intl.NumberFormat("en")?.format(
+                          item?.employeeCount -
+                            historyList[index + 1]?.employeeCount,
+                        )}
+                      {:else}
+                        -
+                      {/if}
                     </td>
                     <td
                       class="text-end border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white text-end"
                     >
                       {#if index + 1 - historyList?.length === 0}
-                        0.00%
+                        -
                       {:else if item?.employeeCount - historyList[index + 1]?.employeeCount > 0}
                         <span class="text-[#37C97D]">
                           +{(
@@ -659,7 +665,7 @@
                           )?.toFixed(2)}%
                         </span>
                       {:else}
-                        0.00%
+                        -
                       {/if}
                     </td>
                   </tr>

@@ -450,9 +450,11 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] overflow-hidden text-white h-full pb-40 sm:mb-0">
+<section class="bg-[#09090B] overflow-hidden text-white h-full w-full">
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
-    <div class="relative flex justify-center items-center overflow-hidden">
+    <div
+      class="relative flex justify-center items-center overflow-hidden w-full"
+    >
       <main class="w-full">
         <div class="sm:p-7 m-auto mt-2 sm:mt-0">
           <div class="mb-3">

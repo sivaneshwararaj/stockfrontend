@@ -59,7 +59,7 @@
     <div class="mb-6">
       {#if Object?.keys(rawData)?.length !== 0}
         <div
-          class="space-y-5 xs:space-y-6 lg:grid 2xl:grid-cols-2 2xl:space-x-10 lg:space-y-0"
+          class="space-y-5 xs:space-y-6 lg:grid lg:grid-cols-2 lg:space-x-10 lg:space-y-0"
         >
           <div class="flex flex-col space-y-5 xs:space-y-6 lg:space-y-8">
             <div

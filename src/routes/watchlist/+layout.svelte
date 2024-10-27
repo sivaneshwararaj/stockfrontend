@@ -1,19 +1,9 @@
 <script lang="ts">
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-
-  function handleMode(i) {
-    activeIdx = i;
-    if (activeIdx === 0) {
-      goto("/watchlist/stocks");
-    } else if (activeIdx === 1) {
-      goto("/watchlist/options");
-    }
-  }
 
   const tabs = [
     {
@@ -152,10 +142,10 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              on:click={() => goto("/pricing")}
               class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
             >
-              <div
+              <a
+                href="/pricing"
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -167,7 +157,7 @@
                 <span class="text-white p-3 ml-3 mr-3">
                   Upgrade now for unlimited access to all data and tools.
                 </span>
-              </div>
+              </a>
             </div>
           {/if}
 

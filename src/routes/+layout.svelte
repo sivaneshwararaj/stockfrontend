@@ -115,7 +115,6 @@
   }
 
   $: hideFooter =
-    $page.url.pathname.startsWith("/dark-pool-flow") ||
     $page.url.pathname.startsWith("/options-flow") ||
     $page.url.pathname.startsWith("/options-zero-dte") ||
     $page.url.pathname.startsWith("/login") ||
@@ -129,7 +128,6 @@
     $page.url.pathname.startsWith("/portfolio") ||
     $page.url.pathname.startsWith("/hedge-funds") ||
     $page.url.pathname.startsWith("/watchlist") ||
-    $page.url.pathname.startsWith("/stocks") ||
     $page.url.pathname.startsWith("/community") ||
     $page.url.pathname.startsWith("/stock-screener") ||
     $page.url.pathname.startsWith("/price-alert");
