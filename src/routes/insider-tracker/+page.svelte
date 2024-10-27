@@ -60,7 +60,7 @@
     { key: "marketCap", label: "Market Cap", align: "right" },
     { key: "price", label: "Price", align: "right" },
     { key: "changesPercentage", label: "% Change", align: "right" },
-    { key: "value", label: "Value", align: "right" },
+    { key: "avgValue", label: "Avg. Value", align: "right" },
   ];
 
   let sortOrders = {
@@ -70,7 +70,7 @@
     marketCap: { order: "none", type: "number" },
     price: { order: "none", type: "number" },
     changesPercentage: { order: "none", type: "number" },
-    value: { order: "none", type: "number" },
+    avgValue: { order: "none", type: "number" },
   };
 
   const sortData = (key) => {
@@ -130,7 +130,7 @@
     // Sort using the generic comparison function
     stockList = [...originalData].sort(compareValues);
   };
-  $: charNumber = $screenWidth < 640 ? 15 : 40;
+  $: charNumber = $screenWidth < 640 ? 15 : 15;
 </script>
 
 <svelte:head>
@@ -278,7 +278,7 @@
                           : ''}"
                       >
                         <td
-                          class="text-white text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap"
+                          class="text-white text-sm font-medium text-white whitespace-nowrap"
                         >
                           {formatDateTime(item?.filingDate)}
                         </td>
@@ -313,10 +313,10 @@
                         </td>
 
                         <td
-                          class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >=
+                          class="text-sm sm:text-[1rem] whitespace-nowrap text-end {item?.changesPercentage >=
                           0
                             ? 'text-[#37C97D]'
-                            : 'text-[#FF2F1F]'} text-end"
+                            : 'text-[#FF2F1F]'}"
                         >
                           {item?.changesPercentage > 0
                             ? "+"
@@ -333,7 +333,7 @@
                         >
                           <div class="flex flex-row items-center justify-end">
                             <div class="">
-                              {abbreviateNumber(item?.value)}
+                              {abbreviateNumber(item?.avgValue)}
                             </div>
                             <div
                               class="ml-2 px-1.5 py-1.5 border text-center rounded-lg text-xs font-semibold"
