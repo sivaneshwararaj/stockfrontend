@@ -395,11 +395,15 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] overflow-hidden text-white h-full pb-40 sm:mb-0">
+<section
+  class="w-full bg-[#09090B] overflow-hidden text-white h-full pb-40 sm:mb-0"
+>
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
-    <div class="relative flex justify-center items-center overflow-hidden">
+    <div
+      class="relative flex justify-center items-center overflow-hidden w-full"
+    >
       <main class="w-full">
-        <div class="sm:p-7 m-auto mt-2 sm:mt-0">
+        <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
           <div class="mb-3">
             <h1 class="text-2xl text-gray-200 font-bold">
               {#if mode}
@@ -412,9 +416,9 @@
             </h1>
           </div>
 
-          <div class="grid grid-cols-1 gap-2">
+          <div class="grid grid-cols-1 gap-2 w-full">
             <div
-              class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+              class="w-full text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
             >
               <svg
                 class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"

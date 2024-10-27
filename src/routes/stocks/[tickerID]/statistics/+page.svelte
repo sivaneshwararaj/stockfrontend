@@ -476,7 +476,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.inventoryTurnover}</td
+                      >{abbreviateNumber(rawData?.inventoryTurnover)}</td
                     >
                   </tr></tbody
                 >

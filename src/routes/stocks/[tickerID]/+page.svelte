@@ -4,7 +4,6 @@
   import {
     getCache,
     setCache,
-    screenWidth,
     displayCompanyName,
     numberOfUnreadNotification,
     globalForm,
@@ -21,7 +20,7 @@
   } from "$lib/store";
   import { onDestroy, onMount } from "svelte";
   import BullBearSay from "$lib/components/BullBearSay.svelte";
-
+  import News from "$lib/components/News.svelte";
   import NextEarnings from "$lib/components/NextEarnings.svelte";
   import EarningsSurprise from "$lib/components/EarningsSurprise.svelte";
   import DividendAnnouncement from "$lib/components/DividendAnnouncement.svelte";
@@ -891,9 +890,11 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] min-h-screen pb-40 overflow-hidden">
+<section class="bg-[#09090B] min-h-screen pb-40 overflow-hidden w-full">
   <div class="w-full m-auto overflow-hidden">
-    <div class="md:flex md:justify-between md:divide-x md:divide-slate-800">
+    <div
+      class="md:flex md:justify-between md:divide-x md:divide-slate-800 w-full"
+    >
       <!-- Main content -->
       <div class="pb-12 md:pb-20 w-full sm:pr-6 xl:pr-0">
         <div class="xl:pr-10">
@@ -1571,11 +1572,7 @@
               ? ''
               : 'hidden'}"
           >
-            <Lazy
-              >{#await import("$lib/components/News.svelte") then { default: Comp }}
-                <svelte:component this={Comp} {data} />
-              {/await}</Lazy
-            >
+            <News {data} />
           </div>
           <!--
           <Lazy>
