@@ -2,6 +2,8 @@
   import { stockTicker, screenWidth } from "$lib/store";
   import { page } from "$app/stores";
 
+  export let data;
+
   let displaySubSection = "";
 
   if (!displaySubSection || displaySubSection.length === 0) {
@@ -37,10 +39,8 @@
   }
 </script>
 
-<section
-  class="w-full max-w-5xl bg-[#09090B] overflow-hidden text-black h-full mb-40"
->
-  <div class="h-full overflow-hidden">
+<section class="w-full bg-[#09090B] overflow-hidden h-full">
+  <div class="h-full overflow-hidden w-full">
     <main class="w-full">
       <div
         class="sm:ml-8 w-screen sm:w-full {$screenWidth < 640

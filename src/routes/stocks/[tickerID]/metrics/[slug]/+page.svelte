@@ -152,16 +152,14 @@
   <meta name="twitter:description" content={`Revenue & Geographic Breakdown`} />
 </svelte:head>
 
-<section
-  class="bg-[#09090B] w-full overflow-hidden text-white h-full pb-40 sm:mb-0"
->
+<section class="bg-[#09090B] w-full overflow-hidden text-white h-full">
   <div class="w-full flex justify-center w-full sm-auto h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
       {#if isLoaded}
         <main class="w-full">
-          <div class="sm:p-7 m-auto mt-2 sm:mt-0">
+          <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
             <div class="mb-3">
               <h1 class="text-2xl text-gray-200 font-bold">
                 {convertToTitleCase(data?.getParams)} Revenue
@@ -191,15 +189,20 @@
                       >
                       <th
                         class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                        >% Change</th
+                      >
+                        Change
+                      </th>
+                      <th
+                        class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                        >Growth</th
                       >
                     </tr>
                   </thead>
                   <tbody>
-                    {#each tableList as item}
+                    {#each tableList as item, index}
                       <!-- row -->
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] cursor-pointer"
                       >
                         <td
                           class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
@@ -220,6 +223,18 @@
                           {item?.value !== null
                             ? abbreviateNumber(item?.value)
                             : "-"}
+                        </td>
+
+                        <td
+                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                        >
+                          {#if Number(item?.value - tableList[index + 1]?.value)}
+                            {abbreviateNumber(
+                              item?.value - tableList[index + 1]?.value,
+                            )}
+                          {:else}
+                            -
+                          {/if}
                         </td>
 
                         <td

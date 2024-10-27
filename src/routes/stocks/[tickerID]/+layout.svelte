@@ -347,7 +347,7 @@ function handleTypeOfTrade(state:string)
 <svelte:window bind:scrollY={y} />
 
 <body
-  class="bg-[#09090B] w-full max-w-screen min-h-screen sm:max-w-7xl xl:max-w-screen-2xl overflow-hidden"
+  class="bg-[#09090B] w-full max-w-screen sm:max-w-7xl min-h-screen xl:max-w-screen-2xl overflow-hidden"
 >
   <!-- Page wrapper -->
   <div class="flex flex-col w-full mt-5 relative w-full">
@@ -554,7 +554,7 @@ function handleTypeOfTrade(state:string)
             </div>
             <!--End Mobile Navbar-->
 
-            <div class="pt-14 sm:pt-0 w-auto max-w-7xl px-3 sm:px-0">
+            <div class="pt-14 sm:pt-0 w-full max-w-7xl px-3 sm:px-0">
               <div
                 class="md:flex md:justify-between md:divide-x md:divide-slate-800"
               >

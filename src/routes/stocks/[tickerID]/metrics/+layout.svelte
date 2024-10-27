@@ -55,9 +55,7 @@
 
 <!-- Rest of the component remains the same -->
 
-<section
-  class="w-auto max-w-5xl bg-[#09090B] overflow-hidden text-black h-full mb-40"
->
+<section class="w-full bg-[#09090B] overflow-hidden h-full">
   <div class="m-auto h-full overflow-hidden">
     <main class="w-fit sm:w-full sm:max-w-2xl">
       <div class="m-auto">

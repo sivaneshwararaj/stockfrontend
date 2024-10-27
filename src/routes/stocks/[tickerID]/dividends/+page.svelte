@@ -132,16 +132,14 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section
-  class="w-full max-w-5xl bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0"
->
+<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="w-full mb-6">
-          <h1 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
+          <h1 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4 w-full">
             Dividends
           </h1>
 
@@ -191,7 +189,9 @@
                 dividends for over 12 months.
               {/if}
             {:else}
-              No dividend history available for {$displayCompanyName}.
+              <div class="w-full">
+                No dividend history available for {$displayCompanyName}.
+              </div>
             {/if}
           </div>
         </div>
