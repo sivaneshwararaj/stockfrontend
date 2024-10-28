@@ -11,38 +11,41 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/market-cap/mega-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Mega-Cap Stocks</a
+            class="sm:hover:text-white text-blue-400 text-lg">Mega-Cap Stocks</a
           >
         </li>
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/market-cap/large-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Large-Cap Stocks</a
+            class="sm:hover:text-white text-blue-400 text-lg"
+            >Large-Cap Stocks</a
           >
         </li>
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/market-cap/mid-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Mid-Cap Stocks</a
+            class="sm:hover:text-white text-blue-400 text-lg">Mid-Cap Stocks</a
           >
         </li>
 
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/market-cap/small-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Small-Cap Stocks</a
+            class="sm:hover:text-white text-blue-400 text-lg"
+            >Small-Cap Stocks</a
           >
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/market-cap/micro-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Micro-Cap Stocks</a
+            class="sm:hover:text-white text-blue-400 text-lg"
+            >Micro-Cap Stocks</a
           >
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/market-cap/nano-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Nano-Cap Stocks</a
+            class="sm:hover:text-white text-blue-400 text-lg">Nano-Cap Stocks</a
           >
         </li>
       </ul>
@@ -53,20 +56,22 @@
       <ul class="list-disc space-y-1 pl-5">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/small-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Small-Cap Stocks</a
+            href="/list/market-cap/small-cap-stocks"
+            class="sm:hover:text-white text-blue-400 text-lg"
+            >Small-Cap Stocks</a
           >
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/micro-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Micro-Cap Stocks</a
+            href="/list/market-cap/micro-cap-stocks"
+            class="sm:hover:text-white text-blue-400 text-lg"
+            >Micro-Cap Stocks</a
           >
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/nano-cap-stocks"
-            class="hover:text-white text-blue-400 text-lg">Nano-Cap Stocks</a
+            href="/list/market-cap/nano-cap-stocks"
+            class="sm:hover:text-white text-blue-400 text-lg">Nano-Cap Stocks</a
           >
         </li>
         <!-- ...other list items -->
@@ -89,25 +94,26 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/nasdaq-stocks"
-            class="hover:text-white text-blue-400 text-lg">Listed on NASDAQ</a
+            class="sm:hover:text-white text-blue-400 text-lg"
+            >Listed on NASDAQ</a
           >
         </li>
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/nyse-stocks"
-            class="hover:text-white text-blue-400 text-lg">Listed on NYSE</a
+            class="sm:hover:text-white text-blue-400 text-lg">Listed on NYSE</a
           >
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/amex-stocks"
-            class="hover:text-white text-blue-400 text-lg">Listed on AMEX</a
+            class="sm:hover:text-white text-blue-400 text-lg">Listed on AMEX</a
           >
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/xetra-stocks"
-            class="hover:text-white text-blue-400 text-lg">Listed on XETRA</a
+            class="sm:hover:text-white text-blue-400 text-lg">Listed on XETRA</a
           >
         </li>
       </ul>
@@ -119,13 +125,13 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/amex-stocks"
-            class="hover:text-white text-blue-400 text-lg">Listed on AMEX</a
+            class="sm:hover:text-white text-blue-400 text-lg">Listed on AMEX</a
           >
         </li>
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/xetra-stocks"
-            class="hover:text-white text-blue-400 text-lg">Listed on XETRA</a
+            class="sm:hover:text-white text-blue-400 text-lg">Listed on XETRA</a
           >
         </li>
         <!-- ...other list items -->
@@ -148,7 +154,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/dow-jones-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on Dow Jones
           </a>
@@ -156,7 +162,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/nasdaq-100-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on NASDAQ 100
           </a>
@@ -164,7 +170,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/sp-500-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on S&P 500
           </a>
@@ -178,7 +184,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/sp-500-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on S&P 500
           </a>
@@ -203,7 +209,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/canadian-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Canada
           </a>
@@ -211,7 +217,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/chinese-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             China
           </a>
@@ -219,7 +225,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/indian-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             India
           </a>
@@ -227,7 +233,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/japanese-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Japan
           </a>
@@ -236,7 +242,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/german-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Germany
           </a>
@@ -244,7 +250,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/israeli-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Israel
           </a>
@@ -252,7 +258,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/uk-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             United Kingdom
           </a>
@@ -265,7 +271,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/german-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Germany
           </a>
@@ -273,7 +279,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/israeli-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Israel
           </a>
@@ -281,7 +287,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/uk-stocks-us"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             United Kingdom
           </a>
@@ -304,7 +310,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/financial-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Financials
           </a>
@@ -312,7 +318,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/healthcare-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Healthcare
           </a>
@@ -320,7 +326,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/technology-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Technology
           </a>
@@ -328,7 +334,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/industrials-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Industrials
           </a>
@@ -336,7 +342,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/energy-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Energy
           </a>
@@ -344,7 +350,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/utilities-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Utilities
           </a>
@@ -353,7 +359,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/consumer-cyclical-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Cyclical
           </a>
@@ -361,7 +367,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/real-estate-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Real Estate
           </a>
@@ -369,7 +375,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/basic-materials-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Basic Materials
           </a>
@@ -377,7 +383,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/communication-services-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Communication Services
           </a>
@@ -385,7 +391,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/consumer-defensive-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Defensive
           </a>
@@ -399,7 +405,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/consumer-cyclical-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Cyclical
           </a>
@@ -407,7 +413,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/real-estate-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Real Estate
           </a>
@@ -415,7 +421,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/basic-materials-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Basic Materials
           </a>
@@ -423,7 +429,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/communication-services-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Communication Services
           </a>
@@ -431,7 +437,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/consumer-defensive-sector"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Defensive
           </a>
@@ -453,7 +459,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/etf/new-launches"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             New Launches
           </a>
@@ -461,7 +467,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/etf/etf-providers"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             ETF Providers
           </a>
@@ -469,7 +475,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/bitcoin-etfs"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Bitcoin ETFs
           </a>
@@ -483,7 +489,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/bitcoin-etfs"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Bitcoin ETFs
           </a>
@@ -506,7 +512,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/magnificent-seven"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Magnificent Seven
           </a>
@@ -514,7 +520,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/dividend-kings"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Dividend Kings
           </a>
@@ -522,7 +528,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/dividend-aristocrats"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Dividend Aristocrats
           </a>
@@ -530,7 +536,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/reit-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             All REITs
           </a>
@@ -538,7 +544,7 @@
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
             href="/list/delisted-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Delisted Companies
           </a>
@@ -552,7 +558,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/reit-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             All REITs
           </a>
@@ -560,7 +566,7 @@
         <li class="mb-2 cursor-pointer">
           <a
             href="/list/delisted-stocks"
-            class="hover:text-white text-blue-400 text-lg"
+            class="sm:hover:text-white text-blue-400 text-lg"
           >
             Delisted Companies
           </a>

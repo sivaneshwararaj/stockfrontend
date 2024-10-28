@@ -42,7 +42,7 @@
   let stockDeck = {};
 
   $: previousClose = data?.getStockQuote?.previousClose;
-
+  let latestChangePercentage = 0;
   //============================================//
   const intervals = ["1D", "1W", "1M", "1Y", "MAX"];
 
@@ -77,11 +77,21 @@
       if (!$isCrosshairMoveActive && $realtimePrice !== null) {
         change = (($realtimePrice / previousClose - 1) * 100)?.toFixed(2);
       } else {
-        change = (
+        latestChangePercentage = (
           ((currentDataRow?.close ?? currentDataRow?.value) / previousClose -
             1) *
           100
         )?.toFixed(2);
+
+        change =
+          displayData === "1D"
+            ? latestChangePercentage
+            : (
+                ((currentDataRow?.close ?? currentDataRow?.value) /
+                  displayLastLogicalRangeValue -
+                  1) *
+                100
+              )?.toFixed(2);
       }
 
       const date = new Date(currentDataRow?.time * 1000);
@@ -96,14 +106,24 @@
       };
 
       //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      const formattedDate = date?.toLocaleString("en-US", options);
+      const formattedDate =
+        displayData === "1D" || displayData === "1W" || displayData === "1M"
+          ? date.toLocaleString("en-US", options)
+          : date.toLocaleDateString("en-US", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
 
       const safeFormattedDate =
         formattedDate === "Invalid Date"
           ? convertTimestamp(data?.getStockQuote?.timestamp)
           : formattedDate;
       displayLegend = {
-        close: data?.getStockQuote?.price?.toFixed(2),
+        close:
+          currentDataRow?.value === "-" && currentDataRow?.close === undefined
+            ? data?.getStockQuote?.price
+            : (currentDataRow?.close ?? currentDataRow?.value),
         date: safeFormattedDate,
         change: change,
       };
@@ -791,45 +811,12 @@
               </div>
 
               <div class="flex flex-row items-center w-full">
-                {#if displayLegend?.change >= 0}
-                  <svg
-                    class="inline-block w-5 h-5 mt-0.5 -mr-0.5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><g id="evaArrowUpFill0"
-                      ><g id="evaArrowUpFill1"
-                        ><path
-                          id="evaArrowUpFill2"
-                          fill="#00FC50"
-                          d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"
-                        /></g
-                      ></g
-                    ></svg
-                  >
-                  <span
-                    class="items-center justify-start text-[#00FC50] font-medium text-xs sm:text-sm"
-                    >+{displayLegend?.change}%</span
-                  >
-                {:else if displayLegend?.change < 0}
-                  <svg
-                    class="inline-block w-5 h-5 mt-0.5 -mr-0.5 rotate-180"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><g id="evaArrowUpFill0"
-                      ><g id="evaArrowUpFill1"
-                        ><path
-                          id="evaArrowUpFill2"
-                          fill="#FF2F1F"
-                          d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"
-                        /></g
-                      ></g
-                    ></svg
-                  >
-                  <span
-                    class="items-center justify-start text-[#FF2F1F] font-medium text-xs sm:text-sm"
-                    >{displayLegend?.change}%
-                  </span>
-                {/if}
+                <span
+                  class="items-center justify-start {latestChangePercentage > 0
+                    ? "before:content-['+'] text-[#00FC50]"
+                    : 'text-[#FF2F1F]'} font-medium text-xs sm:text-sm"
+                  >{latestChangePercentage}%</span
+                >
 
                 <span class="ml-3 text-white text-xs sm:text-sm"
                   >{displayLegend?.date}</span
@@ -1357,7 +1344,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.shortOutStandingPercent}%</td
+                      >{stockDeck?.shortOutStandingPercent !== null
+                        ? stockDeck?.shortOutStandingPercent + "%"
+                        : "n/a"}</td
                     ></tr
                   >
                 </tbody>
@@ -1471,7 +1460,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.shortFloatPercent}%</td
+                      >{stockDeck?.shortFloatPercent !== null
+                        ? stockDeck?.shortFloatPercent + "%"
+                        : "n/a"}</td
                     ></tr
                   >
                 </tbody>
