@@ -229,8 +229,8 @@
       <div class="w-auto lg:w-full flex flex-col m-auto pb-14 sm:pb-10">
         <h2 class="mb-2 text-2xl text-white font-semibold">Analyst Forecast</h2>
         <p class="text-gray-200">
-          According to {numOfAnalyst} analysts, the average rating for NVDA stock
-          is "{consensusRating}." The 12-month stock price forecast is ${priceTarget},
+          According to {numOfAnalyst} analysts, the average rating for {$stockTicker}
+          stock is "{consensusRating}." The 12-month stock price forecast is ${priceTarget},
           which is {changesPercentage > 0 ? "an increase" : "a decrease"} of {changesPercentage}%
           from the latest price.
         </p>
