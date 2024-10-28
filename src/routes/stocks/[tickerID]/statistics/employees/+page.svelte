@@ -370,24 +370,25 @@
           </h2>
 
           <div
-            class="text-white p-3 sm:p-5 mb-5 rounded-lg flex flex-row items-center border border-gray-800 text-sm sm:text-[1rem]"
+            class="text-white p-3 sm:p-5 mb-5 rounded-md border border-gray-800"
           >
-            <svg
-              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#a474f6"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
-
+            <span class="inline-block align-text-bottom">
+              <svg
+                class="w-5 h-5 inline-block align-text-bottom"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+              >
+                <path
+                  fill="#a474f6"
+                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+                />
+              </svg>
+            </span>
             {#if employeeHistory?.length !== 0 && !dateDistance}
-              <div>
-                {$displayCompanyName}
-                had
-                {abbreviateNumber(employees)}
-                employees on
+              <span>
+                {$displayCompanyName} had {new Intl.NumberFormat("en")?.format(
+                  employees,
+                )} employees on
                 {new Date(
                   employeeHistory[employeeHistory?.length - 1]["filingDate"],
                 )?.toLocaleString("en-US", {
@@ -397,30 +398,34 @@
                   daySuffix: "2-digit",
                 })}. The number of employees {changeRate >= 0
                   ? "increased"
-                  : "decreased"} by
-                {abbreviateNumber(changeRate)}
-                or
+                  : "decreased"}
+                by {new Intl.NumberFormat("en")?.format(changeRate)} or
                 <span
                   class={changeRate >= 0 ? "text-[#37C97D]" : "text-[#FF2F1F]"}
                 >
                   {growthRate}%
                 </span>
                 compared to the previous year.
-              </div>
+              </span>
             {:else if employeeHistory?.length !== 0 && dateDistance}
-              {$displayCompanyName} had {abbreviateNumber(employees)} employees on
-              {new Date(
-                employeeHistory[employeeHistory?.length - 1]["filingDate"],
-              )?.toLocaleString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                daySuffix: "2-digit",
-              })}. Since then, the company has not submitted any additional
-              employee data for more than a year.
+              <span>
+                {$displayCompanyName} had {abbreviateNumber(employees)} employees
+                on
+                {new Date(
+                  employeeHistory[employeeHistory?.length - 1]["filingDate"],
+                )?.toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  daySuffix: "2-digit",
+                })}. Since then, the company has not submitted any additional
+                employee data for more than a year.
+              </span>
             {:else}
-              No employee history for {$displayCompanyName}. Probably, no
-              records of past employees.
+              <span>
+                No employee history for {$displayCompanyName}. Probably, no
+                records of past employees.
+              </span>
             {/if}
           </div>
         </div>
@@ -429,57 +434,58 @@
           class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-3 md:grid-rows-1 md:divide-x"
         >
           <div class="p-4 bp:p-5 sm:p-6">
-            <label
-              for="totalAnalystInfo"
-              class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
+            <span
+              class="mr-1 flex flex-row items-center text-white text-lg sm:text-xl"
             >
               Total Employees
-            </label>
+            </span>
             <div
-              class="mt-1 break-words font-semibold leading-8 text-light text-lg"
+              class="mt-1 break-words font-semibold leading-8 text-light text-lg sm:text-xl"
             >
-              {abbreviateNumber(employees)}
+              {#if Number(employees)}
+                {new Intl.NumberFormat("en")?.format(employees)}
+              {:else}
+                -
+              {/if}
             </div>
           </div>
           <div
             class="p-4 bp:p-5 sm:p-6 border-l border-b border-contrast md:border-0"
           >
-            <label
-              for="consensusRatingInfo"
-              class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
+            <span
+              class="mr-1 flex flex-row items-center text-white text-lg sm:text-xl"
             >
               Change (1Y)
-            </label>
+            </span>
 
             <div
-              class="mt-1 break-words font-semibold leading-8 text-light text-lg"
+              class="mt-1 break-words font-semibold leading-8 text-light text-lg sm:text-xl"
             >
               {#if dateDistance}
                 n/a
               {:else}
-                {abbreviateNumber(changeRate)}
+                {new Intl.NumberFormat("en")?.format(changeRate)}
               {/if}
             </div>
           </div>
           <div
             class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast md:border-0"
           >
-            <label
-              for="priceTargetInfo"
-              class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
+            <span
+              class="mr-1 flex flex-row items-center text-white text-lg sm:text-xl"
             >
               Growth (1Y)
-            </label>
+            </span>
 
             <div
-              class="mt-1 break-words font-semibold leading-8 text-light text-xl"
+              class="mt-1 break-words font-semibold leading-8 text-light text-lg sm:text-xl"
             >
               {#if growthRate >= 0}
-                <span class="text-white text-md font-medium">
+                <span class="text-white">
                   <span class="text-[#37C97D] text-lg">+{growthRate}%</span>
                 </span>
               {:else if growthRate < 0}
-                <div class="text-white text-md font-medium">
+                <div class="text-white">
                   <span class="text-[#FF2F1F] text-lg">{growthRate}%</span>
                 </div>
               {:else}

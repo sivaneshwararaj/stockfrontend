@@ -159,26 +159,11 @@
     <div class="w-auto lg:w-full flex flex-col m-auto pb-14 sm:pb-10">
       <h2 class="mb-2 text-2xl text-white font-semibold">Analyst Forecast</h2>
       <p class="text-gray-200">
-        According to 40 analysts, the average rating for NVDA stock is "Strong
-        Buy." The 12-month stock price forecast is $145.84, which is an increase
-        of 3.04% from the latest price.
+        According to {numOfAnalyst} analysts, the average rating for NVDA stock is
+        "{consensusRating}." The 12-month stock price forecast is ${priceTarget},
+        which is {changesPercentage > 0 ? "an increase" : "a decrease"} of {changesPercentage}%
+        from the latest price.
       </p>
-
-      <div class="text-white mt-6">
-        {#if changesPercentage < 0}
-          The Stock Price has a downside of
-          <span style="color: #FF2F1F; font-weight: 500"
-            >{abbreviateNumber(Math.abs(changesPercentage))}%</span
-          >
-        {:else if changesPercentage >= 0}
-          The Stock Price has an upside of
-          <span style="color: #37C97D; font-weight: 500"
-            >{abbreviateNumber(Math.abs(changesPercentage))}%</span
-          >
-        {/if}
-        based on <span style="font-weight: 600">{numOfAnalyst}</span> analysts in
-        the past 12 months.
-      </div>
 
       <div class="mt-5 w-full m-auto flex justify-center items-center mb-5">
         <div class="flex flex-col items-center w-full">
@@ -240,7 +225,7 @@
         href={`/stocks/${$stockTicker}/forecast/analyst`}
         class="rounded-md cursor-pointer w-full m-auto py-2 h-full mt-6 text-lg text-center font-bold text-white hover:bg-purple-700 bg-purple-600 transition duration-100"
       >
-        Analyst Ratings
+        Stock Forecasts
       </a>
     </div>
   </div>
