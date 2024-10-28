@@ -83,7 +83,8 @@
     <div class="grid grid-cols-1 gap-2 pb-5">
       {#each newsList as item}
         <div class="w-full flex flex-col bg-[#09090B] rounded-md m-auto">
-          {#if (videoId = checkIfYoutubeVideo(item.url))}
+          {#if !checkIfYoutubeVideo(item.url)}
+            <!--
             <div class="w-full aspect-video mb-4">
               <iframe
                 class="w-full h-full rounded-md border border-gray-800"
@@ -109,7 +110,7 @@
                 </p>
               </a>
             </div>
-          {:else}
+            -->
             <div class="w-full flex flex-col sm:flex-row">
               <a
                 href={item?.url}

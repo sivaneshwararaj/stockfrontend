@@ -69,7 +69,9 @@
                     <!--Start Item-->
                     <div class="flex flex-row items-center w-full mb-6">
                       <div
-                        class="w-full rounded-lg {latestInfoDate(item?.date)
+                        class="w-full rounded-md pr-4 {latestInfoDate(
+                          item?.date,
+                        )
                           ? 'bg-[#F9AB00] bg-opacity-[0.1]'
                           : 'bg-[#27272A]'} shadow-lg h-full pl-3 pt-2 pb-4"
                       >
@@ -84,9 +86,7 @@
                                 >New</label
                               >
                             {/if}
-                            <div
-                              class="text-white text-sm ml-auto pr-4 font-medium"
-                            >
+                            <div class="text-white text-sm ml-auto font-medium">
                               {#if item?.changesPercentage >= 0}
                                 <svg
                                   class="w-5 h-5 -mr-0.5 -mt-0.5 inline-block"

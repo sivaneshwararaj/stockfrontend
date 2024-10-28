@@ -166,7 +166,9 @@
     </div>
   {/if}
 
-  <div class="mt-3 grid grid-cols-2 gap-3 w-full">
+  <div
+    class="mt-3 grid grid-cols-2 gap-3 w-full border-b border-gray-600 lg:border-none pb-8 lg:pb-0"
+  >
     <div class="col-span-1 text-gray-200">
       <span class="block font-semibold">Industry</span>
       <a
