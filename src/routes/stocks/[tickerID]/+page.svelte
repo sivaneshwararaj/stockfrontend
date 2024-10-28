@@ -39,6 +39,7 @@
   export let form;
 
   let prePostData = {};
+  let stockDeck = {};
 
   $: previousClose = data?.getStockQuote?.previousClose;
 
@@ -578,32 +579,6 @@
   };
 
   $: {
-    if ($stockTicker && typeof window !== "undefined") {
-      // add a check to see if running on client-side
-      shouldUpdatePriceChart.set(false);
-      oneDayPrice = [];
-      oneWeekPrice = [];
-      oneMonthPrice = [];
-      oneYearPrice = [];
-      maxPrice = [];
-      prePostData = {};
-      output = null;
-
-      const asyncFunctions = [getPrePostQuote()];
-
-      Promise.all(asyncFunctions)
-        .then((results) => {
-          setTimeout(() => {
-            initializePrice();
-          }, 100);
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
-    }
-  }
-
-  $: {
     if (form) {
       $globalForm = form;
     }
@@ -695,7 +670,6 @@
   }
 
   onMount(() => {
-    // Subscribe to the store
     shouldUpdatePriceChart.subscribe(async (value) => {
       if (
         value &&
@@ -718,6 +692,32 @@
       }
     });
   });
+
+  $: {
+    if ($stockTicker && typeof window !== "undefined") {
+      // add a check to see if running on client-side
+      shouldUpdatePriceChart.set(false);
+      oneDayPrice = [];
+      oneWeekPrice = [];
+      oneMonthPrice = [];
+      oneYearPrice = [];
+      maxPrice = [];
+      prePostData = {};
+      output = null;
+
+      stockDeck = stockDeck;
+
+      const asyncFunctions = [getPrePostQuote()];
+
+      Promise.all(asyncFunctions)
+        .then((results) => {
+          initializePrice();
+        })
+        .catch((error) => {
+          console.error("An error occurred:", error);
+        });
+    }
+  }
 </script>
 
 <svelte:head>
@@ -997,7 +997,48 @@
               <div
                 class="order-1 lg:order-5 m-auto grow overflow-hidden border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
               >
-                <div class="h-[250px] sm:h-[400px]">
+                <div class="flex items-center justify-between py-1 sm:pt-0.5">
+                  <div class="hide-scroll overflow-x-auto">
+                    <ul
+                      class="flex space-x-[3px] whitespace-nowrap pl-0.5 xs:space-x-1"
+                    >
+                      {#each intervals as interval}
+                        <li>
+                          <button
+                            on:click={() => changeData(interval)}
+                            class="px-1 py-1 text-sm sm:text-[1rem] xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
+                          >
+                            <span
+                              class="block {displayData === interval
+                                ? 'text-white'
+                                : 'text-gray-400'}">{interval}</span
+                            >
+                            <div
+                              class="{displayData === interval
+                                ? `bg-[${colorChange}] `
+                                : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
+                            />
+                          </button>
+                        </li>
+                      {/each}
+                    </ul>
+                  </div>
+                  <div
+                    class="flex shrink flex-row space-x-1 pr-1 text-sm sm:text-[1rem]"
+                  >
+                    <span
+                      class={displayLegend?.change >= 0
+                        ? "before:content-['+'] text-[#00FC50]"
+                        : "text-[#FF2F1F]"}
+                    >
+                      {displayLegend?.change}%
+                    </span>
+                    <span class="hidden text-gray-200 sm:block"
+                      >({displayData})</span
+                    >
+                  </div>
+                </div>
+                <div class="h-[250px] sm:h-[350px]">
                   <div
                     class="flex h-full w-full flex-col items-center justify-center rounded-sm border border-gray-800 p-6 text-center md:p-12"
                   >
@@ -1055,7 +1096,7 @@
                   </div>
                 </div>
 
-                {#if output !== null}
+                {#if output !== null && dataMapping[displayData]?.length !== 0}
                   <Chart
                     {...options}
                     autoSize={true}
@@ -1186,7 +1227,7 @@
                   </Chart>
                 {:else}
                   <div
-                    class="flex justify-center w-full sm:w-[650px] h-80 items-center"
+                    class="flex justify-center w-full sm:w-[650px] h-[350px] items-center"
                   >
                     <div class="relative">
                       <label
@@ -1241,8 +1282,8 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.revenueTTM !== null
-                        ? abbreviateNumber(data?.getStockDeck?.revenueTTM)
+                      >{stockDeck?.revenueTTM !== null
+                        ? abbreviateNumber(stockDeck?.revenueTTM)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1254,8 +1295,8 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.netIncomeTTM !== null
-                        ? abbreviateNumber(data?.getStockDeck?.netIncomeTTM)
+                      >{stockDeck?.netIncomeTTM !== null
+                        ? abbreviateNumber(stockDeck?.netIncomeTTM)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1290,7 +1331,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.forwardPE ?? "n/a"}</td
+                      >{stockDeck?.forwardPE ?? "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1316,7 +1357,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.shortOutStandingPercent}%</td
+                      >{stockDeck?.shortOutStandingPercent}%</td
                     ></tr
                   >
                 </tbody>
@@ -1406,7 +1447,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.beta?.toFixed(2)}</td
+                      >{stockDeck?.beta?.toFixed(2)}</td
                     ></tr
                   >
                   <tr
@@ -1417,8 +1458,8 @@
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.floatShares !== null
-                        ? abbreviateNumber(data?.getStockDeck?.floatShares)
+                      >{stockDeck?.floatShares !== null
+                        ? abbreviateNumber(stockDeck?.floatShares)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1430,7 +1471,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.shortFloatPercent}%</td
+                      >{stockDeck?.shortFloatPercent}%</td
                     ></tr
                   >
                 </tbody>
