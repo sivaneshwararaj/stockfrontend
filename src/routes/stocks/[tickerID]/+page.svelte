@@ -10,6 +10,8 @@
     isCrosshairMoveActive,
     realtimePrice,
     priceIncrease,
+    wsBidPrice,
+    wsAskPrice,
     currentPortfolioPrice,
     stockTicker,
     isOpen,
@@ -28,7 +30,7 @@
   import DividendAnnouncement from "$lib/components/DividendAnnouncement.svelte";
   import Sidecard from "$lib/components/Sidecard.svelte";
 
-  import { convertTimestamp } from "$lib/utils";
+  import { convertTimestamp, abbreviateNumber } from "$lib/utils";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { goto } from "$app/navigation";
@@ -1226,7 +1228,9 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >20</td
+                            >{$wsBidPrice !== 0 && $wsBidPrice !== null
+                              ? $wsBidPrice
+                              : (data?.getStockQuote?.bid ?? "-")}</td
                           ></tr
                         >
                         <tr
@@ -1240,7 +1244,9 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >3.47T</td
+                            >{abbreviateNumber(
+                              data?.getStockQuote?.marketCap,
+                            )}</td
                           ></tr
                         >
                         <tr
@@ -1254,7 +1260,12 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >96.31B</td
+                            >{data?.getStockDeck?.at(0)?.revenueTTM !==
+                            undefined
+                              ? abbreviateNumber(
+                                  data?.getStockDeck?.at(0)?.revenueTTM,
+                                )
+                              : "-"}</td
                           ></tr
                         >
                         <tr
@@ -1265,7 +1276,12 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >53.01B</td
+                            >{data?.getStockDeck?.at(0)?.netIncomeTTM !==
+                            undefined
+                              ? abbreviateNumber(
+                                  data?.getStockDeck?.at(0)?.netIncomeTTM,
+                                )
+                              : "-"}</td
                           ></tr
                         >
                         <tr
@@ -1289,7 +1305,9 @@
                           </td>
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >24.53B</td
+                            >{abbreviateNumber(
+                              data?.getStockQuote?.sharesOutstanding,
+                            )}</td
                           ></tr
                         >
                         <tr
@@ -1300,7 +1318,7 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >2.13</td
+                            >{data?.getStockQuote?.eps}</td
                           ></tr
                         >
                         <tr
@@ -1311,7 +1329,7 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >66.37</td
+                            >{data?.getStockQuote?.pe}</td
                           ></tr
                         >
                         <tr
@@ -1322,7 +1340,7 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >41.66</td
+                            >{data?.getStockDeck?.at(0)?.forwardPE ?? "-"}</td
                           ></tr
                         >
                         <tr
@@ -1354,7 +1372,9 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >20</td
+                            >{$wsAskPrice !== 0 && $wsAskPrice !== null
+                              ? $wsAskPrice
+                              : (data?.getStockQuote?.ask ?? "-")}</td
                           ></tr
                         >
                         <tr
@@ -1365,7 +1385,7 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >203,385,650</td
+                            >{abbreviateNumber(data?.getStockQuote?.volume)}</td
                           ></tr
                         >
                         <tr
@@ -1376,7 +1396,7 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >140.94</td
+                            >{data?.getStockQuote?.open}</td
                           ></tr
                         >
                         <tr
@@ -1387,7 +1407,7 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >140.41</td
+                            >{data?.getStockQuote?.previousClose}</td
                           ></tr
                         >
                         <tr
@@ -1398,7 +1418,8 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >140.80 - 144.06</td
+                            >{data?.getStockQuote?.dayLow} - {data
+                              ?.getStockQuote?.dayHigh}</td
                           ></tr
                         >
                         <tr
@@ -1409,7 +1430,8 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >39.23 - 144.42</td
+                            >{data?.getStockQuote?.yearLow} - {data
+                              ?.getStockQuote?.yearHigh}</td
                           ></tr
                         >
                         <tr
@@ -1420,7 +1442,7 @@
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >1.67</td
+                            >{data?.getStockDeck?.at(0)?.beta?.toFixed(2)}</td
                           ></tr
                         >
                         <tr
