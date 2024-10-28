@@ -29,6 +29,69 @@
   let changePercentageYearAgo = 0;
   let timePeriod = "3Y";
 
+  function getMarketCapCategory(marketCap) {
+    const BILLION = 1_000_000_000;
+    const MILLION = 1_000_000;
+
+    const marketCapNavigation = [
+      {
+        threshold: 200 * BILLION,
+        name: "Mega Cap",
+        link: "/list/mega-cap-stocks",
+      },
+      {
+        minThreshold: 10 * BILLION,
+        maxThreshold: 200 * BILLION,
+        name: "Large Cap",
+        link: "/list/large-cap-stocks",
+      },
+      {
+        minThreshold: 2 * BILLION,
+        maxThreshold: 10 * BILLION,
+        name: "Mid Cap",
+        link: "/list/mid-cap-stocks",
+      },
+      {
+        minThreshold: 300 * MILLION,
+        maxThreshold: 2 * BILLION,
+        name: "Small Cap",
+        link: "/list/small-cap-stocks",
+      },
+      {
+        minThreshold: 50 * MILLION,
+        maxThreshold: 300 * MILLION,
+        name: "Micro Cap",
+        link: "/list/micro-cap-stocks",
+      },
+      {
+        maxThreshold: 50 * MILLION,
+        name: "Nano Cap",
+        link: "/list/nano-cap-stocks",
+      },
+    ];
+
+    if (!marketCap) return null;
+
+    // Convert string to number if needed
+    const capValue =
+      typeof marketCap === "string" ? parseFloat(marketCap) : marketCap;
+
+    return marketCapNavigation.find((category) => {
+      if (category.threshold) {
+        return capValue >= category.threshold;
+      }
+      if (category.minThreshold && category.maxThreshold) {
+        return (
+          capValue >= category.minThreshold && capValue < category.maxThreshold
+        );
+      }
+      if (category.maxThreshold) {
+        return capValue < category.maxThreshold;
+      }
+      return false;
+    });
+  }
+
   function computeYearOverYearChange(rawData) {
     if (rawData.length < 2) {
       return null; // Not enough rawData to compute change
@@ -292,6 +355,8 @@
       goto("/pricing");
     }
   };
+
+  $: capCategory = getMarketCapCategory(data?.getStockQuote?.marketCap);
 </script>
 
 <svelte:head>
@@ -337,7 +402,7 @@
             {#if rawData?.length !== 0}
               <div class="grid grid-cols-1 gap-2">
                 <div
-                  class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+                  class="text-white p-3 sm:p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
                 >
                   <svg
                     class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -366,102 +431,146 @@
                 </div>
 
                 <div
-                  class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
+                  class="mt-5 grid grid-cols-2 gap-3 px-1 text-base xs:mt-6 bp:mt-7 bp:text-lg sm:grid-cols-3 sm:gap-6 sm:px-4 sm:text-xl"
                 >
-                  <div class="relative inline-block text-left grow">
-                    <DropdownMenu.Root>
-                      <DropdownMenu.Trigger asChild let:builder>
-                        <Button
-                          builders={[builder]}
-                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
-                        >
-                          <span class="truncate text-white">{timePeriod}</span>
-                          <svg
-                            class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            style="max-width:40px"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
-                            ></path>
-                          </svg>
-                        </Button>
-                      </DropdownMenu.Trigger>
-                      <DropdownMenu.Content
-                        class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                      >
-                        <DropdownMenu.Label class="text-gray-400">
-                          Select time frame
-                        </DropdownMenu.Label>
-                        <DropdownMenu.Separator />
-                        <DropdownMenu.Group>
-                          <DropdownMenu.Item
-                            on:click={() => changeStatement("1M")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            1 Month
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => changeStatement("6M")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            6 Months
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => changeStatement("1Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            1 Year
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => changeStatement("3Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            3 Years
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => changeStatement("5Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            5 Years
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => changeStatement("10Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            10 Years
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => changeStatement("Max")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            Max
-                          </DropdownMenu.Item>
-                        </DropdownMenu.Group>
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Root>
-                  </div>
-                  <Button
-                    on:click={() => exportData("csv")}
-                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
-                  >
-                    <span class="truncate text-white">Download</span>
-                    <svg
-                      class="{data?.user?.tier === 'Pro'
-                        ? 'hidden'
-                        : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      ><path
-                        fill="#A3A3A3"
-                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                      /></svg
+                  <div>
+                    Market Cap
+                    <div
+                      class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
                     >
-                  </Button>
+                      {abbreviateNumber(data?.getStockQuote?.marketCap)}
+                    </div>
+                  </div>
+                  <div>
+                    Category
+                    <div
+                      class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
+                    >
+                      {#if capCategory}
+                        <a
+                          class="sm:hover:text-white text-blue-400"
+                          href={capCategory.link}
+                        >
+                          {capCategory.name}
+                        </a>
+                      {:else}
+                        n/a
+                      {/if}
+                    </div>
+                  </div>
+                  <div>
+                    1-Year Change
+                    <div
+                      class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
+                    >
+                      198.62%
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex flex-row items-center w-full mt-10 mb-8">
+                  <h1 class="text-2xl text-white font-bold">
+                    Market Cap Chart
+                  </h1>
+                  <div
+                    class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
+                  >
+                    <div class="relative inline-block text-left grow">
+                      <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild let:builder>
+                          <Button
+                            builders={[builder]}
+                            class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                          >
+                            <span class="truncate text-white">{timePeriod}</span
+                            >
+                            <svg
+                              class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              style="max-width:40px"
+                              aria-hidden="true"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          </Button>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content
+                          class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                        >
+                          <DropdownMenu.Label class="text-gray-400">
+                            Select time frame
+                          </DropdownMenu.Label>
+                          <DropdownMenu.Separator />
+                          <DropdownMenu.Group>
+                            <DropdownMenu.Item
+                              on:click={() => changeStatement("1M")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              1 Month
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => changeStatement("6M")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              6 Months
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => changeStatement("1Y")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              1 Year
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => changeStatement("3Y")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              3 Years
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => changeStatement("5Y")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              5 Years
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => changeStatement("10Y")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              10 Years
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => changeStatement("Max")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              Max
+                            </DropdownMenu.Item>
+                          </DropdownMenu.Group>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Root>
+                    </div>
+                    <Button
+                      on:click={() => exportData("csv")}
+                      class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                    >
+                      <span class="truncate text-white">Download</span>
+                      <svg
+                        class="{data?.user?.tier === 'Pro'
+                          ? 'hidden'
+                          : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="#A3A3A3"
+                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                        /></svg
+                      >
+                    </Button>
+                  </div>
                 </div>
 
                 <div class="app w-full">

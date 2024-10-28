@@ -363,8 +363,8 @@
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="mb-6">
-          <h2 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
-            Employees
+          <h2 class="text-2xl sm:text-2xl text-gray-200 font-bold mb-4">
+            {$stockTicker} Employees
           </h2>
 
           <div
@@ -429,35 +429,23 @@
         </div>
 
         <div
-          class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-3 md:grid-rows-1 md:divide-x"
+          class="my-5 grid grid-cols-2 gap-3 px-1 text-base xs:mt-6 bp:mt-7 bp:text-lg sm:grid-cols-3 sm:gap-6 sm:px-4 sm:text-xl"
         >
-          <div class="p-4 bp:p-5 sm:p-6">
-            <span
-              class="mr-1 flex flex-row items-center text-white text-lg sm:text-xl"
-            >
-              Total Employees
-            </span>
+          <div>
+            Employees
             <div
-              class="mt-1 break-words font-semibold leading-8 text-light text-lg sm:text-xl"
+              class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
             >
               {#if Number(employees)}
                 {new Intl.NumberFormat("en")?.format(employees)}
               {:else}
-                -
+                n/a
               {/if}
             </div>
           </div>
-          <div
-            class="p-4 bp:p-5 sm:p-6 border-l border-b border-contrast md:border-0"
-          >
-            <span
-              class="mr-1 flex flex-row items-center text-white text-lg sm:text-xl"
-            >
-              Change (1Y)
-            </span>
-
-            <div
-              class="mt-1 break-words font-semibold leading-8 text-light text-lg sm:text-xl"
+          <div>
+            Change (1Y) <div
+              class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
             >
               {#if dateDistance}
                 n/a
@@ -466,35 +454,55 @@
               {/if}
             </div>
           </div>
-          <div
-            class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast md:border-0"
-          >
-            <span
-              class="mr-1 flex flex-row items-center text-white text-lg sm:text-xl"
+          <div>
+            Growth (1Y) <div
+              class="mt-0.5 text-lg {growthRate > 0
+                ? "before:content-['+'] "
+                : ''} font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
             >
-              Growth (1Y)
-            </span>
-
+              {growthRate}%
+            </div>
+          </div>
+          <div>
+            Revenue / Employee
             <div
-              class="mt-1 break-words font-semibold leading-8 text-light text-lg sm:text-xl"
+              class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
             >
-              {#if growthRate >= 0}
-                <span class="text-white">
-                  <span class="text-[#37C97D] text-lg">+{growthRate}%</span>
-                </span>
-              {:else if growthRate < 0}
-                <div class="text-white">
-                  <span class="text-[#FF2F1F] text-lg">{growthRate}%</span>
-                </div>
+              {#if Number(data?.getStockDeck?.revenuePerEmployee)}
+                ${new Intl.NumberFormat("en")?.format(
+                  data?.getStockDeck?.revenuePerEmployee,
+                )}
               {:else}
-                <span class="text-white m-auto"> n/a </span>
+                n/a
               {/if}
+            </div>
+          </div>
+          <div>
+            Profits / Employee
+            <div
+              class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
+            >
+              {#if Number(data?.getStockDeck?.profitPerEmployee)}
+                ${new Intl.NumberFormat("en")?.format(
+                  data?.getStockDeck?.profitPerEmployee,
+                )}
+              {:else}
+                n/a
+              {/if}
+            </div>
+          </div>
+          <div>
+            Market Cap
+            <div
+              class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
+            >
+              {abbreviateNumber(data?.getStockQuote?.marketCap)}
             </div>
           </div>
         </div>
 
         <div class="flex flex-row items-center w-full mt-10 mb-8">
-          <h1 class="text-xl text-white font-semibold">Employees History</h1>
+          <h1 class="text-2xl text-white font-bold">Employees Chart</h1>
 
           <div
             class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
