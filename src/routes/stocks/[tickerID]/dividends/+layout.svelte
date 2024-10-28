@@ -1,7 +1,35 @@
 <script lang="ts">
+  import { stockTicker } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   export let data;
+
+  const formatDate = (dateString) => {
+    // Create a date object for the input dateString
+    const inputDate = new Date(dateString);
+
+    // Create a date object for the current time in New York City
+    const nycTime = new Date().toLocaleString("en-US", {
+      timeZone: "America/New_York",
+    });
+    const currentNYCDate = new Date(nycTime);
+
+    // Calculate the difference in milliseconds
+    const difference = inputDate.getTime() - currentNYCDate.getTime();
+
+    // Convert the difference to minutes
+    const minutes = Math.abs(Math.round(difference / (1000 * 60)));
+
+    if (minutes < 60) {
+      return `${minutes} minutes`;
+    } else if (minutes < 1440) {
+      const hours = Math.round(minutes / 60);
+      return `${hours} hour${hours !== 1 ? "s" : ""}`;
+    } else {
+      const days = Math.round(minutes / 1440);
+      return `${days} day${days !== 1 ? "s" : ""}`;
+    }
+  };
 </script>
 
 <section class="w-auto overflow-hidden min-h-screen">
@@ -25,7 +53,7 @@
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                   <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription 🔥
+                    Pro Subscription
                   </h2>
                   <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
@@ -36,43 +64,31 @@
             </div>
           {/if}
 
-          <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/price-alert"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+          {#if data?.getNews?.length !== 0}
+            <div
+              class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
             >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Price Alert ⏰
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
+              <div class="p-4 text-sm">
+                <h3 class="text-lg text-white font-semibold mb-3">
+                  {$stockTicker} News
+                </h3>
+                <ul class="text-gray-200">
+                  {#each data?.getNews?.slice(0, 10) as item}
+                    <li class="mb-3 last:mb-1">
+                      {formatDate(item?.publishedDate)} ago -
+                      <a
+                        class="sm:hover:text-white text-blue-400"
+                        href={item?.url}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow">{item?.title}</a
+                      >
+                      - {item?.site}
+                    </li>
+                  {/each}
+                </ul>
               </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Customize your alerts to never miss out again
-              </span>
-            </a>
-          </div>
-
-          <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/stock-screener"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Stock Screener 🔎
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Build your Stock Screener to find profitable stocks.
-              </span>
-            </a>
-          </div>
+            </div>
+          {/if}
         </aside>
       </div>
     </div>

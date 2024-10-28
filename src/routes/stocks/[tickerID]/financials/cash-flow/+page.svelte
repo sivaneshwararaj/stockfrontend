@@ -2,6 +2,7 @@
   import {
     numberOfUnreadNotification,
     displayCompanyName,
+    coolMode,
     stockTicker,
   } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
@@ -25,7 +26,7 @@
   let filterRule = "annual";
   let displayStatement = "netIncome";
 
-  let mode = false;
+  $coolMode = false;
   let tableList = [];
 
   let timeFrame = "10Y";
@@ -160,7 +161,7 @@
   ];
 
   function toggleMode() {
-    mode = !mode;
+    $coolMode = !$coolMode;
   }
 
   function changeStatement(event) {
@@ -351,7 +352,7 @@
 
       cashFlow = filterStatement(fullStatement, timeFrame);
 
-      if (mode === true) {
+      if ($coolMode === true) {
         optionsData = plotData();
       }
     }
@@ -404,7 +405,7 @@
         <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
           <div class="mb-3">
             <h1 class="text-2xl text-gray-200 font-bold">
-              {#if mode}
+              {#if $coolMode}
                 {statementConfig?.find(
                   (item) => item?.propertyName === displayStatement,
                 )?.label}
@@ -428,7 +429,7 @@
                 /></svg
               >
 
-              {#if mode}
+              {#if $coolMode}
                 {statementConfig?.find(
                   (item) => item?.propertyName === displayStatement,
                 )?.text}
@@ -494,14 +495,14 @@
                 <input
                   on:click={toggleMode}
                   type="checkbox"
-                  checked={mode}
-                  value={mode}
+                  checked={$coolMode}
+                  value={$coolMode}
                   class="sr-only peer"
                 />
                 <div
                   class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"
                 ></div>
-                {#if mode}
+                {#if $coolMode}
                   <span class="ml-2 text-sm font-medium text-white">
                     Cool Mode
                   </span>
@@ -588,7 +589,7 @@
               </div>
             </div>
 
-            {#if mode}
+            {#if $coolMode}
               <div class="sm:w-full">
                 <div class="relative">
                   <select
