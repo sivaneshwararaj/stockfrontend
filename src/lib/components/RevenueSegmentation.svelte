@@ -337,7 +337,7 @@
                       </span>
                     </div>
                     <progress
-                      class="progress bg-[#3B3D3F] [&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]"
+                      class="progress bg-[#3B3D3F] [&::-webkit-progress-value]:bg-[#00FC50] [&::-moz-progress-bar]:bg-[#00FC50]"
                       value={(item?.value / totalGeographicRevenue) * 100}
                       max="100"
                     ></progress>

@@ -668,9 +668,9 @@
                           {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
                             <span class="text-[#FF2F1F]">-100.00%</span>
                           {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
-                            <span class="text-[#37C97D]">100.00%</span>
+                            <span class="text-[#00FC50]">100.00%</span>
                           {:else if item?.value - tableList[index + 1]?.value > 0}
-                            <span class="text-[#37C97D]">
+                            <span class="text-[#00FC50]">
                               {(
                                 ((item?.value - tableList[index + 1]?.value) /
                                   Math.abs(item?.value)) *

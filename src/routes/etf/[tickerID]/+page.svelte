@@ -278,7 +278,7 @@
         return;
     }
     colorChange =
-      lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
+      lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#00FC50";
     topColorChange =
       lastValue < displayLastLogicalRangeValue
         ? "rgb(255, 47, 31, 0.2)"
@@ -407,7 +407,7 @@
       //colorChange = lastValue < displayLastLogicalRangeValue ? "#CC3636" : "#367E18";
 
       colorChange =
-        lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#37C97D";
+        lastValue < displayLastLogicalRangeValue ? "#FF2F1F" : "#00FC50";
       topColorChange =
         lastValue < displayLastLogicalRangeValue
           ? "rgb(255, 47, 31, 0.2)"
@@ -739,14 +739,14 @@
                       ><g id="evaArrowUpFill1"
                         ><path
                           id="evaArrowUpFill2"
-                          fill="#37C97D"
+                          fill="#00FC50"
                           d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"
                         /></g
                       ></g
                     ></svg
                   >
                   <span
-                    class="items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm"
+                    class="items-center justify-start text-[#00FC50] font-medium text-xs sm:text-sm"
                     >+{displayLegend?.change}%</span
                   >
                 {:else if displayLegend?.change < 0}
@@ -784,7 +784,7 @@
                   </span>
                   {#if prePostData?.changesPercentage >= 0}
                     <span
-                      class="ml-1 items-center justify-start text-[#37C97D] font-medium text-xs sm:text-sm"
+                      class="ml-1 items-center justify-start text-[#00FC50] font-medium text-xs sm:text-sm"
                       >({prePostData?.changesPercentage}%)</span
                     >
                   {:else if prePostData?.changesPercentage < 0}

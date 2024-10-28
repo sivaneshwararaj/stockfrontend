@@ -241,7 +241,7 @@
                           class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
                         >
                           {#if item?.valueGrowth > 0}
-                            <span class="text-[#37C97D]">
+                            <span class="text-[#00FC50]">
                               +{item?.valueGrowth?.toFixed(2)}%
                             </span>
                           {:else if item?.valueGrowth < 0}

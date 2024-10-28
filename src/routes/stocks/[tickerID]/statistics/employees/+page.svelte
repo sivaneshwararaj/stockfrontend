@@ -399,7 +399,7 @@
                   : "decreased"}
                 by {new Intl.NumberFormat("en")?.format(changeRate)} or
                 <span
-                  class={changeRate >= 0 ? "text-[#37C97D]" : "text-[#FF2F1F]"}
+                  class={changeRate >= 0 ? "text-[#00FC50]" : "text-[#FF2F1F]"}
                 >
                   {growthRate}%
                 </span>
@@ -659,7 +659,7 @@
                       {#if index + 1 - historyList?.length === 0}
                         -
                       {:else if item?.employeeCount - historyList[index + 1]?.employeeCount > 0}
-                        <span class="text-[#37C97D]">
+                        <span class="text-[#00FC50]">
                           +{(
                             ((item?.employeeCount -
                               historyList[index + 1]?.employeeCount) /

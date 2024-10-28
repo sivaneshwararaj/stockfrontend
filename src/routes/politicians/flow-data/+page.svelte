@@ -620,7 +620,7 @@
                                     class="text-sm sm:text-[1rem] text-end text-white"
                                   >
                                     {#if item?.type === "Bought"}
-                                      <span class="text-[#37C97D]">Bought</span>
+                                      <span class="text-[#00FC50]">Bought</span>
                                     {:else if item?.type === "Sold"}
                                       <span class="text-[#FF2F1F]">Sold</span>
                                     {/if}

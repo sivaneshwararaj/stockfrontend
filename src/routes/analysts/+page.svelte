@@ -300,7 +300,7 @@
                           class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-semibold text-white"
                         >
                           {#if Number(item?.successRate) >= 0}
-                            <span class="text-[#37C97D]"
+                            <span class="text-[#00FC50]"
                               >+{Number(item?.successRate)?.toFixed(2)}%</span
                             >
                           {/if}
@@ -310,7 +310,7 @@
                           class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-semibold text-white"
                         >
                           {#if Number(item?.avgReturn) >= 0}
-                            <span class="text-[#37C97D]"
+                            <span class="text-[#00FC50]"
                               >+{Number(item?.avgReturn)?.toFixed(2)}%</span
                             >
                           {:else}

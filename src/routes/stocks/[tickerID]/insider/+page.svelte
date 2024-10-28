@@ -129,8 +129,8 @@
   const transactionStyles = {
     Bought: {
       text: "Bought",
-      class: "text-[#37C97D]",
-      border: "border-[#37C97D]",
+      class: "text-[#00FC50]",
+      border: "border-[#00FC50]",
     },
     Grant: {
       text: "Grant",

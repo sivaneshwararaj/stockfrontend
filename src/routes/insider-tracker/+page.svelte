@@ -315,7 +315,7 @@
                         <td
                           class="text-sm sm:text-[1rem] whitespace-nowrap text-end {item?.changesPercentage >=
                           0
-                            ? 'text-[#37C97D]'
+                            ? 'text-[#00FC50]'
                             : 'text-[#FF2F1F]'}"
                         >
                           {item?.changesPercentage > 0
@@ -326,7 +326,7 @@
                         <td
                           class="text-end text-sm sm:text-[1rem] font-medium whitespace-nowrap {item?.transactionType ===
                           'Buy'
-                            ? 'text-[#37C97D]'
+                            ? 'text-[#00FC50]'
                             : item?.transactionType === 'Sell'
                               ? 'text-[#FF2F1F]'
                               : 'text-[#E57C34]'}"

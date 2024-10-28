@@ -290,7 +290,7 @@
                         class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
                       >
                         {#if item?.changesPercentage >= 0}
-                          <span class="text-[#37C97D]"
+                          <span class="text-[#00FC50]"
                             >+{item?.changesPercentage >= 1000
                               ? abbreviateNumber(item?.changesPercentage)
                               : item?.changesPercentage?.toFixed(2)}%</span
@@ -371,7 +371,7 @@
                         class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
                       >
                         {#if item?.changesPercentage >= 0}
-                          <span class="text-[#37C97D]"
+                          <span class="text-[#00FC50]"
                             >+{item?.changesPercentage >= 1000
                               ? abbreviateNumber(item?.changesPercentage)
                               : item?.changesPercentage?.toFixed(2)}%</span

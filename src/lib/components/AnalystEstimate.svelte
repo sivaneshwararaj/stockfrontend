@@ -22,24 +22,26 @@
 
   let displayData = "Revenue";
 
-function findIndex(data) {
-  const currentYear = new Date().getFullYear();
-  
-  // Find the index where the item's date is greater than or equal to the current year and revenue is null
-  const index = data.findIndex((item) => item.date > currentYear && item.revenue === null);
-  
-  // Check if there is any item for the current year with non-null revenue
-  const hasNonNullRevenue = data.some((item) => item.date === currentYear && item.revenue !== null);
-  
-  // Add +1 to the index if the condition is met
-  return index !== -1 && hasNonNullRevenue ? index + 1 : index;
-}
+  function findIndex(data) {
+    const currentYear = new Date().getFullYear();
 
+    // Find the index where the item's date is greater than or equal to the current year and revenue is null
+    const index = data.findIndex(
+      (item) => item.date > currentYear && item.revenue === null,
+    );
+
+    // Check if there is any item for the current year with non-null revenue
+    const hasNonNullRevenue = data.some(
+      (item) => item.date === currentYear && item.revenue !== null,
+    );
+
+    // Add +1 to the index if the condition is met
+    return index !== -1 && hasNonNullRevenue ? index + 1 : index;
+  }
 
   function changeStatement(event) {
     displayData = event.target.value;
   }
-
 
   let tableDataActual = [];
   let tableDataForecast = [];
@@ -51,13 +53,14 @@ function findIndex(data) {
     let lowList = [];
     let highList = [];
 
-    let filteredData = analystEstimateList?.filter((item) => item.date >= 2019) ?? [];
+    let filteredData =
+      analystEstimateList?.filter((item) => item.date >= 2019) ?? [];
     const stopIndex = findIndex(filteredData);
 
     if (filteredData) {
       filteredData.forEach((item, index) => {
         const date = item.date?.toString().slice(-2);
-        const isAfterStartIndex = stopIndex <= index+1;
+        const isAfterStartIndex = stopIndex <= index + 1;
         dates.push(`FY${date}`);
         switch (displayData) {
           case "Revenue":
@@ -70,7 +73,9 @@ function findIndex(data) {
             valueList.push(item.netIncome);
             avgList.push(isAfterStartIndex ? item.estimatedNetIncomeAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedNetIncomeLow : null);
-            highList.push(isAfterStartIndex ? item.estimatedNetIncomeHigh : null);
+            highList.push(
+              isAfterStartIndex ? item.estimatedNetIncomeHigh : null,
+            );
             break;
           case "EBITDA":
             valueList.push(item.ebitda);
@@ -124,16 +129,16 @@ function findIndex(data) {
         },
       },
       yAxis: [
-      {
-        type: 'value',
-        splitLine: {
-              show: false, // Disable x-axis grid lines
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
         },
-        
-        axisLabel: {
-          show: false // Hide y-axis labels
-        }
-      },
       ],
       series: [
         {
@@ -192,7 +197,8 @@ function findIndex(data) {
     tableDataActual = [];
     tableDataForecast = [];
 
-    let filteredData = analystEstimateList?.filter((item) => item.date >= 2015) ?? [];
+    let filteredData =
+      analystEstimateList?.filter((item) => item.date >= 2015) ?? [];
 
     xData = filteredData?.map(({ date }) => Number(String(date)?.slice(-2)));
     if (displayData === "Revenue") {
@@ -243,7 +249,8 @@ function findIndex(data) {
 
         // Add forwardPe if the condition is met
         if (forwardPeStart && forecastVal !== null) {
-          forecastEntry.forwardPe = Math.round((data.getStockQuote.price / forecastVal) * 100) / 100;
+          forecastEntry.forwardPe =
+            Math.round((data.getStockQuote.price / forecastVal) * 100) / 100;
         } else {
           forecastEntry.forwardPe = null;
         }
@@ -286,7 +293,10 @@ function findIndex(data) {
   <main class="overflow-hidden">
     <div class="w-full m-auto mt-5 sm:mt-0">
       <div class="flex flex-row items-center">
-        <label for="predictiveFundamentalsInfo" class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold">
+        <label
+          for="predictiveFundamentalsInfo"
+          class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
+        >
           {displayData} Forecast
         </label>
         <InfoModal
@@ -296,132 +306,246 @@ function findIndex(data) {
         />
       </div>
 
-      <div class="text-white text-[1rem] mt-1 sm:mt-3 mb-1 w-full sm:w-5/6">We analyze insights from various analysts to offer both historical and future fundamental data forecasts.</div>
+      <div class="text-white text-[1rem] mt-1 sm:mt-3 mb-1 w-full sm:w-5/6">
+        We analyze insights from various analysts to offer both historical and
+        future fundamental data forecasts.
+      </div>
 
-        {#if isLoaded}
-          {#if analystEstimateList?.length !== 0}
-            <select class="mt-5 mb-5 sm:mb-0 sm:mt-3 ml-1 w-44 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]" on:change={changeStatement}>
-              <option disabled>Choose Fundamental Data</option>
-              <option disabled={deactivateContent} value="EPS">{deactivateContent ? 'EPS (Pro Only)' : 'EPS'}</option>
-              <option disabled={deactivateContent} value="EBITDA">{deactivateContent ? 'EBITDA (Pro Only)' : 'EBITDA'}</option>
-              <option value="Net Income"> Net Income </option>
-              <option value="Revenue" selected>Revenue</option>
-            </select>
+      {#if isLoaded}
+        {#if analystEstimateList?.length !== 0}
+          <select
+            class="mt-5 mb-5 sm:mb-0 sm:mt-3 ml-1 w-44 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]"
+            on:change={changeStatement}
+          >
+            <option disabled>Choose Fundamental Data</option>
+            <option disabled={deactivateContent} value="EPS"
+              >{deactivateContent ? "EPS (Pro Only)" : "EPS"}</option
+            >
+            <option disabled={deactivateContent} value="EBITDA"
+              >{deactivateContent ? "EBITDA (Pro Only)" : "EBITDA"}</option
+            >
+            <option value="Net Income"> Net Income </option>
+            <option value="Revenue" selected>Revenue</option>
+          </select>
 
-            <div class="pb-2">
-              <div class="app w-full h-[300px] mt-5">
-                <Chart {init} options={optionsData} class="chart" />
-              </div>
+          <div class="pb-2">
+            <div class="app w-full h-[300px] mt-5">
+              <Chart {init} options={optionsData} class="chart" />
+            </div>
+          </div>
+
+          <div class="flex flex-row items-center justify-between m-auto mt-10">
+            <div
+              class="flex flex-row items-center w-1/2 sm:w-full justify-center"
+            >
+              <div
+                class="h-full bg-gray-800 transform -translate-x-1/2"
+                aria-hidden="true"
+              ></div>
+              <div
+                class="w-3 h-3 bg-[#fff] border-4 box-content border-gray-900 rounded-full transform -translate-x-1/2"
+                aria-hidden="true"
+              ></div>
+              <span
+                class="text-white text-sm sm:text-md sm:font-medium inline-block"
+              >
+                Actual
+              </span>
             </div>
 
-            <div class="flex flex-row items-center justify-between m-auto mt-10">
-              <div class="flex flex-row items-center w-1/2 sm:w-full justify-center">
-                <div class="h-full bg-gray-800 transform -translate-x-1/2" aria-hidden="true"></div>
-                <div class="w-3 h-3 bg-[#fff] border-4 box-content border-gray-900 rounded-full transform -translate-x-1/2" aria-hidden="true"></div>
-                <span class="text-white text-sm sm:text-md sm:font-medium inline-block"> Actual </span>
-              </div>
-
-              <div class="flex flex-row items-center w-1/2 sm:w-full justify-center">
-                <div class="h-full bg-gray-800 transform -translate-x-1/2" aria-hidden="true"></div>
-                <div class="w-3 h-3 bg-[#E11D48] border-4 box-content border-gray-900 rounded-full transform -translate-x-1/2" aria-hidden="true"></div>
-                <span class="text-white text-sm sm:text-md sm:font-medium inline-block"> Analyst Forecast </span>
-              </div>
+            <div
+              class="flex flex-row items-center w-1/2 sm:w-full justify-center"
+            >
+              <div
+                class="h-full bg-gray-800 transform -translate-x-1/2"
+                aria-hidden="true"
+              ></div>
+              <div
+                class="w-3 h-3 bg-[#E11D48] border-4 box-content border-gray-900 rounded-full transform -translate-x-1/2"
+                aria-hidden="true"
+              ></div>
+              <span
+                class="text-white text-sm sm:text-md sm:font-medium inline-block"
+              >
+                Analyst Forecast
+              </span>
             </div>
+          </div>
 
-            <div class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0">
-              <table class="table table-sm shaodow table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]">
-                <thead class="">
-                  <tr class="">
-                    <th class="bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-start">Year</th>
-                    {#each xData as item}
-                      <td class="z-20 bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-end bg-[#09090B]">{"FY" + item}</td>
-                    {/each}
-                  </tr>
-                </thead>
-                <tbody class="shadow-md">
-                  <tr class="bg-[#09090B] border-b-[#09090B]">
-                    <th class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"> Forecast </th>
-                    {#each tableDataForecast as item}
-                      <td class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]">
-                        {item?.val === "0.00" || item?.val === null || item?.val === 0 ? "-" : abbreviateNumber(item?.val.toFixed(2))}
-                      </td>
-                    {/each}
-                  </tr>
+          <div
+            class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
+          >
+            <table
+              class="table table-sm shaodow table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+            >
+              <thead class="">
+                <tr class="">
+                  <th
+                    class="bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-start"
+                    >Year</th
+                  >
+                  {#each xData as item}
+                    <td
+                      class="z-20 bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-end bg-[#09090B]"
+                      >{"FY" + item}</td
+                    >
+                  {/each}
+                </tr>
+              </thead>
+              <tbody class="shadow-md">
+                <tr class="bg-[#09090B] border-b-[#09090B]">
+                  <th
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                  >
+                    Forecast
+                  </th>
+                  {#each tableDataForecast as item}
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                    >
+                      {item?.val === "0.00" ||
+                      item?.val === null ||
+                      item?.val === 0
+                        ? "-"
+                        : abbreviateNumber(item?.val.toFixed(2))}
+                    </td>
+                  {/each}
+                </tr>
 
-                  <tr class="bg-[#27272A] border-b-[#27272A]">
-                    <th class="bg-[#27272A] text-sm sm:text-[1rem] whitespace-nowrap text-white text-start font-medium bg-[#27272A] border-b border-[#27272A]"> Actual </th>
-                    {#each tableDataActual as item}
-                      <td class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]">
-                        {item?.val === "0.00" || item?.val === null || item?.val === 0 ? "-" : abbreviateNumber(item?.val)}
-                      </td>
-                    {/each}
-                  </tr>
+                <tr class="bg-[#27272A] border-b-[#27272A]">
+                  <th
+                    class="bg-[#27272A] text-sm sm:text-[1rem] whitespace-nowrap text-white text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                  >
+                    Actual
+                  </th>
+                  {#each tableDataActual as item}
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]"
+                    >
+                      {item?.val === "0.00" ||
+                      item?.val === null ||
+                      item?.val === 0
+                        ? "-"
+                        : abbreviateNumber(item?.val)}
+                    </td>
+                  {/each}
+                </tr>
 
-                  <tr class="bg-[#09090B] border-b-[#09090B]">
-                    <th class="bg-[#09090B] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#09090B]"> % Change </th>
-                    {#each tableDataActual as item, index}
-                      <td class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]">
-                        {#if index === 0 || tableDataActual?.length === 0}
-                          -
-                        {:else if item?.val === null}
-                          {#if tableDataForecast[index]?.val - tableDataForecast[index - 1]?.val > 0}
-                            <span class="text-orange-400">
-                              {(((tableDataForecast[index]?.val - tableDataForecast[index - 1]?.val) / Math.abs(tableDataForecast[index - 1]?.val)) * 100)?.toFixed(2)}%&#42;
-                            </span>
-                          {:else if tableDataForecast[index]?.val - tableDataForecast[index - 1]?.val < 0}
-                            <span class="text-orange-400">
-                              {(((tableDataForecast[index]?.val - tableDataForecast[index - 1]?.val) / Math.abs(tableDataForecast[index - 1]?.val)) * 100)?.toFixed(2)}%&#42;
-                            </span>
-                          {/if}
-                        {:else if item?.val - tableDataActual[index - 1]?.val > 0}
-                          <span class="text-[#37C97D]">
-                            {(((item?.val - tableDataActual[index - 1]?.val) / Math.abs(tableDataActual[index - 1]?.val)) * 100)?.toFixed(2)}%
+                <tr class="bg-[#09090B] border-b-[#09090B]">
+                  <th
+                    class="bg-[#09090B] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#09090B]"
+                  >
+                    % Change
+                  </th>
+                  {#each tableDataActual as item, index}
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                    >
+                      {#if index === 0 || tableDataActual?.length === 0}
+                        -
+                      {:else if item?.val === null}
+                        {#if tableDataForecast[index]?.val - tableDataForecast[index - 1]?.val > 0}
+                          <span class="text-orange-400">
+                            {(
+                              ((tableDataForecast[index]?.val -
+                                tableDataForecast[index - 1]?.val) /
+                                Math.abs(tableDataForecast[index - 1]?.val)) *
+                              100
+                            )?.toFixed(2)}%&#42;
                           </span>
-                        {:else if item?.val - tableDataActual[index - 1]?.val < 0}
-                          <span class="text-[#FF2F1F]">
-                            {(((item?.val - tableDataActual[index - 1]?.val) / Math.abs(tableDataActual[index - 1]?.val)) * 100)?.toFixed(2)}%
+                        {:else if tableDataForecast[index]?.val - tableDataForecast[index - 1]?.val < 0}
+                          <span class="text-orange-400">
+                            {(
+                              ((tableDataForecast[index]?.val -
+                                tableDataForecast[index - 1]?.val) /
+                                Math.abs(tableDataForecast[index - 1]?.val)) *
+                              100
+                            )?.toFixed(2)}%&#42;
                           </span>
-                        {:else}
-                          0.00%
                         {/if}
+                      {:else if item?.val - tableDataActual[index - 1]?.val > 0}
+                        <span class="text-[#00FC50]">
+                          {(
+                            ((item?.val - tableDataActual[index - 1]?.val) /
+                              Math.abs(tableDataActual[index - 1]?.val)) *
+                            100
+                          )?.toFixed(2)}%
+                        </span>
+                      {:else if item?.val - tableDataActual[index - 1]?.val < 0}
+                        <span class="text-[#FF2F1F]">
+                          {(
+                            ((item?.val - tableDataActual[index - 1]?.val) /
+                              Math.abs(tableDataActual[index - 1]?.val)) *
+                            100
+                          )?.toFixed(2)}%
+                        </span>
+                      {:else}
+                        0.00%
+                      {/if}
+                    </td>
+                  {/each}
+                </tr>
+
+                {#if displayData === "EPS"}
+                  <tr class="bg-[#27272A] border-b-[#27272A]">
+                    <th
+                      class="bg-[#27272A] text-sm sm:text-[1rem] whitespace-nowrap text-white text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                      >Forward PE</th
+                    >
+                    {#each tableDataForecast as item}
+                      <td
+                        class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]"
+                      >
+                        {item?.forwardPe === "0.00" ||
+                        item?.forwardPe === null ||
+                        item?.forwardPe === 0
+                          ? "-"
+                          : abbreviateNumber(item.forwardPe)}
                       </td>
                     {/each}
                   </tr>
 
-                  {#if displayData === "EPS"}
-                    <tr class="bg-[#27272A] border-b-[#27272A]">
-                      <th class="bg-[#27272A] text-sm sm:text-[1rem] whitespace-nowrap text-white text-start font-medium bg-[#27272A] border-b border-[#27272A]">Forward PE</th>
-                      {#each tableDataForecast as item}
-                        <td class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]">
-                          {item?.forwardPe === "0.00" || item?.forwardPe === null || item?.forwardPe === 0 ? "-" : abbreviateNumber(item.forwardPe)}
-                        </td>
-                      {/each}
-                    </tr>
+                  <tr class="odd:bg-[#09090B] border-b-[#09090B]">
+                    <th
+                      class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                      >No. Analysts</th
+                    >
+                    {#each tableDataForecast as item}
+                      <td
+                        class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                      >
+                        {item?.numOfAnalysts === (null || 0)
+                          ? "-"
+                          : item?.numOfAnalysts}
+                      </td>
+                    {/each}
+                  </tr>
+                {:else}
+                  <tr class="bg-[#27272A] border-b-[#27272A]">
+                    <th
+                      class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                    >
+                      No. Analysts
+                    </th>
+                    {#each tableDataForecast as item}
+                      <td
+                        class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]"
+                      >
+                        {item?.numOfAnalysts === (null || 0)
+                          ? "-"
+                          : item?.numOfAnalysts}
+                      </td>
+                    {/each}
+                  </tr>
+                {/if}
+              </tbody>
+            </table>
+          </div>
 
-                    <tr class="odd:bg-[#09090B] border-b-[#09090B]">
-                      <th class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]">No. Analysts</th>
-                      {#each tableDataForecast as item}
-                        <td class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]">
-                          {item?.numOfAnalysts === (null || 0) ? "-" : item?.numOfAnalysts}
-                        </td>
-                      {/each}
-                    </tr>
-                  {:else}
-                    <tr class="bg-[#27272A] border-b-[#27272A]">
-                      <th class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium bg-[#27272A] border-b border-[#27272A]"> No. Analysts </th>
-                      {#each tableDataForecast as item}
-                        <td class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]">
-                          {item?.numOfAnalysts === (null || 0) ? "-" : item?.numOfAnalysts}
-                        </td>
-                      {/each}
-                    </tr>
-                  {/if}
-                </tbody>
-              </table>
-            </div>
-
-            <div class="text-orange-400 text-xs sm:text-sm mt-2">&#42; This value depends on the forecast</div>
-            <!--
+          <div class="text-orange-400 text-xs sm:text-sm mt-2">
+            &#42; This value depends on the forecast
+          </div>
+          <!--
             <div class="mt-5 text-gray-100 text-sm sm:text-[1rem] sm:rounded-lg h-auto border border-slate-800 p-4">
               <svg class="w-5 h-5 inline-block mr-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                 ><path fill="#a474f6" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16" /></svg
@@ -429,22 +553,22 @@ function findIndex(data) {
               For the current Fiscal Year we use available quarterly data. Complete annual data, used to compare against analyst estimates, is only finalized after the year ends.
             </div>
             -->
-          {/if}
-        {:else}
-          <div class="flex justify-center items-center h-80">
-            <div class="relative">
-              <label class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <span class="loading loading-spinner loading-md text-gray-400"></span>
-              </label>
-            </div>
-          </div>
         {/if}
-
+      {:else}
+        <div class="flex justify-center items-center h-80">
+          <div class="relative">
+            <label
+              class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            >
+              <span class="loading loading-spinner loading-md text-gray-400"
+              ></span>
+            </label>
+          </div>
+        </div>
+      {/if}
     </div>
   </main>
 </section>
-
-
 
 <style>
   .app {

@@ -74,7 +74,7 @@
         <div class="flex flex-row m-auto w-full">
           {#if consensusRating === "Buy" || consensusRating === "Strong Buy"}
             <span
-              class="text-start font-semibold text-[#37C97D] mr-auto ml-5 mt-2 text-xl"
+              class="text-start font-semibold text-[#00FC50] mr-auto ml-5 mt-2 text-xl"
             >
               {consensusRating}
             </span>
@@ -106,7 +106,7 @@
           >
         {:else if changesPercentage >= 0}
           The Stock Price has an upside of
-          <span style="color: #37C97D; font-weight: 500"
+          <span style="color: #00FC50; font-weight: 500"
             >{abbreviateNumber(Math.abs(changesPercentage))}%</span
           >
         {/if}
@@ -130,7 +130,7 @@
               </span>
             </div>
             <progress
-              class="progress bg-[#3B3D3F] w-11/12 [&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]"
+              class="progress bg-[#3B3D3F] w-11/12 [&::-webkit-progress-value]:bg-[#00FC50] [&::-moz-progress-bar]:bg-[#00FC50]"
               value={buyCount}
               max="100"
             ></progress>

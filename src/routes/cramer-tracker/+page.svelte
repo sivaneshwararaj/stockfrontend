@@ -366,7 +366,7 @@
                             'Buy',
                           ].includes(item?.sentiment) ||
                           item?.sentiment?.includes('Buy')
-                            ? 'text-[#37C97D]'
+                            ? 'text-[#00FC50]'
                             : ['Bearish', 'Sell', 'Trim'].includes(
                                   item?.sentiment,
                                 ) ||
@@ -379,7 +379,7 @@
 
                         <td
                           class="text-sm sm:text-[1rem] {item?.returnSince >= 0
-                            ? 'text-[#37C97D]'
+                            ? 'text-[#00FC50]'
                             : 'text-[#FF2F1F]'} text-end"
                         >
                           {item?.returnSince > 0 ? "+" : ""}{item?.returnSince}%

@@ -873,7 +873,7 @@
 
                         <td class="text-white text-sm sm:text-[1rem] text-end">
                           {#if item?.changesPercentage >= 0}
-                            <span class="text-[#37C97D]"
+                            <span class="text-[#00FC50]"
                               >+{item?.changesPercentage >= 1000
                                 ? abbreviateNumber(item?.changesPercentage)
                                 : item?.changesPercentage?.toFixed(2)}%</span

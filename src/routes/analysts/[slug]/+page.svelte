@@ -378,7 +378,7 @@
                                 'Strong Buy',
                                 'Buy',
                               ]?.includes(item?.rating_current)
-                                ? 'text-[#37C97D]'
+                                ? 'text-[#00FC50]'
                                 : item?.rating_current === 'Hold'
                                   ? 'text-[#FF7070]'
                                   : ['Strong Sell', 'Sell']?.includes(

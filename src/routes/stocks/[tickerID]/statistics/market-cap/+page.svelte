@@ -37,36 +37,36 @@
       {
         threshold: 200 * BILLION,
         name: "Mega Cap",
-        link: "/list/mega-cap-stocks",
+        link: "/list/market-cap/mega-cap-stocks",
       },
       {
         minThreshold: 10 * BILLION,
         maxThreshold: 200 * BILLION,
         name: "Large Cap",
-        link: "/list/large-cap-stocks",
+        link: "/list/market-cap/large-cap-stocks",
       },
       {
         minThreshold: 2 * BILLION,
         maxThreshold: 10 * BILLION,
         name: "Mid Cap",
-        link: "/list/mid-cap-stocks",
+        link: "/list/market-cap/mid-cap-stocks",
       },
       {
         minThreshold: 300 * MILLION,
         maxThreshold: 2 * BILLION,
         name: "Small Cap",
-        link: "/list/small-cap-stocks",
+        link: "/list/market-cap/small-cap-stocks",
       },
       {
         minThreshold: 50 * MILLION,
         maxThreshold: 300 * MILLION,
         name: "Micro Cap",
-        link: "/list/micro-cap-stocks",
+        link: "/list/market-cap/micro-cap-stocks",
       },
       {
         maxThreshold: 50 * MILLION,
         name: "Nano Cap",
-        link: "/list/nano-cap-stocks",
+        link: "/list/market-cap/nano-cap-stocks",
       },
     ];
 
@@ -671,7 +671,7 @@
                             {#if index + 1 - tableList?.length === 0}
                               -
                             {:else if item?.marketCap - tableList[index + 1]?.marketCap > 0}
-                              <span class="text-[#37C97D]">
+                              <span class="text-[#00FC50]">
                                 +{(
                                   ((item?.marketCap -
                                     tableList[index + 1]?.marketCap) /

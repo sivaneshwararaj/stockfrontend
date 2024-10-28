@@ -157,7 +157,7 @@
                     {#each growthValues[index] as growthValue}
                       <td
                         class="text-sm sm:text-[1rem] text-end {growthValue > 0
-                          ? 'text-[#37C97D]'
+                          ? 'text-[#00FC50]'
                           : growthValue < 0
                             ? 'text-[#FF2F1F]'
                             : 'text-white'} font-medium border-b border-[#09090B]"
@@ -231,7 +231,7 @@
                         <td
                           class="text-sm sm:text-[1rem] text-end {growthValue >
                           0
-                            ? 'text-[#37C97D]'
+                            ? 'text-[#00FC50]'
                             : growthValue < 0
                               ? 'text-[#FF2F1F]'
                               : 'text-white'} font-medium border-b border-[#09090B]"

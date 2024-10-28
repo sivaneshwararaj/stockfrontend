@@ -317,7 +317,7 @@
                           class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
                         >
                           {#if Number(item?.upside) >= 0}
-                            <span class="text-[#37C97D]"
+                            <span class="text-[#00FC50]"
                               >+{Number(item?.upside)?.toFixed(2)}%</span
                             >
                           {:else}

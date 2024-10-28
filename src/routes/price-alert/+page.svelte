@@ -531,7 +531,7 @@
                           class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
                         >
                           {#if item?.changesPercentage >= 0}
-                            <span class="text-[#37C97D]"
+                            <span class="text-[#00FC50]"
                               >+{item?.changesPercentage?.toFixed(2)}%</span
                             >
                           {:else}

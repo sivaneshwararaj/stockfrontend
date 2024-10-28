@@ -207,7 +207,7 @@
                   >
                     {#if item?.return >= 0 && item?.return !== null}
                       <span
-                        class="inline-block text-[#37C97D] text-sm sm:text-[1rem] whitespace-nowrap"
+                        class="inline-block text-[#00FC50] text-sm sm:text-[1rem] whitespace-nowrap"
                         >+{abbreviateNumber(item?.return)}%</span
                       >
                     {:else if item?.return < 0 && item?.return !== null}

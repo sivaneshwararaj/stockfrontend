@@ -27,27 +27,27 @@
     },
     {
       title: "Mega-Cap Stocks",
-      link: "/list/mega-cap-stocks",
+      link: "/list/market-cap/mega-cap-stocks",
     },
     {
       title: "Large-Cap Stocks",
-      link: "/list/large-cap-stocks",
+      link: "/list/market-cap/large-cap-stocks",
     },
     {
       title: "Mid-Cap Stocks",
-      link: "/list/mid-cap-stocks",
+      link: "/list/market-cap/mid-cap-stocks",
     },
     {
       title: "Small-Cap Stocks",
-      link: "/list/small-cap-stocks",
+      link: "/list/market-cap/small-cap-stocks",
     },
     {
       title: "Micro-Cap Stocks",
-      link: "/list/micro-cap-stocks",
+      link: "/list/market-cap/micro-cap-stocks",
     },
     {
       title: "Nano-Cap Stocks",
-      link: "/list/nano-cap-stocks",
+      link: "/list/market-cap/nano-cap-stocks",
     },
     {
       title: "All Stocks Listed on the NASDAQ",
@@ -218,7 +218,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs ml-3 lg:ml-10">
     <ul>
@@ -273,7 +273,7 @@
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                   <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription 🔥
+                    Pro Subscription
                   </h2>
                   <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
@@ -293,7 +293,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Watchlist ⭐
+                  Watchlist
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
@@ -312,7 +312,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Stock Screener 🔎
+                  Stock Screener
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>

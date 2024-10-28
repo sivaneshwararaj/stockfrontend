@@ -1,33 +1,31 @@
-<script lang='ts'>
-import { numberOfUnreadNotification, globalForm } from '$lib/store';
-import { openLemonSqueezyUrl } from '$lib/lemonsqueezy';
-//import Discount from '$lib/components/Discount.svelte';
-import { onMount } from 'svelte';
+<script lang="ts">
+  import { numberOfUnreadNotification, globalForm } from "$lib/store";
+  import { openLemonSqueezyUrl } from "$lib/lemonsqueezy";
+  //import Discount from '$lib/components/Discount.svelte';
+  import { onMount } from "svelte";
 
-//import proTierLogo from "$lib/images/pro_tier_logo.png";
+  //import proTierLogo from "$lib/images/pro_tier_logo.png";
 
-export let data;
-export let form;
+  export let data;
+  export let form;
 
-let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-//let mode = false;
-const emailAddress = 'support@stocknear.com';
+  //let mode = false;
+  const emailAddress = "support@stocknear.com";
 
-/*
+  /*
 function toggleMode()
 {
     mode = !mode;
 }
 */
 
-let LoginPopup;
+  let LoginPopup;
 
-onMount(async () => {
-  
-    if(!data?.user)
-    {
-      LoginPopup = (await import('$lib/components/LoginPopup.svelte')).default;
+  onMount(async () => {
+    if (!data?.user) {
+      LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
     }
 
     /*
@@ -41,76 +39,78 @@ onMount(async () => {
         closePopup?.dispatchEvent(new MouseEvent('click'))
     }
     */
-    
+  });
 
-});
+  async function purchasePlan(subscriptionType: string = "") {
+    if (data?.user) {
+      let subId = "";
 
+      if (subscriptionType === "lifeTime") {
+        subId = import.meta.env.VITE_LEMON_SQUEEZY_LIFE_TIME_ACCESS_ID;
+      } else {
+        subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_ID;
+      }
 
+      const isDarkMode =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const checkoutUrl =
+        `https://stocknear.lemonsqueezy.com/checkout/buy/${subId}?` +
+        new URLSearchParams({
+          embed: "1",
+          dark: isDarkMode ? "1" : "0",
+          "checkout[email]": data?.user?.email,
+          "checkout[name]": data?.user?.username,
+          "checkout[custom][userId]": data?.user?.id,
+        }).toString();
 
-async function purchasePlan(subscriptionType:string='') {
-    if(data?.user) {
-        let subId = '';
-
-        if(subscriptionType === 'lifeTime') {
-            subId = import.meta.env.VITE_LEMON_SQUEEZY_LIFE_TIME_ACCESS_ID
-
-        }
-        else {
-            subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_ID
-        }
-
-        const isDarkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const checkoutUrl =
-            `https://stocknear.lemonsqueezy.com/checkout/buy/${subId}?` +
-            new URLSearchParams({
-                embed: "1",
-                dark: isDarkMode ? "1" : "0",
-                "checkout[email]": data?.user?.email,
-                "checkout[name]": data?.user?.username,
-                "checkout[custom][userId]": data?.user?.id,
-            }).toString();
-
-        openLemonSqueezyUrl(checkoutUrl);
-        //goto(`https://stocknear.lemonsqueezy.com/checkout/buy/${subId}`)
+      openLemonSqueezyUrl(checkoutUrl);
+      //goto(`https://stocknear.lemonsqueezy.com/checkout/buy/${subId}`)
     }
-}
-
+  }
 </script>
 
 <svelte:head>
+  <meta charset="utf-8" />
 
+  <meta name="viewport" content="width=device-width" />
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Pricing
+    · stocknear
+  </title>
+  <meta
+    name="description"
+    content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}
+  />
 
-<meta charset="utf-8" />
+  <!-- Other meta tags -->
+  <meta property="og:title" content={`Pricing · stocknear`} />
+  <meta
+    property="og:description"
+    content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}
+  />
+  <meta property="og:type" content="website" />
+  <!-- Add more Open Graph meta tags as needed -->
 
-<meta name="viewport" content="width=device-width" />
-<title>
-  {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Pricing · stocknear
-</title>
-<meta name="description" content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`} />
+  <!-- Twitter specific meta tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={`Pricing · stocknear`} />
+  <meta
+    name="twitter:description"
+    content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}
+  />
+  <!-- Add more Twitter meta tags as needed -->
 
-<!-- Other meta tags -->
-<meta property="og:title" content={`Pricing · stocknear`}/>
-<meta property="og:description" content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`} />
-<meta property="og:type" content="website"/>
-<!-- Add more Open Graph meta tags as needed -->
-
-<!-- Twitter specific meta tags -->
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content={`Pricing · stocknear`}/>
-<meta name="twitter:description" content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`} />
-<!-- Add more Twitter meta tags as needed -->
-
-
-<script>window.lemonSqueezyAffiliateConfig = { store: "stocknear" };</script>
-<script src="https://lmsqueezy.com/affiliate.js" defer></script>
-
-
+  <script>
+    window.lemonSqueezyAffiliateConfig = { store: "stocknear" };
+  </script>
+  <script src="https://lmsqueezy.com/affiliate.js" defer></script>
 </svelte:head>
 
-
-<section class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 pb-40 m-auto">
-
-    <!--
+<section
+  class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 pb-40 m-auto"
+>
+  <!--
 {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
   <div class="mb-5 -mt-10 sm:-mt-5 relative sm:rounded isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
   <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
@@ -130,22 +130,24 @@ async function purchasePlan(subscriptionType:string='') {
 
 -->
 
-    <div class="px-3">
-        <div class="mx-auto text-center mb-8 ">
-            
-            
-            
-            
-            <h1 class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#E8BB28] to-purple-500 bg-clip-text text-transparent pb-4">
-                Flexible plans and features
-            </h1>
-            <div class="w-full flex justify-center items-center h-16 bg-[#09090B] rounded-lg">
-                <p class="font-medium font-serif text-center w-3/4 sm:w-full text-white text-[1rem] sm:text-xl italic">
-                    Simple pricing. No hidden fees. Cancel anytime.
-                </p>
-            </div>
+  <div class="px-3">
+    <div class="mx-auto text-center mb-8">
+      <h1
+        class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#E8BB28] to-purple-500 bg-clip-text text-transparent pb-4"
+      >
+        Flexible plans and features
+      </h1>
+      <div
+        class="w-full flex justify-center items-center h-16 bg-[#09090B] rounded-lg"
+      >
+        <p
+          class="font-medium font-serif text-center w-3/4 sm:w-full text-white text-[1rem] sm:text-xl italic"
+        >
+          Simple pricing. No hidden fees. Cancel anytime.
+        </p>
+      </div>
 
-            <!--
+      <!--
             <div class="flex flex-row items-center justify-center mt-6 pb-5">
                 <span class="text-sm font-semibold text-white mr-3">
                     Pay Monthly
@@ -168,133 +170,322 @@ async function purchasePlan(subscriptionType:string='') {
               
             </div>
             -->
-            
-         
+    </div>
+
+    <!--<Discount/>-->
+
+    <div
+      class="flex flex-col sm:flex-row items-center gap-10 sm:gap-5 w-full m-auto mt-10 sm:mt-20"
+    >
+      <!-- Pricing Card -->
+      <div
+        class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-[#09090B] rounded-lg"
+      >
+        <div class="flex flex-row items-center justify-start items-center mt-2">
+          <img
+            src={cloudFrontUrl + "/assets/free_tier_logo.png"}
+            class="w-16 transform ease-in-out duration-300"
+            loading="lazy"
+            alt="free tier"
+          />
+          <h2 class="m-auto sm:ml-8 text-4xl font-bold text-white">
+            Free Tier
+          </h2>
         </div>
 
+        <div class="flex flex-col mt-8 mb-6">
+          <div class="flex flex-row items-center">
+            <span class="mr-2 text-4xl font-bold">$0</span>
+            <span class="text-gray-300 text-xl">/month</span>
+          </div>
+        </div>
 
-        <!--<Discount/>-->
+        <ol class="mb-8 space-y-4 text-left">
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Stock Screener Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Financial history.</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Hedge Funds Portfolio.</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Wall Street Analysts Ratings</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Watchlist Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Price Alerts</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Options Data</span
+            >
+          </li>
+        </ol>
 
+        <div class="divider"></div>
+        <div class="m-auto w-full text-white font-medium text-sm mb-6">
+          + Limited feature updates
+        </div>
 
+        {#if !data?.user}
+          <label
+            for="userLogin"
+            class="py-3 cursor-pointer rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+          >
+            Get Sign In
+            <span
+              class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+            >
+              <svg
+                class="w-4 h-4 inline-block"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><g transform="rotate(90 12 12)"
+                  ><g fill="none"
+                    ><path
+                      d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                    /><path
+                      fill="white"
+                      d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                    /></g
+                  ></g
+                ></svg
+              >
+            </span>
+          </label>
+        {/if}
+      </div>
+      <!--End Pricing Card-->
 
+      <!-- Pricing Card -->
+      <div
+        class="sm:order-2 rounded-lg box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]"
+      >
+        <!--<div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right"><span class="text-white">Discount</span></div>-->
 
-        <div class="flex flex-col sm:flex-row items-center gap-10 sm:gap-5 w-full m-auto mt-10 sm:mt-20">
-            <!-- Pricing Card -->
-            <div class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-[#09090B] rounded-lg">
+        <div
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row items-center bg-red-600 p-2"
+        >
+          <svg
+            class="w-6 h-6 mr-2"
+            fill="#D6D6DC"
+            viewBox="0 0 48 48"
+            xmlns="http://www.w3.org/2000/svg"
+            stroke=""
+            ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g><g id="SVGRepo_iconCarrier">
+              <title>star-solid</title>
+              <g id="Layer_2" data-name="Layer 2">
+                <g id="invisible_box" data-name="invisible box">
+                  <rect width="48" height="48" fill="none"></rect>
+                </g>
+                <g id="icons_Q2" data-name="icons Q2">
+                  <path
+                    d="M24,3a2.1,2.1,0,0,0-1.8,1.1L16.5,15.7,3.7,17.5A2.1,2.1,0,0,0,2.6,21l9.2,8.9L9.7,42.7A2,2,0,0,0,11.6,45l1-.2,11.4-6,11.4,6,1,.2a2,2,0,0,0,1.9-2.3L36.2,29.9,45.4,21a2.1,2.1,0,0,0-1.1-3.5L31.5,15.7,25.8,4.1A2.1,2.1,0,0,0,24,3Z"
+                  ></path>
+                </g>
+              </g>
+            </g></svg
+          >
+          <span class="text-white text-md font-medium"> Most Popular </span>
+        </div>
 
+        <div class="flex flex-row justify-start items-center mt-10 mb-3">
+          <img
+            src={cloudFrontUrl + "/assets/pro_tier_logo.png"}
+            class="w-28 transform ease-in-out duration-300"
+            style="transform: rotate(23deg);"
+            loading="lazy"
+            alt="pro tier"
+          />
+          <h2 class="text-4xl font-bold text-white">Pro Tier</h2>
+        </div>
 
-                <div class="flex flex-row items-center justify-start items-center mt-2">
-                    <img src={cloudFrontUrl+"/assets/free_tier_logo.png"} class="w-16 transform ease-in-out duration-300" loading="lazy" alt="free tier" />
-                    <h2 class="m-auto sm:ml-8 text-4xl font-bold text-white">
-                        Free Tier
-                    </h2>
-                </div>
-                
-
-
-                <div class="flex flex-col mt-8 mb-6">
-
-                    <div class="flex flex-row items-center">
-                        <span class="mr-2 text-4xl font-bold">$0</span>
-                        <span class="text-gray-300 text-xl">/month</span>
-                    </div> 
-                </div>
-
-
-                <ol class="mb-8 space-y-4 text-left">
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Stock Screener Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Financial history.</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Hedge Funds Portfolio.</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Wall Street Analysts Ratings</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Watchlist Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Price Alerts</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Options Data</span>
-                    </li>
-                </ol>
-
-        
-
-                <div class="divider"></div>
-                <div class="m-auto w-full text-white font-medium text-sm mb-6">
-                    + Limited feature updates
-                </div>  
-
-                {#if !data?.user}
-                <label for="userLogin" class="py-3 cursor-pointer rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
-                    Get Sign In 
-                   <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                       <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                   </span>
-                </label>
-                {/if}
-
-               
-            </div>
-            <!--End Pricing Card-->
-            
-        
-
-            <!-- Pricing Card -->
-            <div class="sm:order-2 rounded-lg box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]">
-                <!--<div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right"><span class="text-white">Discount</span></div>-->
-
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row items-center bg-red-600 p-2">
-                    <svg class="w-6 h-6 mr-2" fill="#D6D6DC" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" stroke=""><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>star-solid</title> <g id="Layer_2" data-name="Layer 2"> <g id="invisible_box" data-name="invisible box"> <rect width="48" height="48" fill="none"></rect> </g> <g id="icons_Q2" data-name="icons Q2"> <path d="M24,3a2.1,2.1,0,0,0-1.8,1.1L16.5,15.7,3.7,17.5A2.1,2.1,0,0,0,2.6,21l9.2,8.9L9.7,42.7A2,2,0,0,0,11.6,45l1-.2,11.4-6,11.4,6,1,.2a2,2,0,0,0,1.9-2.3L36.2,29.9,45.4,21a2.1,2.1,0,0,0-1.1-3.5L31.5,15.7,25.8,4.1A2.1,2.1,0,0,0,24,3Z"></path> </g> </g> </g></svg>
-                    <span class="text-white text-md font-medium">
-                        Most Popular
-                    </span>
-                </div>                
-
-                <div class="flex flex-row justify-start items-center mt-10 mb-3">
-                    <img src={cloudFrontUrl+"/assets/pro_tier_logo.png"} class="w-28 transform ease-in-out duration-300" style="transform: rotate(23deg);" loading="lazy" alt="pro tier" />
-                    <h2 class="text-4xl font-bold text-white">
-                        Pro Tier
-                    </h2>
-                </div>
-                
-
-
-                <div class="flex flex-col  mb-6 items-center">
-
-                    <div class="flex flex-row items-center">
-                        <span class="mr-2 text-4xl font-bold">$1.99</span>
-                        <span class="text-white text-xl">/month</span>
-                    </div>
-                    <div class="text-white">
-                        (Billed Annually)
-                    </div>
-                     <div class="flex items-center mt-2 text-[1rem] text-center">
-                          less than a
-                        <svg class="w-6 h-6 inline-block ml-2" viewBox="0 0 47.5 47.5" id="svg2" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs id="defs6"> <clipPath clipPathUnits="userSpaceOnUse" id="clipPath16"> <path d="M 0,38 38,38 38,0 0,0 0,38 Z" id="path18"></path> </clipPath> <clipPath clipPathUnits="userSpaceOnUse" id="clipPath40"> <path d="M 0,38 38,38 38,0 0,0 0,38 Z" id="path42"></path> </clipPath> </defs> <g id="g10" transform="matrix(1.25,0,0,-1.25,0,47.5)"> <g id="g12"> <g clip-path="url(#clipPath16)" id="g14"> <g id="g20" transform="translate(37,11)"> <path d="m 0,0 c 0,-5.522 -8.059,-10 -18,-10 -9.941,0 -18,4.478 -18,10 0,5.522 8.059,10 18,10 C -8.059,10 0,5.522 0,0" id="path22" style="fill:#99aab5;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g24" transform="translate(37,13)"> <path d="m 0,0 c 0,-5.522 -8.059,-10 -18,-10 -9.941,0 -18,4.478 -18,10 0,5.522 8.059,10 18,10 C -8.059,10 0,5.522 0,0" id="path26" style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g28" transform="translate(19,6)"> <path d="m 0,0 c -14.958,0 -17,15 -17,19 l 34,0 C 17,17 15.042,0 0,0" id="path30" style="fill:#f5f8fa;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g32" transform="translate(32.8818,30.0483)"> <path d="M 0,0 C -1.357,0.938 -3.103,1.694 -5.121,2.25 -3.246,2.826 -0.57,2.559 0,0 M 2.503,-2.692 C 4.945,7.43 -7.278,5.014 -9.701,3.106 c -1.34,0.149 -2.736,0.234 -4.181,0.234 -9.389,0 -17,-3.228 -17,-8.444 0,-5.216 7.611,-9.444 17,-9.444 9.389,0 17,4.228 17,9.444 0,0.862 -0.225,1.664 -0.615,2.412" id="path34" style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> </g> </g> <g id="g36"> <g clip-path="url(#clipPath40)" id="g38"> <g id="g44" transform="translate(34,24)"> <path d="m 0,0 c 0,-3.866 -6.716,-7 -15,-7 -8.284,0 -15,3.134 -15,7 0,3.866 6.716,7 15,7 C -6.716,7 0,3.866 0,0" id="path46" style="fill:#8a4b38;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g48" transform="translate(21,20)"> <path d="m 0,0 c -0.256,0 -0.512,0.098 -0.707,0.293 -2.337,2.337 -2.376,4.885 -0.125,8.262 0.739,1.109 0.9,2.245 0.478,3.377 -0.461,1.235 -1.438,1.996 -1.731,2.076 -0.553,0 -0.958,0.444 -0.958,0.996 C -3.043,15.557 -2.552,16 -2,16 -1.003,16 0.395,14.847 1.183,13.375 2.217,11.442 2.093,9.336 0.832,7.445 -1.129,4.503 -0.699,3.113 0.707,1.707 1.098,1.316 1.098,0.684 0.707,0.293 0.512,0.098 0.256,0 0,0" id="path50" style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> <g id="g52" transform="translate(15,22)"> <path d="m 0,0 c -0.256,0 -0.512,0.098 -0.707,0.293 -2.337,2.337 -2.376,4.885 -0.125,8.262 0.727,1.091 0.894,2.082 0.494,2.947 -0.444,0.961 -1.431,1.469 -1.684,1.499 -0.552,0 -0.989,0.447 -0.989,0.999 0,0.553 0.459,1 1.011,1 0.997,0 2.584,-0.974 3.36,-2.423 C 1.841,11.678 2.413,9.816 0.832,7.445 -1.129,4.503 -0.699,3.113 0.707,1.707 1.098,1.316 1.098,0.684 0.707,0.293 0.512,0.098 0.256,0 0,0" id="path54" style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none"></path> </g> </g> </g> </g> </g></svg>
-                    </div>
-                    <!--
+        <div class="flex flex-col mb-6 items-center">
+          <div class="flex flex-row items-center">
+            <span class="mr-2 text-4xl font-bold">$1.99</span>
+            <span class="text-white text-xl">/month</span>
+          </div>
+          <div class="text-white">(Billed Annually)</div>
+          <div class="flex items-center mt-2 text-[1rem] text-center">
+            less than a
+            <svg
+              class="w-6 h-6 inline-block ml-2"
+              viewBox="0 0 47.5 47.5"
+              id="svg2"
+              version="1.1"
+              xml:space="preserve"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:cc="http://creativecommons.org/ns#"
+              xmlns:dc="http://purl.org/dc/elements/1.1/"
+              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+              xmlns:svg="http://www.w3.org/2000/svg"
+              fill="#ffffff"
+              ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g><g id="SVGRepo_iconCarrier">
+                <defs id="defs6">
+                  <clipPath clipPathUnits="userSpaceOnUse" id="clipPath16">
+                    <path d="M 0,38 38,38 38,0 0,0 0,38 Z" id="path18"></path>
+                  </clipPath>
+                  <clipPath clipPathUnits="userSpaceOnUse" id="clipPath40">
+                    <path d="M 0,38 38,38 38,0 0,0 0,38 Z" id="path42"></path>
+                  </clipPath>
+                </defs>
+                <g id="g10" transform="matrix(1.25,0,0,-1.25,0,47.5)">
+                  <g id="g12">
+                    <g clip-path="url(#clipPath16)" id="g14">
+                      <g id="g20" transform="translate(37,11)">
+                        <path
+                          d="m 0,0 c 0,-5.522 -8.059,-10 -18,-10 -9.941,0 -18,4.478 -18,10 0,5.522 8.059,10 18,10 C -8.059,10 0,5.522 0,0"
+                          id="path22"
+                          style="fill:#99aab5;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        ></path>
+                      </g>
+                      <g id="g24" transform="translate(37,13)">
+                        <path
+                          d="m 0,0 c 0,-5.522 -8.059,-10 -18,-10 -9.941,0 -18,4.478 -18,10 0,5.522 8.059,10 18,10 C -8.059,10 0,5.522 0,0"
+                          id="path26"
+                          style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        ></path>
+                      </g>
+                      <g id="g28" transform="translate(19,6)">
+                        <path
+                          d="m 0,0 c -14.958,0 -17,15 -17,19 l 34,0 C 17,17 15.042,0 0,0"
+                          id="path30"
+                          style="fill:#f5f8fa;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        ></path>
+                      </g>
+                      <g id="g32" transform="translate(32.8818,30.0483)">
+                        <path
+                          d="M 0,0 C -1.357,0.938 -3.103,1.694 -5.121,2.25 -3.246,2.826 -0.57,2.559 0,0 M 2.503,-2.692 C 4.945,7.43 -7.278,5.014 -9.701,3.106 c -1.34,0.149 -2.736,0.234 -4.181,0.234 -9.389,0 -17,-3.228 -17,-8.444 0,-5.216 7.611,-9.444 17,-9.444 9.389,0 17,4.228 17,9.444 0,0.862 -0.225,1.664 -0.615,2.412"
+                          id="path34"
+                          style="fill:#ccd6dd;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        ></path>
+                      </g>
+                    </g>
+                  </g>
+                  <g id="g36">
+                    <g clip-path="url(#clipPath40)" id="g38">
+                      <g id="g44" transform="translate(34,24)">
+                        <path
+                          d="m 0,0 c 0,-3.866 -6.716,-7 -15,-7 -8.284,0 -15,3.134 -15,7 0,3.866 6.716,7 15,7 C -6.716,7 0,3.866 0,0"
+                          id="path46"
+                          style="fill:#8a4b38;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        ></path>
+                      </g>
+                      <g id="g48" transform="translate(21,20)">
+                        <path
+                          d="m 0,0 c -0.256,0 -0.512,0.098 -0.707,0.293 -2.337,2.337 -2.376,4.885 -0.125,8.262 0.739,1.109 0.9,2.245 0.478,3.377 -0.461,1.235 -1.438,1.996 -1.731,2.076 -0.553,0 -0.958,0.444 -0.958,0.996 C -3.043,15.557 -2.552,16 -2,16 -1.003,16 0.395,14.847 1.183,13.375 2.217,11.442 2.093,9.336 0.832,7.445 -1.129,4.503 -0.699,3.113 0.707,1.707 1.098,1.316 1.098,0.684 0.707,0.293 0.512,0.098 0.256,0 0,0"
+                          id="path50"
+                          style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        ></path>
+                      </g>
+                      <g id="g52" transform="translate(15,22)">
+                        <path
+                          d="m 0,0 c -0.256,0 -0.512,0.098 -0.707,0.293 -2.337,2.337 -2.376,4.885 -0.125,8.262 0.727,1.091 0.894,2.082 0.494,2.947 -0.444,0.961 -1.431,1.469 -1.684,1.499 -0.552,0 -0.989,0.447 -0.989,0.999 0,0.553 0.459,1 1.011,1 0.997,0 2.584,-0.974 3.36,-2.423 C 1.841,11.678 2.413,9.816 0.832,7.445 -1.129,4.503 -0.699,3.113 0.707,1.707 1.098,1.316 1.098,0.684 0.707,0.293 0.512,0.098 0.256,0 0,0"
+                          id="path54"
+                          style="fill:#d99e82;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                        ></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g></svg
+            >
+          </div>
+          <!--
                     <div class="flex flex-col items-center">
                         <div class="flex flex-row items-center">
                             <span class="mr-2 text-[#FFF374] text-3xl font-bold">{mode ? '$124.75' : '$12.50'}</span>
@@ -306,7 +497,7 @@ async function purchasePlan(subscriptionType:string='') {
                     </div>
                     -->
 
-                    <!--
+          <!--
                     <div class="flex items-center mt-2 text-[1rem] text-center">
                         only ${mode ? (7.5/4)?.toFixed(2) : (9.99/4)?.toFixed(2)} / week, less than a
                         {#if mode}
@@ -316,90 +507,289 @@ async function purchasePlan(subscriptionType:string='') {
                         {/if}
                     </div>
                     -->
-                </div>
+        </div>
 
-            
+        <!-- List -->
 
-                 <!-- List -->
- 
-                 <ol class="mb-8 space-y-4 text-left">
+        <ol class="mb-8 space-y-4 text-left">
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Stock Screener Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Financial history</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Hedge Funds Portfolio</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Wall Street Analysts Ratings</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Watchlist Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Price Alerts</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Options Data</span
+            >
+          </li>
+          <!--
                     <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Stock Screener Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Financial history</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Hedge Funds Portfolio</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Wall Street Analysts Ratings</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Watchlist Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Price Alerts</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Options Data</span>
-                    </li>
-                    <!--
-                    <li class="flex items-center space-x-3 ">
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">{mode ? '14 Days Free Trial' : '30 days Free Trial'}  </span>
                     </li>
                     -->
-                </ol>
-                <div class="divider"></div>
-                <div class="m-auto w-full text-white font-medium text-sm mb-6">
-                    + Unlimited feature updates
-                </div>  
-                {#if data?.user?.tier === 'Pro' && !data?.user?.freeTrial}
-                <a class="py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-150 ease-in-out group" href="#">
-                    Active Plan
-               </a>
-               {:else if data?.user?.tier === 'Pro' && data?.user?.freeTrial === true}
-               <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan()} class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
-                    Get Pro
-                    <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                        <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                    </span>
-                </label>
-               {:else}
-                <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan()} class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
-                   Get Pro
-                    <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                        <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                    </span>
-                </label>
-                {/if}
+        </ol>
+        <div class="divider"></div>
+        <div class="m-auto w-full text-white font-medium text-sm mb-6">
+          + Unlimited feature updates
+        </div>
+        {#if data?.user?.tier === "Pro" && !data?.user?.freeTrial}
+          <a
+            class="py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-150 ease-in-out group"
+            href="#"
+          >
+            Active Plan
+          </a>
+        {:else if data?.user?.tier === "Pro" && data?.user?.freeTrial === true}
+          <label
+            for={!data?.user ? "userLogin" : ""}
+            on:click={() => purchasePlan()}
+            class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+          >
+            Get Pro
+            <span
+              class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+            >
+              <svg
+                class="w-4 h-4 inline-block"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><g transform="rotate(90 12 12)"
+                  ><g fill="none"
+                    ><path
+                      d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                    /><path
+                      fill="white"
+                      d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                    /></g
+                  ></g
+                ></svg
+              >
+            </span>
+          </label>
+        {:else}
+          <label
+            for={!data?.user ? "userLogin" : ""}
+            on:click={() => purchasePlan()}
+            class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+          >
+            Get Pro
+            <span
+              class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+            >
+              <svg
+                class="w-4 h-4 inline-block"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><g transform="rotate(90 12 12)"
+                  ><g fill="none"
+                    ><path
+                      d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                    /><path
+                      fill="white"
+                      d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                    /></g
+                  ></g
+                ></svg
+              >
+            </span>
+          </label>
+        {/if}
 
-                <div class="m-auto w-full text-white font-medium text-[¹rem] mt-4">
-                    30 Day Money Back Guarantee
-                </div>  
+        <div class="m-auto w-full text-white font-medium text-[¹rem] mt-4">
+          30 Day Money Back Guarantee
+        </div>
+      </div>
+      <!--End Pricing Card-->
 
-               
-            </div>
-            <!--End Pricing Card-->
-
-
-             <!--Start Pricing Card-->
-             <!--
+      <!--Start Pricing Card-->
+      <!--
              <div class="sm:h-[660px] sm:order-2 box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto ring-[1px] ring-gray-400 rounded-lg w-full text-center text-white">
 
                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row border-l border-r border-b border-gray-400 items-center p-2">
@@ -427,16 +817,16 @@ async function purchasePlan(subscriptionType:string='') {
                 <ol class="mb-8 space-y-4 text-left mt-6">
                     <li class="flex items-center space-x-3 ">
                         
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">Everything in Pro Tier.</span>
                     </li>
                     <li class="flex items-center space-x-3 ">
                         
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">Pay Once and use forever.</span>
                     </li>
                     <li class="flex items-center space-x-3 "> 
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">If you ❤️ Stocknear and want to support us, this is the best way.</span>
                     </li>
                 </ol>
@@ -469,70 +859,132 @@ async function purchasePlan(subscriptionType:string='') {
                
             </div>
             -->
-            <!--End Pricing Card-->
+      <!--End Pricing Card-->
+    </div>
 
+    <!--Feature Table-->
+    <section>
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-10">
+        <div class="py-12 md:py-20">
+          <!-- Section header -->
+          <div class="mx-auto text-center pb-12 md:pb-20">
+            <h2
+              class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60"
+            >
+              Compare plans by features
+            </h2>
+          </div>
 
-
-        </div>
-
-
-
-
-        <!--Feature Table-->
-        <section>
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-10">
-                <div class="py-12 md:py-20">
-
-                    <!-- Section header -->
-                    <div class="mx-auto text-center pb-12 md:pb-20">
-                        <h2 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60">Compare plans by features</h2>
-                    </div>
-
-                    <!-- Tables -->
-                    <div class="space-y-4 mb-12">
-                        <!-- Table (Tidy Essential) -->
-                        <div class="overflow-x-auto" data-aos="fade-up">
-                            <table class="table table-sm table-compact w-full">
-                                <!-- Table header -->
-                                <thead class="border-b border-gray-800">
-                                    <tr class="text-base sm:text-lg text-white">
-                                        <th class="text-xl md:text-2xl whitespace-nowrap font-bold text-left pr-2 py-4 min-w-[10rem] md:min-w-[24rem]">Plan</th>
-                                        <th class="text-bold text-center px-2 py-4">Free</th>
-                                        <th class="text-bold text-center px-2 py-4">Pro</th>
-                                    </tr>
-                                </thead>
-                                <!-- Table body -->
-                                <tbody>
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>Unusual Options Activity</div>
-                                            </div>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-4 h-4 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path fill="#dd2e44" d="M21.533 18.002L33.768 5.768a2.5 2.5 0 0 0-3.535-3.535L17.998 14.467L5.764 2.233a2.498 2.498 0 0 0-3.535 0a2.498 2.498 0 0 0 0 3.535l12.234 12.234L2.201 30.265a2.498 2.498 0 0 0 1.768 4.267c.64 0 1.28-.244 1.768-.732l12.262-12.263l12.234 12.234a2.493 2.493 0 0 0 1.768.732a2.5 2.5 0 0 0 1.768-4.267z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>Retail Trader Activity</div>
-                                            </div>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-4 h-4 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path fill="#dd2e44" d="M21.533 18.002L33.768 5.768a2.5 2.5 0 0 0-3.535-3.535L17.998 14.467L5.764 2.233a2.498 2.498 0 0 0-3.535 0a2.498 2.498 0 0 0 0 3.535l12.234 12.234L2.201 30.265a2.498 2.498 0 0 0 1.768 4.267c.64 0 1.28-.244 1.768-.732l12.262-12.263l12.234 12.234a2.493 2.493 0 0 0 1.768.732a2.5 2.5 0 0 0 1.768-4.267z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                    <!-- Row -->
-                                     <!--
+          <!-- Tables -->
+          <div class="space-y-4 mb-12">
+            <!-- Table (Tidy Essential) -->
+            <div class="overflow-x-auto" data-aos="fade-up">
+              <table class="table table-sm table-compact w-full">
+                <!-- Table header -->
+                <thead class="border-b border-gray-800">
+                  <tr class="text-base sm:text-lg text-white">
+                    <th
+                      class="text-xl md:text-2xl whitespace-nowrap font-bold text-left pr-2 py-4 min-w-[10rem] md:min-w-[24rem]"
+                      >Plan</th
+                    >
+                    <th class="text-bold text-center px-2 py-4">Free</th>
+                    <th class="text-bold text-center px-2 py-4">Pro</th>
+                  </tr>
+                </thead>
+                <!-- Table body -->
+                <tbody>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>Unusual Options Activity</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-4 h-4 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 36 36"
+                        ><path
+                          fill="#dd2e44"
+                          d="M21.533 18.002L33.768 5.768a2.5 2.5 0 0 0-3.535-3.535L17.998 14.467L5.764 2.233a2.498 2.498 0 0 0-3.535 0a2.498 2.498 0 0 0 0 3.535l12.234 12.234L2.201 30.265a2.498 2.498 0 0 0 1.768 4.267c.64 0 1.28-.244 1.768-.732l12.262-12.263l12.234 12.234a2.493 2.493 0 0 0 1.768.732a2.5 2.5 0 0 0 1.768-4.267z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>Retail Trader Activity</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-4 h-4 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 36 36"
+                        ><path
+                          fill="#dd2e44"
+                          d="M21.533 18.002L33.768 5.768a2.5 2.5 0 0 0-3.535-3.535L17.998 14.467L5.764 2.233a2.498 2.498 0 0 0-3.535 0a2.498 2.498 0 0 0 0 3.535l12.234 12.234L2.201 30.265a2.498 2.498 0 0 0 1.768 4.267c.64 0 1.28-.244 1.768-.732l12.262-12.263l12.234 12.234a2.493 2.493 0 0 0 1.768.732a2.5 2.5 0 0 0 1.768-4.267z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <!--
                                     <tr class="border-t first:border-t-2 border-gray-800">
                                         <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
                                             <div class="flex items-center justify-between max-w-xs">
@@ -543,329 +995,607 @@ async function purchasePlan(subscriptionType:string='') {
                                             <svg class="flex-shrink-0 w-4 h-4 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path fill="#dd2e44" d="M21.533 18.002L33.768 5.768a2.5 2.5 0 0 0-3.535-3.535L17.998 14.467L5.764 2.233a2.498 2.498 0 0 0-3.535 0a2.498 2.498 0 0 0 0 3.535l12.234 12.234L2.201 30.265a2.498 2.498 0 0 0 1.768 4.267c.64 0 1.28-.244 1.768-.732l12.262-12.263l12.234 12.234a2.493 2.493 0 0 0 1.768.732a2.5 2.5 0 0 0 1.768-4.267z"/></svg>
                                         </td>
                                         <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                                         </td>
                                     </tr>
                                     -->
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>AI Predictions</div>
-                                            </div>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>Wallstreet Analyst Database</div>
-                                            </div>
-                                        </td>
-                                         <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                     <!-- Row -->
-                                     <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>Hedge Fund Database</div>
-                                            </div>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>Congress Database</div>
-                                            </div>
-                                        </td>
-                                         <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>Financial History</div>
-                                            </div>
-                                        </td>
-                                         <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div>Watchlist</div>
-                                            </div>
-                                        </td>
-                                         <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                    <!-- Row -->
-                                    <tr class="border-t first:border-t-2 border-gray-800">
-                                        <td class="text-sm sm:text-base font-medium text-white pr-2 py-4">
-                                            <div class="flex items-center justify-between max-w-xs">
-                                                <div class="flex items-center space-x-2">
-                                                    <div>Future feature updates</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                         <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                                        </td>
-                                        <td class="text-sm px-2 py-4 text-center font-medium">
-                                            <svg class="flex-shrink-0 w-5 h-5 inline-flex" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>AI Predictions</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="orange"
+                          d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>Wallstreet Analyst Database</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="orange"
+                          d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>Hedge Fund Database</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="orange"
+                          d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>Congress Database</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="orange"
+                          d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>Financial History</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="orange"
+                          d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div>Watchlist</div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="orange"
+                          d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                  <!-- Row -->
+                  <tr class="border-t first:border-t-2 border-gray-800">
+                    <td
+                      class="text-sm sm:text-base font-medium text-white pr-2 py-4"
+                    >
+                      <div class="flex items-center justify-between max-w-xs">
+                        <div class="flex items-center space-x-2">
+                          <div>Future feature updates</div>
                         </div>
-
-    
-                    </div>
-
-                    <!-- CTA -->
-                     {#if data?.user?.tier !== 'Pro'}
-                    <div class="text-center">
-                        <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan()} class="cursor-pointer w-56 py-3 px-6 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
-                            Become a Pro
-                             <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                                 <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                             </span>
-                         </label>
-                    </div>
-                    {/if}
-
-                </div>
+                      </div>
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="orange"
+                          d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+                        /></svg
+                      >
+                    </td>
+                    <td class="text-sm px-2 py-4 text-center font-medium">
+                      <svg
+                        class="flex-shrink-0 w-5 h-5 inline-flex"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 48 48"
+                        ><mask id="ipSSuccess0"
+                          ><g
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                            ><path
+                              fill="#fff"
+                              stroke="#fff"
+                              d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                            /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                          ></mask
+                        ><path
+                          fill="#00FC50"
+                          d="M0 0h48v48H0z"
+                          mask="url(#ipSSuccess0)"
+                        /></svg
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-        </section>
-       <!--Feature Table -->
+          </div>
 
-        <!--Start FAQ-->
-        <section class="bg-[#09090B]">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6">
-                <div class="py-12 md:py-20">
-
-                    <!-- Section header -->
-                    <div class="max-w-3xl mx-auto text-center pb-12 md:pb-20">
-                        <h2 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60">Frequently Asked Questions</h2>
-                    </div>
-
-                    <!-- Faqs -->
-                    <ul class="mx-auto divide-y divide-gray-800">
-                        <li>
-                            <details class="collapse collapse-arrow">
-                                <summary class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5">What are the advantages of Stocknear Service?</summary>
-                                <div class="collapse-content"> 
-                                    <p class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out">
-                                        Stocknear Service provides simplified, actionable trading data and an extensive tool suite for every trader, featuring exclusive, high-quality Wall Street data at an unmatched price. We also offer proprietary AI models for accurate forecasting and timely alerts, all within a single, unified platform.
-                                    </p>
-                                </div>
-                            </details>
-                          
-                        </li>
-                        <li>
-                            <details class="collapse collapse-arrow">
-                                <summary class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5">
-                                    Can I change plans at any time?
-                                </summary>
-                                <div class="collapse-content"> 
-                                    <p class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out">
-                                        If you have a monthly subscription, you can upgrade to the Annual Plan in your account settings.
-                                        However, our payment provider currently supports only credit cards for upgrading from monthly to annual. We are working to expand this to other payment methods.
-                                        If you paid via PayPal and want to switch to the Annual Plan, please wait until your current subscription ends and then purchase the Annual Plan.
-                                    </p>
-                                </div>
-                            </details>
-                          
-                        </li>
-                         <li>
-                            <details class="collapse collapse-arrow">
-                                <summary class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5">
-                                    Do you offer a Lifetime Deal?
-                                </summary>
-                                <div class="collapse-content"> 
-                                    <p class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out">
-                                        Yes, we do offer a special limited life time deal for <strong>$599</strong>.
-                                        <br>
-                                        <br>
-                                        You might be wondering why this price is higher than our standard subscription. The reason is that while I can't guarantee our current pricing will remain the same, purchasing lifetime access locks in your deal—you pay once and never again.
-                                        <br>
-                                        <br>
-                                        This offer includes all features from the Pro Tier. If you're interested, feel free to email me at <a href={`mailto:${emailAddress}`} class="text-blue-400 underline">{emailAddress}</a>.
-                                    </p>
-                                </div>
-                            </details>
-                          
-                        </li>
-                        <li>
-                            <details class="collapse collapse-arrow">
-                                <summary class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5">
-                                    Are there any commissions in addition to the subscription plans?
-                                </summary>
-                                <div class="collapse-content"> 
-                                    <p class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out">
-                                        No, we do not charge any additional commissions or hidden fees beyond our subscription plans.
-                                    </p>
-                                </div>
-                            </details>
-                          
-                        </li>
-                        <li>
-                            <details class="collapse collapse-arrow">
-                                <summary class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5">
-                                    Can I request a refund?
-                                </summary>
-                                <div class="collapse-content "> 
-                                    <p class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out">
-                                        We offer a 30 day money back guarantee, no questions asked. Just send an email to <a href={`mailto:${emailAddress}`} class="text-blue-400 underline">{emailAddress}</a> and you will get a full refund.
-                                    </p>
-                                </div>
-                            </details>
-                          
-                        </li>
-
-                        <li>
-                            <details class="collapse collapse-arrow">
-                                <summary class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5">
-                                    What are my payment options?
-                                </summary>
-                                <div class="collapse-content"> 
-                                    <p class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out">
-                                        We support Credit Card & Paypal payments.
-                                    </p>
-                                </div>
-                            </details>
-                          
-                        </li>
-
-                        <li>
-                            <details class="collapse collapse-arrow">
-                                <summary class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5">
-                                    Can I cancel at any time?
-                                </summary>
-                                <div class="collapse-content"> 
-                                    <p class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out">
-                                        Of course. There is a "Cancel Subscription" button in your account area that you get access to after signing up. You can also send us a message and we will cancel for you.
-                                    </p>
-                                </div>
-                            </details>
-                        </li>                  
-                    </ul>
-                    
-                </div>
+          <!-- CTA -->
+          {#if data?.user?.tier !== "Pro"}
+            <div class="text-center">
+              <label
+                for={!data?.user ? "userLogin" : ""}
+                on:click={() => purchasePlan()}
+                class="cursor-pointer w-56 py-3 px-6 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+              >
+                Become a Pro
+                <span
+                  class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+                >
+                  <svg
+                    class="w-4 h-4 inline-block"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    ><g transform="rotate(90 12 12)"
+                      ><g fill="none"
+                        ><path
+                          d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                        /><path
+                          fill="white"
+                          d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                        /></g
+                      ></g
+                    ></svg
+                  >
+                </span>
+              </label>
             </div>
-        </section>
+          {/if}
+        </div>
+      </div>
+    </section>
+    <!--Feature Table -->
 
-        <!--End FAQ-->
+    <!--Start FAQ-->
+    <section class="bg-[#09090B]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="py-12 md:py-20">
+          <!-- Section header -->
+          <div class="max-w-3xl mx-auto text-center pb-12 md:pb-20">
+            <h2
+              class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60"
+            >
+              Frequently Asked Questions
+            </h2>
+          </div>
 
-    
+          <!-- Faqs -->
+          <ul class="mx-auto divide-y divide-gray-800">
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                  >What are the advantages of Stocknear Service?</summary
+                >
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    Stocknear Service provides simplified, actionable trading
+                    data and an extensive tool suite for every trader, featuring
+                    exclusive, high-quality Wall Street data at an unmatched
+                    price. We also offer proprietary AI models for accurate
+                    forecasting and timely alerts, all within a single, unified
+                    platform.
+                  </p>
+                </div>
+              </details>
+            </li>
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                >
+                  Can I change plans at any time?
+                </summary>
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    If you have a monthly subscription, you can upgrade to the
+                    Annual Plan in your account settings. However, our payment
+                    provider currently supports only credit cards for upgrading
+                    from monthly to annual. We are working to expand this to
+                    other payment methods. If you paid via PayPal and want to
+                    switch to the Annual Plan, please wait until your current
+                    subscription ends and then purchase the Annual Plan.
+                  </p>
+                </div>
+              </details>
+            </li>
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                >
+                  Do you offer a Lifetime Deal?
+                </summary>
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    Yes, we do offer a special limited life time deal for <strong
+                      >$599</strong
+                    >.
+                    <br />
+                    <br />
+                    You might be wondering why this price is higher than our standard
+                    subscription. The reason is that while I can't guarantee our
+                    current pricing will remain the same, purchasing lifetime access
+                    locks in your deal—you pay once and never again.
+                    <br />
+                    <br />
+                    This offer includes all features from the Pro Tier. If you're
+                    interested, feel free to email me at
+                    <a
+                      href={`mailto:${emailAddress}`}
+                      class="text-blue-400 underline">{emailAddress}</a
+                    >.
+                  </p>
+                </div>
+              </details>
+            </li>
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                >
+                  Are there any commissions in addition to the subscription
+                  plans?
+                </summary>
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    No, we do not charge any additional commissions or hidden
+                    fees beyond our subscription plans.
+                  </p>
+                </div>
+              </details>
+            </li>
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                >
+                  Can I request a refund?
+                </summary>
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    We offer a 30 day money back guarantee, no questions asked.
+                    Just send an email to <a
+                      href={`mailto:${emailAddress}`}
+                      class="text-blue-400 underline">{emailAddress}</a
+                    > and you will get a full refund.
+                  </p>
+                </div>
+              </details>
+            </li>
 
-    </div>
-  </section>
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                >
+                  What are my payment options?
+                </summary>
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    We support Credit Card & Paypal payments.
+                  </p>
+                </div>
+              </details>
+            </li>
 
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                >
+                  Can I cancel at any time?
+                </summary>
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    Of course. There is a "Cancel Subscription" button in your
+                    account area that you get access to after signing up. You
+                    can also send us a message and we will cancel for you.
+                  </p>
+                </div>
+              </details>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!--End FAQ-->
+  </div>
+</section>
 
 <!--Start Login Modal-->
 {#if LoginPopup}
-  <LoginPopup form={form}/> 
-{/if}   
+  <LoginPopup {form} />
+{/if}
+
 <!--End Login Modal-->
 
+<style lang="scss">
+  @import url(https://fonts.googleapis.com/css?family=Lato:700);
+  @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
+  .box {
+    position: relative;
+    width: 100%;
+  }
+  /* common */
+  .ribbon {
+    width: 100px; /* Adjusted width for mobile */
+    height: 100px; /* Adjusted height for mobile */
+    overflow: hidden;
+    position: absolute;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    display: block;
+    border: 3px solid #e1341e; /* Reduced border thickness for mobile */
+  }
+  .ribbon span {
+    position: absolute;
+    display: block;
+    width: 150px; /* Adjusted width for mobile */
+    padding: 10px 0; /* Reduced padding for mobile */
+    background-color: #e1341e;
+    box: 0 3px 6px rgba(0, 0, 0, 0.6); /* Reduced box for mobile */
+    color: #fff;
+    font:
+      700 10px/1 "Lato",
+      sans-serif; /* Reduced font size for mobile */
+    text-transform: normalcase;
+    text-align: center;
+  }
 
-<style lang='scss'>
-
-@import url(https://fonts.googleapis.com/css?family=Lato:700);
-@import url(https://fonts.googleapis.com/css?family=Lato:700);
-
-
-.box {
-position: relative;
-width: 100%;
-}
-/* common */
-.ribbon {
-width: 100px; /* Adjusted width for mobile */
-height: 100px; /* Adjusted height for mobile */
-overflow: hidden;
-position: absolute;
-}
-.ribbon::before,
-.ribbon::after {
-position: absolute;
-z-index: -1;
-content: '';
-display: block;
-border: 3px solid #E1341E; /* Reduced border thickness for mobile */
-}
-.ribbon span {
-position: absolute;
-display: block;
-width: 150px; /* Adjusted width for mobile */
-padding: 10px 0; /* Reduced padding for mobile */
-background-color: #E1341E;
-box: 0 3px 6px rgba(0,0,0,.6); /* Reduced box for mobile */
-color: #fff;
-font: 700 10px/1 'Lato', sans-serif; /* Reduced font size for mobile */
-text-transform: normalcase;
-text-align: center;
-}
-
-/* top right*/
-.ribbon-top-right {
-top: -5px; /* Adjusted positioning for mobile */
-right: -5px; /* Adjusted positioning for mobile */
-}
-.ribbon-top-right::before,
-.ribbon-top-right::after {
-border-top-color: transparent;
-border-right-color: transparent;
-}
-.ribbon-top-right::before {
-top: 0;
-left: 0;
-}
-.ribbon-top-right::after {
-bottom: 0;
-right: 0;
-}
-.ribbon-top-right span {
-left: -15px; /* Adjusted positioning for mobile */
-top: 20px; /* Adjusted positioning for mobile */
-transform: rotate(45deg);
-font-size: 0.97rem;
-
-}
-
-    
+  /* top right*/
+  .ribbon-top-right {
+    top: -5px; /* Adjusted positioning for mobile */
+    right: -5px; /* Adjusted positioning for mobile */
+  }
+  .ribbon-top-right::before,
+  .ribbon-top-right::after {
+    border-top-color: transparent;
+    border-right-color: transparent;
+  }
+  .ribbon-top-right::before {
+    top: 0;
+    left: 0;
+  }
+  .ribbon-top-right::after {
+    bottom: 0;
+    right: 0;
+  }
+  .ribbon-top-right span {
+    left: -15px; /* Adjusted positioning for mobile */
+    top: 20px; /* Adjusted positioning for mobile */
+    transform: rotate(45deg);
+    font-size: 0.97rem;
+  }
 </style>

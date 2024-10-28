@@ -1,187 +1,307 @@
-<script lang='ts'>
-    import { onMount } from 'svelte';
-    
-    //import proTierLogo from "$lib/images/pro_tier_logo.png";
-    
-    export let data;
-    export let form;
+<script lang="ts">
+  import { onMount } from "svelte";
 
-    let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-    
-    let mode = false;
-    
-    function toggleMode()
-    {
-        mode = !mode;
-    }
-    
-    
-    let LoginPopup;
-    
-    
-onMount(async () => {
-    LoginPopup = (await import('$lib/components/LoginPopup.svelte')).default;
-});
+  //import proTierLogo from "$lib/images/pro_tier_logo.png";
 
+  export let data;
+  export let form;
+
+  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+
+  let mode = false;
+
+  function toggleMode() {
+    mode = !mode;
+  }
+
+  let LoginPopup;
+
+  onMount(async () => {
+    LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
+  });
 </script>
 
-<section class="bg-[#09090B] min-h-screen max-w-3xl sm:max-w-screen-lg w-full pt-24 m-auto">
-    <div class="px-3">
-        <div class="mx-auto text-center mb-8 ">
-            
-            
-            <h1 class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#E8BB28] to-purple-500 bg-clip-text text-transparent pb-4">
-                Flexible plans and features
-            </h1>
-            <div class="w-full flex justify-center items-center h-16 bg-[#09090B] rounded-lg">
-                <p class="font-medium font-serif text-center w-3/4 sm:w-full text-white text-[1rem] sm:text-xl italic">
-                    Simple pricing. No hidden fees. Cancel anytime.
-                </p>
-            </div>
+<section
+  class="bg-[#09090B] min-h-screen max-w-3xl sm:max-w-screen-lg w-full pt-24 m-auto"
+>
+  <div class="px-3">
+    <div class="mx-auto text-center mb-8">
+      <h1
+        class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-[#E8BB28] to-purple-500 bg-clip-text text-transparent pb-4"
+      >
+        Flexible plans and features
+      </h1>
+      <div
+        class="w-full flex justify-center items-center h-16 bg-[#09090B] rounded-lg"
+      >
+        <p
+          class="font-medium font-serif text-center w-3/4 sm:w-full text-white text-[1rem] sm:text-xl italic"
+        >
+          Simple pricing. No hidden fees. Cancel anytime.
+        </p>
+      </div>
 
-            
-            <div class="flex flex-row items-center justify-center mt-6 pb-5">
-                <span class="text-sm font-medium text-white text-opacity-[0.6] mr-3">
-                    Pay Monthly
-                </span>
-    
-                <label class="inline-flex cursor-pointer relative ">
-                    
-                    <input on:click={toggleMode} type="checkbox" checked={mode} value={mode} class="sr-only peer">
-                    <div class="w-14 h-7 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[0.40rem] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#1563F9] {mode === false ? 'after:translate-x-[-0.2rem]' : ''} "></div>
-                </label>
-                
-                <div class="ml-3 -mb-4 flex flex-col items-start">
-                    <span class="text-sm font-medium text-white text-opacity-[0.6]">
-                        Pay Yearly
-                    </span>
-                    <span class="text-[#FBCE3C] text-sm font-semibold">
-                        Save up 16%
-                    </span>
-                </div>
-              
-            </div>
-            
-         
+      <div class="flex flex-row items-center justify-center mt-6 pb-5">
+        <span class="text-sm font-medium text-white text-opacity-[0.6] mr-3">
+          Pay Monthly
+        </span>
+
+        <label class="inline-flex cursor-pointer relative">
+          <input
+            on:click={toggleMode}
+            type="checkbox"
+            checked={mode}
+            value={mode}
+            class="sr-only peer"
+          />
+          <div
+            class="w-14 h-7 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[0.40rem] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#1563F9] {mode ===
+            false
+              ? 'after:translate-x-[-0.2rem]'
+              : ''} "
+          ></div>
+        </label>
+
+        <div class="ml-3 -mb-4 flex flex-col items-start">
+          <span class="text-sm font-medium text-white text-opacity-[0.6]">
+            Pay Yearly
+          </span>
+          <span class="text-[#FBCE3C] text-sm font-semibold">
+            Save up 16%
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!--<Discount/>-->
+
+    <div
+      class="flex flex-col sm:flex-row items-center gap-10 sm:gap-5 w-full m-auto mt-10 sm:mt-20"
+    >
+      <!-- Pricing Card -->
+      <div
+        class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-[#09090B] rounded-lg"
+      >
+        <div class="flex flex-row items-center justify-start items-center mt-2">
+          <img
+            src={cloudFrontUrl + "/assets/free_tier_logo.png"}
+            class="w-16 transform ease-in-out duration-300"
+            loading="lazy"
+            alt="free tier"
+          />
+          <h2 class="m-auto sm:ml-8 text-4xl font-bold text-white">
+            Free Tier
+          </h2>
         </div>
 
+        <div class="flex flex-col mt-8 mb-6">
+          <div class="flex flex-row items-center">
+            <span class="mr-2 text-4xl font-bold">$0</span>
+            <span class="text-gray-300 text-xl">/month</span>
+          </div>
+        </div>
 
-        <!--<Discount/>-->
+        <ol class="mb-8 space-y-4 text-left">
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Stock Screener Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Financial history.</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Hedge Funds Portfolio.</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Wall Street Analysts Ratings</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Watchlist Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Price Alerts</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="orange"
+                d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+              /></svg
+            >
+            <span class="text-white text-sm font-medium"
+              >Limited Options Data</span
+            >
+          </li>
+        </ol>
 
+        <div class="divider"></div>
+        <div class="m-auto w-full text-white font-medium text-sm mb-6">
+          + Limited feature updates
+        </div>
 
+        {#if !data?.user}
+          <label
+            for="userLogin"
+            class="py-3 cursor-pointer rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+          >
+            Get Sign In
+            <span
+              class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+            >
+              <svg
+                class="w-4 h-4 inline-block"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><g transform="rotate(90 12 12)"
+                  ><g fill="none"
+                    ><path
+                      d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                    /><path
+                      fill="white"
+                      d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                    /></g
+                  ></g
+                ></svg
+              >
+            </span>
+          </label>
+        {/if}
+      </div>
+      <!--End Pricing Card-->
 
+      <!-- Pricing Card -->
+      <div
+        class="sm:order-2 rounded-lg box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]"
+      >
+        <div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right">
+          <span class="text-white">Discount</span>
+        </div>
 
-        <div class="flex flex-col sm:flex-row items-center gap-10 sm:gap-5 w-full m-auto mt-10 sm:mt-20">
-            <!-- Pricing Card -->
-            <div class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-[#09090B] rounded-lg">
+        <div
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row items-center bg-red-600 p-2"
+        >
+          <svg
+            class="w-6 h-6 mr-2"
+            fill="#D6D6DC"
+            viewBox="0 0 48 48"
+            xmlns="http://www.w3.org/2000/svg"
+            stroke=""
+            ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g><g id="SVGRepo_iconCarrier">
+              <title>star-solid</title>
+              <g id="Layer_2" data-name="Layer 2">
+                <g id="invisible_box" data-name="invisible box">
+                  <rect width="48" height="48" fill="none"></rect>
+                </g>
+                <g id="icons_Q2" data-name="icons Q2">
+                  <path
+                    d="M24,3a2.1,2.1,0,0,0-1.8,1.1L16.5,15.7,3.7,17.5A2.1,2.1,0,0,0,2.6,21l9.2,8.9L9.7,42.7A2,2,0,0,0,11.6,45l1-.2,11.4-6,11.4,6,1,.2a2,2,0,0,0,1.9-2.3L36.2,29.9,45.4,21a2.1,2.1,0,0,0-1.1-3.5L31.5,15.7,25.8,4.1A2.1,2.1,0,0,0,24,3Z"
+                  ></path>
+                </g>
+              </g>
+            </g></svg
+          >
+          <span class="text-white text-md font-medium"> Most Popular </span>
+        </div>
 
+        <div class="flex flex-row justify-start items-center mt-10 mb-3">
+          <img
+            src={cloudFrontUrl + "/assets/pro_tier_logo.png"}
+            class="w-28 transform ease-in-out duration-300"
+            style="transform: rotate(23deg);"
+            loading="lazy"
+            alt="pro tier"
+          />
+          <h2 class="text-4xl font-bold text-white">Pro Tier</h2>
+        </div>
 
-                <div class="flex flex-row items-center justify-start items-center mt-2">
-                    <img src={cloudFrontUrl+"/assets/free_tier_logo.png"} class="w-16 transform ease-in-out duration-300" loading="lazy" alt="free tier" />
-                    <h2 class="m-auto sm:ml-8 text-4xl font-bold text-white">
-                        Free Tier
-                    </h2>
-                </div>
-                
+        <div class="flex flex-col mb-6 items-center">
+          <div class="flex flex-row items-center">
+            <span class="mr-2 text-4xl font-bold"
+              >{mode ? "$19.99" : "$1.99"}</span
+            >
+            <span class="text-white text-xl">{mode ? "/year" : "/month"}</span>
+          </div>
 
-
-                <div class="flex flex-col mt-8 mb-6">
-
-                    <div class="flex flex-row items-center">
-                        <span class="mr-2 text-4xl font-bold">$0</span>
-                        <span class="text-gray-300 text-xl">/month</span>
-                    </div> 
-                </div>
-
-
-                <ol class="mb-8 space-y-4 text-left">
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Stock Screener Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Financial history.</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Hedge Funds Portfolio.</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Wall Street Analysts Ratings</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Watchlist Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Price Alerts</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="orange" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.713T12 15q-.425 0-.713.288T11 16q0 .425.288.713T12 17Zm-1-4h2V7h-2v6Zm1 9q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-                        <span class="text-white text-sm font-medium">Limited Options Data</span>
-                    </li>
-                </ol>
-
-        
-
-                <div class="divider"></div>
-                <div class="m-auto w-full text-white font-medium text-sm mb-6">
-                    + Limited feature updates
-                </div>  
-
-                {#if !data?.user}
-                <label for="userLogin" class="py-3 cursor-pointer rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
-                    Get Sign In 
-                   <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                       <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                   </span>
-                </label>
-                {/if}
-
-               
-            </div>
-            <!--End Pricing Card-->
-            
-        
-
-            <!-- Pricing Card -->
-            <div class="sm:order-2 rounded-lg box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]">
-                <div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right"><span class="text-white">Discount</span></div>
-
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row items-center bg-red-600 p-2">
-                    <svg class="w-6 h-6 mr-2" fill="#D6D6DC" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" stroke=""><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>star-solid</title> <g id="Layer_2" data-name="Layer 2"> <g id="invisible_box" data-name="invisible box"> <rect width="48" height="48" fill="none"></rect> </g> <g id="icons_Q2" data-name="icons Q2"> <path d="M24,3a2.1,2.1,0,0,0-1.8,1.1L16.5,15.7,3.7,17.5A2.1,2.1,0,0,0,2.6,21l9.2,8.9L9.7,42.7A2,2,0,0,0,11.6,45l1-.2,11.4-6,11.4,6,1,.2a2,2,0,0,0,1.9-2.3L36.2,29.9,45.4,21a2.1,2.1,0,0,0-1.1-3.5L31.5,15.7,25.8,4.1A2.1,2.1,0,0,0,24,3Z"></path> </g> </g> </g></svg>
-                    <span class="text-white text-md font-medium">
-                        Most Popular
-                    </span>
-                </div>                
-
-                <div class="flex flex-row justify-start items-center mt-10 mb-3">
-                    <img src={cloudFrontUrl+"/assets/pro_tier_logo.png"} class="w-28 transform ease-in-out duration-300" style="transform: rotate(23deg);" loading="lazy" alt="pro tier" />
-                    <h2 class="text-4xl font-bold text-white">
-                        Pro Tier
-                    </h2>
-                </div>
-                
-
-
-                <div class="flex flex-col  mb-6 items-center">
-
-                    <div class="flex flex-row items-center">
-                        <span class="mr-2 text-4xl font-bold">{mode ? '$19.99' : '$1.99'}</span>
-                        <span class="text-white text-xl">{mode ? '/year' : '/month'}</span>
-                    </div>
-
-                    <!--
+          <!--
                     <div class="flex flex-col items-center">
                         <div class="flex flex-row items-center">
                             <span class="mr-2 text-[#FFF374] text-3xl font-bold">{mode ? '$124.75' : '$12.50'}</span>
@@ -193,7 +313,7 @@ onMount(async () => {
                     </div>
                     -->
 
-                    <!--
+          <!--
                     <div class="flex items-center mt-2 text-[1rem] text-center">
                         only ${mode ? (7.5/4)?.toFixed(2) : (9.99/4)?.toFixed(2)} / week, less than a
                         {#if mode}
@@ -203,77 +323,252 @@ onMount(async () => {
                         {/if}
                     </div>
                     -->
-                </div>
+        </div>
 
-            
+        <!-- List -->
 
-                 <!-- List -->
- 
-                 <ol class="mb-8 space-y-4 text-left">
+        <ol class="mb-8 space-y-4 text-left">
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Stock Screener Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Financial history</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Hedge Funds Portfolio</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Wall Street Analysts Ratings</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Watchlist Strategy</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Price Alerts</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <!-- Icon -->
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Unlimited Options Data</span
+            >
+          </li>
+          <!--
                     <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Stock Screener Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Financial history</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Hedge Funds Portfolio</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Wall Street Analysts Ratings</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Watchlist Strategy</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Price Alerts</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        <!-- Icon -->
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Unlimited Options Data</span>
-                    </li>
-                    <!--
-                    <li class="flex items-center space-x-3 ">
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">{mode ? '14 Days Free Trial' : '30 days Free Trial'}  </span>
                     </li>
                     -->
-                </ol>
-                <div class="divider"></div>
-                <div class="m-auto w-full text-white font-medium text-sm mb-6">
-                    + Unlimited feature updates
-                </div>  
-                <label for={'userLogin'} class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
-                    30 Days Free Trial
-                    <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                        <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                    </span>
-                </label>
+        </ol>
+        <div class="divider"></div>
+        <div class="m-auto w-full text-white font-medium text-sm mb-6">
+          + Unlimited feature updates
+        </div>
+        <label
+          for={"userLogin"}
+          class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+        >
+          30 Days Free Trial
+          <span
+            class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+          >
+            <svg
+              class="w-4 h-4 inline-block"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><g transform="rotate(90 12 12)"
+                ><g fill="none"
+                  ><path
+                    d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                  /><path
+                    fill="white"
+                    d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                  /></g
+                ></g
+              ></svg
+            >
+          </span>
+        </label>
 
-                <div class="m-auto w-full text-white font-medium text-[¹rem] mt-4">
-                    30 Day Money Back Guarantee
-                </div>  
+        <div class="m-auto w-full text-white font-medium text-[¹rem] mt-4">
+          30 Day Money Back Guarantee
+        </div>
+      </div>
+      <!--End Pricing Card-->
 
-               
-            </div>
-            <!--End Pricing Card-->
-
-
-             <!--Start Pricing Card-->
-             <!--
+      <!--Start Pricing Card-->
+      <!--
              <div class="sm:h-[660px] sm:order-2 box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto ring-[1px] ring-gray-400 rounded-lg w-full text-center text-white">
 
                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row border-l border-r border-b border-gray-400 items-center p-2">
@@ -301,16 +596,16 @@ onMount(async () => {
                 <ol class="mb-8 space-y-4 text-left mt-6">
                     <li class="flex items-center space-x-3 ">
                         
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">Everything in Pro Tier.</span>
                     </li>
                     <li class="flex items-center space-x-3 ">
                         
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">Pay Once and use forever.</span>
                     </li>
                     <li class="flex items-center space-x-3 "> 
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#37C97D" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
+                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
                         <span class="text-white text-[1rem] font-semibold">If you ❤️ Stocknear and want to support us, this is the best way.</span>
                     </li>
                 </ol>
@@ -343,88 +638,78 @@ onMount(async () => {
                
             </div>
             -->
-            <!--End Pricing Card-->
-
-
-
-        </div>
-
-
-
+      <!--End Pricing Card-->
+    </div>
+  </div>
 </section>
-
 
 <!--Start Login Modal-->
 {#if LoginPopup}
-  <LoginPopup form={form}/> 
-{/if}   
+  <LoginPopup {form} />
+{/if}
+
 <!--End Login Modal-->
 
+<style lang="scss">
+  @import url(https://fonts.googleapis.com/css?family=Lato:700);
+  @import url(https://fonts.googleapis.com/css?family=Lato:700);
 
-<style lang='scss'>
-
-    @import url(https://fonts.googleapis.com/css?family=Lato:700);
-    @import url(https://fonts.googleapis.com/css?family=Lato:700);
-    
-    
-    .box {
+  .box {
     position: relative;
     width: 100%;
-    }
-    /* common */
-    .ribbon {
+  }
+  /* common */
+  .ribbon {
     width: 100px; /* Adjusted width for mobile */
     height: 100px; /* Adjusted height for mobile */
     overflow: hidden;
     position: absolute;
-    }
-    .ribbon::before,
-    .ribbon::after {
+  }
+  .ribbon::before,
+  .ribbon::after {
     position: absolute;
     z-index: -1;
-    content: '';
+    content: "";
     display: block;
-    border: 3px solid #E1341E; /* Reduced border thickness for mobile */
-    }
-    .ribbon span {
+    border: 3px solid #e1341e; /* Reduced border thickness for mobile */
+  }
+  .ribbon span {
     position: absolute;
     display: block;
     width: 150px; /* Adjusted width for mobile */
     padding: 10px 0; /* Reduced padding for mobile */
-    background-color: #E1341E;
-    box: 0 3px 6px rgba(0,0,0,.6); /* Reduced box for mobile */
+    background-color: #e1341e;
+    box: 0 3px 6px rgba(0, 0, 0, 0.6); /* Reduced box for mobile */
     color: #fff;
-    font: 700 10px/1 'Lato', sans-serif; /* Reduced font size for mobile */
+    font:
+      700 10px/1 "Lato",
+      sans-serif; /* Reduced font size for mobile */
     text-transform: normalcase;
     text-align: center;
-    }
-    
-    /* top right*/
-    .ribbon-top-right {
+  }
+
+  /* top right*/
+  .ribbon-top-right {
     top: -5px; /* Adjusted positioning for mobile */
     right: -5px; /* Adjusted positioning for mobile */
-    }
-    .ribbon-top-right::before,
-    .ribbon-top-right::after {
+  }
+  .ribbon-top-right::before,
+  .ribbon-top-right::after {
     border-top-color: transparent;
     border-right-color: transparent;
-    }
-    .ribbon-top-right::before {
+  }
+  .ribbon-top-right::before {
     top: 0;
     left: 0;
-    }
-    .ribbon-top-right::after {
+  }
+  .ribbon-top-right::after {
     bottom: 0;
     right: 0;
-    }
-    .ribbon-top-right span {
+  }
+  .ribbon-top-right span {
     left: -15px; /* Adjusted positioning for mobile */
     top: 20px; /* Adjusted positioning for mobile */
     transform: rotate(45deg);
     font-size: 0.97rem;
-    
-    }
-    
-
-        
-    </style>
+  }
+</style>

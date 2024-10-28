@@ -300,7 +300,7 @@
                         <td
                           class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >=
                           0
-                            ? 'text-[#37C97D]'
+                            ? 'text-[#00FC50]'
                             : 'text-[#FF2F1F]'} text-end"
                         >
                           {item?.changesPercentage > 0
@@ -311,7 +311,7 @@
                         <td
                           class="text-end text-sm sm:text-[1rem] font-medium whitespace-nowrap {item?.sentiment >=
                           55
-                            ? 'text-[#37C97D]'
+                            ? 'text-[#00FC50]'
                             : item?.sentiment >= 50
                               ? 'text-[#E57C34]'
                               : 'text-[#FF2F1F]'}"

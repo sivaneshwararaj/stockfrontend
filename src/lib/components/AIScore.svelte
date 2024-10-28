@@ -66,7 +66,7 @@
                   r="16"
                   fill="none"
                   class="stroke-current {score >= 7
-                    ? 'text-[#37C97D]'
+                    ? 'text-[#00FC50]'
                     : score >= 4
                       ? 'text-[#FF9E21]'
                       : 'text-[#FF2F1F]'}"
