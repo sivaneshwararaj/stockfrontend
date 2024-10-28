@@ -994,7 +994,7 @@
           <div class="sm:pl-7 mt-4 mb-5 lg:flex lg:flex-row lg:gap-x-4 w-full">
             {#if dataMapping[displayData]?.length === 0}
               <div
-                class="order-1 lg:order-5 m-auto grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
+                class="order-1 lg:order-5 m-auto grow overflow-hidden border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
               >
                 <div class="h-[250px] sm:h-[400px]">
                   <div
@@ -1010,7 +1010,7 @@
               </div>
             {:else}
               <div
-                class="order-1 lg:order-5 grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
+                class="order-1 lg:order-5 grow overflow-hidden border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
               >
                 <div class="flex items-center justify-between py-1 sm:pt-0.5">
                   <div class="hide-scroll overflow-x-auto">

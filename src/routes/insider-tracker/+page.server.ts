@@ -15,7 +15,7 @@ export const load = async ({ locals, setHeaders }) => {
     console.log(output);
     output = user?.tier !== "Pro" ? output?.reverse()?.slice(0, 6) : output;
 
-    setHeaders({ "cache-control": "public, max-age=3000" });
+    setHeaders({ "cache-control": "public, max-age=200" });
 
     return output;
   };

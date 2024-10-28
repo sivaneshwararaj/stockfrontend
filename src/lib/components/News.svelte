@@ -32,7 +32,7 @@
       return `${days} day${days !== 1 ? "s" : ""}`;
     }
   };
-
+  /*
   let videoId = null;
 
   function checkIfYoutubeVideo(link) {
@@ -49,7 +49,7 @@
       return null;
     }
   }
-
+*/
   function loadMoreData() {
     const nextIndex = newsList?.length;
     const newArticles = rawData?.slice(nextIndex, nextIndex + 20);
@@ -83,8 +83,8 @@
     <div class="grid grid-cols-1 gap-2 pb-5">
       {#each newsList as item}
         <div class="w-full flex flex-col bg-[#09090B] rounded-md m-auto">
+          <!--
           {#if !checkIfYoutubeVideo(item.url)}
-            <!--
             <div class="w-full aspect-video mb-4">
               <iframe
                 class="w-full h-full rounded-md border border-gray-800"
@@ -111,42 +111,41 @@
               </a>
             </div>
             -->
-            <div class="w-full flex flex-col sm:flex-row">
+          <div class="w-full flex flex-col sm:flex-row">
+            <a
+              href={item?.url}
+              rel="noopener noreferrer"
+              target="_blank"
+              class="w-full sm:max-w-56 h-fit max-h-96 sm:mr-3 border border-gray-800 rounded-md"
+            >
+              <div class="flex-shrink-0 m-auto">
+                <img
+                  src={item?.image}
+                  class="h-auto w-full rounded-md"
+                  alt="news image"
+                  loading="lazy"
+                />
+              </div>
+            </a>
+            <div class="-mt-3 w-full">
+              <h3 class="text-sm text-white/80 truncate mb-2 mt-3">
+                {formatDate(item?.publishedDate)} ago · {item?.site}
+              </h3>
               <a
                 href={item?.url}
                 rel="noopener noreferrer"
                 target="_blank"
-                class="w-full sm:max-w-56 h-fit max-h-96 sm:mr-3 border border-gray-800 rounded-md"
+                class="text-lg sm:text-xl font-bold text-white"
               >
-                <div class="flex-shrink-0 m-auto">
-                  <img
-                    src={item?.image}
-                    class="h-auto w-full rounded-md"
-                    alt="news image"
-                    loading="lazy"
-                  />
-                </div>
+                {item?.title}
+                <p class="text-white text-sm mt-2 font-normal">
+                  {item?.text?.length > 200
+                    ? item?.text?.slice(0, 200) + "..."
+                    : item?.text}
+                </p>
               </a>
-              <div class="-mt-3 w-full">
-                <h3 class="text-sm text-white/80 truncate mb-2 mt-3">
-                  {formatDate(item?.publishedDate)} ago · {item?.site}
-                </h3>
-                <a
-                  href={item?.url}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  class="text-lg sm:text-xl font-bold text-white"
-                >
-                  {item?.title}
-                  <p class="text-white text-sm mt-2 font-normal">
-                    {item?.text?.length > 200
-                      ? item?.text?.slice(0, 200) + "..."
-                      : item?.text}
-                  </p>
-                </a>
-              </div>
             </div>
-          {/if}
+          </div>
         </div>
         <hr class="border-gray-600 w-full m-auto mt-5 mb-5" />
       {/each}
