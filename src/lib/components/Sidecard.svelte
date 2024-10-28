@@ -86,12 +86,7 @@
   }
 
   $: {
-    if (
-      $stockTicker &&
-      typeof window !== "undefined" &&
-      typeof data?.getStockDeck !== "undefined" &&
-      data?.getStockDeck?.length !== 0
-    ) {
+    if ($stockTicker && typeof window !== "undefined") {
       info = data?.getStockDeck?.at(0);
 
       //ceoName = info?.ceoName?.length !== 0 ? getAbbreviatedName(info?.ceoName) : "-";
@@ -209,86 +204,88 @@
   </div>
 </div>
 
-<div
-  class="space-y-3 sm:pt-5 hidden sm:block sm:{Object?.keys(
-    data?.getAnalystRating ?? {},
-  )?.length !== 0
-    ? ''
-    : 'hidden'}"
->
-  <div class="h-auto w-full">
-    <!--Start Content-->
-    <div class="w-auto lg:w-full flex flex-col m-auto pb-14 sm:pb-10">
-      <h2 class="mb-2 text-2xl text-white font-semibold">Analyst Forecast</h2>
-      <p class="text-gray-200">
-        According to {numOfAnalyst} analysts, the average rating for NVDA stock is
-        "{consensusRating}." The 12-month stock price forecast is ${priceTarget},
-        which is {changesPercentage > 0 ? "an increase" : "a decrease"} of {changesPercentage}%
-        from the latest price.
-      </p>
+{#if Object?.keys(data?.getAnalystRating ?? {})?.length !== 0}
+  <div
+    class="space-y-3 sm:pt-5 hidden sm:block sm:{Object?.keys(
+      data?.getAnalystRating ?? {},
+    )?.length !== 0
+      ? ''
+      : 'hidden'}"
+  >
+    <div class="h-auto w-full">
+      <!--Start Content-->
+      <div class="w-auto lg:w-full flex flex-col m-auto pb-14 sm:pb-10">
+        <h2 class="mb-2 text-2xl text-white font-semibold">Analyst Forecast</h2>
+        <p class="text-gray-200">
+          According to {numOfAnalyst} analysts, the average rating for NVDA stock
+          is "{consensusRating}." The 12-month stock price forecast is ${priceTarget},
+          which is {changesPercentage > 0 ? "an increase" : "a decrease"} of {changesPercentage}%
+          from the latest price.
+        </p>
 
-      <div class="mt-5 w-full m-auto flex justify-center items-center mb-5">
-        <div class="flex flex-col items-center w-full">
-          <!--Start Progress-->
-
+        <div class="mt-5 w-full m-auto flex justify-center items-center mb-5">
           <div class="flex flex-col items-center w-full">
-            <div class="flex flex-row items-center w-full mt-5 mb-2">
-              <span class="text-white font-medium text-start mr-auto">
-                Buy
-              </span>
-              <span class="text-white text-md font-medium ml-auto">
-                {buyCount}%
-              </span>
-            </div>
-            <progress
-              class="progress bg-[#3B3D3F] w-full [&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]"
-              value={buyCount}
-              max="100"
-            ></progress>
-          </div>
+            <!--Start Progress-->
 
-          <div class="flex flex-col items-center w-full">
-            <div class="flex flex-row items-center w-full mt-5 mb-2">
-              <span class="text-white font-medium text-start mr-auto">
-                Hold
-              </span>
-              <span class="text-white text-md font-medium ml-auto">
-                {holdCount}%
-              </span>
+            <div class="flex flex-col items-center w-full">
+              <div class="flex flex-row items-center w-full mt-5 mb-2">
+                <span class="text-white font-medium text-start mr-auto">
+                  Buy
+                </span>
+                <span class="text-white text-md font-medium ml-auto">
+                  {buyCount}%
+                </span>
+              </div>
+              <progress
+                class="progress bg-[#3B3D3F] w-full [&::-webkit-progress-value]:bg-[#37C97D] [&::-moz-progress-bar]:bg-[#37C97D]"
+                value={buyCount}
+                max="100"
+              ></progress>
             </div>
-            <progress
-              class="progress bg-[#3B3D3F] w-full [&::-webkit-progress-value]:bg-[#fff] [&::-moz-progress-bar]:bg-[#fff]"
-              value={holdCount}
-              max="100"
-            ></progress>
-          </div>
 
-          <div class="flex flex-col items-center w-full">
-            <div class="flex flex-row items-center w-full mt-5 mb-2">
-              <span class="text-white font-medium text-start mr-auto">
-                Sell
-              </span>
-              <span class="text-white text-md font-medium ml-auto">
-                {sellCount}%
-              </span>
+            <div class="flex flex-col items-center w-full">
+              <div class="flex flex-row items-center w-full mt-5 mb-2">
+                <span class="text-white font-medium text-start mr-auto">
+                  Hold
+                </span>
+                <span class="text-white text-md font-medium ml-auto">
+                  {holdCount}%
+                </span>
+              </div>
+              <progress
+                class="progress bg-[#3B3D3F] w-full [&::-webkit-progress-value]:bg-[#fff] [&::-moz-progress-bar]:bg-[#fff]"
+                value={holdCount}
+                max="100"
+              ></progress>
             </div>
-            <progress
-              class="progress bg-[#3B3D3F] w-full [&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]"
-              value={sellCount}
-              max="100"
-            ></progress>
-          </div>
 
-          <!--End Progress-->
+            <div class="flex flex-col items-center w-full">
+              <div class="flex flex-row items-center w-full mt-5 mb-2">
+                <span class="text-white font-medium text-start mr-auto">
+                  Sell
+                </span>
+                <span class="text-white text-md font-medium ml-auto">
+                  {sellCount}%
+                </span>
+              </div>
+              <progress
+                class="progress bg-[#3B3D3F] w-full [&::-webkit-progress-value]:bg-[#FF2F1F] [&::-moz-progress-bar]:bg-[#FF2F1F]"
+                value={sellCount}
+                max="100"
+              ></progress>
+            </div>
+
+            <!--End Progress-->
+          </div>
         </div>
-      </div>
 
-      <a
-        href={`/stocks/${$stockTicker}/forecast/analyst`}
-        class="rounded cursor-pointer w-full m-auto py-2 h-full mt-6 text-lg text-center font-bold text-white hover:bg-purple-700 bg-purple-600 transition duration-100"
-      >
-        Stock Forecasts
-      </a>
+        <a
+          href={`/stocks/${$stockTicker}/forecast/analyst`}
+          class="rounded cursor-pointer w-full m-auto py-2 h-full mt-6 text-lg text-center font-bold text-white hover:bg-purple-700 bg-purple-600 transition duration-100"
+        >
+          Stock Forecasts
+        </a>
+      </div>
     </div>
   </div>
-</div>
+{/if}

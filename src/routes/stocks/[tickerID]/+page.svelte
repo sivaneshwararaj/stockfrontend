@@ -1011,461 +1011,449 @@
           <!--End Ticker Section-->
           <!-- Start Graph -->
 
-          {#if output !== null}
-            <div class="w-full sm:pl-7 mb-10 sm:mt-10">
-              {#if dataMapping[displayData]?.length === 0}
-                <div
-                  class="mt-20 flex h-[240px] justify-center items-center mb-20 m-auto"
-                >
+          <div class="sm:pl-7 mt-4 lg:flex lg:flex-row lg:gap-x-4 w-full">
+            {#if dataMapping[displayData]?.length === 0}
+              <div
+                class="order-1 lg:order-5 m-auto grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
+              >
+                <div class="h-[250px] sm:h-[300px]">
                   <div
-                    class="text-white p-5 mt-5 w-fit m-auto rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-[1rem]"
+                    class="flex h-full w-full flex-col items-center justify-center rounded-sm border border-gray-600 p-6 text-center md:p-12"
                   >
-                    <svg
-                      class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 256 256"
-                      ><path
-                        fill="#a474f6"
-                        d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                      /></svg
-                    >
-                    No {displayData} chart data available
+                    <div class="mb-4 text-white text-xl font-semibold">
+                      No {displayData} chart data available
+                    </div>
                   </div>
                 </div>
-              {:else}
-                <div class="mt-4 lg:flex lg:flex-row lg:gap-x-4 w-full">
-                  <div
-                    class="order-1 sm:order-2 grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
-                  >
-                    <div
-                      class="flex items-center justify-between py-1 sm:pt-0.5"
+              </div>
+            {:else}
+              <div
+                class="order-1 lg:order-5 grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
+              >
+                <div class="flex items-center justify-between py-1 sm:pt-0.5">
+                  <div class="hide-scroll overflow-x-auto">
+                    <ul
+                      class="flex space-x-[3px] whitespace-nowrap pl-0.5 xs:space-x-1"
                     >
-                      <div class="hide-scroll overflow-x-auto">
-                        <ul
-                          class="flex space-x-[3px] whitespace-nowrap pl-0.5 xs:space-x-1"
-                        >
-                          {#each intervals as interval}
-                            <li>
-                              <button
-                                on:click={() => changeData(interval)}
-                                class="px-1 py-1 text-smaller xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
-                              >
-                                <span
-                                  class="block {displayData === interval
-                                    ? 'text-white'
-                                    : 'text-gray-400'}">{interval}</span
-                                >
-                                <div
-                                  class="{displayData === interval
-                                    ? `bg-[${colorChange}] `
-                                    : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
-                                />
-                              </button>
-                            </li>
-                          {/each}
-                        </ul>
-                      </div>
-                      <div
-                        class="flex shrink flex-row space-x-1 pr-1 text-smaller sm:text-base"
+                      {#each intervals as interval}
+                        <li>
+                          <button
+                            on:click={() => changeData(interval)}
+                            class="px-1 py-1 text-smaller xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
+                          >
+                            <span
+                              class="block {displayData === interval
+                                ? 'text-white'
+                                : 'text-gray-400'}">{interval}</span
+                            >
+                            <div
+                              class="{displayData === interval
+                                ? `bg-[${colorChange}] `
+                                : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
+                            />
+                          </button>
+                        </li>
+                      {/each}
+                    </ul>
+                  </div>
+                  <div
+                    class="flex shrink flex-row space-x-1 pr-1 text-smaller sm:text-base"
+                  >
+                    <span
+                      class={displayLegend?.change >= 0
+                        ? "before:content-['+'] text-[#00FC50]"
+                        : "text-[#FF2F1F]"}
+                    >
+                      {displayLegend?.change}%
+                    </span>
+                    <span class="hidden text-gray-200 sm:block"
+                      >({displayData})</span
+                    >
+                  </div>
+                </div>
+
+                {#if output !== null}
+                  <Chart
+                    {...options}
+                    autoSize={true}
+                    ref={(api) => (chart = api)}
+                  >
+                    {#if displayData === "1D"}
+                      <AreaSeries
+                        reactive={true}
+                        data={oneDayPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
+                        lineWidth={1.5}
+                        priceScaleId="right"
+                        lineColor={colorChange}
+                        topColor={topColorChange}
+                        bottomColor={bottomColorChange}
+                        ref={handleSeriesReference}
+                        priceLineVisible={false}
+                      >
+                        <PriceLine
+                          price={oneDayPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
+                      </AreaSeries>
+                    {:else if displayData === "1W"}
+                      <AreaSeries
+                        data={oneWeekPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
+                        lineWidth={1.5}
+                        priceScaleId="right"
+                        lineColor={colorChange}
+                        topColor={topColorChange}
+                        bottomColor={bottomColorChange}
+                        ref={handleSeriesReference}
+                        priceLineVisible={false}
+                      >
+                        <PriceLine
+                          price={oneWeekPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
+                      </AreaSeries>
+                    {:else if displayData === "1M"}
+                      <AreaSeries
+                        data={oneMonthPrice?.map(({ time, close }) => ({
+                          time: time,
+                          value: close,
+                        }))}
+                        lineWidth={1.5}
+                        priceScaleId="right"
+                        lineColor={colorChange}
+                        topColor={topColorChange}
+                        bottomColor={bottomColorChange}
+                        ref={handleSeriesReference}
+                        priceLineVisible={false}
+                      >
+                        <PriceLine
+                          price={oneMonthPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
+                      </AreaSeries>
+                    {:else if displayData === "6M"}
+                      <AreaSeries
+                        data={sixMonthPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
+                        lineWidth={1.5}
+                        priceScaleId="right"
+                        lineColor={colorChange}
+                        topColor={topColorChange}
+                        bottomColor={bottomColorChange}
+                        ref={handleSeriesReference}
+                        priceLineVisible={false}
+                      >
+                        <PriceLine
+                          price={sixMonthPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
+                      </AreaSeries>
+                    {:else if displayData === "1Y"}
+                      <AreaSeries
+                        data={oneYearPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
+                        lineWidth={1.5}
+                        priceScaleId="right"
+                        lineColor={colorChange}
+                        topColor={topColorChange}
+                        bottomColor={bottomColorChange}
+                        ref={handleSeriesReference}
+                        priceLineVisible={false}
+                      >
+                        <PriceLine
+                          price={oneYearPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
+                      </AreaSeries>
+                    {:else if displayData === "MAX"}
+                      <AreaSeries
+                        data={maxPrice?.map(({ time, close }) => ({
+                          time,
+                          value: close,
+                        }))}
+                        lineWidth={1.5}
+                        priceScaleId="right"
+                        lineColor={colorChange}
+                        topColor={topColorChange}
+                        bottomColor={bottomColorChange}
+                        ref={handleSeriesReference}
+                        priceLineVisible={false}
+                      >
+                        <PriceLine
+                          price={maxPrice?.at(0)?.close}
+                          lineWidth={1}
+                          color="#fff"
+                        />
+                      </AreaSeries>
+                    {/if}
+                  </Chart>
+                {:else}
+                  <div
+                    class="flex justify-center w-full sm:w-[650px] h-80 items-center"
+                  >
+                    <div class="relative">
+                      <label
+                        class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                       >
                         <span
-                          class={displayLegend?.change >= 0
-                            ? "before:content-['+'] text-[#00FC50]"
-                            : "text-[#FF2F1F]"}
-                        >
-                          {displayLegend?.change}%
-                        </span>
-
-                        <span class="hidden text-gray-200 sm:block"
-                          >({displayData})</span
-                        >
-                      </div>
+                          class="loading loading-spinner loading-md text-gray-400"
+                        ></span>
+                      </label>
                     </div>
-                    <Chart
-                      {...options}
-                      autoSize={true}
-                      ref={(api) => (chart = api)}
-                    >
-                      {#if displayData === "1D"}
-                        <AreaSeries
-                          reactive={true}
-                          data={oneDayPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneDayPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "1W"}
-                        <AreaSeries
-                          data={oneWeekPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneWeekPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "1M"}
-                        <AreaSeries
-                          data={oneMonthPrice?.map(({ time, close }) => ({
-                            time: time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneMonthPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "6M"}
-                        <AreaSeries
-                          data={sixMonthPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={sixMonthPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "1Y"}
-                        <AreaSeries
-                          data={oneYearPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneYearPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "MAX"}
-                        <AreaSeries
-                          data={maxPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={maxPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {/if}
-                    </Chart>
                   </div>
-                  <div
-                    class="mt-10 lg:mt-0 order-5 lg:order-1 flex flex-row space-x-2 tiny:space-x-3 xs:space-x-4"
-                  >
-                    <table
-                      class="w-[50%] text-sm text-white tiny:text-small lg:w-full lg:min-w-[210px]"
-                    >
-                      <tbody
-                        ><tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Bid</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{$wsBidPrice !== 0 && $wsBidPrice !== null
-                              ? $wsBidPrice
-                              : (data?.getStockQuote?.bid ?? "-")}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Market Cap</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{abbreviateNumber(
-                              data?.getStockQuote?.marketCap,
-                            )}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Revenue (ttm)</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockDeck?.at(0)?.revenueTTM !==
-                            undefined
-                              ? abbreviateNumber(
-                                  data?.getStockDeck?.at(0)?.revenueTTM,
-                                )
-                              : "-"}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Net Income (ttm)</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockDeck?.at(0)?.netIncomeTTM !==
-                            undefined
-                              ? abbreviateNumber(
-                                  data?.getStockDeck?.at(0)?.netIncomeTTM,
-                                )
-                              : "-"}</td
-                          ></tr
-                        >
-
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >EPS (ttm)</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockQuote?.eps}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >PE Ratio (ttm)</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockQuote?.pe}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Forward PE</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockDeck?.at(0)?.forwardPE ?? "-"}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Shares Out
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{abbreviateNumber(
-                              data?.getStockQuote?.sharesOutstanding,
-                            )}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Short % of Shares Out</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >1.2%</td
-                          ></tr
-                        >
-                      </tbody>
-                    </table>
-                    <table
-                      class="w-[48%] text-sm text-white tiny:text-small lg:w-auto lg:min-w-[210px]"
-                      data-test="overview-quote"
-                    >
-                      <tbody
-                        ><tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Ask</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{$wsAskPrice !== 0 && $wsAskPrice !== null
-                              ? $wsAskPrice
-                              : (data?.getStockQuote?.ask ?? "-")}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Volume</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{abbreviateNumber(data?.getStockQuote?.volume)}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Open</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockQuote?.open}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Previous Close</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockQuote?.previousClose}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Day's Range</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockQuote?.dayLow} - {data
-                              ?.getStockQuote?.dayHigh}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >52-Week Range</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockQuote?.yearLow} - {data
-                              ?.getStockQuote?.yearHigh}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Beta</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{data?.getStockDeck?.at(0)?.beta?.toFixed(2)}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Shares Float
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{abbreviateNumber(
-                              data?.getStockQuote?.sharesOutstanding,
-                            )}</td
-                          ></tr
-                        >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Short % of Float</td
-                          >
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >1.2%</td
-                          ></tr
-                        >
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              {/if}
-            </div>
-          {:else}
-            <!-- else output not loaded yet-->
-            <div
-              class="flex justify-center w-full sm:w-[650px] h-80 items-center"
-            >
-              <div class="relative">
-                <label
-                  class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                >
-                  <span class="loading loading-spinner loading-md text-gray-400"
-                  ></span>
-                </label>
+                {/if}
               </div>
+            {/if}
+
+            <div
+              class="mt-10 lg:mt-0 order-5 lg:order-1 flex flex-row space-x-2 tiny:space-x-3 xs:space-x-4"
+            >
+              <table
+                class="w-[50%] text-sm text-white tiny:text-small lg:w-full lg:min-w-[210px]"
+              >
+                <tbody
+                  ><tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Bid</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{$wsBidPrice !== 0 && $wsBidPrice !== null
+                        ? $wsBidPrice
+                        : (data?.getStockQuote?.bid ?? "-")}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Market Cap</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{abbreviateNumber(data?.getStockQuote?.marketCap)}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Revenue (ttm)</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockDeck?.at(0)?.revenueTTM !== undefined
+                        ? abbreviateNumber(
+                            data?.getStockDeck?.at(0)?.revenueTTM,
+                          )
+                        : "-"}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Net Income (ttm)</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockDeck?.at(0)?.netIncomeTTM !== undefined
+                        ? abbreviateNumber(
+                            data?.getStockDeck?.at(0)?.netIncomeTTM,
+                          )
+                        : "-"}</td
+                    ></tr
+                  >
+
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >EPS (ttm)</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockQuote?.eps}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >PE Ratio (ttm)</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockQuote?.pe}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Forward PE</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockDeck?.at(0)?.forwardPE ?? "-"}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Shares Out
+                    </td>
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{abbreviateNumber(
+                        data?.getStockQuote?.sharesOutstanding,
+                      )}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Short % of Shares Out</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >1.2%</td
+                    ></tr
+                  >
+                </tbody>
+              </table>
+              <table
+                class="w-[48%] text-sm text-white tiny:text-small lg:w-auto lg:min-w-[210px]"
+                data-test="overview-quote"
+              >
+                <tbody
+                  ><tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Ask</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{$wsAskPrice !== 0 && $wsAskPrice !== null
+                        ? $wsAskPrice
+                        : (data?.getStockQuote?.ask ?? "-")}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Volume</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{abbreviateNumber(data?.getStockQuote?.volume)}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Open</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockQuote?.open}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Previous Close</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockQuote?.previousClose}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Day's Range</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockQuote?.dayLow} - {data?.getStockQuote
+                        ?.dayHigh}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >52-Week Range</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockQuote?.yearLow} - {data?.getStockQuote
+                        ?.yearHigh}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Beta</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{data?.getStockDeck?.at(0)?.beta?.toFixed(2)}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Shares Float
+                    </td>
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >{abbreviateNumber(
+                        data?.getStockQuote?.sharesOutstanding,
+                      )}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                      >Short % of Float</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                      >1.2%</td
+                    ></tr
+                  >
+                </tbody>
+              </table>
             </div>
-          {/if}
+          </div>
 
           <!--End Graph-->
 
