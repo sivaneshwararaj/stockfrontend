@@ -1,4 +1,34 @@
-<script lang 'ts'></script>
+<script lang="ts">
+  import { displayCompanyName } from "$lib/store";
+  import InfoModal from "$lib/components/InfoModal.svelte";
+
+  export let data;
+
+  let sentimentList = data?.getSentimentAnalysis;
+
+  let oneMonthResult = sentimentList?.at(1)?.value ?? 0;
+  let outlook =
+    oneMonthResult > 5
+      ? "Positive"
+      : oneMonthResult < 5
+        ? "Negative"
+        : "Neutral";
+  let oneYearResult = sentimentList?.at(-1)?.value ?? 0;
+
+  let dashedLinePosition: Record<string, string> = {
+    "0": "-mt-[80px]",
+    "1": "-mt-[95px]",
+    "2": "-mt-[105px]",
+    "3": "-mt-[120px]",
+    "4": "-mt-[125px]",
+    "5": "-mt-[140px]",
+    "6": "-mt-[152px]",
+    "7": "-mt-[165px]",
+    "8": "-mt-[178px]",
+    "9": "-mt-[190px]",
+    "10": "-mt-[200px]",
+  };
+</script>
 
 <section class="overflow-hidden text-white h-full pb-10 sm:pb-0">
   <main class="overflow-hidden">

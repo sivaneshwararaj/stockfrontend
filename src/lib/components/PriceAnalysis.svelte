@@ -1,4 +1,134 @@
-<script lang "ts"></script>
+<script lang="ts">
+  import { displayCompanyName, screenWidth } from "$lib/store";
+  import InfoModal from "$lib/components/InfoModal.svelte";
+  import { Chart } from "svelte-echarts";
+  import { onMount } from "svelte";
+
+  import { init, use } from "echarts/core";
+  import { LineChart } from "echarts/charts";
+  import { GridComponent, TooltipComponent } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
+
+  use([LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
+
+  export let data;
+  let isLoaded = false;
+
+  let priceAnalysisDict = data?.getPriceAnalysis;
+  let lastPrice = data?.getStockQuote?.price ?? "n/a";
+
+  const modalContent = `
+    Our AI model, employing a Bayesian approach, predicts future prices by breaking down trends, seasonality, and holiday effects. It integrates uncertainty to offer forecasts with intervals.<br><br>
+    <span class="font-semibold underline"><span class="italic">R</span><sup>2</sup> Score</span>: How well the regression model fits the data. A high score (close to 100%) is good, indicating a strong fit, while a low score (close to 0%) is bad, suggesting poor fit.
+    <br><br>
+    <span class="font-semibold underline">Mean Absolute Percentage Error (MAPE)</span>: Measures the average percentage difference between predicted and actual values. A lower MAPE indicates better accuracy, while a higher MAPE suggests less accurate predictions.
+  `;
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  let r2Score;
+  let mape;
+  let priceSentiment = "n/a";
+  let oneYearPricePrediction = "n/a";
+  let optionsData;
+
+  function getPlotOptions() {
+    const predictionDate = priceAnalysisDict?.predictionDate;
+    const upperBand = priceAnalysisDict?.upperBand;
+    const lowerBand = priceAnalysisDict?.lowerBand?.map((value) =>
+      value < 0 ? 0 : value,
+    );
+    const historicalPrice = priceAnalysisDict?.historicalPrice;
+
+    const option = {
+      silent: true,
+      animation: false,
+      grid: {
+        left: screenWidth < 640 ? "0%" : "2%",
+        right: screenWidth < 640 ? "5%" : "2%",
+        bottom: screenWidth < 640 ? "0%" : "5%",
+        containLabel: true,
+      },
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+      },
+      xAxis: {
+        type: "category",
+        boundaryGap: false,
+        data: predictionDate,
+        axisLabel: {
+          color: "#fff",
+          formatter(value) {
+            const dateParts = value?.split("-");
+            const year = dateParts[0]?.substring(2);
+            const monthIndex = parseInt(dateParts[1], 10) - 1;
+            return `${monthNames[monthIndex]} '${year}`;
+          },
+        },
+      },
+      yAxis: [
+        {
+          type: "value",
+          splitLine: { show: false },
+          axisLabel: { show: false },
+        },
+      ],
+      series: [
+        {
+          name: "Stock Price",
+          data: historicalPrice,
+          showSymbol: false,
+          smooth: true,
+          type: "line",
+          itemStyle: { color: "#fff" },
+        },
+        {
+          name: "Upperband",
+          data: upperBand,
+          showSymbol: false,
+          smooth: true,
+          type: "line",
+          areaStyle: { color: "rgba(60, 116, 212, 0.4)" },
+          lineStyle: { color: "rgb(60, 116, 212)" },
+        },
+        {
+          name: "Lowerband",
+          data: lowerBand,
+          showSymbol: false,
+          smooth: true,
+          type: "line",
+          areaStyle: { color: "#09090B", opacity: 1 },
+          lineStyle: { color: "rgb(60, 116, 212)" },
+        },
+      ],
+    };
+
+    return option;
+  }
+
+  onMount(async () => {
+    oneYearPricePrediction = priceAnalysisDict?.meanResult?.slice(-1)?.at(0);
+    mape = priceAnalysisDict?.mape;
+    r2Score = priceAnalysisDict?.r2Score;
+    priceSentiment = lastPrice < oneYearPricePrediction ? "Bullish" : "Bearish";
+    optionsData = await getPlotOptions();
+    isLoaded = true;
+  });
+</script>
 
 <section class="overflow-hidden text-white h-full pb-8 sm:pb-2">
   <main class="overflow-hidden">
@@ -41,7 +171,7 @@
                 <span
                   class="text-start text-[1rem] sm:text-lg font-semibold {priceSentiment ===
                   'Bullish'
-                    ? 'text-[#00FC50]'
+                    ? 'text-[#37C97D]'
                     : 'text-[#FF2F1F]'}">{priceSentiment}</span
                 >
               </div>
@@ -174,7 +304,7 @@
           Over the next 12 months, the model predicts a
           <span
             class="font-semibold {priceSentiment === 'Bullish'
-              ? 'text-[#00FC50]'
+              ? 'text-[#37C97D]'
               : 'text-[#FF2F1F]'}">{priceSentiment}</span
           >
           trend, suggesting that the future price is expected to {priceSentiment ===
