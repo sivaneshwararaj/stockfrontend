@@ -705,7 +705,7 @@
       prePostData = {};
       output = null;
 
-      stockDeck = stockDeck;
+      stockDeck = data?.getStockDeck;
 
       const asyncFunctions = [getPrePostQuote()];
 
