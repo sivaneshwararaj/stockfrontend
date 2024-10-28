@@ -77,14 +77,16 @@
           class="ml-[20px] sm:ml-[30px]"
           style="color: #fff; line-height: 22px; margin-top:20px; margin-bottom: 15px; list-style-type: disc;"
         >
-          Revenue of <strong>{abbreviateNumber(rawData?.revenue, true)}</strong>
+          Revenue of <span class="font-semibold"
+            >{abbreviateNumber(rawData?.revenue, true)}</span
+          >
           {rawData?.revenueSurprise > 0 ? "exceeds" : "misses"} estimates by {abbreviateNumber(
             Math.abs(rawData?.revenueSurprise),
             true,
           )}, with
           <span
             class="font-semibold {revenueRatio > 0
-              ? 'text-[#00FC50]'
+              ? "before:content-['+'] text-[#00FC50]"
               : 'text-[#FF2F1F]'}">{revenueRatio}%</span
           >
           YoY {revenueRatio < 0 ? "decline" : "growth"}.
@@ -93,13 +95,13 @@
           class="ml-[20px] sm:ml-[30px]"
           style="color: #fff; line-height: 22px; margin-top:0px; margin-bottom: 15px; list-style-type: disc;"
         >
-          EPS of <strong>${rawData?.eps}</strong>
-          {rawData?.epsSurprise > 0 ? "exceeds" : "misses"} estimates by ${rawData?.epsSurprise?.toFixed(
+          EPS of <span class="font-semibold">{rawData?.eps}</span>
+          {rawData?.epsSurprise > 0 ? "exceeds" : "misses"} estimates by {rawData?.epsSurprise?.toFixed(
             2,
           )}, with
           <span
             class="font-semibold {epsRatio > 0
-              ? 'text-[#00FC50]'
+              ? "before:content-['+'] text-[#00FC50]"
               : 'text-[#FF2F1F]'}">{epsRatio}%</span
           >
           YoY {epsRatio < 0 ? "decline" : "growth"}.

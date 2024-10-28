@@ -28,7 +28,6 @@
   import DividendAnnouncement from "$lib/components/DividendAnnouncement.svelte";
   import Sidecard from "$lib/components/Sidecard.svelte";
 
-  import Lazy from "$lib/components/Lazy.svelte";
   import { convertTimestamp } from "$lib/utils";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
@@ -424,68 +423,6 @@
     }
   }
 
-  async function handleCrosshairMove({ detail: param }) {
-    if (
-      param?.time &&
-      !isNaN(
-        param?.seriesData?.get(lineLegend)?.close ??
-          param?.seriesData?.get(lineLegend)?.value,
-      )
-    ) {
-      $isCrosshairMoveActive = true;
-      try {
-        let graphData;
-        graphData = param?.seriesData?.get(lineLegend);
-
-        const price = graphData?.close ?? graphData?.value;
-        const dateObj = graphData?.time;
-        const date = ["1D", "1W", "1M"]?.includes(displayData)
-          ? new Date(dateObj * 1000)
-          : new Date(dateObj);
-        const options = {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "numeric",
-          minute: "2-digit",
-          timeZone: "UTC",
-        };
-        //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })?.replace(/\//g, '.');
-
-        const formattedDate =
-          displayData === "1D" || displayData === "1W" || displayData === "1M"
-            ? date.toLocaleString("en-US", options)
-            : date.toLocaleDateString("en-US", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              });
-
-        const change = (
-          (price / displayLastLogicalRangeValue - 1) *
-          100
-        )?.toFixed(2);
-
-        displayLegend = {
-          close: price?.toFixed(2),
-          date: formattedDate,
-          change: change,
-        };
-      } catch (error) {
-        //pass;
-      }
-    } else {
-      //currentDataRow = oneDayPrice[oneDayPrice?.length - 1];
-      const length = oneDayPrice?.length;
-      for (let i = length - 1; i >= 0; i--) {
-        if (!isNaN(oneDayPrice[i]?.close)) {
-          currentDataRow = oneDayPrice[i];
-          break;
-        }
-      }
-    }
-  }
-
   let displayLastLogicalRangeValue;
 
   const fitContentChart = async () => {
@@ -735,56 +672,6 @@
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      /*
-    if (data?.user) {
-      const response = await fetch("/api/historical-price", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ticker: $stockTicker, timePeriod: timePeriod }),
-      });
-
-      exportList = await response.json();
-
-      exportList = exportList?.map(
-        ({ time, open, high, low, close, date }) => ({
-          date: timePeriod === "max" ? time : date, // Use 'time' if timePeriod is "max", otherwise use 'date'
-          open,
-          high,
-          low,
-          close,
-        }),
-      );
-
-      const csvRows = [];
-
-      // Add headers row
-      csvRows.push("time,open,high,low,close");
-
-      // Add data rows
-      for (const row of exportList) {
-        const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close}`;
-        csvRows.push(csvRow);
-      }
-
-      // Create CSV blob and trigger download
-      const csv = csvRows.join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.setAttribute("hidden", "");
-      a.setAttribute("href", url);
-      a.setAttribute("download", `${$stockTicker}_${timePeriod}.csv`);
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else {
-      toast.error("Please Sign In", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
-      });
-    }
-      */
     } else {
       goto("/pricing");
     }
@@ -905,13 +792,7 @@
               <div
                 class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full"
               >
-                {#if $isCrosshairMoveActive}
-                  {displayLegend?.close}
-                {:else if !$isCrosshairMoveActive && $realtimePrice !== null}
-                  {$currentPortfolioPrice}
-                {:else}
-                  {displayLegend?.close}
-                {/if}
+                {displayLegend?.close}
 
                 {#if $priceIncrease === true}
                   <div
@@ -1152,7 +1033,183 @@
               {:else}
                 <div class="mt-4 lg:flex lg:flex-row lg:gap-x-4 w-full">
                   <div
-                    class="order-2 sm:order-1 flex flex-row space-x-2 tiny:space-x-3 xs:space-x-4"
+                    class="order-1 sm:order-2 grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
+                  >
+                    <div
+                      class="flex items-center justify-between py-1 sm:pt-0.5"
+                    >
+                      <div class="hide-scroll overflow-x-auto">
+                        <ul
+                          class="flex space-x-[3px] whitespace-nowrap pl-0.5 xs:space-x-1"
+                        >
+                          {#each intervals as interval}
+                            <li>
+                              <button
+                                on:click={() => changeData(interval)}
+                                class="px-1 py-1 text-smaller xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
+                              >
+                                <span
+                                  class="block {displayData === interval
+                                    ? 'text-white'
+                                    : 'text-gray-400'}">{interval}</span
+                                >
+                                <div
+                                  class="{displayData === interval
+                                    ? `bg-[${colorChange}] `
+                                    : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
+                                />
+                              </button>
+                            </li>
+                          {/each}
+                        </ul>
+                      </div>
+                      <div
+                        class="flex shrink flex-row space-x-1 pr-1 text-smaller sm:text-base"
+                      >
+                        <span
+                          class={displayLegend?.change >= 0
+                            ? "before:content-['+'] text-[#00FC50]"
+                            : "text-[#FF2F1F]"}
+                        >
+                          {displayLegend?.change}%
+                        </span>
+
+                        <span class="hidden text-gray-200 sm:block"
+                          >({displayData})</span
+                        >
+                      </div>
+                    </div>
+                    <Chart
+                      {...options}
+                      autoSize={true}
+                      ref={(api) => (chart = api)}
+                    >
+                      {#if displayData === "1D"}
+                        <AreaSeries
+                          reactive={true}
+                          data={oneDayPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneDayPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "1W"}
+                        <AreaSeries
+                          data={oneWeekPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneWeekPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "1M"}
+                        <AreaSeries
+                          data={oneMonthPrice?.map(({ time, close }) => ({
+                            time: time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneMonthPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "6M"}
+                        <AreaSeries
+                          data={sixMonthPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={sixMonthPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "1Y"}
+                        <AreaSeries
+                          data={oneYearPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={oneYearPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {:else if displayData === "MAX"}
+                        <AreaSeries
+                          data={maxPrice?.map(({ time, close }) => ({
+                            time,
+                            value: close,
+                          }))}
+                          lineWidth={1.5}
+                          priceScaleId="right"
+                          lineColor={colorChange}
+                          topColor={topColorChange}
+                          bottomColor={bottomColorChange}
+                          ref={handleSeriesReference}
+                          priceLineVisible={false}
+                        >
+                          <PriceLine
+                            price={maxPrice?.at(0)?.close}
+                            lineWidth={1}
+                            color="#fff"
+                          />
+                        </AreaSeries>
+                      {/if}
+                    </Chart>
+                  </div>
+                  <div
+                    class="order-5 lg:order-1 flex flex-row space-x-2 tiny:space-x-3 xs:space-x-4"
                   >
                     <table
                       class="w-[50%] text-sm text-white tiny:text-small lg:w-full lg:min-w-[210px]"
@@ -1391,175 +1448,6 @@
                       </tbody>
                     </table>
                   </div>
-                  <div
-                    class="order-1 sm:order-2 grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
-                  >
-                    <div
-                      class="flex items-center justify-between py-1 sm:pt-0.5"
-                    >
-                      <div class="hide-scroll overflow-x-auto">
-                        <ul
-                          class="flex space-x-[3px] whitespace-nowrap pl-0.5 xs:space-x-1"
-                        >
-                          {#each intervals as interval}
-                            <li>
-                              <button
-                                on:click={() => changeData(interval)}
-                                class="px-1 py-1 text-smaller xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
-                              >
-                                <span
-                                  class="block {displayData === interval
-                                    ? 'text-white'
-                                    : 'text-gray-400'}">{interval}</span
-                                >
-                                <div
-                                  class="{displayData === interval
-                                    ? `bg-[${colorChange}] `
-                                    : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
-                                />
-                              </button>
-                            </li>
-                          {/each}
-                        </ul>
-                      </div>
-                      <div
-                        class="flex shrink flex-row space-x-1 pr-1 text-smaller sm:text-base"
-                      >
-                        <span class="text-green-vivid before:content-['+']"
-                          >0.80%</span
-                        > <span class="hidden text-faded sm:block">(1D)</span>
-                      </div>
-                    </div>
-                    <Chart
-                      {...options}
-                      autoSize={true}
-                      ref={(api) => (chart = api)}
-                      on:crosshairMove={handleCrosshairMove}
-                    >
-                      {#if displayData === "1D"}
-                        <AreaSeries
-                          reactive={true}
-                          data={oneDayPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneDayPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "1W"}
-                        <AreaSeries
-                          data={oneWeekPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneWeekPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "1M"}
-                        <AreaSeries
-                          data={oneMonthPrice?.map(({ time, close }) => ({
-                            time: time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneMonthPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "6M"}
-                        <AreaSeries
-                          data={sixMonthPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={sixMonthPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "1Y"}
-                        <AreaSeries
-                          data={oneYearPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={oneYearPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {:else if displayData === "MAX"}
-                        <AreaSeries
-                          data={maxPrice?.map(({ time, close }) => ({
-                            time,
-                            value: close,
-                          }))}
-                          lineWidth={1.5}
-                          priceScaleId="right"
-                          lineColor={colorChange}
-                          topColor={topColorChange}
-                          bottomColor={bottomColorChange}
-                          ref={handleSeriesReference}
-                          priceLineVisible={false}
-                        >
-                          <PriceLine
-                            price={maxPrice?.at(0)?.close}
-                            lineWidth={1}
-                            color="#fff"
-                          />
-                        </AreaSeries>
-                      {/if}
-                    </Chart>
-                  </div>
                 </div>
               {/if}
             </div>
@@ -1581,8 +1469,12 @@
 
           <!--End Graph-->
 
-          <div class="mt-6 flex flex-row gap-x-14 items-start w-full">
-            <div class="space-y-6 lg:order-2 lg:pt-1 w-[45%] ml-auto">
+          <div
+            class="mt-6 flex flex-col lg:flex-row gap-x-14 items-start w-full"
+          >
+            <div
+              class="space-y-6 lg:order-2 lg:pt-1 sm:pl-7 lg:pl-0 w-full lg:w-[45%] sm:ml-auto"
+            >
               <Sidecard {data} />
               <div class="lg:sticky lg:top-20"></div>
             </div>

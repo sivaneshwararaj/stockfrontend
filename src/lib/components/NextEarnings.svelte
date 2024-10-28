@@ -64,19 +64,20 @@
           during market hours.
         {/if}
         <br />Analysts project revenue of
-        <strong>{abbreviateNumber(rawData?.revenueEst, true)}</strong>,
-        reflecting a
+        <span class="font-semibold"
+          >{abbreviateNumber(rawData?.revenueEst, true)}</span
+        >, reflecting a
         <span
-          class="font-semibold {revenueRatio > 0
-            ? 'text-[#00FC50]'
+          class="{revenueRatio > 0
+            ? "before:content-['+'] text-[#00FC50]"
             : 'text-[#FF2F1F]'} ">{abbreviateNumber(revenueRatio)}%</span
         >
         YoY {revenueRatio > 0 ? "growth" : revenueRatio < 0 ? "shrinking" : ""} and
         earnings per share of
-        <strong>{rawData?.epsEst}</strong>, making a
+        <span class="font-semibold">{rawData?.epsEst}</span>, making a
         <span
-          class="font-semibold {epsRatio > 0
-            ? 'text-[#00FC50]'
+          class="{epsRatio > 0
+            ? "before:content-['+'] text-[#00FC50]"
             : 'text-[#FF2F1F]'} ">{epsRatio}%</span
         >
         {epsRatio > 0 ? "increase" : epsRatio < 0 ? "decrease" : ""} YoY.

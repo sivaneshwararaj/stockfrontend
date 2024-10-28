@@ -23,6 +23,68 @@
 
   let showFullText = false;
 
+  const sectorNavigation = [
+    {
+      title: "Financial Services",
+      link: "/list/financial-sector",
+    },
+    {
+      title: "Finance",
+      link: "/list/financial-sector",
+    },
+    {
+      title: "Healthcare",
+      link: "/list/healthcare-sector",
+    },
+    {
+      title: "Technology",
+      link: "/list/technology-sector",
+    },
+    {
+      title: "Industrials",
+      link: "/list/industrials-sector",
+    },
+    {
+      title: "Energy",
+      link: "/list/energy-sector",
+    },
+    {
+      title: "Utilities",
+      link: "/list/utilities-sector",
+    },
+    {
+      title: "Consumer Cyclical",
+      link: "/list/consumer-cyclical-sector",
+    },
+    {
+      title: "Real Estate",
+      link: "/list/real-estate-sector",
+    },
+    {
+      title: "Basic Materials",
+      link: "/list/basic-materials-sector",
+    },
+    {
+      title: "Communication Services",
+      link: "/list/communication-services-sector",
+    },
+    {
+      title: "Consumer Defensive",
+      link: "/list/consumer-defensive-sector",
+    },
+  ];
+
+  function getIndustryHref(industryName) {
+    // Replace spaces with hyphens
+    let formattedName = industryName?.replace(/ /g, "-");
+    // Replace "&" with "and"
+    formattedName = formattedName?.replace(/&/g, "and");
+    // Remove any extra hyphens (e.g., from consecutive spaces)
+    formattedName = formattedName?.replace(/-{2,}/g, "-");
+    // Convert to lowercase for consistency
+    return "/list/industry/" + formattedName?.toLowerCase();
+  }
+
   $: {
     if (
       $stockTicker &&
@@ -88,7 +150,7 @@
     <div class="inline-block">
       <label
         on:click={() => (showFullText = !showFullText)}
-        class="hidden lg:block w-full text-md mt-1 cursor-pointer font-medium sm:hover:text-white text-blue-400 sm:hover:underline"
+        class="w-full text-md mt-1 cursor-pointer font-medium sm:hover:text-white text-blue-400 sm:hover:underline"
       >
         {#if showFullText}
           [Show less]
@@ -103,7 +165,7 @@
     <div class="col-span-1 text-gray-200">
       <span class="block font-semibold">Industry</span>
       <a
-        href={`/stocks/${$stockTicker}/statistics/employees`}
+        href={getIndustryHref(industry)}
         class="sm:hover:text-blue-400 text-white underline underline-offset-4"
         >{industry}</a
       >
@@ -111,7 +173,7 @@
     <div class="col-span-1 text-gray-200">
       <span class="block font-semibold">Sector</span>
       <a
-        href={`/stocks/${$stockTicker}/statistics/employees`}
+        href={sectorNavigation?.find((item) => item?.title === sector)?.link}
         class="sm:hover:text-blue-400 text-white underline underline-offset-4"
         >{sector}</a
       >
