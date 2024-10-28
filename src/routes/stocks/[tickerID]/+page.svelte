@@ -705,7 +705,7 @@
       prePostData = {};
       output = null;
 
-      stockDeck = data?.getStockDeck;
+      stockDeck = data?.getStockDeck; // Essential otherwise chart will not be updated since we wait until #layout.server.ts server response is finished
 
       const asyncFunctions = [getPrePostQuote()];
 
