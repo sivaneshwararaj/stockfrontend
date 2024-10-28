@@ -1,4 +1,24 @@
-<script lang 'ts'></script>
+<script lang="ts">
+  import { stockTicker } from "$lib/store";
+  import InfoModal from "$lib/components/InfoModal.svelte";
+
+  export let stockDeck: Array<{ stockSplits: Array<any> }> | undefined;
+
+  let showFullHistory = false;
+  let stockSplits: Array<any> = [];
+
+  $: {
+    if (
+      $stockTicker &&
+      typeof window !== "undefined" &&
+      stockDeck &&
+      stockDeck.length > 0
+    ) {
+      stockSplits = stockDeck?.stockSplits || [];
+      showFullHistory = false;
+    }
+  }
+</script>
 
 <section class="overflow-hidden text-white h-full">
   <main class="overflow-hidden">

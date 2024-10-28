@@ -1,4 +1,172 @@
-<script lang 'ts'></script>
+<script lang="ts">
+  import {
+    retailVolumeComponent,
+    displayCompanyName,
+    stockTicker,
+    assetType,
+    etfTicker,
+    screenWidth,
+    getCache,
+    setCache,
+  } from "$lib/store";
+  import InfoModal from "$lib/components/InfoModal.svelte";
+  import { Chart } from "svelte-echarts";
+  import { abbreviateNumber, formatDateRange, monthNames } from "$lib/utils";
+  import { init, use } from "echarts/core";
+  import { LineChart, BarChart } from "echarts/charts";
+  import { GridComponent, TooltipComponent } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
+
+  use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+
+  export let data: any;
+
+  let isLoaded = false;
+  let historyData: Array<{ date: string; traded: number; sentiment: number }> =
+    [];
+  let rawData: { history: typeof historyData; lastDate?: string } | null = null;
+  let optionsData: any;
+  let avgVolume: number | string = 0;
+  let avgSentiment: string = "";
+  let monthlyVolume: string | number = 0;
+  let lowestSentiment: string | number = 0;
+  let highestSentiment: string | number = 0;
+
+  function findMonthlyValue(data: any[], lastDateStr: string) {
+    if (!data || !data[0]?.sentiment) {
+      console.error("Sentiment is undefined or missing in the data:", data);
+      $retailVolumeComponent = false;
+      return;
+    }
+    const lastDate = new Date(lastDateStr);
+    const firstDate = new Date(lastDate.getFullYear(), lastDate.getMonth(), 1);
+    const filteredData = data.filter((item) => {
+      const currentDate = new Date(item.date);
+      return currentDate >= firstDate && currentDate <= lastDate;
+    });
+
+    monthlyVolume = filteredData.reduce(
+      (acc, item) => acc + (item.traded || 0),
+      0,
+    );
+    monthlyVolume =
+      monthlyVolume > 100e3 ? abbreviateNumber(monthlyVolume, true) : "< $100K";
+
+    const sentiments = filteredData.map((item) => parseFloat(item.sentiment));
+    lowestSentiment = Math.min(...sentiments).toFixed(0);
+    highestSentiment = Math.max(...sentiments).toFixed(0);
+  }
+
+  function getPlotOptions() {
+    const dates = historyData.map((item) => item.date);
+    const tradingList = historyData.map((item) => item.traded);
+    const sentimentList = historyData.map((item) => item.sentiment);
+
+    findMonthlyValue(historyData, rawData?.lastDate || "");
+
+    const totalTraded = tradingList.reduce((acc, traded) => acc + traded, 0);
+    avgVolume = totalTraded / tradingList.length;
+    avgSentiment =
+      sentimentList.reduce((acc, sentiment) => acc + sentiment, 0) /
+        tradingList.length >
+      1
+        ? "Bullish"
+        : "Bearish";
+
+    return {
+      silent: true,
+      animation: false,
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+      },
+      grid: {
+        left: "3%",
+        right: "3%",
+        bottom: "0%",
+        top: "5%",
+        containLabel: true,
+      },
+      xAxis: {
+        type: "category",
+        boundaryGap: false,
+        data: dates,
+        axisLabel: {
+          color: "#fff",
+          formatter: (value: string) => {
+            const [year, month, day] = value.split("-");
+            return `${day} ${monthNames[parseInt(month) - 1]}`;
+          },
+        },
+      },
+      yAxis: [
+        {
+          type: "value",
+          splitLine: { show: false },
+          axisLabel: { show: false },
+        },
+        {
+          type: "value",
+          splitLine: { show: false },
+          position: "right",
+          axisLabel: { show: false },
+        },
+      ],
+      series: [
+        {
+          name: "Volume [$]",
+          data: tradingList,
+          type: "line",
+          itemStyle: { color: "#fff" },
+          showSymbol: false,
+        },
+        {
+          name: "Retail Sentiment",
+          data: sentimentList,
+          type: "bar",
+          yAxisIndex: 1,
+          itemStyle: {
+            color: (params: any) => (params.data >= 0 ? "#22C55E" : "#F71F4F"),
+          },
+        },
+      ],
+    };
+  }
+
+  const getRetailVolume = async (ticker: string) => {
+    const cachedData = getCache(ticker, "getRetailVolume");
+    if (cachedData) {
+      rawData = cachedData;
+      historyData = rawData.history;
+    } else {
+      const response = await fetch("/api/ticker-data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ticker, path: "retail-volume" }),
+      });
+      rawData = await response.json();
+      historyData = rawData.history;
+      setCache(ticker, rawData, "getRetailVolume");
+    }
+    $retailVolumeComponent = !!rawData;
+  };
+
+  $: {
+    if (
+      ($assetType === "stock" ? $stockTicker : $etfTicker) &&
+      typeof window !== "undefined"
+    ) {
+      isLoaded = false;
+      const ticker = $assetType === "stock" ? $stockTicker : $etfTicker;
+      Promise.all([getRetailVolume(ticker)])
+        .then(() => {
+          optionsData = rawData ? getPlotOptions() : null;
+          isLoaded = true;
+        })
+        .catch((error) => console.error("An error occurred:", error));
+    }
+  }
+</script>
 
 <section class="overflow-hidden text-white h-full pb-8">
   <main class="overflow-hidden">

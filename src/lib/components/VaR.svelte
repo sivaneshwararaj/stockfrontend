@@ -1,5 +1,126 @@
-<script lang 'ts'></script>
+<script lang="ts">
+  import { varComponent, displayCompanyName, stockTicker, etfTicker, cryptoTicker, assetType, getCache, setCache } from '$lib/store';
+  import InfoModal from '$lib/components/InfoModal.svelte';
 
+  import { Chart } from 'svelte-echarts';
+
+  import { init, use } from 'echarts/core';
+  import { LineChart } from 'echarts/charts';
+  import { GridComponent, TooltipComponent } from 'echarts/components';
+  import { CanvasRenderer } from 'echarts/renderers';
+
+  export let data;
+
+  use([LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
+
+  let isLoaded = false;
+  let rating: string | undefined;
+  let outlook: string | undefined;
+  let valueAtRisk: number | string | undefined;
+  let varDict: Record<string, any> = {};
+  let optionsData: any;
+  let monthlyVarAvg: string | undefined;
+
+  function getPlotOptions() {
+    const dates: string[] = [];
+    const varList: number[] = [];
+
+    varDict?.history?.forEach((item: { date: string; var: number }) => {
+      dates.push(item.date);
+      varList.push(item.var);
+    });
+
+    const sum = varList.reduce((acc, curr) => acc + curr, 0);
+    monthlyVarAvg = (sum / varList.length)?.toFixed(2);
+
+    const option = {
+      silent: true,
+      tooltip: {
+        trigger: 'axis',
+        hideDelay: 100,
+      },
+      animation: false,
+      grid: {
+        left: '2%',
+        right: '2%',
+        bottom: '2%',
+        top: '5%',
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: dates,
+        axisLabel: {
+          color: '#fff',
+          formatter: (value: string) => {
+            const date = new Date(value + '-01');
+            return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short' }).format(date);
+          },
+        },
+      },
+      yAxis: [
+        {
+          type: 'value',
+          splitLine: { show: false },
+          axisLabel: { show: false },
+        },
+      ],
+      series: [
+        {
+          name: 'VaR',
+          data: varList,
+          type: 'line',
+          areaStyle: { opacity: 0.8 },
+          itemStyle: { color: '#E11D48' },
+          showSymbol: false,
+        },
+      ],
+    };
+
+    return option;
+  }
+
+  const getVaR = async (ticker: string) => {
+    const cachedData = getCache(ticker, 'getVaR');
+    if (cachedData) {
+      varDict = cachedData;
+    } else {
+      const postData = { ticker, path: 'value-at-risk' };
+      const response = await fetch('/api/ticker-data', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(postData),
+      });
+
+      varDict = await response.json();
+      setCache(ticker, varDict, 'getVaR');
+    }
+
+    $varComponent = Object.keys(varDict).length !== 0;
+  };
+
+  $: {
+    const ticker = $assetType === 'stock' ? $stockTicker : $assetType === 'etf' ? $etfTicker : $cryptoTicker;
+    if (ticker && typeof window !== 'undefined') {
+      isLoaded = false;
+
+      getVaR(ticker)
+        .then(() => {
+          rating = varDict.rating;
+          outlook = varDict.outlook;
+          valueAtRisk = varDict.history?.slice(-1)?.at(0)?.var ?? "n/a";
+          optionsData = getPlotOptions();
+        })
+        .catch((error) => console.error('An error occurred:', error))
+        .finally(() => {
+          isLoaded = true;
+        });
+    }
+  }
+</script>
+
+    
 <section class="overflow-hidden text-white h-full pb-10 sm:pb-0">
   <main class="overflow-hidden">
     <div class="flex flex-row items-center">
