@@ -1199,7 +1199,7 @@ const handleTwitchMessage = (event) => {
                     <Card.Header class="p-2 pt-0 md:p-4">
                       <Card.Title>Upgrade to Pro</Card.Title>
                       <Card.Description>
-                        Get unlimit access to all features
+                        Get unlimited access to all features
                       </Card.Description>
                     </Card.Header>
                     <Card.Content class="p-2 pt-0 md:p-4 md:pt-0">
