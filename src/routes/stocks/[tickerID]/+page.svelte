@@ -76,20 +76,11 @@
       if (!$isCrosshairMoveActive && $realtimePrice !== null) {
         change = (($realtimePrice / previousClose - 1) * 100)?.toFixed(2);
       } else {
-        change =
-          displayData === "1D"
-            ? (
-                ((currentDataRow?.close ?? currentDataRow?.value) /
-                  previousClose -
-                  1) *
-                100
-              )?.toFixed(2)
-            : (
-                ((currentDataRow?.close ?? currentDataRow?.value) /
-                  displayLastLogicalRangeValue -
-                  1) *
-                100
-              )?.toFixed(2);
+        change = (
+          ((currentDataRow?.close ?? currentDataRow?.value) / previousClose -
+            1) *
+          100
+        )?.toFixed(2);
       }
 
       const date = new Date(currentDataRow?.time * 1000);
@@ -104,24 +95,14 @@
       };
 
       //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      const formattedDate =
-        displayData === "1D" || displayData === "1W" || displayData === "1M"
-          ? date.toLocaleString("en-US", options)
-          : date.toLocaleDateString("en-US", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            });
+      const formattedDate = date?.toLocaleString("en-US", options);
 
       const safeFormattedDate =
         formattedDate === "Invalid Date"
           ? convertTimestamp(data?.getStockQuote?.timestamp)
           : formattedDate;
       displayLegend = {
-        close:
-          currentDataRow?.value === "-" && currentDataRow?.close === undefined
-            ? data?.getStockQuote?.price
-            : (currentDataRow?.close ?? currentDataRow?.value),
+        close: data?.getStockQuote?.price?.toFixed(2),
         date: safeFormattedDate,
         change: change,
       };
@@ -481,7 +462,6 @@
       case 3: // TickMarkType.Time:
         formatOptions.hour12 = true; // Use 12-hour clock
         formatOptions.hour = "numeric"; // Use numeric hour without leading zero
-        formatOptions.minute = "2-digit"; // Always show minutes with leading zero
         break;
       case 4: // TickMarkType.TimeWithSeconds:
         formatOptions.hour12 = true; // Use 12-hour clock
@@ -1011,16 +991,18 @@
           <!--End Ticker Section-->
           <!-- Start Graph -->
 
-          <div class="sm:pl-7 mt-4 lg:flex lg:flex-row lg:gap-x-4 w-full">
+          <div class="sm:pl-7 mt-4 mb-5 lg:flex lg:flex-row lg:gap-x-4 w-full">
             {#if dataMapping[displayData]?.length === 0}
               <div
                 class="order-1 lg:order-5 m-auto grow overflow-hidden border-t border-gray-600 py-0.5 xs:py-1 sm:px-0.5 sm:pb-3 sm:pt-2.5 lg:mb-0 lg:border-0 lg:border-l lg:border-sharp lg:px-0 lg:py-0 lg:pl-5 md:mb-4 md:border-b"
               >
-                <div class="h-[250px] sm:h-[300px]">
+                <div class="h-[250px] sm:h-[400px]">
                   <div
-                    class="flex h-full w-full flex-col items-center justify-center rounded-sm border border-gray-600 p-6 text-center md:p-12"
+                    class="flex h-full w-full flex-col items-center justify-center rounded-sm border border-gray-800 p-6 text-center md:p-12"
                   >
-                    <div class="mb-4 text-white text-xl font-semibold">
+                    <div
+                      class="mb-4 text-white text-[1rem] sm:text-xl font-semibold"
+                    >
                       No {displayData} chart data available
                     </div>
                   </div>
@@ -1039,7 +1021,7 @@
                         <li>
                           <button
                             on:click={() => changeData(interval)}
-                            class="px-1 py-1 text-smaller xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
+                            class="px-1 py-1 text-sm sm:text-[1rem] xs:px-[3px] bp:px-1.5 sm:px-2 xxxl:px-3"
                           >
                             <span
                               class="block {displayData === interval
@@ -1057,7 +1039,7 @@
                     </ul>
                   </div>
                   <div
-                    class="flex shrink flex-row space-x-1 pr-1 text-smaller sm:text-base"
+                    class="flex shrink flex-row space-x-1 pr-1 text-sm sm:text-[1rem]"
                   >
                     <span
                       class={displayLegend?.change >= 0
@@ -1258,11 +1240,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.at(0)?.revenueTTM !== undefined
-                        ? abbreviateNumber(
-                            data?.getStockDeck?.at(0)?.revenueTTM,
-                          )
-                        : "-"}</td
+                      >{data?.getStockDeck?.revenueTTM !== null
+                        ? abbreviateNumber(data?.getStockDeck?.revenueTTM)
+                        : "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1273,11 +1253,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.at(0)?.netIncomeTTM !== undefined
-                        ? abbreviateNumber(
-                            data?.getStockDeck?.at(0)?.netIncomeTTM,
-                          )
-                        : "-"}</td
+                      >{data?.getStockDeck?.netIncomeTTM !== null
+                        ? abbreviateNumber(data?.getStockDeck?.netIncomeTTM)
+                        : "n/a"}</td
                     ></tr
                   >
 
@@ -1311,7 +1289,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.at(0)?.forwardPE ?? "-"}</td
+                      >{data?.getStockDeck?.forwardPE ?? "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1322,9 +1300,11 @@
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{abbreviateNumber(
-                        data?.getStockQuote?.sharesOutstanding,
-                      )}</td
+                      >{data?.getStockQuote?.sharesOutstanding !== null
+                        ? abbreviateNumber(
+                            data?.getStockQuote?.sharesOutstanding,
+                          )
+                        : "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1335,7 +1315,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >1.2%</td
+                      >{data?.getStockDeck?.shortOutStandingPercent}%</td
                     ></tr
                   >
                 </tbody>
@@ -1377,7 +1357,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockQuote?.open}</td
+                      >{data?.getStockQuote?.open?.toFixed(2)}</td
                     ></tr
                   >
                   <tr
@@ -1388,7 +1368,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockQuote?.previousClose}</td
+                      >{data?.getStockQuote?.previousClose?.toFixed(2)}</td
                     ></tr
                   >
                   <tr
@@ -1399,8 +1379,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockQuote?.dayLow} - {data?.getStockQuote
-                        ?.dayHigh}</td
+                      >{data?.getStockQuote?.dayLow?.toFixed(2)} - {data?.getStockQuote?.dayHigh?.toFixed(
+                        2,
+                      )}</td
                     ></tr
                   >
                   <tr
@@ -1411,8 +1392,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockQuote?.yearLow} - {data?.getStockQuote
-                        ?.yearHigh}</td
+                      >{data?.getStockQuote?.yearLow?.toFixed(2)} - {data?.getStockQuote?.yearHigh?.toFixed(
+                        2,
+                      )}</td
                     ></tr
                   >
                   <tr
@@ -1423,7 +1405,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockDeck?.at(0)?.beta?.toFixed(2)}</td
+                      >{data?.getStockDeck?.beta?.toFixed(2)}</td
                     ></tr
                   >
                   <tr
@@ -1434,9 +1416,9 @@
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{abbreviateNumber(
-                        data?.getStockQuote?.sharesOutstanding,
-                      )}</td
+                      >{data?.getStockDeck?.floatShares !== null
+                        ? abbreviateNumber(data?.getStockDeck?.floatShares)
+                        : "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1447,7 +1429,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >1.2%</td
+                      >{data?.getStockDeck?.shortFloatPercent}%</td
                     ></tr
                   >
                 </tbody>

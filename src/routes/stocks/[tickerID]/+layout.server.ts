@@ -93,6 +93,6 @@ export const load = async ({ params, locals }) => {
     getDividendAnnouncement,
     getNews,
     getUserWatchlist,
-    companyName: cleanString(getStockDeck?.at(0)?.companyName),
+    companyName: cleanString(getStockDeck?.companyName),
   };
 };

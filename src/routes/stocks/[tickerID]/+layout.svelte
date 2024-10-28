@@ -60,8 +60,6 @@
 
   let displaySection = "";
 
-  let stockDeck;
-
   function shareContent(url) {
     if (navigator.share) {
       navigator
@@ -294,7 +292,6 @@ function handleTypeOfTrade(state:string)
       typeof window !== "undefined"
     ) {
       // add a check to see if running on client-side
-      stockDeck = data?.getStockDeck;
 
       $currentPortfolioPrice = data?.getStockQuote?.price;
     }
@@ -730,7 +727,7 @@ function handleTypeOfTrade(state:string)
                               : ''}"
                           >
                             <AIScore
-                              score={data?.getStockDeck?.at(0)?.score}
+                              score={data?.getStockDeck?.score}
                               tier={data?.user?.tier}
                             />
                           </div>

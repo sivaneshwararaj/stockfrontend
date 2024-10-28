@@ -20,6 +20,7 @@
   let numOfAnalyst = 0;
   let consensusRating = "n/a";
   let changesPercentage = 0;
+  let ipoDate = "n/a";
 
   let showFullText = false;
 
@@ -87,7 +88,16 @@
 
   $: {
     if ($stockTicker && typeof window !== "undefined") {
-      info = data?.getStockDeck?.at(0);
+      info = data?.getStockDeck;
+      ipoDate =
+        info?.ipoDate !== null
+          ? new Date(info?.ipoDate)?.toLocaleString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+              daySuffix: "2-digit",
+            })
+          : "n/a";
 
       //ceoName = info?.ceoName?.length !== 0 ? getAbbreviatedName(info?.ceoName) : "-";
       sector = info?.sector ?? "-";
@@ -175,7 +185,7 @@
     </div>
     <div class="col-span-1 text-gray-200">
       <span class="block font-semibold">IPO Date</span>
-      <span>Jan 22, 1999</span>
+      <span>{ipoDate}</span>
     </div>
     <div class="col-span-1 text-gray-200">
       <span class="block font-semibold">Employees</span>
