@@ -1211,7 +1211,7 @@
                     </Chart>
                   </div>
                   <div
-                    class="order-5 lg:order-1 flex flex-row space-x-2 tiny:space-x-3 xs:space-x-4"
+                    class="mt-10 lg:mt-0 order-5 lg:order-1 flex flex-row space-x-2 tiny:space-x-3 xs:space-x-4"
                   >
                     <table
                       class="w-[50%] text-sm text-white tiny:text-small lg:w-full lg:min-w-[210px]"
@@ -1221,10 +1221,7 @@
                           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                           ><td
                             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            ><a
-                              href="/stocks/nvda/market-cap/"
-                              class="dothref text-white">Bid</a
-                            ></td
+                            >Bid</td
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
@@ -1237,10 +1234,7 @@
                           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                           ><td
                             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            ><a
-                              href="/stocks/nvda/market-cap/"
-                              class="dothref text-white">Market Cap</a
-                            ></td
+                            >Market Cap</td
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
@@ -1253,10 +1247,7 @@
                           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                           ><td
                             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            ><a
-                              href="/stocks/nvda/revenue/"
-                              class="dothref text-white">Revenue (ttm)</a
-                            ></td
+                            >Revenue (ttm)</td
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
@@ -1284,32 +1275,7 @@
                               : "-"}</td
                           ></tr
                         >
-                        <tr
-                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                          ><td
-                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Shares Out <span class="relative" role="tooltip"
-                              ><span
-                                class="absolute -right-[13px] -top-[3px] cursor-pointer p-1 text-gray-300 hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-300"
-                                ><svg
-                                  class="h-[9px] w-[9px]"
-                                  viewBox="0 0 4 16"
-                                  fill="currentColor"
-                                  style="max-width:20px"
-                                  ><path
-                                    d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
-                                  ></path></svg
-                                ></span
-                              ></span
-                            >
-                          </td>
-                          <td
-                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >{abbreviateNumber(
-                              data?.getStockQuote?.sharesOutstanding,
-                            )}</td
-                          ></tr
-                        >
+
                         <tr
                           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                           ><td
@@ -1347,14 +1313,24 @@
                           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                           ><td
                             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            ><a
-                              href="/stocks/nvda/dividend/"
-                              class="dothref text-white">Dividend</a
-                            ></td
+                            >Shares Out
+                          </td>
+                          <td
+                            class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
+                            >{abbreviateNumber(
+                              data?.getStockQuote?.sharesOutstanding,
+                            )}</td
+                          ></tr
+                        >
+                        <tr
+                          class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                          ><td
+                            class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
+                            >Short % of Shares Out</td
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >$0.04 (0.03%)</td
+                            >1.2%</td
                           ></tr
                         >
                       </tbody>
@@ -1449,22 +1425,24 @@
                           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                           ><td
                             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Analysts</td
-                          >
+                            >Shares Float
+                          </td>
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >Strong Buy</td
+                            >{abbreviateNumber(
+                              data?.getStockQuote?.sharesOutstanding,
+                            )}</td
                           ></tr
                         >
                         <tr
                           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                           ><td
                             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                            >Price Target</td
+                            >Short % of Float</td
                           >
                           <td
                             class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                            >145.84 (+3.04%)</td
+                            >1.2%</td
                           ></tr
                         >
                       </tbody>
