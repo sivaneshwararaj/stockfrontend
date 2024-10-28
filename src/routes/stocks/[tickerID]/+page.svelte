@@ -333,7 +333,6 @@
     intervalId = setInterval(checkChart, 0);
     try {
       output = [...data?.getOneDayPrice] ?? [];
-
       oneDayPrice = output?.map((item) => ({
         time: Date?.parse(item?.time + "Z") / 1000,
         open: item?.open !== null ? item?.open : NaN,
@@ -594,7 +593,9 @@
 
       Promise.all(asyncFunctions)
         .then((results) => {
-          initializePrice();
+          setTimeout(() => {
+            initializePrice();
+          }, 100);
         })
         .catch((error) => {
           console.error("An error occurred:", error);
