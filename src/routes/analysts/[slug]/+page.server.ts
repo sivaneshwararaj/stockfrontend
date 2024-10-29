@@ -1,6 +1,6 @@
-export const load = async ({ locals, setHeaders, params }) => {
+export const load = async ({ locals, params }) => {
   const getAnalystStats = async () => {
-    const { apiURL, apiKey, user } = locals;
+    const { apiURL, apiKey } = locals;
 
     const postData = { analystId: params.slug };
     // make the POST request to the endpoint
@@ -13,9 +13,7 @@ export const load = async ({ locals, setHeaders, params }) => {
       body: JSON.stringify(postData),
     });
 
-    let output = await response.json();
-
-    setHeaders({ "cache-control": "public, max-age=3000" });
+    const output = await response.json();
 
     return output;
   };

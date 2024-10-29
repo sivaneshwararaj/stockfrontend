@@ -130,128 +130,141 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
 >
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
-      <li class="text-gray-300">Top Analyst Stocks</li>
+      <li><a href="/analysts" class="text-gray-300">Analyst</a></li>
+
+      <li class="text-gray-300">{analystName}</li>
     </ul>
   </div>
 
-  <div class="w-full overflow-hidden m-auto mt-5">
+  <div class="w-full overflow-hidden m-auto">
     <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
           <div class="w-full m-auto mt-12">
-            <div
-              class="flex flex-row items-center -ml-10 sm:ml-0 justify-center sm:justify-start"
-            >
-              <svg
-                class="w-16 h-16"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 32 32"
-                ><path
-                  fill="#D4D4D4"
-                  d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5"
-                /><path
-                  fill="#D4D4D4"
-                  d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m7.993 22.926A5.002 5.002 0 0 0 19 20h-6a5.002 5.002 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0"
-                /></svg
+            <div class="items-center justify-between lg:flex">
+              <div
+                class="flex space-x-3 border-b-[2px] border-below-title pb-3 lg:border-none lg:pb-0"
               >
-              <div class="ml-3 flex flex-col items-start">
-                <div class="text-xl font-bold text-gray-200">{analystName}</div>
-                <div class="text-[1rem] text-gray-200">
-                  Analyst at {companyName}
+                <div class="flex-shrink-0">
+                  <svg
+                    class="h-16 w-16 sm:h-20 sm:w-20 text-gray-200"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    style="max-width:100px"
+                    ><path
+                      fill-rule="evenodd"
+                      d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                      clip-rule="evenodd"
+                    ></path></svg
+                  >
                 </div>
-                <div class="flex flex-row items-center mt-1">
-                  {#each Array.from({ length: 5 }) as _, i}
-                    {#if i < Math.floor(analystScore)}
-                      <svg
-                        class="w-5 h-5 text-[#FBCE3C]"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path
-                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                        />
-                      </svg>
-                    {:else}
-                      <svg
-                        class="w-5 h-5 text-gray-300 dark:text-gray-500"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path
-                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                        />
-                      </svg>
-                    {/if}
-                  {/each}
-
-                  <span class="ml-1 text-sm sm:text-[1rem] text-gray-400">
-                    ({analystScore})
-                  </span>
+                <div class="mt-0 pt-0.5 text-left">
+                  <h1 class="mb-0 text-2xl font-bold text-white">
+                    {analystName}
+                  </h1>
+                  <p class="mb-0.5 text-sm font-semibold text-gray-300">
+                    Stock Analyst at {companyName}
+                  </p>
+                  <div class="inline-flex items-center">
+                    <div class="flex flex-row items-center mt-1">
+                      {#each Array.from({ length: 5 }) as _, i}
+                        {#if i < Math.floor(analystScore)}
+                          <svg
+                            class="w-5 h-5 text-[#FBCE3C]"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 22 20"
+                          >
+                            <path
+                              d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                            />
+                          </svg>
+                        {:else}
+                          <svg
+                            class="w-5 h-5 text-gray-300 dark:text-gray-500"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 22 20"
+                          >
+                            <path
+                              d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                            />
+                          </svg>
+                        {/if}
+                      {/each}
+                    </div>
+                    <span class="ml-1 text-sm text-white">({analystScore})</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="mt-4 grid grid-cols-2 overflow-hidden rounded-lg border border-gray-600 py-2 text-center md:grid-cols-4 md:p-0 lg:mt-0 lg:border-none"
+              >
+                <div class="flex flex-col px-4 py-2 bp:px-6 md:py-6">
+                  <div class="text-2xl font-semibold tracking-tight text-white">
+                    # {rank}
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Out of {numOfAnalysts} analysts
+                  </div>
+                </div>
+                <div
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
+                >
+                  <div class="text-2xl font-bold tracking-tight text-white">
+                    {totalRatings}
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Total ratings
+                  </div>
+                </div>
+                <div
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
+                >
+                  <div class="text-2xl font-bold tracking-tight">
+                    <span
+                      class={successRate >= 0
+                        ? "before:content-['+'] text-[#36D984]"
+                        : "text-[#EF4444]"}>{successRate?.toFixed(2)}%</span
+                    >
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Success rate
+                  </div>
+                </div>
+                <div
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
+                >
+                  <div class="text-2xl font-bold tracking-tight text-white">
+                    <span
+                      class={avgReturn >= 0
+                        ? "before:content-['+'] text-[#36D984]"
+                        : "text-[#EF4444]"}>{avgReturn?.toFixed(2)}%</span
+                    >
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Average return
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="p-2 sm:p-0">
+            <div class="mb-10 mt-10">
               <div
-                class="stats stats-horizontal bg-[#09090B] w-full rounded-none sm:rounded-lg mt-12 mb-5"
-              >
-                <div class="grid grid-cols-2 sm:grid-cols-4">
-                  <div class="stat">
-                    <div class="text-2xl font-bold text-gray-200"># {rank}</div>
-                    <div class="text-gray-200 text-sm">
-                      Out of {numOfAnalysts} analysts
-                    </div>
-                  </div>
-
-                  <div class="stat">
-                    <div class="text-2xl font-bold text-gray-200">
-                      {totalRatings}
-                    </div>
-                    <div class="text-gray-200 text-sm">Total Ratings</div>
-                  </div>
-
-                  <div class="stat">
-                    <div
-                      class="text-2xl font-bold {successRate >= 0
-                        ? 'text-[#36D984]'
-                        : 'text-[#EF4444]'}"
-                    >
-                      {successRate >= 0 ? "+" : ""}{successRate?.toFixed(2)}%
-                    </div>
-                    <div class="text-gray-200 text-sm">Success Rate</div>
-                  </div>
-
-                  <div class="stat">
-                    <div
-                      class="text-2xl font-bold {avgReturn >= 0
-                        ? 'text-[#36D984]'
-                        : 'text-[#EF4444]'}"
-                    >
-                      {avgReturn >= 0 ? "+" : ""}{avgReturn?.toFixed(2)}%
-                    </div>
-                    <div class="text-gray-200 text-sm">Avg Return</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="p-2 sm:p-0 mb-10">
-              <div
-                class="text-white p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+                class="text-white p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
               >
                 <div class="flex flex-col items-start">
-                  <span class="text-gray-300 font-bold text-lg smtext-xl">
+                  <span class="text-white font-semibold text-lg sm:text-xl">
                     Main Sectors:
                   </span>
 
@@ -261,7 +274,7 @@
                     {#each data?.getAnalystStats?.mainSectors as sector}
                       <a
                         href={"/list/" + sectorSelector(sector)}
-                        class="cursor-pointer w-fit bg-[#404040] bg-opacity-[0.5] sm:hover:bg-opacity-[0.6] px-3 sm:px-4 py-2 text-sm sm:text-[1rem] font-medium rounded-lg sm:hover:text-white text-blue-400"
+                        class="cursor-pointer w-fit border border-gray-600 px-3 sm:px-4 py-2 text-sm sm:text-[1rem] font-medium rounded-md sm:hover:text-blue-400 text-white underline underline-offset-4"
                       >
                         {sector}
                       </a>
@@ -271,13 +284,13 @@
               </div>
             </div>
 
-            <span class="p-3 text-[#F5F5F5] font-bold text-2xl">
+            <span class="text-[#F5F5F5] font-bold text-2xl">
               {numOfStocks} Stocks
             </span>
 
-            <div class="w-screen sm:w-full m-auto mt-10">
+            <div class="w-full m-auto mt-10">
               <div
-                class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll"
+                class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll"
               >
                 <table
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
@@ -285,23 +298,23 @@
                   <thead>
                     <tr class="bg-[#09090B]">
                       <th
-                        class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
+                        class="text-start bg-[#09090B] text-white text-sm font-semibold"
                       >
                         Stock
                       </th>
                       <th
-                        class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
+                        class="text-start bg-[#09090B] text-white text-sm font-semibold"
                       >
                         Action
                       </th>
 
                       <th
-                        class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
+                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
                       >
                         Price Target
                       </th>
-                      <th class="text-white font-semibold text-end text-[1rem]">
-                        Date
+                      <th class="text-white font-semibold text-end text-sm">
+                        Updated
                       </th>
                     </tr>
                   </thead>
@@ -322,7 +335,7 @@
                               </span>
 
                               <div
-                                class="ml-px max-w-[130px] truncate text-sm text-default blur group-hover:blur-[6px] lg:max-w-[150px]"
+                                class="ml-px max-w-[130px] truncate text-sm text-white blur group-hover:blur-[6px] lg:max-w-[150px]"
                               >
                                 XXXXXXXXXXXXXXXX
                               </div>
@@ -343,7 +356,7 @@
                                 </svg>
 
                                 <span
-                                  class="ml-1 font-semibold text-muted group-hover:text-default"
+                                  class="ml-1 font-semibold text-gray-300 group-hover:text-white"
                                 >
                                   Upgrade
                                 </span>
@@ -377,13 +390,16 @@
                               class="font-medium {[
                                 'Strong Buy',
                                 'Buy',
+                                'Outperform',
                               ]?.includes(item?.rating_current)
                                 ? 'text-[#00FC50]'
                                 : item?.rating_current === 'Hold'
                                   ? 'text-[#FF7070]'
-                                  : ['Strong Sell', 'Sell']?.includes(
-                                        item?.rating_current,
-                                      )
+                                  : [
+                                        'Strong Sell',
+                                        'Sell',
+                                        'Underperform',
+                                      ]?.includes(item?.rating_current)
                                     ? 'text-[#FF2F1F]'
                                     : 'text-gray-300'}"
                             >
@@ -398,7 +414,7 @@
                           <div class="flex flex-row items-center justify-end">
                             {#if Math?.ceil(item?.adjusted_pt_prior) !== 0}
                               <span class="text-gray-100 font-normal"
-                                >${Math?.ceil(item?.adjusted_pt_prior)}</span
+                                >{Math?.ceil(item?.adjusted_pt_prior)}</span
                               >
                               <svg
                                 class="w-3 h-3 ml-1 mr-1 inline-block"
@@ -414,12 +430,14 @@
                                 /></svg
                               >
                               <span class="text-white font-semibold"
-                                >${Math?.ceil(item?.adjusted_pt_current)}</span
+                                >{Math?.ceil(item?.adjusted_pt_current)}</span
                               >
                             {:else if Math?.ceil(item?.adjusted_pt_current) !== 0}
                               <span class="text-white font-semibold"
-                                >${Math?.ceil(item?.adjusted_pt_current)}</span
+                                >{Math?.ceil(item?.adjusted_pt_current)}</span
                               >
+                            {:else}
+                              n/a
                             {/if}
                           </div>
                         </td>
@@ -454,7 +472,7 @@
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                   <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription 🔥
+                    Pro Subscriptio
                   </h2>
                   <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
@@ -474,7 +492,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Top Analyst 📊
+                  Top Analyst
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
@@ -493,7 +511,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Top Stocks Picks ⭐
+                  Top Stocks Picks
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>

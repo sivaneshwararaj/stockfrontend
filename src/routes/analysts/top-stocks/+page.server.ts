@@ -1,4 +1,4 @@
-export const load = async ({ locals, setHeaders }) => {
+export const load = async ({ locals }) => {
   const getTopAnalystStocks = async () => {
     const { apiURL, apiKey, user } = locals;
 
@@ -14,7 +14,6 @@ export const load = async ({ locals, setHeaders }) => {
 
     output = user?.tier !== "Pro" ? output?.reverse()?.slice(0, 6) : output;
 
-    setHeaders({ "cache-control": "public, max-age=3000" });
     return output;
   };
 

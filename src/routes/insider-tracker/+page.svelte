@@ -9,9 +9,11 @@
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-  let isLoaded = false;
-  let rawData = [];
-  let stockList = [];
+  let isLoaded = true;
+  let rawData = data?.getInsiderTracker ?? [];
+  let stockList = rawData?.slice(0, 50) ?? [];
+
+  isLoaded = true;
 
   function formatDateTime(dateTimeStr) {
     const date = new Date(dateTimeStr);
@@ -39,11 +41,6 @@
   }
 
   onMount(() => {
-    rawData = data?.getInsiderTracker ?? [];
-    stockList = rawData?.slice(0, 50) ?? [];
-
-    isLoaded = true;
-
     if (data?.user?.tier === "Pro") {
       window.addEventListener("scroll", handleScroll);
       return () => {

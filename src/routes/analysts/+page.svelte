@@ -8,8 +8,7 @@
 
   export let data;
 
-  let isLoaded = false;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+  let isLoaded = true;
 
   let rawData = data?.getTopAnalyst;
   let analytRatingList = rawData?.slice(0, 40) ?? [];
@@ -25,7 +24,6 @@
   }
 
   onMount(async () => {
-    isLoaded = true;
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
