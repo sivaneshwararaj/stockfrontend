@@ -203,9 +203,9 @@
               value of $100,000.
             </div>
 
-            <div class="w-screen sm:w-full m-auto mt-20 sm:mt-10">
+            <div class="w-full m-auto mt-20 sm:mt-10">
               <div
-                class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+                class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
               >
                 <table
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
