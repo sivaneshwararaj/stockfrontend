@@ -4,9 +4,9 @@ export const load = async ({ locals, params }) => {
   };
   const getMarketCapCategory = async () => {
     const { apiKey, apiURL } = locals;
-    const postData = { category: params.slug };
+    const postData = { filterList: params.slug };
 
-    const response = await fetch(apiURL + "/cap-category", {
+    const response = await fetch(apiURL + "/list-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

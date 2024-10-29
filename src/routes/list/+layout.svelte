@@ -107,47 +107,47 @@
     },
     {
       title: "Financials Sector Stocks",
-      link: "/list/financial-sector",
+      link: "/list/sector/financial",
     },
     {
       title: "Healthcare Sector Stocks",
-      link: "/list/healthcare-sector",
+      link: "/list/sector/healthcare",
     },
     {
       title: "Technology Sector Stocks",
-      link: "/list/technology-sector",
+      link: "/list/sector/technology",
     },
     {
       title: "Industrials Sector Stocks",
-      link: "/list/industrials-sector",
+      link: "/list/sector/industrials",
     },
     {
       title: "Energy Sector Stocks",
-      link: "/list/energy-sector",
+      link: "/list/sector/energy",
     },
     {
       title: "Utilities Sector Stocks",
-      link: "/list/utilities-sector",
+      link: "/list/sector/utilities",
     },
     {
       title: "Consumer Cyclical Sector Stocks",
-      link: "/list/consumer-cyclical-sector",
+      link: "/list/sector/consumer-cyclical",
     },
     {
       title: "Real Estate Sector Stocks",
-      link: "/list/real-estate-sector",
+      link: "/list/sector/real-estate",
     },
     {
       title: "Basic Materials Sector Stocks",
-      link: "/list/basic-materials-sector",
+      link: "/list/sector/basic-materials",
     },
     {
       title: "Communication Services Sector Stocks",
-      link: "/list/communication-services-sector",
+      link: "/list/sector/communication-services",
     },
     {
       title: "Consumer Defensive Sector Stocks",
-      link: "/list/consumer-defensive-sector",
+      link: "/list/sector/consumer-defensive",
     },
     {
       title: "Delisted Companies",

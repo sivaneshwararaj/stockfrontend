@@ -309,7 +309,7 @@
       <ul class="list-disc space-y-1 pl-3">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/financial-sector"
+            href="/list/sector/financial"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Financials
@@ -317,7 +317,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/healthcare-sector"
+            href="/list/sector/healthcare"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Healthcare
@@ -325,7 +325,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/technology-sector"
+            href="/list/sector/technology"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Technology
@@ -333,7 +333,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/industrials-sector"
+            href="/list/sector/industrials"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Industrials
@@ -341,7 +341,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/energy-sector"
+            href="/list/sector/energy"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Energy
@@ -349,7 +349,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/utilities-sector"
+            href="/list/sector/utilities"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Utilities
@@ -358,7 +358,7 @@
 
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/consumer-cyclical-sector"
+            href="/list/sector/consumer-cyclical"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Cyclical
@@ -366,7 +366,7 @@
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/real-estate-sector"
+            href="/list/sector/real-estate"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Real Estate
@@ -374,7 +374,7 @@
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/basic-materials-sector"
+            href="/list/sector/basic-materials"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Basic Materials
@@ -382,7 +382,7 @@
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/communication-services-sector"
+            href="/list/sector/communication-services"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Communication Services
@@ -390,7 +390,7 @@
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/consumer-defensive-sector"
+            href="/list/sector/consumer-defensive"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Defensive
@@ -404,7 +404,7 @@
       <ul class="list-disc space-y-1 pl-5">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/consumer-cyclical-sector"
+            href="/list/sector/consumer-cyclical"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Cyclical
@@ -412,7 +412,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/real-estate-sector"
+            href="/list/sector/real-estate"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Real Estate
@@ -420,7 +420,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/basic-materials-sector"
+            href="/list/sector/basic-materials"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Basic Materials
@@ -428,7 +428,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/communication-services-sector"
+            href="/list/sector/communication-services"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Communication Services
@@ -436,7 +436,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/consumer-defensive-sector"
+            href="/list/sector/consumer-defensive"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Consumer Defensive

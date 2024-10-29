@@ -27,51 +27,51 @@
   const sectorNavigation = [
     {
       title: "Financial Services",
-      link: "/list/financial-sector",
+      link: "/list/sector/financial",
     },
     {
       title: "Finance",
-      link: "/list/financial-sector",
+      link: "/list/sector/financial",
     },
     {
       title: "Healthcare",
-      link: "/list/healthcare-sector",
+      link: "/list/sector/healthcare",
     },
     {
       title: "Technology",
-      link: "/list/technology-sector",
+      link: "/list/sector/technology",
     },
     {
       title: "Industrials",
-      link: "/list/industrials-sector",
+      link: "/list/sector/industrials",
     },
     {
       title: "Energy",
-      link: "/list/energy-sector",
+      link: "/list/sector/energy",
     },
     {
       title: "Utilities",
-      link: "/list/utilities-sector",
+      link: "/list/sector/utilities",
     },
     {
       title: "Consumer Cyclical",
-      link: "/list/consumer-cyclical-sector",
+      link: "/list/sector/consumer-cyclical",
     },
     {
       title: "Real Estate",
-      link: "/list/real-estate-sector",
+      link: "/list/sector/real-estate",
     },
     {
       title: "Basic Materials",
-      link: "/list/basic-materials-sector",
+      link: "/list/sector/basic-materials",
     },
     {
       title: "Communication Services",
-      link: "/list/communication-services-sector",
+      link: "/list/sector/communication-services",
     },
     {
       title: "Consumer Defensive",
-      link: "/list/consumer-defensive-sector",
+      link: "/list/sector/consumer-defensive",
     },
   ];
 

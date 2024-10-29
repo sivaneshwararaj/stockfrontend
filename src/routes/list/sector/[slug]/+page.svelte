@@ -101,7 +101,7 @@
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
 
-    let originalData = data?.getMarketCapCategory;
+    let originalData = data?.getSectorCategory;
 
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
@@ -153,7 +153,7 @@
 
   $: {
     if ($page?.url?.pathname) {
-      rawData = data?.getMarketCapCategory;
+      rawData = data?.getSectorCategory;
       marketCapList = rawData?.slice(0, 50);
 
       totalMarketCap = rawData?.reduce(
@@ -168,70 +168,15 @@
   }
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
-
-  // Get current category from URL params
-  $: currentCategory = data?.getParams?.replace("-stocks", "");
-  // Filter out current category
-  $: otherCategories = marketCapNavigation.filter(
-    (cat) => !cat.link.includes(currentCategory),
-  );
-
-  // Format number to billions/millions
-  function formatThreshold(value) {
-    const billion = 1_000_000_000;
-    const million = 1_000_000;
-
-    if (value >= billion) {
-      return `$${(value / billion).toFixed(0)} billion`;
-    }
-    return `$${(value / million).toFixed(0)} million`;
-  }
-
-  // Get description for current category
-  $: currentCategoryData = marketCapNavigation.find((cat) =>
-    cat.link.includes(currentCategory),
-  );
-
-  // Generate description based on thresholds
-  $: description = currentCategoryData
-    ? (() => {
-        if (currentCategoryData.threshold) {
-          return `above ${formatThreshold(currentCategoryData.threshold)}`;
-        } else if (
-          currentCategoryData.minThreshold &&
-          currentCategoryData.maxThreshold
-        ) {
-          return `between ${formatThreshold(currentCategoryData.minThreshold)} and ${formatThreshold(currentCategoryData.maxThreshold)}`;
-        } else if (currentCategoryData.maxThreshold) {
-          return `below ${formatThreshold(currentCategoryData.maxThreshold)}`;
-        }
-        return "";
-      })()
-    : "";
 </script>
 
 <section class="w-full overflow-hidden m-auto">
   <div
     class="w-full m-auto text-white border border-gray-600 rounded-md h-auto p-5 mb-4"
   >
-    {currentCategoryData?.name} stocks have market capitalizations ranging {description}
-    USD, while additional categories include
-    {#each otherCategories as category, i}
-      {#if i === otherCategories.length - 1}
-        and
-        <a href={category.link} class="text-blue-400 sm:hover:text-white">
-          {category.name}
-        </a>.
-      {:else if i === otherCategories.length - 2}
-        <a href={category.link} class="text-blue-400 sm:hover:text-white">
-          {category.name}
-        </a>
-      {:else}
-        <a href={category.link} class="text-blue-400 sm:hover:text-white">
-          {category.name}
-        </a>,
-      {/if}
-    {/each}
+    The {data?.getParams} sector has a total of {rawData?.length} stocks, with a
+    combined market cap of {abbreviateNumber(totalMarketCap)} and a total revenue
+    of {abbreviateNumber(totalRevenue)}.
   </div>
 
   <div
