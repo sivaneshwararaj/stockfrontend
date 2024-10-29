@@ -73,8 +73,9 @@
     { key: "name", label: "Name", align: "left" },
     { key: "marketCap", label: "Market Cap", align: "right" },
 
-    { key: "changesPercentage", label: "% Change", align: "right" },
     { key: "price", label: "Price", align: "right" },
+        { key: "changesPercentage", label: "% Change", align: "right" },
+
     { key: "revenue", label: "Revenue", align: "right" },
   ];
 
@@ -82,8 +83,9 @@
     rank: { order: "none", type: "number" },
     symbol: { order: "none", type: "string" },
     name: { order: "none", type: "string" },
-    changesPercentage: { order: "none", type: "number" },
     price: { order: "none", type: "number" },
+        changesPercentage: { order: "none", type: "number" },
+
     marketCap: { order: "none", type: "number" },
     revenue: { order: "none", type: "number" },
   };
