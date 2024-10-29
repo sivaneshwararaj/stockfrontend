@@ -1,7 +1,7 @@
 <script lang="ts">
   export let data;
   export let title;
-  export let color = "#27272A";
+  export let color = "#09090B";
 </script>
 
 {#if data?.user?.tier !== "Pro"}
@@ -68,14 +68,14 @@
 
       <a
         href="/pricing"
-        class="mt-10 flex justify-center items-center w-56 m-auto btn text-white bg-purple-600 hover:bg-purple-500 transition duration-150 ease-in-out group"
+        class="mt-10 flex justify-center text-[1rem] items-center px-5 w-fit m-auto rounded-md btn text-white bg-purple-600 hover:bg-purple-500 transition duration-150 ease-in-out group"
       >
         Become a Pro
         <span
           class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
         >
           <svg
-            class="w-4 h-4"
+            class="w-4 h-4 mt-1"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             ><g transform="rotate(90 12 12)"

@@ -108,7 +108,7 @@ function toggleMode()
 </svelte:head>
 
 <section
-  class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 pb-40 m-auto"
+  class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 m-auto"
 >
   <!--
 {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
@@ -944,7 +944,7 @@ function toggleMode()
                       class="text-sm sm:text-base font-medium text-white pr-2 py-4"
                     >
                       <div class="flex items-center justify-between max-w-xs">
-                        <div>Retail Trader Activity</div>
+                        <div>Unusual Insider Activity</div>
                       </div>
                     </td>
                     <td class="text-sm px-2 py-4 text-center font-medium">
@@ -1392,6 +1392,7 @@ function toggleMode()
                 </div>
               </details>
             </li>
+            <!--
             <li>
               <details class="collapse collapse-arrow">
                 <summary
@@ -1414,6 +1415,7 @@ function toggleMode()
                 </div>
               </details>
             </li>
+            -->
             <li>
               <details class="collapse collapse-arrow">
                 <summary
