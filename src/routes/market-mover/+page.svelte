@@ -168,18 +168,8 @@
     }
   }
 
-  function selectTimeInterval(event) {
-    timePeriod =
-      event.target.value === "oneDay"
-        ? "1D"
-        : event.target.value === "oneWeek"
-          ? "1W"
-          : event.target.value === "oneMonth"
-            ? "1M"
-            : event.target.value === "threeMonths"
-              ? "3M"
-              : "6M";
-
+  function selectTimeInterval(state) {
+    timePeriod = state;
     if (buttonText === "Top Winners") {
       gainerLoserActive = outputList?.gainers[timePeriod];
     } else if (buttonText === "Top Losers") {
@@ -317,11 +307,11 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3"
+  class="w-full max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3"
 >
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
-      <li><a href="/" class="text-gray-300">Home</a></li>
+      <li class=""><a href="/" class="text-gray-300">Home</a></li>
       <li class="text-gray-300">Market Movers</li>
     </ul>
   </div>
@@ -332,72 +322,17 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
-          <div
-            class="w-full m-auto sm:bg-[#27272A] h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
-          >
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <!-- Start Column -->
-              <div>
-                <div class="flex flex-row justify-center items-center">
-                  <h1
-                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
-                  >
-                    Market Movers
-                  </h1>
-                </div>
-
-                <span
-                  class="hidden sm:block text-white text-md font-semibold text-center flex justify-center items-center"
-                >
-                  Explore top-performing, underperforming & most active traded
-                  stocks across different time frames.
-                </span>
-              </div>
-              <!-- End Column -->
-
-              <!-- Start Column -->
-              <div
-                class="hidden sm:block relative m-auto mb-5 mt-5 md:mb-0 md:mt-0"
-              >
-                <svg
-                  class="w-32 -my-4"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="5" result="glow" />
-                      <feMerge>
-                        <feMergeNode in="glow" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    fill="#1E40AF"
-                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
-                    transform="translate(100 100)"
-                    filter="url(#glow)"
-                  />
-                </svg>
-
-                <div class="z-1 absolute -top-3 right-1">
-                  <img class="w-28" src={logo} alt="logo" loading="lazy" />
-                </div>
-              </div>
-              <!-- End Column -->
-            </div>
-          </div>
+          <h1 class="mb-6 text-white text-2xl sm:text-3xl font-bold">
+            Market Movers
+          </h1>
 
           {#if isLoaded}
-            <div
-              class="sm:hidden text-white text-xs sm:text-sm pb-5 sm:pb-2 pl-3 sm:pl-0"
-            >
+            <div class="sm:hidden text-white text-xs sm:text-sm pb-5 sm:pb-2">
               Stock Indexes - {getCurrentDateFormatted()}
             </div>
 
             <div
-              class="w-full sm:hidden -mt-4 sm:mt-0 mb-8 m-auto flex justify-start sm:justify-center items-center p-3 sm:p-0"
+              class="w-full sm:hidden -mt-4 sm:mt-0 mb-8 m-auto flex justify-start sm:justify-center items-center pb-3 sm:pb-0"
             >
               <div
                 class="w-full grid grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-3"
@@ -429,60 +364,88 @@
               </div>
             </div>
 
-            <div
-              class="w-full m-auto mb-10 sm:mb-5 bg-[#09090B] pl-3 pr-3 sm:pl-0 sm:pr-0"
-            >
-              <div
-                class="bg-[#313131] w-fit relative m-auto sm:m-0 sm:mr-auto flex sm:flex-wrap items-center justify-center rounded-lg p-1 -mt-3"
+            <nav class="border-b-[2px] overflow-x-scroll whitespace-nowrap">
+              <ul
+                class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
               >
-                {#each tabs as item, i}
-                  <label
-                    on:click={() => changeSection(i)}
-                    class="cursor-pointer group relative z-[1] rounded-full px-6 py-1 {activeIdx ===
-                    i
-                      ? 'z-0'
-                      : ''} "
-                  >
-                    {#if activeIdx === i}
-                      <div
-                        class="absolute inset-0 rounded-lg bg-purple-600"
-                      ></div>
-                    {/if}
-                    <span
-                      class="relative text-[1rem] sm:text-lg block font-semibold duration-200 text-white"
-                    >
-                      {item.title}
-                    </span>
-                  </label>
-                {/each}
-              </div>
-            </div>
+                <li
+                  on:click={() => changeSection(0)}
+                  class="p-2 px-5 cursor-pointer {activeIdx === 0
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Gainers
+                </li>
+                <li
+                  on:click={() => changeSection(1)}
+                  class="p-2 px-5 cursor-pointer {activeIdx === 1
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Losers
+                </li>
+                <li
+                  on:click={() => changeSection(2)}
+                  class="p-2 px-5 cursor-pointer {activeIdx === 2
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Active
+                </li>
+              </ul>
+            </nav>
+
+            <nav class="mb-3 pt-1 overflow-x-scroll whitespace-nowrap">
+              <ul
+                class="flex flex-row items-center w-full text-sm sm:text-[1rem] text-white"
+              >
+                <li
+                  on:click={() => selectTimeInterval("1D")}
+                  class="p-2 px-5 cursor-pointer {timePeriod === '1D'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Today
+                </li>
+                <li
+                  on:click={() => selectTimeInterval("1W")}
+                  class="p-2 px-5 cursor-pointer {timePeriod === '1W'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Week
+                </li>
+                <li
+                  on:click={() => selectTimeInterval("1M")}
+                  class="p-2 px-5 cursor-pointer {timePeriod === '1M'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Month
+                </li>
+                <li
+                  on:click={() => selectTimeInterval("3M")}
+                  class="p-2 px-5 cursor-pointer {timePeriod === '3M'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  3 Months
+                </li>
+                <li
+                  on:click={() => selectTimeInterval("6M")}
+                  class="p-2 px-5 cursor-pointer {timePeriod === '6M'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  6 Months
+                </li>
+              </ul>
+            </nav>
 
             <!--Start Top Winners/Losers-->
             <div
-              class="flex flex-col justify-center items-center overflow-hidden"
+              class="flex flex-col justify-center items-center overflow-hidden mt-10"
             >
-              <div
-                class="w-full flex justify-start sm:justify-end items-center mb-10 ml-5 sm:ml-0"
-              >
-                <div class="relative flex flex-col items-start">
-                  <span class="sm:hidden text-white text-sm mb-3">
-                    Time Period:
-                  </span>
-                  <select
-                    class="w-32 text-white select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]"
-                    on:change={selectTimeInterval}
-                  >
-                    <option disabled>Choose a time period</option>
-                    <option value="oneDay" selected>1 Day</option>
-                    <option value="oneWeek">1 Week</option>
-                    <option value="oneMonth">1 Month</option>
-                    <option value="threeMonths">3 Months</option>
-                    <option value="sixMonths">6 Months</option>
-                  </select>
-                </div>
-              </div>
-
               <div class="w-full overflow-x-scroll no-scrollbar">
                 <table
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
@@ -562,7 +525,7 @@
             <div class="flex justify-center items-center h-80">
               <div class="relative">
                 <label
-                  class="bg-[#09090B] rounded-lg h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  class="bg-[#09090B] rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 >
                   <span class="loading loading-spinner loading-md text-gray-400"
                   ></span>
@@ -575,7 +538,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href={"/pricing"}
@@ -583,7 +546,7 @@
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                   <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription 🔥
+                    Pro Subscription
                   </h2>
                   <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
@@ -595,7 +558,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/analysts"}
@@ -603,7 +566,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Top Analyst 📊
+                  Top Analyst
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
@@ -614,7 +577,7 @@
           </div>
 
           <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/politicians"}
@@ -622,7 +585,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Congress Trading 🇺🇸
+                  Congress Trading
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>

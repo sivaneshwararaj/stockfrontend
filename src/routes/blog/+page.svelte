@@ -1,23 +1,18 @@
 <script lang="ts">
-
-import { articleId, numberOfUnreadNotification } from '$lib/store';
-import { goto } from '$app/navigation';
-import {getImageURL} from '$lib/utils';
+  import { articleId, numberOfUnreadNotification } from "$lib/store";
+  import { goto } from "$app/navigation";
+  import { getImageURL } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
+  export let data;
+  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-export let data;
-let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+  function blogSelector(state: string) {
+    $articleId = state;
+    goto("/blog/article/" + $articleId);
+  }
 
-
-function blogSelector(state:string)
-{
-  $articleId = state;
-  goto('/blog/article/'+$articleId)
-}
-
-
-/*
+  /*
 let allBlogPosts = [
     {
         'title': 'How the Stock Market is Corrupted by Market Makers',
@@ -53,67 +48,76 @@ let allBlogPosts = [
     
 ]
 */
-let allBlogPosts = data?.getAllBlogPost;
-    
-  
+  let allBlogPosts = data?.getAllBlogPost;
 </script>
-  
-  
 
 <svelte:head>
-  <title> {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Stock Analysis Blog · stocknear</title>
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
+    Analysis Blog · stocknear</title
+  >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
-  <meta name="description" content="Get the latest blog post to understand and invest correctly into companies.">
+  <meta
+    name="description"
+    content="Get the latest blog post to understand and invest correctly into companies."
+  />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Stock Analysis Blog · stocknear"/>
-  <meta property="og:description" content="Get the latest blog post to understand and invest correctly into companies.">
-  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Stock Analysis Blog · stocknear" />
+  <meta
+    property="og:description"
+    content="Get the latest blog post to understand and invest correctly into companies."
+  />
+  <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Stock Analysis Blog · stocknear"/>
-  <meta name="twitter:description" content="Get the latest blog post to understand and invest correctly into companies.">
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stock Analysis Blog · stocknear" />
+  <meta
+    name="twitter:description"
+    content="Get the latest blog post to understand and invest correctly into companies."
+  />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
-    
 
+<section
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3"
+>
+  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+    <ul>
+      <li><a href="/" class="text-gray-300">Home</a></li>
+      <li class="text-gray-300">Blog Posts</li>
+    </ul>
+  </div>
 
+  <div class="w-full overflow-hidden m-auto mt-5">
+    <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
+      <div
+        class="relative flex justify-center items-start overflow-hidden w-full"
+      >
+        <main class="w-full lg:w-3/4 lg:pr-5">
+          <div
+            class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
+          >
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+              <!-- Start Column -->
+              <div>
+                <div class="flex flex-row justify-center items-center">
+                  <h1
+                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
+                  >
+                    Stock Analysis Blog
+                  </h1>
+                </div>
 
-  <section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3">
-          
-    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
-      <ul>
-        <li><a href="/" class="text-gray-300">Home</a></li>
-        <li class="text-gray-300">Blog Posts</li>
-      </ul>
-    </div>
-            
-    <div class="w-full overflow-hidden m-auto mt-5">
-      
-      <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden ">
-          <div class="relative flex justify-center items-start overflow-hidden w-full">
-
-
-              <main class="w-full lg:w-3/4 lg:pr-5">
-               
-                <div class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-    
-        <!-- Start Column -->
-        <div>
-          <div class="flex flex-row justify-center items-center">
-            <h1 class="text-3xl sm:text-4xl text-white text-center font-bold mb-5">
-              Stock Analysis Blog
-            </h1>
-          </div>
-  
-          <span class="w-3/4 m-auto text-white text-md font-medium text-center flex justify-center items-center ">
-            An investment in knowledge pays the best
-          </span>
-          <!--
+                <span
+                  class="w-3/4 m-auto text-white text-md font-medium text-center flex justify-center items-center"
+                >
+                  An investment in knowledge pays the best
+                </span>
+                <!--
           <label for="marketMoverInfo" class="cursor-pointer flex justify-center items-center mt-2">
             <span class="text-white text-md font-medium">
               Learn more
@@ -121,160 +125,181 @@ let allBlogPosts = data?.getAllBlogPost;
             <svg class="w-6 h-6 inline-block ml-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="info-circle"> <g> <circle cx="12" cy="12" data-name="--Circle" fill="none" id="_--Circle" r="10" stroke="#B46266" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle> <line fill="none" stroke="#B46266" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="12" y2="16"></line> <line fill="none" stroke="#B46266" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="12" x2="12" y1="8" y2="8"></line> </g> </g> </g> </g></svg>
           </label>
           -->
-  
-        </div>
-        <!-- End Column -->
-    
-        <!-- Start Column -->
-        <div class="relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0">
-          <svg class="w-40 -my-5" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="5" result="glow"/>
-                <feMerge>
-                  <feMergeNode in="glow"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-            <path fill="#1E40AF" d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z" transform="translate(100 100)" filter="url(#glow)" />
-          </svg>
-          
-          
-          <div class="z-1 absolute top-3 right-0">
-            <img class="w-28 mr-6" src={cloudFrontUrl+"/assets/blog_logo.png"} alt="logo" loading="lazy">
-          </div>
-        </div>
-        <!-- End Column -->
-      </div>
-  
-     
-  
-  
-    </div>
-  
-  
-        
-        <div class="mt-10 sm:mt-5 w-full m-auto px-3">
+              </div>
+              <!-- End Column -->
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-5">
-                {#if allBlogPosts?.length !== 0}
-                {#each allBlogPosts as item}
-                    <div class="flex flex-col w-full min-h-fit mb-5 mt-5 bg-[#fff] bg-opacity-[0.01] sm:bg-opacity-[1.0] sm:bg-[#09090B] border border-slate-700 rounded-xl m-auto">
-                        
-                        <label on:click={() => blogSelector(item?.id)} class="cursor-pointer">
-                            <div class="flex-shrink-0 m-auto">
-                                <img 
-                                class="w-full object-cover h-56 rounded-t-xl" 
-                                src={getImageURL(item?.collectionId, item?.id, item?.cover)}
-                                alt="Wallpaper" loading="lazy"/>
-                            </div>
+              <!-- Start Column -->
+              <div class="relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0">
+                <svg
+                  class="w-40 -my-5"
+                  viewBox="0 0 200 200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <filter id="glow">
+                      <feGaussianBlur stdDeviation="5" result="glow" />
+                      <feMerge>
+                        <feMergeNode in="glow" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <path
+                    fill="#1E40AF"
+                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
+                    transform="translate(100 100)"
+                    filter="url(#glow)"
+                  />
+                </svg>
 
-                            <div class="pl-4 pt-3 w-11/12">
-                                <h1 class="text-xl font-bold text-white">
-                                    {item?.title}
-                                </h1>
-                                <p class="text-white text-sm mt-4">
-                                    {item?.abstract.length > 250 ? item?.abstract?.slice(0,250) + "..." : item?.abstract}
-                                </p>
-                            </div>
-
-                        </label>
-                        
-                      
-                        <div class="flex flex-row items-center pl-4 pr-3 pt-8 pb-6">
-                            <a href={"/community/user/"+item?.expand?.user?.id} class="cursor-pointer text-sm text-white sm:text-opacity-[0.7] flex flex-row items-center">
-                                <img 
-                                  class="rounded-full w-10 h-10 mr-2"
-                                  src={item?.expand?.user?.avatar
-                                    ? getImageURL(item?.expand?.user?.collectionId, item?.expand?.user?.id, item?.expand?.user?.avatar)
-                                    : `https://avatar.vercel.sh/${item?.expand?.user?.username}`} 
-                                alt="User avatar" loading='lazy'/>
-
-                                {item?.expand?.user?.username} &centerdot; {new Date(item?.created)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
-                            </a>
-                            
-
-                            <div class="ml-auto">
-                                <span class="text-white sm:text-opacity-[0.7] text-sm ml-1 mr-4">
-                                    {item?.readingTime} min read
-                                </span>
-                            </div>
-                            
-                        </div>
-                    
-                        
-                    </div>
-
-                
-                    {/each}
-
-                
-                {/if}
+                <div class="z-1 absolute top-3 right-0">
+                  <img
+                    class="w-28 mr-6"
+                    src={cloudFrontUrl + "/assets/blog_logo.png"}
+                    alt="logo"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <!-- End Column -->
             </div>
+          </div>
 
-        </div>
+          <div class="mt-10 sm:mt-5 w-full m-auto px-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-5">
+              {#if allBlogPosts?.length !== 0}
+                {#each allBlogPosts as item}
+                  <div
+                    class="flex flex-col w-full min-h-fit mb-5 mt-5 bg-[#fff] bg-opacity-[0.01] sm:bg-opacity-[1.0] sm:bg-[#09090B] border border-slate-700 rounded-xl m-auto"
+                  >
+                    <label
+                      on:click={() => blogSelector(item?.id)}
+                      class="cursor-pointer"
+                    >
+                      <div class="flex-shrink-0 m-auto">
+                        <img
+                          class="w-full object-cover h-56 rounded-t-xl"
+                          src={getImageURL(
+                            item?.collectionId,
+                            item?.id,
+                            item?.cover,
+                          )}
+                          alt="Wallpaper"
+                          loading="lazy"
+                        />
+                      </div>
 
+                      <div class="pl-4 pt-3 w-11/12">
+                        <h1 class="text-xl font-bold text-white">
+                          {item?.title}
+                        </h1>
+                        <p class="text-white text-sm mt-4">
+                          {item?.abstract.length > 250
+                            ? item?.abstract?.slice(0, 250) + "..."
+                            : item?.abstract}
+                        </p>
+                      </div>
+                    </label>
 
-    
-  </main>
-              <aside class="hidden lg:block relative fixed w-1/4 ml-4">        
-              
-                {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial}
-                <div on:click={() => goto('/pricing')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
-                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-                        <div class="w-full flex justify-between items-center p-3 mt-3">
-                        <h2 class="text-start text-xl font-semibold text-white ml-3">
-                        Pro Subscription 🔥
-                        </h2>
-                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
-                        </div>
-                        <span class="text-white p-3 ml-3 mr-3">
-                            Upgrade now for unlimited access to all data and tools
+                    <div class="flex flex-row items-center pl-4 pr-3 pt-8 pb-6">
+                      <a
+                        href={"/community/user/" + item?.expand?.user?.id}
+                        class="cursor-pointer text-sm text-white sm:text-opacity-[0.7] flex flex-row items-center"
+                      >
+                        <img
+                          class="rounded-full w-10 h-10 mr-2"
+                          src={item?.expand?.user?.avatar
+                            ? getImageURL(
+                                item?.expand?.user?.collectionId,
+                                item?.expand?.user?.id,
+                                item?.expand?.user?.avatar,
+                              )
+                            : `https://avatar.vercel.sh/${item?.expand?.user?.username}`}
+                          alt="User avatar"
+                          loading="lazy"
+                        />
+
+                        {item?.expand?.user?.username} &centerdot; {new Date(
+                          item?.created,
+                        )?.toLocaleString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                          daySuffix: "2-digit",
+                        })}
+                      </a>
+
+                      <div class="ml-auto">
+                        <span
+                          class="text-white sm:text-opacity-[0.7] text-sm ml-1 mr-4"
+                        >
+                          {item?.readingTime} min read
                         </span>
+                      </div>
                     </div>
+                  </div>
+                {/each}
+              {/if}
+            </div>
+          </div>
+        </main>
+        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
+          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
+            <div
+              on:click={() => goto("/pricing")}
+              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            >
+              <div
+                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+              >
+                <div class="w-full flex justify-between items-center p-3 mt-3">
+                  <h2 class="text-start text-xl font-semibold text-white ml-3">
+                    Pro Subscription 🔥
+                  </h2>
+                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
-                {/if}
+                <span class="text-white p-3 ml-3 mr-3">
+                  Upgrade now for unlimited access to all data and tools
+                </span>
+              </div>
+            </div>
+          {/if}
 
-                <div on:click={() => goto('/analysts')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
-                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-                        <div class="w-full flex justify-between items-center p-3 mt-3">
-                        <h2 class="text-start text-xl font-semibold text-white ml-3">
-                        Top Analyst 📊
-                        </h2>
-                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
-                        </div>
-                        <span class="text-white p-3 ml-3 mr-3">
-                            Get the latest top Wall Street analyst ratings
-                        </span>
-                    </div>
-                </div>
+          <div
+            on:click={() => goto("/analysts")}
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+          >
+            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+              <div class="w-full flex justify-between items-center p-3 mt-3">
+                <h2 class="text-start text-xl font-semibold text-white ml-3">
+                  Top Analyst 📊
+                </h2>
+                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
+              </div>
+              <span class="text-white p-3 ml-3 mr-3">
+                Get the latest top Wall Street analyst ratings
+              </span>
+            </div>
+          </div>
 
-                <div on:click={() => goto('/analysts/top-stocks')} class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer">
-                    <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-                        <div class="w-full flex justify-between items-center p-3 mt-3">
-                        <h2 class="text-start text-xl font-semibold text-white ml-3">
-                        Top Stocks Picks ⭐
-                        </h2>
-                        <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0"/>
-                        </div>
-                        <span class="text-white p-3 ml-3 mr-3">
-                            Get the latest top Wall Street analyst ratings.
-                        </span>
-                    </div>
-                </div>
-
-              </aside>
-
-        </div>
+          <div
+            on:click={() => goto("/analysts/top-stocks")}
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+          >
+            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+              <div class="w-full flex justify-between items-center p-3 mt-3">
+                <h2 class="text-start text-xl font-semibold text-white ml-3">
+                  Top Stocks Picks ⭐
+                </h2>
+                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
+              </div>
+              <span class="text-white p-3 ml-3 mr-3">
+                Get the latest top Wall Street analyst ratings.
+              </span>
+            </div>
+          </div>
+        </aside>
       </div>
-  
-    
     </div>
-        
-        
-    
-  </section>
-  
-
-  
+  </div>
+</section>

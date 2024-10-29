@@ -195,7 +195,7 @@
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
               on:click={() => goto("/pricing")}
-              class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <div
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
@@ -215,7 +215,7 @@
 
           <div
             on:click={() => goto("/analysts")}
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
               <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -232,7 +232,7 @@
 
           <div
             on:click={() => goto("/politicians")}
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
               <div class="w-full flex justify-between items-center p-3 mt-3">

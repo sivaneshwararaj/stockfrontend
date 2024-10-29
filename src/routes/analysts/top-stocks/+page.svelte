@@ -176,7 +176,7 @@
           </div>
 
           <div
-            class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 bg-[#09090B] border border-gray-800 sm:rounded-lg h-auto p-5"
+            class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 bg-[#09090B] border border-gray-800 sm:rounded-md h-auto p-5"
           >
             <svg
               class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -192,10 +192,10 @@
             on the volume of analyst ratings.
           </div>
 
-          <div class="w-screen sm:w-full m-auto mt-10">
+          <div class="w-full m-auto mt-10">
             {#if isLoaded}
               <div
-                class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll sm:overflow-hidden"
               >
                 <table
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
@@ -294,16 +294,18 @@
               </div>
             {/if}
           </div>
-          <UpgradeToPro
-            {data}
-            title="Get stock forecasts from Wall Street's highest rated professionals"
-          />
+          {#if isLoaded}
+            <UpgradeToPro
+              {data}
+              title="Get stock forecasts from Wall Street's highest rated professionals"
+            />
+          {/if}
         </main>
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href={"/pricing"}
@@ -323,7 +325,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/analysts"}
@@ -342,7 +344,7 @@
           </div>
 
           <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/most-shorted-stocks"}

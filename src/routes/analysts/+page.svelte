@@ -170,10 +170,10 @@
             </p>
           </div>
 
-          <div class="w-screen sm:w-full m-auto mt-16">
+          <div class="w-full m-auto mt-16">
             {#if isLoaded}
               <div
-                class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+                class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
               >
                 <table
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
@@ -315,15 +315,17 @@
             {/if}
           </div>
 
-          <UpgradeToPro
-            {data}
-            title="Get stock forecasts from Wall Street's highest rated professionals"
-          />
+          {#if isLoaded}
+            <UpgradeToPro
+              {data}
+              title="Get stock forecasts from Wall Street's highest rated professionals"
+            />
+          {/if}
         </main>
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href={"/pricing"}
@@ -343,7 +345,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/analysts/top-stocks"}
@@ -362,7 +364,7 @@
           </div>
 
           <div
-            class="w-full bg-[#141417] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-lg h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/most-shorted-stocks"}
