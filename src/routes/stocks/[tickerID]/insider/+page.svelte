@@ -12,14 +12,32 @@
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
-  let isLoaded = false;
+  let isLoaded = true;
+
+  let rawData = data?.getInsiderTrading?.sort(
+    (a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate),
+  );
+
+  let insiderTradingList = rawData?.slice(0, 50);
+  function backToTop() {
+    window.scrollTo({
+      top: 0,
+    });
+  }
 
   let statistics = {};
   let buySellRatio = 0;
   const now = new Date();
   let year = now.getFullYear();
   let quarter = Math.floor(now.getMonth() / 3) + 1;
-  let yearRange = [];
+  let yearRange = Array.from(
+    new Set(
+      rawData?.map((item) => new Date(item?.transactionDate)?.getFullYear()),
+    ),
+  )?.sort((a, b) => b - a);
+  if (yearRange?.length > 0) {
+    year = yearRange?.slice(0)?.at(0);
+  }
 
   function calculateInsiderTradingStatistics(data, year, quarter) {
     // Helper function to check if the transaction date is within the current quarter
@@ -66,17 +84,6 @@
     return statistics;
   }
 
-  let rawData = data?.getInsiderTrading?.sort(
-    (a, b) => new Date(b?.transactionDate) - new Date(a?.transactionDate),
-  );
-
-  let insiderTradingList = rawData?.slice(0, 50);
-  function backToTop() {
-    window.scrollTo({
-      top: 0,
-    });
-  }
-
   function extractOfficeInfo(inputString) {
     const indexOfficer = inputString?.toLowerCase()?.indexOf("officer:");
     const indexOther = inputString?.toLowerCase()?.indexOf("other:");
@@ -104,22 +111,6 @@
   }
 
   onMount(() => {
-    statistics = calculateInsiderTradingStatistics(rawData, year, quarter);
-    buySellRatio =
-      statistics?.soldShares !== 0
-        ? statistics?.buyShares / statistics?.soldShares
-        : 0;
-
-    yearRange = Array.from(
-      new Set(
-        rawData?.map((item) => new Date(item?.transactionDate)?.getFullYear()),
-      ),
-    )?.sort((a, b) => b - a);
-    if (yearRange?.length > 0) {
-      year = yearRange?.slice(0)?.at(0);
-    }
-
-    isLoaded = true;
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);

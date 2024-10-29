@@ -22,7 +22,6 @@
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
-  import Sidecard from "$lib/components/Sidecard.svelte";
   import Markethour from "$lib/components/Markethour.svelte";
   import AIScore from "$lib/components/AIScore.svelte";
 
@@ -53,7 +52,7 @@
   let y;
 
   let userWatchList = data?.getUserWatchlist ?? [];
-  let isTickerIncluded;
+  let isTickerIncluded = false;
   //let userPortfolio = data?.getUserPortfolio ?? [];
   //let holdingShares = 0;
   //let availableCash = 0;
@@ -315,7 +314,7 @@ function handleTypeOfTrade(state:string)
   }
 
   $: {
-    if ($page.url.pathname) {
+    if ($page?.url?.pathname && typeof window !== "undefined") {
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
         statistics: "statistics",

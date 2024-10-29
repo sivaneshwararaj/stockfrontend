@@ -4,6 +4,8 @@
 
   export let data;
 
+  let newsList = data?.getNews ?? [];
+
   const formatDate = (dateString) => {
     // Create a date object for the input dateString
     const inputDate = new Date(dateString);
@@ -64,7 +66,7 @@
             </div>
           {/if}
 
-          {#if data?.getNews?.length !== 0}
+          {#if newsList?.length !== 0}
             <div
               class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
@@ -73,7 +75,7 @@
                   {$stockTicker} News
                 </h3>
                 <ul class="text-gray-200">
-                  {#each data?.getNews?.slice(0, 10) as item}
+                  {#each newsList?.slice(0, 10) as item}
                     <li class="mb-3 last:mb-1">
                       {formatDate(item?.publishedDate)} ago -
                       <a

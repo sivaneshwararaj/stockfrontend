@@ -15,12 +15,11 @@
   import { LineChart, BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-  import { onMount } from "svelte";
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
 
-  let isLoaded = false;
+  let isLoaded = true;
   let optionsData;
   let tableList = [];
 
@@ -31,10 +30,6 @@
 
   $coolMode = false;
   let timeFrame = "10Y";
-
-  onMount(async () => {
-    isLoaded = true;
-  });
 
   const statementConfig = [
     {
