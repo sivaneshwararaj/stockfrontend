@@ -407,10 +407,7 @@
                               class="text-white font-semibold text-sm text-end"
                               >Revenue</th
                             >
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >Ex. Dividend Date</th
-                            >
+
                             <th
                               class="text-white font-semibold text-sm text-end"
                               >Cash Amount</th
@@ -422,7 +419,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          {#each day as item, index}
+                          {#each day as item}
                             <!-- row -->
                             <tr
                               class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
@@ -462,26 +459,10 @@
                               </td>
 
                               <td
-                                class="text-center text-white border-b-[#09090B] whitespace-nowrap text-sm sm:text-[1rem] text-end"
-                              >
-                                {item?.date !== null
-                                  ? new Date(item?.date)?.toLocaleString(
-                                      "en-US",
-                                      {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                        daySuffix: "2-digit",
-                                      },
-                                    )
-                                  : "-"}
-                              </td>
-
-                              <td
                                 class="text-white border-b-[#09090B] text-center text-sm sm:text-[1rem] text-end"
                               >
                                 {item?.adjDividend !== null
-                                  ? item?.adjDividend?.toFixed(2)
+                                  ? item?.adjDividend?.toFixed(3)
                                   : "-"}
                               </td>
 
