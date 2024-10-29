@@ -1,4 +1,4 @@
-export const load = async ({ locals, setHeaders }) => {
+export const load = async ({ locals }) => {
   const getInsiderTracker = async () => {
     const { apiKey, apiURL, user } = locals;
 
@@ -13,8 +13,6 @@ export const load = async ({ locals, setHeaders }) => {
 
     let output = await response.json();
     output = user?.tier !== "Pro" ? output?.reverse()?.slice(0, 6) : output;
-
-    setHeaders({ "cache-control": "public, max-age=200" });
 
     return output;
   };
