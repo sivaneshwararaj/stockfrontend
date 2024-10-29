@@ -218,9 +218,9 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
 >
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-3 lg:ml-10">
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
       {#if $page.url.pathname.startsWith("/list/industry")}
@@ -240,9 +240,7 @@
     </ul>
   </div>
 
-  <div
-    class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B] px-3 lg:px-10 overflow-hidden"
-  >
+  <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B] overflow-hidden">
     <!--Start Top Winners/Losers-->
     <div class="flex flex-col justify-center items-center">
       <div class="ml-2 text-start w-full text-white mb-2">
@@ -255,7 +253,7 @@
         {/each}
       </div>
 
-      <div class="border-b mt-2 border-blue-400 w-full mb-7" />
+      <div class="border-b-[2px] mt-2 w-full mb-7" />
 
       <div class="flex justify-center w-full m-auto overflow-hidden">
         <main class="w-full lg:w-3/4 lg:pr-10">

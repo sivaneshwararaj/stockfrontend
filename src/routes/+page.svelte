@@ -214,10 +214,9 @@
       </div>
 
       <h1
-        class="hidden sm:block text-3xl lg:text-5xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto"
+        class="hidden sm:block text-3xl lg:text-4xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto"
       >
-        Stock Analysis for
-        <span class="italic text-[#FBCE3C]">Data Freaks</span>
+        Clear & <span class="italic text-[#FBCE3C]">Simple</span> Market Insight.
       </h1>
 
       <h1

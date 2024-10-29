@@ -5,21 +5,10 @@
   export let data;
   let rawData = data?.getIndustryOverview;
 
-  function formatFilename(industryName) {
-    // Replace spaces with hyphens
-    let formattedName = industryName?.replace(/ /g, "-");
-    // Replace "&" with "and"
-    formattedName = formattedName?.replace(/&/g, "and");
-    // Remove any extra hyphens (e.g., from consecutive spaces)
-    formattedName = formattedName?.replace(/-{2,}/g, "-");
-    // Convert to lowercase for consistency
-    return "/list/industry/" + formattedName?.toLowerCase();
-  }
-
   $: charNumber = $screenWidth < 640 ? 20 : 30;
 </script>
 
-<section class="w-full overflow-hidden m-auto px-2 sm:px-0">
+<section class="w-full overflow-hidden m-auto">
   <!-- Page wrapper -->
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
     <!-- Content area -->
@@ -101,7 +90,7 @@
 
               <td
                 class="{item?.avgChange1M >= 0
-                  ? 'text-[#00FC50]'
+                  ? "before:content-['+']  text-[#00FC50]"
                   : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
               >
                 {item?.avgChange1M?.toFixed(2) ?? "-"}%
@@ -109,7 +98,7 @@
 
               <td
                 class="{item?.avgChange1Y >= 0
-                  ? 'text-[#00FC50]'
+                  ? "before:content-['+']  text-[#00FC50]"
                   : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
               >
                 {item?.avgChange1Y?.toFixed(2) ?? "-"}%

@@ -85,10 +85,9 @@
             </tr>
           </thead>
           <tbody>
-            {#each ipoList as item, index}
+            {#each ipoList as item}
               <tr
-                on:click={() => goto("/stocks/" + item?.symbol)}
-                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
               >
                 <td
                   class="text-white text-sm sm:text-[1rem] text-start border-b-[#09090B] whitespace-nowrap"
@@ -102,9 +101,14 @@
                 </td>
 
                 <td
-                  class="whitespace-nowrap text-blue-400 text-sm sm:text-[1rem] text-start border-b-[#09090B]"
+                  class="whitespace-nowrap text-sm sm:text-[1rem] text-start border-b-[#09090B]"
                 >
-                  {item?.symbol}
+                  <a
+                    href={"/stocks/" + item?.symbol}
+                    class="sm:hover:text-white text-blue-400"
+                  >
+                    {item?.symbol}
+                  </a>
                 </td>
 
                 <td
@@ -118,7 +122,7 @@
                 <td
                   class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
                 >
-                  {item?.ipoPrice !== null ? "$" + item?.ipoPrice : "-"}
+                  {item?.ipoPrice !== null ? item?.ipoPrice : "-"}
                 </td>
 
                 <td

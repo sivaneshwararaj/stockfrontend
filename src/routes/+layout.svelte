@@ -118,19 +118,10 @@
     $page.url.pathname.startsWith("/options-flow") ||
     $page.url.pathname.startsWith("/options-zero-dte") ||
     $page.url.pathname.startsWith("/login") ||
-    $page.url.pathname.startsWith("/register") ||
     $page.url.pathname.startsWith("/etf") ||
-    $page.url.pathname.startsWith("/stock-splits-calendar") ||
-    $page.url.pathname.startsWith("/dividends-calendar") ||
-    $page.url.pathname.startsWith("/earnings-calendar") ||
-    $page.url.pathname.startsWith("/market-mover") ||
-    $page.url.pathname.startsWith("/market-news") ||
     $page.url.pathname.startsWith("/portfolio") ||
     $page.url.pathname.startsWith("/hedge-funds") ||
-    $page.url.pathname.startsWith("/watchlist") ||
-    $page.url.pathname.startsWith("/community") ||
-    $page.url.pathname.startsWith("/stock-screener") ||
-    $page.url.pathname.startsWith("/price-alert");
+    $page.url.pathname.startsWith("/community");
 
   //$: hideSidebar = $page.url.pathname.startsWith('/contact') || $page.url.pathname.startsWith('/imprint') || $page.url.pathname.startsWith('/privacy-policy') || $page.url.pathname.startsWith('/terms-of-use') || $page.url.pathname.startsWith('/about') || $page.url.pathname.startsWith('/community/create-post') || $page.url.pathname.startsWith('/login') || $page.url.pathname.startsWith('/register')
 
@@ -539,6 +530,8 @@ const handleTwitchMessage = (event) => {
                               >Economic Calendar</a
                             >
                           </Button>
+                          <!--
+
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -549,7 +542,9 @@ const handleTwitchMessage = (event) => {
                               class="text-start w-full text-[1rem] text-white ml-4 mt-4"
                               >Stock Splits Calendar</a
                             >
+                             
                           </Button>
+                           -->
                         </div>
                       </Sheet.Close>
                     </Accordion.Content>
@@ -1045,11 +1040,13 @@ const handleTwitchMessage = (event) => {
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Economic Calendar</a
                           >
+                          <!--
                           <a
                             href="/stock-splits-calendar"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Stock Splits Calendar</a
                           >
+                            -->
                         </div>
                       </Accordion.Content>
                     </Accordion.Item>

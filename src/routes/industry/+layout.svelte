@@ -1,128 +1,110 @@
-<script lang='ts'>
-  import { numberOfUnreadNotification } from '$lib/store';
-  import { page } from '$app/stores';
+<script lang="ts">
+  import { numberOfUnreadNotification } from "$lib/store";
+  import { page } from "$app/stores";
 
-    export let data;
-
-
-
+  export let data;
 
   function handleMode(i) {
     activeIdx = i;
-
   }
-  
+
   const tabs = [
-      {
-        title: "Overview",
-      },
-      {
-        title: "Sectors",
-      },
-      {
-        title: "Industries",
-      },
-    ];
-  
-let activeIdx = 0;
+    {
+      title: "Overview",
+    },
+    {
+      title: "Sectors",
+    },
+    {
+      title: "Industries",
+    },
+  ];
+
+  let activeIdx = 0;
 
   // Subscribe to the $page store to reactively update the activeIdx based on the URL
-  $: if ($page.url.pathname === '/industry') {
+  $: if ($page.url.pathname === "/industry") {
     activeIdx = 0;
-  } else if ($page.url.pathname.startsWith('/industry/sectors')) {
+  } else if ($page.url.pathname.startsWith("/industry/sectors")) {
     activeIdx = 1;
-  } else if ($page.url.pathname.startsWith('/industry/all')) {
+  } else if ($page.url.pathname.startsWith("/industry/all")) {
     activeIdx = 2;
   }
-
 </script>
-        
-
 
 <svelte:head>
-  <title> {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Industry · stocknear</title>
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Industry
+    · stocknear</title
+  >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
-  <meta name="description" content="Lists of stocks industry and sectors.">
+  <meta name="description" content="Lists of stocks industry and sectors." />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Industry · stocknear"/>
-  <meta property="og:description" content="Lists of stocks industry and sectors.">
-  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Industry · stocknear" />
+  <meta
+    property="og:description"
+    content="Lists of stocks industry and sectors."
+  />
+  <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Industry · stocknear"/>
-  <meta name="twitter:description" content="Lists of stocks industry and sectors.">
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Industry · stocknear" />
+  <meta
+    name="twitter:description"
+    content="Lists of stocks industry and sectors."
+  />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
-    
-    
-          
-<section class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40">
-            
-            <div class="text-sm sm:text-[1rem] breadcrumbs ml-3 lg:ml-10">
-                <ul>
-                  <li><a href="/" class="text-gray-300">Home</a></li> 
-                  <li><span class="text-gray-300">Industry</span></li>
-                </ul>
-            </div>
 
+<section
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
+>
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
+    <ul>
+      <li><a href="/" class="text-gray-300">Home</a></li>
+      <li><span class="text-gray-300">Industry</span></li>
+    </ul>
+  </div>
 
+  <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B] overflow-hidden">
+    <div class="mb-6">
+      <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
+        Stock Sectors & Industries
+      </h1>
+    </div>
 
-        
-        <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B]  lg:px-10 overflow-hidden">
-        
-        
-            <!--Start Top Winners/Losers-->
-            <div class="flex flex-col justify-center items-center">
-              
-              <div class="ml-4 sm:ml-2 text-start w-full text-white mb-1 text-2xl sm:text-3xl font-semibold">
-                Stock Sectors & Industries
-              </div>
-    
-              <div class="border-b mt-2 border-blue-400 w-full mb-7" />
-                <div class="ml-4 sm:ml-0 w-full mb-4">
-                    <div class="bg-[#313131] w-fit relative mr-auto flex flex-wrap items-center justify-center rounded sm:rounded-lg p-1 -mt-3">
-                    {#each tabs as item, i}
-                    <a href={i === 0 ? '/industry' : i === 1 ? '/industry/sectors' : '/industry/all'}
-                        on:click={() => handleMode(i)}
-                        class="group relative z-[1] rounded-full px-6 py-1 {activeIdx === i
-                        ? 'z-0'
-                        : ''} "
-                    >
-                        {#if activeIdx === i}
-                            <div
-                            class="absolute inset-0 rounded-lg bg-purple-600"
-                            ></div>
-                        {/if}
-                        <span class="relative text-[1rem] block font-semibold duration-200 text-white">
-                            {item.title}
-                        </span>
-                    </a>
-                    {/each}
-                    </div>
-                </div>
+    <nav class="border-b-[2px] overflow-x-scroll whitespace-nowrap mb-5">
+      <ul
+        class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
+      >
+        {#each tabs as item, i}
+          <a
+            href={i === 0
+              ? "/industry"
+              : i === 1
+                ? "/industry/sectors"
+                : "/industry/all"}
+            on:click={() => handleMode(i)}
+            class="p-2 px-5 cursor-pointer {activeIdx === i
+              ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+              : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+          >
+            {item.title}
+          </a>
+        {/each}
+      </ul>
+    </nav>
 
-              <div class="flex justify-center w-full m-auto overflow-hidden">
-      
-            <main class="w-full">
-              <slot />
-            </main>
-
-          
-
-            </div>
-
-
-          
-          </div>
-    
-    
-        </div>
-     
-        
-        </section>
-        
-        
+    <div class="w-full flex flex-col justify-center items-center">
+      <div class="flex justify-center w-full m-auto overflow-hidden">
+        <main class="w-full">
+          <slot />
+        </main>
+      </div>
+    </div>
+  </div>
+</section>
