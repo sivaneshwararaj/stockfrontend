@@ -8,7 +8,6 @@
 
   let navigation = [];
   let displaySection = "2024";
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   for (let year = 2024; year >= 2019; year--) {
     navigation.push({ title: year, link: `/ipos/${year}` });
@@ -87,9 +86,9 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
 >
-  <div class="text-sm breadcrumbs ml-4 sm:ml-2">
+  <div class="text-sm breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
       <li class="text-gray-300">IPO Calendar</li>
@@ -102,90 +101,34 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
-          <div
-            class="w-full m-auto sm:bg-[#27272A] sm:rounded-lg h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-12"
-          >
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <!-- Start Column -->
-              <div>
-                <div class="flex flex-row justify-center items-center">
-                  <h1
-                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
-                  >
-                    IPO Calendar
-                  </h1>
-                </div>
-
-                <span
-                  class="text-white text-md font-medium text-center flex justify-center items-center"
-                >
-                  Stay updated on upcoming IPOs in the stock market.
-                </span>
-              </div>
-              <!-- End Column -->
-
-              <!-- Start Column -->
-              <div
-                class="hidden sm:block relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0"
-              >
-                <svg
-                  class="w-40 -my-5"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="5" result="glow" />
-                      <feMerge>
-                        <feMergeNode in="glow" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    fill="#1E40AF"
-                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
-                    transform="translate(100 100)"
-                    filter="url(#glow)"
-                  />
-                </svg>
-
-                <div class="z-1 absolute top-0 left-7">
-                  <img
-                    class="w-[90px] h-fit"
-                    src={cloudFrontUrl + "/assets/ipo_logo.png"}
-                    alt="logo"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-              <!-- End Column -->
-            </div>
+          <div class="mb-5">
+            <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
+              IPO Calendar
+            </h1>
           </div>
 
           <div
-            class="sm:ml-4 w-screen sm:w-full {$page?.url?.pathname === '/ipos'
+            class="w-full {$page?.url?.pathname === '/ipos'
               ? 'hidden'
-              : ''} {$screenWidth < 640 ? 'overflow-auto scrollbar' : ''} mb-2"
+              : ''} mb-2"
           >
-            <ul
-              class="px-3 pr-4 sm:pr-0 w-screen font-medium flex flex-row items-center bg-[#09090B] overflow-x-scroll no-scrollbar space-x-3 rtl:space-x-reverse py-2"
-            >
-              {#each ["2024", "2023", "2022", "2021", "2020", "2019"] as item}
-                <li class="cursor-pointer flex flex-col items-center">
+            <nav class="border-b-[2px] overflow-x-scroll whitespace-nowrap">
+              <ul
+                class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
+              >
+                {#each ["2024", "2023", "2022", "2021", "2020", "2019"] as item}
                   <a
                     href={`/ipos/${item}`}
-                    id="item1"
-                    on:click={() => changeSection(item, "item1")}
-                    class="px-3 text-lg rounded {displaySection === item
-                      ? 'text-black bg-[#75d377] font-semibold '
-                      : 'bg-[#09090B] text-gray-300'}"
+                    on:click={() => (displaySection = item)}
+                    class="p-2 px-5 cursor-pointer {displaySection === item
+                      ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                      : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
                   >
                     {item}
                   </a>
-                </li>
-              {/each}
-            </ul>
+                {/each}
+              </ul>
+            </nav>
           </div>
 
           <slot />

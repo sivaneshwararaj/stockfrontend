@@ -78,7 +78,7 @@
   $: charNumber = $screenWidth < 640 ? 20 : 40;
 </script>
 
-<section class="w-full overflow-hidden m-auto px-3 sm:px-0">
+<section class="w-full overflow-hidden m-auto">
   {#if isLoaded}
     <div class="flex flex-col justify-center items-center">
       <div
