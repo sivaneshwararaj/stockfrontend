@@ -8,21 +8,8 @@
 
   export let data;
 
-  let isLoaded = false;
-  let rawData = [];
-  let displayList = [];
-
-  let order = "highToLow";
-
-  const sortByAmount = (tickerList) => {
-    return tickerList?.sort(function (a, b) {
-      if (order === "highToLow") {
-        return b?.amount - a?.amount;
-      } else {
-        return a?.amount - b?.amount;
-      }
-    });
-  };
+  let rawData = data?.getCorporateLobbyingTracker ?? [];
+  let displayList = rawData?.slice(0, 50) ?? [];
 
   async function infiniteHandler({ detail: { loaded, complete } }) {
     if (displayList?.length === rawData?.length) {
@@ -47,21 +34,6 @@
     const ampm = date.getHours() >= 12 ? "PM" : "AM";
 
     return `${year}/${month}/${day} ${hours}:${minutes} ${ampm}`;
-  }
-  onMount(() => {
-    rawData = data?.getCorporateLobbyingTracker ?? [];
-    displayList = rawData?.slice(0, 50) ?? [];
-    isLoaded = true;
-  });
-
-  function changeOrder(state: string) {
-    if (state === "highToLow") {
-      order = "lowToHigh";
-    } else {
-      order = "highToLow";
-    }
-
-    displayList = sortByAmount(rawData)?.slice(0, 50);
   }
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
@@ -206,102 +178,90 @@
               Track the latest lobbying spendings of US stock companies
             </p>
           </div>
-          {#if isLoaded}
+          <div
+            class="w-screen sm:w-full flex flex-row items-start mt-20 sm:mt-10"
+          >
             <div
-              class="w-screen sm:w-full flex flex-row items-start mt-20 sm:mt-10"
+              class="w-screen sm:w-full rounded-none sm:rounded-lg mb-4 overflow-x-scroll lg:overflow-hidden"
             >
-              <div
-                class="w-screen sm:w-full rounded-none sm:rounded-lg mb-4 overflow-x-scroll lg:overflow-hidden"
+              <table
+                class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
               >
-                <table
-                  class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
-                >
-                  <thead>
-                    <TableHeader {columns} {sortOrders} {sortData} />
-                  </thead>
-                  <tbody>
-                    {#each displayList as item, index}
-                      <tr
-                        class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index +
-                          1 ===
-                          displayList?.length && data?.user?.tier !== 'Pro'
-                          ? 'opacity-[0.1]'
-                          : ''}"
+                <thead>
+                  <TableHeader {columns} {sortOrders} {sortData} />
+                </thead>
+                <tbody>
+                  {#each displayList as item, index}
+                    <tr
+                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index +
+                        1 ===
+                        displayList?.length && data?.user?.tier !== 'Pro'
+                        ? 'opacity-[0.1]'
+                        : ''}"
+                    >
+                      <td
+                        class="text-start text-sm text-white whitespace-nowrap"
                       >
-                        <td
-                          class="text-start text-sm text-white whitespace-nowrap"
-                        >
-                          {formatDate(item?.date)}
-                        </td>
+                        {formatDate(item?.date)}
+                      </td>
 
-                        <td
-                          class="text-blue-400 text-sm sm:text-[1rem] text-start"
+                      <td
+                        class="text-blue-400 text-sm sm:text-[1rem] text-start"
+                      >
+                        <a
+                          href={"/stocks/" + item?.ticker}
+                          class="sm:hover:text-white text-blue-400"
                         >
-                          <a
-                            href={"/stocks/" + item?.ticker}
-                            class="sm:hover:text-white text-blue-400"
+                          {item?.ticker}
+                        </a>
+                      </td>
+
+                      <td
+                        class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start"
+                      >
+                        {item?.name?.length > charNumber
+                          ? item?.name?.slice(0, charNumber) + "..."
+                          : item?.name}
+                      </td>
+
+                      <td
+                        class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap"
+                      >
+                        {item?.price}
+                      </td>
+
+                      <td
+                        class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]"
+                      >
+                        {#if item?.changesPercentage >= 0}
+                          <span class="text-[#00FC50]"
+                            >+{item?.changesPercentage >= 1000
+                              ? item?.changesPercentage
+                              : item?.changesPercentage?.toFixed(2)}%</span
                           >
-                            {item?.ticker}
-                          </a>
-                        </td>
+                        {:else}
+                          <span class="text-[#FF2F1F]"
+                            >{item?.changesPercentage <= -1000
+                              ? item?.changesPercentage
+                              : item?.changesPercentage?.toFixed(2)}%
+                          </span>
+                        {/if}
+                      </td>
 
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start"
-                        >
-                          {item?.name?.length > charNumber
-                            ? item?.name?.slice(0, charNumber) + "..."
-                            : item?.name}
-                        </td>
-
-                        <td
-                          class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap"
-                        >
-                          {item?.price}
-                        </td>
-
-                        <td
-                          class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]"
-                        >
-                          {#if item?.changesPercentage >= 0}
-                            <span class="text-[#00FC50]"
-                              >+{item?.changesPercentage >= 1000
-                                ? item?.changesPercentage
-                                : item?.changesPercentage?.toFixed(2)}%</span
-                            >
-                          {:else}
-                            <span class="text-[#FF2F1F]"
-                              >{item?.changesPercentage <= -1000
-                                ? item?.changesPercentage
-                                : item?.changesPercentage?.toFixed(2)}%
-                            </span>
-                          {/if}
-                        </td>
-
-                        <td class="text-white text-sm sm:text-[1rem] text-end">
-                          ${new Intl.NumberFormat("en", {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          }).format(item?.amount)}
-                        </td>
-                      </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-              <InfiniteLoading on:infinite={infiniteHandler} />
+                      <td class="text-white text-sm sm:text-[1rem] text-end">
+                        ${new Intl.NumberFormat("en", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(item?.amount)}
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
             </div>
-          {:else}
-            <div class="flex justify-center items-center h-80">
-              <div class="relative">
-                <label
-                  class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                >
-                  <span class="loading loading-spinner loading-md text-gray-400"
-                  ></span>
-                </label>
-              </div>
-            </div>
-          {/if}
+            <InfiniteLoading on:infinite={infiniteHandler} />
+          </div>
+
           <UpgradeToPro
             {data}
             title="Get the latest lobbying spendings in realtime of US stock companies"
