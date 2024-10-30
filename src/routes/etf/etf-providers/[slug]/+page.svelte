@@ -70,7 +70,7 @@
 <section class="w-full overflow-hidden m-auto">
   {#if rawData?.length !== 0}
     <div
-      class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5 mb-4"
+      class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-600 sm:rounded-lg h-auto p-5 mb-4"
     >
       <svg
         class="w-5 h-5 inline-block flex-shrink-0 mr-0.5 sm:mr-2"
@@ -93,32 +93,36 @@
   {/if}
 
   <div
-    class="stats stats-horizontal bg-[#27272A] shadow w-full rounded-none sm:rounded-lg overflow-hidden"
+    class="mb-4 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
   >
-    <div class="stat">
-      <div class="stat-title text-white text-sm sm:text-lg font-semibold">
-        Listed Funds
-      </div>
-      <div class="stat-value text-lg font-semibold text-white">
-        {rawData?.length}
-      </div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-title text-white text-sm sm:text-lg font-semibold">
-        Total Assets
-      </div>
-      <div class="stat-value text-lg font-semibold text-white">
-        {abbreviateNumber(totalAssets)}
+    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+      <div class="flex items-center justify-between sm:block">
+        <div class="text-sm font-normal text-white">Listed Funds</div>
+        <div
+          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+        >
+          {rawData?.length}
+        </div>
       </div>
     </div>
-
-    <div class="stat">
-      <div class="stat-title text-white text-sm sm:text-lg font-semibold">
-        Average Cost
+    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+      <div class="flex items-center justify-between sm:block">
+        <div class="text-sm font-normal text-white">Total Assets</div>
+        <div
+          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+        >
+          {abbreviateNumber(totalAssets)}
+        </div>
       </div>
-      <div class="stat-value text-lg font-semibold text-white">
-        {avgExpenseRatio?.toFixed(2)}%
+    </div>
+    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+      <div class="flex items-center justify-between sm:block">
+        <div class="text-sm font-normal text-white">Average Cost</div>
+        <div
+          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+        >
+          {avgExpenseRatio?.toFixed(2)}%
+        </div>
       </div>
     </div>
   </div>

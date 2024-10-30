@@ -32,11 +32,13 @@
     };
   });
 
-  $: charNumber = $screenWidth < 640 ? 20 : 30;
+  $: charNumber = $screenWidth < 640 ? 20 : 20;
 
   let columns = [
     { key: "asset", label: "Symbol", align: "left" },
     { key: "name", label: "Name", align: "left" },
+    { key: "price", label: "Price", align: "right" },
+    { key: "changesPercentage", label: "Change", align: "right" },
     { key: "sharesNumber", label: "Shares", align: "right" },
     { key: "weightPercentage", label: "% Weight", align: "right" },
   ];
@@ -44,6 +46,8 @@
   let sortOrders = {
     asset: { order: "none", type: "string" },
     name: { order: "none", type: "string" },
+    price: { order: "none", type: "number" },
+    changesPercentage: { order: "none", type: "number" },
     sharesNumber: { order: "none", type: "number" },
     weightPercentage: { order: "none", type: "number" },
   };
@@ -110,11 +114,11 @@
     if (data?.user?.tier === "Pro") {
       // Add headers row
       const csvRows = [];
-      csvRows.push("Symbol,Name,Shares,Weight");
+      csvRows.push("Symbol,Name,Price, Change, Shares,Weight");
 
       // Add data rows
       rawData.forEach((item) => {
-        const csvRow = `${item?.asset},${item?.name},${item?.sharesNumber},${item?.weightPercentage}`;
+        const csvRow = `${item?.asset},${item?.name},${item?.price},${item?.changesPercentage},${item?.sharesNumber},${item?.weightPercentage}`;
         csvRows.push(csvRow);
       });
 
@@ -269,6 +273,32 @@
                           ? formatString(item?.name?.slice(0, charNumber)) +
                             "..."
                           : formatString(item?.name)}
+                      </td>
+
+                      <td
+                        class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B] text-end"
+                      >
+                        {item?.price}
+                      </td>
+
+                      <td
+                        class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B] text-end"
+                      >
+                        {#if item?.changesPercentage >= 0}
+                          <span class="text-[#00FC50]"
+                            >+{item?.changesPercentage >= 1000
+                              ? abbreviateNumber(item?.changesPercentage)
+                              : item?.changesPercentage?.toFixed(2)}%</span
+                          >
+                        {:else if item?.changesPercentage < 0}
+                          <span class="text-[#FF2F1F]"
+                            >{item?.changesPercentage <= -1000
+                              ? abbreviateNumber(item?.changesPercentage)
+                              : item?.changesPercentage?.toFixed(2)}%
+                          </span>
+                        {:else}
+                          -
+                        {/if}
                       </td>
 
                       <td

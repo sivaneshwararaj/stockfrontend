@@ -1018,7 +1018,7 @@
                         ? "before:content-['+'] text-[#00FC50]"
                         : "text-[#FF2F1F]"}
                     >
-                      {displayLegend?.change}%
+                      {displayLegend?.change ?? "-"}%
                     </span>
                     <span class="hidden text-gray-200 sm:block"
                       >({displayData})</span
