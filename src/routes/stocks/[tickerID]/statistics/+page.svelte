@@ -966,8 +966,9 @@
               >
                 {#if rawData?.priceTarget && rawData?.upside && rawData?.analystRating}
                   The average price target for {$stockTicker} is ${rawData?.priceTarget},
-                  which is {rawData?.upside}% higher than the current price. The
-                  consensus rating is "{rawData?.analystRating}".
+                  which is {rawData?.upside}% {rawData?.upside > 0
+                    ? "higher"
+                    : "lower"} than the current price. The consensus rating is "{rawData?.analystRating}".
                 {:else}
                   Currently there are no analyst rating for {$stockTicker}.
                 {/if}
@@ -1031,7 +1032,14 @@
                   class="mb-4 px-0.5 text-base leading-relaxed text-white xs:text-[1.05rem] lg:leading-normal"
                   data-test="statistics-text"
                 >
-                  The last stock split was on {rawData?.lastStockSplit} It was a
+                  The last stock split was on {new Date(
+                    rawData?.lastStockSplit,
+                  ).toLocaleString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                    timeZone: "Europe/Berlin",
+                  })}. It was a
                   {rawData?.splitType}
                   split with a ratio of {rawData?.splitRatio}.
                 </p>
@@ -1043,7 +1051,16 @@
                       </td>
                       <td
                         class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                        title="August 22, 2000">{rawData?.lastStockSplit}</td
+                        title="August 22, 2000"
+                        >{new Date(rawData?.lastStockSplit).toLocaleString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            timeZone: "Europe/Berlin",
+                          },
+                        )}</td
                       >
                     </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                       ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
