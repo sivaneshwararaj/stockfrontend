@@ -27,43 +27,43 @@
     let path;
     switch (sector) {
       case "Financials":
-        path = "financial-sector";
+        path = "financial";
         break;
       case "Healthcare":
-        path = "healthcare-sector";
+        path = "healthcare";
         break;
       case "Information Technology":
-        path = "technology-sector";
+        path = "technology";
         break;
       case "Technology":
-        path = "technology-sector";
+        path = "technology";
         break;
       case "Financial Services":
-        path = "financial-sector";
+        path = "financial";
         break;
       case "Industrials":
-        path = "industrials-sector";
+        path = "industrials";
         break;
       case "Energy":
-        path = "energy-sector";
+        path = "energy";
         break;
       case "Utilities":
-        path = "utilities-sector";
+        path = "utilities";
         break;
       case "Consumer Cyclical":
-        path = "consumer-cyclical-sector";
+        path = "consumer-cyclical";
         break;
       case "Real Estate":
-        path = "real-estate-sector";
+        path = "real-estate";
         break;
       case "Basic Materials":
-        path = "basic-materials-sector";
+        path = "basic-materials";
         break;
       case "Communication Services":
-        path = "communication-services-sector";
+        path = "communication-services";
         break;
       case "Consumer Defensive":
-        path = "consumer-defensive-sector";
+        path = "consumer-defensive";
         break;
       default:
         // Handle default case if needed
@@ -273,7 +273,7 @@
                   >
                     {#each data?.getAnalystStats?.mainSectors as sector}
                       <a
-                        href={"/list/" + sectorSelector(sector)}
+                        href={"/list/sector/" + sectorSelector(sector)}
                         class="cursor-pointer w-fit border border-gray-600 px-3 sm:px-4 py-2 text-sm sm:text-[1rem] font-medium rounded-md sm:hover:text-blue-400 text-white underline underline-offset-4"
                       >
                         {sector}
