@@ -4,9 +4,9 @@
   import { onMount } from "svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let isLoaded = false;
   let rawData = [];
@@ -65,6 +65,84 @@
   }
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
+
+  let columns = [
+    { key: "date", label: "Date", align: "left" },
+    { key: "ticker", label: "Symbol", align: "left" },
+
+    { key: "name", label: "Name", align: "left" },
+    { key: "price", label: "Price", align: "right" },
+
+    { key: "changesPercentage", label: "% Change", align: "right" },
+    { key: "amount", label: "Amount", align: "right" },
+  ];
+
+  let sortOrders = {
+    date: { order: "none", type: "date" },
+    ticker: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    changesPercentage: { order: "none", type: "number" },
+    price: { order: "none", type: "number" },
+    amount: { order: "none", type: "number" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = rawData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      displayList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    displayList = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
 </script>
 
 <svelte:head>
@@ -139,50 +217,7 @@
                   class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
                 >
                   <thead>
-                    <tr class="bg-[#09090B] border-b border-[#27272A]">
-                      <th
-                        class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
-                      >
-                        Date
-                      </th>
-                      <th
-                        class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
-                      >
-                        Symbol
-                      </th>
-                      <th
-                        class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
-                      >
-                        Name
-                      </th>
-
-                      <th
-                        class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-                      >
-                        Sector
-                      </th>
-                      <th
-                        on:click={() => {
-                          changeOrder(order);
-                        }}
-                        class="cursor-pointer text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-                      >
-                        Amount
-                        <svg
-                          class="w-5 h-5 inline-block {order === 'highToLow'
-                            ? ''
-                            : 'rotate-180'}"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          style="max-width:40px"
-                          ><path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          ></path></svg
-                        >
-                      </th>
-                    </tr>
+                    <TableHeader {columns} {sortOrders} {sortData} />
                   </thead>
                   <tbody>
                     {#each displayList as item, index}
@@ -221,7 +256,25 @@
                         <td
                           class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap"
                         >
-                          {item?.sector}
+                          {item?.price}
+                        </td>
+
+                        <td
+                          class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]"
+                        >
+                          {#if item?.changesPercentage >= 0}
+                            <span class="text-[#00FC50]"
+                              >+{item?.changesPercentage >= 1000
+                                ? item?.changesPercentage
+                                : item?.changesPercentage?.toFixed(2)}%</span
+                            >
+                          {:else}
+                            <span class="text-[#FF2F1F]"
+                              >{item?.changesPercentage <= -1000
+                                ? item?.changesPercentage
+                                : item?.changesPercentage?.toFixed(2)}%
+                            </span>
+                          {/if}
                         </td>
 
                         <td class="text-white text-sm sm:text-[1rem] text-end">
