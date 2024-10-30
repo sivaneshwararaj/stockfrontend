@@ -126,7 +126,7 @@
     // Sort using the generic comparison function
     stockList = [...originalData].sort(compareValues);
   };
-  $: charNumber = $screenWidth < 640 ? 15 : 15;
+  $: charNumber = $screenWidth < 640 ? 20 : 25;
 </script>
 
 <svelte:head>
