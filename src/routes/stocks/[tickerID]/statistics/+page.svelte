@@ -2,10 +2,10 @@
   import {
     numberOfUnreadNotification,
     displayCompanyName,
-    screenWidth,
     stockTicker,
   } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
+  import ScrollToTop from "$lib/components/ScrollToTop.svelte";
 
   export let data;
   let rawData = data?.getStatistics ?? {};
@@ -59,7 +59,7 @@
     <div class="mb-6">
       {#if Object?.keys(rawData)?.length !== 0}
         <div
-          class="space-y-5 xs:space-y-6 lg:grid lg:grid-cols-2 lg:space-x-10 lg:space-y-0"
+          class="space-y-5 xs:space-y-6 lg:grid lg:grid-cols-3 lg:space-x-10 lg:space-y-0"
         >
           <div class="flex flex-col space-y-5 xs:space-y-6 lg:space-y-8">
             <div
@@ -871,6 +871,226 @@
               </table>
             </div>
           </div>
+
+          <div class="flex flex-col space-y-5 xs:space-y-6 lg:space-y-8">
+            <div>
+              <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
+                Dividends &amp; Yields
+              </h2>
+              <p
+                class="mb-4 px-0.5 text-base leading-relaxed text-white xs:text-[1.05rem] lg:leading-normal"
+              >
+                {$stockTicker} does not appear to pay any dividends at this time.
+              </p>
+              <table class="w-full" data-test="statistics-table">
+                <tbody
+                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Dividend Per Share</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      >{rawData?.annualDividend !== null
+                        ? "$" + rawData?.annualDividend?.toFixed(2)
+                        : "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Dividend Yield</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      >{rawData?.dividendYield !== null
+                        ? rawData?.dividendYield
+                        : "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Dividend Growth (YoY)</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      >{rawData?.dividendGrowth !== null
+                        ? rawData?.dividendGrowth + "%"
+                        : "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Payout Ratio</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="n/a"
+                      >{rawData?.payoutRatio !== null
+                        ? rawData?.payoutRatio + "%"
+                        : "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Earnings Yield</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      >{rawData?.earningsYield !== null
+                        ? rawData?.earningsYield + "%"
+                        : "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>FCF Yield</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="0.578%"
+                      >{rawData?.freeCashFlowYield !== null
+                        ? rawData?.freeCashFlowYield + "%"
+                        : "n/a"}</td
+                    >
+                  </tr></tbody
+                >
+              </table>
+              <a
+                href={`/stocks/${$stockTicker}/dividends`}
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+              >
+                Dividend Details
+              </a>
+            </div>
+            <div>
+              <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
+                Analyst Forecast
+              </h2>
+              <p
+                class="mb-4 px-0.5 text-base leading-relaxed text-white xs:text-[1.05rem] lg:leading-normal"
+                data-test="statistics-text"
+              >
+                {#if rawData?.priceTarget && rawData?.upside && rawData?.analystRating}
+                  The average price target for {$stockTicker} is ${rawData?.priceTarget},
+                  which is {rawData?.upside}% higher than the current price. The
+                  consensus rating is "{rawData?.analystRating}".
+                {:else}
+                  Currently there are no analyst rating for {$stockTicker}.
+                {/if}
+              </p>
+              <table class="w-full" data-test="statistics-table">
+                <tbody
+                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Price Target</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="$197.17"
+                      >{rawData?.priceTarget !== null
+                        ? "$" + rawData?.priceTarget
+                        : "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Price Target Difference</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="30.69%"
+                      >{rawData?.upside !== null
+                        ? rawData?.upside + "%"
+                        : "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Analyst Consensus</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="Strong Buy">{rawData?.analystRating ?? "n/a"}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Analyst Count</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="30">{rawData?.analystCounter ?? "n/a"}</td
+                    >
+                  </tr></tbody
+                >
+              </table>
+              <a
+                href={`/stocks/${$stockTicker}/forecast/analyst`}
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+              >
+                Stock Forecasts
+              </a>
+            </div>
+            {#if rawData?.lastStockSplit && rawData?.splitType && rawData?.splitRatio}
+              <div>
+                <h2 class="mb-2 px-0.5 text-xl font-bold text-white">
+                  Stock Splits
+                </h2>
+                <p
+                  class="mb-4 px-0.5 text-base leading-relaxed text-white xs:text-[1.05rem] lg:leading-normal"
+                  data-test="statistics-text"
+                >
+                  The last stock split was on {rawData?.lastStockSplit} It was a
+                  {rawData?.splitType}
+                  split with a ratio of {rawData?.splitRatio}.
+                </p>
+                <table class="w-full" data-test="statistics-table">
+                  <tbody
+                    ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                      ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                        ><span>Last Split Date</span>
+                      </td>
+                      <td
+                        class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                        title="August 22, 2000">{rawData?.lastStockSplit}</td
+                      >
+                    </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                      ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                        ><span>Split Type</span>
+                      </td>
+                      <td
+                        class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                        title="Forward">{rawData?.splitType}</td
+                      >
+                    </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                      ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                        ><span>Split Ratio</span>
+                      </td>
+                      <td
+                        class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                        >{rawData?.splitRatio}</td
+                      >
+                    </tr></tbody
+                  >
+                </table>
+              </div>
+            {/if}
+            <div>
+              <h2 class="mb-2 px-0.5 text-xl font-bold text-white">Scores</h2>
+              <table class="w-full" data-test="statistics-table">
+                <tbody
+                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Altman Z-Score</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      title="n/a">{rawData?.altmanZScore}</td
+                    >
+                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
+                      ><span>Piotroski F-Score</span>
+                    </td>
+                    <td
+                      class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
+                      >{rawData?.piotroskiScore}</td
+                    >
+                  </tr></tbody
+                >
+              </table>
+            </div>
+          </div>
         </div>
       {:else}
         <h2
@@ -880,5 +1100,7 @@
         </h2>
       {/if}
     </div>
+
+    <ScrollToTop />
   </div>
 </section>
