@@ -66,18 +66,23 @@
     }
 
     // Save recent ticker
+    searchHistory = [...searchHistory];
+    console.log(searchHistory);
     await saveRecentTicker();
-
     // Map of asset types to their corresponding actions
+    console.log(upperState, assetType);
     const assetActions = {
       ETF: () => {
         etfTicker.update(() => upperState);
+        goto(`/etf/${upperState}`);
       },
       Stock: () => {
         stockTicker.update(() => upperState);
+        goto(`/stocks/${upperState}`);
       },
       Crypto: () => {
         cryptoTicker.update(() => upperState);
+        goto(`/crypto/${upperState}`);
       },
     };
 
@@ -124,6 +129,8 @@
     }
 
     // Map of asset types to their corresponding actions
+    searchHistory = [...searchHistory];
+    console.log(searchHistory);
     await saveRecentTicker();
 
     const assetActions = {
@@ -236,6 +243,8 @@
   let focusedSuggestion = null;
 
   function handleKeyDown(event) {
+    const newList = searchHistory?.length > 0 ? searchHistory : popularList;
+
     if (event.key === "ArrowDown" && showSuggestions) {
       // Move down in the suggestions
       event.preventDefault(); // Prevent scrolling
@@ -261,23 +270,23 @@
     } else if (event.key === "ArrowDown" && !showSuggestions) {
       // Move down in the suggestions
       event.preventDefault(); // Prevent scrolling
-      const currentIndex = popularList?.findIndex(
+      const currentIndex = newList?.findIndex(
         (item) => item?.symbol === searchQuery,
       );
-      if (currentIndex < popularList?.length - 1) {
-        searchQuery = popularList[currentIndex + 1]?.symbol;
-        assetType = popularList[currentIndex + 1]?.type;
+      if (currentIndex < newList?.length - 1) {
+        searchQuery = newList[currentIndex + 1]?.symbol;
+        assetType = newList[currentIndex + 1]?.type;
         focusedSuggestion = searchQuery; // Update the focused suggestion
       }
     } else if (event.key === "ArrowUp" && !showSuggestions) {
       // Move up in the suggestions
       event.preventDefault(); // Prevent scrolling
-      const currentIndex = popularList?.findIndex(
+      const currentIndex = newList?.findIndex(
         (item) => item?.symbol === searchQuery,
       );
       if (currentIndex > 0) {
-        searchQuery = popularList[currentIndex - 1]?.symbol;
-        assetType = popularList[currentIndex - 1]?.type;
+        searchQuery = newList[currentIndex - 1]?.symbol;
+        assetType = newList[currentIndex - 1]?.type;
         focusedSuggestion = searchQuery; // Update the focused suggestion
       }
     }
@@ -539,11 +548,8 @@
               {#if !showSuggestions}
                 {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
                   <li class="border-b border-gray-600">
-                    <a
-                      data-sveltekit-preload-data={false}
-                      href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
-                      on:click={() =>
-                        popularTicker(item?.symbol, item?.assetType)}
+                    <label
+                      on:click={() => popularTicker(item?.symbol, item?.type)}
                       class="mb-2 {item?.symbol === focusedSuggestion
                         ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
                         : 'shake-ticker cursor-pointer bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white  group'} w-full"
@@ -572,7 +578,7 @@
                           {item?.type}
                         </div>
                       </div>
-                    </a>
+                    </label>
                   </li>
                 {/each}
               {:else if showSuggestions && searchResults?.length > 0}
@@ -730,9 +736,7 @@
                 {#if !showSuggestions}
                   {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
                     <li class="border-b border-gray-600">
-                      <a
-                        data-sveltekit-preload-data={false}
-                        href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                      <label
                         on:click={() => popularTicker(item?.symbol, item?.type)}
                         class="mb-2 {item?.symbol === focusedSuggestion
                           ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
@@ -762,7 +766,7 @@
                             {item?.type}
                           </div>
                         </div>
-                      </a>
+                      </label>
                     </li>
                   {/each}
                 {:else if showSuggestions && searchResults?.length > 0}
