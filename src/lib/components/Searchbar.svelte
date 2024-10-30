@@ -220,7 +220,14 @@
     if (e?.charCode === 13) {
       focusedSuggestion = "";
 
-      if (!notFoundTicker) {
+      if (searchResults?.length > 0) {
+        // Use the first search result
+        const firstResult = searchResults[0];
+        searchQuery = firstResult.symbol;
+        assetType = firstResult.type;
+        searchBarTicker(firstResult.symbol, firstResult.type);
+      } else if (!notFoundTicker && searchQuery) {
+        // Fallback to original behavior if no search results
         searchBarTicker(searchQuery, assetType);
       }
     }
