@@ -10,6 +10,9 @@
   import { onMount } from "svelte";
   import Search from "lucide-svelte/icons/search";
 
+  let searchHistory = [];
+  let searchResults = [];
+
   let dataLoaded = false; // Flag to track data loading
 
   let assetType = "";
@@ -38,51 +41,118 @@
     }
   }
 
-  function popularTicker(state, assetType) {
+  async function popularTicker(state, assetType) {
     searchOpen = false;
 
-    if (assetType === "ETF") {
-      etfTicker.update((value) => state?.toUpperCase());
-    } else if (assetType === "Stock") {
-      stockTicker.update((value) => state?.toUpperCase());
-    } else if (assetType === "Crypto") {
-      cryptoTicker.update((value) => state?.toUpperCase());
+    if (!state) return;
+
+    // Convert state to uppercase once
+    const upperState = state.toUpperCase();
+
+    // Find the matching ticker data
+    const newSearchItem = $searchBarData?.find(
+      ({ symbol }) => symbol === upperState,
+    );
+
+    // Update search history:
+    // 1. Remove the item if it already exists (to avoid duplicates)
+    // 2. Add the new item at the beginning
+    // 3. Limit to 5 items
+    if (newSearchItem) {
+      searchHistory = [
+        newSearchItem,
+        ...(searchHistory?.filter((item) => item.symbol !== upperState) || []),
+      ].slice(0, 5);
     }
 
+    // Save recent ticker
+    await saveRecentTicker();
+
+    // Map of asset types to their corresponding actions
+    const assetActions = {
+      ETF: () => {
+        etfTicker.update(() => upperState);
+      },
+      Stock: () => {
+        stockTicker.update(() => upperState);
+      },
+      Crypto: () => {
+        cryptoTicker.update(() => upperState);
+      },
+    };
+
+    // Execute the appropriate action for the asset type
+    if (assetActions[assetType]) {
+      assetActions[assetType]();
+    }
+
+    // Close search modal
     const closePopup = document.getElementById("searchBarModal");
     closePopup?.dispatchEvent(new MouseEvent("click"));
   }
 
-  function searchBarTicker(state, assetType) {
+  async function searchBarTicker(state, assetType) {
     showSuggestions = false;
+
+    // Early return if state is empty or ticker not found
     if (
-      state !== "" &&
-      $searchBarData?.find((item) => item?.symbol === state?.toUpperCase())
+      !state ||
+      !$searchBarData?.find((item) => item?.symbol === state?.toUpperCase())
     ) {
       notFoundTicker = false;
-      if (assetType === "ETF") {
-        etfTicker.update((value) => state?.toUpperCase());
-        goto(`/etf/${state?.toUpperCase()}`);
-      } else if (assetType === "Stock") {
-        stockTicker.update((value) => state?.toUpperCase());
-        goto(`/stocks/${state?.toUpperCase()}`);
-      } else if (assetType === "Crypto") {
-        cryptoTicker.update((value) => state?.toUpperCase());
-        goto(`/crypto/${state?.toUpperCase()}`);
-      }
+      searchQuery = "";
+      return;
+    }
 
+    // Convert state to uppercase once
+    const upperState = state.toUpperCase();
+
+    // Find the matching ticker data
+    const newSearchItem = $searchBarData?.find(
+      ({ symbol }) => symbol === upperState,
+    );
+
+    // Update search history:
+    // 1. Remove the item if it already exists (to avoid duplicates)
+    // 2. Add the new item at the beginning
+    // 3. Limit to 5 items
+    if (newSearchItem) {
+      searchHistory = [
+        newSearchItem,
+        ...(searchHistory?.filter((item) => item.symbol !== upperState) || []),
+      ].slice(0, 5);
+    }
+
+    // Map of asset types to their corresponding actions
+    await saveRecentTicker();
+
+    const assetActions = {
+      ETF: () => {
+        etfTicker.update(() => upperState);
+        goto(`/etf/${upperState}`);
+      },
+      Stock: () => {
+        stockTicker.update(() => upperState);
+        goto(`/stocks/${upperState}`);
+      },
+      Crypto: () => {
+        cryptoTicker.update(() => upperState);
+        goto(`/crypto/${upperState}`);
+      },
+    };
+
+    // Execute the appropriate action for the asset type
+    if (assetActions[assetType]) {
+      assetActions[assetType]();
+
+      // Close search modal
       searchOpen = false;
-      //searchQuery = state.toUpperCase();
       const closePopup = document.getElementById("searchBarModal");
       closePopup?.dispatchEvent(new MouseEvent("click"));
-    } else {
-      notFoundTicker = false;
     }
 
     searchQuery = "";
   }
-
-  let searchResults = [];
 
   async function search() {
     const normalizedSearchQuery = searchQuery?.toLowerCase();
@@ -224,7 +294,26 @@
     }
   };
 
+  function saveRecentTicker() {
+    try {
+      // Save the version along with the rules
+      localStorage?.setItem("search-history", JSON?.stringify(searchHistory));
+    } catch (e) {
+      console.log("Failed saving indicator rules: ", e);
+    }
+  }
+
   onMount(() => {
+    try {
+      const savedRules = localStorage?.getItem("search-history");
+
+      if (savedRules) {
+        searchHistory = JSON.parse(savedRules);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
     window.addEventListener("keydown", handleControlF);
     window.addEventListener("keydown", handleEscape);
     return () => {
@@ -436,12 +525,12 @@
             {/if}
             {#if !showSuggestions}
               <div class="text-start text-sm font-semibold text-white mb-2">
-                Popular
+                {searchHistory?.length > 0 ? "Recent" : "Popular"}
               </div>
             {/if}
             <ul class="text-sm">
               {#if !showSuggestions}
-                {#each popularList as item}
+                {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
                   <li class="border-b border-gray-600">
                     <a
                       data-sveltekit-preload-data={false}
@@ -627,12 +716,12 @@
               {/if}
               {#if !showSuggestions}
                 <div class="text-start text-sm font-semibold text-white mb-2">
-                  Popular
+                  {searchHistory?.length > 0 ? "Recent" : "Popular"}
                 </div>
               {/if}
               <ul class="text-sm">
                 {#if !showSuggestions}
-                  {#each popularList as item}
+                  {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
                     <li class="border-b border-gray-600">
                       <a
                         data-sveltekit-preload-data={false}
