@@ -124,8 +124,8 @@
         100
       )?.toFixed(2);
       priceTarget =
-        data?.getAnalystRating?.priceTarget !== ("n/a" && 0)
-          ? data?.getAnalystRating?.priceTarget
+        data?.getAnalystRating?.medianPriceTarget !== ("n/a" && 0)
+          ? data?.getAnalystRating?.medianPriceTarget
           : "-";
       consensusRating = data?.getAnalystRating?.consensusRating;
 

@@ -165,23 +165,19 @@
   const onKeyPress = (e) => {
     if (e?.charCode === 13) {
       focusedSuggestion = "";
-
       const assetActions = {
         ETF: () => goto(`/etf/${searchQuery}`),
         Stock: () => goto(`/stocks/${searchQuery}`),
         Crypto: () => goto(`/crypto/${searchQuery}`),
       };
 
-      if (showSuggestions?.length > 0) {
-        // Use the first search result
-        searchQuery = firstResult.symbol;
-        assetType = firstResult.type;
+      if (searchResults?.length > 0) {
+        searchQuery = searchResults.at(0).symbol;
+        assetType = searchResults.at(0).type;
       }
 
-      // Execute the appropriate action for the asset type
-      if (assetActions[assetType]) {
-        assetActions[assetType]();
-      }
+      // Call the function for the selected asset type
+      assetActions[assetType]?.();
 
       // Trigger search bar action
       searchBarTicker(searchQuery);
