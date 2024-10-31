@@ -83,5 +83,6 @@ export const load = async ({ params, locals, setHeaders }) => {
     getOneDayPrice,
     getUserWatchlist,
     companyName,
+    getParams: params.tickerID,
   };
 };

@@ -1,17 +1,11 @@
 <script lang="ts">
-  import {
-    searchBarData,
-    stockTicker,
-    etfTicker,
-    cryptoTicker,
-    screenWidth,
-  } from "$lib/store";
-  import { goto } from "$app/navigation";
+  import { searchBarData, screenWidth } from "$lib/store";
   import { onMount } from "svelte";
   import Search from "lucide-svelte/icons/search";
-
+  import { goto } from "$app/navigation";
   let searchHistory = [];
   let searchResults = [];
+  let updatedSearchHistory = [];
 
   let dataLoaded = false; // Flag to track data loading
 
@@ -41,9 +35,8 @@
     }
   }
 
-  async function popularTicker(state, assetType) {
+  async function popularTicker(state) {
     searchOpen = false;
-
     if (!state) return;
 
     // Convert state to uppercase once
@@ -54,41 +47,14 @@
       ({ symbol }) => symbol === upperState,
     );
 
-    // Update search history:
-    // 1. Remove the item if it already exists (to avoid duplicates)
-    // 2. Add the new item at the beginning
-    // 3. Limit to 5 items
     if (newSearchItem) {
-      searchHistory = [
+      // Ensure `upperState` matches the case of `item.symbol`
+      updatedSearchHistory = [
         newSearchItem,
-        ...(searchHistory?.filter((item) => item.symbol !== upperState) || []),
+        ...(searchHistory?.filter(
+          (item) => item?.symbol?.toUpperCase() !== upperState,
+        ) || []),
       ].slice(0, 5);
-    }
-
-    // Save recent ticker
-    searchHistory = [...searchHistory];
-    console.log(searchHistory);
-    await saveRecentTicker();
-    // Map of asset types to their corresponding actions
-    console.log(upperState, assetType);
-    const assetActions = {
-      ETF: () => {
-        etfTicker.update(() => upperState);
-        goto(`/etf/${upperState}`);
-      },
-      Stock: () => {
-        stockTicker.update(() => upperState);
-        goto(`/stocks/${upperState}`);
-      },
-      Crypto: () => {
-        cryptoTicker.update(() => upperState);
-        goto(`/crypto/${upperState}`);
-      },
-    };
-
-    // Execute the appropriate action for the asset type
-    if (assetActions[assetType]) {
-      assetActions[assetType]();
     }
 
     // Close search modal
@@ -96,9 +62,8 @@
     closePopup?.dispatchEvent(new MouseEvent("click"));
   }
 
-  async function searchBarTicker(state, assetType) {
+  function searchBarTicker(state) {
     showSuggestions = false;
-
     // Early return if state is empty or ticker not found
     if (
       !state ||
@@ -117,51 +82,25 @@
       ({ symbol }) => symbol === upperState,
     );
 
-    // Update search history:
-    // 1. Remove the item if it already exists (to avoid duplicates)
-    // 2. Add the new item at the beginning
-    // 3. Limit to 5 items
     if (newSearchItem) {
-      searchHistory = [
+      // Ensure `upperState` matches the case of `item.symbol`
+      updatedSearchHistory = [
         newSearchItem,
-        ...(searchHistory?.filter((item) => item.symbol !== upperState) || []),
+        ...(searchHistory?.filter(
+          (item) => item?.symbol?.toUpperCase() !== upperState,
+        ) || []),
       ].slice(0, 5);
     }
 
-    // Map of asset types to their corresponding actions
-    searchHistory = [...searchHistory];
-    console.log(searchHistory);
-    await saveRecentTicker();
-
-    const assetActions = {
-      ETF: () => {
-        etfTicker.update(() => upperState);
-        goto(`/etf/${upperState}`);
-      },
-      Stock: () => {
-        stockTicker.update(() => upperState);
-        goto(`/stocks/${upperState}`);
-      },
-      Crypto: () => {
-        cryptoTicker.update(() => upperState);
-        goto(`/crypto/${upperState}`);
-      },
-    };
-
-    // Execute the appropriate action for the asset type
-    if (assetActions[assetType]) {
-      assetActions[assetType]();
-
-      // Close search modal
-      searchOpen = false;
-      const closePopup = document.getElementById("searchBarModal");
-      closePopup?.dispatchEvent(new MouseEvent("click"));
-    }
+    // Close search modal
+    searchOpen = false;
+    const closePopup = document.getElementById("searchBarModal");
+    closePopup?.dispatchEvent(new MouseEvent("click"));
 
     searchQuery = "";
   }
 
-  async function search() {
+  function search() {
     const normalizedSearchQuery = searchQuery?.toLowerCase();
 
     // Define names for which symbols without dots should be prioritized
@@ -227,16 +166,25 @@
     if (e?.charCode === 13) {
       focusedSuggestion = "";
 
-      if (searchResults?.length > 0) {
+      const assetActions = {
+        ETF: () => goto(`/etf/${searchQuery}`),
+        Stock: () => goto(`/stocks/${searchQuery}`),
+        Crypto: () => goto(`/crypto/${searchQuery}`),
+      };
+
+      if (showSuggestions?.length > 0) {
         // Use the first search result
-        const firstResult = searchResults[0];
         searchQuery = firstResult.symbol;
         assetType = firstResult.type;
-        searchBarTicker(firstResult.symbol, firstResult.type);
-      } else if (!notFoundTicker && searchQuery) {
-        // Fallback to original behavior if no search results
-        searchBarTicker(searchQuery, assetType);
       }
+
+      // Execute the appropriate action for the asset type
+      if (assetActions[assetType]) {
+        assetActions[assetType]();
+      }
+
+      // Trigger search bar action
+      searchBarTicker(searchQuery);
     }
   };
 
@@ -398,6 +346,20 @@
       notFoundTicker = false;
     }
   }
+
+  $: {
+    if (updatedSearchHistory?.length > 0 && searchBarModalChecked === false) {
+      (async () => {
+        // Add 500 ms delay is important otherwise bug since #each has searchHistory and updates too quickly and redirects to wrong symbol
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Update search history after delay
+        searchHistory = updatedSearchHistory;
+        updatedSearchHistory = [];
+        saveRecentTicker();
+      })();
+    }
+  }
 </script>
 
 <label
@@ -510,7 +472,7 @@
             autocomplete="off"
           />
           <button
-            on:click={() => searchBarTicker(searchQuery, assetType)}
+            on:click={() => searchBarTicker(searchQuery)}
             class="absolute inset-0 right-auto group"
             type="submit"
             aria-label="Search"
@@ -548,8 +510,9 @@
               {#if !showSuggestions}
                 {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
                   <li class="border-b border-gray-600">
-                    <label
-                      on:click={() => popularTicker(item?.symbol, item?.type)}
+                    <a
+                      href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                      on:click={() => popularTicker(item?.symbol)}
                       class="mb-2 {item?.symbol === focusedSuggestion
                         ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
                         : 'shake-ticker cursor-pointer bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white  group'} w-full"
@@ -578,7 +541,7 @@
                           {item?.type}
                         </div>
                       </div>
-                    </label>
+                    </a>
                   </li>
                 {/each}
               {:else if showSuggestions && searchResults?.length > 0}
@@ -589,9 +552,9 @@
                   <li class="border-b border-gray-600">
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label
-                      data-sveltekit-preload-data={false}
-                      on:click={() => searchBarTicker(item?.symbol, item?.type)}
+                    <a
+                      href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                      on:click={() => searchBarTicker(item?.symbol)}
                       class="mb-2 {item?.symbol === focusedSuggestion
                         ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
                         : 'cursor-pointer mb-2 bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white group'}"
@@ -610,7 +573,7 @@
                           {item?.type}
                         </div>
                       </div>
-                    </label>
+                    </a>
                   </li>
                 {/each}
               {:else if showSuggestions && searchResults?.length === 0}
@@ -697,7 +660,7 @@
               autocomplete="off"
             />
             <button
-              on:click={() => searchBarTicker(searchQuery, assetType)}
+              on:click={() => searchBarTicker(searchQuery)}
               class="absolute inset-0 right-auto group"
               type="submit"
               aria-label="Search"
@@ -736,8 +699,9 @@
                 {#if !showSuggestions}
                   {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
                     <li class="border-b border-gray-600">
-                      <label
-                        on:click={() => popularTicker(item?.symbol, item?.type)}
+                      <a
+                        href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                        on:click={() => popularTicker(item?.symbol)}
                         class="mb-2 {item?.symbol === focusedSuggestion
                           ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
                           : 'cursor-pointer bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'} w-full"
@@ -766,7 +730,7 @@
                             {item?.type}
                           </div>
                         </div>
-                      </label>
+                      </a>
                     </li>
                   {/each}
                 {:else if showSuggestions && searchResults?.length > 0}
@@ -777,10 +741,9 @@
                     <li class="border-b border-gray-600">
                       <!-- svelte-ignore a11y-click-events-have-key-events -->
                       <!-- svelte-ignore a11y-label-has-associated-control -->
-                      <label
-                        data-sveltekit-preload-data={false}
-                        on:click={() =>
-                          searchBarTicker(item?.symbol, item?.type)}
+                      <a
+                        href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                        on:click={() => searchBarTicker(item?.symbol)}
                         class="mb-2 {item?.symbol === focusedSuggestion
                           ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
                           : 'cursor-pointer mb-2 bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'}"
@@ -799,7 +762,7 @@
                             {item?.type}
                           </div>
                         </div>
-                      </label>
+                      </a>
                     </li>
                   {/each}
                 {:else if showSuggestions && searchResults?.length === 0}

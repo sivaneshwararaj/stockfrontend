@@ -94,5 +94,6 @@ export const load = async ({ params, locals }) => {
     getNews,
     getUserWatchlist,
     companyName: cleanString(getStockDeck?.companyName),
+    getParams: params.tickerID,
   };
 };

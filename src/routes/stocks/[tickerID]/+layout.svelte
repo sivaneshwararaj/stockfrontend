@@ -12,8 +12,9 @@
     isCrosshairMoveActive,
     currentPrice,
     priceIncrease,
-    displayCompanyName,
     stockTicker,
+    assetType,
+    displayCompanyName,
     isOpen,
     shouldUpdatePriceChart,
     priceChartData,
@@ -315,6 +316,9 @@ function handleTypeOfTrade(state:string)
 
   $: {
     if ($page?.url?.pathname && typeof window !== "undefined") {
+      stockTicker.update((value) => (value = data?.getParams?.toUpperCase()));
+      assetType.update((value) => (value = "stock"));
+      displayCompanyName.update((value) => (value = data?.companyName));
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
         statistics: "statistics",
