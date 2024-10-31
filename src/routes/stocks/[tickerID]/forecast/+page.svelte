@@ -19,9 +19,9 @@
 
   let index = 0;
   let changeRevenue = 0;
-  let changeNetIncome = 0;
-  let changeEBITDA = 0;
+  let changeRevenueNextYear = 0;
   let changeEPS = 0;
+  let changeEPSNextYear = 0;
 
   const price = data?.getStockQuote?.price?.toFixed(2) || 0;
 
@@ -262,21 +262,28 @@
     const estimatedRevenueAvg =
       data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg;
     const revenue = data?.getAnalystEstimate[index - 2]?.revenue;
-    const estimatedNetIncomeAvg =
-      data?.getAnalystEstimate[index - 1]?.estimatedNetIncomeAvg;
-    const netIncome = data?.getAnalystEstimate[index - 2]?.netIncome;
-    const estimatedEbitdaAvg =
-      data?.getAnalystEstimate[index - 1]?.estimatedEbitdaAvg;
-    const ebitda = data?.getAnalystEstimate[index - 2]?.ebitda;
+    const estimatedRevenueAvgNextYear =
+      data?.getAnalystEstimate[index]?.estimatedRevenueAvg;
+
     const estimatedEpsAvg =
       data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg;
     const eps = data?.getAnalystEstimate[index - 2]?.eps;
+    const estimatedEPSAvgNextYear =
+      data?.getAnalystEstimate[index]?.estimatedEpsAvg;
 
     // Calculate percentage changes for each metric
     changeRevenue = calculateChange(estimatedRevenueAvg, revenue);
-    changeNetIncome = calculateChange(estimatedNetIncomeAvg, netIncome);
-    changeEBITDA = calculateChange(estimatedEbitdaAvg, ebitda);
+    changeRevenueNextYear = calculateChange(
+      estimatedRevenueAvgNextYear,
+      estimatedRevenueAvg,
+    );
     changeEPS = calculateChange(estimatedEpsAvg, eps);
+    changeEPSNextYear = calculateChange(
+      estimatedEPSAvgNextYear,
+      estimatedEpsAvg,
+    );
+
+    console.log(estimatedEpsAvg, data?.getAnalystEstimate[index - 2]?.eps);
   }
 
   let optionsData = getPlotOptions() || null;
@@ -520,16 +527,16 @@
           </h2>
           {#if data?.getAnalystEstimate?.length !== 0}
             <div
-              class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-600 rounded-lg border border-gray-600 shadow md:grid-cols-4 md:grid-rows-1 md:divide-x"
+              class="mb-4 grid grid-cols-1 overflow-hidden rounded-md border divide-gray-600 border-gray-600 md:grid-cols-2 lg:grid-cols-4"
             >
-              <div class="p-4 bp:p-5 sm:p-6">
-                <label
-                  class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] font-semibold"
-                >
-                  Revenue
-                </label>
+              <div
+                class="border-b px-3 py-5 last:border-b-0 xs:px-4 sm:p-6 md:border-b lg:border-b-0"
+              >
+                <div class="text-base font-normal text-white">
+                  Revenue This Year
+                </div>
                 <div
-                  class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0"
+                  class="mt-1 flex flex-wrap items-baseline justify-between space-y-2 bp:space-y-0"
                 >
                   <div
                     class="flex items-baseline text-2xl font-semibold text-white"
@@ -537,15 +544,25 @@
                     {abbreviateNumber(
                       data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg,
                     )}
+                    <div
+                      class="ml-2 block text-sm font-semibold text-white lg:hidden"
+                    >
+                      from {abbreviateNumber(
+                        data?.getAnalystEstimate[index - 2]?.revenue,
+                      )}
+                    </div>
                   </div>
                   <div
-                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black"
+                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 {changeRevenue >
+                    0
+                      ? 'bg-[#00FC50]'
+                      : 'bg-[#FF2F1F]'} text-black"
                   >
                     <svg
-                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeRevenue >
+                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-black {changeRevenue >
                       0
                         ? ''
-                        : 'rotate-180'}"
+                        : 'rotate-180 '}"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -557,12 +574,12 @@
                         stroke-width="2"
                         d="M7 11l5-5m0 0l5 5m-5-5v12"
                       ></path></svg
-                    >
+                    > <span class="sr-only">Increased by</span>
                     {abbreviateNumber(changeRevenue?.toFixed(1))}%
                   </div>
                 </div>
                 <div
-                  class="ml-0.5 mt-1.5 text-sm font-semibold text-white/60 lg:block"
+                  class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
                 >
                   from {abbreviateNumber(
                     data?.getAnalystEstimate[index - 2]?.revenue,
@@ -570,32 +587,40 @@
                 </div>
               </div>
               <div
-                class="p-4 bp:p-5 sm:p-6 border-l border-contrast md:border-0"
+                class="border-b px-3 py-5 last:border-b-0 xs:px-4 sm:p-6 md:border-b md:border-l lg:border-b-0"
               >
-                <label
-                  class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] font-semibold"
-                >
-                  Net Income
-                </label>
+                <div class="text-base font-normal text-white">
+                  Revenue Next Year
+                </div>
                 <div
-                  class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0"
+                  class="mt-1 flex flex-wrap items-baseline justify-between space-y-2 bp:space-y-0"
                 >
                   <div
                     class="flex items-baseline text-2xl font-semibold text-white"
                   >
                     {abbreviateNumber(
-                      data?.getAnalystEstimate[index - 1]
-                        ?.estimatedNetIncomeAvg,
+                      data?.getAnalystEstimate[index]?.estimatedRevenueAvg,
                     )}
+                    <div
+                      class="ml-2 block text-sm font-semibold text-white lg:hidden"
+                    >
+                      from {abbreviateNumber(
+                        data?.getAnalystEstimate[index - 1]
+                          ?.estimatedRevenueAvg,
+                      )}
+                    </div>
                   </div>
                   <div
-                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black"
+                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 {changeRevenueNextYear >
+                    0
+                      ? 'bg-[#00FC50]'
+                      : 'bg-[#FF2F1F]'} text-black"
                   >
                     <svg
-                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeNetIncome >
+                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-black {changeRevenueNextYear >
                       0
                         ? ''
-                        : 'rotate-180'}"
+                        : 'rotate-180 '}"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -607,44 +632,50 @@
                         stroke-width="2"
                         d="M7 11l5-5m0 0l5 5m-5-5v12"
                       ></path></svg
-                    >
-                    {abbreviateNumber(changeNetIncome?.toFixed(1))}%
+                    > <span class="sr-only">Increased by</span>
+                    {abbreviateNumber(changeRevenueNextYear?.toFixed(1))}%
                   </div>
                 </div>
                 <div
-                  class="ml-0.5 mt-1.5 text-sm font-semibold text-white/60 lg:block"
+                  class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
                 >
                   from {abbreviateNumber(
-                    data?.getAnalystEstimate[index - 2]?.netIncome,
+                    data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg,
                   )}
                 </div>
               </div>
               <div
-                class="p-4 bp:p-5 sm:p-6 border-t border-contrast md:border-0"
+                class="border-b px-3 py-5 last:border-b-0 xs:px-4 sm:p-6 md:border-b-0 lg:border-l"
               >
-                <label
-                  class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] font-semibold"
-                >
-                  EBITDA
-                </label>
+                <div class="text-base font-normal text-white">
+                  EPS This Year
+                </div>
                 <div
-                  class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0"
+                  class="mt-1 flex flex-wrap items-baseline justify-between space-y-2 bp:space-y-0"
                 >
                   <div
                     class="flex items-baseline text-2xl font-semibold text-white"
                   >
                     {abbreviateNumber(
-                      data?.getAnalystEstimate[index - 1]?.estimatedEbitdaAvg,
+                      data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg,
                     )}
+                    <div
+                      class="ml-2 block text-sm font-semibold text-white lg:hidden"
+                    >
+                      from {data?.getAnalystEstimate[index - 2]?.eps}
+                    </div>
                   </div>
                   <div
-                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black"
+                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 {changeEPS >
+                    0
+                      ? 'bg-[#00FC50]'
+                      : 'bg-[#FF2F1F]'} text-black"
                   >
                     <svg
-                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeEBITDA >
+                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-black {changeEPS >
                       0
                         ? ''
-                        : 'rotate-180'}"
+                        : 'rotate-180 '}"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -656,61 +687,71 @@
                         stroke-width="2"
                         d="M7 11l5-5m0 0l5 5m-5-5v12"
                       ></path></svg
-                    >
-                    {abbreviateNumber(changeEBITDA?.toFixed(2))}%
-                  </div>
-                </div>
-                <div
-                  class="ml-0.5 mt-1.5 text-sm font-semibold text-white/60 lg:block"
-                >
-                  from {abbreviateNumber(
-                    data?.getAnalystEstimate[index - 2]?.ebitda,
-                  )}
-                </div>
-              </div>
-              <div
-                class="p-4 bp:p-5 sm:p-6 border-t border-contrast md:border-0 border-l border-contrast md:border-0"
-              >
-                <label
-                  class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] font-semibold"
-                >
-                  EPS
-                </label>
-                <div
-                  class="mt-1 flex flex-col items-baseline justify-start space-y-2 bp:space-y-0"
-                >
-                  <div
-                    class="flex items-baseline text-2xl font-semibold text-white"
-                  >
-                    {data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg}
-                  </div>
-                  <div
-                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 bg-[#FBCE3C] text-black"
-                  >
-                    <svg
-                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center {changeEPS >
-                      0
-                        ? ''
-                        : 'rotate-180'}"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      style="max-width:40px"
-                      aria-hidden="true"
-                      ><path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 11l5-5m0 0l5 5m-5-5v12"
-                      ></path></svg
-                    >
+                    > <span class="sr-only">Increased by</span>
                     {abbreviateNumber(changeEPS?.toFixed(1))}%
                   </div>
                 </div>
                 <div
-                  class="ml-0.5 mt-1.5 text-sm font-semibold text-white/60 lg:block"
+                  class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
                 >
                   from {data?.getAnalystEstimate[index - 2]?.eps}
+                </div>
+              </div>
+              <div
+                class="border-b px-3 py-5 last:border-b-0 xs:px-4 sm:p-6 md:border-l"
+              >
+                <div class="text-base font-normal text-white">
+                  EPS Next Year
+                </div>
+                <div
+                  class="mt-1 flex flex-wrap items-baseline justify-between space-y-2 bp:space-y-0"
+                >
+                  <div
+                    class="flex items-baseline text-2xl font-semibold text-white"
+                  >
+                    {abbreviateNumber(
+                      data?.getAnalystEstimate[index]?.estimatedEpsAvg,
+                    )}
+                    <div
+                      class="ml-2 block text-sm font-semibold text-white lg:hidden"
+                    >
+                      from {abbreviateNumber(
+                        data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg,
+                      )}
+                    </div>
+                  </div>
+                  <div
+                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 {changeEPSNextYear >
+                    0
+                      ? 'bg-[#00FC50]'
+                      : 'bg-[#FF2F1F] '} text-black"
+                  >
+                    <svg
+                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-black {changeEPSNextYear >
+                      0
+                        ? ''
+                        : 'rotate-180 '}"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      style="max-width:40px"
+                      aria-hidden="true"
+                      ><path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 11l5-5m0 0l5 5m-5-5v12"
+                      ></path></svg
+                    > <span class="sr-only">Increased by</span>
+                    {abbreviateNumber(changeEPSNextYear?.toFixed(1))}%
+                  </div>
+                </div>
+                <div
+                  class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
+                >
+                  from {abbreviateNumber(
+                    data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg,
+                  )}
                 </div>
               </div>
             </div>
