@@ -14,6 +14,27 @@
   let changeEBITDA = 0;
   let changeEPS = 0;
 
+  const price = data?.getStockQuote?.price?.toFixed(2) || 0;
+
+  const calculatePriceChange = (targetPrice) =>
+    targetPrice && price ? ((targetPrice / price - 1) * 100)?.toFixed(2) : 0;
+
+  const numOfAnalyst = data?.getAnalystRating?.numOfAnalyst || 0;
+  const avgPriceTarget = data?.getAnalystRating?.avgPriceTarget || 0;
+  const medianPriceTarget = data?.getAnalystRating?.medianPriceTarget || 0;
+  const lowPriceTarget = data?.getAnalystRating?.lowPriceTarget || 0;
+  const highPriceTarget = data?.getAnalystRating?.highPriceTarget || 0;
+  const consensusRating = data?.getAnalystRating?.consensusRating;
+
+  const lowChange = calculatePriceChange(lowPriceTarget);
+  const medianChange = calculatePriceChange(medianPriceTarget);
+  const avgChange = calculatePriceChange(avgPriceTarget);
+  const highChange = calculatePriceChange(highPriceTarget);
+  const rawAnalystList = data?.getAnalystRating?.recommendationList || [];
+  const recommendationList =
+    rawAnalystList?.length > 5 ? rawAnalystList?.slice(-6, -1) : rawAnalystList;
+  const categories = ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"];
+
   function findIndex(data) {
     const currentYear = new Date().getFullYear();
 
@@ -33,6 +54,13 @@
     }
 
     return index; // Return the index or -1 if not found
+  }
+
+  function getTotalForDate(index) {
+    return categories.reduce(
+      (sum, cat) => sum + recommendationList[index][cat],
+      0,
+    );
   }
 
   const calculateChange = (current, previous) => {
@@ -115,24 +143,29 @@
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-        <div class="w-full mb-6">
+      <div class="sm:pl-6 sm:pr-7 sm:pt-5 w-full m-auto mt-2 sm:mt-0">
+        <h1 class="mb-px text-2xl font-bold bp:text-3xl sm:pl-1">
+          {$displayCompanyName} Forcast
+        </h1>
+        <div class="w-full mb-6 mt-3">
           <div
-            class="rounded-sm border border-gray-600 p-0.5 xs:p-1 md:flex md:flex-col md:space-y-4 md:divide-y md:p-4 lg:flex-row lg:space-x-4 lg:space-y-0 lg:divide-x lg:divide-y-0"
+            class="rounded-sm border border-gray-600 p-0.5 xs:p-1 md:flex md:flex-col md:space-y-4 md:divide-y md:p-4 lg:flex-row lg:space-x-4 lg:space-y-0 lg:divide-x lg:divide-y-0 divide-gray-600"
           >
             <div
               class="p-3 md:flex md:space-x-4 md:p-0 lg:block lg:max-w-[32%] lg:space-x-0"
             >
-              <div data-test="forecast-snippet">
+              <div>
                 <div class="flex items-baseline justify-between">
                   <h2 class="mb-1 text-xl font-bold">Stock Price Forecast</h2>
                   <span></span>
                 </div>
                 <p>
-                  The 15 analysts with 12-month price forecasts for SMCI stock
-                  have an average target of 74.53, with a low estimate of 32.5
-                  and a high estimate of 135. The average target predicts an
-                  increase of 125.37% from the current stock price of 33.07.
+                  The {numOfAnalyst} analysts with 12-month price forecasts for {$stockTicker}
+                  stock have an median target of {medianPriceTarget}, with a low
+                  estimate of {lowPriceTarget}
+                  and a high estimate of {highPriceTarget}. The median target
+                  predicts an increase of {medianChange}% from the current stock
+                  price of {price}.
                 </p>
               </div>
               <div>
@@ -145,8 +178,14 @@
                   ></canvas>
                 </div>
                 <div class="-mt-2 text-center text-xl font-semibold">
-                  Analyst Consensus: <span class="font-bold text-green-700"
-                    >Buy</span
+                  Analyst Consensus: <span
+                    class="font-bold {['Strong Buy', 'Buy']?.includes(
+                      consensusRating,
+                    )
+                      ? 'text-[#00FC50]'
+                      : ['Strong Sell', 'Sell']?.includes(consensusRating)
+                        ? 'text-[#FF2F1F]'
+                        : 'text-[#FF9E21]'}">{consensusRating}</span
                   >
                 </div>
               </div>
@@ -162,7 +201,6 @@
               </div>
               <div
                 class="hide-scroll mb-1 mt-2 overflow-x-auto px-1.5 text-center md:mb-0 md:px-0 lg:mt-2"
-                data-test="forecast-target-table"
               >
                 <table
                   class="w-full text-right text-tiny text-white xs:text-sm sm:text-base"
@@ -180,20 +218,31 @@
                   <tbody
                     ><tr class="border-b border-gray-600 font-normal"
                       ><td class="py-[3px] text-left lg:py-0.5">Price</td>
-                      <td>$32.5</td> <td>$74.53</td> <td>$67.5</td>
-                      <td>$135</td></tr
+                      <td>${lowPriceTarget}</td>
+                      <td>${avgPriceTarget}</td> <td>${medianPriceTarget}</td>
+                      <td>${highPriceTarget}</td></tr
                     >
                     <tr
                       ><td class="py-[3px] text-left lg:py-0.5">Change</td>
-                      <td class="text-red-700 dark:text-red-default">-1.72%</td>
-                      <td class="text-green-800 dark:text-green-default"
-                        >+125.37%</td
+                      <td
+                        class={lowChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}>{lowChange}%</td
                       >
-                      <td class="text-green-800 dark:text-green-default"
-                        >+104.11%</td
+                      <td
+                        class={avgChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}>{avgChange}%</td
                       >
-                      <td class="text-green-800 dark:text-green-default"
-                        >+308.22%</td
+                      <td
+                        class={medianChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}>{lowChange}%</td
+                      >
+                      <td
+                        class={highChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}>{highChange}%</td
                       ></tr
                     ></tbody
                   >
@@ -202,12 +251,94 @@
             </div>
           </div>
 
-          <h2 class="mt-5 text-xl sm:text-2xl text-gray-200 font-bold mb-4">
+          <div
+            class="w-full rounded-sm border border-gray-600 p-3 divide-gray-600 lg:flex lg:space-x-4 lg:divide-x"
+          >
+            <div
+              class="flex flex-col justify-between p-1 lg:max-w-[32%] text-white"
+            >
+              <div>
+                <h2 class="mb-1 text-xl font-bold">Analyst Ratings</h2>
+                <p>
+                  According to {numOfAnalyst} stock analyst, the rating for GameStop
+                  is "{consensusRating}". This means that the analyst believes
+                  this stock is likely to lead to {[
+                    "Strong Sell",
+                    "Sell",
+                  ]?.includes(consensusRating)
+                    ? "lower"
+                    : ["Strong Buy", "Buy"]?.includes(consensusRating)
+                      ? "higher"
+                      : "similar"} returns than market as a whole.
+                </p>
+              </div>
+            </div>
+            <div class="grow pt-2 md:pt-4 lg:pl-4 lg:pt-0">
+              <div class="h-[250px] xs:h-[275px]">
+                <canvas
+                  id="myChart"
+                  style="display: block; box-sizing: border-box; height: 275px; width: 728px;"
+                  width="1092"
+                  height="412"
+                ></canvas>
+              </div>
+              <div
+                class="hide-scroll mb-1 mt-2 overflow-x-auto px-1.5 text-center md:mb-0 md:px-0 lg:mt-2"
+              >
+                <table
+                  class="w-full text-right text-tiny xs:text-sm md:text-smaller"
+                >
+                  <thead
+                    ><tr class="border-b border-gray-600 font-normal"
+                      ><th
+                        class="whitespace-nowrap px-1 py-[3px] text-left font-semibold"
+                        >Rating</th
+                      >
+                      {#each recommendationList as item}
+                        <th class="px-1 py-[3px] text-right font-semibold"
+                          >{new Intl.DateTimeFormat("en", {
+                            month: "short",
+                            year: "2-digit",
+                          }).format(new Date(item?.date))}</th
+                        >
+                      {/each}
+                    </tr></thead
+                  >
+                  <tbody>
+                    {#each categories as category}
+                      <tr class="border-b border-gray-600 font-normal">
+                        <td class="whitespace-nowrap px-1 py-[3px] text-left"
+                          >{category}</td
+                        >
+                        {#each recommendationList as entry}
+                          <td class="px-1 py-[3px] text-right"
+                            >{entry[category]}</td
+                          >
+                        {/each}
+                      </tr>
+                    {/each}
+                    <tr class="font-semibold"> </tr><tr class="font-semibold">
+                      <td class="whitespace-nowrap px-1 py-[3px] text-left"
+                        >Total</td
+                      >
+                      {#each recommendationList as _, i}
+                        <td class="px-1 py-[3px] text-right">
+                          {getTotalForDate(i)}
+                        </td>
+                      {/each}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="mt-5 text-xl sm:text-2xl text-white font-bold mb-4">
             Financial Forecast this Year
           </h2>
           {#if data?.getAnalystEstimate?.length !== 0}
             <div
-              class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-4 md:grid-rows-1 md:divide-x"
+              class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-600 rounded-lg border border-gray-600 shadow md:grid-cols-4 md:grid-rows-1 md:divide-x"
             >
               <div class="p-4 bp:p-5 sm:p-6">
                 <label
