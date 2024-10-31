@@ -2,6 +2,7 @@
   import {
     numberOfUnreadNotification,
     displayCompanyName,
+    screenWidth,
     stockTicker,
   } from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
@@ -36,8 +37,8 @@
     if (Object?.keys(analystRating)?.length !== 0) {
       numOfAnalyst = analystRating?.numOfAnalyst;
       priceTarget =
-        analystRating?.priceTarget !== ("n/a" && 0)
-          ? analystRating?.priceTarget
+        analystRating?.medianPriceTarget !== ("n/a" && 0)
+          ? analystRating?.medianPriceTarget
           : "-";
       consensusRating = analystRating?.consensusRating;
       changesPercentage =
@@ -93,6 +94,8 @@
       window.removeEventListener("scroll", handleScroll);
     };
   });
+
+  $: charNumber = $screenWidth < 640 ? 20 : 30;
 </script>
 
 <svelte:head>
@@ -251,8 +254,18 @@
                       >Analyst</td
                     >
                     <td class="text-white font-semibold text-[1rem] text-start"
+                      >Firm</td
+                    >
+                    <td class="text-white font-semibold text-[1rem] text-end"
                       >Rating</td
                     >
+                    <td class="text-white font-semibold text-[1rem] text-end"
+                      >Action</td
+                    >
+                    <td class="text-white font-semibold text-[1rem] text-end"
+                      >Price Target</td
+                    >
+
                     <td class="text-white font-semibold text-[1rem] text-end"
                       >Date</td
                     >
@@ -280,11 +293,6 @@
                             class="sm:hover:text-white text-blue-400"
                             >{item?.analyst_name}
                           </a>
-                          <span class="text-white"
-                            >{item?.analyst?.length > 15
-                              ? item?.analyst?.slice(0, 15) + "..."
-                              : item?.analyst}</span
-                          >
 
                           <div class="flex flex-row items-center mt-1">
                             {#each Array.from({ length: 5 }) as _, i}
@@ -325,31 +333,47 @@
                       </td>
 
                       <td
-                        class="text-sm sm:text-[1rem] whitespace-nowrap text-center text-white"
+                        class="text-sm sm:text-[1rem] whitespace-nowrap text-start text-white"
                       >
-                        <div class="flex flex-col items-start">
-                          <span
-                            class="text-[1rem] font-medium {[
-                              'Strong Buy',
-                              'Buy',
-                            ]?.includes(item?.rating_current)
-                              ? 'text-[#00FC50]'
-                              : item?.rating_current === 'Hold'
-                                ? 'text-[#FF7070]'
-                                : ['Strong Sell', 'Sell']?.includes(
-                                      item?.rating_current,
-                                    )
-                                  ? 'text-[#FF2F1F]'
-                                  : ''}"
-                          >
-                            {item?.rating_current}
-                          </span>
-                          <span class="font-medium text-white"
-                            >{item?.action_company?.replace(
-                              "Initiates Coverage On",
-                              "Initiates",
-                            )}</span
-                          >
+                        {item?.analyst?.length > charNumber
+                          ? item?.analyst?.slice(0, charNumber) + "..."
+                          : item?.analyst}
+                      </td>
+
+                      <td
+                        class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                      >
+                        <span
+                          class="text-[1rem] font-medium {[
+                            'Strong Buy',
+                            'Buy',
+                          ]?.includes(item?.rating_current)
+                            ? 'text-[#00FC50]'
+                            : item?.rating_current === 'Hold'
+                              ? 'text-[#FF7070]'
+                              : ['Strong Sell', 'Sell']?.includes(
+                                    item?.rating_current,
+                                  )
+                                ? 'text-[#FF2F1F]'
+                                : ''}"
+                        >
+                          {item?.rating_current}
+                        </span>
+                      </td>
+
+                      <td
+                        class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                      >
+                        {item?.action_company?.replace(
+                          "Initiates Coverage On",
+                          "Initiates",
+                        )}
+                      </td>
+
+                      <td
+                        class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                      >
+                        <div class="flex flex-col items-end">
                           <div class="flex flex-row items-center">
                             {#if Math?.ceil(item?.adjusted_pt_prior) !== 0}
                               <span class="text-gray-100 font-normal"
