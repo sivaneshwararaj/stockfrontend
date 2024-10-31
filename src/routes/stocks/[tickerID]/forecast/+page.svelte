@@ -5,18 +5,17 @@
     stockTicker,
     analystEstimateComponent,
   } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { abbreviateNumber, monthNames } from "$lib/utils";
 
   import { Chart } from "svelte-echarts";
   import { init, use } from "echarts/core";
-  import { BarChart } from "echarts/charts";
+  import { BarChart, GaugeChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-  import { onMount } from "svelte";
 
   export let data;
 
-  use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+  use([GaugeChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   let index = 0;
   let changeRevenue = 0;
@@ -90,8 +89,8 @@
     }
 
     // Define categories in the exact order you specified
-    const categories = ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"];
-    const colors = ["#008A00", "#31B800", "#FF9E21", "#D9220E", "#9E190A"];
+    const categories = ["Strong Sell", "Sell", "Hold", "Buy", "Strong Buy"];
+    const colors = ["#9E190A", "#D9220E", "#FF9E21", "#31B800", "#008A00"];
 
     // Create a consistent mapping for data
     const formattedData = rawAnalystList.map((item) =>
@@ -124,9 +123,6 @@
       itemStyle: {
         color: colors[idx],
       },
-      tooltip: {
-        valueFormatter: (value) => `${value.toFixed(2)}%`,
-      },
     }));
 
     // Define chart option
@@ -138,12 +134,7 @@
         top: "5%",
         containLabel: true,
       },
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          type: "shadow",
-        },
-      },
+
       legend: {
         data: categories,
         bottom: 0,
@@ -153,6 +144,12 @@
         data: rawAnalystList.map((item) => item.date),
         axisLabel: {
           color: "#fff",
+          formatter: function (value) {
+            const dateParts = value.split("-");
+            const year = dateParts[0].substring(0);
+            const monthIndex = parseInt(dateParts[1]) - 1;
+            return `${monthNames[monthIndex]} ${year}`;
+          },
         },
       },
       yAxis: {
@@ -168,8 +165,93 @@
       },
       series,
       animation: false,
+      silent: true,
     };
 
+    return option;
+  }
+
+  function getPieChart() {
+    const consensusRating = "Buy";
+    let value;
+    // Determine the value based on the consensus rating
+    switch (consensusRating) {
+      case "Strong Sell":
+        value = 0;
+        break;
+      case "Sell":
+        value = 0.25;
+        break;
+      case "Hold":
+        value = 0.5;
+        break;
+      case "Buy":
+        value = 0.75;
+        break;
+      case "Strong Buy":
+        value = 1;
+        break;
+      default:
+        value = 0.5;
+        break;
+    }
+    const option = {
+      silent: true,
+      animation: false,
+      series: [
+        {
+          type: "gauge",
+          startAngle: 180,
+          endAngle: 0,
+          center: ["50%", "45%"],
+          radius: "70%",
+          min: 0,
+          max: 1,
+          splitNumber: 4,
+          axisLine: {
+            lineStyle: {
+              width: 25,
+              color: [
+                [0.2, "#9E190A"],
+                [0.4, "#D9220E"],
+                [0.6, "#FF9E21"],
+                [0.8, "#31B800"],
+                [1, "#008A00"],
+              ],
+            },
+          },
+          pointer: {
+            icon: "path://M12.8,0.7l12,40.1H0.7L12.8,0.7z",
+            length: "25%",
+            width: 20,
+            offsetCenter: [0, "-30%"],
+            itemStyle: {
+              color: "#fff",
+            },
+          },
+          axisTick: {
+            length: 0,
+          },
+          splitLine: {
+            length: 0,
+          },
+          axisLabel: {
+            show: false,
+          },
+          detail: {
+            show: false, // Hide the numerical value display
+          },
+          data: [
+            {
+              value: value,
+              label: {
+                show: false, // Hide the data label
+              },
+            },
+          ],
+        },
+      ],
+    };
     return option;
   }
 
@@ -198,6 +280,7 @@
   }
 
   let optionsData = getPlotOptions() || null;
+  let optionsPieChart = getPieChart() || null;
 </script>
 
 <svelte:head>
@@ -265,20 +348,17 @@
                   stock have an median target of {medianPriceTarget}, with a low
                   estimate of {lowPriceTarget}
                   and a high estimate of {highPriceTarget}. The median target
-                  predicts an increase of {medianChange}% from the current stock
-                  price of {price}.
+                  predicts {medianChange > 0 ? "an increase" : "a decrease"} of {medianChange}%
+                  from the current stock price of {price}.
                 </p>
               </div>
               <div>
-                <div class="h-[160px]">
-                  <canvas
-                    id="myChart"
-                    style="display: block; box-sizing: border-box; height: 160px; width: 352px;"
-                    width="529"
-                    height="240"
-                  ></canvas>
+                <div class="app h-[160px]">
+                  {#if optionsPieChart !== null}
+                    <Chart {init} options={optionsPieChart} class="chart" />
+                  {/if}
                 </div>
-                <div class="-mt-2 text-center text-xl font-semibold">
+                <div class="-mt-36 text-center text-xl font-semibold">
                   Analyst Consensus: <span
                     class="font-bold {['Strong Buy', 'Buy']?.includes(
                       consensusRating,
@@ -338,7 +418,7 @@
                       <td
                         class={medianChange > 0
                           ? "before:content-['+'] text-[#00FC50]"
-                          : "text-[#FF2F1F]"}>{lowChange}%</td
+                          : "text-[#FF2F1F]"}>{medianChange}%</td
                       >
                       <td
                         class={highChange > 0
@@ -674,7 +754,7 @@
 
   @media (max-width: 640px) {
     .app {
-      height: 210px;
+      height: 300px;
     }
   }
 

@@ -26,12 +26,9 @@
   function changeSubSection(state) {
     const subSectionMap = {
       overview: "/forecast",
-      ai: "/forecast/ai",
+      //ai: "/forecast/ai",
       analyst: "/forecast/analyst",
     };
-
-    console.log(state);
-    console.log(subSectionMap[state]);
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
@@ -86,6 +83,7 @@
                   : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
               />
             </li>
+            <!--
             <li class="cursor-pointer flex flex-col items-center">
               <a
                 href={`/stocks/${$stockTicker}/forecast/ai`}
@@ -103,6 +101,7 @@
                   : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
               />
             </li>
+            -->
             <li class="cursor-pointer flex flex-col items-center">
               <a
                 href={`/stocks/${$stockTicker}/forecast/analyst`}
@@ -112,7 +111,7 @@
                   ? 'text-white '
                   : 'bg-[#09090B]'}"
               >
-                Analysts
+                Analysts Ratings
               </a>
               <div
                 class="{displaySubSection === 'analyst'
