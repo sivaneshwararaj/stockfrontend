@@ -117,6 +117,91 @@
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="w-full mb-6">
+          <div
+            class="rounded-sm border border-gray-600 p-0.5 xs:p-1 md:flex md:flex-col md:space-y-4 md:divide-y md:p-4 lg:flex-row lg:space-x-4 lg:space-y-0 lg:divide-x lg:divide-y-0"
+          >
+            <div
+              class="p-3 md:flex md:space-x-4 md:p-0 lg:block lg:max-w-[32%] lg:space-x-0"
+            >
+              <div data-test="forecast-snippet">
+                <div class="flex items-baseline justify-between">
+                  <h2 class="mb-1 text-xl font-bold">Stock Price Forecast</h2>
+                  <span></span>
+                </div>
+                <p>
+                  The 15 analysts with 12-month price forecasts for SMCI stock
+                  have an average target of 74.53, with a low estimate of 32.5
+                  and a high estimate of 135. The average target predicts an
+                  increase of 125.37% from the current stock price of 33.07.
+                </p>
+              </div>
+              <div>
+                <div class="h-[160px]">
+                  <canvas
+                    id="myChart"
+                    style="display: block; box-sizing: border-box; height: 160px; width: 352px;"
+                    width="529"
+                    height="240"
+                  ></canvas>
+                </div>
+                <div class="-mt-2 text-center text-xl font-semibold">
+                  Analyst Consensus: <span class="font-bold text-green-700"
+                    >Buy</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="grow pt-2 md:pt-4 lg:pl-4 lg:pt-0">
+              <div class="h-[250px] xs:h-[275px]">
+                <canvas
+                  id="myChart"
+                  style="display: block; box-sizing: border-box; height: 275px; width: 728px;"
+                  width="1092"
+                  height="412"
+                ></canvas>
+              </div>
+              <div
+                class="hide-scroll mb-1 mt-2 overflow-x-auto px-1.5 text-center md:mb-0 md:px-0 lg:mt-2"
+                data-test="forecast-target-table"
+              >
+                <table
+                  class="w-full text-right text-tiny text-white xs:text-sm sm:text-base"
+                >
+                  <thead
+                    ><tr class="border-b border-gray-600 font-normal"
+                      ><th class="py-[3px] text-left font-semibold lg:py-0.5"
+                        >Target</th
+                      > <th class="font-semibold">Low</th>
+                      <th class="font-semibold">Average</th>
+                      <th class="font-semibold">Median</th>
+                      <th class="font-semibold">High</th></tr
+                    ></thead
+                  >
+                  <tbody
+                    ><tr class="border-b border-gray-600 font-normal"
+                      ><td class="py-[3px] text-left lg:py-0.5">Price</td>
+                      <td>$32.5</td> <td>$74.53</td> <td>$67.5</td>
+                      <td>$135</td></tr
+                    >
+                    <tr
+                      ><td class="py-[3px] text-left lg:py-0.5">Change</td>
+                      <td class="text-red-700 dark:text-red-default">-1.72%</td>
+                      <td class="text-green-800 dark:text-green-default"
+                        >+125.37%</td
+                      >
+                      <td class="text-green-800 dark:text-green-default"
+                        >+104.11%</td
+                      >
+                      <td class="text-green-800 dark:text-green-default"
+                        >+308.22%</td
+                      ></tr
+                    ></tbody
+                  >
+                </table>
+              </div>
+            </div>
+          </div>
+
           <h2 class="mt-5 text-xl sm:text-2xl text-gray-200 font-bold mb-4">
             Financial Forecast this Year
           </h2>
