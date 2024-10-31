@@ -250,23 +250,23 @@
               >
                 <thead class="">
                   <tr class="border-b border-[#27272A]">
-                    <td class="text-white font-semibold text-[1rem] text-start"
+                    <td class="text-white font-semibold text-sm text-start"
                       >Analyst</td
                     >
-                    <td class="text-white font-semibold text-[1rem] text-start"
+                    <td class="text-white font-semibold text-sm text-start"
                       >Firm</td
                     >
-                    <td class="text-white font-semibold text-[1rem] text-end"
+                    <td class="text-white font-semibold text-sm text-end"
                       >Rating</td
                     >
-                    <td class="text-white font-semibold text-[1rem] text-end"
+                    <td class="text-white font-semibold text-sm text-end"
                       >Action</td
                     >
-                    <td class="text-white font-semibold text-[1rem] text-end"
+                    <td class="text-white font-semibold text-sm text-end"
                       >Price Target</td
                     >
 
-                    <td class="text-white font-semibold text-[1rem] text-end"
+                    <td class="text-white font-semibold text-sm text-end"
                       >Date</td
                     >
                   </tr>

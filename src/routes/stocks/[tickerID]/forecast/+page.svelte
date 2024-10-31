@@ -7,7 +7,17 @@
   } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
 
+  import { Chart } from "svelte-echarts";
+  import { init, use } from "echarts/core";
+  import { BarChart } from "echarts/charts";
+  import { GridComponent, TooltipComponent } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
+  import { onMount } from "svelte";
+
   export let data;
+
+  use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+
   let index = 0;
   let changeRevenue = 0;
   let changeNetIncome = 0;
@@ -74,6 +84,95 @@
     }
   };
 
+  function getPlotOptions() {
+    if (!rawAnalystList || rawAnalystList.length === 0) {
+      return null;
+    }
+
+    // Define categories in the exact order you specified
+    const categories = ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"];
+    const colors = ["#008A00", "#31B800", "#FF9E21", "#D9220E", "#9E190A"];
+
+    // Create a consistent mapping for data
+    const formattedData = rawAnalystList.map((item) =>
+      categories.map((cat) => item[cat] || 0),
+    );
+
+    // Normalize data to percentages
+    const normalizedData = formattedData.map((row) => {
+      const total = row.reduce((sum, val) => sum + val, 0);
+      return row.map((val) => (total > 0 ? (val / total) * 100 : 0));
+    });
+
+    // Calculate total percentage for each category across all dates
+    const totalData = [];
+    for (let i = 0; i < categories.length; ++i) {
+      let sum = 0;
+      for (let j = 0; j < normalizedData.length; ++j) {
+        sum += normalizedData[j][i];
+      }
+      totalData.push(sum / normalizedData.length);
+    }
+
+    // Define series based on categories with color mapping
+    const series = categories.map((name, idx) => ({
+      name,
+      type: "bar",
+      stack: "total",
+      barWidth: "60%",
+      data: normalizedData.map((row) => row[idx]),
+      itemStyle: {
+        color: colors[idx],
+      },
+      tooltip: {
+        valueFormatter: (value) => `${value.toFixed(2)}%`,
+      },
+    }));
+
+    // Define chart option
+    const option = {
+      grid: {
+        left: "2%",
+        right: "2%",
+        bottom: "10%",
+        top: "5%",
+        containLabel: true,
+      },
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow",
+        },
+      },
+      legend: {
+        data: categories,
+        bottom: 0,
+      },
+      xAxis: {
+        type: "category",
+        data: rawAnalystList.map((item) => item.date),
+        axisLabel: {
+          color: "#fff",
+        },
+      },
+      yAxis: {
+        type: "value",
+        max: 100,
+
+        axisLabel: {
+          show: false, // Hide y-axis labels
+        },
+        splitLine: {
+          show: false,
+        },
+      },
+      series,
+      animation: false,
+    };
+
+    return option;
+  }
+
   if (data?.getAnalystEstimate?.length !== 0) {
     index = findIndex(data?.getAnalystEstimate);
 
@@ -97,6 +196,8 @@
     changeEBITDA = calculateChange(estimatedEbitdaAvg, ebitda);
     changeEPS = calculateChange(estimatedEpsAvg, eps);
   }
+
+  let optionsData = getPlotOptions() || null;
 </script>
 
 <svelte:head>
@@ -258,29 +359,30 @@
               class="flex flex-col justify-between p-1 lg:max-w-[32%] text-white"
             >
               <div>
-                <h2 class="mb-1 text-xl font-bold">Analyst Ratings</h2>
-                <p>
-                  According to {numOfAnalyst} stock analyst, the rating for GameStop
-                  is "{consensusRating}". This means that the analyst believes
-                  this stock is likely to lead to {[
-                    "Strong Sell",
-                    "Sell",
-                  ]?.includes(consensusRating)
-                    ? "lower"
-                    : ["Strong Buy", "Buy"]?.includes(consensusRating)
-                      ? "higher"
-                      : "similar"} returns than market as a whole.
-                </p>
+                <h2 class="mb-1 text-xl font-bold">Latest Analyst Report</h2>
+                {#if Object?.keys(data?.getAnalystInsight)?.length > 0}
+                  <p>{data?.getAnalystInsight?.insight}</p>
+                {:else}
+                  <p>
+                    According to {numOfAnalyst} stock analyst, the rating for GameStop
+                    is "{consensusRating}". This means that the analyst believes
+                    this stock is likely to lead to {[
+                      "Strong Sell",
+                      "Sell",
+                    ]?.includes(consensusRating)
+                      ? "lower"
+                      : ["Strong Buy", "Buy"]?.includes(consensusRating)
+                        ? "higher"
+                        : "similar"} returns than market as a whole.
+                  </p>
+                {/if}
               </div>
             </div>
             <div class="grow pt-2 md:pt-4 lg:pl-4 lg:pt-0">
-              <div class="h-[250px] xs:h-[275px]">
-                <canvas
-                  id="myChart"
-                  style="display: block; box-sizing: border-box; height: 275px; width: 728px;"
-                  width="1092"
-                  height="412"
-                ></canvas>
+              <div class="app h-[250px] xs:h-[275px]">
+                {#if optionsData !== null}
+                  <Chart {init} options={optionsData} class="chart" />
+                {/if}
               </div>
               <div
                 class="hide-scroll mb-1 mt-2 overflow-x-auto px-1.5 text-center md:mb-0 md:px-0 lg:mt-2"
@@ -563,3 +665,20 @@
     </div>
   </div>
 </section>
+
+<style>
+  .app {
+    height: 300px;
+    max-width: 100%; /* Ensure chart width doesn't exceed the container */
+  }
+
+  @media (max-width: 640px) {
+    .app {
+      height: 210px;
+    }
+  }
+
+  .chart {
+    width: 100%;
+  }
+</style>
