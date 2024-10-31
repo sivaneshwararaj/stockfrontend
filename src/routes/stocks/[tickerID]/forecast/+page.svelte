@@ -172,7 +172,6 @@
   }
 
   function getPieChart() {
-    const consensusRating = "Buy";
     let value;
     // Determine the value based on the consensus rating
     switch (consensusRating) {
@@ -757,9 +756,7 @@
             </div>
 
             <div
-              class="w-full m-auto sm:pb-6 sm:pt-6 {!$analystEstimateComponent
-                ? 'hidden'
-                : ''}"
+              class="w-full m-auto {!$analystEstimateComponent ? 'hidden' : ''}"
             >
               {#await import("$lib/components/AnalystEstimate.svelte") then { default: Comp }}
                 <svelte:component this={Comp} {data} />
