@@ -591,7 +591,7 @@
                   <p>{data?.getAnalystInsight?.insight}</p>
                 {:else}
                   <p>
-                    According to {numOfAnalyst} stock analyst, the rating for GameStop
+                    According to {numOfAnalyst} stock analyst, the rating for {$displayCompanyName}
                     is "{consensusRating}". This means that the analyst believes
                     this stock is likely to lead to {[
                       "Strong Sell",
