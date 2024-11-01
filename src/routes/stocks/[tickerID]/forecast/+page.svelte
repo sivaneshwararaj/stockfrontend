@@ -4,25 +4,32 @@
     displayCompanyName,
     stockTicker,
     analystEstimateComponent,
+    screenWidth,
   } from "$lib/store";
   import { abbreviateNumber, monthNames } from "$lib/utils";
 
   import { Chart } from "svelte-echarts";
   import { init, use } from "echarts/core";
-  import { BarChart, GaugeChart } from "echarts/charts";
+  import { LineChart, BarChart, GaugeChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
 
   export let data;
 
-  use([GaugeChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+  use([
+    LineChart,
+    GaugeChart,
+    BarChart,
+    GridComponent,
+    TooltipComponent,
+    CanvasRenderer,
+  ]);
 
   let index = 0;
   let changeRevenue = 0;
   let changeRevenueNextYear = 0;
   let changeEPS = 0;
   let changeEPSNextYear = 0;
-
   const price = data?.getStockQuote?.price?.toFixed(2) || 0;
 
   const calculatePriceChange = (targetPrice) =>
@@ -135,10 +142,6 @@
         containLabel: true,
       },
 
-      legend: {
-        data: categories,
-        bottom: 0,
-      },
       xAxis: {
         type: "category",
         data: rawAnalystList.map((item) => item.date),
@@ -285,8 +288,148 @@
     console.log(estimatedEpsAvg, data?.getAnalystEstimate[index - 2]?.eps);
   }
 
+  function getPriceForecastChart() {
+    const historicalData = data?.getAnalystRating?.pastPriceList || [];
+    const forecastTargets = {
+      low: lowPriceTarget,
+      avg: avgPriceTarget,
+      high: highPriceTarget,
+    };
+
+    // Process historical data
+    const processedHistorical = historicalData?.map((point) => ({
+      date: point?.date,
+      value: point?.close,
+    }));
+
+    const currentDate = new Date(); // Get the current date
+    const forecastDate = new Date(
+      currentDate.getFullYear() + 1,
+      currentDate.getMonth(),
+      currentDate.getDate(),
+    ); // Add one year
+    const forecastDateString = forecastDate.toISOString().split("T")[0]; // Format as 'YYYY-MM-DD'
+
+    // Get the last historical data point
+    const lastHistoricalDate = historicalData[historicalData.length - 1]?.date;
+    const lastHistoricalClose =
+      historicalData[historicalData.length - 1]?.close;
+
+    // Create forecast points by appending them after the last historical date
+    const forecastHigh = [
+      { date: lastHistoricalDate, value: lastHistoricalClose },
+      { date: forecastDateString, value: forecastTargets.high },
+    ];
+
+    const forecastAvg = [
+      { date: lastHistoricalDate, value: lastHistoricalClose },
+      { date: forecastDateString, value: forecastTargets.avg },
+    ];
+
+    const forecastLow = [
+      { date: lastHistoricalDate, value: lastHistoricalClose },
+      { date: forecastDateString, value: forecastTargets.low },
+    ];
+
+    const option = {
+      animation: false,
+      silent: true,
+      grid: {
+        left: "2%",
+        right: "2%",
+        bottom: "10%",
+        top: "5%",
+        containLabel: true,
+      },
+
+      xAxis: {
+        type: "time",
+        axisLabel: {
+          color: "#fff",
+          formatter: (value) => {
+            const date = new Date(value);
+            const isMobile = $screenWidth < 640; // Define your breakpoint for mobile
+
+            // Use a different date format for mobile screens
+            return isMobile
+              ? date.toLocaleDateString("en-US", { month: "short" }) // Show only the month for mobile
+              : date.toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                }); // Full format for larger screens
+          },
+        },
+        axisPointer: {
+          type: "line", // Can enhance interaction on mobile
+          lineStyle: {
+            color: "#fff", // Customize pointer color if needed
+          },
+        },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (value) => `$${value.toFixed(0)}`,
+        },
+
+        splitLine: {
+          show: false,
+        },
+      },
+      series: [
+        {
+          name: "Historical",
+          type: "line",
+          data: processedHistorical.map((point) => [point.date, point.value]),
+          symbol: "circle",
+          symbolSize: 6,
+          itemStyle: {
+            color: "#fff",
+          },
+          lineStyle: {
+            width: 2,
+          },
+        },
+        {
+          name: "High",
+          type: "line",
+          data: forecastHigh.map((point) => [point.date, point.value]),
+          symbol: "none",
+          lineStyle: {
+            type: "dashed",
+            color: "#31B800",
+          },
+        },
+        {
+          name: "Average",
+          type: "line",
+          data: forecastAvg.map((point) => [point.date, point.value]),
+          symbol: "none",
+          lineStyle: {
+            type: "dashed",
+            color: "#FF9E21",
+          },
+        },
+        {
+          name: "Low",
+          type: "line",
+          data: forecastLow.map((point) => [point.date, point.value]),
+          symbol: "none",
+          lineStyle: {
+            type: "dashed",
+            color: "#D9220E",
+          },
+        },
+      ],
+    };
+
+    return option;
+  }
+
   let optionsData = getPlotOptions() || null;
   let optionsPieChart = getPieChart() || null;
+  let optionsPriceForecast = getPriceForecastChart() || null;
 </script>
 
 <svelte:head>
@@ -378,13 +521,10 @@
               </div>
             </div>
             <div class="grow pt-2 md:pt-4 lg:pl-4 lg:pt-0">
-              <div class="h-[250px] xs:h-[275px]">
-                <canvas
-                  id="myChart"
-                  style="display: block; box-sizing: border-box; height: 275px; width: 728px;"
-                  width="1092"
-                  height="412"
-                ></canvas>
+              <div class="app h-[250px] xs:h-[275px]">
+                {#if optionsPriceForecast !== null}
+                  <Chart {init} options={optionsPriceForecast} class="chart" />
+                {/if}
               </div>
               <div
                 class="hide-scroll mb-1 mt-2 overflow-x-auto px-1.5 text-center md:mb-0 md:px-0 lg:mt-2"
