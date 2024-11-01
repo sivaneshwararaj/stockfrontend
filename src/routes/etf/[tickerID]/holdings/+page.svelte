@@ -5,15 +5,20 @@
     displayCompanyName,
   } from "$lib/store";
   import { Button } from "$lib/components/shadcn/button/index.js";
-  import { screenWidth } from "$lib/store";
+  import { screenWidth, getCache, setCache } from "$lib/store";
   import { abbreviateNumber, formatString } from "$lib/utils";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
   let rawData = data?.getETFHoldings;
   let holdings = rawData?.slice(0, 50);
+  let stockChartData = {};
+  let change = 0;
+  let changesPercentage = 0;
+  let priceData = [];
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -23,6 +28,40 @@
       const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
       holdings = [...holdings, ...filteredNewResults];
     }
+  }
+
+  async function getStockData(ticker: string) {
+    const cachedData = getCache(ticker, "hoverStockChart");
+    if (cachedData) {
+      stockChartData = cachedData;
+    } else {
+      const postData = { ticker: ticker };
+      const response = await fetch("/api/hover-stock-chart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      stockChartData = (await response.json()) ?? {};
+
+      setCache(ticker, stockChartData, "hoverStockChart");
+    }
+
+    changesPercentage = stockChartData?.changesPercentage;
+    change = stockChartData?.change;
+
+    priceData = stockChartData?.history;
+
+    priceData = priceData
+      ?.map((item) => ({
+        time: Date.parse(item.time), // Assuming 'time' is the correct property to parse
+        value: item?.close ?? null,
+      }))
+      .filter(
+        (item) => item?.value !== 0 && item?.value != null, // Simplified condition
+      );
   }
 
   onMount(() => {
@@ -254,16 +293,14 @@
                       <td
                         class="text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B]"
                       >
-                        <a
-                          href={item?.asset?.length !== 0 &&
-                          !["BTC", "USD"].includes(item?.asset)
-                            ? `/stocks/${item?.asset}`
-                            : item?.asset === "BTC"
-                              ? "/crypto/BTCUSD"
-                              : ""}
-                          class="sm:hover:text-white text-blue-400"
-                          >{item?.asset?.length !== 0 ? item?.asset : "-"}</a
-                        >
+                        <HoverStockChart
+                          on:mouseover={() => getStockData(item?.asset)}
+                          {stockChartData}
+                          symbol={item?.asset}
+                          {change}
+                          {changesPercentage}
+                          {priceData}
+                        />
                       </td>
 
                       <td
