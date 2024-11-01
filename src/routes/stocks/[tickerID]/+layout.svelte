@@ -813,23 +813,25 @@ function handleTypeOfTrade(state:string)
                             />
                           </li>
                         {/if}
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}/forecast`}
-                            on:click={() => changeSection("forecast")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'forecast'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}"
-                          >
-                            Forecast
-                          </a>
-                          <div
-                            class="{displaySection === 'forecast'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
-                          />
-                        </li>
+                        {#if Object?.keys(data?.getAnalystRating ?? {})?.length > 0}
+                          <li class="cursor-pointer flex flex-col items-center">
+                            <a
+                              href={`/stocks/${$stockTicker}/forecast`}
+                              on:click={() => changeSection("forecast")}
+                              class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                              'forecast'
+                                ? 'text-white '
+                                : 'bg-[#09090B]'}"
+                            >
+                              Forecast
+                            </a>
+                            <div
+                              class="{displaySection === 'forecast'
+                                ? 'bg-[#75D377]'
+                                : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
+                            />
+                          </li>
+                        {/if}
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
                             href={`/stocks/${$stockTicker}/options`}

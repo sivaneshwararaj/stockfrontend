@@ -48,7 +48,7 @@
   const highChange = calculatePriceChange(highPriceTarget);
   const rawAnalystList = data?.getAnalystRating?.recommendationList || [];
   const recommendationList =
-    rawAnalystList?.length > 5 ? rawAnalystList?.slice(-6, -1) : rawAnalystList;
+    rawAnalystList?.length > 5 ? rawAnalystList?.slice(-6) : rawAnalystList;
   const categories = ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"];
 
   function findIndex(data) {
