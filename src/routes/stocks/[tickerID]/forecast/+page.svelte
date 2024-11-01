@@ -370,6 +370,7 @@
       yAxis: {
         type: "value",
         axisLabel: {
+          color: "#fff",
           formatter: (value) => `$${value.toFixed(0)}`,
         },
 
@@ -579,7 +580,7 @@
           </div>
 
           <div
-            class="w-full rounded-sm border border-gray-600 p-3 divide-gray-600 lg:flex lg:space-x-4 lg:divide-x"
+            class="w-full rounded-sm border border-gray-600 mt-8 sm:mt-0 p-3 divide-gray-600 lg:flex lg:space-x-4 lg:divide-x"
           >
             <div
               class="flex flex-col justify-between p-1 lg:max-w-[32%] text-white"
@@ -619,11 +620,12 @@
                   <thead
                     ><tr class="border-b border-gray-600 font-normal"
                       ><th
-                        class="whitespace-nowrap px-1 py-[3px] text-left font-semibold"
+                        class="whitespace-nowrap px-1 py-[3px] text-sm sm:text-[1rem] text-left font-semibold"
                         >Rating</th
                       >
                       {#each recommendationList as item}
-                        <th class="px-1 py-[3px] text-right font-semibold"
+                        <th
+                          class="px-1 py-[3px] text-sm sm:text-[1rem] text-right font-semibold"
                           >{new Intl.DateTimeFormat("en", {
                             month: "short",
                             year: "2-digit",
@@ -635,22 +637,27 @@
                   <tbody>
                     {#each categories as category}
                       <tr class="border-b border-gray-600 font-normal">
-                        <td class="whitespace-nowrap px-1 py-[3px] text-left"
+                        <td
+                          class="whitespace-nowrap px-1 py-[3px] text-sm sm:text-[1rem] text-left"
                           >{category}</td
                         >
                         {#each recommendationList as entry}
-                          <td class="px-1 py-[3px] text-right"
+                          <td
+                            class="px-1 py-[3px] text-sm sm:text-[1rem] text-right"
                             >{entry[category]}</td
                           >
                         {/each}
                       </tr>
                     {/each}
                     <tr class="font-semibold"> </tr><tr class="font-semibold">
-                      <td class="whitespace-nowrap px-1 py-[3px] text-left"
+                      <td
+                        class="whitespace-nowrap px-1 py-[3px] text-sm sm:text-[1rem] text-left"
                         >Total</td
                       >
                       {#each recommendationList as _, i}
-                        <td class="px-1 py-[3px] text-right">
+                        <td
+                          class="px-1 py-[3px] text-sm sm:text-[1rem] text-right"
+                        >
                           {getTotalForDate(i)}
                         </td>
                       {/each}
@@ -661,7 +668,7 @@
             </div>
           </div>
 
-          <h2 class="mt-5 text-xl sm:text-2xl text-white font-bold mb-4">
+          <h2 class="mt-8 text-xl sm:text-2xl text-white font-bold mb-4">
             Financial Forecast this Year
           </h2>
           {#if data?.getAnalystEstimate?.length !== 0}

@@ -297,7 +297,7 @@
                 <tr class="">
                   <th
                     class="bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-start"
-                    >Year</th
+                    >Fiscal Year</th
                   >
                   {#each xData as item}
                     <td
@@ -308,15 +308,15 @@
                 </tr>
               </thead>
               <tbody class="shadow-md">
-                <tr class="bg-[#09090B] border-b-[#09090B]">
+                <tr class="bg-[#27272A] border-b-[#27272A]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
                   >
                     Revenue
                   </th>
                   {#each tableForecastRevenue as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
                       {item?.val === "0.00" ||
                       item?.val === null ||
@@ -335,7 +335,7 @@
                   </th>
                   {#each tableActualRevenue as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
                       {#if index === 0 || tableActualRevenue?.length === 0}
                         -
@@ -386,15 +386,15 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#09090B] border-b-[#09090B]">
+                <tr class="bg-[#27272A] border-b-[#09090B]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
                   >
                     EPS
                   </th>
                   {#each tableForecastEPS as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
                       {item?.val === "0.00" ||
                       item?.val === null ||
@@ -413,7 +413,7 @@
                   </th>
                   {#each tableActualEPS as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#27272A]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
                       {#if index === 0 || tableActualEPS?.length === 0}
                         -
@@ -479,14 +479,14 @@
                 </tr>
                 -->
 
-                <tr class="odd:bg-[#09090B] border-b-[#09090B]">
+                <tr class="bg-[#27272A] border-b-[#27272A]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
                     >No. Analysts</th
                   >
                   {#each tableForecastRevenue as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
                       {item?.numOfAnalysts === (null || 0)
                         ? "-"
@@ -534,16 +534,19 @@
             </div>
             <div
               class="mt-3 overflow-x-auto p-0 text-center sm:p-0.5 lg:mt-3.5"
-              data-test="forecast-estimate-table"
             >
-              <table
-                class="w-full text-right text-tiny xs:text-sm md:text-small"
-              >
+              <table class="w-full text-right">
                 <thead
-                  ><tr class="border-b border-gray-600 align-bottom font-normal"
-                    ><th class="p-1 text-left font-semibold">Revenue</th>
+                  ><tr
+                    class="border-b border-gray-600 align-bottom text-white font-normal"
+                    ><th
+                      class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
+                      >Revenue</th
+                    >
                     {#each revenueDateList as date}
-                      <th class="p-1 font-semibold">{date}</th>
+                      <th class="p-1 font-semibold text-sm sm:text-[1rem]"
+                        >{date}</th
+                      >
                     {/each}
                   </tr></thead
                 >
@@ -553,21 +556,27 @@
                       >High</td
                     >
                     {#each highRevenueList as val}
-                      <td class="px-1 py-[3px]">{abbreviateNumber(val)}</td>
+                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]"
+                        >{abbreviateNumber(val)}</td
+                      >
                     {/each}
                   </tr><tr class="border-b border-gray-600 last:border-0"
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Avg</td
                     >
                     {#each avgRevenueList as val}
-                      <td class="px-1 py-[3px]">{abbreviateNumber(val)}</td>
+                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]"
+                        >{abbreviateNumber(val)}</td
+                      >
                     {/each}
                   </tr><tr class="border-b border-gray-600 last:border-0"
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Low</td
                     >
                     {#each lowRevenueList as val}
-                      <td class="px-1 py-[3px]">{abbreviateNumber(val)}</td>
+                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]"
+                        >{abbreviateNumber(val)}</td
+                      >
                     {/each}
                   </tr></tbody
                 >
@@ -588,14 +597,17 @@
               class="mt-3 overflow-x-auto p-0 text-center sm:p-0.5 lg:mt-3.5"
               data-test="forecast-estimate-table"
             >
-              <table
-                class="w-full text-right text-tiny xs:text-sm md:text-small"
-              >
+              <table class="w-full text-right">
                 <thead
                   ><tr class="border-b border-gray-600 align-bottom font-normal"
-                    ><th class="p-1 text-left font-semibold">EPS</th>
+                    ><th
+                      class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
+                      >EPS</th
+                    >
                     {#each epsDateList as date}
-                      <th class="p-1 font-semibold">{date}</th>
+                      <th class="p-1 font-semibold text-sm sm:text-[1rem]"
+                        >{date}</th
+                      >
                     {/each}
                   </tr></thead
                 >
@@ -605,21 +617,27 @@
                       >High</td
                     >
                     {#each highEPSList as val}
-                      <td class="px-1 py-[3px]">{abbreviateNumber(val)}</td>
+                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]"
+                        >{abbreviateNumber(val)}</td
+                      >
                     {/each}
                   </tr><tr class="border-b border-gray-600 last:border-0"
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Avg</td
                     >
                     {#each avgEPSList as val}
-                      <td class="px-1 py-[3px]">{abbreviateNumber(val)}</td>
+                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]"
+                        >{abbreviateNumber(val)}</td
+                      >
                     {/each}
                   </tr><tr class="border-b border-gray-600 last:border-0"
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Low</td
                     >
                     {#each lowEPSList as val}
-                      <td class="px-1 py-[3px]">{abbreviateNumber(val)}</td>
+                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]"
+                        >{abbreviateNumber(val)}</td
+                      >
                     {/each}
                   </tr></tbody
                 >
