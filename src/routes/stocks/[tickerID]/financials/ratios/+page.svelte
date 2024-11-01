@@ -368,7 +368,7 @@
       <main class="w-full">
         <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
           <div class="mb-3">
-            <h1 class="text-2xl text-gray-200 font-bold">
+            <h1 class="text-xl sm:text-2xl text-gray-200 font-bold">
               {#if $coolMode}
                 {statementConfig?.find(
                   (item) => item?.propertyName === displayStatement,

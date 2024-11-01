@@ -470,15 +470,13 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section
-  class="w-full bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0"
->
+<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
       <div class="sm:pl-6 sm:pr-7 sm:pt-5 w-full m-auto mt-2 sm:mt-0">
-        <h1 class="mb-px text-2xl font-bold bp:text-3xl sm:pl-1">
+        <h1 class="mb-px text-xl sm:text-2xl font-bold bp:text-3xl sm:pl-1">
           {$displayCompanyName} Forcast
         </h1>
         <div class="w-full mb-6 mt-3">
@@ -534,7 +532,8 @@
                   class="w-full text-right text-tiny text-white xs:text-sm sm:text-base"
                 >
                   <thead
-                    ><tr class="border-b border-gray-600 font-normal"
+                    ><tr
+                      class="border-b border-gray-600 font-normal text-sm sm:text-[1rem]"
                       ><th class="py-[3px] text-left font-semibold lg:py-0.5"
                         >Target</th
                       > <th class="font-semibold">Low</th>
@@ -544,13 +543,14 @@
                     ></thead
                   >
                   <tbody
-                    ><tr class="border-b border-gray-600 font-normal"
+                    ><tr
+                      class="border-b border-gray-600 font-normal text-sm sm:text-[1rem]"
                       ><td class="py-[3px] text-left lg:py-0.5">Price</td>
                       <td>${lowPriceTarget}</td>
                       <td>${avgPriceTarget}</td> <td>${medianPriceTarget}</td>
                       <td>${highPriceTarget}</td></tr
                     >
-                    <tr
+                    <tr class="text-sm sm:text-[1rem]"
                       ><td class="py-[3px] text-left lg:py-0.5">Change</td>
                       <td
                         class={lowChange > 0
@@ -676,7 +676,7 @@
               class="mb-4 grid grid-cols-1 overflow-hidden rounded-md border divide-gray-600 border-gray-600 md:grid-cols-2 lg:grid-cols-4"
             >
               <div
-                class="border-b px-3 py-5 last:border-b-0 xs:px-4 sm:p-6 md:border-b lg:border-b-0"
+                class="border-b px-3 py-5 last:border-b-0 xs:px-4 sm:p-6 md:border-b lg:border-b-0 border-gray-600"
               >
                 <div class="text-base font-normal text-white">
                   Revenue This Year

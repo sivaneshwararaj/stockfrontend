@@ -139,7 +139,7 @@
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="w-full mb-6">
-          <h1 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4 w-full">
+          <h1 class="text-xl sm:text-2xl text-gray-200 font-bold mb-4 w-full">
             Dividends
           </h1>
 

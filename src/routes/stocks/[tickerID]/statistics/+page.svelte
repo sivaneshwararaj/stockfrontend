@@ -65,7 +65,7 @@
             <div
               class="-mb-2 flex items-start justify-between border-b border-gray-500 md:-mb-4"
             >
-              <h1 class="mb-3 text-2xl font-bold">
+              <h1 class="mb-3 text-xl sm:text-2xl font-bold">
                 {companyName} Statistics
               </h1>
             </div>

@@ -374,7 +374,7 @@
         <main class="w-full">
           <div class="sm:p-7 m-auto mt-2 sm:mt-0">
             <div class="mb-3">
-              <h1 class="text-2xl text-gray-200 font-bold">
+              <h1 class="text-xl sm:text-2xl text-gray-200 font-bold">
                 {#if $coolMode}
                   {statementConfig?.find(
                     (item) => item?.propertyName === displayStatement,
@@ -413,12 +413,12 @@
               </div>
 
               <ul
-                class="text-[0.8rem] font-medium text-center w-56 sm:w-56 pb-6 flex justify-center sm:justify-end items-center m-auto sm:m-0 sm:ml-auto"
+                class="text-[0.8rem] font-medium text-center w-56 w-56 pb-6 flex justify-center sm:justify-end items-center m-auto sm:m-0 sm:ml-auto"
               >
                 <li class="w-full">
                   <label
                     on:click={() => (filterRule = "annual")}
-                    class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule ===
+                    class="cursor-pointer rounded-l-lg inline-block w-full py-1.5 sm:py-2.5 text-white {filterRule ===
                     'annual'
                       ? 'bg-purple-600'
                       : 'bg-[#2A303C]'} font-semibold border-r border-gray-600"
@@ -431,7 +431,7 @@
                   {#if data?.user?.tier === "Pro"}
                     <label
                       on:click={() => (filterRule = "quartely")}
-                      class="cursor-pointer inline-block w-full py-2.5 {filterRule ===
+                      class="cursor-pointer inline-block w-full py-1.5 sm:py-2.5 {filterRule ===
                       'quartely'
                         ? 'bg-purple-600'
                         : 'bg-[#2A303C]'} font-semibold text-white rounded-r-lg"

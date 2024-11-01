@@ -363,12 +363,12 @@
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="mb-6">
-          <h2 class="text-2xl sm:text-2xl text-gray-200 font-bold mb-4">
+          <h2 class="text-xl sm:text-2xl text-gray-200 font-bold mb-4">
             {$stockTicker} Employees
           </h2>
 
           <div
-            class="text-white p-3 sm:p-5 mb-5 rounded-md border border-gray-800"
+            class="text-white text-sm sm:text-[1rem] p-3 sm:p-5 mb-5 rounded-md border border-gray-800"
           >
             <span class="inline-block align-text-bottom">
               <svg
@@ -501,8 +501,12 @@
           </div>
         </div>
 
-        <div class="flex flex-row items-center w-full mt-10 mb-8">
-          <h1 class="text-2xl text-white font-bold">Employees Chart</h1>
+        <div class="flex flex-col sm:flex-row items-center w-full mt-10 mb-8">
+          <h1
+            class="text-xl sm:text-2xl text-white font-bold text-start mr-auto mb-4 sm:mb-0"
+          >
+            Employees Chart
+          </h1>
 
           <div
             class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
