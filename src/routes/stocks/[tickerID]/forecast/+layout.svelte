@@ -58,69 +58,31 @@
   <div class="m-auto h-full overflow-hidden">
     <main class="w-full">
       <div class="m-auto">
-        <div
-          class="-ml-2 sm:ml-8 w-screen sm:w-full {$screenWidth < 640
-            ? 'overflow-auto scrollbar'
-            : 'no-scrollbar'} mb-2"
+        <nav
+          class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
         >
-          <ul
-            class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2"
-          >
-            <li class="cursor-pointer flex flex-col items-center">
-              <a
-                href={`/stocks/${$stockTicker}/forecast`}
-                on:click={() => changeSubSection("overview")}
-                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                'overview'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                Overview
-              </a>
-              <div
-                class="{displaySubSection === 'overview'
-                  ? 'bg-[#75D377]'
-                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
-              />
-            </li>
-            <!--
-            <li class="cursor-pointer flex flex-col items-center">
-              <a
-                href={`/stocks/${$stockTicker}/forecast/ai`}
-                on:click={() => changeSubSection("ai")}
-                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                'ai'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                AI
-              </a>
-              <div
-                class="{displaySubSection === 'ai'
-                  ? 'bg-[#75D377]'
-                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
-              />
-            </li>
-            -->
-            <li class="cursor-pointer flex flex-col items-center">
-              <a
-                href={`/stocks/${$stockTicker}/forecast/analyst`}
-                on:click={() => changeSubSection("analyst")}
-                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                'analyst'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                Analysts Ratings
-              </a>
-              <div
-                class="{displaySubSection === 'analyst'
-                  ? 'bg-[#75D377]'
-                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
-              />
-            </li>
+          <ul class="flex flex-row items-center w-full text-white">
+            <a
+              href={`/stocks/${$stockTicker}/forecast`}
+              on:click={() => changeSubSection("overview")}
+              class="p-2 px-5 cursor-pointer {displaySubSection === 'overview'
+                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+            >
+              Overview
+            </a>
+
+            <a
+              href={`/stocks/${$stockTicker}/forecast/analyst`}
+              on:click={() => changeSubSection("analyst")}
+              class="p-2 px-5 cursor-pointer {displaySubSection === 'analyst'
+                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+            >
+              Analysts Ratings
+            </a>
           </ul>
-        </div>
+        </nav>
       </div>
     </main>
 

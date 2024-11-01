@@ -53,85 +53,51 @@
       >
         <main class="w-full {$coolMode ? 'lg:w-3/4' : 'w-full'}  ">
           <div class="m-auto">
-            <div
-              class="-ml-2 sm:ml-8 w-screen sm:w-full {$screenWidth < 640
-                ? 'overflow-auto scrollbar'
-                : 'no-scrollbar'} mb-2"
+            <nav
+              class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
             >
-              <ul
-                class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2"
-              >
-                <li class="cursor-pointer flex flex-col items-center">
-                  <a
-                    href={`/stocks/${$stockTicker}/financials`}
-                    on:click={() => changeSubSection("income")}
-                    class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                    'income'
-                      ? 'text-white '
-                      : 'bg-[#09090B]'}"
-                  >
-                    Income
-                  </a>
-                  <div
-                    class="{displaySubSection === 'income'
-                      ? 'bg-[#75D377]'
-                      : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
-                  />
-                </li>
-                <li class="cursor-pointer flex flex-col items-center">
-                  <a
-                    href={`/stocks/${$stockTicker}/financials/balance-sheet`}
-                    on:click={() => changeSubSection("balance-sheet")}
-                    class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                    'balance-sheet'
-                      ? 'text-white '
-                      : 'bg-[#09090B]'}"
-                  >
-                    Balance Sheet
-                  </a>
-                  <div
-                    class="{displaySubSection === 'balance-sheet'
-                      ? 'bg-[#75D377]'
-                      : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
-                  />
-                </li>
-                <li class="cursor-pointer flex flex-col items-center">
-                  <a
-                    href={`/stocks/${$stockTicker}/financials/cash-flow`}
-                    on:click={() => changeSubSection("cash-flow")}
-                    class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                    'cash-flow'
-                      ? 'text-white '
-                      : 'bg-[#09090B]'}"
-                  >
-                    Cashflow
-                  </a>
-                  <div
-                    class="{displaySubSection === 'cash-flow'
-                      ? 'bg-[#75D377]'
-                      : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
-                  />
-                </li>
+              <ul class="flex flex-row items-center w-full text-white">
+                <a
+                  href={`/stocks/${$stockTicker}/financials`}
+                  on:click={() => changeSubSection("income")}
+                  class="p-2 px-5 cursor-pointer {displaySubSection === 'income'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Income
+                </a>
 
-                <li class="cursor-pointer flex flex-col items-center">
-                  <a
-                    href={`/stocks/${$stockTicker}/financials/ratios`}
-                    on:click={() => changeSubSection("ratios")}
-                    class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                    'ratios'
-                      ? 'text-white '
-                      : 'bg-[#09090B]'}"
-                  >
-                    Ratios
-                  </a>
-                  <div
-                    class="{displaySubSection === 'ratios'
-                      ? 'bg-[#75D377]'
-                      : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
-                  />
-                </li>
+                <a
+                  href={`/stocks/${$stockTicker}/financials/balance-sheet`}
+                  on:click={() => changeSubSection("balance-sheet")}
+                  class="p-2 px-5 cursor-pointer {displaySubSection ===
+                  'balance-sheet'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Balance Sheet
+                </a>
+                <a
+                  href={`/stocks/${$stockTicker}/financials/cash-flow`}
+                  on:click={() => changeSubSection("cash-flow")}
+                  class="p-2 px-5 cursor-pointer {displaySubSection ===
+                  'cash-flowt'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Cashflow
+                </a>
+                <a
+                  href={`/stocks/${$stockTicker}/financials/ratios`}
+                  on:click={() => changeSubSection("ratios")}
+                  class="p-2 px-5 cursor-pointer {displaySubSection === 'ratios'
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Ratios
+                </a>
               </ul>
-            </div>
+            </nav>
           </div>
           <slot />
         </main>

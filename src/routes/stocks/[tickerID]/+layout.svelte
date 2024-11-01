@@ -742,149 +742,98 @@ function handleTypeOfTrade(state:string)
                     <!--Start Ticker Section-->
 
                     <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-[#09090B]"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
-                    <div
-                      class="-ml-2 sm:ml-4 w-screen sm:w-full overflow-x-scroll md:overflow-hidden mb-2"
+                    <nav
+                      class="sm:ml-4 border-b-[2px] overflow-x-scroll whitespace-nowrap"
                     >
                       <ul
-                        class="pr-4 w-fit overflow-x-scroll md:overflow-hidden font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
+                        class="flex flex-row items-center w-full text-sm sm:text-[1rem] text-white"
                       >
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}`}
-                            on:click={() => changeSection("overview")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'overview'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}"
-                          >
-                            Overview
-                          </a>
-                          <div
-                            class="{displaySection === 'overview'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
-                          />
-                        </li>
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}/financials`}
-                            on:click={() => changeSection("financials")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'financials'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}">Financials</a
-                          >
-                          <div
-                            class="{displaySection === 'financials'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
-                          />
-                        </li>
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}/statistics`}
-                            on:click={() => changeSection("statistics")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'statistics'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}">Statistics</a
-                          >
-                          <div
-                            class="{displaySection === 'statistics'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
-                          />
-                        </li>
-                        {#if ["amd", "save", "ba", "adbe", "nflx", "pltr", "msft", "meta", "tsla", "nvda", "aapl", "gme"]?.includes($stockTicker?.toLowerCase())}
-                          <li class="cursor-pointer flex flex-col items-center">
-                            <a
-                              href={`/stocks/${$stockTicker}/metrics`}
-                              on:click={() => changeSection("metrics")}
-                              class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                              'metrics'
-                                ? 'text-white '
-                                : 'bg-[#09090B]'}">Metrics</a
-                            >
+                        <a
+                          href={`/stocks/${$stockTicker}`}
+                          on:click={() => changeSection("overview")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'overview'
+                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                        >
+                          Overview
+                        </a>
+                        <a
+                          href={`/stocks/${$stockTicker}/financials`}
+                          on:click={() => changeSection("financials")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'financials'
+                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                        >
+                          Financials
+                        </a>
+                        <a
+                          href={`/stocks/${$stockTicker}/statistics`}
+                          on:click={() => changeSection("statistics")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'statistics'
+                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                          >Statistics</a
+                        >
 
-                            <div
-                              class="{displaySection === 'metrics'
-                                ? 'bg-[#75D377]'
-                                : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.8rem]"
-                            />
-                          </li>
+                        {#if ["amd", "save", "ba", "adbe", "nflx", "pltr", "msft", "meta", "tsla", "nvda", "aapl", "gme"]?.includes($stockTicker?.toLowerCase())}
+                          <a
+                            href={`/stocks/${$stockTicker}/metrics`}
+                            on:click={() => changeSection("metrics")}
+                            class="p-2 px-5 cursor-pointer {displaySection ===
+                            'metrics'
+                              ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                            >Metrics</a
+                          >
                         {/if}
+
                         {#if Object?.keys(data?.getAnalystRating ?? {})?.length > 0}
-                          <li class="cursor-pointer flex flex-col items-center">
-                            <a
-                              href={`/stocks/${$stockTicker}/forecast`}
-                              on:click={() => changeSection("forecast")}
-                              class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                              'forecast'
-                                ? 'text-white '
-                                : 'bg-[#09090B]'}"
-                            >
-                              Forecast
-                            </a>
-                            <div
-                              class="{displaySection === 'forecast'
-                                ? 'bg-[#75D377]'
-                                : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
-                            />
-                          </li>
+                          <a
+                            href={`/stocks/${$stockTicker}/forecast`}
+                            on:click={() => changeSection("forecast")}
+                            class="p-2 px-5 cursor-pointer {displaySection ===
+                            'forecast'
+                              ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                          >
+                            Forecast
+                          </a>
                         {/if}
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}/options`}
-                            on:click={() => changeSection("options")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'options'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}"
-                          >
-                            Options
-                          </a>
-                          <div
-                            class="{displaySection === 'options'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
-                          />
-                        </li>
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}/insider`}
-                            on:click={() => changeSection("insider")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'insider'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}"
-                          >
-                            Insider
-                          </a>
-                          <div
-                            class="{displaySection === 'insider'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
-                          />
-                        </li>
-                        <li class="cursor-pointer flex flex-col items-center">
-                          <a
-                            href={`/stocks/${$stockTicker}/dividends`}
-                            on:click={() => changeSection("dividends")}
-                            class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
-                            'dividends'
-                              ? 'text-white '
-                              : 'bg-[#09090B]'}"
-                          >
-                            Dividends
-                          </a>
-                          <div
-                            class="{displaySection === 'dividends'
-                              ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
-                          />
-                        </li>
+                        <a
+                          href={`/stocks/${$stockTicker}/options`}
+                          on:click={() => changeSection("options")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'options'
+                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                        >
+                          Options
+                        </a>
+                        <a
+                          href={`/stocks/${$stockTicker}/insider`}
+                          on:click={() => changeSection("insider")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'insider'
+                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                        >
+                          Insider
+                        </a>
+                        <a
+                          href={`/stocks/${$stockTicker}/dividends`}
+                          on:click={() => changeSection("dividends")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'dividends'
+                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                        >
+                          Dividends
+                        </a>
                       </ul>
-                    </div>
+                    </nav>
 
                     <!--Start-Main Content-->
                     <slot />

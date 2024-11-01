@@ -43,68 +43,40 @@
   <div class="m-auto h-full overflow-hidden">
     <main class="w-full">
       <div class="m-auto">
-        <div
-          class="-ml-2 sm:ml-8 w-screen sm:w-full {$screenWidth < 640
-            ? 'overflow-auto scrollbar'
-            : 'no-scrollbar'} mb-2"
+        <nav
+          class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
         >
-          <ul
-            class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2"
-          >
-            <li class="cursor-pointer flex flex-col items-center">
-              <a
-                href={`/stocks/${$stockTicker}/statistics`}
-                on:click={() => changeSubSection("overview")}
-                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                'overview'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                Overview
-              </a>
-              <div
-                class="{displaySubSection === 'overview'
-                  ? 'bg-[#75D377]'
-                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[4rem]"
-              />
-            </li>
+          <ul class="flex flex-row items-center w-full text-white">
+            <a
+              href={`/stocks/${$stockTicker}/statistics`}
+              on:click={() => changeSubSection("overview")}
+              class="p-2 px-5 cursor-pointer {displaySubSection === 'overview'
+                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+            >
+              Overview
+            </a>
 
-            <li class="cursor-pointer flex flex-col items-center">
-              <a
-                href={`/stocks/${$stockTicker}/statistics/market-cap`}
-                on:click={() => changeSubSection("market-cap")}
-                class="whitespace-nowrap px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                'market-cap'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                Market Cap
-              </a>
-              <div
-                class="{displaySubSection === 'market-cap'
-                  ? 'bg-[#75D377]'
-                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
-              />
-            </li>
-            <li class="cursor-pointer flex flex-col items-center">
-              <a
-                href={`/stocks/${$stockTicker}/statistics/employees`}
-                on:click={() => changeSubSection("employees")}
-                class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                'employees'
-                  ? 'text-white '
-                  : 'bg-[#09090B]'}"
-              >
-                Employees
-              </a>
-              <div
-                class="{displaySubSection === 'employees'
-                  ? 'bg-[#75D377]'
-                  : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
-              />
-            </li>
+            <a
+              href={`/stocks/${$stockTicker}/statistics/market-cap`}
+              on:click={() => changeSubSection("market-cap")}
+              class="p-2 px-5 cursor-pointer {displaySubSection === 'market-cap'
+                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+            >
+              Market Cap
+            </a>
+            <a
+              href={`/stocks/${$stockTicker}/statistics/employees`}
+              on:click={() => changeSubSection("employees")}
+              class="p-2 px-5 cursor-pointer {displaySubSection === 'employees'
+                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+            >
+              Employees
+            </a>
           </ul>
-        </div>
+        </nav>
       </div>
     </main>
 

@@ -59,14 +59,10 @@
   <div class="m-auto h-full overflow-hidden">
     <main class="w-fit sm:w-full sm:max-w-2xl">
       <div class="m-auto">
-        <div
-          class="-ml-2 sm:ml-8 w-screen sm:w-full {$screenWidth < 640
-            ? 'overflow-auto scrollbar'
-            : ''} mb-2"
+        <nav
+          class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
         >
-          <ul
-            class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll sm:overflow-hidden space-x-4 rtl:space-x-reverse py-2"
-          >
+          <ul class="flex flex-row items-center w-full text-white">
             {#each subsectionTitles?.slice(0, 4) as title}
               {@const sectionKey = title
                 ?.toLowerCase()
@@ -75,26 +71,18 @@
                 ?.replace(/-{2,}/g, "-") // Replace multiple dashes with single dash
                 ?.replace(/^-|-$/g, "") // Remove leading/trailing dashes
                 ?.trim()}
-              <li class="cursor-pointer flex flex-col items-center">
-                <a
-                  href={getHref(sectionKey)}
-                  on:click={() => changeSubSection(sectionKey)}
-                  class="px-2 text-sm sm:text-[1rem] whitespace-nowrap font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                  sectionKey
-                    ? 'text-white'
-                    : 'bg-[#09090B]'}"
-                >
-                  {title}
-                </a>
-                <div
-                  class="{displaySubSection === sectionKey
-                    ? 'bg-[#75D377]'
-                    : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]"
-                />
-              </li>
+              <a
+                href={getHref(sectionKey)}
+                on:click={() => changeSubSection(sectionKey)}
+                class="p-2 px-5 cursor-pointer {displaySubSection === sectionKey
+                  ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+              >
+                {title}
+              </a>
             {/each}
           </ul>
-        </div>
+        </nav>
       </div>
     </main>
 

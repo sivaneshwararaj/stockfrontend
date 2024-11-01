@@ -77,67 +77,43 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4">
-          <div
-            class="sm:ml-8 w-screen sm:w-full {$screenWidth < 640
-              ? 'overflow-auto scrollbar no-scrollbar'
-              : ''} mb-2"
+          <nav
+            class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
           >
-            <ul
-              class="pr-4 sm:pr-0 w-screen flex flex-row items-center bg-[#09090B] overflow-x-scroll space-x-6 rtl:space-x-reverse py-2"
-            >
-              <li class="cursor-pointer flex flex-col items-center">
-                <a
-                  href={`/stocks/${$stockTicker}/insider`}
-                  on:click={() => changeSubSection("insider")}
-                  class="text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                  'insider'
-                    ? 'text-white '
-                    : 'bg-[#09090B]'}"
-                >
-                  Insider Trading
-                </a>
-                <div
-                  class="{displaySubSection === 'insider'
-                    ? 'bg-[#75D377]'
-                    : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[5rem]"
-                />
-              </li>
-              <li class="cursor-pointer flex flex-col items-center">
-                <a
-                  href={`/stocks/${$stockTicker}/insider/congress-trading`}
-                  on:click={() => changeSubSection("congress-trading")}
-                  class="text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                  'congress-trading'
-                    ? 'text-white '
-                    : 'bg-[#09090B]'}"
-                >
-                  Congress Trading
-                </a>
-                <div
-                  class="{displaySubSection === 'congress-trading'
-                    ? 'bg-[#75D377]'
-                    : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[5rem]"
-                />
-              </li>
-              <li class="cursor-pointer flex flex-col items-center">
-                <a
-                  href={`/stocks/${$stockTicker}/insider/transcripts`}
-                  on:click={() => changeSubSection("transcripts")}
-                  class="text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySubSection ===
-                  'transcripts'
-                    ? 'text-white '
-                    : 'bg-[#09090B]'}"
-                >
-                  Transcripts
-                </a>
-                <div
-                  class="{displaySubSection === 'transcripts'
-                    ? 'bg-[#75D377]'
-                    : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
-                />
-              </li>
+            <ul class="flex flex-row items-center w-full text-white">
+              <a
+                href={`/stocks/${$stockTicker}/insider`}
+                on:click={() => changeSubSection("insider")}
+                class="p-2 px-5 cursor-pointer {displaySubSection === 'insider'
+                  ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+              >
+                Insider Trading
+              </a>
+
+              <a
+                href={`/stocks/${$stockTicker}/insider/congress-trading`}
+                on:click={() => changeSubSection("congress-trading")}
+                class="p-2 px-5 cursor-pointer {displaySubSection ===
+                'congress-trading'
+                  ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+              >
+                Congress Trading
+              </a>
+              <a
+                href={`/stocks/${$stockTicker}/insider/transcripts`}
+                on:click={() => changeSubSection("transcripts")}
+                class="p-2 px-5 cursor-pointer {displaySubSection ===
+                'transcripts'
+                  ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+              >
+                Transcripts
+              </a>
             </ul>
-          </div>
+          </nav>
+
           <slot />
         </main>
 
@@ -165,13 +141,13 @@
 
           {#if newsList?.length !== 0}
             <div
-              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full sm:hover:text-white text-white border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <div class="p-4 text-sm">
                 <h3 class="text-lg text-white font-semibold mb-3">
                   {$stockTicker} News
                 </h3>
-                <ul class="text-gray-200">
+                <ul class="text-white">
                   {#each newsList?.slice(0, 10) as item}
                     <li class="mb-3 last:mb-1">
                       {formatDate(item?.publishedDate)} ago -
