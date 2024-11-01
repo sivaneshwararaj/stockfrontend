@@ -144,7 +144,7 @@
           </h1>
 
           <div
-            class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+            class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
           >
             <svg
               class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -198,7 +198,7 @@
 
         {#if rawData?.history?.length !== 0}
           <div
-            class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-3 md:grid-rows-1 divide-x"
+            class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-600 rounded-md border border-gray-600 md:grid-cols-3 md:grid-rows-1 divide-x"
           >
             <div class="p-4 bp:p-5 sm:p-6">
               <label

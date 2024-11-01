@@ -17,7 +17,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href="/pricing"
@@ -25,7 +25,7 @@
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                   <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription 🔥
+                    Pro Subscription
                   </h2>
                   <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
@@ -37,7 +37,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/options-flow"}
@@ -56,7 +56,7 @@
           </div>
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/stock-screener"}

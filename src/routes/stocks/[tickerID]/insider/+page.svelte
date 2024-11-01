@@ -270,28 +270,24 @@
           <h1 class="text-xl sm:text-2xl text-white font-bold mb-4">
             Insider Trading
           </h1>
-
-          <div
-            class="w-fit text-white p-3 sm:p-5 mb-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
-          >
-            <svg
-              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#a474f6"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
+          {#if insiderTradingList?.length === 0}
+            <div
+              class="w-fit text-white p-3 sm:p-5 mb-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
             >
+              <svg
+                class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                ><path
+                  fill="#a474f6"
+                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+                /></svg
+              >
 
-            {#if insiderTradingList?.length !== 0}
-              Get detailed insights of Insiders who bought or sold {$displayCompanyName}
-              and the amounts involved!
-            {:else}
               No trading history available for {$displayCompanyName}. Likely no
               insider trading has happened yet.
-            {/if}
-          </div>
+            </div>
+          {/if}
         </div>
 
         {#if isLoaded}
@@ -401,11 +397,11 @@
                 >
                   <!--Start Put/Call-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
-                        class="font-medium text-gray-200 text-sm sm:text-[1rem]"
+                        class="font-medium text-white text-sm sm:text-[1rem]"
                         >Buy/Sell</span
                       >
                       <span
@@ -463,11 +459,11 @@
                   <!--End Put/Call-->
                   <!--Start Call Flow-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
-                        class="font-medium text-gray-200 text-sm sm:text-[1rem]"
+                        class="font-medium text-white text-sm sm:text-[1rem]"
                         >Bought Shares</span
                       >
                       <span
@@ -525,11 +521,11 @@
                   <!--End Call Flow-->
                   <!--Start Put Flow-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
-                        class="font-medium text-gray-200 text-sm sm:text-[1rem]"
+                        class="font-medium text-white text-sm sm:text-[1rem]"
                         >Sold Shares</span
                       >
                       <span

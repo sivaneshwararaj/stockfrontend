@@ -594,7 +594,7 @@
 
         {#if optionsPlotData?.length !== 0}
           <div
-            class="mb-4 grid grid-cols-2 grid-rows-2 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-4 md:grid-rows-1 md:divide-x"
+            class="mb-4 grid grid-cols-2 grid-rows-2 divide-gray-600 rounded-md border border-gray-600 md:grid-cols-4 md:grid-rows-1 md:divide-x"
           >
             <div class="p-4 bp:p-5 sm:p-6">
               <label
