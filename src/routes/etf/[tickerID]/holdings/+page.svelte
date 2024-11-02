@@ -15,10 +15,6 @@
   export let data;
   let rawData = data?.getETFHoldings;
   let holdings = rawData?.slice(0, 50);
-  let stockChartData = {};
-  let change = 0;
-  let changesPercentage = 0;
-  let priceData = [];
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -28,40 +24,6 @@
       const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
       holdings = [...holdings, ...filteredNewResults];
     }
-  }
-
-  async function getStockData(ticker: string) {
-    const cachedData = getCache(ticker, "hoverStockChart");
-    if (cachedData) {
-      stockChartData = cachedData;
-    } else {
-      const postData = { ticker: ticker };
-      const response = await fetch("/api/hover-stock-chart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-
-      stockChartData = (await response.json()) ?? {};
-
-      setCache(ticker, stockChartData, "hoverStockChart");
-    }
-
-    changesPercentage = stockChartData?.changesPercentage;
-    change = stockChartData?.change;
-
-    priceData = stockChartData?.history;
-
-    priceData = priceData
-      ?.map((item) => ({
-        time: Date.parse(item.time), // Assuming 'time' is the correct property to parse
-        value: item?.close ?? null,
-      }))
-      .filter(
-        (item) => item?.value !== 0 && item?.value != null, // Simplified condition
-      );
   }
 
   onMount(() => {
@@ -293,14 +255,7 @@
                       <td
                         class="text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B]"
                       >
-                        <HoverStockChart
-                          on:mouseover={() => getStockData(item?.asset)}
-                          {stockChartData}
-                          symbol={item?.asset}
-                          {change}
-                          {changesPercentage}
-                          {priceData}
-                        />
+                        <HoverStockChart symbol={item?.asset} />
                       </td>
 
                       <td

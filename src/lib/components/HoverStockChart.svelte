@@ -4,15 +4,49 @@
 
   import { ColorType } from "lightweight-charts";
   import { Chart, BaselineSeries, PriceLine } from "svelte-lightweight-charts";
-  import { screenWidth } from "$lib/store";
+  import { screenWidth, getCache, setCache } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { afterUpdate } from "svelte";
-  export let stockChartData;
   export let symbol;
 
-  export let priceData;
-  export let changesPercentage;
-  export let change;
+  let priceData = [];
+  let changesPercentage = 0;
+  let change = 0;
+  let stockChartData;
+
+  async function getStockData(ticker: string) {
+    const cachedData = getCache(ticker, "hoverStockChart");
+    if (cachedData) {
+      stockChartData = cachedData;
+    } else {
+      const postData = { ticker: ticker };
+      const response = await fetch("/api/hover-stock-chart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      stockChartData = (await response.json()) ?? {};
+
+      setCache(ticker, stockChartData, "hoverStockChart");
+    }
+
+    changesPercentage = stockChartData?.changesPercentage;
+    change = stockChartData?.change;
+
+    priceData = stockChartData?.history;
+
+    priceData = priceData
+      ?.map((item) => ({
+        time: Date.parse(item.time), // Assuming 'time' is the correct property to parse
+        value: item?.close ?? null,
+      }))
+      .filter(
+        (item) => item?.value !== 0 && item?.value != null, // Simplified condition
+      );
+  }
 
   const topLineColor = "#71CA96";
   const topFillColor1 = "rgba( 38, 166, 154, 0.2)";
@@ -122,7 +156,7 @@
   });
 </script>
 
-<div on:mouseover>
+<div on:mouseover={() => getStockData(symbol)}>
   <HoverCard.Root>
     <div on:mouseover>
       <HoverCard.Trigger
