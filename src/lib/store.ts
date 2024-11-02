@@ -53,7 +53,6 @@ export const secFilingsClicked = writable(<boolean>false);
 export const discordMembers = writable(<Number>380);
 
 export const newAvatar = writable(<string>"");
-
 export const displayCompanyName = writable(<string>"");
 export const currentPrice = writable(<number>0);
 export const currentPortfolioPrice = writable(<number>0);

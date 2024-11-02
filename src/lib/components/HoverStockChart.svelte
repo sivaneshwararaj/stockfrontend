@@ -6,7 +6,7 @@
   import { Chart, BaselineSeries, PriceLine } from "svelte-lightweight-charts";
   import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
-
+  import { afterUpdate } from "svelte";
   export let stockChartData;
   export let symbol;
 
@@ -108,10 +108,18 @@
     },
   };
 
-  if ($screenWidth && chart && typeof window !== "undefined") {
-    console.log("yes");
-    chart?.timeScale()?.fitContent();
-  }
+  afterUpdate(async () => {
+    if (
+      $screenWidth &&
+      stockChartData &&
+      chart &&
+      typeof window !== "undefined"
+    ) {
+      console.log("yes");
+
+      chart?.timeScale()?.fitContent();
+    }
+  });
 </script>
 
 <div on:mouseover>
@@ -131,7 +139,7 @@
         >
       </HoverCard.Trigger>
     </div>
-    <HoverCard.Content class="w-80 bg-[#09090B] border border-gray-600">
+    <HoverCard.Content class=" w-96 bg-[#09090B] border border-gray-400">
       <div class="flex justify-between space-x-4 w-full text-white">
         <div class="space-y-1 w-full">
           <!--Hover Stock Chart-->
@@ -187,7 +195,7 @@
               </p>
             </div>
             {#if priceData?.length > 0}
-              <div class="w-[50%]">
+              <div class="w-[40%]">
                 <Chart
                   {...options}
                   {...theme.chart}
