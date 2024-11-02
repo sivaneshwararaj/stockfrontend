@@ -363,7 +363,7 @@
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="mb-6">
-          <h2 class="text-xl sm:text-2xl text-gray-200 font-bold mb-4">
+          <h2 class="text-xl sm:text-2xl text-white font-bold mb-4">
             {$stockTicker} Employees
           </h2>
 

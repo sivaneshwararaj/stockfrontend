@@ -113,7 +113,7 @@
     <div class="flex flex-row items-center">
       <label
         for="optionsNetFlowInfo"
-        class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
+        class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
       >
         Options Net Flow
       </label>

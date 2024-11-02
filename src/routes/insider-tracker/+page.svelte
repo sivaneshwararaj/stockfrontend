@@ -89,7 +89,7 @@
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      stockList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      stockList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
       return;
     }
 
@@ -124,7 +124,7 @@
     };
 
     // Sort using the generic comparison function
-    stockList = [...originalData].sort(compareValues);
+    stockList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
   $: charNumber = $screenWidth < 640 ? 20 : 25;
 </script>

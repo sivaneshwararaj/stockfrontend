@@ -10,7 +10,8 @@
   let dataLoaded = false; // Flag to track data loading
 
   let assetType = "";
-
+  let focusedSuggestion = "";
+  let arrowMovement = false;
   let showSuggestions = false;
   let notFoundTicker = false;
   let searchQuery = "";
@@ -164,14 +165,13 @@
 
   const onKeyPress = (e) => {
     if (e?.charCode === 13) {
-      focusedSuggestion = "";
       const assetActions = {
         ETF: () => goto(`/etf/${searchQuery}`),
         Stock: () => goto(`/stocks/${searchQuery}`),
         Crypto: () => goto(`/crypto/${searchQuery}`),
       };
-
-      if (searchResults?.length > 0) {
+      console.log(arrowMovement);
+      if (!arrowMovement && searchResults?.length > 0) {
         searchQuery = searchResults.at(0).symbol;
         assetType = searchResults.at(0).type;
       }
@@ -182,61 +182,42 @@
       // Trigger search bar action
       searchBarTicker(searchQuery);
     }
+
+    console.log(focusedSuggestion);
   };
 
-  let focusedSuggestion = null;
-
   function handleKeyDown(event) {
-    const newList = searchHistory?.length > 0 ? searchHistory : popularList;
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
 
-    if (event.key === "ArrowDown" && showSuggestions) {
-      // Move down in the suggestions
-      event.preventDefault(); // Prevent scrolling
-      const currentIndex = searchResults?.findIndex(
-        (item) => item?.symbol === searchQuery,
-      );
-      if (currentIndex < searchResults?.length - 1) {
-        searchQuery = searchResults[currentIndex + 1]?.symbol;
-        assetType = searchResults[currentIndex + 1]?.type;
-        focusedSuggestion = searchQuery; // Update the focused suggestion
-      }
-    } else if (event.key === "ArrowUp" && showSuggestions) {
-      // Move up in the suggestions
-      event.preventDefault(); // Prevent scrolling
-      const currentIndex = searchResults?.findIndex(
-        (item) => item?.symbol === searchQuery,
-      );
-      if (currentIndex > 0) {
-        searchQuery = searchResults[currentIndex - 1]?.symbol;
-        assetType = searchResults[currentIndex - 1]?.type;
-        focusedSuggestion = searchQuery; // Update the focused suggestion
-      }
-    } else if (event.key === "ArrowDown" && !showSuggestions) {
-      // Move down in the suggestions
-      event.preventDefault(); // Prevent scrolling
-      const currentIndex = newList?.findIndex(
-        (item) => item?.symbol === searchQuery,
-      );
-      if (currentIndex < newList?.length - 1) {
-        searchQuery = newList[currentIndex + 1]?.symbol;
-        assetType = newList[currentIndex + 1]?.type;
-        focusedSuggestion = searchQuery; // Update the focused suggestion
-      }
-    } else if (event.key === "ArrowUp" && !showSuggestions) {
-      // Move up in the suggestions
-      event.preventDefault(); // Prevent scrolling
-      const currentIndex = newList?.findIndex(
-        (item) => item?.symbol === searchQuery,
-      );
-      if (currentIndex > 0) {
-        searchQuery = newList[currentIndex - 1]?.symbol;
-        assetType = newList[currentIndex - 1]?.type;
-        focusedSuggestion = searchQuery; // Update the focused suggestion
-      }
+    event.preventDefault(); // Prevent scrolling
+
+    const list = showSuggestions
+      ? searchResults
+      : searchHistory?.length > 0
+        ? searchHistory
+        : popularList;
+    if (!list?.length) return;
+
+    const currentIndex = list.findIndex((item) => item?.symbol === searchQuery);
+    const isMovingDown = event.key === "ArrowDown";
+
+    // Check if movement is within bounds
+    const isValidMove = isMovingDown
+      ? currentIndex < list.length - 1
+      : currentIndex > 0;
+
+    if (isValidMove) {
+      arrowMovement = true;
+      const newIndex = currentIndex + (isMovingDown ? 1 : -1);
+      const selectedItem = list[newIndex];
+
+      // Update all related states at once
+      searchQuery = selectedItem?.symbol;
+      assetType = selectedItem?.type;
+      focusedSuggestion = selectedItem?.symbol;
     }
   }
-
-  const handleControlF = async (event) => {
+  const handleControlD = async (event) => {
     if (event.ctrlKey && event.key === "k") {
       // Ctrl+F is pressed, open the modal
       const keyboardSearch = document.getElementById("searchBarModal");
@@ -274,10 +255,10 @@
       console.log(e);
     }
 
-    window.addEventListener("keydown", handleControlF);
+    window.addEventListener("keydown", handleControlD);
     window.addEventListener("keydown", handleEscape);
     return () => {
-      window.removeEventListener("keydown", handleControlF);
+      window.removeEventListener("keydown", handleControlD);
       window.removeEventListener("keydown", handleEscape);
     };
   });
