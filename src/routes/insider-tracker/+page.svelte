@@ -5,9 +5,9 @@
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let isLoaded = true;
   let rawData = data?.getInsiderTracker ?? [];
@@ -226,12 +226,7 @@
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-start">
-                          <a
-                            href={"/stocks/" + item?.symbol}
-                            class="sm:hover:text-white text-blue-400"
-                          >
-                            {item?.symbol}
-                          </a>
+                          <HoverStockChart symbol={item?.symbol} />
                         </td>
 
                         <td
@@ -311,7 +306,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href="/pricing"
@@ -331,7 +326,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href="/sentiment-tracker"
@@ -350,7 +345,7 @@
           </div>
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href="/reddit-tracker"

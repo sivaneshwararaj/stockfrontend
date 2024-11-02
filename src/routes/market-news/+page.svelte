@@ -1,165 +1,185 @@
 <script lang="ts">
+  import { numberOfUnreadNotification } from "$lib/store";
+  import { onMount } from "svelte";
 
+  export let data;
 
-import { numberOfUnreadNotification } from '$lib/store';
-import { onMount } from 'svelte';
+  let rawData = data?.getMarketNews;
+  let news = rawData.slice(0, 15) ?? [];
 
-export let data;
+  const formatDate = (dateString) => {
+    // Create a date object for the input dateString
+    const inputDate = new Date(dateString);
 
+    // Create a date object for the current time in New York City
+    const nycTime = new Date().toLocaleString("en-US", {
+      timeZone: "America/New_York",
+    });
+    const currentNYCDate = new Date(nycTime);
 
-let rawData = data?.getMarketNews;
-let news = rawData.slice(0,15) ?? [];
+    // Calculate the difference in milliseconds
+    const difference = inputDate.getTime() - currentNYCDate.getTime();
 
-const formatDate = (dateString) => {
-// Create a date object for the input dateString
-const inputDate = new Date(dateString);
-  
-  // Create a date object for the current time in New York City
-  const nycTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
-  const currentNYCDate = new Date(nycTime);
-  
-  // Calculate the difference in milliseconds
-  const difference = inputDate.getTime() - currentNYCDate.getTime();
-  
-  // Convert the difference to minutes
-  const minutes = Math.abs(Math.round(difference / (1000 * 60)));
-  
-  if (minutes < 60) {
-    return `${minutes} minutes`;
-  } else if (minutes < 1440) {
-    const hours = Math.round(minutes / 60);
-    return `${hours} hour${hours !== 1 ? 's' : ''}`;
-  } else {
-    const days = Math.round(minutes / 1440);
-    return `${days} day${days !== 1 ? 's' : ''}`;
-  }
-};
+    // Convert the difference to minutes
+    const minutes = Math.abs(Math.round(difference / (1000 * 60)));
 
+    if (minutes < 60) {
+      return `${minutes} minutes`;
+    } else if (minutes < 1440) {
+      const hours = Math.round(minutes / 60);
+      return `${hours} hour${hours !== 1 ? "s" : ""}`;
+    } else {
+      const days = Math.round(minutes / 1440);
+      return `${days} day${days !== 1 ? "s" : ""}`;
+    }
+  };
 
- async function handleScroll() {
+  async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
     if (isBottom && news?.length !== rawData?.length) {
-        const nextIndex = news?.length;
-        const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
-        news = [...news, ...filteredNewResults];
+      const nextIndex = news?.length;
+      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 25);
+      news = [...news, ...filteredNewResults];
     }
   }
 
   onMount(async () => {
-    window.addEventListener('scroll', handleScroll);
-      return () => {
-          window.removeEventListener('scroll', handleScroll);
-      };
-  })
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
-let videoId = null;
+  let videoId = null;
 
+  function checkIfYoutubeVideo(link) {
+    const url = new URL(link);
+    if (url.hostname === "www.youtube.com") {
+      const searchParams = url.searchParams;
+      searchParams?.delete("t"); // Remove the "t" parameter
+      const videoIdMatch = url?.search?.match(/v=([^&]+)/);
 
-function checkIfYoutubeVideo(link) {
-
-  const url = new URL(link);
-  if (url.hostname === "www.youtube.com") {
-  const searchParams = url.searchParams;
-  searchParams?.delete('t'); // Remove the "t" parameter
-  const videoIdMatch = url?.search?.match(/v=([^&]+)/);
-
-  if (videoIdMatch) {
-    return videoIdMatch[1];
+      if (videoIdMatch) {
+        return videoIdMatch[1];
+      }
+    } else {
+      return null;
+    }
   }
-  } else {
-    return null;
-  }
-
-}
-
-
 </script>
 
 <svelte:head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Today's
+    Stock Market News and Breaking Stories · stocknear
+  </title>
+  <meta
+    name="description"
+    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+  />
 
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width" />
-<title>
-  {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} Today's Stock Market News and Breaking Stories · stocknear
-</title>
-<meta name="description" content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`} />
+  <!-- Other meta tags -->
+  <meta
+    property="og:title"
+    content={`Today's Stock Market News and Breaking Stories · stocknear`}
+  />
+  <meta
+    property="og:description"
+    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+  />
+  <meta property="og:type" content="website" />
+  <!-- Add more Open Graph meta tags as needed -->
 
-<!-- Other meta tags -->
-<meta property="og:title" content={`Today's Stock Market News and Breaking Stories · stocknear`}/>
-<meta property="og:description" content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`} />
-<meta property="og:type" content="website"/>
-<!-- Add more Open Graph meta tags as needed -->
-
-<!-- Twitter specific meta tags -->
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content={`Today's Stock Market News and Breaking Stories · stocknear`}/>
-<meta name="twitter:description" content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`} />
-<!-- Add more Twitter meta tags as needed -->
-
+  <!-- Twitter specific meta tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content={`Today's Stock Market News and Breaking Stories · stocknear`}
+  />
+  <meta
+    name="twitter:description"
+    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+  />
+  <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-
-<section class="w-full  overflow-hidden m-auto mt-10">
-  
+<section class="w-full overflow-hidden m-auto mt-10">
   <div class="flex justify-center w-full m-auto overflow-hidden">
-      <div class="relative flex justify-center items-center overflow-hidden">
-          <main>
-              <div class="w-screen sm:w-full m-auto">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      {#if news.length !== 0}
-                      {#each news as item}
-                          <div class="flex flex-col w-full mt-5 bg-[#141417] shadow-lg h-auto sm:h-[450px] xl:h-[430px] pb-10 sm:pb-5 rounded-none sm:rounded-lg m-auto">
-                            {#if videoId = checkIfYoutubeVideo(item.url)}
-                                <iframe
-                                    class="w-full h-60 rounded-none sm:rounded-lg"
-                                    src={`https://www.youtube.com/embed/${videoId}`}
-                                    frameborder="0"
-                                    allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen
-                                ></iframe>
-                            {:else}
-                                <a href={item.url} target="_blank">
-                                <div class="h-48 sm:h-60 m-auto border border-slate-800 rounded-none sm:rounded-lg ">
-                                    <img src={item?.image} class="w-screen sm:w-full object-cover h-48 sm:h-60 rounded-none sm:rounded-t-lg" alt="news image" loading="lazy">
-                                </div>
-                                </a>
-                            {/if}
+    <div class="relative flex justify-center items-center overflow-hidden">
+      <main>
+        <div class="w-full m-auto">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {#if news.length !== 0}
+              {#each news as item}
+                <div
+                  class="flex flex-col w-full mt-5 bg-[#141417] shadow-lg h-auto sm:h-[450px] xl:h-[430px] pb-10 sm:pb-5 rounded-md m-auto"
+                >
+                  {#if (videoId = checkIfYoutubeVideo(item.url))}
+                    <iframe
+                      class="w-full h-60 rounded-none sm:rounded-lg"
+                      src={`https://www.youtube.com/embed/${videoId}`}
+                      frameborder="0"
+                      allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                  {:else}
+                    <a href={item.url} target="_blank">
+                      <div
+                        class="h-48 sm:h-60 m-auto border border-gray-600 rounded-none sm:rounded-lg"
+                      >
+                        <img
+                          src={item?.image}
+                          class="w-full object-cover h-48 sm:h-60 rounded-none sm:rounded-t-lg"
+                          alt="news image"
+                          loading="lazy"
+                        />
+                      </div>
+                    </a>
+                  {/if}
 
-                            <div class="pl-3 pr-3">
-                              <label class="mt-3 mb-3 cursor-pointer text-xs text-gray-200 flex flex-row items-center">
-                                <div class="rounded-full w-6 h-6 relative bg-gray-800 mr-1.5 mb-0.5">
-                                  <img class="rounded-full w-4 h-4 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2" src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`} loading="lazy" />
-                                </div>
-                                {item?.symbol} · {formatDate(item?.publishedDate)} ago
-                                <span class="ml-auto text-gray-300 italic text-xs mr-2">
-                                  Source: {item?.site}
-                                </span>
-                              </label>
-                                
-                                  <a href={item.url} target="_blank" class="text-lg font-bold text-white">
-                                    {item?.title?.length > 120 ? item?.title?.slice(0,120) +'...' : item?.title}
-                                  </a>
-                                  <p class="text-white text-sm mt-2">
-                                    {item?.text?.length > 100 ? item?.text?.slice(0,100) + "..." : item?.text}
-                                  </p>
-                              </div>
+                  <div class="pl-3 pr-3">
+                    <label
+                      class="mt-3 mb-3 cursor-pointer text-xs text-gray-200 flex flex-row items-center"
+                    >
+                      <div
+                        class="rounded-full w-6 h-6 relative bg-gray-800 mr-1.5 mb-0.5"
+                      >
+                        <img
+                          class="rounded-full w-4 h-4 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                          src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`}
+                          loading="lazy"
+                        />
+                      </div>
+                      {item?.symbol} · {formatDate(item?.publishedDate)} ago
+                      <span class="ml-auto text-gray-300 italic text-xs mr-2">
+                        Source: {item?.site}
+                      </span>
+                    </label>
 
-                        </div>
-
-                          {/each}
-
-  
-                      
-                      {/if}
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      class="text-lg font-bold text-white"
+                    >
+                      {item?.title?.length > 120
+                        ? item?.title?.slice(0, 120) + "..."
+                        : item?.title}
+                    </a>
+                    <p class="text-white text-sm mt-2">
+                      {item?.text?.length > 100
+                        ? item?.text?.slice(0, 100) + "..."
+                        : item?.text}
+                    </p>
                   </div>
-
-          </main>
-      </div>
+                </div>
+              {/each}
+            {/if}
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </section>
-
-
-
-
-

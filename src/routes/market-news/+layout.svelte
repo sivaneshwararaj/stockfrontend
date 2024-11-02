@@ -35,9 +35,9 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden pb-20 pt-5 px-4 lg:px-3"
 >
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
       <li class="text-gray-300">Market News</li>
@@ -50,86 +50,26 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
-          <div
-            class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
-          >
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <!-- Start Column -->
-              <div>
-                <div class="flex flex-row justify-center items-center">
-                  <h1
-                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
-                  >
-                    Market News
-                  </h1>
-                </div>
+          <h1 class="mb-6 text-white text-2xl sm:text-3xl font-bold">
+            Stock Market News
+          </h1>
 
-                <span
-                  class="hidden sm:block text-white text-md font-medium text-center flex justify-center items-center"
-                >
-                  Flush your stock worries away with our website's latest news!
-                </span>
-              </div>
-              <!-- End Column -->
-
-              <!-- Start Column -->
-              <div
-                class="hidden sm:block relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0"
-              >
-                <svg
-                  class="w-40 -my-5"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="5" result="glow" />
-                      <feMerge>
-                        <feMergeNode in="glow" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    fill="#1E40AF"
-                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
-                    transform="translate(100 100)"
-                    filter="url(#glow)"
-                  />
-                </svg>
-
-                <div class="z-1 absolute top-1 right-10">
-                  <img class="w-24 mr-1" src={logo} alt="logo" loading="lazy" />
-                </div>
-              </div>
-              <!-- End Column -->
-            </div>
-          </div>
-
-          <div
-            class="bg-[#313131] w-52 sm:w-fit relative m-auto sm:m-0 sm:mr-auto flex sm:flex-wrap items-center justify-center rounded-lg p-1 -mt-3"
-          >
-            {#each tabs as item, i}
-              <a
-                href={item?.path}
-                class="group relative z-[1] rounded-full px-6 py-1 {activeIdx ===
-                i
-                  ? 'z-0'
-                  : ''} "
-              >
-                {#if activeIdx === i}
-                  <div class="absolute inset-0 rounded-lg bg-purple-600"></div>
-                {/if}
-                <span
-                  class="relative text-[1rem] sm:text-lg block font-semibold duration-200 text-white"
+          <nav class=" border-b-[2px] overflow-x-scroll whitespace-nowrap">
+            <ul
+              class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
+            >
+              {#each tabs as item, i}
+                <a
+                  href={item?.path}
+                  class="p-2 px-5 cursor-pointer {activeIdx === i
+                    ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
                 >
                   {item.title}
-                </span>
-              </a>
-            {/each}
-          </div>
-
-          <div class="border-b mt-5 border-slate-700" />
+                </a>
+              {/each}
+            </ul>
+          </nav>
 
           <slot />
 
@@ -139,7 +79,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href={"/pricing"}
@@ -147,7 +87,7 @@
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                   <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription 🔥
+                    Pro Subscription
                   </h2>
                   <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
@@ -159,7 +99,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/earnings-calendar"}
@@ -167,7 +107,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Earnings Calendar 🌟
+                  Earnings Calendar
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
@@ -178,7 +118,7 @@
           </div>
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/dividends-calendar"}
@@ -186,7 +126,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Dividend Calendar 💸
+                  Dividend Calendar
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
@@ -197,7 +137,7 @@
           </div>
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/economic-calendar"}
@@ -205,7 +145,7 @@
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Economic Events 🌍
+                  Economic Events
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>

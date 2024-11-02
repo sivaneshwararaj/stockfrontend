@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
+  import { numberOfUnreadNotification } from "$lib/store";
   import { onMount } from "svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
-
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let isLoaded = false;
   let rawData = data?.getCramerTracker ?? [];
@@ -282,12 +281,7 @@
                             </a>
                           {:else}
                             <div class="flex flex-col items-start">
-                              <a
-                                href={`/stocks/${item?.ticker}`}
-                                class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
-                              >
-                                {item?.ticker}
-                              </a>
+                              <HoverStockChart symbol={item?.ticker} />
                               <span class="text-white">
                                 {item?.name?.length > charNumber
                                   ? item?.name?.slice(0, charNumber) + "..."
@@ -366,7 +360,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href={"/pricing"}
@@ -386,7 +380,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/reddit-tracker"}
@@ -405,7 +399,7 @@
           </div>
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/sentiment-tracker"}

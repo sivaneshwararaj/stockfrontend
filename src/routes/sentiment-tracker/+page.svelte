@@ -6,9 +6,9 @@
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let isLoaded = false;
   let rawData = [];
@@ -214,12 +214,7 @@
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-start">
-                          <a
-                            href={"/stocks/" + item?.symbol}
-                            class="sm:hover:text-white text-blue-400"
-                          >
-                            {item?.symbol}
-                          </a>
+                          <HoverStockChart symbol={item?.symbol} />
                         </td>
 
                         <td
@@ -306,7 +301,7 @@
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
               on:click={() => goto("/pricing")}
-              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <div
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
@@ -326,7 +321,7 @@
 
           <div
             on:click={() => goto("/cramer-tracker")}
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
               <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -343,7 +338,7 @@
 
           <div
             on:click={() => goto("/reddit-tracker")}
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
               <div class="w-full flex justify-between items-center p-3 mt-3">

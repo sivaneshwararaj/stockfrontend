@@ -2,7 +2,7 @@
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { onMount } from "svelte";
-
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   export let data;
 
   let analystStats = data?.getAnalystStats;
@@ -364,12 +364,8 @@
                             </a>
                           {:else}
                             <div class="flex flex-col items-start">
-                              <a
-                                href={`/stocks/${item?.ticker}`}
-                                class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
-                              >
-                                {item?.ticker}
-                              </a>
+                              <HoverStockChart symbol={item?.ticker} />
+
                               <span class="text-white">
                                 {item?.name?.length > charNumber
                                   ? item?.name?.slice(0, charNumber) + "..."
@@ -464,7 +460,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <a
                 href={"/pricing"}
@@ -472,7 +468,7 @@
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
                   <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscriptio
+                    Pro Subscription
                   </h2>
                   <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
                 </div>
@@ -484,7 +480,7 @@
           {/if}
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/analysts"}
@@ -503,7 +499,7 @@
           </div>
 
           <div
-            class="w-full bg-[#27272A] duration-100 ease-out sm:hover:text-white text-gray-400 sm:hover:border-gray-700 border border-gray-800 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
               href={"/analysts/top-stocks"}

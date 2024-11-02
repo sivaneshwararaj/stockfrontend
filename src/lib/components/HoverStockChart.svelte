@@ -52,7 +52,7 @@
   function getHref(symbol: string) {
     let path = "";
     if (symbol?.length !== 0) {
-      if (assetType?.toLowerCase() === "stock") {
+      if (["stocks", "stock"]?.includes(assetType?.toLowerCase())) {
         path = `/stocks/${symbol}`;
       } else if (assetType?.toLowerCase() === "etf") {
         path = `/etf/${symbol}`;
@@ -191,7 +191,8 @@
             class=" text-sm flex flex-row items-center justify-start bg-[#09090B]"
           >
             <div class="flex flex-col items-start w-full">
-              <div class="-ml-2 flex flex-row items-center pb-1">
+              <div class=" flex flex-row items-center pb-1">
+                <!--
                 <Avatar.Root>
                   <Avatar.Image
                     class="w-5 h-5 rounded-full avatar text-center m-auto flex-shrink-0"
@@ -199,6 +200,7 @@
                   />
                   <Avatar.Fallback>SK</Avatar.Fallback>
                 </Avatar.Root>
+                -->
                 <h4 class="text-[1rem] font-semibold inline-block">{symbol}</h4>
               </div>
               <p>
