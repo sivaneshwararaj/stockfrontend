@@ -1099,7 +1099,7 @@
             {:else}
               <!--Start Table of Watchlist-->
               {#if watchList?.length !== 0}
-                <div class="w-screen sm:w-full">
+                <div class="w-full">
                   <div class="w-full overflow-x-scroll">
                     <table
                       class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
