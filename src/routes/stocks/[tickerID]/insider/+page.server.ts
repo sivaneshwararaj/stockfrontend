@@ -21,7 +21,7 @@ const transactionTypeMap = {
 };
 
 export const load = async ({ locals, params }) => {
-  const { apiURL, apiKey } = locals;
+  const { apiURL, apiKey, user } = locals;
 
   const getInsiderTrading = async () => {
     const postData = {
@@ -40,6 +40,8 @@ export const load = async ({ locals, params }) => {
 
     let output = await response.json();
 
+    output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
+
     output = output?.reduce((acc, item) => {
       const newTransactionType =
         typeof transactionTypeMap[item?.transactionType] === "function"
@@ -48,11 +50,14 @@ export const load = async ({ locals, params }) => {
 
       // Only include items with 'Bought' or 'Sold'
       if (newTransactionType === "Bought" || newTransactionType === "Sold") {
-        acc.push({
-          ...item,
-          transactionType: newTransactionType,
-          value: item?.securitiesTransacted * item?.price, // new key 'value'
-        });
+        const value = item?.securitiesTransacted * item?.price;
+        if (value > 0) {
+          acc.push({
+            ...item,
+            transactionType: newTransactionType,
+            value: value, // new key 'value'
+          });
+        }
       }
 
       return acc;

@@ -596,11 +596,11 @@
                   <TableHeader {columns} {sortOrders} {sortData} />
                 </thead>
                 <tbody>
-                  {#each data?.user?.tier === "Pro" ? insiderTradingList : insiderTradingList?.slice(0, 3) as item, index}
+                  {#each insiderTradingList as item, index}
                     {#if item?.price > 0}
                       <tr
                         class="text-white odd:bg-[#27272A] {index + 1 ===
-                          insiderTradingList?.slice(0, 3)?.length &&
+                          insiderTradingList?.slice(0, 6)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
                           : ''}"
@@ -677,7 +677,7 @@
               </table>
             </div>
 
-            {#if rawData?.length === insiderTradingList?.length}
+            {#if rawData?.length === insiderTradingList?.length && data?.user?.tier === "Pro"}
               <label
                 on:click={backToTop}
                 class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-slate-800 rounded-full"
