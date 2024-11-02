@@ -111,60 +111,76 @@
     <div class="relative flex justify-center items-center overflow-hidden">
       <main>
         <div class="w-full m-auto">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 gap-y-3">
             {#if news?.length !== 0}
               {#each news as item}
-                <div
-                  class="flex flex-col w-full mt-5 bg-[#27272A] shadow-lg h-auto sm:h-[420px] pb-10 sm:pb-5 rounded-md m-auto"
-                >
-                  {#if (videoId = checkIfYoutubeVideo(item.url))}
-                    <iframe
-                      class="w-full h-60 rounded-none sm:rounded-lg"
-                      src={`https://www.youtube.com/embed/${videoId}`}
-                      frameborder="0"
-                      allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen
-                    ></iframe>
-                  {:else}
-                    <a href={item?.url} target="_blank">
-                      <div
-                        class="h-48 sm:h-60 m-auto border border-slate-800 rounded-none sm:rounded-lg"
+                <div class="w-full flex flex-col bg-[#09090B] m-auto">
+                  {#if (videoId = checkIfYoutubeVideo(item?.url))}
+                    <div class="w-full mb-4">
+                      <h3 class="text-sm text-white/80 mb-2">
+                        {formatDate(item?.datetime * 1000)} ago · {item?.source}
+                      </h3>
+                      <a
+                        href={item?.url}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        class="text-lg sm:text-xl font-bold text-white"
                       >
-                        <img
-                          src={item?.image}
-                          class="w-full object-cover h-48 sm:h-60 rounded-none sm:rounded-t-lg"
-                          alt="news image"
-                          loading="lazy"
-                        />
+                        {item?.headline}
+                        <p class="text-white text-sm font-normal">
+                          {item?.summary}
+                        </p>
+                      </a>
+                    </div>
+                    <div class="w-full aspect-video">
+                      <iframe
+                        class="w-full h-full"
+                        src={`https://www.youtube.com/embed/${videoId}`}
+                        frameborder="0"
+                        allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                      ></iframe>
+                    </div>
+                  {:else}
+                    <div class="w-full flex flex-col sm:flex-row">
+                      <a
+                        href={item?.url}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        class="w-full sm:max-w-56 h-fit max-h-96 sm:mr-3"
+                      >
+                        <div class="flex-shrink-0 m-auto">
+                          <img
+                            src={item?.image}
+                            class="h-auto w-full"
+                            alt="news image"
+                            loading="lazy"
+                          />
+                        </div>
+                      </a>
+                      <div class="w-full">
+                        <h3 class="text-sm text-white/80 truncate mb-2 mt-3">
+                          {formatDate(item?.datetime * 1000)} ago · {item?.source}
+                        </h3>
+                        <a
+                          href={item?.url}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          class="text-lg sm:text-xl font-bold text-white"
+                        >
+                          {item?.headline}
+                          <p class="text-white text-sm mt-2 font-normal">
+                            {item?.summary?.length > 200
+                              ? item?.summary?.slice(0, 200) + "..."
+                              : item?.summary}
+                          </p>
+                        </a>
                       </div>
-                    </a>
+                    </div>
                   {/if}
-
-                  <div class="pl-3 pr-3">
-                    <label
-                      class="mt-3 mb-3 cursor-pointer text-xs text-gray-200 flex flex-row items-center"
-                    >
-                      Source: {item?.source} · {formatDate(
-                        item?.datetime * 1000,
-                      )} ago
-                    </label>
-
-                    <a
-                      href={item?.url}
-                      target="_blank"
-                      class="text-lg font-bold text-white"
-                    >
-                      {item?.headline?.length > 120
-                        ? item?.headline?.slice(0, 120) + "..."
-                        : item?.headline}
-                    </a>
-                    <p class="text-white text-sm mt-2">
-                      {item?.summary?.length > 100
-                        ? item?.summary?.slice(0, 100) + "..."
-                        : item?.summary}
-                    </p>
-                  </div>
                 </div>
+
+                <hr class="border-gray-800 w-full m-auto mt-5 mb-5" />
               {/each}
             {/if}
           </div>

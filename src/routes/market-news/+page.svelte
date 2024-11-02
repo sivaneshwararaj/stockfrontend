@@ -111,70 +111,76 @@
     <div class="relative flex justify-center items-center overflow-hidden">
       <main>
         <div class="w-full m-auto">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="grid grid-cols-1 gap-y-3">
             {#if news.length !== 0}
               {#each news as item}
-                <div
-                  class="flex flex-col w-full mt-5 bg-[#141417] shadow-lg h-auto sm:h-[450px] xl:h-[430px] pb-10 sm:pb-5 rounded-md m-auto"
-                >
-                  {#if (videoId = checkIfYoutubeVideo(item.url))}
-                    <iframe
-                      class="w-full h-60 rounded-none sm:rounded-lg"
-                      src={`https://www.youtube.com/embed/${videoId}`}
-                      frameborder="0"
-                      allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen
-                    ></iframe>
+                <div class="w-full flex flex-col bg-[#09090B] m-auto">
+                  {#if (videoId = checkIfYoutubeVideo(item?.url))}
+                    <div class="w-full mb-4">
+                      <h3 class="text-sm text-white/80 mb-2">
+                        {formatDate(item?.publishedDate)} ago · {item?.site}
+                      </h3>
+                      <a
+                        href={item?.url}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        class="text-lg sm:text-xl font-bold text-white"
+                      >
+                        {item?.title}
+                        <p class="text-white text-sm font-normal">
+                          {item?.text}
+                        </p>
+                      </a>
+                    </div>
+                    <div class="w-full aspect-video">
+                      <iframe
+                        class="w-full h-full"
+                        src={`https://www.youtube.com/embed/${videoId}`}
+                        frameborder="0"
+                        allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                      ></iframe>
+                    </div>
                   {:else}
-                    <a href={item.url} target="_blank">
-                      <div
-                        class="h-48 sm:h-60 m-auto border border-gray-600 rounded-none sm:rounded-lg"
+                    <div class="w-full flex flex-col sm:flex-row">
+                      <a
+                        href={item?.url}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        class="w-full sm:max-w-56 h-fit max-h-96 sm:mr-3"
                       >
-                        <img
-                          src={item?.image}
-                          class="w-full object-cover h-48 sm:h-60 rounded-none sm:rounded-t-lg"
-                          alt="news image"
-                          loading="lazy"
-                        />
+                        <div class="flex-shrink-0 m-auto">
+                          <img
+                            src={item?.image}
+                            class="h-auto w-full"
+                            alt="news image"
+                            loading="lazy"
+                          />
+                        </div>
+                      </a>
+                      <div class="w-full">
+                        <h3 class="text-sm text-white/80 truncate mb-2 mt-3">
+                          {formatDate(item?.publishedDate)} ago · {item?.site}
+                        </h3>
+                        <a
+                          href={item?.url}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          class="text-lg sm:text-xl font-bold text-white"
+                        >
+                          {item?.title}
+                          <p class="text-white text-sm mt-2 font-normal">
+                            {item?.text?.length > 200
+                              ? item?.text?.slice(0, 200) + "..."
+                              : item?.text}
+                          </p>
+                        </a>
                       </div>
-                    </a>
+                    </div>
                   {/if}
-
-                  <div class="pl-3 pr-3">
-                    <label
-                      class="mt-3 mb-3 cursor-pointer text-xs text-gray-200 flex flex-row items-center"
-                    >
-                      <div
-                        class="rounded-full w-6 h-6 relative bg-gray-800 mr-1.5 mb-0.5"
-                      >
-                        <img
-                          class="rounded-full w-4 h-4 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                          src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`}
-                          loading="lazy"
-                        />
-                      </div>
-                      {item?.symbol} · {formatDate(item?.publishedDate)} ago
-                      <span class="ml-auto text-gray-300 italic text-xs mr-2">
-                        Source: {item?.site}
-                      </span>
-                    </label>
-
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      class="text-lg font-bold text-white"
-                    >
-                      {item?.title?.length > 120
-                        ? item?.title?.slice(0, 120) + "..."
-                        : item?.title}
-                    </a>
-                    <p class="text-white text-sm mt-2">
-                      {item?.text?.length > 100
-                        ? item?.text?.slice(0, 100) + "..."
-                        : item?.text}
-                    </p>
-                  </div>
                 </div>
+
+                <hr class="border-gray-800 w-full m-auto mt-5 mb-5" />
               {/each}
             {/if}
           </div>
