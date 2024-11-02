@@ -132,18 +132,6 @@
 
   let buttonText = "Top Winners";
 
-  const tabs = [
-    {
-      title: "Gainers",
-    },
-    {
-      title: "Losers",
-    },
-    {
-      title: "Active",
-    },
-  ];
-
   let activeIdx = 0;
 
   function changeSection(index) {

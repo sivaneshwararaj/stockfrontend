@@ -1,5 +1,4 @@
 <script lang="ts">
-  import * as Avatar from "$lib/components/shadcn/avatar/index.js";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
 
   import { ColorType } from "lightweight-charts";
@@ -29,7 +28,7 @@
         body: JSON.stringify(postData),
       });
 
-      stockChartData = (await response.json()) ?? {};
+      stockChartData = (await response?.json()) ?? {};
 
       setCache(ticker, stockChartData, "hoverStockChart");
     }
@@ -41,11 +40,14 @@
 
     priceData = priceData
       ?.map((item) => ({
-        time: Date.parse(item.time), // Assuming 'time' is the correct property to parse
+        time: Date?.parse(item?.time), // Assuming 'time' is the correct property to parse
         value: item?.close ?? null,
       }))
-      .filter(
-        (item) => item?.value !== 0 && item?.value != null, // Simplified condition
+      ?.filter(
+        (item) =>
+          item?.value !== 0 &&
+          item?.value !== null &&
+          item?.value !== undefined,
       );
   }
 
@@ -64,10 +66,7 @@
     }
     return path;
   }
-  const topLineColor = "#71CA96";
-  const topFillColor1 = "rgba( 38, 166, 154, 0.2)";
-  const bottomLineColor = "#FF7070";
-  const bottomFillColor1 = "rgba(239, 83, 80, 0.2)";
+  $: topLineColor = changesPercentage >= 0 ? "#71CA96" : "#FF7070";
 
   let width = $screenWidth < 640 ? 80 : 150; //= ($screenWidth <= 1200 && $screenWidth > 900) ? 360 : ($screenWidth <= 900 && $screenWidth > 700) ? 260 : ($screenWidth <= 700 && $screenWidth >=600 ) ? 200 : ($screenWidth < 600 && $screenWidth >=500 ) ? 150 : 80;
 
@@ -252,9 +251,6 @@
                     data={priceData}
                     {...theme.series}
                     {topLineColor}
-                    {topFillColor1}
-                    {bottomLineColor}
-                    {bottomFillColor1}
                   >
                     <PriceLine
                       price={priceData?.at(0)?.value}
