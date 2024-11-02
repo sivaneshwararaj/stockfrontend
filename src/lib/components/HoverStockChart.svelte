@@ -8,6 +8,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import { afterUpdate } from "svelte";
   export let symbol;
+  export let assetType = "stock";
 
   let priceData = [];
   let changesPercentage = 0;
@@ -48,6 +49,21 @@
       );
   }
 
+  function getHref(symbol: string) {
+    let path = "";
+    if (symbol?.length !== 0) {
+      if (assetType?.toLowerCase() === "stock") {
+        path = `/stocks/${symbol}`;
+      } else if (assetType?.toLowerCase() === "etf") {
+        path = `/etf/${symbol}`;
+      } else if (["BTC", "USD"]?.includes(symbol)) {
+        path = "";
+      } else {
+        path = `/crypto/${symbol}`;
+      }
+    }
+    return path;
+  }
   const topLineColor = "#71CA96";
   const topFillColor1 = "rgba( 38, 166, 154, 0.2)";
   const bottomLineColor = "#FF7070";
@@ -156,19 +172,13 @@
   });
 </script>
 
-<div on:mouseover={() => getStockData(symbol)}>
+<div on:mouseover={() => getStockData(symbol)} class="inline-block">
   <HoverCard.Root>
     <div on:mouseover>
       <HoverCard.Trigger
         class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
       >
-        <a
-          href={symbol?.length !== 0 && !["BTC", "USD"]?.includes(symbol)
-            ? `/stocks/${symbol}`
-            : symbol === "BTC"
-              ? "/crypto/BTCUSD"
-              : ""}
-          class="sm:hover:text-white text-blue-400"
+        <a href={getHref(symbol)} class="sm:hover:text-white text-blue-400"
           >{symbol?.length !== 0 ? symbol : "-"}</a
         >
       </HoverCard.Trigger>

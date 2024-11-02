@@ -5,7 +5,7 @@
     displayCompanyName,
   } from "$lib/store";
   import { Button } from "$lib/components/shadcn/button/index.js";
-  import { screenWidth, getCache, setCache } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import { abbreviateNumber, formatString } from "$lib/utils";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";

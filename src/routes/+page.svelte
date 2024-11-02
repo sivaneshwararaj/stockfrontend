@@ -8,6 +8,7 @@
   import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
   import { abbreviateNumber } from "$lib/utils";
   import * as Tabs from "$lib/components/shadcn/tabs/index.js";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
 
@@ -267,11 +268,7 @@
                   {#each gainersList as item}
                     <Table.Row>
                       <Table.Cell>
-                        <a
-                          href={`/stocks/${item?.symbol}`}
-                          class="text-sm sm:text-[1rem] font-medium text-blue-400 sm:hover:text-white transition duration-100"
-                          >{item?.symbol}</a
-                        >
+                        <HoverStockChart symbol={item?.symbol} />
                       </Table.Cell>
                       <Table.Cell
                         class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
@@ -348,11 +345,7 @@
                   {#each losersList as item}
                     <Table.Row>
                       <Table.Cell>
-                        <a
-                          href={`/stocks/${item?.symbol}`}
-                          class="text-sm sm:text-[1rem] font-medium text-blue-400 sm:hover:text-white transition duration-100"
-                          >{item?.symbol}</a
-                        >
+                        <HoverStockChart symbol={item?.symbol} />
                       </Table.Cell>
                       <Table.Cell
                         class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
@@ -469,13 +462,10 @@
                   {#each optionsTable as item}
                     <Table.Row>
                       <Table.Cell>
-                        <a
-                          href={item?.underlying_type === "stock"
-                            ? `/stocks/${item?.ticker}`
-                            : `/etf/${item?.ticker}`}
-                          class="text-sm sm:text-[1rem] font-medium text-blue-400 sm:hover:text-white transition duration-100"
-                          >{item?.ticker}</a
-                        >
+                        <HoverStockChart
+                          symbol={item?.ticker}
+                          assetType={item?.underlying_type}
+                        />
                       </Table.Cell>
                       <Table.Cell
                         class="text-right xl:table.-column text-sm sm:text-[1rem] {item?.put_call ===
@@ -537,11 +527,9 @@
               {#if data?.getDashboard?.recentDividends?.length !== 0}
                 <ul style="padding-left: 5px;">
                   {#each data?.getDashboard?.recentDividends as item}
-                    <strong>{item?.name}</strong> (<a
-                      href="/stocks/{item?.symbol}"
-                      class="sm:hover:text-white text-blue-400"
-                      >{item?.symbol}</a
-                    >) has announced its upcoming dividend details as of {convertTimestamp(
+                    <strong>{item?.name}</strong> (<HoverStockChart
+                      symbol={item?.symbol}
+                    />) has announced its upcoming dividend details as of {convertTimestamp(
                       item?.updated,
                     )}:
 
@@ -645,11 +633,9 @@
                     <li
                       style="margin-left: 8px; line-height: 22px; margin-bottom: 30px; list-style-type: disc;"
                     >
-                      <strong>{item?.name}</strong> (<a
-                        href="/stocks/{item?.symbol}"
-                        class="text-blue-400 sm:hover:text-white"
-                        >{item?.symbol}</a
-                      >)
+                      <strong>{item?.name}</strong> (<HoverStockChart
+                        symbol={item?.symbol}
+                      />)
                       {item?.isToday === true
                         ? "will report today"
                         : [
@@ -724,11 +710,9 @@
               {#if data?.getDashboard?.recentEarnings?.length !== 0}
                 <ul style="padding-left: 5px;">
                   {#each data?.getDashboard?.recentEarnings as item}
-                    <strong>{item?.name}</strong> (<a
-                      href="/stocks/{item?.symbol}"
-                      class="sm:hover:text-white text-blue-400"
-                      >{item?.symbol}</a
-                    >) has released its quarterly earnings at {formatTime(
+                    <strong>{item?.name}</strong> (<HoverStockChart
+                      symbol={item?.symbol}
+                    />) has released its quarterly earnings at {formatTime(
                       item?.time,
                     )}:
 

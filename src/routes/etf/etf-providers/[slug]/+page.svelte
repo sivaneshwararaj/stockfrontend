@@ -3,6 +3,7 @@
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { onMount } from "svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
   let rawData = data?.getETFProviderData;
@@ -226,12 +227,7 @@
                 <td
                   class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                 >
-                  <a
-                    href={"/etf/" + item?.symbol}
-                    class="sm:hover:text-white text-blue-400"
-                  >
-                    {item?.symbol}
-                  </a>
+                  <HoverStockChart symbol={item?.symbol} assetType={"etf"} />
                 </td>
 
                 <td
