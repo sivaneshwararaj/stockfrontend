@@ -75,14 +75,44 @@ function isSameDay(date1: Date, date2: Date): boolean {
 }
 
 function isDateWithinRange(dateString: string, range: string): boolean {
-  const now = new Date();
+  let now = new Date();
   const expirationDate = new Date(dateString);
+  const dayOfWeek = now.getDay();
+
+  // Special handling for "1 day" range when it's Friday, Saturday, or Sunday
+  if (
+    range.toLowerCase() === "1 day" &&
+    (dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0)
+  ) {
+    // Calculate next Monday
+    const daysUntilMonday =
+      dayOfWeek === 5
+        ? 3 // From Friday
+        : dayOfWeek === 6
+          ? 2 // From Saturday
+          : 1; // From Sunday
+
+    const monday = new Date(now);
+    monday.setDate(now.getDate() + daysUntilMonday);
+
+    // Compare with next Monday
+    return isSameDay(expirationDate, monday);
+  }
+
+  // Adjust now to Friday if it falls on a weekend (for other ranges)
+  if (dayOfWeek === 6) {
+    // Saturday
+    now.setDate(now.getDate() - 1); // Move to Friday
+  } else if (dayOfWeek === 0) {
+    // Sunday
+    now.setDate(now.getDate() - 2); // Move to Friday
+  }
+
   const timeDiff = expirationDate.getTime() - now.getTime();
   const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
   switch (range.toLowerCase()) {
     case "same day":
-      // Check if the current date and expiration date are the same
       return isSameDay(now, expirationDate);
     case "1 day":
       return daysDiff >= 0 && daysDiff <= 1;

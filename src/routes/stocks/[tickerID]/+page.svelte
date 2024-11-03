@@ -1532,12 +1532,7 @@
                 <WIIM {data} />
               </div>
 
-              <div
-                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6 {data
-                  ?.getNews?.length !== 0
-                  ? ''
-                  : 'hidden'}"
-              >
+              <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
                 <News {data} />
               </div>
             </div>
