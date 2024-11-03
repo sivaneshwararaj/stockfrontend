@@ -11,6 +11,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
 
@@ -36,6 +37,7 @@
     formattedFriday,
   ];
   let weekday = [];
+  let rawWeekday = [];
 
   let startDate = startOfWeek(currentWeek, { weekStartsOn: 1 });
   let endDate = addDays(startDate, 4);
@@ -126,6 +128,7 @@
       formattedFriday,
     ];
     weekday = [];
+    rawWeekday = [];
 
     startDate = startOfWeek(currentWeek, { weekStartsOn: 1 });
     endDate = addDays(startDate, 4);
@@ -171,8 +174,9 @@
         // Filter out entries with company name "---"
 
         // Sort and map the filtered data
-        weekday[i] = dayData?.sort((a, b) => b?.marketCap - a?.marketCap);
+        rawWeekday[i] = dayData?.sort((a, b) => b?.marketCap - a?.marketCap);
       }
+      weekday = rawWeekday;
     }
   }
 
@@ -195,8 +199,9 @@
           // Filter out entries with company name "---"
 
           // Sort and map the filtered data
-          weekday[i] = dayData?.sort((a, b) => b?.marketCap - a?.marketCap);
+          rawWeekday[i] = dayData?.sort((a, b) => b?.marketCap - a?.marketCap);
         }
+        weekday = rawWeekday;
       }
     }
   }
@@ -239,6 +244,8 @@
     release: { order: "none", type: "string" },
   };
 
+  $: originalData = rawWeekday[selectedWeekday];
+
   const sortData = (key) => {
     // Reset all other keys to 'none' except the current key
     for (const k in sortOrders) {
@@ -249,8 +256,6 @@
 
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
-
-    let originalData = weekday[selectedWeekday];
 
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
@@ -294,7 +299,7 @@
     };
 
     // Sort using the generic comparison function
-    weekday[selectedWeekday] = [...originalData].sort(compareValues);
+    weekday[selectedWeekday] = [...originalData]?.sort(compareValues);
   };
 </script>
 
@@ -478,11 +483,7 @@
                               <td
                                 class="text-blue-400 border-b-[#09090B] text-start text-sm sm:text-[1rem]"
                               >
-                                <a
-                                  href={"/stocks/" + item?.symbol}
-                                  class="sm:hover:text-white text-blue-400"
-                                  >{item?.symbol}</a
-                                >
+                                <HoverStockChart symbol={item?.symbol} />
                               </td>
 
                               <td

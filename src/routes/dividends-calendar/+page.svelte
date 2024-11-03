@@ -10,6 +10,9 @@
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
   let currentWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -34,6 +37,7 @@
     formattedFriday,
   ];
   let weekday = [];
+  let rawWeekday = [];
 
   let startDate = startOfWeek(currentWeek, { weekStartsOn: 1 });
   let endDate = addDays(startDate, 4);
@@ -123,6 +127,7 @@
       formattedFriday,
     ];
     weekday = [];
+    rawWeekday = [];
 
     startDate = startOfWeek(currentWeek, { weekStartsOn: 1 });
     endDate = addDays(startDate, 4);
@@ -168,8 +173,9 @@
         // Filter out entries with company name "---"
 
         // Sort and map the filtered data
-        weekday[i] = dayData.sort((a, b) => b.marketCap - a.marketCap);
+        rawWeekday[i] = dayData.sort((a, b) => b.marketCap - a.marketCap);
       }
+      weekday = rawWeekday;
     }
   }
 
@@ -192,8 +198,9 @@
           // Filter out entries with company name "---"
 
           // Sort and map the filtered data
-          weekday[i] = dayData.sort((a, b) => b.marketCap - a.marketCap);
+          rawWeekday[i] = dayData.sort((a, b) => b.marketCap - a.marketCap);
         }
+        weekday = rawWeekday;
       }
     }
   }
@@ -217,6 +224,82 @@
       }
     }
   }
+
+  let columns = [
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "marketCap", label: "Market Cap", align: "right" },
+    { key: "revenue", label: "Revenue", align: "right" },
+    { key: "adjDividend", label: "Cash Amount", align: "right" },
+    { key: "paymentDate", label: "Payment Date", align: "right" },
+  ];
+
+  let sortOrders = {
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    marketCap: { order: "none", type: "number" },
+    revenue: { order: "none", type: "number" },
+    adjDividend: { order: "none", type: "number" },
+    paymentDate: { order: "none", type: "date" },
+  };
+
+  $: originalData = rawWeekday[selectedWeekday];
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      weekday[selectedWeekday] = [...originalData]; // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    weekday[selectedWeekday] = [...originalData]?.sort(compareValues);
+  };
 </script>
 
 <svelte:head>
@@ -389,33 +472,7 @@
                         class="table table-sm table-compact rounded-none sm:rounded-md w-full border-[#09090B] m-auto mt-4"
                       >
                         <thead>
-                          <tr
-                            class="whitespace-nowrap border-b border-[#27272A]"
-                          >
-                            <th class="text-white font-semibold text-sm"
-                              >Symbol</th
-                            >
-                            <th class="text-white font-semibold text-sm"
-                              >Company Name</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >Market Cap</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >Revenue</th
-                            >
-
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >Cash Amount</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >Payment Date</th
-                            >
-                          </tr>
+                          <TableHeader {columns} {sortOrders} {sortData} />
                         </thead>
                         <tbody>
                           {#each day as item}
@@ -426,11 +483,7 @@
                               <td
                                 class="border-b-[#09090B] text-sm sm:text-[1rem]"
                               >
-                                <a
-                                  href={"/stocks/" + item?.symbol}
-                                  class="text-blue-400 sm:hover:text-white"
-                                  >{item?.symbol}
-                                </a>
+                                <HoverStockChart symbol={item?.symbol} />
                               </td>
 
                               <td
