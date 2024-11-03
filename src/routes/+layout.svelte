@@ -114,14 +114,7 @@
     }
   }
 
-  $: hideFooter =
-    $page.url.pathname.startsWith("/options-flow") ||
-    $page.url.pathname.startsWith("/options-zero-dte") ||
-    $page.url.pathname.startsWith("/login") ||
-    $page.url.pathname.startsWith("/etf") ||
-    $page.url.pathname.startsWith("/portfolio") ||
-    $page.url.pathname.startsWith("/hedge-funds") ||
-    $page.url.pathname.startsWith("/community");
+  $: hideFooter = $page.url.pathname.startsWith("/community");
 
   //$: hideSidebar = $page.url.pathname.startsWith('/contact') || $page.url.pathname.startsWith('/imprint') || $page.url.pathname.startsWith('/privacy-policy') || $page.url.pathname.startsWith('/terms-of-use') || $page.url.pathname.startsWith('/about') || $page.url.pathname.startsWith('/community/create-post') || $page.url.pathname.startsWith('/login') || $page.url.pathname.startsWith('/register')
 
@@ -286,13 +279,23 @@ const handleTwitchMessage = (event) => {
             class="max-w-screen w-full sm:max-w-xs bg-[#141417] overflow-y-auto text-white"
           >
             <nav class=" grid gap-6 text-lg font-medium bg-[#141417]">
-              <a href="/" class="flex items-center gap-4 px-0.5 text-white">
-                <img
-                  class="avatar w-9 sm:w-10 rounded-full"
-                  src={cloudFrontUrl + "/assets/stocknear_logo.png"}
-                />
-                Stocknear
-              </a>
+              <Sheet.Close asChild let:builder>
+                <Button
+                  builders={[builder]}
+                  class="bg-[#141417] hover:bg-[#141417] -ml-4 mr-auto"
+                >
+                  <a
+                    href="/"
+                    class="flex items-center gap-4 px-0.5 text-white text-lg font-semibold"
+                  >
+                    <img
+                      class="avatar w-9 sm:w-10 rounded-full"
+                      src={cloudFrontUrl + "/assets/stocknear_logo.png"}
+                    />
+                    Stocknear
+                  </a>
+                </Button>
+              </Sheet.Close>
 
               <Sheet.Close asChild let:builder>
                 <Button
