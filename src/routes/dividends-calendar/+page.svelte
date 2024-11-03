@@ -156,7 +156,7 @@
       },
     ];
 
-    dividendCalendar = daysOfWeek.map((day) => {
+    dividendCalendar = daysOfWeek?.map((day) => {
       return {
         name: day.name,
         data: data?.getDividendCalendar?.filter(
@@ -173,7 +173,7 @@
         // Filter out entries with company name "---"
 
         // Sort and map the filtered data
-        rawWeekday[i] = dayData.sort((a, b) => b.marketCap - a.marketCap);
+        rawWeekday[i] = dayData?.sort((a, b) => b.marketCap - a.marketCap);
       }
       weekday = rawWeekday;
     }
