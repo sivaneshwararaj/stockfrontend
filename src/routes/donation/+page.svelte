@@ -1,7 +1,6 @@
 <script>
-  import { numberOfUnreadNotification } from "$lib/store";
+  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import { goto } from "$app/navigation";
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 </script>
@@ -38,7 +37,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
@@ -192,12 +191,12 @@
                 our ability to serve you and the retail investor community.
                 <br />
                 <br />
-                <a
-                  href="https://github.com/sponsors/stocknear"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  class="text-blue-400 sm:hover:text-white">Sponsor us here</a
-                >
+                <iframe
+                  class="w-full border border-gray-600 rounded-md"
+                  src="https://github.com/sponsors/stocknear/card"
+                  title="Sponsor stocknear"
+                  height={$screenWidth < 640 ? "300" : "auto"}
+                ></iframe>
                 <br />
                 <br />
                 Your support means the world to me and helps keep Stocknear running
@@ -209,54 +208,60 @@
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           <div
-            on:click={() => goto("/pricing")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/pricing"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Pro Subscription 🔥
+                  Pro Subscription
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Upgrade now for unlimited access to all data and tools.
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/about")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/about"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  About Us ⚡
+                  About Us
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Learn more about why we're doing this here
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/contact")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/contact"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Contact Us 💬
+                  Contact Us
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Let me know if you need something
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>
