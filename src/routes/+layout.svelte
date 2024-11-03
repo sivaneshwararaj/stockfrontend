@@ -114,7 +114,14 @@
     }
   }
 
-  $: hideFooter = $page.url.pathname.startsWith("/community");
+  $: hideFooter =
+    $page.url.pathname.startsWith("/options-flow") ||
+    $page.url.pathname.startsWith("/options-zero-dte") ||
+    $page.url.pathname.startsWith("/login") ||
+    $page.url.pathname.startsWith("/etf") ||
+    $page.url.pathname.startsWith("/portfolio") ||
+    $page.url.pathname.startsWith("/hedge-funds") ||
+    $page.url.pathname.startsWith("/community");
 
   //$: hideSidebar = $page.url.pathname.startsWith('/contact') || $page.url.pathname.startsWith('/imprint') || $page.url.pathname.startsWith('/privacy-policy') || $page.url.pathname.startsWith('/terms-of-use') || $page.url.pathname.startsWith('/about') || $page.url.pathname.startsWith('/community/create-post') || $page.url.pathname.startsWith('/login') || $page.url.pathname.startsWith('/register')
 
@@ -286,7 +293,7 @@ const handleTwitchMessage = (event) => {
                 >
                   <a
                     href="/"
-                    class="flex items-center gap-4 px-0.5 text-white text-lg font-semibold"
+                    class="flex items-center gap-4 px-0.5 text-white text-[1rem] font-semibold"
                   >
                     <img
                       class="avatar w-9 sm:w-10 rounded-full"
