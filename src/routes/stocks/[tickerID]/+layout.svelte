@@ -743,7 +743,7 @@ function handleTypeOfTrade(state:string)
 
                     <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-[#09090B]"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
                     <nav
-                      class="sm:ml-4 border-b-[2px] overflow-x-scroll whitespace-nowrap"
+                      class="sm:ml-4 border-b-[2px] overflow-x-scroll md:overflow-hidden whitespace-nowrap"
                     >
                       <ul
                         class="flex flex-row items-center w-full text-sm sm:text-[1rem] text-white"

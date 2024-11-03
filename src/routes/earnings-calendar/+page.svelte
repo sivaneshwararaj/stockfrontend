@@ -276,10 +276,10 @@
           <!-- Page wrapper -->
           <div class="flex justify-center w-full m-auto h-full overflow-hidden">
             <!-- Content area -->
-            <div class="relative flex flex-col flex-1 overflow-hidden">
+            <div class="w-full overflow-x-scroll">
               <!-- Cards -->
               <div
-                class=" w-full flex flex-row justify-center m-auto items-center pl-2 pr-2 sm:pl-0 sm:pr-0"
+                class=" w-full flex flex-row justify-center m-auto items-center"
               >
                 <!-- Start Columns -->
                 <label
@@ -300,16 +300,16 @@
                 </label>
                 {#each weekday as day, index}
                   <div
-                    class="w-full {index === selectedWeekday
+                    class="w-full text-white {index === selectedWeekday
                       ? ''
                       : 'hidden sm:block'}"
                   >
                     <label
                       on:click={() => toggleDate(index)}
-                      class="w-11/12 m-auto sm:w-full cursor-pointer h-16 {index ===
+                      class=" m-auto w-full cursor-pointer h-16 {index ===
                       selectedWeekday
-                        ? 'bg-purple-600 sm:hover:bg-purple-700'
-                        : ''} rounded sm:rounded-none flex bg-[#09090B] sm:hover:bg-purple-600 transition duration-50 border border-gray-600 mb-3"
+                        ? 'bg-[#FBCE3C] text-black font-semibold'
+                        : ''} rounded-md sm:rounded-none flex bg-[#09090B] border border-gray-600 mb-3"
                     >
                       <div
                         class=" flex flex-row justify-center items-center w-full"
@@ -325,15 +325,15 @@
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             ><path
-                              fill="white"
+                              fill="black"
                               d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10l-10 10Z"
                             /></svg
                           >
                         </label>
                         <div
-                          class="flex flex-col items-center text-white truncate m-auto p-1"
+                          class="flex flex-col items-center truncate m-auto p-1"
                         >
-                          <span class="font-medium text-md"
+                          <span class="text-[1rem]"
                             >{formattedWeekday[index]}</span
                           >
                           <span class="text-[1rem] sm:text-sm m-auto pt-1 pb-1">
@@ -351,7 +351,7 @@
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             ><path
-                              fill="white"
+                              fill="black"
                               d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10l-10 10Z"
                             /></svg
                           >
@@ -382,21 +382,21 @@
                 {#if index === selectedWeekday}
                   {#if day?.length !== 0}
                     <h2 class="font-semibold text-white text-xl mt-5">
-                      {formattedWeekday[index]?.split(", ")[1]} · {day?.length} Earnings
+                      {formattedWeekday[index]?.split(", ")[1]} · {day?.length} Dividends
                     </h2>
 
                     <div class="w-full overflow-x-scroll no-scrollbar">
                       <table
-                        class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
+                        class="table table-sm table-compact rounded-none sm:rounded-md w-full border-[#09090B] m-auto mt-4"
                       >
                         <thead>
-                          <tr class="whitespace-nowrap">
-                            <th
-                              class="text-start text-white font-semibold text-sm"
+                          <tr
+                            class="whitespace-nowrap border-b border-[#27272A]"
+                          >
+                            <th class="text-white font-semibold text-sm"
                               >Symbol</th
                             >
-                            <th
-                              class="text-start text-white font-semibold text-sm"
+                            <th class="text-white font-semibold text-sm"
                               >Company Name</th
                             >
                             <th
@@ -405,44 +405,45 @@
                             >
                             <th
                               class="text-white font-semibold text-sm text-end"
-                              >Revenue Estimate</th
+                              >Revenue</th
+                            >
+
+                            <th
+                              class="text-white font-semibold text-sm text-end"
+                              >Cash Amount</th
                             >
                             <th
                               class="text-white font-semibold text-sm text-end"
-                              >EPS Estimate</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end text-end"
-                              >Earnings Time</th
+                              >Payment Date</th
                             >
                           </tr>
                         </thead>
                         <tbody>
-                          {#each day as item, index}
+                          {#each day as item}
                             <!-- row -->
                             <tr
                               class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
                             >
                               <td
-                                class="text-blue-400 border-b-[#09090B] text-start text-sm sm:text-[1rem]"
+                                class="border-b-[#09090B] text-sm sm:text-[1rem]"
                               >
                                 <a
                                   href={"/stocks/" + item?.symbol}
-                                  class="sm:hover:text-white text-blue-400"
-                                  >{item?.symbol}</a
-                                >
+                                  class="text-blue-400 sm:hover:text-white"
+                                  >{item?.symbol}
+                                </a>
                               </td>
 
                               <td
-                                class="text-white whitespace-nowrap text-sm sm:text-[1rem] border-b-[#09090B]"
+                                class="text-white border-b-[#09090B] whitespace-nowrap text-sm sm:text-[1rem]"
                               >
                                 {item?.name.length > 20
-                                  ? item?.name?.slice(0, 20) + "..."
+                                  ? item?.name.slice(0, 20) + "..."
                                   : item?.name}
                               </td>
 
                               <td
-                                class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem]"
+                                class="text-white border-b-[#09090B] text-sm text-end sm:text-[1rem]"
                               >
                                 {item?.marketCap !== null
                                   ? abbreviateNumber(item?.marketCap)
@@ -450,101 +451,35 @@
                               </td>
 
                               <td
-                                class="text-white text-end border-b-[#09090B] text-sm sm:text-[1rem]"
+                                class="text-white border-b-[#09090B] text-sm sm:text-[1rem] text-end"
                               >
-                                <div
-                                  class="flex flex-row items-center justify-end"
-                                >
-                                  <span>
-                                    {item?.revenueEst !== null
-                                      ? abbreviateNumber(item?.revenueEst)
-                                      : "-"}
-                                  </span>
-                                  {#if item?.revenueEst !== null && item?.revenueEst !== null}
-                                    {#if item?.revenueEst / item?.revenuePrior - 1 >= 0}
-                                      <span class="ml-1 text-[#22C55E]">
-                                        +{(
-                                          (item?.revenueEst /
-                                            item?.revenuePrior -
-                                            1) *
-                                          100
-                                        )?.toFixed(2)}%
-                                      </span>
-                                    {:else}
-                                      <span class="ml-1 text-[#FF2F1F]">
-                                        {(
-                                          (item?.revenueEst /
-                                            item?.revenuePrior -
-                                            1) *
-                                          100
-                                        )?.toFixed(2)}%
-                                      </span>
-                                    {/if}
-                                  {/if}
-                                </div>
+                                {item?.revenue !== null
+                                  ? abbreviateNumber(item?.revenue)
+                                  : "-"}
+                              </td>
+
+                              <td
+                                class="text-white border-b-[#09090B] text-center text-sm sm:text-[1rem] text-end"
+                              >
+                                {item?.adjDividend !== null
+                                  ? item?.adjDividend?.toFixed(3)
+                                  : "-"}
                               </td>
 
                               <td
                                 class="text-white text-end border-b-[#09090B] text-sm sm:text-[1rem]"
                               >
-                                <div
-                                  class="flex flex-row items-center justify-end"
-                                >
-                                  <span>
-                                    {item?.epsEst !== null
-                                      ? item?.epsEst?.toFixed(2)
-                                      : "-"}
-                                  </span>
-                                  {#if item?.epsEst !== null && item?.epsPrior !== null}
-                                    {#if item?.epsEst / item?.epsPrior - 1 >= 0}
-                                      <span class="ml-1 text-[#22C55E]">
-                                        +{(
-                                          (item?.epsEst / item?.epsPrior - 1) *
-                                          100
-                                        )?.toFixed(2)}%
-                                      </span>
-                                    {:else}
-                                      <span class="ml-1 text-[#FF2F1F]">
-                                        {(
-                                          (item?.epsEst / item?.epsPrior - 1) *
-                                          100
-                                        )?.toFixed(2)}%
-                                      </span>
-                                    {/if}
-                                  {/if}
-                                </div>
-                              </td>
-
-                              <td
-                                class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
-                              >
-                                {#if item?.release === "amc"}
-                                  <svg
-                                    class="w-4 h-4 inline-block mr-1"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 256 256"
-                                    ><path
-                                      fill="#70A1EF"
-                                      d="M232.13 143.64a6 6 0 0 0-6-1.49a90.07 90.07 0 0 1-112.27-112.3a6 6 0 0 0-7.49-7.48a102.88 102.88 0 0 0-51.89 36.31a102 102 0 0 0 142.84 142.84a102.88 102.88 0 0 0 36.31-51.89a6 6 0 0 0-1.5-5.99m-42 48.29a90 90 0 0 1-126-126a90.9 90.9 0 0 1 35.52-28.27a102.06 102.06 0 0 0 118.69 118.69a90.9 90.9 0 0 1-28.24 35.58Z"
-                                    /></svg
-                                  >
-                                  After Close
-                                {:else}
-                                  <svg
-                                    class="w-4 h-4 inline-block mr-1"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 256 256"
-                                    ><g fill="#FEC001"
-                                      ><path
-                                        d="M184 128a56 56 0 1 1-56-56a56 56 0 0 1 56 56Z"
-                                        opacity=".2"
-                                      /><path
-                                        d="M120 40V16a8 8 0 0 1 16 0v24a8 8 0 0 1-16 0Zm72 88a64 64 0 1 1-64-64a64.07 64.07 0 0 1 64 64Zm-16 0a48 48 0 1 0-48 48a48.05 48.05 0 0 0 48-48ZM58.34 69.66a8 8 0 0 0 11.32-11.32l-16-16a8 8 0 0 0-11.32 11.32Zm0 116.68l-16 16a8 8 0 0 0 11.32 11.32l16-16a8 8 0 0 0-11.32-11.32ZM192 72a8 8 0 0 0 5.66-2.34l16-16a8 8 0 0 0-11.32-11.32l-16 16A8 8 0 0 0 192 72Zm5.66 114.34a8 8 0 0 0-11.32 11.32l16 16a8 8 0 0 0 11.32-11.32ZM48 128a8 8 0 0 0-8-8H16a8 8 0 0 0 0 16h24a8 8 0 0 0 8-8Zm80 80a8 8 0 0 0-8 8v24a8 8 0 0 0 16 0v-24a8 8 0 0 0-8-8Zm112-88h-24a8 8 0 0 0 0 16h24a8 8 0 0 0 0-16Z"
-                                      /></g
-                                    ></svg
-                                  >
-                                  Before Open
-                                {/if}
+                                {item?.paymentDate !== null
+                                  ? new Date(item?.paymentDate)?.toLocaleString(
+                                      "en-US",
+                                      {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                        daySuffix: "2-digit",
+                                      },
+                                    )
+                                  : "-"}
                               </td>
                             </tr>
                           {/each}
@@ -560,11 +495,11 @@
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 256 256"
                         ><path
-                          fill="#a474f6"
+                          fill="#FBCE3C"
                           d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                         /></svg
                       >
-                      No Earnings available for the day.
+                      No Dividends available for the day.
                     </div>
                   {/if}
                 {/if}

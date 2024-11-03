@@ -8,7 +8,6 @@
     differenceInWeeks,
   } from "date-fns";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
-  import logo from "$lib/images/transcripts_logo.png";
   import { abbreviateNumber, listOfRelevantCountries } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
@@ -224,7 +223,7 @@
             <div class="relative flex flex-col flex-1 overflow-hidden">
               <!-- Cards -->
               <div
-                class=" w-full flex flex-row justify-center m-auto items-center pl-2 pr-2 sm:pl-0 sm:pr-0"
+                class=" w-full flex flex-row justify-center m-auto items-center"
               >
                 <!-- Start Columns -->
                 <label
@@ -245,16 +244,16 @@
                 </label>
                 {#each filterList?.length === 0 ? weekday : weekdayFiltered as day, index}
                   <div
-                    class="w-full {index === selectedWeekday
+                    class="w-full text-white {index === selectedWeekday
                       ? ''
                       : 'hidden sm:block'}"
                   >
                     <label
                       on:click={() => toggleDate(index)}
-                      class="w-11/12 m-auto sm:w-full cursor-pointer h-16 {index ===
+                      class=" m-auto w-full cursor-pointer h-16 {index ===
                       selectedWeekday
-                        ? 'bg-purple-600 sm:hover:bg-purple-700'
-                        : ''} rounded sm:rounded-none flex bg-[#09090B] sm:hover:bg-purple-600 transition duration-50 border border-gray-600 mb-3"
+                        ? 'bg-[#FBCE3C] text-black font-semibold'
+                        : ''} rounded sm:rounded-none flex bg-[#09090B] border border-gray-600 mb-3"
                     >
                       <div
                         class=" flex flex-row justify-center items-center w-full"
@@ -268,17 +267,15 @@
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             ><path
-                              fill="white"
+                              fill="black"
                               d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10l-10 10Z"
                             /></svg
                           >
                         </label>
                         <div
-                          class="flex flex-col items-center text-white truncate m-auto p-1"
+                          class="flex flex-col items-center truncate m-auto p-1"
                         >
-                          <span class="font-medium text-md"
-                            >{formattedWeekday[index]}</span
-                          >
+                          <span class="text-md">{formattedWeekday[index]}</span>
                           <span class="text-[1rem] sm:text-sm m-auto pt-1 pb-1">
                             {day?.length} Events</span
                           >
@@ -292,7 +289,7 @@
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             ><path
-                              fill="white"
+                              fill="black"
                               d="M8.025 22L6.25 20.225L14.475 12L6.25 3.775L8.025 2l10 10l-10 10Z"
                             /></svg
                           >
@@ -707,7 +704,7 @@
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 256 256"
                           ><path
-                            fill="#a474f6"
+                            fill="#FBCE3C"
                             d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                           /></svg
                         >
