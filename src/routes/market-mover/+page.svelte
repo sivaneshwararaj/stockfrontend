@@ -1,6 +1,5 @@
 <script lang="ts">
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
-  import logo from "$lib/images/top_winner_logo.png";
   import { abbreviateNumber } from "$lib/utils";
   import MiniPlot from "$lib/components/MiniPlot.svelte";
   import { onMount } from "svelte";

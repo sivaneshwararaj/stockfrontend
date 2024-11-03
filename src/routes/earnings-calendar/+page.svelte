@@ -10,9 +10,9 @@
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let currentWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
   let earningsCalendar = data?.getEarningsCalendar;
@@ -98,6 +98,7 @@
 
   async function changeWeek(state) {
     //Limit the user to go back max 4 weeks and look forward 4 weeks
+
     if (
       state === "previous" &&
       differenceInWeeks(currentWeek, today) > -maxWeeksChange
@@ -170,7 +171,7 @@
         // Filter out entries with company name "---"
 
         // Sort and map the filtered data
-        weekday[i] = dayData.sort((a, b) => b.marketCap - a.marketCap);
+        weekday[i] = dayData?.sort((a, b) => b?.marketCap - a?.marketCap);
       }
     }
   }
@@ -194,7 +195,7 @@
           // Filter out entries with company name "---"
 
           // Sort and map the filtered data
-          weekday[i] = dayData.sort((a, b) => b.marketCap - a.marketCap);
+          weekday[i] = dayData?.sort((a, b) => b?.marketCap - a?.marketCap);
         }
       }
     }
@@ -219,6 +220,82 @@
       }
     }
   }
+
+  let columns = [
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "marketCap", label: "Market Cap", align: "right" },
+    { key: "revenueEst", label: "Revenue Estimate", align: "right" },
+    { key: "epsEst", label: "EPS Estimate", align: "right" },
+    { key: "release", label: "Earnings Time", align: "right" },
+  ];
+
+  let sortOrders = {
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    marketCap: { order: "none", type: "number" },
+    revenueEst: { order: "none", type: "number" },
+    epsEst: { order: "none", type: "number" },
+    release: { order: "none", type: "string" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = weekday[selectedWeekday];
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      weekday[selectedWeekday] = [...originalData]; // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    weekday[selectedWeekday] = [...originalData].sort(compareValues);
+  };
 </script>
 
 <svelte:head>
@@ -390,32 +467,7 @@
                         class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
                       >
                         <thead>
-                          <tr class="whitespace-nowrap">
-                            <th
-                              class="text-start text-white font-semibold text-sm"
-                              >Symbol</th
-                            >
-                            <th
-                              class="text-start text-white font-semibold text-sm"
-                              >Company Name</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >Market Cap</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >Revenue Estimate</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end"
-                              >EPS Estimate</th
-                            >
-                            <th
-                              class="text-white font-semibold text-sm text-end text-end"
-                              >Earnings Time</th
-                            >
-                          </tr>
+                          <TableHeader {columns} {sortOrders} {sortData} />
                         </thead>
                         <tbody>
                           {#each day as item, index}
