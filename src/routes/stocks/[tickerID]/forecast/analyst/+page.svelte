@@ -42,8 +42,14 @@
           : "-";
       consensusRating = analystRating?.consensusRating;
       changesPercentage =
-        analystRating?.priceTarget !== ("n/a" && 0)
-          ? ((priceTarget / data?.getStockQuote?.price - 1) * 100)?.toFixed(2)
+        analystRating?.medianPriceTarget !== "n/a" &&
+        analystRating?.medianPriceTarget !== null &&
+        analystRating?.medianPriceTarget !== undefined &&
+        data?.getStockQuote?.price !== null
+          ? (
+              (analystRating.medianPriceTarget / data.getStockQuote.price - 1) *
+              100
+            )?.toFixed(2)
           : "-";
     }
     if (activeIdx === 1) {
@@ -220,7 +226,9 @@
             <div
               class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
             >
-              ${priceTarget}
+              {priceTarget !== null && priceTarget !== undefined
+                ? "$" + priceTarget
+                : "n/a"}
             </div>
           </div>
           <div
@@ -232,10 +240,12 @@
             <div
               class="mt-1 break-words font-semibold leading-8 tiny:text-lg xs:text-xl sm:text-2xl {changesPercentage >=
               0
-                ? "before:content-['+'] text-[#00FC50]"
-                : 'text-[#FF2F1F]'}"
+                ? "before:content-['+'] after:content-['%'] text-[#00FC50]"
+                : changesPercentage < 0
+                  ? "after:content-['%'] text-[#FF2F1F]"
+                  : 'text-white'}"
             >
-              {changesPercentage}%
+              {changesPercentage}
             </div>
           </div>
         </div>
