@@ -235,6 +235,10 @@ function handleTypeOfTrade(state:string)
   let PriceAlert;
 
   onMount(async () => {
+    stockTicker.set(data?.getParams?.toUpperCase());
+    assetType.set("stock");
+    displayCompanyName.set(data?.companyName);
+
     if (!data?.user) {
       LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
     } else {
