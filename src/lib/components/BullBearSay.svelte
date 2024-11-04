@@ -106,13 +106,11 @@
       </div>
 
       <!--End Header-->
-      <span
-        class="text-gray-200 text-xs sm:text-[0.915rem] italic mt-6 sm:ml-auto"
-      >
+      <span class="text-white text-xs sm:text-sm italic mt-6 sm:ml-auto">
         <label
           class="{latestInfoDate(rawData?.date)
             ? ''
-            : 'hidden'} bg-purple-600 mr-2 text-white font-medium not-italic text-xs rounded-md px-2 py-0.5"
+            : 'hidden'} text-black bg-[#FBCE3C] mr-2 font-semibold not-italic text-xs rounded px-2 py-0.5"
           >New</label
         >
         Updated {rawData?.date}

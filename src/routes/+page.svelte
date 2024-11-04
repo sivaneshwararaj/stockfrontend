@@ -195,11 +195,11 @@
       {#if Feedback}
         <Feedback {data} />
       {/if}
-
+      <!--
       <div class="text-center mb-10 relative w-fit flex justify-center m-auto">
         <a
           href="/insider-tracker"
-          class="text-white antialiased bg-[#27272A] w-full px-4 py-2 rounded-lg m-auto font-medium text-[1rem] flex items-center"
+          class="text-white antialiased bg-[#27272A] w-full px-4 py-2 rounded m-auto font-medium text-[1rem] flex items-center"
         >
           <span class="text-white sm:hover:text-blue-400"
             >Realtime Insider Tracker</span
@@ -207,12 +207,13 @@
         </a>
         <div class="absolute top-[-1.2rem] -right-5 sm:-right-8 rotate-[7deg]">
           <span
-            class="bg-[#FBCE3C] text-black text-sm sm:text-[0.9rem] rounded-xl font-semibold sm:me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300"
+            class="bg-[#FBCE3C] text-black text-sm sm:text-[0.9rem] rounded font-semibold sm:me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300"
           >
             New
           </span>
         </div>
       </div>
+      -->
 
       <h1
         class="hidden sm:block text-3xl lg:text-4xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto"
@@ -397,7 +398,7 @@
                   >
                   <a
                     href="/options-flow"
-                    class="ml-auto rounded-lg text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#FBCE3C] text-black"
+                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#FBCE3C] text-black"
                   >
                     View All
                     <ArrowUpRight
@@ -587,7 +588,7 @@
                 </ul>
               {:else}
                 <div
-                  class="text-left text-white sm:p-5 w-fit rounded-lg flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
+                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
                 >
                   <svg
                     class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
@@ -616,7 +617,7 @@
                   >
                   <a
                     href="/earnings-calendar"
-                    class="ml-auto rounded-lg text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#FBCE3C] text-black"
+                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#FBCE3C] text-black"
                   >
                     View All
                     <ArrowUpRight
@@ -673,7 +674,7 @@
                 </ul>
               {:else}
                 <div
-                  class="text-left text-white sm:p-5 w-fit rounded-lg flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
+                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
                 >
                   <svg
                     class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
@@ -752,7 +753,7 @@
                 </ul>
               {:else}
                 <div
-                  class="text-left text-white sm:p-5 w-fit rounded-lg flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
+                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
                 >
                   <svg
                     class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
