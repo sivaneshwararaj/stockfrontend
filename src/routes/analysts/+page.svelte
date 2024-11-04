@@ -342,7 +342,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -350,7 +350,7 @@
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="h-6 w-6 text-white"
+                            class="h-6 w-6 text-black"
                             ><path
                               stroke-linecap="round"
                               stroke-linejoin="round"
@@ -371,7 +371,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -379,7 +379,7 @@
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="h-6 w-6 text-white"
+                            class="h-6 w-6 text-black"
                             ><path
                               stroke-linecap="round"
                               stroke-linejoin="round"
@@ -401,7 +401,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -409,7 +409,7 @@
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="h-6 w-6 text-white"
+                            class="h-6 w-6 text-black"
                             ><path
                               stroke-linecap="round"
                               stroke-linejoin="round"
@@ -431,7 +431,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -439,7 +439,7 @@
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="h-6 w-6 text-white"
+                            class="h-6 w-6 text-black"
                             ><path
                               stroke-linecap="round"
                               stroke-linejoin="round"
