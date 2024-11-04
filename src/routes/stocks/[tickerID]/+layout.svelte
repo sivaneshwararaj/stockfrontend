@@ -13,7 +13,6 @@
     currentPrice,
     priceIncrease,
     stockTicker,
-    assetType,
     displayCompanyName,
     isOpen,
     shouldUpdatePriceChart,
@@ -235,10 +234,6 @@ function handleTypeOfTrade(state:string)
   let PriceAlert;
 
   onMount(async () => {
-    stockTicker.set(data?.getParams?.toUpperCase());
-    assetType.set("stock");
-    displayCompanyName.set(data?.companyName);
-
     if (!data?.user) {
       LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
     } else {
@@ -320,9 +315,6 @@ function handleTypeOfTrade(state:string)
 
   $: {
     if ($page?.url?.pathname && typeof window !== "undefined") {
-      stockTicker.update((value) => (value = data?.getParams?.toUpperCase()));
-      assetType.update((value) => (value = "stock"));
-      displayCompanyName.update((value) => (value = data?.companyName));
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
         statistics: "statistics",

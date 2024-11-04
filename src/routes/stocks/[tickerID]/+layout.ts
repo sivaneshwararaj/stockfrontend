@@ -3,6 +3,9 @@ import {
   isAfterMarketClose,
   isBeforeMarketOpen,
   isWeekend,
+  stockTicker,
+  displayCompanyName,
+  assetType,
 } from "$lib/store";
 
 const checkMarketHour = async () => {
@@ -50,5 +53,8 @@ const checkMarketHour = async () => {
 };
 
 export const load = async ({ params, data }) => {
+  stockTicker.set(data?.getParams?.toUpperCase());
+  assetType.set("stock");
+  displayCompanyName.set(data?.companyName);
   await checkMarketHour();
 };
