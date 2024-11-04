@@ -13,7 +13,6 @@
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let isLoaded = false;
   let rawData;
@@ -22,6 +21,7 @@
   let optionsCPI;
   let optionsGDP;
   let optionsInflation;
+  let optionsFedFundRate;
 
   let filterRule = "annual";
 
@@ -504,13 +504,92 @@
 
     return options;
   }
+
+  async function plotFedFundRate() {
+    // Get the filtered data based on the selected time period
+    let dates = [];
+    let valueList = [];
+    // Iterate over the data and extract required information
+    data?.getEconomicIndicator?.fedFundRate?.forEach((item) => {
+      dates?.push(item?.date);
+      valueList?.push(item?.value);
+    });
+
+    const options = {
+      animation: false,
+      grid: {
+        left: "2%",
+        right: "2%",
+        bottom: "2%",
+        top: "10%",
+        containLabel: true,
+      },
+      xAxis: {
+        axisLabel: {
+          color: "#fff",
+          formatter: function (value) {
+            // Assuming dates are in the format 'yyyy-mm-dd'
+            // Extract the month and day from the date string and convert the month to its abbreviated name
+            const dateParts = value.split("-");
+            const year = dateParts[0].substring(2); // Extracting the last two digits of the year
+            const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+            return `${monthNames[monthIndex]} '${year}`;
+          },
+        },
+        data: dates,
+        type: "category",
+      },
+      yAxis: [
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          axisLabel: {
+            color: "#fff", // Change label color to white
+          },
+        },
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+        },
+      ],
+      series: {
+        name: "Fed Fund Rate",
+        data: valueList,
+        type: "line",
+        areaStyle: { opacity: 0.2 },
+        smooth: true,
+        showSymbol: false,
+      },
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+      },
+    };
+
+    return options;
+  }
+
   onMount(async () => {
     rawData = data?.getEconomicIndicator?.treasury ?? {};
 
     // Run the async functions concurrently
-    [optionsData, optionsCPI, optionsGDP, optionsInflation] = await Promise.all(
-      [plotData(), plotCPI(), plotGDP(), plotInflation()],
-    );
+    [
+      optionsData,
+      optionsCPI,
+      optionsGDP,
+      optionsInflation,
+      optionsFedFundRate,
+    ] = await Promise.all([
+      plotData(),
+      plotCPI(),
+      plotGDP(),
+      plotInflation(),
+      plotFedFundRate(),
+    ]);
 
     tableList = filterEndOfYearDates(rawData);
     tableList?.sort((a, b) => new Date(b?.date) - new Date(a?.date));
@@ -551,9 +630,9 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 lg:px-3"
+  class="w-full max-w-screen-2xl overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
 >
-  <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
       <li class="text-gray-300">US Economic Indicator</li>
@@ -566,71 +645,54 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
-          <div
-            class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
-          >
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <!-- Start Column -->
-              <div>
-                <div class="flex flex-row justify-center items-center">
-                  <h1
-                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
-                  >
-                    Economic Indicators
-                  </h1>
-                </div>
-
-                <span
-                  class="text-white text-md font-medium text-center flex justify-center items-center"
-                >
-                  The indicators measure economic performance and identify
-                  growth trends.
-                </span>
-              </div>
-              <!-- End Column -->
-
-              <!-- Start Column -->
-              <div
-                class="hidden sm:block relative m-auto mb-5 mt-5 sm:mb-0 sm:mt-0"
-              >
-                <svg
-                  class="w-40 -my-5"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="5" result="glow" />
-                      <feMerge>
-                        <feMergeNode in="glow" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    fill="#1E40AF"
-                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
-                    transform="translate(100 100)"
-                    filter="url(#glow)"
-                  />
-                </svg>
-
-                <div class="z-1 absolute top-1">
-                  <img
-                    class="w-[80px] ml-10"
-                    src={cloudFrontUrl + "/assets/economic_data_logo.png"}
-                    alt="logo"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-              <!-- End Column -->
-            </div>
+          <div class="mb-6 border-b-[2px]">
+            <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
+              Economic Indicators
+            </h1>
           </div>
 
           {#if isLoaded}
-            <div class="w-screen sm:w-full m-auto mt-20 sm:mt-10 p-3">
-              <h2 class="text-2xl text-gray-200 font-bold">
+            <div
+              class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5"
+            >
+              <svg
+                class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                ><path
+                  fill="#FBCE3C"
+                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+                /></svg
+              >
+              We provide real-time and historical data on key economic indicators
+              like GDP, unemployment, and inflation, essential for tracking economic
+              performance and growth trends.
+            </div>
+
+            <div class="w-full m-auto mt-20 sm:mt-10">
+              <h2 class="text-xl sm:text-2xl text-gray-200 font-bold">
+                Federal Fund Rate
+              </h2>
+
+              <div class="text-[1rem] text-white mt-2 mb-2">
+                The federal funds rate is the interest rate at which banks lend
+                to each other overnight to maintain reserve balances. It's a
+                critical tool for U.S. monetary policy, influencing borrowing
+                costs for consumers and businesses, economic growth, and
+                inflation. Changes in the federal funds rate affect everything
+                from loan interest rates to stock market performance, making it
+                a key indicator of economic health.
+              </div>
+
+              <Lazy>
+                <div class="app w-full">
+                  <Chart {init} options={optionsFedFundRate} class="chart" />
+                </div>
+              </Lazy>
+
+              <h2
+                class="text-xl sm:text-2xl text-gray-200 font-bold mt-20 sm:mt-10"
+              >
                 Consumer Price Index (CPI)
               </h2>
 
@@ -648,7 +710,9 @@
                 </div>
               </Lazy>
 
-              <h2 class="text-2xl text-gray-200 font-bold mt-20 sm:mt-10">
+              <h2
+                class="text-xl sm:text-2xl text-gray-200 font-bold mt-20 sm:mt-10"
+              >
                 Gross Domestic Product (GDP)
               </h2>
 
@@ -666,7 +730,9 @@
                 </div>
               </Lazy>
 
-              <h2 class="text-2xl text-gray-200 font-bold mt-20 sm:mt-10">
+              <h2
+                class="text-xl sm:text-2xl text-gray-200 font-bold mt-20 sm:mt-10"
+              >
                 Unemployment Rate vs Inflation Rate
               </h2>
 
@@ -686,7 +752,9 @@
                 </div>
               </Lazy>
 
-              <h2 class="text-2xl text-gray-200 font-bold mt-20 sm:mt-10">
+              <h2
+                class="text-xl sm:text-2xl text-gray-200 font-bold mt-20 sm:mt-10"
+              >
                 Treasury Rates
               </h2>
 
@@ -917,10 +985,10 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              on:click={() => goto("/pricing")}
               class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
-              <div
+              <a
+                href="/pricing"
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -932,42 +1000,46 @@
                 <span class="text-white p-3 ml-3 mr-3">
                   Upgrade now for unlimited access to all data and tools.
                 </span>
-              </div>
+              </a>
             </div>
           {/if}
 
           <div
-            on:click={() => goto("/analysts")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/economic-calendar"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Wallstreet Analyst
+                  Economic Events
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Wall Street analyst ratings.
+                Stay updated on upcoming Economic Events worldwide.
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/politicians")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/earnings-calendar"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Congress Trading
+                  Earnings Calendar
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Congress trading insights.
+                Get the latest Earnings of companies.
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>

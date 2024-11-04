@@ -619,23 +619,24 @@
       exportList = await response.json();
 
       exportList = exportList?.map(
-        ({ time, open, high, low, close, date }) => ({
+        ({ time, open, high, low, close, date, volume }) => ({
           date: timePeriod === "max" ? time : date, // Use 'time' if timePeriod is "max", otherwise use 'date'
           open,
           high,
           low,
           close,
+          volume
         }),
       );
 
       const csvRows = [];
 
       // Add headers row
-      csvRows.push("time,open,high,low,close");
+      csvRows.push("time,open,high,low,close, volume");
 
       // Add data rows
       for (const row of exportList) {
-        const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close}`;
+        const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close},${row.volume}`;
         csvRows.push(csvRow);
       }
 

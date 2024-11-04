@@ -542,6 +542,17 @@ const handleTwitchMessage = (event) => {
                               >Economic Calendar</a
                             >
                           </Button>
+                          <Button
+                            builders={[builder]}
+                            type="submit"
+                            class="w-full bg-[#141417] hover:bg-[#141417]"
+                          >
+                            <a
+                              href="/economic-indicator"
+                              class="text-start w-full text-[1rem] text-white ml-4 mt-4"
+                              >Economic Indicator</a
+                            >
+                          </Button>
                           <!--
 
                           <Button
@@ -1053,6 +1064,11 @@ const handleTwitchMessage = (event) => {
                             href="/economic-calendar"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Economic Calendar</a
+                          >
+                          <a
+                            href="/economic-indicator"
+                            class="text-[1rem] text-white ml-4 mt-4"
+                            >Economic Indicator</a
                           >
                           <!--
                           <a
