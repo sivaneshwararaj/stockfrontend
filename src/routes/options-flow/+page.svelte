@@ -363,8 +363,8 @@
 
   let audio;
   let muted = false;
-  let newIncomingData = false;
-  let previousCallVolume = 0; //This is needed to play the sound only if it changes.
+  let newData = [];
+  let previousVolume = 0; //This is needed to play the sound only if it changes.
   let notFound = false;
   let isLoaded = false;
   let mode = $isOpen === true ? true : false;
@@ -457,7 +457,7 @@ function sendMessage(message) {
 */
 
   async function websocketRealtimeData() {
-    let newData = [];
+    newData = [];
     try {
       socket = new WebSocket(data?.wsURL + "/options-flow-reader");
       /*
@@ -468,7 +468,7 @@ function sendMessage(message) {
     */
 
       socket.addEventListener("message", (event) => {
-        previousCallVolume = displayCallVolume ?? 0;
+        previousVolume = displayCallVolume + displayPutVolume || 0;
         if (mode === true) {
           try {
             newData = JSON.parse(event.data) ?? [];
@@ -479,7 +479,13 @@ function sendMessage(message) {
               if (newData?.length > rawData?.length) {
                 rawData = newData;
                 displayedData = rawData;
-                if (!muted) {
+
+                newData = [];
+                if (
+                  !muted &&
+                  ruleOfList?.length === 0 &&
+                  filterQuery?.length === 0
+                ) {
                   audio?.play();
                 }
               }
@@ -804,7 +810,7 @@ function sendMessage(message) {
         ruleToUpdate.value = valueMappings[ruleToUpdate.name];
         ruleToUpdate.condition = ruleCondition[ruleToUpdate.name];
         ruleOfList = [...ruleOfList];
-        shouldLoadWorker.set(true);
+        //shouldLoadWorker.set(true);
       }
     }
   }
@@ -927,6 +933,23 @@ function sendMessage(message) {
 
     // Sort using the appropriate comparison function
     displayedData = originalData.sort(compareFunctions[key]);
+  }
+
+  $: {
+    if (
+      previousVolume !== displayCallVolume + displayPutVolume &&
+      typeof window !== "undefined" &&
+      newData?.length !== 0
+    ) {
+      if (
+        !muted &&
+        mode &&
+        (ruleOfList?.length !== 0 || filterQuery?.length !== 0)
+      ) {
+        audio?.play();
+        console.log("sound for filtered list");
+      }
+    }
   }
 </script>
 

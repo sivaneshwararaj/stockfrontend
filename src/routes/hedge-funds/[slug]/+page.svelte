@@ -27,43 +27,43 @@
     let path;
     switch (sector) {
       case "Financials":
-        path = "financial-sector";
+        path = "financial";
         break;
       case "Healthcare":
-        path = "healthcare-sector";
+        path = "healthcare";
         break;
       case "Information Technology":
-        path = "technology-sector";
+        path = "technology";
         break;
       case "Technology":
-        path = "technology-sector";
+        path = "technology";
         break;
       case "Financial Services":
-        path = "financial-sector";
+        path = "financial";
         break;
       case "Industrials":
-        path = "industrials-sector";
+        path = "industrials";
         break;
       case "Energy":
-        path = "energy-sector";
+        path = "energy";
         break;
       case "Utilities":
-        path = "utilities-sector";
+        path = "utilities";
         break;
       case "Consumer Cyclical":
-        path = "consumer-cyclical-sector";
+        path = "consumer-cyclical";
         break;
       case "Real Estate":
-        path = "real-estate-sector";
+        path = "real-estate";
         break;
       case "Basic Materials":
-        path = "basic-materials-sector";
+        path = "basic-materials";
         break;
       case "Communication Services":
-        path = "communication-services-sector";
+        path = "communication-services";
         break;
       case "Consumer Defensive":
-        path = "consumer-defensive-sector";
+        path = "consumer-defensive";
         break;
       default:
         // Handle default case if needed
@@ -693,13 +693,13 @@
                     </thead>
                     <tbody>
                       {#each rawData?.topSectors as item}
-                        {#each Object.entries(item) as [name, value]}
+                        {#each Object?.entries(item) as [name, value]}
                           <tr
                             class="text-white sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#141417] border-b border-[#141417]"
                           >
                             <td class="text-[1rem] whitespace-nowrap">
                               <a
-                                href={"/list/" + sectorSelector(name)}
+                                href={"/list/sector/" + sectorSelector(name)}
                                 class="text-blue-400 sm:hover:text-white"
                               >
                                 {name}
