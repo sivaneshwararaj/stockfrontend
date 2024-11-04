@@ -81,7 +81,7 @@
                   href={`/stocks/${$stockTicker}/financials/cash-flow`}
                   on:click={() => changeSubSection("cash-flow")}
                   class="p-2 px-5 cursor-pointer {displaySubSection ===
-                  'cash-flowt'
+                  'cash-flow'
                     ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
                     : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
                 >
