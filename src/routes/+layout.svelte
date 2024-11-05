@@ -136,7 +136,7 @@
     notificationList = output?.notificationList;
     hasUnreadElement = output?.hasUnreadElement;
     //const unreadNotificationList = output?.unreadNotificationList;
-    $numberOfUnreadNotification = output?.numberOfUnreadNotification;
+    $numberOfUnreadNotification = output?.numberOfUnreadNotification?.length;
     //pushNotification()
   };
 
@@ -163,18 +163,19 @@ const handleTwitchMessage = (event) => {
     // Implement fallback logic here, e.g., using timers or other techniques
     console.log("Fallback worker activated");
 
-    const postData = { userId: data?.user?.id };
     const response = await fetch("/api/get-notifications", {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(postData),
     });
 
-    notificationList = (await response.json())?.items;
-    hasUnreadElement = notificationList?.length !== 0 ? true : false;
-    $numberOfUnreadNotification = notificationList?.length;
+    notificationList = await response.json();
+    const numberOfUnreadNotification = notificationList.filter(
+      (item?) => !item?.readed,
+    );
+    hasUnreadElement = numberOfUnreadNotification?.length !== 0 ? true : false;
+    $numberOfUnreadNotification = numberOfUnreadNotification?.length;
   }
 
   let Cookie;

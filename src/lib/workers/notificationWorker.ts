@@ -1,28 +1,27 @@
 // lib/workers/test.ts
 
-async function loadNotifications(userId: string) {
-  const postData = { userId: userId };
-
+async function loadNotifications() {
   const response = await fetch("/api/get-notifications", {
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(postData),
   });
 
-  const output = (await response.json())?.items;
+  const output = await response.json();
+
   return output;
 }
 
 onmessage = async (event: MessageEvent) => {
   const data = event.data?.message;
-  const userId = data?.userId;
   try {
-    const [notificationList] = await Promise.all([loadNotifications(userId)]);
-
-    const numberOfUnreadNotification = notificationList?.length;
-    const hasUnreadElement = notificationList?.length !== 0 ? true : false;
+    const [notificationList] = await Promise.all([loadNotifications()]);
+    const numberOfUnreadNotification = notificationList.filter(
+      (item?) => !item?.readed,
+    );
+    const hasUnreadElement =
+      numberOfUnreadNotification?.length !== 0 ? true : false;
     const output = {
       notificationList,
       hasUnreadElement,
