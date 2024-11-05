@@ -3,6 +3,8 @@
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
@@ -226,7 +228,7 @@
             <TableHeader {columns} {sortOrders} {sortData} />
           </thead>
           <tbody>
-            {#each marketCapList as item, index}
+            {#each marketCapList as item}
               <!-- row -->
               <tr
                 class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
@@ -238,14 +240,9 @@
                 </td>
 
                 <td
-                  class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                  class="text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                 >
-                  <a
-                    href={"/stocks/" + item?.symbol}
-                    class="sm:hover:text-white text-blue-400"
-                  >
-                    {item?.symbol}
-                  </a>
+                  <HoverStockChart symbol={item?.symbol} />
                 </td>
 
                 <td
