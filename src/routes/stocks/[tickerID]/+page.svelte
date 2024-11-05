@@ -43,7 +43,7 @@
 
   $: previousClose = data?.getStockQuote?.previousClose;
   //============================================//
-  const intervals = ["1D", "1W", "1M", "1Y", "MAX"];
+  const intervals = ["1D", "1W", "1M", "6M", "1Y", "MAX"];
 
   let chart = null;
   async function checkChart() {
@@ -60,66 +60,85 @@
   $: {
     if (output !== null) {
       let change;
-      let formattedDate;
-      let safeFormattedDate;
+      let currentDataRow;
+      let baseClose;
 
-      if (displayData === "1D") {
-        const length = oneDayPrice?.length;
-        for (let i = length - 1; i >= 0; i--) {
-          if (!isNaN(oneDayPrice[i]?.close)) {
-            currentDataRow = oneDayPrice[i];
-            break;
+      // Determine current data row and base close price based on displayData
+      switch (displayData) {
+        case "1D":
+          const length = oneDayPrice?.length;
+          for (let i = length - 1; i >= 0; i--) {
+            if (!isNaN(oneDayPrice[i]?.close)) {
+              currentDataRow = oneDayPrice[i];
+              break;
+            }
           }
-        }
+          baseClose = previousClose;
+          break;
+
+        case "1W":
+          currentDataRow = oneWeekPrice?.at(-1); // Latest entry for 1 week
+          baseClose = oneWeekPrice?.[0]?.close;
+          break;
+
+        case "1M":
+          currentDataRow = oneMonthPrice?.at(-1); // Latest entry for 1 month
+          baseClose = oneMonthPrice?.[0]?.close;
+          break;
+
+        case "6M":
+          currentDataRow = sixMonthPrice?.at(-1); // Latest entry for 6 months
+          baseClose = sixMonthPrice?.[0]?.close;
+          break;
+
+        case "1Y":
+          currentDataRow = oneYearPrice?.at(-1); // Latest entry for 1 year
+          baseClose = oneYearPrice?.[0]?.close;
+          break;
+
+        case "MAX":
+          currentDataRow = maxPrice?.at(-1); // Latest entry for MAX range
+          baseClose = maxPrice?.[0]?.close;
+          break;
       }
 
-      if ($realtimePrice !== null) {
-        change = (($realtimePrice / previousClose - 1) * 100).toFixed(2);
-      } else {
-        change =
-          displayData === "1D"
-            ? ((currentDataRow?.close ?? currentDataRow?.value) /
-                previousClose -
-                1) *
-              100
-            : ((currentDataRow?.close ?? currentDataRow?.value) /
-                displayLastLogicalRangeValue -
-                1) *
-              100;
-        change = change.toFixed(2);
+      // Calculate percentage change if baseClose and currentDataRow are valid
+      const closeValue =
+        displayData === "1D" &&
+        !$isCrosshairMoveActive &&
+        $realtimePrice !== null
+          ? $realtimePrice
+          : (currentDataRow?.close ?? currentDataRow?.value);
+
+      if (closeValue && baseClose) {
+        change = ((closeValue / baseClose - 1) * 100).toFixed(2);
       }
 
-      const date = new Date(currentDataRow?.time * 1000);
+      // Format date
+      const date = new Date(currentDataRow?.time);
       const options = {
         day: "2-digit",
-        month: "short",
+        month:
+          displayData === "1D" || displayData === "1W" || displayData === "1M"
+            ? "short"
+            : "numeric",
         year: "numeric",
         hour: "numeric",
         minute: "2-digit",
-        timeZone: "UTC",
       };
 
-      formattedDate =
-        displayData === "1D" || displayData === "1W" || displayData === "1M"
-          ? date.toLocaleString("en-US", options)
-          : date.toLocaleDateString("en-US", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            });
+      const formattedDate = !isNaN(date)
+        ? date.toLocaleString("en-US", options)
+        : convertTimestamp(data?.getStockQuote?.timestamp);
 
-      safeFormattedDate =
-        formattedDate === "Invalid Date"
-          ? convertTimestamp(data?.getStockQuote?.timestamp)
-          : formattedDate;
-
+      // Set display legend
       displayLegend = {
         close:
-          currentDataRow?.value === "-" && currentDataRow?.close === undefined
-            ? data?.getStockQuote?.price
-            : (currentDataRow?.close ?? currentDataRow?.value),
-        date: safeFormattedDate,
-        change: change,
+          currentDataRow?.value ??
+          currentDataRow?.close ??
+          data?.getStockQuote?.price,
+        date: formattedDate,
+        change,
       };
     }
   }
