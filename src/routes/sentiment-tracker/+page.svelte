@@ -10,9 +10,8 @@
 
   export let data;
 
-  let isLoaded = false;
-  let rawData = [];
-  let stockList = [];
+  let rawData = data?.getSentimentTracker ?? [];
+  let stockList = rawData?.slice(0, 50) ?? [];
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -25,11 +24,6 @@
   }
 
   onMount(() => {
-    rawData = data?.getSentimentTracker ?? [];
-    stockList = rawData?.slice(0, 50) ?? [];
-
-    isLoaded = true;
-
     if (data?.user?.tier === "Pro") {
       window.addEventListener("scroll", handleScroll);
       return () => {
@@ -171,139 +165,126 @@
             </h1>
           </div>
 
-          {#if isLoaded}
-            <div
-              class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5"
+          <div
+            class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5"
+          >
+            <svg
+              class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256 256"
+              ><path
+                fill="#FBCE3C"
+                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+              /></svg
             >
-              <svg
-                class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 256 256"
-                ><path
-                  fill="#FBCE3C"
-                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                /></svg
-              >
-              We update our data in realtime to provide you with the latest trends
-              and the most bullish stocks being discussed on Twitter and StockTwits
-            </div>
+            We update our data in realtime to provide you with the latest trends
+            and the most bullish stocks being discussed on Twitter and StockTwits
+          </div>
 
-            <div class="w-screen sm:w-full m-auto mt-20 sm:mt-10">
-              <div
-                class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+          <div class="w-screen sm:w-full m-auto mt-20 sm:mt-10">
+            <div
+              class="w-screen sm:w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+            >
+              <table
+                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
               >
-                <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
-                >
-                  <thead>
-                    <TableHeader {columns} {sortOrders} {sortData} />
-                  </thead>
-                  <tbody>
-                    {#each stockList as item, index}
-                      <tr
-                        class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index +
-                          1 ===
-                          stockList?.length && data?.user?.tier !== 'Pro'
-                          ? 'opacity-[0.1]'
-                          : ''}"
+                <thead>
+                  <TableHeader {columns} {sortOrders} {sortData} />
+                </thead>
+                <tbody>
+                  {#each stockList as item, index}
+                    <tr
+                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index +
+                        1 ===
+                        stockList?.length && data?.user?.tier !== 'Pro'
+                        ? 'opacity-[0.1]'
+                        : ''}"
+                    >
+                      <td
+                        class="text-white text-sm sm:text-[1rem] font-medium text-white text-end"
                       >
-                        <td
-                          class="text-white text-sm sm:text-[1rem] font-medium text-white text-end"
-                        >
-                          {item?.rank}
-                        </td>
+                        {item?.rank}
+                      </td>
 
-                        <td class="text-sm sm:text-[1rem] text-start">
-                          <HoverStockChart symbol={item?.symbol} />
-                        </td>
+                      <td class="text-sm sm:text-[1rem] text-start">
+                        <HoverStockChart symbol={item?.symbol} />
+                      </td>
 
-                        <td
-                          class="whitespace-nowrap text-white text-sm sm:text-[1rem] text-white text-start"
-                        >
-                          {item?.name?.length > charNumber
-                            ? item?.name?.slice(0, charNumber) + "..."
-                            : item?.name}
-                        </td>
+                      <td
+                        class="whitespace-nowrap text-white text-sm sm:text-[1rem] text-white text-start"
+                      >
+                        {item?.name?.length > charNumber
+                          ? item?.name?.slice(0, charNumber) + "..."
+                          : item?.name}
+                      </td>
 
-                        <td
-                          class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap"
-                        >
-                          {abbreviateNumber(item?.marketCap)}
-                        </td>
+                      <td
+                        class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap"
+                      >
+                        {abbreviateNumber(item?.marketCap)}
+                      </td>
 
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
-                        >
-                          {item?.price}
-                        </td>
+                      <td
+                        class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
+                      >
+                        {item?.price}
+                      </td>
 
-                        <td
-                          class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >=
-                          0
-                            ? 'text-[#00FC50]'
-                            : 'text-[#FF2F1F]'} text-end"
-                        >
-                          {item?.changesPercentage > 0
-                            ? "+"
-                            : ""}{item?.changesPercentage}%
-                        </td>
+                      <td
+                        class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage >=
+                        0
+                          ? 'text-[#00FC50]'
+                          : 'text-[#FF2F1F]'} text-end"
+                      >
+                        {item?.changesPercentage > 0
+                          ? "+"
+                          : ""}{item?.changesPercentage}%
+                      </td>
 
-                        <td
-                          class="text-end text-sm sm:text-[1rem] font-medium whitespace-nowrap {item?.sentiment >=
-                          55
-                            ? 'text-[#00FC50]'
-                            : item?.sentiment >= 50
-                              ? 'text-[#E57C34]'
-                              : 'text-[#FF2F1F]'}"
-                        >
-                          <div class="flex flex-row items-center justify-end">
-                            <div class="">
-                              {item?.sentiment >= 80
-                                ? "Very Bullish"
-                                : item?.sentiment >= 55
-                                  ? "Bullish"
-                                  : item?.sentiment > 50
-                                    ? "Mixed"
-                                    : "Bearish"}
-                            </div>
-                            <div
-                              class="ml-2 px-1.5 py-1.5 border text-center rounded-lg text-xs font-semibold"
-                            >
-                              {item?.sentiment}
-                            </div>
+                      <td
+                        class="text-end text-sm sm:text-[1rem] font-medium whitespace-nowrap {item?.sentiment >=
+                        55
+                          ? 'text-[#00FC50]'
+                          : item?.sentiment >= 50
+                            ? 'text-[#E57C34]'
+                            : 'text-[#FF2F1F]'}"
+                      >
+                        <div class="flex flex-row items-center justify-end">
+                          <div class="">
+                            {item?.sentiment >= 80
+                              ? "Very Bullish"
+                              : item?.sentiment >= 55
+                                ? "Bullish"
+                                : item?.sentiment > 50
+                                  ? "Mixed"
+                                  : "Bearish"}
                           </div>
-                        </td>
-                      </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-              <UpgradeToPro
-                {data}
-                title="Get the latest stock trends from social media to never miss out the next hype"
-              />
+                          <div
+                            class="ml-2 px-1.5 py-1.5 border text-center rounded-lg text-xs font-semibold"
+                          >
+                            {item?.sentiment}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
             </div>
-          {:else}
-            <div class="flex justify-center items-center h-80">
-              <div class="relative">
-                <label
-                  class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                >
-                  <span class="loading loading-spinner loading-md text-gray-400"
-                  ></span>
-                </label>
-              </div>
-            </div>
-          {/if}
+            <UpgradeToPro
+              {data}
+              title="Get the latest stock trends from social media to never miss out the next hype"
+            />
+          </div>
         </main>
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              on:click={() => goto("/pricing")}
               class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
-              <div
+              <a
+                href="/pricing"
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -315,15 +296,17 @@
                 <span class="text-white p-3 ml-3 mr-3">
                   Upgrade now for unlimited access to all data and tools.
                 </span>
-              </div>
+              </a>
             </div>
           {/if}
 
           <div
-            on:click={() => goto("/cramer-tracker")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="cramer-tracker"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Cramer Tracker
@@ -333,14 +316,16 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Follow Jim Cramer latest stock picks
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/reddit-tracker")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/reddit-tracker"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
                   Reddit Tracker
@@ -350,7 +335,7 @@
               <span class="text-white p-3 ml-3 mr-3">
                 Get the latest trends of r/Wallstreetbets
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>
