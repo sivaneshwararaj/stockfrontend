@@ -56,6 +56,7 @@
     { key: "marketCap", label: "Market Cap", align: "right" },
     { key: "price", label: "Price", align: "right" },
     { key: "changesPercentage", label: "% Change", align: "right" },
+    { key: "totalShares", label: "Shares", align: "right" },
     { key: "avgValue", label: "Avg. Value", align: "right" },
   ];
 
@@ -66,6 +67,7 @@
     marketCap: { order: "none", type: "number" },
     price: { order: "none", type: "number" },
     changesPercentage: { order: "none", type: "number" },
+    totalShares: { order: "none", type: "number" },
     avgValue: { order: "none", type: "number" },
   };
 
@@ -178,7 +180,7 @@
         <main class="w-full lg:w-3/4 lg:pr-5">
           <div class="mb-6 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
-              Unusual Insider Tracker
+              Insider Tracker
             </h1>
           </div>
 
@@ -258,6 +260,12 @@
                           {item?.changesPercentage > 0
                             ? "+"
                             : ""}{item?.changesPercentage}%
+                        </td>
+
+                        <td
+                          class="text-end text-sm sm:text-[1rem] font-medium text-white whitespace-nowrap"
+                        >
+                          {abbreviateNumber(item?.totalShares)}
                         </td>
 
                         <td
