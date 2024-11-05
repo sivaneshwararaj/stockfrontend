@@ -964,8 +964,8 @@
                 class="mb-4 px-0.5 text-base leading-relaxed text-white xs:text-[1.05rem] lg:leading-normal"
                 data-test="statistics-text"
               >
-                {#if rawData?.medianPriceTarget && rawData?.upside && rawData?.analystRating}
-                  The average price target for {$stockTicker} is ${rawData?.medianPriceTarget},
+                {#if rawData?.priceTarget && rawData?.upside && rawData?.analystRating}
+                  The average price target for {$stockTicker} is ${rawData?.priceTarget},
                   which is {rawData?.upside}% {rawData?.upside > 0
                     ? "higher"
                     : "lower"} than the current price. The consensus rating is "{rawData?.analystRating}".
@@ -982,8 +982,8 @@
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="$197.17"
-                      >{rawData?.medianPriceTarget !== null
-                        ? "$" + rawData?.medianPriceTarget
+                      >{rawData?.priceTarget !== null
+                        ? "$" + rawData?.priceTarget
                         : "n/a"}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
