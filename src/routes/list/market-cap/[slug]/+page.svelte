@@ -296,7 +296,7 @@
                 <td
                   class="text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                 >
-                 <HoverStockChart symbol={item?.symbol} />
+                  <HoverStockChart symbol={item?.symbol} />
                 </td>
 
                 <td
