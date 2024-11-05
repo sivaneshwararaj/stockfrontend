@@ -42,7 +42,6 @@
   let stockDeck = {};
 
   $: previousClose = data?.getStockQuote?.previousClose;
-  let latestChangePercentage = 0;
   //============================================//
   const intervals = ["1D", "1W", "1M", "1Y", "MAX"];
 
@@ -60,8 +59,9 @@
 
   $: {
     if (output !== null) {
-      //Bug value is NaN
       let change;
+      let formattedDate;
+      let safeFormattedDate;
 
       if (displayData === "1D") {
         const length = oneDayPrice?.length;
@@ -73,29 +73,23 @@
         }
       }
 
-      //currentDataRow = oneWeekPrice.slice(-1)[0]
-      if (!$isCrosshairMoveActive && $realtimePrice !== null) {
-        change = (($realtimePrice / previousClose - 1) * 100)?.toFixed(2);
+      if ($realtimePrice !== null) {
+        change = (($realtimePrice / previousClose - 1) * 100).toFixed(2);
       } else {
-        latestChangePercentage = (
-          ((currentDataRow?.close ?? currentDataRow?.value) / previousClose -
-            1) *
-          100
-        )?.toFixed(2);
-
         change =
           displayData === "1D"
-            ? latestChangePercentage
-            : (
-                ((currentDataRow?.close ?? currentDataRow?.value) /
-                  displayLastLogicalRangeValue -
-                  1) *
-                100
-              )?.toFixed(2);
+            ? ((currentDataRow?.close ?? currentDataRow?.value) /
+                previousClose -
+                1) *
+              100
+            : ((currentDataRow?.close ?? currentDataRow?.value) /
+                displayLastLogicalRangeValue -
+                1) *
+              100;
+        change = change.toFixed(2);
       }
 
       const date = new Date(currentDataRow?.time * 1000);
-
       const options = {
         day: "2-digit",
         month: "short",
@@ -105,8 +99,7 @@
         timeZone: "UTC",
       };
 
-      //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      const formattedDate =
+      formattedDate =
         displayData === "1D" || displayData === "1W" || displayData === "1M"
           ? date.toLocaleString("en-US", options)
           : date.toLocaleDateString("en-US", {
@@ -115,10 +108,11 @@
               year: "numeric",
             });
 
-      const safeFormattedDate =
+      safeFormattedDate =
         formattedDate === "Invalid Date"
           ? convertTimestamp(data?.getStockQuote?.timestamp)
           : formattedDate;
+
       displayLegend = {
         close:
           currentDataRow?.value === "-" && currentDataRow?.close === undefined
@@ -625,7 +619,7 @@
           high,
           low,
           close,
-          volume
+          volume,
         }),
       );
 
@@ -813,10 +807,10 @@
 
               <div class="flex flex-row items-center w-full">
                 <span
-                  class="items-center justify-start {latestChangePercentage > 0
+                  class="items-center justify-start {displayLegend?.change > 0
                     ? "before:content-['+'] text-[#00FC50]"
                     : 'text-[#FF2F1F]'} font-medium text-xs sm:text-sm"
-                  >{latestChangePercentage}%</span
+                  >{displayLegend?.change ?? "-"}%</span
                 >
 
                 <span class="ml-3 text-white text-xs sm:text-sm"
