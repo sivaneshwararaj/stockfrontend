@@ -347,7 +347,7 @@ const handleTwitchMessage = (event) => {
                               >Top Analyst</a
                             >
                           </Button>
-                          <!--
+
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -359,7 +359,7 @@ const handleTwitchMessage = (event) => {
                               >Top Analyst Stocks</a
                             >
                           </Button>
-                          -->
+
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -964,13 +964,13 @@ const handleTwitchMessage = (event) => {
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Top Analyst</a
                           >
-                          <!--
+
                           <a
                             href="/analysts/top-stocks"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Top Analyst Stocks</a
                           >
-                            -->
+
                           <a
                             href="/most-shorted-stocks"
                             class="text-[1rem] text-white ml-4 mt-4"
