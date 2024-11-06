@@ -158,7 +158,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full overflow-hidden m-auto">
+<section class="w-full overflow-hidden m-auto min-h-screen">
   <div class="flex justify-center w-full m-auto overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
