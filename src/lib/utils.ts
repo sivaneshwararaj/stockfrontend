@@ -1307,17 +1307,6 @@ export const getLastTradingDay = () => {
   const nyDate = new Date(
     date.toLocaleString("en-US", { timeZone: etTimeZone }),
   );
-  const currentHour = nyDate.getHours();
-  const currentMinutes = nyDate.getMinutes();
-  const isMarketClosed =
-    currentHour < 9 ||
-    (currentHour === 9 && currentMinutes < 30) ||
-    currentHour >= 16;
-
-  // If market is closed, move to the previous day
-  if (isMarketClosed) {
-    nyDate.setDate(nyDate.getDate() - 1);
-  }
 
   // Loop backwards to find the most recent trading day
   while (true) {
