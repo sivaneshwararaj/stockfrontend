@@ -241,7 +241,7 @@
                       ? "Top"
                       : marketStatus === 1
                         ? "Pre-Market"
-                        : "After-Market"} Gainers</Card.Title
+                        : "Afterhours"} Gainers</Card.Title
                   >
                 </div>
               </div>
@@ -318,7 +318,7 @@
                       ? "Top"
                       : marketStatus === 1
                         ? "Pre-Market"
-                        : "After-Market"} Losers</Card.Title
+                        : "Afterhours"} Losers</Card.Title
                   >
                 </div>
               </div>

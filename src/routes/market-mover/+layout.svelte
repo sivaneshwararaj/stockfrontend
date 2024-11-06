@@ -18,44 +18,17 @@
       title: "Active",
       path: "/market-mover/active",
     },
+    {
+      title: "Pre-Market",
+      path: "/market-mover/premarket",
+    },
+    {
+      title: "After-Hours",
+      path: "/market-mover/afterhours",
+    },
   ];
 
   let activeIdx = 0;
-  let timePeriod = "1D";
-  let buttonText = "Top Winners";
-
-  function changeSection(index) {
-    activeIdx = index;
-    sortOrders = {
-      symbol: { order: "none", type: "string" },
-      name: { order: "none", type: "string" },
-      changesPercentage: { order: "none", type: "number" },
-      price: { order: "none", type: "number" },
-      marketCap: { order: "none", type: "number" },
-      volume: { order: "none", type: "number" },
-    };
-    if (index === 0) {
-      gainerLoserActive = outputList?.gainers[timePeriod];
-      buttonText = "Top Winners";
-    } else if (index === 1) {
-      gainerLoserActive = outputList?.losers[timePeriod];
-      buttonText = "Top Losers";
-    } else if (index === 2) {
-      gainerLoserActive = outputList?.active[timePeriod];
-      buttonText = "Most Active";
-    }
-  }
-
-  function selectTimeInterval(state) {
-    timePeriod = state;
-    if (buttonText === "Top Winners") {
-      gainerLoserActive = outputList?.gainers[timePeriod];
-    } else if (buttonText === "Top Losers") {
-      gainerLoserActive = outputList?.losers[timePeriod];
-    } else if (buttonText === "Most Active") {
-      gainerLoserActive = outputList?.active[timePeriod];
-    }
-  }
 
   // Subscribe to the $page store to reactively update the activeIdx based on the URL
   $: if ($page.url.pathname === "/market-mover") {
@@ -64,6 +37,10 @@
     activeIdx = 1;
   } else if ($page.url.pathname.startsWith("/market-mover/active")) {
     activeIdx = 2;
+  } else if ($page.url.pathname.startsWith("/market-mover/premarket")) {
+    activeIdx = 3;
+  } else if ($page.url.pathname.startsWith("/market-mover/afterhours")) {
+    activeIdx = 4;
   }
 </script>
 
