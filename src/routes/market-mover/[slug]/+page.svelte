@@ -2,6 +2,7 @@
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber, getLastTradingDay } from "$lib/utils";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { goto } from "$app/navigation";
 
   import { afterUpdate } from "svelte";
@@ -314,12 +315,7 @@
                     <td
                       class="border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
                     >
-                      <a
-                        href={"/stocks/" + item?.symbol}
-                        class="sm:hover:text-white text-blue-400"
-                      >
-                        {item?.symbol}
-                      </a>
+                      <HoverStockChart symbol={item?.symbol} />
                     </td>
                     <td
                       class="border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white"
