@@ -56,7 +56,7 @@
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
-      <li class="text-gray-300">Market News</li>
+      <li class="text-gray-300">Market Mover</li>
     </ul>
   </div>
 
@@ -67,7 +67,7 @@
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
           <h1 class="mb-6 text-white text-2xl sm:text-3xl font-bold">
-            Stock Market News
+            Market Mover
           </h1>
 
           <nav class="border-b-[2px] overflow-x-scroll whitespace-nowrap">

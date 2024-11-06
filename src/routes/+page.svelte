@@ -236,13 +236,29 @@
               <div class="flex flex-col items-start w-full">
                 <div class="flex flex-row w-full items-center">
                   <Card.Title
-                    class="text-xl sm:text-2xl tex-white font-semibold"
-                    >{marketStatus === 0
-                      ? "Top"
-                      : marketStatus === 1
-                        ? "Pre-Market"
-                        : "Afterhours"} Gainers</Card.Title
-                  >
+                    ><a
+                      href={`/market-mover/${marketStatus === 0 ? "" : marketStatus === 1 ? "premarket" : "afterhours"}`}
+                      class="text-xl sm:text-2xl tex-white font-semibold cursor-pointer sm:hover:underline sm:hover:underline-offset-4"
+                    >
+                      {marketStatus === 0
+                        ? "Top"
+                        : marketStatus === 1
+                          ? "Pre-Market"
+                          : "Afterhours"} Gainers
+                      <svg
+                        class="h-5 w-5 inline-block"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        style="max-width:40px"
+                        aria-hidden="true"
+                        ><path
+                          fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd"
+                        ></path></svg
+                      ></a
+                    >
+                  </Card.Title>
                 </div>
               </div>
             </Card.Header>
@@ -312,13 +328,29 @@
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
                 <div class="flex flex-row w-full items-center">
-                  <Card.Title
-                    class="text-xl sm:text-2xl tex-white font-semibold"
-                    >{marketStatus === 0
-                      ? "Top"
-                      : marketStatus === 1
-                        ? "Pre-Market"
-                        : "Afterhours"} Losers</Card.Title
+                  <Card.Title>
+                    <a
+                      href={`/market-mover/${marketStatus === 0 ? "losers" : marketStatus === 1 ? "premarket" : "afterhours"}`}
+                      class="text-xl sm:text-2xl tex-white font-semibold cursor-pointer sm:hover:underline sm:hover:underline-offset-4"
+                    >
+                      {marketStatus === 0
+                        ? "Top"
+                        : marketStatus === 1
+                          ? "Pre-Market"
+                          : "Afterhours"} Losers
+                      <svg
+                        class="h-5 w-5 inline-block"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        style="max-width:40px"
+                        aria-hidden="true"
+                        ><path
+                          fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd"
+                        ></path></svg
+                      >
+                    </a></Card.Title
                   >
                 </div>
               </div>
