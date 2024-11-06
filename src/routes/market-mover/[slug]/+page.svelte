@@ -2,10 +2,9 @@
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber, getLastTradingDay } from "$lib/utils";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
-
+  import { afterUpdate } from "svelte";
   export let data;
   let timePeriod = "1D";
-
   const lastTradingDay = new Date(getLastTradingDay() ?? null)?.toLocaleString(
     "en-US",
     {
@@ -14,17 +13,15 @@
       year: "numeric",
     },
   );
-
   const displayTitle = {
-    "1D": "Active Today",
-    "1W": "Week Active",
-    "1M": "Month Active",
-    "1Y": "1 Year Active",
-    "3Y": "3 Year Active",
-    "5Y": "5 Year Active",
+    "1D": "title Today",
+    "1W": "Week title",
+    "1M": "Month title",
+    "1Y": "1 Year title",
+    "3Y": "3 Year title",
+    "5Y": "5 Year title",
   };
-
-  let rawData = data?.getMarketMover?.active;
+  let rawData = data?.getMarketMover[data?.getParams];
   let stockList = rawData[timePeriod];
 
   function selectTimeInterval(state) {
@@ -62,19 +59,15 @@
 
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
-
-    let originalData = [];
-
-    originalData = rawData[timePeriod];
-
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
       orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+
     const sortOrder = sortOrders[key].order;
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      stockList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      stockList = [...rawData[timePeriod]]; // Reset to original data (spread to avoid mutation)
       return;
     }
 
@@ -82,7 +75,6 @@
     const compareValues = (a, b) => {
       const { type } = sortOrders[key];
       let valueA, valueB;
-
       switch (type) {
         case "date":
           valueA = new Date(a[key]);
@@ -100,7 +92,6 @@
           valueB = parseFloat(b[key]);
           break;
       }
-
       if (sortOrder === "asc") {
         return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
       } else {
@@ -109,8 +100,24 @@
     };
 
     // Sort using the generic comparison function
-    stockList = [...originalData].sort(compareValues);
+    stockList = [...rawData[timePeriod]].sort(compareValues);
   };
+
+  let previousTimePeriod;
+  let previousPage = data?.getParams;
+  let title;
+
+  afterUpdate(() => {
+    if (timePeriod !== previousTimePeriod || previousPage !== data?.getParams) {
+      previousTimePeriod = timePeriod;
+      previousPage = data?.getParams;
+      rawData = data?.getMarketMover[data?.getParams];
+      stockList = rawData[timePeriod];
+      title =
+        data?.getParams?.charAt(0)?.toUpperCase() + data?.getParams?.slice(1);
+    }
+  });
+
   $: charNumber = $screenWidth < 640 ? 20 : 30;
 </script>
 
@@ -118,8 +125,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    Top Stock Active · stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Today's
+    Top Stock {title} · stocknear
   </title>
   <meta
     name="description"
@@ -127,7 +134,10 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Today's Top Stock Active · stocknear`} />
+  <meta
+    property="og:title"
+    content={`Today's Top Stock ${title} · stocknear`}
+  />
   <meta
     property="og:description"
     content={`A list of the stocks with the highest percentage gain, highest percentage loss and most active today. See stock price, volume, market cap and more.`}
@@ -137,7 +147,10 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Today's Top Stock Active · stocknear`} />
+  <meta
+    name="twitter:title"
+    content={`Today's Top Stock ${title} · stocknear`}
+  />
   <meta
     name="twitter:description"
     content={`A list of the stocks with the highest percentage gain, highest percentage loss and most active today. See stock price, volume, market cap and more.`}
@@ -216,7 +229,7 @@
               class="title-group flex flex-row items-center justify-start mb-3"
             >
               <h1 class="text-white text-xl sm:text-2xl font-semibold">
-                {displayTitle[timePeriod]}
+                {displayTitle[timePeriod]?.replace("title", title)}
               </h1>
 
               <div

@@ -1,4 +1,4 @@
-export const load = async ({ locals }) => {
+export const load = async ({ locals, params }) => {
   const { apiURL, apiKey } = locals;
 
   const getMarketMover = async () => {
@@ -14,22 +14,12 @@ export const load = async ({ locals }) => {
 
     return output;
   };
-  /*
-  const getMiniPlotsIndex = async () => {
-    const response = await fetch(apiURL + "/mini-plots-index", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": apiKey,
-      },
-    });
-
-    const output = await response.json();
-
-    return output;
+  const getParams = async () => {
+    return params.slug;
   };
-  */
+
   return {
     getMarketMover: await getMarketMover(),
+    getParams: await getParams(),
   };
 };

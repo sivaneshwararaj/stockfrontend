@@ -402,7 +402,7 @@ const handleTwitchMessage = (event) => {
                             class="w-full bg-[#141417] hover:bg-[#141417]"
                           >
                             <a
-                              href="/market-mover"
+                              href="/market-mover/gainers"
                               class="text-start w-full text-[1rem] text-white ml-4 mt-4"
                               >Market Mover</a
                             >
@@ -988,7 +988,7 @@ const handleTwitchMessage = (event) => {
                             >Stock Screener</a
                           >
                           <a
-                            href="/market-mover"
+                            href="/market-mover/gainers"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Market Mover</a
                           >

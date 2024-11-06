@@ -8,7 +8,7 @@
   const tabs = [
     {
       title: "Gainers",
-      path: "/market-mover",
+      path: "/market-mover/gainers",
     },
     {
       title: "Losers",
@@ -31,7 +31,7 @@
   let activeIdx = 0;
 
   // Subscribe to the $page store to reactively update the activeIdx based on the URL
-  $: if ($page.url.pathname === "/market-mover") {
+  $: if ($page.url.pathname === "/market-mover/gainers") {
     activeIdx = 0;
   } else if ($page.url.pathname.startsWith("/market-mover/losers")) {
     activeIdx = 1;
