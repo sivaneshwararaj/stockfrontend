@@ -1,8 +1,6 @@
 <script lang="ts">
-  import logo from "$lib/images/news_logo.png";
   import ScrollToTop from "$lib/components/ScrollToTop.svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
   export let data;

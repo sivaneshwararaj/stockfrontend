@@ -130,7 +130,7 @@
       const formattedDate =
         displayData === "1D" || displayData === "1W" || displayData === "1M"
           ? date.toLocaleString("en-US", options)
-          : date.toLocaleDateString("en-US", {
+          : new Date(currentDataRow?.time)?.toLocaleDateString("en-US", {
               day: "2-digit",
               month: "short",
               year: "numeric",

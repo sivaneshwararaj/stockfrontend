@@ -20,7 +20,7 @@ type FlyAndScaleParams = {
 
 export const flyAndScale = (
   node: Element,
-  params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 0 }
+  params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 0 },
 ): TransitionConfig => {
   const style = getComputedStyle(node);
   const transform = style.transform === "none" ? "" : style.transform;
@@ -28,7 +28,7 @@ export const flyAndScale = (
   const scaleConversion = (
     valueA: number,
     scaleA: [number, number],
-    scaleB: [number, number]
+    scaleB: [number, number],
   ) => {
     const [minA, maxA] = scaleA;
     const [minB, maxB] = scaleB;
@@ -40,7 +40,7 @@ export const flyAndScale = (
   };
 
   const styleToString = (
-    style: Record<string, number | string | undefined>
+    style: Record<string, number | string | undefined>,
   ): string => {
     return Object.keys(style).reduce((str, key) => {
       if (style[key] === undefined) return str;
@@ -268,7 +268,7 @@ export function sumQuarterlyResultsByYear(quarterlyResults, namingList) {
 
   // Filter out years with less than 4 quarters
   const validYears = Object?.keys(quarterCounts)?.filter(
-    (year) => quarterCounts[year] === 4
+    (year) => quarterCounts[year] === 4,
   );
   const annualResults = validYears?.map((year) => yearlySummaries[year]);
 
@@ -476,7 +476,7 @@ export function formatETFName(inputString) {
 
   // Capitalize the first letter of each word
   const capitalizedWords = words?.map(
-    (word) => word.charAt(0)?.toUpperCase() + word?.slice(1)
+    (word) => word.charAt(0)?.toUpperCase() + word?.slice(1),
   );
 
   // Join the words back together with a space between them
@@ -498,7 +498,7 @@ export function addDays(data, days, state) {
   } else {
     const differenceInTime = result - createdDate;
     const differenceInDays = Math.round(
-      differenceInTime / (1000 * 60 * 60 * 24)
+      differenceInTime / (1000 * 60 * 60 * 24),
     );
     return Math.abs(differenceInDays);
   }
@@ -1280,3 +1280,55 @@ export const monthNames = [
   "Nov",
   "Dec",
 ];
+
+export const holidays = [
+  "2024-01-01",
+  "2024-01-15",
+  "2024-02-19",
+  "2024-03-29",
+  "2024-05-27",
+  "2024-06-19",
+  "2024-07-04",
+  "2024-09-02",
+  "2024-11-28",
+  "2024-12-25",
+];
+
+export const getLastTradingDay = () => {
+  const etTimeZone = "America/New_York";
+
+  // Helper function to check if a date (in NY time) is a holiday
+  const isHoliday = (date) => {
+    return holidays.includes(date.toISOString().split("T")[0]);
+  };
+  let date = new Date();
+
+  // Convert current date to NY timezone
+  const nyDate = new Date(
+    date.toLocaleString("en-US", { timeZone: etTimeZone }),
+  );
+  const currentHour = nyDate.getHours();
+  const currentMinutes = nyDate.getMinutes();
+  const isMarketClosed =
+    currentHour < 9 ||
+    (currentHour === 9 && currentMinutes < 30) ||
+    currentHour >= 16;
+
+  // If market is closed, move to the previous day
+  if (isMarketClosed) {
+    nyDate.setDate(nyDate.getDate() - 1);
+  }
+
+  // Loop backwards to find the most recent trading day
+  while (true) {
+    const dayOfWeek = nyDate.getUTCDay();
+
+    // Check if it's a weekday and not a holiday
+    if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday(nyDate)) {
+      return nyDate.toISOString().split("T")[0];
+    }
+
+    // Move back one day
+    nyDate.setDate(nyDate.getDate() - 1);
+  }
+};

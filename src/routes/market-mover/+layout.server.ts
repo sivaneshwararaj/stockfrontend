@@ -1,7 +1,7 @@
-export const load = async ({ locals, setHeaders }) => {
+export const load = async ({ locals }) => {
   const { apiURL, apiKey } = locals;
 
-  const getDailyGainerLoserActive = async () => {
+  const getMarketMover = async () => {
     const response = await fetch(apiURL + "/market-movers", {
       method: "GET",
       headers: {
@@ -14,7 +14,7 @@ export const load = async ({ locals, setHeaders }) => {
 
     return output;
   };
-
+  /*
   const getMiniPlotsIndex = async () => {
     const response = await fetch(apiURL + "/mini-plots-index", {
       method: "GET",
@@ -28,11 +28,8 @@ export const load = async ({ locals, setHeaders }) => {
 
     return output;
   };
-
-  setHeaders({ "cache-control": "public, max-age=3000" });
-  // Make sure to return a promise
+  */
   return {
-    getDailyGainerLoserActive: await getDailyGainerLoserActive(),
-    getMiniPlotsIndex: await getMiniPlotsIndex(),
+    getMarketMover: await getMarketMover(),
   };
 };
