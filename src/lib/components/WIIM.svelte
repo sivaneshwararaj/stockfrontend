@@ -78,7 +78,7 @@
                             >
                             {#if latestInfoDate(item?.date)}
                               <label
-                                class="bg-[#FBCE3C] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3"
+                                class="bg-[#fff] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3"
                                 >New</label
                               >
                             {/if}

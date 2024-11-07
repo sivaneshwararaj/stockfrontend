@@ -165,7 +165,7 @@
           {#if newsList?.length !== rawNews?.length}
             <label
               on:click={loadMoreData}
-              class="shadow-lg rounded-lg cursor-pointer w-5/6 sm:w-3/5 sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-white m-auto hover:bg-purple-600 bg-purple-600 bg-opacity-[0.6]"
+              class="shadow-lg rounded-lg cursor-pointer w-5/6 sm:w-3/5 sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-white m-auto hover:bg-[#fff] bg-[#fff] bg-opacity-[0.6]"
             >
               Load More News
             </label>
@@ -179,7 +179,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 256 256"
               ><path
-                fill="#FBCE3C"
+                fill="#fff"
                 d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
               /></svg
             >

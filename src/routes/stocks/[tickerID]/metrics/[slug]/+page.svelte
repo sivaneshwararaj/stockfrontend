@@ -95,7 +95,7 @@
           smooth: true,
           symbol: "none",
           itemStyle: {
-            color: "#FBCE3C",
+            color: "#fff",
           },
         },
       ],

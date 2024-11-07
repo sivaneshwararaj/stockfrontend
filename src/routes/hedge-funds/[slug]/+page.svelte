@@ -6,7 +6,7 @@
     displayCompanyName,
   } from "$lib/store";
   import cardBackground from "$lib/images/bg-hedge-funds.png";
-  import { abbreviateNumber, formatString } from "$lib/utils";
+  import { abbreviateNumber, formatString, sectorNavigation } from "$lib/utils";
 
   import PercentIcon from "lucide-svelte/icons/percent";
   import MoneyIcon from "lucide-svelte/icons/circle-dollar-sign";
@@ -22,55 +22,6 @@
 
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-
-  function sectorSelector(sector) {
-    let path;
-    switch (sector) {
-      case "Financials":
-        path = "financial";
-        break;
-      case "Healthcare":
-        path = "healthcare";
-        break;
-      case "Information Technology":
-        path = "technology";
-        break;
-      case "Technology":
-        path = "technology";
-        break;
-      case "Financial Services":
-        path = "financial";
-        break;
-      case "Industrials":
-        path = "industrials";
-        break;
-      case "Energy":
-        path = "energy";
-        break;
-      case "Utilities":
-        path = "utilities";
-        break;
-      case "Consumer Cyclical":
-        path = "consumer-cyclical";
-        break;
-      case "Real Estate":
-        path = "real-estate";
-        break;
-      case "Basic Materials":
-        path = "basic-materials";
-        break;
-      case "Communication Services":
-        path = "communication-services";
-        break;
-      case "Consumer Defensive":
-        path = "consumer-defensive";
-        break;
-      default:
-        // Handle default case if needed
-        break;
-    }
-    return path;
-  }
 
   let isLoaded = false;
   let rawData = data?.getHedgeFundsData;
@@ -408,7 +359,7 @@
           type: "bar",
           showSymbol: false,
           itemStyle: {
-            color: "#FBCE3C", // Change bar color to white
+            color: "#fff", // Change bar color to white
           },
         },
         {
@@ -582,14 +533,14 @@
         <aside class="relative fixed w-full sm:w-1/3">
           <!--Start Card-->
           <div
-            class="w-full bg-[#141417] border border-gray-800 rounded-lg h-auto pb-4"
+            class="w-full bg-[#141417] border border-gray-800 rounded-md h-auto pb-4"
           >
             <div class="flex flex-col relative">
               <img
-                class="absolute w-full m-auto rounded-lg"
+                class="absolute w-full m-auto rounded-md"
                 src={cardBackground}
               />
-              <div class="flex flex-col justify-center items-center rounded-lg">
+              <div class="flex flex-col justify-center items-center rounded-md">
                 <div
                   class="mt-10 rounded-full border border-slate-600 w-24 h-24 relative hedge-fund-striped bg-[#20202E] flex items-center justify-center"
                 >
@@ -666,7 +617,7 @@
           </div>
 
           <div
-            class="w-full bg-[#141417] border border-gray-800 rounded-lg h-fit pb-4 mt-5"
+            class="w-full bg-[#141417] border border-gray-800 rounded-md h-fit pb-4 mt-5"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
               <h2
@@ -699,7 +650,9 @@
                           >
                             <td class="text-[1rem] whitespace-nowrap">
                               <a
-                                href={"/list/sector/" + sectorSelector(name)}
+                                href={sectorNavigation?.find(
+                                  (item) => item?.title === name,
+                                )?.link}
                                 class="text-blue-400 sm:hover:text-white"
                               >
                                 {name}
@@ -737,7 +690,7 @@
             >
               <!--Start Total Amount Traded-->
               <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] rounded-lg h-20"
+                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span class="font-medium text-gray-200 text-sm">AUM</span>
@@ -752,7 +705,7 @@
 
               <!--Start-->
               <div
-                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20"
+                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span
@@ -829,7 +782,7 @@
 
               <!--Start-->
               <div
-                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20"
+                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span
@@ -906,7 +859,7 @@
 
               <!--Start-->
               <div
-                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20"
+                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span
@@ -993,7 +946,7 @@
 
         <main class="w-full mt-10 sm:mt-0 sm:pl-10">
           {#if isLoaded && Object?.keys(optionsData)?.length !== 0}
-            <div class="bg-[#09090B] rounded-lg sm:min-h-[330px] mb-10 sm:mb-6">
+            <div class="bg-[#09090B] rounded-md sm:min-h-[330px] mb-10 sm:mb-6">
               <div class="flex flex-row justify-start items-center">
                 {#if activePlotIdx === 0}
                   <PercentIcon class="h-6 w-6 shrink-0 inline-block" />
@@ -1009,7 +962,7 @@
               </div>
 
               <div
-                class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 mt-5"
+                class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-5"
               >
                 {#each plotTabs as item, i}
                   <button
@@ -1020,12 +973,13 @@
                       : ''} "
                   >
                     {#if activePlotIdx === i}
-                      <div
-                        class="absolute inset-0 rounded-lg sm:rounded-lg bg-purple-600"
-                      ></div>
+                      <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
                     {/if}
                     <span
-                      class="relative block text-sm font-medium duration-200 text-white"
+                      class="relative block text-sm font-semibold {activePlotIdx ===
+                      i
+                        ? 'text-black'
+                        : 'text-white'}"
                     >
                       {item?.title}
                     </span>
@@ -1088,7 +1042,7 @@
             <div class="w-full grid grid-cols-4 gap-y-3 lg:gap-y-3 gap-x-3">
               <!--Start Total Amount Traded-->
               <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] rounded-lg h-20"
+                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span class="font-medium text-gray-200 text-[1rem]">AUM</span>
@@ -1103,7 +1057,7 @@
 
               <!--Start-->
               <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20"
+                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span class="font-medium text-gray-200 text-[1rem]"
@@ -1171,7 +1125,7 @@
 
               <!--Start-->
               <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20"
+                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span class="font-medium text-gray-200 text-[1rem]"
@@ -1239,7 +1193,7 @@
 
               <!--Start-->
               <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-lg h-20"
+                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
               >
                 <div class="flex flex-col items-start">
                   <span class="font-medium text-gray-200 text-[1rem]"
@@ -1320,26 +1274,29 @@
               </span>
 
               <div class="w-64 mt-5">
-                <div class="relative right-0 bg-[#313131] rounded-lg">
+                <div class="relative right-0 bg-[#313131] rounded-md">
                   <div
-                    class="relative flex flex-row items-center p-1 list-none rounded-lg"
+                    class="relative flex flex-row items-center p-1 list-none rounded-md"
                   >
                     {#each tabs as item, i}
                       <button
                         on:click={() => changeTab(i)}
-                        class="group relative z-[1] rounded-lg px-6 py-1 border z-30 flex items-center justify-center w-full px-0 py-1 mb-0 border-0 bg-inherit {activeIdx ===
+                        class="group relative z-[1] rounded-md px-6 py-1 border z-30 flex items-center justify-center w-full px-0 py-1 mb-0 border-0 bg-inherit {activeIdx ===
                         i
                           ? 'z-0'
                           : ''} "
                       >
                         {#if activeIdx === i}
                           <div
-                            class="absolute inset-0 rounded-lg sm:rounded-lg bg-purple-600"
+                            class="absolute inset-0 rounded-md bg-[#fff]"
                           ></div>
                         {/if}
 
                         <span
-                          class="relative text-sm block font-medium duration-200 text-white"
+                          class="relative text-sm block font-semibold {activeIdx ===
+                          i
+                            ? 'text-black'
+                            : 'text-white'}"
                         >
                           {item?.title}
                         </span>
@@ -1706,14 +1663,14 @@
                   class="flex justify-center items-center m-auto sm:mt-24 mt-32 mb-6"
                 >
                   <div
-                    class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-lg h-auto border border-gray-800 p-4"
+                    class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-gray-800 p-4"
                   >
                     <svg
                       class="w-5 h-5 inline-block mr-2 flex-shrink-0"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 256 256"
                       ><path
-                        fill="#FBCE3C"
+                        fill="#fff"
                         d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                       /></svg
                     >

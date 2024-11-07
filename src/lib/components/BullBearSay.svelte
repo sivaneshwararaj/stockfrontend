@@ -83,10 +83,12 @@
               : ''} "
           >
             {#if activeIdx === i}
-              <div class="absolute inset-0 rounded-md bg-purple-600"></div>
+              <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
             {/if}
             <span
-              class="relative text-sm block font-medium duration-200 text-white"
+              class="relative text-sm block font-semibold {activeIdx === i
+                ? 'text-black'
+                : 'text-white'}"
             >
               {item.title}
               <svg
@@ -110,7 +112,7 @@
         <label
           class="{latestInfoDate(rawData?.date)
             ? ''
-            : 'hidden'} text-black bg-[#FBCE3C] mr-2 font-semibold not-italic text-xs rounded px-2 py-0.5"
+            : 'hidden'} text-black bg-[#fff] mr-2 font-semibold not-italic text-xs rounded px-2 py-0.5"
           >New</label
         >
         Updated {rawData?.date}

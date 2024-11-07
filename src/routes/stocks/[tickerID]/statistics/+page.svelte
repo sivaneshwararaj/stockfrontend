@@ -274,7 +274,7 @@
               </table>
               <a
                 href={`/stocks/${$stockTicker}/financials/ratios`}
-                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
               >
                 Financial Ratio History
               </a>
@@ -653,7 +653,7 @@
               </table>
               <a
                 href={`/stocks/${$stockTicker}/financials`}
-                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
               >
                 Full Income Statement
               </a>
@@ -732,7 +732,7 @@
               </table>
               <a
                 href={`/stocks/${$stockTicker}/financials/balance-sheet`}
-                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
               >
                 Full Balance Sheet
               </a>
@@ -795,7 +795,7 @@
               </table>
               <a
                 href={`/stocks/${$stockTicker}/financials/cash-flow`}
-                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
               >
                 Full Cash Flow Statement
               </a>
@@ -951,7 +951,7 @@
               </table>
               <a
                 href={`/stocks/${$stockTicker}/dividends`}
-                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
               >
                 Dividend Details
               </a>
@@ -1018,7 +1018,7 @@
               </table>
               <a
                 href={`/stocks/${$stockTicker}/forecast/analyst`}
-                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-lg text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
               >
                 Stock Forecasts
               </a>

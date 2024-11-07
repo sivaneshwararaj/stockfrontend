@@ -1,249 +1,228 @@
-<script lang='ts'>
+<script lang="ts">
+  import {
+    searchBarData,
+    globalForm,
+    screenWidth,
+    openPriceAlert,
+    currentPortfolioPrice,
+    wsBidPrice,
+    wsAskPrice,
+    realtimePrice,
+    isCrosshairMoveActive,
+    currentPrice,
+    priceIncrease,
+    displayCompanyName,
+    traded,
+    etfTicker,
+    assetType,
+    isOpen,
+  } from "$lib/store";
 
-    import {searchBarData, globalForm, screenWidth, openPriceAlert, currentPortfolioPrice, wsBidPrice, wsAskPrice, realtimePrice, isCrosshairMoveActive, currentPrice, priceIncrease, displayCompanyName, traded, etfTicker, assetType, isOpen } from '$lib/store';
+  import { onMount, onDestroy, afterUpdate } from "svelte";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+  import toast from "svelte-french-toast";
+  import ETFProfileCard from "$lib/components/ETFProfileCard.svelte";
+  import SimilarETFCard from "$lib/components/SimilarETFCard.svelte";
+  import Markethour from "$lib/components/Markethour.svelte";
+  import TopHoldingCard from "$lib/components/TopHoldingCard.svelte";
+  import DividendCard from "$lib/components/DividendCard.svelte";
 
-    import { onMount, onDestroy, afterUpdate} from "svelte";
-    import { goto } from '$app/navigation';
-    import { page } from '$app/stores';
-    import toast from 'svelte-french-toast';
-    import ETFProfileCard from '$lib/components/ETFProfileCard.svelte';
-    import SimilarETFCard from '$lib/components/SimilarETFCard.svelte';
-    import Markethour from '$lib/components/Markethour.svelte';
-  	import TopHoldingCard from '$lib/components/TopHoldingCard.svelte';
-    import DividendCard from '$lib/components/DividendCard.svelte';
+  export let data;
 
-  export let data;  
-    
   //$assetType = 'etf';
-  //$etfTicker = data?.getTicker;  
+  //$etfTicker = data?.getTicker;
   $realtimePrice = null;
-    
-  
 
-async function loadSearchData() {
-    
-    if($searchBarData?.length !== 0)
-    {
-      return
-    }
-    else {
-  
-       // make the GET request to the endpoint
-       const response = await fetch('/api/searchbar-data', {
-      method: 'GET',
-      headers: {
-          "Content-Type": "application/json"
-      },
+  async function loadSearchData() {
+    if ($searchBarData?.length !== 0) {
+      return;
+    } else {
+      // make the GET request to the endpoint
+      const response = await fetch("/api/searchbar-data", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-  
+
       $searchBarData = await response.json();
     }
-     
-  
   }
-      
-    
-  
-      let previousRealtimePrice = null;
-      let previousTicker;
-      let socket;
-  
-      
-      let isScrolled = false;
-        
-      let userWatchList = data?.getUserWatchlist ?? [];
-      let isTickerIncluded; 
-      let userPortfolio = data?.getUserPortfolio ?? [];
-      let holdingShares = 0;
-      let availableCash = 0;
-      
-      let displaySection = '';
-  
-    
-  
-      let etfProfile = [];
-      let similarTicker = [];
-      let topHoldingList = [];
-      let dividendList = [];
-      
-  
+
+  let previousRealtimePrice = null;
+  let previousTicker;
+  let socket;
+
+  let isScrolled = false;
+
+  let userWatchList = data?.getUserWatchlist ?? [];
+  let isTickerIncluded;
+  let userPortfolio = data?.getUserPortfolio ?? [];
+  let holdingShares = 0;
+  let availableCash = 0;
+
+  let displaySection = "";
+
+  let etfProfile = [];
+  let similarTicker = [];
+  let topHoldingList = [];
+  let dividendList = [];
+
   function shareContent(url) {
-      
     if (navigator.share) {
-        navigator.share({
+      navigator
+        .share({
           title: document.title,
           url,
         })
-          .then(() => console.log('Content shared successfully.'))
-          .catch((error) => console.log('Error sharing content:', error));
-      } else {
-        toast.error('Sharing is not supported by your device', {
-          style: 'background: #333; color: #fff;'
-          });
-  
+        .then(() => console.log("Content shared successfully."))
+        .catch((error) => console.log("Error sharing content:", error));
+    } else {
+      toast.error("Sharing is not supported by your device", {
+        style: "background: #333; color: #fff;",
+      });
     }
-    
   }
-  
-  
-  
-  
-  function handleTypeOfTrade(state:string)
-  {
-    if (state === 'buy')
-    {
+
+  function handleTypeOfTrade(state: string) {
+    if (state === "buy") {
       const closePopup = document.getElementById("buyTradeModal");
-      closePopup?.dispatchEvent(new MouseEvent('click'))
-    }
-  
-    else if (state === 'sell')
-    {
+      closePopup?.dispatchEvent(new MouseEvent("click"));
+    } else if (state === "sell") {
       const closePopup = document.getElementById("sellTradeModal");
-      closePopup?.dispatchEvent(new MouseEvent('click'))
+      closePopup?.dispatchEvent(new MouseEvent("click"));
     }
-  
-    
   }
-  
-  
+
   function scrollToItem(itemId) {
-      const item = document.getElementById(itemId);
-      if (item) {
-        
-        item.scrollIntoView({ behavior: 'smooth' });
-        window.scrollTo(0,0)
-      }
+    const item = document.getElementById(itemId);
+    if (item) {
+      item.scrollIntoView({ behavior: "smooth" });
+      window.scrollTo(0, 0);
     }
-  
-      
+  }
+
   function changeSection(state, item) {
     scrollToItem(item);
-  
+
     const sectionMap = {
-      options: '/options',
+      options: "/options",
       holdings: "/holdings",
-       forecast: "/forecast",
-      dividends: '/dividends',
-      stats: '/stats',
-      news: '/news',
+      forecast: "/forecast",
+      dividends: "/dividends",
+      stats: "/stats",
+      news: "/news",
     };
-  
-    if (state !== 'overview' && sectionMap[state]) {
+
+    if (state !== "overview" && sectionMap[state]) {
       displaySection = state;
       //goto(`/etf/${$etfTicker}${sectionMap[state]}`);
     } else {
-      displaySection = 'overview';
+      displaySection = "overview";
       //goto(`/etf/${$etfTicker}/`);
     }
   }
-  
-    
-  
 
+  async function toggleUserWatchlist(watchListId: string) {
+    try {
+      isTickerIncluded = !isTickerIncluded;
 
-async function toggleUserWatchlist(watchListId: string) {
-  try {
-    isTickerIncluded = !isTickerIncluded;
+      const watchlistIndex = userWatchList?.findIndex(
+        (item) => item?.id === watchListId,
+      );
 
-    const watchlistIndex = userWatchList?.findIndex(item => item?.id === watchListId);
+      if (watchlistIndex !== -1) {
+        const existingTickerIndex =
+          userWatchList[watchlistIndex]?.ticker?.indexOf($etfTicker);
 
-    if (watchlistIndex !== -1) {
-      const existingTickerIndex = userWatchList[watchlistIndex]?.ticker?.indexOf($etfTicker);
+        if (existingTickerIndex !== -1) {
+          // If the $etfTicker exists, remove it from the array
+          userWatchList[watchlistIndex]?.ticker?.splice(existingTickerIndex, 1);
+        } else {
+          // If the $etfTicker doesn't exist, add it to the array
+          userWatchList[watchlistIndex]?.ticker?.push($etfTicker);
+        }
 
-      if (existingTickerIndex !== -1) {
-        // If the $etfTicker exists, remove it from the array
-        userWatchList[watchlistIndex]?.ticker?.splice(existingTickerIndex, 1);
-      } else {
-        // If the $etfTicker doesn't exist, add it to the array
-        userWatchList[watchlistIndex]?.ticker?.push($etfTicker);
+        // Update the userWatchList
+        userWatchList = [...userWatchList];
       }
 
-      // Update the userWatchList
-      userWatchList = [...userWatchList];
+      const postData = {
+        watchListId: watchListId,
+        ticker: $etfTicker,
+      };
+
+      const response = await fetch("/api/update-watchlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const output = await response.json();
+
+      // Update the userWatchList with the response from the server
+      if (watchlistIndex !== -1) {
+        userWatchList[watchlistIndex] = output;
+        userWatchList = [...userWatchList];
+      } else {
+        userWatchList = [...userWatchList, output];
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      // Handle the error appropriately (e.g., show an error message to the user)
     }
-
-
-    const postData = {
-      'watchListId': watchListId,
-      'ticker': $etfTicker,
-    };
-
-    const response = await fetch('/api/update-watchlist', {
-      method: 'POST',
-      headers: {
-         "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const output = await response.json();
-
-    // Update the userWatchList with the response from the server
-    if( watchlistIndex !== -1)
-    {
-      userWatchList[watchlistIndex] = output;
-      userWatchList = [...userWatchList];
-    }
-    else {
-      userWatchList = [...userWatchList, output];
-    }
-
-  } catch (error) {
-    console.error('An error occurred:', error);
-    // Handle the error appropriately (e.g., show an error message to the user)
   }
-}
-      
 
-      
-
-  
-  
-  
   function handleScroll() {
-      // Check the scroll position
-      isScrolled = window.scrollY > 0;
-    }
-  
-    
+    // Check the scroll position
+    isScrolled = window.scrollY > 0;
+  }
+
   function sendMessage(message) {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(message);
     } else {
-      console.error('WebSocket is not open. Unable to send message.');
+      console.error("WebSocket is not open. Unable to send message.");
     }
   }
-  
-  
+
   async function websocketRealtimeData() {
-  
     previousTicker = $etfTicker;
     try {
-      socket = new WebSocket(data?.wsURL+"/realtime-data");
-  
-      socket.addEventListener('open', () => {
+      socket = new WebSocket(data?.wsURL + "/realtime-data");
+
+      socket.addEventListener("open", () => {
         //console.log('WebSocket connection opened');
-        
+
         // Send the initial value of etfTicker
         sendMessage($etfTicker?.toLowerCase());
       });
-      
-  
-      socket.addEventListener('message', (event) => {
+
+      socket.addEventListener("message", (event) => {
         const data = event.data;
         //console.log('Received message:', data);
         try {
-  
-          $realtimePrice = typeof JSON.parse(data)?.lp !== "undefined" ? JSON.parse(data)?.lp : null;
-          $wsBidPrice = typeof JSON.parse(data)?.bp !== "undefined" ? JSON.parse(data)?.bp : null;
-          $wsAskPrice = typeof JSON.parse(data)?.ap !== "undefined" ? JSON.parse(data)?.ap : null;
+          $realtimePrice =
+            typeof JSON.parse(data)?.lp !== "undefined"
+              ? JSON.parse(data)?.lp
+              : null;
+          $wsBidPrice =
+            typeof JSON.parse(data)?.bp !== "undefined"
+              ? JSON.parse(data)?.bp
+              : null;
+          $wsAskPrice =
+            typeof JSON.parse(data)?.ap !== "undefined"
+              ? JSON.parse(data)?.ap
+              : null;
           //console.log('Received message:', $realtimePrice);
-  
-  
+
           if ($realtimePrice > previousRealtimePrice) {
             $priceIncrease = true;
             previousRealtimePrice = $realtimePrice;
@@ -251,117 +230,96 @@ async function toggleUserWatchlist(watchListId: string) {
             $priceIncrease = false;
             previousRealtimePrice = $realtimePrice;
           }
-  
-  
+
           $isCrosshairMoveActive = false;
-  
-  
+        } catch (e) {
+          console.log(e);
         }
-        catch(e) {
-          console.log(e)
-        }
-      
-    
-    });
-  
-  
-  
-    socket.addEventListener('close', (event) => {
-      console.log('WebSocket connection closed:', event.reason);
-      // Handle disconnection, you might want to attempt to reconnect here
-    });
-  } catch (error) {
-    console.error('WebSocket connection error:', error);
-    // Handle connection errors here
+      });
+
+      socket.addEventListener("close", (event) => {
+        console.log("WebSocket connection closed:", event.reason);
+        // Handle disconnection, you might want to attempt to reconnect here
+      });
+    } catch (error) {
+      console.error("WebSocket connection error:", error);
+      // Handle connection errors here
+    }
   }
-  }
-  
-  
+
   let LoginPopup;
   let PriceAlert;
-  
-      
+
   onMount(async () => {
-      
-      if(!data?.user)
-      {
-        LoginPopup = (await import('$lib/components/LoginPopup.svelte')).default;
-      }
-      else {
-        //AddPortfolio = (await import('$lib/components/AddPortfolio.svelte')).default;
-        //BuyTrade = (await import('$lib/components/BuyTrade.svelte')).default;
-        //SellTrade = (await import('$lib/components/SellTrade.svelte')).default;
-        PriceAlert = (await import('$lib/components/PriceAlert.svelte')).default;
-      }
-     
-      //const startTime = currentDateTime.set({ hour: 15, minute: 30 });
-      //const endTime = currentDateTime.set({ hour: 22, minute: 0 });
-      // Check if it's not a weekend and the current time is within the specified range
-  
-    
-      if ($isOpen) //&& currentDateTime > startTime && currentDateTime < endTime
-      {
-        await websocketRealtimeData()
-      }
-    
-  
-      // Add a scroll event listener
-      window.addEventListener('scroll', handleScroll);
-  
-      return () => {
+    if (!data?.user) {
+      LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
+    } else {
+      //AddPortfolio = (await import('$lib/components/AddPortfolio.svelte')).default;
+      //BuyTrade = (await import('$lib/components/BuyTrade.svelte')).default;
+      //SellTrade = (await import('$lib/components/SellTrade.svelte')).default;
+      PriceAlert = (await import("$lib/components/PriceAlert.svelte")).default;
+    }
+
+    //const startTime = currentDateTime.set({ hour: 15, minute: 30 });
+    //const endTime = currentDateTime.set({ hour: 22, minute: 0 });
+    // Check if it's not a weekend and the current time is within the specified range
+
+    if ($isOpen) {
+      //&& currentDateTime > startTime && currentDateTime < endTime
+      await websocketRealtimeData();
+    }
+
+    // Add a scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
       // Remove the event listener when the component is unmounted
-      window.removeEventListener('scroll', handleScroll);
-      };
-  
+      window.removeEventListener("scroll", handleScroll);
+    };
   });
-  
-  afterUpdate( async () => {
-   
-   if(previousTicker !== $etfTicker && typeof socket !== 'undefined')
-   {
-     previousTicker = $etfTicker;
-     //socket.send('close')
-     socket?.close();
-     await new Promise((resolve, reject) => {
-       socket.addEventListener('close', resolve);
-     });
-    
-     if(socket?.readyState === WebSocket?.CLOSED)
-     {
-       await websocketRealtimeData()
-       console.log('connecting again')
-     }
-     $wsAskPrice = null;
+
+  afterUpdate(async () => {
+    if (previousTicker !== $etfTicker && typeof socket !== "undefined") {
+      previousTicker = $etfTicker;
+      //socket.send('close')
+      socket?.close();
+      await new Promise((resolve, reject) => {
+        socket.addEventListener("close", resolve);
+      });
+
+      if (socket?.readyState === WebSocket?.CLOSED) {
+        await websocketRealtimeData();
+        console.log("connecting again");
+      }
+      $wsAskPrice = null;
       $wsBidPrice = null;
-   }
-  
+    }
   });
-  
-  
+
   onDestroy(() => {
     try {
       //socket?.send('close')
-      socket?.close()
+      socket?.close();
+    } catch (e) {
+      console.log(e);
     }
-    catch(e) {
-      console.log(e)
-    }  
-   
+
     //$displayCompanyName = '';
     $currentPortfolioPrice = null;
     $currentPrice = null;
     $priceIncrease = null;
     $wsAskPrice = null;
     $wsBidPrice = null;
-    $traded = false
-    
+    $traded = false;
   });
-  
-  
-    
+
   $: {
-    if ($etfTicker && $etfTicker?.length !== 0 && typeof window !== 'undefined') // add a check to see if running on client-side
-    {
+    if (
+      $etfTicker &&
+      $etfTicker?.length !== 0 &&
+      typeof window !== "undefined"
+    ) {
+      // add a check to see if running on client-side
       etfProfile = [];
 
       etfProfile = data?.getETFProfile;
@@ -370,265 +328,458 @@ async function toggleUserWatchlist(watchListId: string) {
       dividendList = data?.getStockDividend;
       $currentPortfolioPrice = data?.getStockQuote?.price;
 
-      const asyncFunctions = [
-        ];
-  
-        Promise.all(asyncFunctions)
-            .then((results) => {
-              
-            })
-            .catch((error) => {
-              console.error('An error occurred:', error);
-            });
-  
+      const asyncFunctions = [];
+
+      Promise.all(asyncFunctions)
+        .then((results) => {})
+        .catch((error) => {
+          console.error("An error occurred:", error);
+        });
     }
-  
   }
 
-      
   $: {
-    if(userWatchList)
-    {
-      isTickerIncluded = userWatchList?.some(item => item.user === data?.user?.id && item?.ticker?.includes($etfTicker));
+    if (userWatchList) {
+      isTickerIncluded = userWatchList?.some(
+        (item) =>
+          item.user === data?.user?.id && item?.ticker?.includes($etfTicker),
+      );
     }
   }
-  
 
-
-  
   let charNumber = 50;
-      
-      
-      $: {
-        if($screenWidth < 640)
-        {
-          charNumber =15;
-        }
-        else 
-        {
-          charNumber=50;
-        }
-      }
-      
-  
 
-$: {
-  if($etfTicker && typeof window !== 'undefined' && $page.url.pathname === `/etf/${$etfTicker}`)
-  {
-    displaySection = 'overview';
+  $: {
+    if ($screenWidth < 640) {
+      charNumber = 15;
+    } else {
+      charNumber = 50;
+    }
   }
-}
 
-$: {
-  if($page.url.pathname)
-  {
-      const parts = $page?.url?.pathname?.split('/');
+  $: {
+    if (
+      $etfTicker &&
+      typeof window !== "undefined" &&
+      $page.url.pathname === `/etf/${$etfTicker}`
+    ) {
+      displaySection = "overview";
+    }
+  }
+
+  $: {
+    if ($page.url.pathname) {
+      const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
-        'stats': 'stats',
-        'forecast': 'forecast',
-        'options': 'options',
-        'holdings': 'holdings',
-        'dividends': 'dividends',
-        'congress-trading': 'congress-trading',
-        'news': 'news'
+        stats: "stats",
+        forecast: "forecast",
+        options: "options",
+        holdings: "holdings",
+        dividends: "dividends",
+        "congress-trading": "congress-trading",
+        news: "news",
       };
-      displaySection = sectionMap[parts?.find(part => Object?.keys(sectionMap)?.includes(part))] || 'overview';
+      displaySection =
+        sectionMap[
+          parts?.find((part) => Object?.keys(sectionMap)?.includes(part))
+        ] || "overview";
+    }
   }
-}
-
-
 </script>
-  
 
-  
-      
-
-<body class="bg-[#09090B] pb-40 w-full max-w-screen min-h-screen sm:max-w-7xl xl:max-w-screen-2xl overflow-hidden">    
+<body
+  class="bg-[#09090B] pb-40 w-full max-w-screen min-h-screen sm:max-w-7xl xl:max-w-screen-2xl overflow-hidden"
+>
   <!-- Page wrapper -->
   <div class="flex flex-col w-full">
-      <main class="grow w-full">
-          <section class="w-full">
-              <div class="w-full">
-                  <div class="sm:flex sm:justify-start w-full">
-             <!--Start Mobile Navbar-->
-             <div class="fixed top-0 left-0 right-0 z-20 bg-[#09090B] sm:hidden">
+    <main class="grow w-full">
+      <section class="w-full">
+        <div class="w-full">
+          <div class="sm:flex sm:justify-start w-full">
+            <!--Start Mobile Navbar-->
+            <div class="fixed top-0 left-0 right-0 z-20 bg-[#09090B] sm:hidden">
               <div class="navbar w-full px-4 py-2">
-      
-                <div class="{isScrolled ? 'border-b border-slate-800 ease-in' : 'ease-out'} m-auto w-full">
-        
-                  <div class="flex-1 flex-shrink-0 flex flex-row items-center justify-between -mt-2">
-        
-                      <label on:click={() => goto('/')} class="ml-2 cursor-pointer">
-                          <svg class="w-5 h-5 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="rotate(-90 512 512)"><path fill="white" d="M104.704 685.248a64 64 0 0 0 90.496 0l316.8-316.8l316.8 316.8a64 64 0 0 0 90.496-90.496L557.248 232.704a64 64 0 0 0-90.496 0L104.704 594.752a64 64 0 0 0 0 90.496z"/></g></svg>
-                      </label>
-        
-                      <div class="{!isScrolled ? 'hidden' : 'flex flex-col items-center ml-6 transition-transform ease-in'}">
-                          <span class="text-white text-[0.70rem] font-medium text-opacity-[0.6]">
-                          {$etfTicker}
-                          </span>
-                          <span class="text-white font-medium text-sm">
-                            {#if $currentPortfolioPrice !== null && $currentPortfolioPrice !== 0}
-                              {$etfTicker?.includes('.DE') || $etfTicker?.includes('.F') ? `${$currentPortfolioPrice}€` : ` $${$currentPortfolioPrice}`}
-                            {:else}
-                            ---
-                            {/if}
-                          </span>
-                      </div>
-                      
-                        <!--Start Search Button-->
-                        <label on:click={loadSearchData} class="ml-auto mr-4" for="searchBarModal">
-                          <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"/></svg>
-                        </label>
-                          <!--End Search Button-->
-        
-  
-                         <!--Start Share Button-->
-                        <label class="mr-4" on:click={() => shareContent('https://stocknear.com/stocks/'+$etfTicker)} >
-                          <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M336 192h40a40 40 0 0 1 40 40v192a40 40 0 0 1-40 40H136a40 40 0 0 1-40-40V232a40 40 0 0 1 40-40h40m160-64l-80-80l-80 80m80 193V48"/></svg>
-                        </label>
-                          <!--End Share Button-->
-  
-                  
-        
-                          <!--Start Watchlist-->
-                          {#if data?.user}
-                            <div class="flex flex-col mr-4">
-                              {#if userWatchList?.length !== 0}
-                                <label for="addWatchListModal" class="cursor-pointer flex-shrink-0">
-                                  {#if isTickerIncluded}
-                                    <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#FBCE3C" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
-                                    {:else}
-                                    <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>              
-                                  {/if}
-                                </label>
+                <div
+                  class="{isScrolled
+                    ? 'border-b border-slate-800 ease-in'
+                    : 'ease-out'} m-auto w-full"
+                >
+                  <div
+                    class="flex-1 flex-shrink-0 flex flex-row items-center justify-between -mt-2"
+                  >
+                    <label
+                      on:click={() => goto("/")}
+                      class="ml-2 cursor-pointer"
+                    >
+                      <svg
+                        class="w-5 h-5 inline-block"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 1024 1024"
+                        ><g transform="rotate(-90 512 512)"
+                          ><path
+                            fill="white"
+                            d="M104.704 685.248a64 64 0 0 0 90.496 0l316.8-316.8l316.8 316.8a64 64 0 0 0 90.496-90.496L557.248 232.704a64 64 0 0 0-90.496 0L104.704 594.752a64 64 0 0 0 0 90.496z"
+                          /></g
+                        ></svg
+                      >
+                    </label>
 
-                              {:else if userWatchList?.length === 0}
-                                <label on:click={() => toggleUserWatchlist('firstList')} class="cursor-pointer flex-shrink-0">
-                                  {#if isTickerIncluded}
-                                  <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#FBCE3C" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
-                                  {:else}
-                                  <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>              
-                                  {/if}
-                              </label>
-                            
-                              {/if}
-                            </div>
-                            {:else}
-                              <label for="userLogin" class="cursor-pointer flex-shrink-0 text-white mr-4">
-                                <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>
-                              </label>
-                            {/if}
-                          <!--End Watchlist-->
-                        
-                        <!--Start Price Alert-->
-                        <label on:click={() => $openPriceAlert = true} for={data?.user ? 'priceAlertModal' : 'userLogin'} class="mr-2">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 inline-block mt-1" viewBox="0 0 24 24"><g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M3 5.231L6.15 3M21 5.231L17.85 3"/><circle cx="12" cy="13" r="8"/><path d="M9.5 13h5M12 10.5v5"/></g></svg>
-                        </label>
-                        <!--End Price Alert -->
-        
-                        
+                    <div
+                      class={!isScrolled
+                        ? "hidden"
+                        : "flex flex-col items-center ml-6 transition-transform ease-in"}
+                    >
+                      <span
+                        class="text-white text-[0.70rem] font-medium text-opacity-[0.6]"
+                      >
+                        {$etfTicker}
+                      </span>
+                      <span class="text-white font-medium text-sm">
+                        {#if $currentPortfolioPrice !== null && $currentPortfolioPrice !== 0}
+                          {$etfTicker?.includes(".DE") ||
+                          $etfTicker?.includes(".F")
+                            ? `${$currentPortfolioPrice}€`
+                            : ` $${$currentPortfolioPrice}`}
+                        {:else}
+                          ---
+                        {/if}
+                      </span>
                     </div>
+
+                    <!--Start Search Button-->
+                    <label
+                      on:click={loadSearchData}
+                      class="ml-auto mr-4"
+                      for="searchBarModal"
+                    >
+                      <svg
+                        class="w-6 h-6 inline-block"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="none"
+                          stroke="white"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"
+                        /></svg
+                      >
+                    </label>
+                    <!--End Search Button-->
+
+                    <!--Start Share Button-->
+                    <label
+                      class="mr-4"
+                      on:click={() =>
+                        shareContent(
+                          "https://stocknear.com/stocks/" + $etfTicker,
+                        )}
+                    >
+                      <svg
+                        class="w-6 h-6 inline-block"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                        ><path
+                          fill="none"
+                          stroke="white"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="32"
+                          d="M336 192h40a40 40 0 0 1 40 40v192a40 40 0 0 1-40 40H136a40 40 0 0 1-40-40V232a40 40 0 0 1 40-40h40m160-64l-80-80l-80 80m80 193V48"
+                        /></svg
+                      >
+                    </label>
+                    <!--End Share Button-->
+
+                    <!--Start Watchlist-->
+                    {#if data?.user}
+                      <div class="flex flex-col mr-4">
+                        {#if userWatchList?.length !== 0}
+                          <label
+                            for="addWatchListModal"
+                            class="cursor-pointer flex-shrink-0"
+                          >
+                            {#if isTickerIncluded}
+                              <svg
+                                class="w-6 h-6 inline-block"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                ><path
+                                  fill="#fff"
+                                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                                /></svg
+                              >
+                            {:else}
+                              <svg
+                                class="w-6 h-6 inline-block"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                ><path
+                                  fill="white"
+                                  d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"
+                                /></svg
+                              >
+                            {/if}
+                          </label>
+                        {:else if userWatchList?.length === 0}
+                          <label
+                            on:click={() => toggleUserWatchlist("firstList")}
+                            class="cursor-pointer flex-shrink-0"
+                          >
+                            {#if isTickerIncluded}
+                              <svg
+                                class="w-6 h-6 inline-block"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                ><path
+                                  fill="#fff"
+                                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                                /></svg
+                              >
+                            {:else}
+                              <svg
+                                class="w-6 h-6 inline-block"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                ><path
+                                  fill="white"
+                                  d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"
+                                /></svg
+                              >
+                            {/if}
+                          </label>
+                        {/if}
+                      </div>
+                    {:else}
+                      <label
+                        for="userLogin"
+                        class="cursor-pointer flex-shrink-0 text-white mr-4"
+                      >
+                        <svg
+                          class="w-6 h-6 inline-block"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 16 16"
+                          ><path
+                            fill="white"
+                            d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"
+                          /></svg
+                        >
+                      </label>
+                    {/if}
+                    <!--End Watchlist-->
+
+                    <!--Start Price Alert-->
+                    <label
+                      on:click={() => ($openPriceAlert = true)}
+                      for={data?.user ? "priceAlertModal" : "userLogin"}
+                      class="mr-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-7 h-7 inline-block mt-1"
+                        viewBox="0 0 24 24"
+                        ><g
+                          fill="none"
+                          stroke="white"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          ><path d="M3 5.231L6.15 3M21 5.231L17.85 3" /><circle
+                            cx="12"
+                            cy="13"
+                            r="8"
+                          /><path d="M9.5 13h5M12 10.5v5" /></g
+                        ></svg
+                      >
+                    </label>
+                    <!--End Price Alert -->
+                  </div>
                 </div>
               </div>
             </div>
             <!--End Mobile Navbar-->
-           
-        
-            <div class="pt-20 sm:pt-0 w-auto max-w-3xl lg:max-w-content 2xl:max-w-6xl px-3 sm:px-0">     
-                    
-              <div class="md:flex md:justify-between md:divide-x md:divide-slate-800">
-                  <!-- Main content -->
-                  <div class="pb-12 md:pb-20 w-full 2xl:max-w-5xl">
-                      <div class="md:pr-6 lg:pr-10">
-                                   
-                                   
-                  
-                                      <!-----Start-Header-CandleChart-Indicators------>
-                                      <div class="m-auto pl-0 sm:pl-4 max-w-5xl overflow-hidden mb-5 md:mt-10">
-      
-                                        <div class="hidden sm:flex flex-row w-full justify-between items-center pb-10">
-  
-                                            <Markethour />
-  
-                                            <!--Start Watchlist-->
-                                          
-                                            {#if data?.user}
-                                            <div class="flex flex-col ml-auto mr-2">
-                                              {#if userWatchList?.length !== 0}
-                                              <div class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center">
-                                                <label for="addWatchListModal" class="cursor-pointer flex-shrink-0">
-                                                  {#if isTickerIncluded}
-                                                    <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#FBCE3C" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
-                                                    {:else}
-                                                    <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>              
-                                                  {/if}
-                                                </label>
-                                              </div>
-        
-                                              {:else if userWatchList?.length === 0}
-                                              <div class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center">
-                                                <label on:click={() => toggleUserWatchlist('firstList')} class="cursor-pointer flex-shrink-0">
-                                                  {#if isTickerIncluded}
-                                                  <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#9DED1E" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
-                                                  {:else}
-                                                  <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>              
-                                                  {/if}
-                                              </label>
-                                              </div>
-                                             
-                                              {/if}
-                                            </div>
-                                            {:else}
-                                            <div class="flex-shrink-0 ml-auto mr-2 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center">
-                                              <label for="userLogin" class="cursor-pointer flex-shrink-0 text-white">
-                                                <svg class="w-7 h-7 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>
-                                              </label>
-                                            </div>
-                                            {/if}
-                                          <!--End Watchlist-->
 
-                                         <!--Start Price Alert -->
-                                        
-                                         <div class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center">
-                                          <label on:click={() => $openPriceAlert = true} for={data?.user ? 'priceAlertModal' : 'userLogin'} class="cursor-pointer flex-shrink-0 text-white">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 inline-block" viewBox="0 0 24 24"><g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M3 5.231L6.15 3M21 5.231L17.85 3"/><circle cx="12" cy="13" r="8"/><path d="M9.5 13h5M12 10.5v5"/></g></svg>
-                                          </label>
-                                        </div>
-                                        <!--End Price Alert -->
+            <div
+              class="pt-20 sm:pt-0 w-auto max-w-3xl lg:max-w-content 2xl:max-w-6xl px-3 sm:px-0"
+            >
+              <div
+                class="md:flex md:justify-between md:divide-x md:divide-slate-800"
+              >
+                <!-- Main content -->
+                <div class="pb-12 md:pb-20 w-full 2xl:max-w-5xl">
+                  <div class="md:pr-6 lg:pr-10">
+                    <!-----Start-Header-CandleChart-Indicators------>
+                    <div
+                      class="m-auto pl-0 sm:pl-4 max-w-5xl overflow-hidden mb-5 md:mt-10"
+                    >
+                      <div
+                        class="hidden sm:flex flex-row w-full justify-between items-center pb-10"
+                      >
+                        <Markethour />
 
-                                        </div>
-        
-                                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                                        <!-- svelte-ignore a11y-label-has-associated-control -->
-                                        
-                                        <div class="flex items-center">
-                                          <div class="flex flex-row justify-start items-center mb-5 mt-2">
-                                            
-                                            <div class="rounded-full w-10 h-10 relative bg-[#141417] flex items-center justify-center border border-slate-800">
-                                              <img style="clip-path: circle(50%);" class="w-6 h-6" src={`https://financialmodelingprep.com/image-stock/${$etfTicker?.toUpperCase()}.png`} loading="lazy"/>
-                                            </div>
-                                            
-                                            
-                                            <div class="flex flex-col items-start ml-2 sm:ml-3">
-                                              <span class="text-xs text-blue-400">
-                                                {$etfTicker?.toUpperCase()}
-                                              </span>
-                                              <span class="text-sm sm:text-xl font-medium text-slate-100">
-                                                {$displayCompanyName?.length > charNumber ? $displayCompanyName?.slice(0,charNumber) + "..." : $displayCompanyName}
-                                              </span>
-                                            </div>
-                                          </div>
-  
-  
-                                      <div class="ml-auto sm:hidden">
-                                        <Markethour />
-                                      </div>
-        
-                                          
-        
-        
-                                            <!--Start Trade-->
-                                            <!--
+                        <!--Start Watchlist-->
+
+                        {#if data?.user}
+                          <div class="flex flex-col ml-auto mr-2">
+                            {#if userWatchList?.length !== 0}
+                              <div
+                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                              >
+                                <label
+                                  for="addWatchListModal"
+                                  class="cursor-pointer flex-shrink-0"
+                                >
+                                  {#if isTickerIncluded}
+                                    <svg
+                                      class="w-7 h-7 inline-block"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 16 16"
+                                      ><path
+                                        fill="#fff"
+                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                                      /></svg
+                                    >
+                                  {:else}
+                                    <svg
+                                      class="w-7 h-7 inline-block"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 16 16"
+                                      ><path
+                                        fill="white"
+                                        d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"
+                                      /></svg
+                                    >
+                                  {/if}
+                                </label>
+                              </div>
+                            {:else if userWatchList?.length === 0}
+                              <div
+                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                              >
+                                <label
+                                  on:click={() =>
+                                    toggleUserWatchlist("firstList")}
+                                  class="cursor-pointer flex-shrink-0"
+                                >
+                                  {#if isTickerIncluded}
+                                    <svg
+                                      class="w-7 h-7 inline-block"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 16 16"
+                                      ><path
+                                        fill="#9DED1E"
+                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                                      /></svg
+                                    >
+                                  {:else}
+                                    <svg
+                                      class="w-7 h-7 inline-block"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 16 16"
+                                      ><path
+                                        fill="white"
+                                        d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"
+                                      /></svg
+                                    >
+                                  {/if}
+                                </label>
+                              </div>
+                            {/if}
+                          </div>
+                        {:else}
+                          <div
+                            class="flex-shrink-0 ml-auto mr-2 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                          >
+                            <label
+                              for="userLogin"
+                              class="cursor-pointer flex-shrink-0 text-white"
+                            >
+                              <svg
+                                class="w-7 h-7 inline-block"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                ><path
+                                  fill="white"
+                                  d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256l4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73l3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356l-.83 4.73zm4.905-2.767l-3.686 1.894l.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575l-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957l-3.686-1.894a.503.503 0 0 0-.461 0z"
+                                /></svg
+                              >
+                            </label>
+                          </div>
+                        {/if}
+                        <!--End Watchlist-->
+
+                        <!--Start Price Alert -->
+
+                        <div
+                          class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                        >
+                          <label
+                            on:click={() => ($openPriceAlert = true)}
+                            for={data?.user ? "priceAlertModal" : "userLogin"}
+                            class="cursor-pointer flex-shrink-0 text-white"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="w-8 h-8 inline-block"
+                              viewBox="0 0 24 24"
+                              ><g
+                                fill="none"
+                                stroke="white"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.5"
+                                ><path
+                                  d="M3 5.231L6.15 3M21 5.231L17.85 3"
+                                /><circle cx="12" cy="13" r="8" /><path
+                                  d="M9.5 13h5M12 10.5v5"
+                                /></g
+                              ></svg
+                            >
+                          </label>
+                        </div>
+                        <!--End Price Alert -->
+                      </div>
+
+                      <!-- svelte-ignore a11y-click-events-have-key-events -->
+                      <!-- svelte-ignore a11y-label-has-associated-control -->
+
+                      <div class="flex items-center">
+                        <div
+                          class="flex flex-row justify-start items-center mb-5 mt-2"
+                        >
+                          <div
+                            class="rounded-full w-10 h-10 relative bg-[#141417] flex items-center justify-center border border-slate-800"
+                          >
+                            <img
+                              style="clip-path: circle(50%);"
+                              class="w-6 h-6"
+                              src={`https://financialmodelingprep.com/image-stock/${$etfTicker?.toUpperCase()}.png`}
+                              loading="lazy"
+                            />
+                          </div>
+
+                          <div class="flex flex-col items-start ml-2 sm:ml-3">
+                            <span class="text-xs text-blue-400">
+                              {$etfTicker?.toUpperCase()}
+                            </span>
+                            <span
+                              class="text-sm sm:text-xl font-medium text-slate-100"
+                            >
+                              {$displayCompanyName?.length > charNumber
+                                ? $displayCompanyName?.slice(0, charNumber) +
+                                  "..."
+                                : $displayCompanyName}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="ml-auto sm:hidden">
+                          <Markethour />
+                        </div>
+
+                        <!--Start Trade-->
+                        <!--
                                             <div class="hidden sm:flex ml-auto">
                                               {#if holdingShares !== 0 && data?.user}
                                              
@@ -648,120 +799,205 @@ $: {
                                               {/if}
                                             </div>
                                             -->
-                                            <!--End Trade-->
-                       
-                                        </div>
-                                         
-        
-                         
-                                      
-        
-                                      </div>
-                                      <!-----End-Header-CandleChart-Indicators------>
-        
-        
-                                        <!--Start Ticker Section-->
-                                        
-                                        <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-[#09090B]"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
-                                          <div class="sm:ml-4 w-screen sm:w-full {$screenWidth < 640 ? 'overflow-auto scrollbar no-scrollbar' : ''} mb-2" >
-                                            <ul class="pr-4 sm:pr-0 w-screen font-medium flex flex-row items-center bg-[#09090B]  space-x-3 rtl:space-x-reverse py-2">
-                                              <li class="cursor-pointer flex flex-col items-center">
-                                                <a href={`/etf/${$etfTicker}`} id="item1" on:click={() => (changeSection('overview','item1'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'overview' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  Overview
-                                                </a>
-                                                <div class="{displaySection === 'overview' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]" />
-                                              </li>
-                                              <li class="cursor-pointer flex flex-col items-center">
-                                                <a href={`/etf/${$etfTicker}/stats`} id="item2" on:click={() => (changeSection('stats','item2'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'stats' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  Stats
-                                                </a>
-                                                <div class="{displaySection === 'stats' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]" />
-                                              </li>
-                                              <li class="cursor-pointer flex flex-col items-center">
-                                                <a href={`/etf/${$etfTicker}/forecast`} id="item10" on:click={() => (changeSection('forecast','item10'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'forecast' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  Forecast
-                                                </a>
-                                                <div class="{displaySection === 'forecast' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]" />
-                                              </li>
-                                              <li class="cursor-pointer flex flex-col items-center">
-                                                <a href={`/etf/${$etfTicker}/options`} id="item3" on:click={() => (changeSection('options','item3'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'options' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  Options
-                                                </a>
-                                                <div class="{displaySection === 'options' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]" />
-                                              </li>
-                                              <li class="cursor-pointer flex flex-col items-center">
-                                                <a href={`/etf/${$etfTicker}/holdings`} id="item4" on:click={() => (changeSection('holdings','item4'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'holdings' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  Holdings
-                                                </a>
-                                                <div class="{displaySection === 'holdings' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]" />
-                                              </li>
-                                              <li class="cursor-pointer flex flex-col items-center">
-                                                <a href={`/etf/${$etfTicker}/dividends`} id="item5" on:click={() => (changeSection('dividends','item5'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'dividends' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  Dividends
-                                                </a>
-                                                <div class="{displaySection === 'dividends' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]" />
-                                              </li>
-                                              <li class="cursor-pointer flex flex-col items-center">
-                                                <a href={`/etf/${$etfTicker}/congress-trading`} id="item5" on:click={() => (changeSection('congress-trading','item5'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'congress-trading' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  Insider
-                                                </a>
-                                                <div class="{displaySection === 'congress-trading' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]" />
-                                              </li>
-                                              <li class="cursor-pointer flex flex-col items-center pr-6">
-                                                <a href={`/etf/${$etfTicker}/news`} id="item7" on:click={() => (changeSection('news','item7'))} class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection === 'news' ? 'text-white ' : 'bg-[#09090B]'}" >
-                                                  News
-                                                </a>
-                                                <div class="{displaySection === 'news' ? 'bg-[#75D377]' : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]" />
-                                              </li>
-                                            </ul>
-                                          </div>
-                                          
+                        <!--End Trade-->
+                      </div>
+                    </div>
+                    <!-----End-Header-CandleChart-Indicators------>
 
-                                        <!--Start-Main Content-->
-                                          <slot />
-                                        <!--End Main Content-->
-      
-      
-  
-                
-                              </div>
-                          </div>
-  
-                          <aside class="hidden lg:block w-fit max-w-xl 2xl:w-[120px] m-auto sm:m-0 md:shrink-0 md:pt-10 pb-12 md:pb-20">
-                            <div class="sm:pl-10">
-                        
-                                <!--Start Company Info -->
-                                
-                                <ETFProfileCard
-                                  data = {data}
-                                  etfProfile = {etfProfile}
-                                />
+                    <!--Start Ticker Section-->
 
-                               
-                                <div class="{topHoldingList?.length === 0 ? 'hidden' : ''}">
-                                <TopHoldingCard
-                                topHoldingList = {topHoldingList}
-                                />
-                                </div>
+                    <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-[#09090B]"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
+                    <div
+                      class="sm:ml-4 w-screen sm:w-full {$screenWidth < 640
+                        ? 'overflow-auto scrollbar no-scrollbar'
+                        : ''} mb-2"
+                    >
+                      <ul
+                        class="pr-4 sm:pr-0 w-screen font-medium flex flex-row items-center bg-[#09090B] space-x-3 rtl:space-x-reverse py-2"
+                      >
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/etf/${$etfTicker}`}
+                            id="item1"
+                            on:click={() => changeSection("overview", "item1")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'overview'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            Overview
+                          </a>
+                          <div
+                            class="{displaySection === 'overview'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
+                          />
+                        </li>
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/etf/${$etfTicker}/stats`}
+                            id="item2"
+                            on:click={() => changeSection("stats", "item2")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'stats'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            Stats
+                          </a>
+                          <div
+                            class="{displaySection === 'stats'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
+                          />
+                        </li>
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/etf/${$etfTicker}/forecast`}
+                            id="item10"
+                            on:click={() => changeSection("forecast", "item10")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'forecast'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            Forecast
+                          </a>
+                          <div
+                            class="{displaySection === 'forecast'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]"
+                          />
+                        </li>
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/etf/${$etfTicker}/options`}
+                            id="item3"
+                            on:click={() => changeSection("options", "item3")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'options'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            Options
+                          </a>
+                          <div
+                            class="{displaySection === 'options'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]"
+                          />
+                        </li>
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/etf/${$etfTicker}/holdings`}
+                            id="item4"
+                            on:click={() => changeSection("holdings", "item4")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'holdings'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            Holdings
+                          </a>
+                          <div
+                            class="{displaySection === 'holdings'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]"
+                          />
+                        </li>
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/etf/${$etfTicker}/dividends`}
+                            id="item5"
+                            on:click={() => changeSection("dividends", "item5")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'dividends'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            Dividends
+                          </a>
+                          <div
+                            class="{displaySection === 'dividends'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]"
+                          />
+                        </li>
+                        <li class="cursor-pointer flex flex-col items-center">
+                          <a
+                            href={`/etf/${$etfTicker}/congress-trading`}
+                            id="item5"
+                            on:click={() =>
+                              changeSection("congress-trading", "item5")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'congress-trading'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            Insider
+                          </a>
+                          <div
+                            class="{displaySection === 'congress-trading'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3rem]"
+                          />
+                        </li>
+                        <li
+                          class="cursor-pointer flex flex-col items-center pr-6"
+                        >
+                          <a
+                            href={`/etf/${$etfTicker}/news`}
+                            id="item7"
+                            on:click={() => changeSection("news", "item7")}
+                            class="px-2 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
+                            'news'
+                              ? 'text-white '
+                              : 'bg-[#09090B]'}"
+                          >
+                            News
+                          </a>
+                          <div
+                            class="{displaySection === 'news'
+                              ? 'bg-[#75D377]'
+                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
+                          />
+                        </li>
+                      </ul>
+                    </div>
 
-                                <div class="{dividendList?.history?.length === 0 ? 'hidden' : ''}">
-                                  <DividendCard
-                                  dividendList = {dividendList}
-                                  />
-                                </div>
-                                <div class="{similarTicker.length === 0 ? 'hidden' : ''}">
-                                    <SimilarETFCard 
-                                    similarTicker = {similarTicker}
-                                    />
-                                </div>
+                    <!--Start-Main Content-->
+                    <slot />
+                    <!--End Main Content-->
+                  </div>
+                </div>
 
-                                
-                                <!--End Company Info -->
-    
-    
-                              </div>
-                          </aside>
-                        <!--
+                <aside
+                  class="hidden lg:block w-fit max-w-xl 2xl:w-[120px] m-auto sm:m-0 md:shrink-0 md:pt-10 pb-12 md:pb-20"
+                >
+                  <div class="sm:pl-10">
+                    <!--Start Company Info -->
+
+                    <ETFProfileCard {data} {etfProfile} />
+
+                    <div class={topHoldingList?.length === 0 ? "hidden" : ""}>
+                      <TopHoldingCard {topHoldingList} />
+                    </div>
+
+                    <div
+                      class={dividendList?.history?.length === 0
+                        ? "hidden"
+                        : ""}
+                    >
+                      <DividendCard {dividendList} />
+                    </div>
+                    <div class={similarTicker.length === 0 ? "hidden" : ""}>
+                      <SimilarETFCard {similarTicker} />
+                    </div>
+
+                    <!--End Company Info -->
+                  </div>
+                </aside>
+                <!--
                           {#if $screenWidth < 640 && MobileETFNavbar}
                             <MobileETFNavbar 
                               holdingShares={holdingShares}
@@ -775,7 +1011,7 @@ $: {
                           {/if}
                         -->
 
-                        <!--
+                <!--
                         <div class="sm:hidden fixed z-20 bottom-8 sm:bottom-10 right-5">
                           <div class="h-full mx-auto">        
                             <div class="flex items-center justify-end">
@@ -793,23 +1029,19 @@ $: {
                           </div>
                         </div>
                         -->
-
-
-                                            
-  
-                      </div>
-                  </section>
-              </main>        
+              </div>
+            </div>
           </div>
-      </body>
-                
-              
-  
-  
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
 <!--Start Login Modal-->
 {#if LoginPopup}
-<LoginPopup form={$globalForm}/> 
-{/if}   
+  <LoginPopup form={$globalForm} />
+{/if}
 <!--End Login Modal-->
 
 <!--
@@ -835,73 +1067,99 @@ $: {
 -->
 
 {#if PriceAlert}
-<PriceAlert 
-  data = {data}
-/>
+  <PriceAlert {data} />
 {/if}
 
-  
+<!--Start Type of Trade-->
 
-  
-  
-  
-  
-  <!--Start Type of Trade-->
-  
-  
-  <input type="checkbox" id="typeOfTrade" class="modal-toggle" />
-  
-  <dialog id="typeOfTrade" class="modal modal-bottom sm:modal-middle overflow-hidden">
-  
-  
-    <label for="typeOfTrade"  class="cursor-pointer modal-backdrop bg-[#fff] bg-opacity-[0.08]"></label>
-    
-    <div class="modal-box w-full bg-[#000] border border-slate-600 pb-10">
-  
-  
-  
-      <div class= "flex flex-col">
-        <div class="text-white text-md flex flex-col flex-shrink-0">
-            <div class="rounded-full w-10 h-10 relative bg-gray-900 mb-2">
-                <img class="rounded-full w-6 h-6 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2" src={`https://financialmodelingprep.com/image-stock/${$etfTicker}.png`} />
-            </div>
-            <span class="mb-1">
-                {$displayCompanyName?.length > 30 ? $displayCompanyName?.slice(0, 30) + "..." : $displayCompanyName}
-            </span>
-            <div class="flex flex-row items-center mb-10">
-  
-              <span class="mb-1 text-sm font-medium">
-                  Current Price: ${$currentPortfolioPrice}
-              </span>
-              <span class="text-blue-400 text-sm font-medium ml-auto">
-                Holding Shares: {holdingShares}
-              </span>
-  
-            </div>
+<input type="checkbox" id="typeOfTrade" class="modal-toggle" />
+
+<dialog
+  id="typeOfTrade"
+  class="modal modal-bottom sm:modal-middle overflow-hidden"
+>
+  <label
+    for="typeOfTrade"
+    class="cursor-pointer modal-backdrop bg-[#fff] bg-opacity-[0.08]"
+  ></label>
+
+  <div class="modal-box w-full bg-[#000] border border-slate-600 pb-10">
+    <div class="flex flex-col">
+      <div class="text-white text-md flex flex-col flex-shrink-0">
+        <div class="rounded-full w-10 h-10 relative bg-gray-900 mb-2">
+          <img
+            class="rounded-full w-6 h-6 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            src={`https://financialmodelingprep.com/image-stock/${$etfTicker}.png`}
+          />
         </div>
+        <span class="mb-1">
+          {$displayCompanyName?.length > 30
+            ? $displayCompanyName?.slice(0, 30) + "..."
+            : $displayCompanyName}
+        </span>
+        <div class="flex flex-row items-center mb-10">
+          <span class="mb-1 text-sm font-medium">
+            Current Price: ${$currentPortfolioPrice}
+          </span>
+          <span class="text-blue-400 text-sm font-medium ml-auto">
+            Holding Shares: {holdingShares}
+          </span>
+        </div>
+      </div>
     </div>
-  
-  
+
     <div class="text-white">
-      <h3 class="font-bold text-2xl mb-5">
-        Type of Trade
-      </h3>
-  
-  
+      <h3 class="font-bold text-2xl mb-5">Type of Trade</h3>
+
       <ul class="menu dropdown-content text-white bg-[#000] rounded -ml-6">
         <li class="mb-3">
-          <label for="typeOfTrade" on:click={() => handleTypeOfTrade('buy')} class="cursor-pointer flex flex-row justify-start items-center">
+          <label
+            for="typeOfTrade"
+            on:click={() => handleTypeOfTrade("buy")}
+            class="cursor-pointer flex flex-row justify-start items-center"
+          >
             <div class="rounded-full w-10 h-10 relative bg-gray-800">
-              <svg class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="green"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect width="16" height="16" id="icon-bound" fill="none"></rect> <path d="M0,11h11.2l-2.6,2.6L10,15l6-6H0V11z M4.8,5l2.6-2.6L6,1L0,7h16V5H4.8z"></path> </g></svg>
+              <svg
+                class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                viewBox="0 0 16 16"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                fill="green"
+                ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g><g id="SVGRepo_iconCarrier">
+                  <rect width="16" height="16" id="icon-bound" fill="none"
+                  ></rect>
+                  <path
+                    d="M0,11h11.2l-2.6,2.6L10,15l6-6H0V11z M4.8,5l2.6-2.6L6,1L0,7h16V5H4.8z"
+                  ></path>
+                </g></svg
+              >
             </div>
-            <span class="ml-1 text-white text-lg font-medium">Buy {$etfTicker} Shares</span>
-            
+            <span class="ml-1 text-white text-lg font-medium"
+              >Buy {$etfTicker} Shares</span
+            >
           </label>
         </li>
         <li class="mb-3">
-          <label for="typeOfTrade" on:click={() => handleTypeOfTrade('sell')} class="cursor-pointer flex flex-row justify-start items-center">
+          <label
+            for="typeOfTrade"
+            on:click={() => handleTypeOfTrade("sell")}
+            class="cursor-pointer flex flex-row justify-start items-center"
+          >
             <div class="rounded-full w-10 h-10 relative bg-gray-800">
-              <svg class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="red" d="M14.25 21.4q-.575.575-1.425.575T11.4 21.4l-8.8-8.8q-.275-.275-.438-.65T2 11.15V4q0-.825.588-1.413T4 2h7.15q.425 0 .8.163t.65.437l8.8 8.825q.575.575.575 1.413T21.4 14.25l-7.15 7.15ZM6.5 8q.625 0 1.063-.438T8 6.5q0-.625-.438-1.063T6.5 5q-.625 0-1.063.438T5 6.5q0 .625.438 1.063T6.5 8Z"/></svg>
+              <svg
+                class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><path
+                  fill="red"
+                  d="M14.25 21.4q-.575.575-1.425.575T11.4 21.4l-8.8-8.8q-.275-.275-.438-.65T2 11.15V4q0-.825.588-1.413T4 2h7.15q.425 0 .8.163t.65.437l8.8 8.825q.575.575.575 1.413T21.4 14.25l-7.15 7.15ZM6.5 8q.625 0 1.063-.438T8 6.5q0-.625-.438-1.063T6.5 5q-.625 0-1.063.438T5 6.5q0 .625.438 1.063T6.5 8Z"
+                /></svg
+              >
             </div>
             <span class="ml-1 text-white text-lg font-medium">
               Sell {$etfTicker} Shares
@@ -910,50 +1168,91 @@ $: {
         </li>
       </ul>
     </div>
-    </div>
-  </dialog>
-  
-  <!--End Type of Trade-->
-  
-  
-    
-  
-  
-  
-  
-  <!--Start Add Watchlist Modal-->
+  </div>
+</dialog>
+
+<!--End Type of Trade-->
+
+<!--Start Add Watchlist Modal-->
 <input type="checkbox" id="addWatchListModal" class="modal-toggle" />
 
-<dialog id="addWatchListModal" class="modal modal-bottom sm:modal-middle bg-[#000] bg-opacity-[0.5]">
-  <label id="addWatchListModal" for="addWatchListModal" class="cursor-pointer modal-backdrop"></label>
+<dialog
+  id="addWatchListModal"
+  class="modal modal-bottom sm:modal-middle bg-[#000] bg-opacity-[0.5]"
+>
+  <label
+    id="addWatchListModal"
+    for="addWatchListModal"
+    class="cursor-pointer modal-backdrop"
+  ></label>
 
   <div class="modal-box w-full bg-[#191919] sm:border sm:border-gray-800">
-    <label for="addWatchListModal" class="cursor-pointer bg-[#191919] absolute right-5 top-2 text-[1.8rem] text-white"> ✕ </label>
+    <label
+      for="addWatchListModal"
+      class="cursor-pointer bg-[#191919] absolute right-5 top-2 text-[1.8rem] text-white"
+    >
+      ✕
+    </label>
 
     <div class="text-white">
       <h3 class="font-semibold text-lg sm:text-xl mb-10">Add to Watchlist</h3>
 
       <div class="flex flex-col items-center w-full max-w-3xl bg-[#191919]">
         {#each userWatchList as item}
-          <label on:click|stopPropagation={() => toggleUserWatchlist(item?.id)} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-            <div class="flex flex-row items-center w-full bg-[#313131] p-3 rounded-lg {item?.ticker?.includes($etfTicker) ? 'ring-2 ring-[#04E000]' : ''}">
+          <label
+            on:click|stopPropagation={() => toggleUserWatchlist(item?.id)}
+            class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
+          >
+            <div
+              class="flex flex-row items-center w-full bg-[#313131] p-3 rounded-lg {item?.ticker?.includes(
+                $etfTicker,
+              )
+                ? 'ring-2 ring-[#04E000]'
+                : ''}"
+            >
               <div class="flex flex-col items-center w-full">
                 <span class="ml-1 text-white font-medium mr-auto">
                   {item?.title}
                 </span>
-                <span class="ml-1 text-white text-opacity-40 text-sm font-medium mr-auto">
+                <span
+                  class="ml-1 text-white text-opacity-40 text-sm font-medium mr-auto"
+                >
                   {item?.ticker?.length}
                   {item?.ticker?.length !== 1 ? "Companies" : "Company"}
                 </span>
               </div>
 
-              <div class="rounded-full w-8 h-8 relative border border-[#737373]">
+              <div
+                class="rounded-full w-8 h-8 relative border border-[#737373]"
+              >
                 {#if item?.ticker?.includes($etfTicker)}
-                  <svg class="w-full h-full rounded-full" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#09090B000"
-                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
-                      <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_checkmark_circle_48_filled</title> <desc>Created with Sketch.</desc>
-                      <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <g id="ic_fluent_checkmark_circle_48_filled" fill="#04E000" fill-rule="nonzero">
+                  <svg
+                    class="w-full h-full rounded-full"
+                    viewBox="0 0 48 48"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    fill="#09090B000"
+                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g><g id="SVGRepo_iconCarrier">
+                      <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                      <title>ic_fluent_checkmark_circle_48_filled</title>
+                      <desc>Created with Sketch.</desc>
+                      <g
+                        id="🔍-Product-Icons"
+                        stroke="none"
+                        stroke-width="1"
+                        fill="none"
+                        fill-rule="evenodd"
+                      >
+                        <g
+                          id="ic_fluent_checkmark_circle_48_filled"
+                          fill="#04E000"
+                          fill-rule="nonzero"
+                        >
                           <path
                             d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z"
                             id="🎨-Color"
@@ -973,48 +1272,42 @@ $: {
   </div>
 </dialog>
 
-  <!--End Add Watchlist Modal-->
-      
-  
-  
-  <style lang='scss'>
-       
+<!--End Add Watchlist Modal-->
 
-    .scrollbar {
-        display: grid;
-        grid-gap: 17px;
-        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-        grid-auto-flow: column;
-        overflow-x: auto;
-        scrollbar-width: thin; /* Hide the default scrollbar in Firefox */
-        scrollbar-color: transparent transparent; /* Hide the default scrollbar in Firefox */
-    }
-    
-    /* Custom scrollbar for Webkit (Chrome, Safari) */
-    .scrollbar::-webkit-scrollbar {
-        width: 0; /* Hide the width of the scrollbar */
-        height: 0; /* Hide the height of the scrollbar */
-    }
-    
-    .scrollbar::-webkit-scrollbar-thumb {
-        background: transparent; /* Make the thumb transparent */
-    }
-    
-    ::-webkit-scrollbar {
-        height: 7px;
-        width: 10px;
-        background: #09090B;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: #6B6F79;
-        -webkit-border-radius: 1ex;
-        -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
-    }
-    
-    ::-webkit-scrollbar-corner {
-        background: #09090B;
-    }
-    
-    
-    </style>
+<style lang="scss">
+  .scrollbar {
+    display: grid;
+    grid-gap: 17px;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scrollbar-width: thin; /* Hide the default scrollbar in Firefox */
+    scrollbar-color: transparent transparent; /* Hide the default scrollbar in Firefox */
+  }
+
+  /* Custom scrollbar for Webkit (Chrome, Safari) */
+  .scrollbar::-webkit-scrollbar {
+    width: 0; /* Hide the width of the scrollbar */
+    height: 0; /* Hide the height of the scrollbar */
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: transparent; /* Make the thumb transparent */
+  }
+
+  ::-webkit-scrollbar {
+    height: 7px;
+    width: 10px;
+    background: #09090b;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #6b6f79;
+    -webkit-border-radius: 1ex;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #09090b;
+  }
+</style>

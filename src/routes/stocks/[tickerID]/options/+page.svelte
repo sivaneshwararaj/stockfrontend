@@ -228,7 +228,7 @@
           yAxisIndex: 1, // Use the second y-axis on the right
           data: ivData, // iv60Data (assumed to be passed as ivData)
           itemStyle: {
-            color: "#FFD700", // Choose a color for the line (gold in this case)
+            color: "#fff", // Choose a color for the line (gold in this case)
           },
           lineStyle: {
             width: 2, // Set the width of the line
@@ -311,7 +311,7 @@
           type: "line",
           yAxisIndex: 0,
           itemStyle: {
-            color: "#FBCE3C",
+            color: "#fff",
           },
           showSymbol: false,
         },
@@ -595,7 +595,7 @@
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 256 256"
               ><path
-                fill="#FBCE3C"
+                fill="#fff"
                 d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
               /></svg
             >
@@ -732,7 +732,7 @@
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 256 256"
                     ><path
-                      fill="#FBCE3C"
+                      fill="#fff"
                       d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                     /></svg
                   >
@@ -761,12 +761,12 @@
                     : ''} "
                 >
                   {#if activeEX === i}
-                    <div
-                      class="absolute inset-0 rounded-lg bg-purple-600"
-                    ></div>
+                    <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
                   {/if}
                   <span
-                    class="relative text-sm block font-medium duration-200 text-white"
+                    class="relative text-sm block font-semibold {activeEX === i
+                      ? 'text-black'
+                      : 'text-white'}"
                   >
                     {item.title}
                   </span>
@@ -796,12 +796,12 @@
                     : ''} "
                 >
                   {#if activeIdx === i}
-                    <div
-                      class="absolute inset-0 rounded-lg bg-purple-600"
-                    ></div>
+                    <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
                   {/if}
                   <span
-                    class="relative text-sm block font-medium duration-200 text-white"
+                    class="relative text-sm block font-semibold {activeIdx === i
+                      ? 'text-black'
+                      : 'text-white'}"
                   >
                     {item.title}
                   </span>
@@ -928,7 +928,7 @@
                             </div>
                           {:else if item?.neutral_ratio > (item?.bull_ratio ?? 0) && item?.neutral_ratio > (item?.bear_ratio ?? 0)}
                             <div
-                              class="badge bg-[#FBCE3C] text-black font-semibold gap-2"
+                              class="badge bg-[#fff] text-black font-semibold gap-2"
                             >
                               {item?.neutral_ratio?.toFixed(0)}% Neutral
                             </div>
@@ -976,7 +976,7 @@
                             </div>
                           {:else if item?.midpoint_ratio > (item?.ask_ratio ?? 0) && item?.midpoint_ratio > (item?.bid_ratio ?? 0)}
                             <div
-                              class="badge bg-[#FBCE3C] text-black font-semibold gap-2"
+                              class="badge bg-[#fff] text-black font-semibold gap-2"
                             >
                               {item?.midpoint_ratio?.toFixed(0)}% Midpoint
                             </div>
@@ -1093,7 +1093,7 @@
                             : 'text-[#FF2F1F]'} text-end"
                         >
                           <div
-                            class="rounded-lg w-fit px-2 text-center font-semibold badge gap-2 bg-[#FBCE3C] text-black m-auto flex justify-center items-center"
+                            class="rounded-lg w-fit px-2 text-center font-semibold badge gap-2 bg-[#fff] text-black m-auto flex justify-center items-center"
                           >
                             {item?.strike_price}
                           </div>
@@ -1137,7 +1137,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
                   ><path
-                    fill="#FBCE3C"
+                    fill="#fff"
                     d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                   /></svg
                 >

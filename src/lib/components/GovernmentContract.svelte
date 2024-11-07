@@ -111,7 +111,7 @@
           data: amountList,
           type: "bar",
           itemStyle: {
-            color: "#FBCE3C", // Change bar color to orange
+            color: "#fff", // Change bar color to orange
           },
         },
       ],

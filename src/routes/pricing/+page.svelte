@@ -112,7 +112,7 @@ function toggleMode()
 >
   <!--
 {#if data?.user?.tier !== 'Pro' || data?.user?.freeTrial === true}
-  <div class="mb-5 -mt-10 sm:-mt-5 relative sm:rounded isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
+  <div class="mb-5 -mt-10 sm:-mt-5 relative sm:rounded isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#fff] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1">
   <div class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl" aria-hidden="true">
     <div class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"></div>
   </div>
@@ -122,7 +122,7 @@ function toggleMode()
   <div class="w-full m-auto flex flex-col sm:flex-row justify-center items-center gap-x-4 gap-y-2">
     <p class="text-[1rem] text-white">
       <strong class="font-semibold text-lg text-[1rem] text-white">🎃 Limited Halloween Special</strong><svg viewBox="0 0 2 2" class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg>
-        Save <strong class="text-[#FBCE3C]">16%</strong> with Promo Code: <strong class="text-[#FBCE3C]">HALLOWEEN</strong>
+        Save <strong class="text-[#fff]">16%</strong> with Promo Code: <strong class="text-[#fff]">HALLOWEEN</strong>
     </p>
   </div>
 </div>
@@ -138,7 +138,7 @@ function toggleMode()
         Flexible plans and features
       </h1>
       <div
-        class="w-full flex justify-center items-center h-16 bg-[#09090B] rounded-lg"
+        class="w-full flex justify-center items-center h-16 bg-[#09090B] rounded-md"
       >
         <p
           class="font-medium font-serif text-center w-3/4 sm:w-full text-white text-[1rem] sm:text-xl italic"
@@ -163,7 +163,7 @@ function toggleMode()
                     <span class="text-sm font-semibold text-white">
                         Pay Yearly
                     </span>
-                    <span class="text-[#FBCE3C] text-sm font-semibold">
+                    <span class="text-[#fff] text-sm font-semibold">
                         Save up 16%
                     </span>
                 </div>
@@ -179,7 +179,7 @@ function toggleMode()
     >
       <!-- Pricing Card -->
       <div
-        class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-[#09090B] rounded-lg"
+        class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-[#09090B] rounded-md"
       >
         <div class="flex flex-row items-center justify-start items-center mt-2">
           <img
@@ -316,7 +316,7 @@ function toggleMode()
         {#if !data?.user}
           <label
             for="userLogin"
-            class="py-3 cursor-pointer rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+            class="py-3 cursor-pointer rounded-md text-black font-semibold bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
           >
             Get Sign In
             <span
@@ -331,7 +331,7 @@ function toggleMode()
                     ><path
                       d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
                     /><path
-                      fill="white"
+                      fill="black"
                       d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
                     /></g
                   ></g
@@ -345,7 +345,7 @@ function toggleMode()
 
       <!-- Pricing Card -->
       <div
-        class="sm:order-2 rounded-lg box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]"
+        class="sm:order-2 rounded-md box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]"
       >
         <!--<div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right"><span class="text-white">Discount</span></div>-->
 
@@ -721,7 +721,7 @@ function toggleMode()
         </div>
         {#if data?.user?.tier === "Pro" && !data?.user?.freeTrial}
           <a
-            class="py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-150 ease-in-out group"
+            class="py-3 rounded-md text-black font-semibold bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
             href="#"
           >
             Active Plan
@@ -730,7 +730,7 @@ function toggleMode()
           <label
             for={!data?.user ? "userLogin" : ""}
             on:click={() => purchasePlan()}
-            class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+            class="cursor-pointer py-3 rounded-md text-black font-semibold bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
           >
             Get Pro
             <span
@@ -745,7 +745,7 @@ function toggleMode()
                     ><path
                       d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
                     /><path
-                      fill="white"
+                      fill="black"
                       d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
                     /></g
                   ></g
@@ -757,7 +757,7 @@ function toggleMode()
           <label
             for={!data?.user ? "userLogin" : ""}
             on:click={() => purchasePlan()}
-            class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+            class="cursor-pointer py-3 rounded-md text-black font-semibold bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
           >
             Get Pro
             <span
@@ -772,7 +772,7 @@ function toggleMode()
                     ><path
                       d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
                     /><path
-                      fill="white"
+                      fill="black"
                       d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
                     /></g
                   ></g
@@ -790,7 +790,7 @@ function toggleMode()
 
       <!--Start Pricing Card-->
       <!--
-             <div class="sm:h-[660px] sm:order-2 box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto ring-[1px] ring-gray-400 rounded-lg w-full text-center text-white">
+             <div class="sm:h-[660px] sm:order-2 box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto ring-[1px] ring-gray-400 rounded-md w-full text-center text-white">
 
                 <div class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row border-l border-r border-b border-gray-400 items-center p-2">
                     <span class="text-white text-md font-semibold px-3">
@@ -837,19 +837,19 @@ function toggleMode()
                 </div>  
 
                 {#if data?.user?.tier === 'Pro' && !data?.user?.freeTrial}
-                <a class="py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group" href="#">
+                <a class="py-3 rounded-md text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group" href="#">
                     Active Plan
                </a>
                {:else if data?.user?.tier === 'Pro' && data?.user?.freeTrial === true}
 
-                <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan('lifeTime')} class="py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
+                <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan('lifeTime')} class="py-3 rounded-md text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group">
                     Get Lifetime Access
                    <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
                    </span>
                 </label>
                 {:else}
-                <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan('lifeTime')} class="cursor-pointer py-3 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group">
+                <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan('lifeTime')} class="cursor-pointer py-3 rounded-md text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group">
                     Get Lifetime Access
                    <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
                        <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
@@ -1327,7 +1327,7 @@ function toggleMode()
               <label
                 for={!data?.user ? "userLogin" : ""}
                 on:click={() => purchasePlan()}
-                class="cursor-pointer w-56 py-3 px-6 rounded-lg text-white bg-purple-600 sm:hover:bg-purple-700 transition duration-100 ease-in-out group"
+                class="cursor-pointer w-56 py-3 px-6 rounded-md text-black font-semibold bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
               >
                 Become a Pro
                 <span
@@ -1342,7 +1342,7 @@ function toggleMode()
                         ><path
                           d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
                         /><path
-                          fill="white"
+                          fill="black"
                           d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
                         /></g
                       ></g

@@ -174,7 +174,7 @@
 
       <a
         href={`/stocks/${$stockTicker}/forecast/analyst`}
-        class="rounded-md cursor-pointer w-11/12 py-2 h-full mt-6 text-lg text-center font-bold text-white m-auto hover:bg-purple-700 bg-purple-600 transition duration-100"
+        class="rounded-md cursor-pointer w-11/12 py-2 h-full mt-6 text-lg text-center font-bold text-white m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
       >
         Analyst Ratings
       </a>

@@ -146,7 +146,7 @@
   <!--
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
     <div
-      class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-purple-600 px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
+      class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#fff] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
     >
       <div
         class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
@@ -177,12 +177,12 @@
             class="mx-2 inline h-0.5 w-0.5 fill-current"
             aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg
           >
-          Save <strong class="text-[#FBCE3C]">16%</strong> on Pro Subscription and
+          Save <strong class="text-[#fff]">16%</strong> on Pro Subscription and
           boost your investing game!
         </p>
         <a
           href="/pricing"
-          class="flex-none rounded-full m-auto sm:m-0 px-3.5 py-1 text-[1rem] font-semibold text-black shadow-sm bg-[#FBCE3C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          class="flex-none rounded-full m-auto sm:m-0 px-3.5 py-1 text-[1rem] font-semibold text-black shadow-sm bg-[#fff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
         >
           Get Pro Now <span aria-hidden="true">&rarr;</span>
         </a>
@@ -207,7 +207,7 @@
         </a>
         <div class="absolute top-[-1.2rem] -right-5 sm:-right-8 rotate-[7deg]">
           <span
-            class="bg-[#FBCE3C] text-black text-sm sm:text-[0.9rem] rounded font-semibold sm:me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300"
+            class="bg-[#fff] text-black text-sm sm:text-[0.9rem] rounded font-semibold sm:me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300"
           >
             New
           </span>
@@ -218,7 +218,7 @@
       <h1
         class="hidden sm:block text-3xl lg:text-4xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto"
       >
-        Clear & <span class="italic text-[#FBCE3C]">Simple</span> Market Insight.
+        Clear & <span class="italic text-[#fff]">Simple</span> Market Insight.
       </h1>
 
       <h1
@@ -430,7 +430,7 @@
                   >
                   <a
                     href="/options-flow"
-                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#FBCE3C] text-black"
+                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#fff] text-black"
                   >
                     View All
                     <ArrowUpRight
@@ -627,7 +627,7 @@
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 256 256"
                     ><path
-                      fill="#FBCE3C"
+                      fill="#fff"
                       d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                     /></svg
                   >
@@ -649,7 +649,7 @@
                   >
                   <a
                     href="/earnings-calendar"
-                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#FBCE3C] text-black"
+                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#fff] text-black"
                   >
                     View All
                     <ArrowUpRight
@@ -713,7 +713,7 @@
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 256 256"
                     ><path
-                      fill="#FBCE3C"
+                      fill="#fff"
                       d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                     /></svg
                   >
@@ -792,7 +792,7 @@
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 256 256"
                     ><path
-                      fill="#FBCE3C"
+                      fill="#fff"
                       d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                     /></svg
                   >

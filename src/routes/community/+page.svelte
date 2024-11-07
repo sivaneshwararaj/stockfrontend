@@ -311,7 +311,7 @@
     <main class="m-auto w-full">
       <!--Start Header-->
       <div
-        class="w-full sm:rounded-lg m-auto h-44 sm:h-60 shadow-sm shadow-black bg-center bg-cover bg-no-repeat"
+        class="w-full sm:rounded-md m-auto h-44 sm:h-60 shadow-sm shadow-black bg-center bg-cover bg-no-repeat"
         style="background-image: url('{communityBanner}');"
       />
       <!--End Header-->
@@ -560,7 +560,7 @@
                       <div class="flex justify-center items-center mb-8 pt-5">
                         <a
                           href="/community/create-post"
-                          class="rounded-lg cursor-pointer w-11/12 py-2 h-full mt-2 text-md text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 mb-6 duration-100"
+                          class="rounded-md cursor-pointer w-11/12 py-2 h-full mt-2 text-md text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] mb-6 duration-100"
                         >
                           Create Post
                         </a>
@@ -573,7 +573,7 @@
                   {#if discordData?.length !== 0}
                     <div class="space-y-3 mb-5">
                       <div
-                        class="bg-[#141417] border border-gray-800 h-auto sm:w-96 rounded-lg"
+                        class="bg-[#141417] border border-gray-800 h-auto sm:w-96 rounded-md"
                       >
                         <!--Start Image-->
                         <div class="flex flex-row items-center w-full p-3">
@@ -675,7 +675,7 @@
                             href={discordURL}
                             rel="noopener noreferrer"
                             target="_blank"
-                            class="rounded-lg cursor-pointer w-11/12 py-2 h-full mt-2 text-md text-center font-semibold text-white m-auto hover:bg-purple-700 bg-purple-600 mb-6 duration-100"
+                            class="rounded-md cursor-pointer w-11/12 py-2 h-full mt-2 text-md text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] mb-6 duration-100"
                           >
                             Join Us
                           </a>
@@ -689,7 +689,7 @@
                   <!--Community Rules-->
                   <div class="space-y-3 mt-5 fixed sticky" style="top: 5rem;">
                     <div
-                      class="bg-[#141417] border border-gray-800 sm:w-96 rounded-lg"
+                      class="bg-[#141417] border border-gray-800 sm:w-96 rounded-md"
                     >
                       <!--Start Header-->
                       <div
@@ -702,7 +702,7 @@
                       <!--End Header-->
 
                       <!--Start Content-->
-                      <div class="w-full pl-7 text-gray-300">
+                      <div class="w-full pl-7 text-white">
                         <ol class="list-decimal pl-4 pr-4 pb-5 pt-4">
                           <li class="text-[1rem] mb-3">
                             Avoid Purely Policital Discussion

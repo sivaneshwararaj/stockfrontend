@@ -178,6 +178,9 @@
           {#if isLoaded}
             {#if optionsWatchlist?.length !== 0}
               <div class="flex flex-row justify-end items-center pb-2">
+                <h2 class="font-semibold text-white text-xl mr-auto">
+                  {optionsWatchlist?.length} Options
+                </h2>
                 {#if editMode}
                   <label
                     on:click={handleDelete}
@@ -197,10 +200,6 @@
                     </span>
                   </label>
                 {/if}
-
-                <h2 class="font-semibold text-white text-xl mr-auto">
-                  {optionsWatchlist?.length} Options
-                </h2>
 
                 <label
                   on:click={() => (editMode = !editMode)}

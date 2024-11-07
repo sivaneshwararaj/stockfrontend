@@ -62,7 +62,19 @@
     },
     cost_basis: {
       label: "Premium",
-      step: ["10M", "5M", "1M", "500K", "100K", "50K", "10K", "5K"],
+      step: [
+        "10M",
+        "5M",
+        "1M",
+        "500K",
+        "400K",
+        "300K",
+        "200K",
+        "100K",
+        "50K",
+        "10K",
+        "5K",
+      ],
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -1304,7 +1316,7 @@ function sendMessage(message) {
                                   >
                                     <input
                                       type="radio"
-                                      class="radio checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2"
+                                      class="radio checked:bg-[#fff] bg-[#09090B] border border-slate-800 mr-2"
                                       checked={ruleCondition[row?.rule] ===
                                         "under"}
                                       name={row?.rule}
@@ -1320,7 +1332,7 @@ function sendMessage(message) {
                                   >
                                     <input
                                       type="radio"
-                                      class="radio checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2"
+                                      class="radio checked:bg-[#fff] bg-[#09090B] border border-slate-800 mr-2"
                                       checked={ruleCondition[row?.rule] ===
                                         "over"}
                                       name={row?.rule}
@@ -1418,7 +1430,7 @@ function sendMessage(message) {
                     : flowSentiment === 'Bearish'
                       ? 'text-[#FF2F1F]'
                       : flowSentiment === 'Neutral'
-                        ? 'text-[#FBCE3C]'
+                        ? 'text-[#fff]'
                         : 'text-white'}">{flowSentiment}</span
                 >
               </div>
@@ -1951,7 +1963,7 @@ function sendMessage(message) {
                         class="td {optionsWatchlist.optionsId?.includes(
                           displayedData[index]?.id,
                         )
-                          ? 'text-[#FBCE3C]'
+                          ? 'text-[#fff]'
                           : 'text-white'}"
                       >
                         <svg
@@ -2081,7 +2093,7 @@ function sendMessage(message) {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 256 256"
                 ><path
-                  fill="#FBCE3C"
+                  fill="#fff"
                   d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                 /></svg
               >

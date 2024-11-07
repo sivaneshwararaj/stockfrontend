@@ -1070,7 +1070,7 @@
                 </span>
                 {#if !data?.user}
                   <a
-                    class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-purple-600 hover:bg-purple-500 transition duration-150 ease-in-out group"
+                    class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
                     href="/register"
                   >
                     Get Started
@@ -1363,7 +1363,7 @@
 
         <button
           type="submit"
-          class="mt-10 btn bg-purple-600 sm:hover:bg-purple-700 btn-md w-full rounded-md m-auto text-white font-bold text-md"
+          class="mt-10 btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-md m-auto text-white font-bold text-md"
         >
           Create List
         </button>
@@ -1399,7 +1399,7 @@
       <label
         for="deleteWatchlist"
         on:click={deleteWatchlist}
-        class="mt-5 btn bg-purple-600 hover:bg-purple-500 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+        class="mt-5 btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
       >
         Proceed
       </label>

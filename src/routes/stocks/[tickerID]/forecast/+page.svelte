@@ -97,7 +97,7 @@
 
     // Define categories in the exact order you specified
     const categories = ["Strong Sell", "Sell", "Hold", "Buy", "Strong Buy"];
-    const colors = ["#9E190A", "#D9220E", "#FBCE3C", "#31B800", "#008A00"];
+    const colors = ["#9E190A", "#D9220E", "#FF9E21", "#31B800", "#008A00"];
 
     // Create a consistent mapping for data
     const formattedData = rawAnalystList.map((item) =>
@@ -216,7 +216,7 @@
               color: [
                 [0.2, "#9E190A"],
                 [0.4, "#D9220E"],
-                [0.6, "#FBCE3C"],
+                [0.6, "#FF9E21"],
                 [0.8, "#31B800"],
                 [1, "#008A00"],
               ],
@@ -409,7 +409,7 @@
           symbol: "none",
           lineStyle: {
             type: "dashed",
-            color: "#FBCE3C",
+            color: "#fff",
           },
         },
         {
@@ -533,7 +533,7 @@
                       ? 'text-[#00FC50]'
                       : ['Strong Sell', 'Sell']?.includes(consensusRating)
                         ? 'text-[#FF2F1F]'
-                        : 'text-[#FBCE3C]'}">{consensusRating}</span
+                        : 'text-[#fff]'}">{consensusRating}</span
                   >
                 </div>
               </div>
@@ -609,7 +609,7 @@
                   <h2 class="mb-1 text-xl font-bold">Latest Analyst Report</h2>
                   {#if latestInfoDate(data?.getAnalystInsight?.date)}
                     <label
-                      class="bg-[#FBCE3C] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3"
+                      class="bg-[#fff] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3"
                       >New</label
                     >
                   {/if}
@@ -948,7 +948,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 256 256"
                 ><path
-                  fill="#FBCE3C"
+                  fill="#fff"
                   d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                 /></svg
               >

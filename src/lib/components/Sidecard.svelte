@@ -242,7 +242,7 @@
 
         <a
           href={`/stocks/${$stockTicker}/forecast/analyst`}
-          class="rounded cursor-pointer w-full m-auto py-2 h-full mt-6 text-lg text-center font-bold text-white hover:bg-purple-700 bg-purple-600 transition duration-100"
+          class="rounded cursor-pointer w-full m-auto py-2 h-full mt-6 text-lg text-center font-semibold text-black sm:hover:hover:bg-gray-300 bg-[#ffff] transition duration-100"
         >
           Stock Forecasts
         </a>

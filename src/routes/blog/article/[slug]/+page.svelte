@@ -1,115 +1,144 @@
-<script lang ='ts'>
-import { numberOfUnreadNotification, discordMembers} from '$lib/store';
-import {getImageURL} from '$lib/utils';
-
-export let data;
-
-
-//let discordURL = import.meta.env.VITE_DISCORD_URL;
-const article = data?.getArticle;
-//const discordData = data?.getDiscordWidget;
-    
-</script>
-
-
-
+<script lang 'ts'></script>
 
 <svelte:head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title> {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ''} {article?.title} · stocknear</title>
-    <meta name="description" content="Latest articles on stocks, finance and investing">
-    <!-- Other meta tags -->
-    <meta property="og:title" content="{article?.title}"/>
-    <meta property="og:description" content="{article?.abstract}"/>
-    <meta property="og:type" content="article"/>
-    <!-- Add more Open Graph meta tags as needed -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
+    {article?.title} · stocknear</title
+  >
+  <meta
+    name="description"
+    content="Latest articles on stocks, finance and investing"
+  />
+  <!-- Other meta tags -->
+  <meta property="og:title" content={article?.title} />
+  <meta property="og:description" content={article?.abstract} />
+  <meta property="og:type" content="article" />
+  <!-- Add more Open Graph meta tags as needed -->
 
-    <!-- Twitter specific meta tags -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="{article?.title}"/>
-    <meta name="twitter:description" content="{article?.abstract}"/>
-    <!-- Add more Twitter meta tags as needed -->
+  <!-- Twitter specific meta tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={article?.title} />
+  <meta name="twitter:description" content={article?.abstract} />
+  <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-            
-<section class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40">
-        
-    <div class="text-sm sm:text-[1rem] breadcrumbs ">
-        <ul>
-          <li><a href="/" class="text-gray-300">Home</a></li> 
-          <li><a href="/blog" class="text-gray-300">All Blog Post</a></li> 
-          <li class="text-gray-300">Post</li>
-        </ul>
-    </div>
+<section
+  class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40"
+>
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
+    <ul>
+      <li><a href="/" class="text-gray-300">Home</a></li>
+      <li><a href="/blog" class="text-gray-300">All Blog Post</a></li>
+      <li class="text-gray-300">Post</li>
+    </ul>
+  </div>
 
+  <div
+    class="mt-3 w-full max-w-4xl h-72 flex flex-col bg-cover bg-center bg-no-repeat rounded-lg"
+    style="background-image: url('{article?.cover
+      ? getImageURL(article?.collectionId, article?.id, article?.cover)
+      : ''}');"
+  />
 
-        <div class="mt-3 w-full max-w-4xl h-72 flex flex-col bg-cover bg-center bg-no-repeat rounded-lg" 
-          style="background-image: url('{article?.cover ? getImageURL(article?.collectionId, article?.id, article?.cover) : ''}');" />
-    
-            <main class="grow m-auto"> 
-                    <div class="w-full max-w-4xl ">
-                        <div class="sm:flex sm:justify-start">
-    
-                            <!-- Main content -->
-                            <div class="md:grow pt-6 pb-12 w-full sm:mr-4 rounded-2xl sm:rounded-none">
-                                <div class="sm:pr-5">
-                                   <!--Start Title-->
-                                   <h1 class="text-white font-bold text-3xl bg-[#111011] sm:bg-[#09090B] p-6 sm:p-3 rounded-t-xl -mt-36 sm:mt-0 bg-opacity-[0.9]">
-                                    {@html article?.title}
-                                    </h1>
-                                   <!--End Title-->
-                                    <!--Start Writer-->
-                                    <div class="flex flex-row items-center pl-3 pr-3 pt-8 pb-6">
-                                        <a href={"/community/user/"+article?.user} class="cursor-pointer text-sm text-slate-200 flex flex-row items-center">
-                                          <img 
-                                          class="rounded-full w-10 h-10 mr-2"
-                                          src={article?.expand?.user?.avatar
-                                            ? getImageURL(article?.expand?.user?.collectionId, article?.expand?.user?.id, article?.expand?.user?.avatar)
-                                            : `https://avatar.vercel.sh/${article?.expand?.user?.username}`} 
-                                            alt="User avatar" loading='lazy'/>
-                                            <div class="flex flex-col items-start">
-                                                <span class="text-white text-sm">
-                                                    mrahimi
-                                                </span>
-                                                <span class="text-white text-opacity-[0.7] text-sm">
-                                                    {article?.readingTime} min read &centerdot; {new Date(article?.created)?.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', daySuffix: '2-digit' })}
-                                                </span>
-                                            </div>
-                                        </a>
-                                        
+  <main class="grow m-auto">
+    <div class="w-full max-w-4xl">
+      <div class="sm:flex sm:justify-start">
+        <!-- Main content -->
+        <div
+          class="md:grow pt-6 pb-12 w-full sm:mr-4 rounded-2xl sm:rounded-none"
+        >
+          <div class="sm:pr-5">
+            <!--Start Title-->
+            <h1
+              class="text-white font-bold text-3xl bg-[#111011] sm:bg-[#09090B] p-6 sm:p-3 rounded-t-xl -mt-36 sm:mt-0 bg-opacity-[0.9]"
+            >
+              {@html article?.title}
+            </h1>
+            <!--End Title-->
+            <!--Start Writer-->
+            <div class="flex flex-row items-center pl-3 pr-3 pt-8 pb-6">
+              <a
+                href={"/community/user/" + article?.user}
+                class="cursor-pointer text-sm text-slate-200 flex flex-row items-center"
+              >
+                <img
+                  class="rounded-full w-10 h-10 mr-2"
+                  src={article?.expand?.user?.avatar
+                    ? getImageURL(
+                        article?.expand?.user?.collectionId,
+                        article?.expand?.user?.id,
+                        article?.expand?.user?.avatar,
+                      )
+                    : `https://avatar.vercel.sh/${article?.expand?.user?.username}`}
+                  alt="User avatar"
+                  loading="lazy"
+                />
+                <div class="flex flex-col items-start">
+                  <span class="text-white text-sm"> mrahimi </span>
+                  <span class="text-white text-opacity-[0.7] text-sm">
+                    {article?.readingTime} min read &centerdot; {new Date(
+                      article?.created,
+                    )?.toLocaleString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                      daySuffix: "2-digit",
+                    })}
+                  </span>
+                </div>
+              </a>
+            </div>
+            <!--End Write-->
 
-                                    </div>
-                                    <!--End Write-->
+            <!--Start Description-->
+            <div class="text-white text-lg p-6 sm:p-3">
+              {@html article?.description}
+            </div>
+            <!--End Description-->
 
-                                   
-                                   <!--Start Description-->
-                                   <div class="text-white text-lg p-6 sm:p-3">
-                                      {@html article?.description}                
-                                    </div>
-                                   <!--End Description-->
+            {#if !data?.user}
+              <div
+                class="rounded-lg border border-slate-800 w-11/12 sm:w-full m-auto p-6 mt-16"
+              >
+                <span
+                  class="text-white text-md text-center p-4 mb-3 flex justify-center"
+                >
+                  Stay up to date with the market without the redudant BS
+                </span>
+                <a
+                  class="w-64 flex mb-5 justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
+                  href="/register"
+                >
+                  Get Started
+                  <span
+                    class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><g transform="rotate(90 12 12)"
+                        ><g fill="none"
+                          ><path
+                            d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                          /><path
+                            fill="white"
+                            d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                          /></g
+                        ></g
+                      ></svg
+                    >
+                  </span>
+                </a>
+              </div>
+            {/if}
+          </div>
+        </div>
 
-                                   {#if !data?.user}
-                                    <div class="rounded-lg border border-slate-800 w-11/12 sm:w-full m-auto p-6 mt-16">
-                                    
-                                    <span class="text-white text-md text-center p-4 mb-3 flex justify-center">
-                                        Stay up to date with the market without the redudant BS
-                                    </span>
-                                    <a class="w-64 flex mb-5 justify-center items-center m-auto btn text-white bg-purple-600 hover:bg-purple-500 transition duration-150 ease-in-out group" href="/register">
-                                        Get Started 
-                                        <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                                        </span>
-                                    </a>
-                                    </div>
-                                    {/if}
-    
-    
-                                </div>
-                            </div>
-    
-                            <!-- Sidebar -->
-                            <!--
+        <!-- Sidebar -->
+        <!--
                             <aside class="hidden sm:inline-block min-h-screen sm:w-96 pt-[1rem]">
     
                               
@@ -199,66 +228,66 @@ const article = data?.getArticle;
     
                             </aside>
                           -->
-    
-                        </div>
-    
-                    </div>
-    
-        </main>
-    </section>
-    
-      
-    
-    
-    
-    
-    <style>
-    
-    #content {
-      position: relative;
-    }
-    
-    #content:before,
-    #content:after {
-      position: absolute;
-      width: 120px;
-      height: 40px;
-      border-color: #FF8C6C; /* or whatever color */
-      border-style: solid; /* or whatever style */
-      content: ' ';
-    }
-    
-    #content:before {
-      top: 0;
-      left: 0;
-      border-width: 1px 0 0 1px;
-    }
-    
-    #content:after {
-      bottom: 0;
-      right: 0;
-      border-width: 0 1px 1px 0;
-    }
-    
-      
-    .grid-background {
-        background: linear-gradient(to bottom, #27272A, #111011);
-        width: 24rem;
-        position: relative;
-    }
-    
-    .grid-background::before {
-      content: "";
-      position: absolute;
-      border-radius: 10%;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0, rgba(255, 255, 255, 0.15) 1px, transparent 1px, transparent 40px),
-        repeating-linear-gradient(to right, rgba(255, 255, 255, 0.15) 0, rgba(255, 255, 255, 0.15) 1px, transparent 1px, transparent 40px);
-      background-size: 20px 100% 100% 20px; /* Adjust the grid spacing as needed */
-    }
-    
-      </style>
+      </div>
+    </div>
+  </main>
+</section>
+
+<style>
+  #content {
+    position: relative;
+  }
+
+  #content:before,
+  #content:after {
+    position: absolute;
+    width: 120px;
+    height: 40px;
+    border-color: #ff8c6c; /* or whatever color */
+    border-style: solid; /* or whatever style */
+    content: " ";
+  }
+
+  #content:before {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+  }
+
+  #content:after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+  }
+
+  .grid-background {
+    background: linear-gradient(to bottom, #27272a, #111011);
+    width: 24rem;
+    position: relative;
+  }
+
+  .grid-background::before {
+    content: "";
+    position: absolute;
+    border-radius: 10%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.15) 0,
+        rgba(255, 255, 255, 0.15) 1px,
+        transparent 1px,
+        transparent 40px
+      ),
+      repeating-linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.15) 0,
+        rgba(255, 255, 255, 0.15) 1px,
+        transparent 1px,
+        transparent 40px
+      );
+    background-size: 20px 100% 100% 20px; /* Adjust the grid spacing as needed */
+  }
+</style>

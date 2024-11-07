@@ -68,7 +68,7 @@
 
       <a
         href="/pricing"
-        class="mt-10 flex justify-center text-[1rem] items-center px-5 w-fit m-auto rounded-md btn text-white bg-purple-600 hover:bg-purple-500 transition duration-150 ease-in-out group"
+        class="mt-10 flex justify-center text-[1rem] items-center px-5 w-fit m-auto rounded-md btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
       >
         Become a Pro
         <span

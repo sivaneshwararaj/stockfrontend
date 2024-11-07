@@ -2506,7 +2506,7 @@ const handleKeyDown = (event) => {
                                 >
                                   <input
                                     type="radio"
-                                    class="radio ring-0 checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2"
+                                    class="radio ring-0 checked:bg-[#fff] bg-[#09090B] border border-slate-800 mr-2"
                                     checked={ruleCondition[row?.rule] ===
                                       "under"}
                                     name={row?.rule}
@@ -2522,7 +2522,7 @@ const handleKeyDown = (event) => {
                                 >
                                   <input
                                     type="radio"
-                                    class="radio checked:bg-purple-600 bg-[#09090B] border border-slate-800 mr-2"
+                                    class="radio checked:bg-[#fff] bg-[#09090B] border border-slate-800 mr-2"
                                     checked={ruleCondition[row?.rule] ===
                                       "over"}
                                     name={row?.rule}
@@ -2651,7 +2651,7 @@ const handleKeyDown = (event) => {
                       <div class="text-white font-bold text-xl sm:text-2xl flex justify-start items-center">
                         {ruleOfList.length} Rules Preview
                       </div>
-                      <label on:click={handleResetAll} class="ml-auto cursor-pointer transition  bg-purple-600 sm:hover:bg-purple-700 border border-slate-800 py-2 px-3 rounded-lg text-white text-sm">
+                      <label on:click={handleResetAll} class="ml-auto cursor-pointer transition  bg-[#fff] sm:hover:bg-gray-300 border border-slate-800 py-2 px-3 rounded-lg text-white text-sm">
                         Reset All
                       </label>
                     </div>
@@ -3053,7 +3053,7 @@ const handleKeyDown = (event) => {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 256 256"
           ><path
-            fill="#FBCE3C"
+            fill="#fff"
             d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
           /></svg
         >
@@ -3241,7 +3241,7 @@ const handleKeyDown = (event) => {
 
       <button
         type="submit"
-        class="mt-10 btn bg-purple-600 sm:hover:bg-purple-700 duration-100 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+        class="mt-10 btn bg-[#fff] sm:hover:bg-gray-300 duration-100 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
       >
         Create Strategy
       </button>
@@ -3275,7 +3275,7 @@ const handleKeyDown = (event) => {
       <label
         for="deleteStrategy"
         on:click={handleDeleteStrategy}
-        class="mt-5 btn bg-purple-600 hover:bg-purple-500 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+        class="mt-5 btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
       >
         Proceed
       </label>

@@ -146,7 +146,7 @@
           data: dates?.map((date, index) => [date, notionalQuantity[index]]),
           yAxisIndex: 1,
           itemStyle: {
-            color: "#FBCE3C",
+            color: "#fff",
           },
         },
       ],
@@ -231,7 +231,7 @@
                   : ''} "
               >
                 {#if activeIdx === i}
-                  <div class="absolute inset-0 rounded-lg bg-purple-600"></div>
+                  <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
                 {/if}
                 <span
                   class="relative text-sm block font-medium duration-200 text-white"

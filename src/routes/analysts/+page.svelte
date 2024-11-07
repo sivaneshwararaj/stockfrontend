@@ -342,7 +342,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -371,7 +371,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -401,7 +401,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -431,7 +431,7 @@
                         class="text-base font-semibold leading-4 text-white md:leading-7"
                       >
                         <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#FBCE3C]"
+                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

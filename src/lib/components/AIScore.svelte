@@ -68,7 +68,7 @@
                   class="stroke-current {score >= 7
                     ? 'text-[#00FC50]'
                     : score >= 4
-                      ? 'text-[#FBCE3C]'
+                      ? 'text-[#fff]'
                       : 'text-[#FF2F1F]'}"
                   stroke-width="3"
                   stroke-dasharray="100.48"
@@ -115,7 +115,7 @@
                   </span>
                   <div class="absolute top-0.5 flex items-center">
                     <svg
-                      class="size-5 text-[#FBCE3C]"
+                      class="size-5 text-[#fff]"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                       style="max-width: 40px;"

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { sectorNavigation } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { onMount } from "svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
@@ -22,55 +23,6 @@
     maximumFractionDigits: 0,
   }).format(analystStats?.numOfAnalysts);
   let numOfStocks = analystStats?.numOfStocks;
-
-  function sectorSelector(sector) {
-    let path;
-    switch (sector) {
-      case "Financials":
-        path = "financial";
-        break;
-      case "Healthcare":
-        path = "healthcare";
-        break;
-      case "Information Technology":
-        path = "technology";
-        break;
-      case "Technology":
-        path = "technology";
-        break;
-      case "Financial Services":
-        path = "financial";
-        break;
-      case "Industrials":
-        path = "industrials";
-        break;
-      case "Energy":
-        path = "energy";
-        break;
-      case "Utilities":
-        path = "utilities";
-        break;
-      case "Consumer Cyclical":
-        path = "consumer-cyclical";
-        break;
-      case "Real Estate":
-        path = "real-estate";
-        break;
-      case "Basic Materials":
-        path = "basic-materials";
-        break;
-      case "Communication Services":
-        path = "communication-services";
-        break;
-      case "Consumer Defensive":
-        path = "consumer-defensive";
-        break;
-      default:
-        // Handle default case if needed
-        break;
-    }
-    return path;
-  }
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -273,7 +225,9 @@
                   >
                     {#each data?.getAnalystStats?.mainSectors as sector}
                       <a
-                        href={"/list/sector/" + sectorSelector(sector)}
+                        href={sectorNavigation?.find(
+                          (listItem) => listItem?.title === sector,
+                        )?.link}
                         class="cursor-pointer w-fit border border-gray-600 px-3 sm:px-4 py-2 text-sm sm:text-[1rem] font-medium rounded-md sm:hover:text-blue-400 text-white underline underline-offset-4"
                       >
                         {sector}
@@ -342,7 +296,7 @@
 
                               <div class="absolute top-3 flex items-center">
                                 <svg
-                                  class="size-5 text-[#FBCE3C]"
+                                  class="size-5 text-[#fff]"
                                   viewBox="0 0 20 20"
                                   fill="currentColor"
                                   style="max-width: 40px;"

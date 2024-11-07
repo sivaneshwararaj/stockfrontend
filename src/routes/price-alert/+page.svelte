@@ -311,7 +311,7 @@
                 </span>
                 {#if !data?.user}
                   <a
-                    class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-purple-600 hover:bg-purple-500 transition duration-150 ease-in-out group"
+                    class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
                     href="/register"
                   >
                     Get Started

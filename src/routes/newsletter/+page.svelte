@@ -162,7 +162,7 @@
 
     {#if !data?.user}
       <a
-        class="w-96 mt-6 m-auto flex m-auto justify-center items-center m-auto btn text-white bg-purple-600 hover:bg-purple-500 transition duration-150 ease-in-out group"
+        class="w-96 mt-6 m-auto flex m-auto justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
         href="/register"
       >
         Get Newsletter
@@ -200,7 +200,7 @@
                 errors=''
             />
             <div class="w-full sm:w-5/6 max-w-lg m-auto pb-5">
-                <button type="submit" class="py-3 bg-purple-600 text-white hover:bg-purple-500 w-full rounded-lg m-auto font-bold text-md">
+                <button type="submit" class="py-3 bg-[#fff] text-white sm:hover:bg-gray-300 w-full rounded-lg m-auto font-bold text-md">
                     Subscribe
                 </button>
             </div>
