@@ -1,63 +1,12 @@
 <script lang="ts">
-  import { etfTicker, screenWidth } from "$lib/store";
-  import { formatString } from "$lib/utils";
+  import { etfTicker } from "$lib/store";
+  import { formatString, sectorNavigation } from "$lib/utils";
   import { goto } from "$app/navigation";
   import InfoModal from "$lib/components/InfoModal.svelte";
 
   export let sectorList;
 
   let showFullStats = false;
-
-  const sectorNavigation = [
-    {
-      title: "Financial Services",
-      link: "/list/sector/financial",
-    },
-    {
-      title: "Finance",
-      link: "/list/sector/financial",
-    },
-    {
-      title: "Healthcare",
-      link: "/list/sector/healthcare",
-    },
-    {
-      title: "Technology",
-      link: "/list/sector/technology",
-    },
-    {
-      title: "Industrials",
-      link: "/list/sector/industrials",
-    },
-    {
-      title: "Energy",
-      link: "/list/sector/energy",
-    },
-    {
-      title: "Utilities",
-      link: "/list/sector/utilities",
-    },
-    {
-      title: "Consumer Cyclical",
-      link: "/list/sector/consumer-cyclical",
-    },
-    {
-      title: "Real Estate",
-      link: "/list/sector/real-estate",
-    },
-    {
-      title: "Basic Materials",
-      link: "/list/sector/basic-materials",
-    },
-    {
-      title: "Communication Services",
-      link: "/list/sector/communication-services",
-    },
-    {
-      title: "Consumer Defensive",
-      link: "/list/sector/consumer-defensive",
-    },
-  ];
 
   function sectorSelector(sector) {
     const selectedSector = sectorNavigation?.find(

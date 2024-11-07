@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { Chart } from "svelte-echarts";
 
   import { init, use } from "echarts/core";
@@ -139,6 +141,79 @@
   });
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
+
+  let columns = [
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "marketCap", label: "Market Cap", align: "right" },
+    { key: "changesPercentage", label: "% Change", align: "right" },
+    { key: "volume", label: "Volume", align: "right" },
+    { key: "revenue", label: "Revenue", align: "right" },
+  ];
+
+  let sortOrders = {
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    marketCap: { order: "none", type: "number" },
+    changesPercentage: { order: "none", type: "number" },
+    volume: { order: "none", type: "number" },
+    revenue: { order: "none", type: "number" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    const originalData = rawData;
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      stockList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    stockList = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
 </script>
 
 <section class="w-full overflow-hidden m-auto">
@@ -190,38 +265,7 @@
         class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
       >
         <thead>
-          <tr class="bg-[#09090B]">
-            <th
-              class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
-            >
-              Symbol
-            </th>
-            <th
-              class="text-start bg-[#09090B] text-white text-[1rem] font-semibold"
-            >
-              Name
-            </th>
-            <th
-              class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-            >
-              Market Cap
-            </th>
-            <th
-              class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-            >
-              % Change
-            </th>
-            <th
-              class="text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-            >
-              Volume
-            </th>
-            <th
-              class="hidden xl:table-cell text-end bg-[#09090B] text-white text-[1rem] font-semibold"
-            >
-              Revenue
-            </th>
-          </tr>
+          <TableHeader {columns} {sortOrders} {sortData} />
         </thead>
         <tbody>
           {#each stockList as item}
@@ -229,12 +273,7 @@
               class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]"
             >
               <td class="text-sm sm:text-[1rem] whitespace-nowrap text-start">
-                <a
-                  href={`/stocks/${item?.symbol}`}
-                  class="sm:hover:text-white text-blue-400"
-                >
-                  {item?.symbol}
-                </a>
+                <HoverStockChart symbol={item?.symbol} />
               </td>
 
               <td

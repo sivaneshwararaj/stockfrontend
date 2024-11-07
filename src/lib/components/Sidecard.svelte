@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { stockTicker, screenWidth } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { stockTicker } from "$lib/store";
+  import { sectorNavigation } from "$lib/utils";
   export let data;
 
   let info;
@@ -23,57 +23,6 @@
   let ipoDate = "n/a";
 
   let showFullText = false;
-
-  const sectorNavigation = [
-    {
-      title: "Financial Services",
-      link: "/list/sector/financial",
-    },
-    {
-      title: "Finance",
-      link: "/list/sector/financial",
-    },
-    {
-      title: "Healthcare",
-      link: "/list/sector/healthcare",
-    },
-    {
-      title: "Technology",
-      link: "/list/sector/technology",
-    },
-    {
-      title: "Industrials",
-      link: "/list/sector/industrials",
-    },
-    {
-      title: "Energy",
-      link: "/list/sector/energy",
-    },
-    {
-      title: "Utilities",
-      link: "/list/sector/utilities",
-    },
-    {
-      title: "Consumer Cyclical",
-      link: "/list/sector/consumer-cyclical",
-    },
-    {
-      title: "Real Estate",
-      link: "/list/sector/real-estate",
-    },
-    {
-      title: "Basic Materials",
-      link: "/list/sector/basic-materials",
-    },
-    {
-      title: "Communication Services",
-      link: "/list/sector/communication-services",
-    },
-    {
-      title: "Consumer Defensive",
-      link: "/list/sector/consumer-defensive",
-    },
-  ];
 
   function getIndustryHref(industryName) {
     // Replace spaces with hyphens
