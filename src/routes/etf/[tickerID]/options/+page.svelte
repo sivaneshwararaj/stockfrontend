@@ -234,6 +234,7 @@
             width: 2, // Set the width of the line
           },
           smooth: true, // Optional: make the line smooth
+          showSymbol: false,
         },
       ],
     };
