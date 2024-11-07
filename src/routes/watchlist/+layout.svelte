@@ -53,7 +53,7 @@
 
           <nav class=" border-b-[2px] overflow-x-scroll whitespace-nowrap">
             <ul
-              class="flex flex-row items-center w-full text-sm sm:text-lg text-white"
+              class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
             >
               {#each tabs as item, i}
                 <a

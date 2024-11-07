@@ -3,8 +3,7 @@
 
   //import MiniPlot from '$lib/components/MiniPlot.svelte';
   import { abbreviateNumber } from "$lib/utils";
-  import { goto } from "$app/navigation";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
+
   import { onMount } from "svelte";
   import toast from "svelte-french-toast";
 
@@ -198,6 +197,11 @@
                     </span>
                   </label>
                 {/if}
+
+                <h2 class="font-semibold text-white text-xl mr-auto">
+                  {optionsWatchlist?.length} Options
+                </h2>
+
                 <label
                   on:click={() => (editMode = !editMode)}
                   class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
@@ -430,7 +434,7 @@
                 </span>
                 <a
                   href="/options-flow"
-                  class="py-3 rounded-lg w-64 flex mt-5 justify-center items-center m-auto text-white border border-gray-600 group"
+                  class="py-3 sm:hover:bg-[#27272A] rounded-lg w-64 flex mt-5 justify-center items-center m-auto text-white border border-gray-600 group"
                 >
                   <span class="font-semibold text-[1rem]"
                     >Follow the Whales

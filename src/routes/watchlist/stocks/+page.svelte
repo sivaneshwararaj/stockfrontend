@@ -687,7 +687,7 @@
         <main class="w-full">
           {#if isLoaded}
             <div
-              class="flex w-full sm:w-[50%] md:w-auto px-2 sm:px-0 mb-10 {!data?.user
+              class="flex w-full sm:w-[50%] md:w-auto mb-10 {!data?.user
                 ? 'hidden'
                 : 'md:block'}"
             >
@@ -699,7 +699,7 @@
               <div
                 class="{$screenWidth < 640
                   ? 'grid grid-cols-2'
-                  : ''} gap-x-3 gap-y-3 sm:gap-x-0 sm:gap-y-0 px-2 sm:px-0 relative inline-block text-left w-full flex flex-col sm:flex-row items-center"
+                  : ''} gap-x-3 gap-y-3 sm:gap-x-0 sm:gap-y-0 relative inline-block text-left w-full flex flex-col sm:flex-row items-center"
               >
                 <div class="order-0 w-full sm:w-fit">
                   <DropdownMenu.Root>
@@ -821,7 +821,7 @@
                     {/if}
                     <label
                       on:click={handleEditMode}
-                      class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 text-white bg-[#09090B] sm:hover:bg-[#27272A] ease-out sm:hover:text-red-500"
+                      class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-[#27272A] ease-out sm:hover:text-red-500"
                     >
                       <svg
                         class="inline-block w-5 h-5"
@@ -1100,6 +1100,10 @@
               <!--Start Table of Watchlist-->
               {#if watchList?.length !== 0}
                 <div class="w-full">
+                  <h2 class="font-semibold text-white text-xl">
+                    {watchList?.length} Stocks
+                  </h2>
+
                   <div class="w-full overflow-x-scroll">
                     <table
                       class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
