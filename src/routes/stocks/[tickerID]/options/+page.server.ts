@@ -1,14 +1,16 @@
 export const load = async ({ locals, params }) => {
+  const { apiKey, apiURL } = locals;
+
   const getOptionsNetFlow = async () => {
     const postData = {
       ticker: params.tickerID,
     };
 
-    const response = await fetch(locals?.apiURL + "/options-net-flow-ticker", {
+    const response = await fetch(apiURL + "/options-net-flow-ticker", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-KEY": locals?.apiKey,
+        "X-API-KEY": apiKey,
       },
       body: JSON.stringify(postData),
     });
@@ -23,11 +25,11 @@ export const load = async ({ locals, params }) => {
       ticker: params.tickerID,
     };
 
-    const response = await fetch(locals?.apiURL + "/options-plot-ticker", {
+    const response = await fetch(apiURL + "/options-plot-ticker", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-KEY": locals?.apiKey,
+        "X-API-KEY": apiKey,
       },
       body: JSON.stringify(postData),
     });
@@ -43,17 +45,14 @@ export const load = async ({ locals, params }) => {
     };
 
     // make the POST request to the endpoint
-    const response = await fetch(
-      locals?.apiURL + "/options-historical-data-ticker",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-KEY": locals?.apiKey,
-        },
-        body: JSON.stringify(postData),
+    const response = await fetch(apiURL + "/options-historical-data-ticker", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
       },
-    );
+      body: JSON.stringify(postData),
+    });
 
     const output = await response.json();
 
@@ -66,17 +65,14 @@ export const load = async ({ locals, params }) => {
     };
 
     // make the POST request to the endpoint
-    const response = await fetch(
-      locals?.apiURL + "/options-chain-data-ticker",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-KEY": locals?.apiKey,
-        },
-        body: JSON.stringify(postData),
+    const response = await fetch(apiURL + "/options-chain-data-ticker", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
       },
-    );
+      body: JSON.stringify(postData),
+    });
 
     const output = await response.json();
 
@@ -89,11 +85,11 @@ export const load = async ({ locals, params }) => {
     };
 
     // make the POST request to the endpoint
-    const response = await fetch(locals?.apiURL + "/options-gex-ticker", {
+    const response = await fetch(apiURL + "/options-gex-ticker", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-KEY": locals?.apiKey,
+        "X-API-KEY": apiKey,
       },
       body: JSON.stringify(postData),
     });

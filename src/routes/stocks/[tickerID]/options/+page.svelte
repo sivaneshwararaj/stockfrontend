@@ -93,6 +93,7 @@
   let putVolumeList; //= data?.getOptionsPlotData?.putVolumeList;
   let callOpenInterestList; //= data?.getOptionsPlotData?.callOpenInterestList;
   let putOpenInterestList; //= data?.getOptionsPlotData?.putOpenInterestList;
+  let iv60List;
 
   let displayTimePeriod = "threeMonths";
 
@@ -141,7 +142,7 @@
     displayData = event.target.value;
   }
 
-  function plotData(callData, putData) {
+  function plotData(callData, putData, ivData) {
     const options = {
       animation: false,
       tooltip: {
@@ -162,6 +163,8 @@
           type: "category",
           data: dateList,
           axisLabel: {
+            color: "#fff",
+
             formatter: function (value) {
               // Assuming dates are in the format 'yyyy-mm-dd'
               const dateParts = value.split("-");
@@ -179,7 +182,6 @@
           splitLine: {
             show: false, // Disable x-axis grid lines
           },
-
           axisLabel: {
             show: false, // Hide y-axis labels
           },
@@ -219,6 +221,19 @@
           itemStyle: {
             color: "#EE5365", //'#7A1C16'
           },
+        },
+        {
+          name: "IV60", // Name for the line chart
+          type: "line", // Type of the chart (line)
+          yAxisIndex: 1, // Use the second y-axis on the right
+          data: ivData, // iv60Data (assumed to be passed as ivData)
+          itemStyle: {
+            color: "#FFD700", // Choose a color for the line (gold in this case)
+          },
+          lineStyle: {
+            width: 2, // Set the width of the line
+          },
+          smooth: true, // Optional: make the line smooth
         },
       ],
     };
@@ -369,6 +384,8 @@
     dateList = filteredList?.map((item) => item.date);
     callVolumeList = filteredList?.map((item) => item?.CALL?.volume);
     putVolumeList = filteredList?.map((item) => item?.PUT?.volume);
+    iv60List = filteredList?.map((item) => item?.iv60);
+
     callOpenInterestList = filteredList?.map(
       (item) => item?.CALL?.open_interest,
     );
@@ -389,9 +406,9 @@
 
     // Determine the type of plot data to generate based on displayData
     if (displayData === "volume") {
-      options = plotData(callVolumeList, putVolumeList);
+      options = plotData(callVolumeList, putVolumeList, iv60List);
     } else if (displayData === "openInterest") {
-      options = plotData(callOpenInterestList, putOpenInterestList);
+      options = plotData(callOpenInterestList, putOpenInterestList, iv60List);
     }
   }
 

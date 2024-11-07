@@ -93,6 +93,7 @@
   let putVolumeList; //= data?.getOptionsPlotData?.putVolumeList;
   let callOpenInterestList; //= data?.getOptionsPlotData?.callOpenInterestList;
   let putOpenInterestList; //= data?.getOptionsPlotData?.putOpenInterestList;
+  let iv60List;
 
   let displayTimePeriod = "threeMonths";
 
@@ -141,7 +142,7 @@
     displayData = event.target.value;
   }
 
-  function plotData(callData, putData) {
+  function plotData(callData, putData, ivData) {
     const options = {
       animation: false,
       tooltip: {
@@ -162,6 +163,8 @@
           type: "category",
           data: dateList,
           axisLabel: {
+            color: "#fff",
+
             formatter: function (value) {
               // Assuming dates are in the format 'yyyy-mm-dd'
               const dateParts = value.split("-");
@@ -179,7 +182,6 @@
           splitLine: {
             show: false, // Disable x-axis grid lines
           },
-
           axisLabel: {
             show: false, // Hide y-axis labels
           },
@@ -219,6 +221,19 @@
           itemStyle: {
             color: "#EE5365", //'#7A1C16'
           },
+        },
+        {
+          name: "IV60", // Name for the line chart
+          type: "line", // Type of the chart (line)
+          yAxisIndex: 1, // Use the second y-axis on the right
+          data: ivData, // iv60Data (assumed to be passed as ivData)
+          itemStyle: {
+            color: "#FFD700", // Choose a color for the line (gold in this case)
+          },
+          lineStyle: {
+            width: 2, // Set the width of the line
+          },
+          smooth: true, // Optional: make the line smooth
         },
       ],
     };
@@ -369,6 +384,8 @@
     dateList = filteredList?.map((item) => item.date);
     callVolumeList = filteredList?.map((item) => item?.CALL?.volume);
     putVolumeList = filteredList?.map((item) => item?.PUT?.volume);
+    iv60List = filteredList?.map((item) => item?.iv60);
+
     callOpenInterestList = filteredList?.map(
       (item) => item?.CALL?.open_interest,
     );
@@ -389,9 +406,9 @@
 
     // Determine the type of plot data to generate based on displayData
     if (displayData === "volume") {
-      options = plotData(callVolumeList, putVolumeList);
+      options = plotData(callVolumeList, putVolumeList, iv60List);
     } else if (displayData === "openInterest") {
-      options = plotData(callOpenInterestList, putOpenInterestList);
+      options = plotData(callOpenInterestList, putOpenInterestList, iv60List);
     }
   }
 
@@ -552,18 +569,22 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section
-  class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full"
->
-  <div class="flex justify-center m-auto h-full overflow-hidden w-full">
+<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
+  <div class="w-full flex h-full overflow-hidden">
     <div
-      class="relative flex justify-center items-center overflow-hidden w-full"
+      class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="xl:p-7 w-full m-auto mt-2">
-        <div class="mb-6">
-          <h2 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
-            Unsual Options Activity
-          </h2>
+      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+        <div class="w-full mb-6">
+          <div
+            class="w-full m-auto sm:pb-6 {data?.getOptionsNetFlow?.length === 0
+              ? 'hidden'
+              : ''}"
+          >
+            {#await import("$lib/components/OptionsNetFlow.svelte") then { default: Comp }}
+              <svelte:component this={Comp} rawData={data?.getOptionsNetFlow} />
+            {/await}
+          </div>
 
           <div
             class="w-fit text-white p-3 sm:p-5 mb-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
@@ -590,7 +611,7 @@
 
         {#if optionsPlotData?.length !== 0}
           <div
-            class="mb-4 grid grid-cols-2 grid-rows-2 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-4 md:grid-rows-1 md:divide-x"
+            class="mb-4 grid grid-cols-2 grid-rows-2 divide-gray-600 rounded-md border border-gray-600 md:grid-cols-4 md:grid-rows-1 md:divide-x"
           >
             <div class="p-4 bp:p-5 sm:p-6">
               <label
@@ -695,7 +716,7 @@
             </select>
           </div>
 
-          <div class="app w-full bg-[#09090B] rounded-xl">
+          <div class="app w-full bg-[#09090B]">
             {#if filteredList?.length !== 0}
               <Chart {init} {options} class="chart" />
             {:else}
@@ -752,7 +773,7 @@
               {/each}
             </div>
 
-            <div class="app w-full bg-[#09090B] rounded-xl mb-24">
+            <div class="app w-full bg-[#09090B] mb-24">
               <Chart {init} options={optionsEX} class="chart" />
             </div>
           {/if}
@@ -817,38 +838,35 @@
             <div class="flex justify-start items-center m-auto overflow-x-auto">
               {#if activeIdx === 0}
                 <table
-                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+                  class="w-full table table-sm table-compact rounded-none sm:rounded-md border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
                 >
                   <thead>
-                    <tr class="">
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-start"
+                    <tr class="border-b border-[#27272A]">
+                      <td class="text-white font-semibold text-sm text-start"
                         >Date</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >% Change</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >P/C</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-center"
+                      <td class="text-white font-semibold text-sm text-center"
                         >Bear/Bull</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-center"
+                      <td class="text-white font-semibold text-sm text-center"
                         >Bid/Ask Vol</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >% OTM</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Total Volume</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Total OI</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Total Prem</td
                       >
                     </tr>
