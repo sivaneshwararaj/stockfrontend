@@ -86,7 +86,7 @@ const pages = [
   { title: "/imprint" },
   { title: "/about" },
   { title: "/contact" },
-  { title: "/blog" },
+  //{ title: "/blog" },
   { title: "/politicians" },
   { title: "/politicians/flow-data" },
   { title: "/analysts" },
