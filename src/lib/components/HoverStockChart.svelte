@@ -169,6 +169,8 @@
       chart?.timeScale()?.fitContent();
     }
   });
+
+  $: charNumber = 20;
 </script>
 
 <div on:mouseover={() => getStockData(symbol)} class="inline-block">
@@ -190,7 +192,7 @@
             class=" text-sm flex flex-row items-center justify-start bg-[#09090B]"
           >
             <div class="flex flex-col items-start w-full">
-              <div class=" flex flex-row items-center pb-1">
+              <div class=" flex flex-col items-start pb-1">
                 <!--
                 <Avatar.Root>
                   <Avatar.Image
@@ -200,7 +202,14 @@
                   <Avatar.Fallback>SK</Avatar.Fallback>
                 </Avatar.Root>
                 -->
-                <h4 class="text-[1rem] font-semibold inline-block">{symbol}</h4>
+                <h4 class="text-sm text-blue-400 inline-block">
+                  {symbol}
+                </h4>
+                <h5 class="text-sm inline-block">
+                  {stockChartData?.name?.length > charNumber
+                    ? stockChartData?.name?.slice(0, charNumber) + "..."
+                    : stockChartData?.name}
+                </h5>
               </div>
               <p>
                 Current Price: {stockChartData?.price?.toFixed(2)} (<span
@@ -211,7 +220,7 @@
               </p>
               <p>
                 <svg
-                  class="inline-block w-4 h-4 {changesPercentage >= 0
+                  class="-ml-1 inline-block w-4 h-4 {changesPercentage >= 0
                     ? ''
                     : 'rotate-180'}"
                   xmlns="http://www.w3.org/2000/svg"
