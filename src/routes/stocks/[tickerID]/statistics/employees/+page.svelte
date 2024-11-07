@@ -93,8 +93,12 @@
           data: employeeList,
           type: "bar",
           smooth: true,
+          itemStyle: {
+            color: "#FBCE3C",
+          },
         },
       ],
+
       tooltip: {
         trigger: "axis",
       },

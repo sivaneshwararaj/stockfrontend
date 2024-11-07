@@ -81,6 +81,9 @@
           data: dividendList,
           type: "bar",
           smooth: true,
+          itemStyle: {
+            color: "#FBCE3C",
+          },
         },
       ],
     };

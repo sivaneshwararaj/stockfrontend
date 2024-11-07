@@ -94,6 +94,9 @@
           areaStyle: { opacity: 0.2 },
           smooth: true,
           symbol: "none",
+          itemStyle: {
+            color: "#FBCE3C",
+          },
         },
       ],
       tooltip: {

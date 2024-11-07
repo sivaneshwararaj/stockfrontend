@@ -299,6 +299,9 @@
           data: valueList,
           type: "bar",
           smooth: true,
+          itemStyle: {
+            color: "#FBCE3C",
+          },
         },
       ],
       tooltip: {

@@ -311,7 +311,7 @@
           type: "line",
           yAxisIndex: 0,
           itemStyle: {
-            color: "#fff", // Change bar color to white
+            color: "#FBCE3C",
           },
           showSymbol: false,
         },

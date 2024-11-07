@@ -1,6 +1,5 @@
 <script lang="ts">
   import { analystEstimateComponent, stockTicker } from "$lib/store";
-  import InfoModal from "$lib/components/InfoModal.svelte";
 
   import { Chart } from "svelte-echarts";
   import { init, use } from "echarts/core";
@@ -163,7 +162,9 @@
           },
           lineStyle: {
             type: "dashed", // Set the line type to dashed
+            color: "#FBCE3C",
           },
+
           showSymbol: false, // Show symbols for line plot points
         },
         {
@@ -175,6 +176,7 @@
           },
           lineStyle: {
             type: "dashed", // Set the line type to dashed
+            color: "#FBCE3C",
           },
           showSymbol: false, // Show symbols for line plot points
         },
