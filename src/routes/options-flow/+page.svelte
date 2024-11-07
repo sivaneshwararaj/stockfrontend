@@ -1963,7 +1963,7 @@ function sendMessage(message) {
                         class="td {optionsWatchlist.optionsId?.includes(
                           displayedData[index]?.id,
                         )
-                          ? 'text-[#fff]'
+                          ? 'text-[#FBCE3C]'
                           : 'text-white'}"
                       >
                         <svg

@@ -216,7 +216,7 @@
 >
   <textarea
     on:click={() => (expandField = true)}
-    class="rounded-lg text-sm {expandField
+    class="rounded-md text-sm {expandField
       ? 'min-h-24 h-auto border-[#1C4090]'
       : 'h-12  border-gray-500'} overflow-hidden sm:hover:border-[#1C4090] sm:hover:ring-1 transition sm:ease-out placeholder-gray-300 w-full bg-[#27272A] text-white border border-1 ring-2 sm:ring-0 ring-[#1C4090]"
     {placeholder}
@@ -230,7 +230,7 @@
       <div class="flex flex-row items-center justify-end mt-4">
         <!--
         <div class="relative">
-        <label for={imageId} class="{imageInput.length !== 0 ? 'hidden' : ''} inline-flex mr-auto items-center py-2.5 px-4 text-xs font-medium text-center text-white rounded-lg hover:bg-gray-800 cursor-pointer">
+        <label for={imageId} class="{imageInput.length !== 0 ? 'hidden' : ''} inline-flex mr-auto items-center py-2.5 px-4 text-xs font-medium text-center text-white rounded-md sm:hover:bg-gray-300 cursor-pointer">
           <svg class="w-6 h-6 inline-block"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="0.4" d="M22.0206 16.8198L18.8906 9.49978C18.3206 8.15978 17.4706 7.39978 16.5006 7.34978C15.5406 7.29978 14.6106 7.96978 13.9006 9.24978L12.0006 12.6598C11.6006 13.3798 11.0306 13.8098 10.4106 13.8598C9.78063 13.9198 9.15063 13.5898 8.64063 12.9398L8.42063 12.6598C7.71063 11.7698 6.83063 11.3398 5.93063 11.4298C5.03063 11.5198 4.26063 12.1398 3.75063 13.1498L2.02063 16.5998C1.40063 17.8498 1.46063 19.2998 2.19063 20.4798C2.92063 21.6598 4.19063 22.3698 5.58063 22.3698H18.3406C19.6806 22.3698 20.9306 21.6998 21.6706 20.5798C22.4306 19.4598 22.5506 18.0498 22.0206 16.8198Z" fill="#A6ADBB" ></path> <path d="M6.96984 8.38012C8.83657 8.38012 10.3498 6.86684 10.3498 5.00012C10.3498 3.13339 8.83657 1.62012 6.96984 1.62012C5.10312 1.62012 3.58984 3.13339 3.58984 5.00012C3.58984 6.86684 5.10312 8.38012 6.96984 8.38012Z" fill="#E5E7EB"></path> </g></svg>
         
           <input class="hidden rounded text-gray-200"
@@ -246,7 +246,7 @@
 
         <label
           on:click={handleCancel}
-          class="inline-flex justify-end items-center py-2.5 px-4 text-xs font-medium text-center text-white rounded-lg hover:bg-gray-800 cursor-pointer mr-3"
+          class="inline-flex justify-end items-center py-2.5 px-4 text-xs font-semibold text-white text-black rounded-md sm:hover:bg-red-700 cursor-pointer mr-3"
         >
           Cancel
         </label>
@@ -256,13 +256,13 @@
             class="inline-flex justify-end items-center bg-[#fff] sm:hover:bg-gray-300 duration-100 transition {inputValue.length !==
             0
               ? 'opacity-100 cursor-pointer'
-              : 'opacity-60'}  py-2.5 px-4 text-xs font-medium text-center text-white rounded-lg focus:ring-purple-300"
+              : 'opacity-60'}  py-2.5 px-4 text-xs font-semibold text-center text-black rounded-md focus:ring-purple-300"
           >
             Post
           </label>
         {:else}
           <label
-            class="cursor-not-allowed inline-flex justify-end items-center bg-[#fff] bg-opacity-40 py-2.5 px-4 text-xs font-medium text-center text-white rounded-lg focus:ring-purple-300"
+            class="cursor-not-allowed inline-flex justify-end items-center bg-[#fff] bg-opacity-40 py-2.5 px-4 text-xs font-medium text-center text-white rounded-md focus:ring-purple-300"
           >
             Post
           </label>

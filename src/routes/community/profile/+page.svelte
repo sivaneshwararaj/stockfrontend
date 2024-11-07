@@ -834,7 +834,7 @@
                             <div class="w-full max-w-lg pt-3">
                               <button
                                 type="submit"
-                                class="btn bg-[#fff] sm:hover:bg-gray-300 duration-100 text-white w-full max-w-lg normal-case"
+                                class="btn bg-[#fff] sm:hover:bg-gray-300 duration-100 font-semibold text-black w-full max-w-lg normal-case"
                                 >Update your data</button
                               >
                             </div>
@@ -872,7 +872,7 @@
                             <div class="w-full max-w-lg pt-3">
                               <button
                                 type="submit"
-                                class="btn bg-[#fff] text-white sm:hover:bg-gray-300 w-full max-w-lg normal-case text-md"
+                                class="btn bg-[#fff] text-black font-semibold sm:hover:bg-gray-300 w-full max-w-lg normal-case text-md"
                                 >Update Password</button
                               >
                             </div>
