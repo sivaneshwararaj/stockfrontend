@@ -408,7 +408,7 @@
           type: "bar",
           showSymbol: false,
           itemStyle: {
-            color: "#FF9E21", // Change bar color to white
+            color: "#FBCE3C", // Change bar color to white
           },
         },
         {

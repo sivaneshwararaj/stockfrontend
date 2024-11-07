@@ -82,7 +82,7 @@
 <div class="fixed z-[100] bottom-8 sm:bottom-10 right-8 sm:right-16">
   <label
     for="feedbackInfo"
-    class="inline-flex items-center justify-center w-12 h-12 sm:w-full sm:h-10 font-medium bg-gray-700 sm:bg-[#FFEDE5] ml-1 mr-0 sm:mr-2 rounded-full cursor-pointer"
+    class="inline-flex items-center justify-center w-12 h-12 sm:w-full sm:h-10 font-semibold bg-gray-700 sm:bg-[#FBCE3C] ml-1 mr-0 sm:mr-2 rounded-full cursor-pointer"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -111,10 +111,10 @@
 >
   <label
     for="feedbackInfo"
-    class="cursor-pointer modal-backdrop bg-[#fff] bg-opacity-[0.05]"
+    class="cursor-pointer modal-backdrop bg-[#fff] bg-opacity-[0.1]"
   ></label>
 
-  <div class="modal-box w-full bg-[#000]">
+  <div class="modal-box w-full bg-[#09090B] border border-gray-600">
     <div class="flex flex-row items-center pt-5">
       <h1 class="text-white text-xl sm:text-2xl font-bold">
         Your Feedback matters!
@@ -185,10 +185,10 @@
 
     <button
       on:click={() => sendFeedback()}
-      class="mb-4 px-3 py-2 bg-purple-600 smhover:bg-purple-700 {rating?.length !==
+      class="mb-4 px-3 py-2 bg-[#FBCE3C] sm:hover:bg-[#e8b305] {rating?.length !==
         0 && inputValue?.length !== 0
         ? 'opacity-100 cursor-pointer'
-        : 'opacity-60 cursor-not-allowed'} w-11/12 rounded-lg m-auto text-white font-semibold text-md"
+        : 'opacity-60 cursor-not-allowed'} w-11/12 rounded-lg m-auto text-black font-semibold text-md"
     >
       Send Feedback
     </button>

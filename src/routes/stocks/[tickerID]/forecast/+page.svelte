@@ -97,7 +97,7 @@
 
     // Define categories in the exact order you specified
     const categories = ["Strong Sell", "Sell", "Hold", "Buy", "Strong Buy"];
-    const colors = ["#9E190A", "#D9220E", "#FF9E21", "#31B800", "#008A00"];
+    const colors = ["#9E190A", "#D9220E", "#FBCE3C", "#31B800", "#008A00"];
 
     // Create a consistent mapping for data
     const formattedData = rawAnalystList.map((item) =>
@@ -216,7 +216,7 @@
               color: [
                 [0.2, "#9E190A"],
                 [0.4, "#D9220E"],
-                [0.6, "#FF9E21"],
+                [0.6, "#FBCE3C"],
                 [0.8, "#31B800"],
                 [1, "#008A00"],
               ],
@@ -409,7 +409,7 @@
           symbol: "none",
           lineStyle: {
             type: "dashed",
-            color: "#FF9E21",
+            color: "#FBCE3C",
           },
         },
         {
@@ -533,7 +533,7 @@
                       ? 'text-[#00FC50]'
                       : ['Strong Sell', 'Sell']?.includes(consensusRating)
                         ? 'text-[#FF2F1F]'
-                        : 'text-[#FF9E21]'}">{consensusRating}</span
+                        : 'text-[#FBCE3C]'}">{consensusRating}</span
                   >
                 </div>
               </div>

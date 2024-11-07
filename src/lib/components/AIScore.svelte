@@ -68,7 +68,7 @@
                   class="stroke-current {score >= 7
                     ? 'text-[#00FC50]'
                     : score >= 4
-                      ? 'text-[#FF9E21]'
+                      ? 'text-[#FBCE3C]'
                       : 'text-[#FF2F1F]'}"
                   stroke-width="3"
                   stroke-dasharray="100.48"
