@@ -431,6 +431,25 @@
   let optionsData = getPlotOptions() || null;
   let optionsPieChart = getPieChart() || null;
   let optionsPriceForecast = getPriceForecastChart() || null;
+
+  function latestInfoDate(inputDate) {
+    // Convert the input date string to milliseconds since epoch
+    const inputDateMs = Date?.parse(inputDate);
+
+    // Get today's date in milliseconds since epoch
+    const todayMs = Date?.now();
+
+    // Calculate the difference in milliseconds
+    const differenceInMs = todayMs - inputDateMs;
+
+    // Convert milliseconds to days
+    const differenceInDays = Math?.floor(
+      differenceInMs / (1000 * 60 * 60 * 24),
+    );
+
+    // Return the difference in days
+    return differenceInDays <= 1;
+  }
 </script>
 
 <svelte:head>
@@ -586,9 +605,20 @@
               class="flex flex-col justify-between p-1 lg:max-w-[32%] text-white"
             >
               <div>
-                <h2 class="mb-1 text-xl font-bold">Latest Analyst Report</h2>
+                <div class="flex flex-row items-center">
+                  <h2 class="mb-1 text-xl font-bold">Latest Analyst Report</h2>
+                  {#if latestInfoDate(data?.getAnalystInsight?.date)}
+                    <label
+                      class="bg-[#FBCE3C] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3"
+                      >New</label
+                    >
+                  {/if}
+                </div>
                 {#if Object?.keys(data?.getAnalystInsight)?.length > 0}
                   <p>{data?.getAnalystInsight?.insight}</p>
+                  <p class="mt-5 italic text-white text-sm">
+                    Updated {data?.getAnalystInsight?.date}
+                  </p>
                 {:else}
                   <p>
                     According to {numOfAnalyst} stock analyst, the rating for {$displayCompanyName}
