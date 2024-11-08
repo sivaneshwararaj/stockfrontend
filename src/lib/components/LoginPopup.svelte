@@ -5,6 +5,7 @@
   import toast from "svelte-french-toast";
   import Input from "$lib/components/Input.svelte";
   import { screenWidth } from "$lib/store";
+  import { page } from "$app/stores";
 
   export let form;
 
@@ -17,20 +18,6 @@
     return async ({ result, update }) => {
       switch (result.type) {
         case "success":
-          if (form?.notVerified) {
-            toast.error("Please verify your email first", {
-              style: "border-radius: 200px; background: #333; color: #fff;",
-            });
-            await update();
-            break;
-          } else form?.notVerified === false;
-          {
-            toast.success("Login successfully!", {
-              style: "border-radius: 200px; background: #333; color: #fff;",
-            });
-            await update();
-            break;
-          }
         case "redirect":
           isClicked = true;
           toast.success("Login successfully!", {
@@ -53,17 +40,18 @@
           await update();
       }
 
-      /*
-          setTimeout(() => {
-              if (result.type === 'redirect') {
-                const anchor = document.createElement('a');
-                anchor.href = '/';
-                anchor.dataset.sveltekitReload = true;
-                document.body.appendChild(anchor);
-                anchor.dispatchEvent(new MouseEvent('click'));
-              }
-            }, 280);
-            */
+      setTimeout(() => {
+        if (
+          ["redirect", "success"]?.includes(result.type) &&
+          $page?.url?.pathname === "/pricing"
+        ) {
+          const anchor = document.createElement("a");
+          anchor.href = "/pricing";
+          anchor.dataset.sveltekitReload = true;
+          document.body.appendChild(anchor);
+          anchor.dispatchEvent(new MouseEvent("click"));
+        }
+      }, 280);
 
       loading = false;
     };
@@ -74,6 +62,7 @@
     return async ({ result, update }) => {
       switch (result.type) {
         case "success":
+        case "redirect":
           isClicked = true;
           toast.success("Registration successfully!", {
             style: "border-radius: 200px; background: #333; color: #fff;",
@@ -94,6 +83,20 @@
         default:
           await update();
       }
+
+      setTimeout(() => {
+        if (
+          ["redirect", "success"]?.includes(result.type) &&
+          $page?.url?.pathname === "/pricing"
+        ) {
+          const anchor = document.createElement("a");
+          anchor.href = "/pricing";
+          anchor.dataset.sveltekitReload = true;
+          document.body.appendChild(anchor);
+          anchor.dispatchEvent(new MouseEvent("click"));
+        }
+      }, 280);
+
       loading = false;
     };
   };
@@ -209,7 +212,7 @@ const output = await response.json();
                   >
                     <div class="flex flex-row m-auto items-center">
                       <span class="loading loading-infinity"></span>
-                      <span class="text-white ml-1.5">Signing Up</span>
+                      <span class=" ml-1.5">Signing Up</span>
                     </div>
                   </label>
                 {/if}

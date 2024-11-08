@@ -61,7 +61,7 @@ export const actions = {
       error(err.status, err.message);
     }
 
-    redirect(302, "/");
+    redirect(302, "/pricing");
   },
 
   register: async ({ locals, request }) => {
@@ -78,7 +78,7 @@ export const actions = {
     }
 
     try {
-      let newUser = await locals.pb.collection("users").create(formData);
+      await locals.pb.collection("users").create(formData);
       /*
 await locals.pb?.collection('users').update(
 				newUser?.id, {
@@ -101,7 +101,7 @@ await locals.pb?.collection('users').update(
       error(err.status, err.message);
     }
 
-    redirect(303, "/");
+    redirect(302, "/pricing");
   },
 
   oauth2: async ({ url, locals, request, cookies }) => {
