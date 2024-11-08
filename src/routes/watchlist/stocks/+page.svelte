@@ -1385,7 +1385,7 @@
   ></label>
 
   <div
-    class="modal-box w-full bg-[#141417] border border-gray-800 overflow-hidden"
+    class="modal-box w-full bg-[#27272A] border border-gray-600 overflow-hidden"
   >
     <h3
       class="font-bold text-[1rem] text-center sm:text-lg flex justify-center items-center mt-10 text-white"
@@ -1399,7 +1399,7 @@
       <label
         for="deleteWatchlist"
         on:click={deleteWatchlist}
-        class="mt-5 btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+        class="mt-5 btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-md m-auto text-black font-semibold text-md"
       >
         Proceed
       </label>
