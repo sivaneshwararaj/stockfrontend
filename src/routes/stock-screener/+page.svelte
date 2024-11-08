@@ -18,6 +18,7 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   import Input from "$lib/components/Input.svelte";
 
@@ -1726,48 +1727,6 @@ const handleKeyDown = (event) => {
     }
   }
 
-  enum Order {
-    HighToLow = "highToLow",
-    LowToHigh = "lowToHigh",
-  }
-
-  enum SortBy {
-    Change = "change",
-    MarketCap = "marketCap",
-    PE = "pe", // Add new sorting criteria here
-    Volume = "volume", // Add new sorting criteria here
-  }
-
-  // Mapping of SortBy enum to actual data keys
-  const sortByKeys: Record<SortBy, string> = {
-    [SortBy.Change]: "changesPercentage",
-    [SortBy.MarketCap]: "marketCap",
-    [SortBy.PE]: "pe",
-    [SortBy.Volume]: "volume", // Add new key here
-  };
-
-  let order = Order.HighToLow;
-  let sortBy = SortBy.MarketCap; // Default sorting by change percentage
-
-  function changeOrder(state: Order) {
-    order = state === Order.HighToLow ? Order.LowToHigh : Order.HighToLow;
-  }
-
-  const sortItems = (tickerList: any[], key: string) => {
-    return tickerList?.sort((a, b) => {
-      const aValue = a[key] ?? 0;
-      const bValue = b[key] ?? 0;
-      return order === Order.HighToLow ? bValue - aValue : aValue - bValue;
-    });
-  };
-
-  $: {
-    if (order) {
-      const key = sortByKeys[sortBy]; // Use the mapping to get the key
-      displayResults = sortItems(filteredData, key)?.slice(0, 50);
-    }
-  }
-
   $: {
     if (searchTerm) {
       filteredRows = allRows?.filter((row) =>
@@ -1931,14 +1890,6 @@ const handleKeyDown = (event) => {
           { condition: "over", name: "freeCashFlowMargin", value: "50%" },
         ],
       },
-      bestHalalStocks: {
-        // New Strategy Added
-        name: "Top Halal Stocks",
-        rules: [
-          { condition: "", name: "halalStocks", value: "Compliant" },
-          { condition: "over", name: "marketCap", value: "1B" },
-        ],
-      },
     };
 
     const strategy = strategies[state];
@@ -1980,6 +1931,140 @@ const handleKeyDown = (event) => {
           }) || [];
       }
     }, 50);
+  }
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = filteredData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      displayResults = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    displayResults = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
+
+  let columns;
+  let sortOrders;
+
+  // Initial columns and sort orders for the "general" tab
+  const generalColumns = [
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "marketCap", label: "Market Cap", align: "right" },
+    { key: "changesPercentage", label: "% Change", align: "right" },
+    { key: "price", label: "Price", align: "right" },
+    { key: "volume", label: "Volume", align: "right" },
+    { key: "pe", label: "PE Ratio", align: "right" },
+  ];
+
+  const generalSortOrders = {
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    marketCap: { order: "none", type: "number" },
+    changesPercentage: { order: "none", type: "number" },
+    price: { order: "none", type: "number" },
+    volume: { order: "none", type: "number" },
+    pe: { order: "none", type: "number" },
+  };
+
+  // Initial columns and sort orders for other tabs
+  const baseColumns = [
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "marketCap", label: "Market Cap", align: "right" },
+  ];
+
+  const baseSortOrders = {
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    marketCap: { order: "none", type: "number" },
+  };
+
+  const stringTypeRules = [
+    "country",
+    "industry",
+    "score",
+    "sector",
+    "analystRating",
+    "halalStocks",
+  ];
+
+  // Helper to determine the type based on stringTypeRules
+  const getType = (key) =>
+    stringTypeRules.includes(key) ? "string" : "number";
+
+  $: {
+    if (displayTableTab) {
+      if (displayTableTab === "general") {
+        // Set columns and sortOrders for the "general" tab
+        columns = [...generalColumns];
+        sortOrders = { ...generalSortOrders };
+      } else {
+        // Set base columns and sortOrders, then extend with displayRules
+        columns = [...baseColumns];
+        sortOrders = { ...baseSortOrders };
+
+        displayRules?.forEach((rule) => {
+          if (rule.rule !== "marketCap") {
+            // Ignore "marketCap" if it's present in displayRules
+            columns.push({
+              key: rule.rule,
+              label: rule.label,
+              align: "right",
+            });
+            sortOrders[rule.rule] = { order: "none", type: getType(rule.rule) };
+          }
+        });
+      }
+    }
   }
 </script>
 
@@ -2124,12 +2209,6 @@ const handleKeyDown = (event) => {
                     class="cursor-pointer hover:bg-[#27272A]"
                   >
                     Strong Cash Flow
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    on:click={() => popularStrategy("bestHalalStocks")}
-                    class="cursor-pointer hover:bg-[#27272A]"
-                  >
-                    Top Halal Stocks
                   </DropdownMenu.Item>
                 </DropdownMenu.Group>
               </DropdownMenu.Content>
@@ -2772,113 +2851,7 @@ const handleKeyDown = (event) => {
             class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
           >
             <thead>
-              <tr class="border-b-[#1A1A27]">
-                <th
-                  class="text-white bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]"
-                  >Symbol</th
-                >
-                <th
-                  class="text-white hidden sm:table-cell bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]"
-                  >Company Name</th
-                >
-                <th
-                  on:click={() => {
-                    sortBy = "marketCap";
-                    changeOrder(order);
-                  }}
-                  class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end"
-                >
-                  Market Cap
-                  <svg
-                    class="w-5 h-5 inline-block {order === 'highToLow' &&
-                    sortBy === 'marketCap'
-                      ? ''
-                      : 'rotate-180'}"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    style="max-width:40px"
-                    ><path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    ></path></svg
-                  >
-                </th>
-                <th
-                  on:click={() => {
-                    sortBy = "change";
-                    changeOrder(order);
-                  }}
-                  class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end"
-                >
-                  % Change
-                  <svg
-                    class="w-5 h-5 inline-block {order === 'highToLow' &&
-                    sortBy === 'change'
-                      ? 'rotate-180'
-                      : ''}"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    style="max-width:40px"
-                    ><path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    ></path></svg
-                  >
-                </th>
-                <th
-                  class="text-white bg-[#09090B] text-end text-sm sm:text-[1rem] font-semibold border-b-[#09090B]"
-                >
-                  Price
-                </th>
-                <th
-                  on:click={() => {
-                    sortBy = "volume";
-                    changeOrder(order);
-                  }}
-                  class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end"
-                >
-                  Volume
-                  <svg
-                    class="w-5 h-5 inline-block {order === 'highToLow' &&
-                    sortBy === 'volume'
-                      ? 'rotate-180'
-                      : ''}"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    style="max-width:40px"
-                    ><path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    ></path></svg
-                  >
-                </th>
-                <th
-                  on:click={() => {
-                    sortBy = "pe";
-                    changeOrder(order);
-                  }}
-                  class="whitespace-nowrap cursor-pointer text-white font-semibold text-sm sm:text-[1rem] font-semibold text-end"
-                >
-                  PE Ratio
-                  <svg
-                    class="w-5 h-5 inline-block {order === 'highToLow' &&
-                    sortBy === 'pe'
-                      ? 'rotate-180'
-                      : ''}"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    style="max-width:40px"
-                    ><path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    ></path></svg
-                  >
-                </th>
-              </tr>
+              <TableHeader {columns} {sortOrders} {sortData} />
             </thead>
             <tbody>
               {#each displayResults as item}
@@ -2963,31 +2936,7 @@ const handleKeyDown = (event) => {
             class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
           >
             <thead>
-              <tr class="border-b-[#1A1A27]">
-                <th
-                  class="text-white bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]"
-                  >Symbol</th
-                >
-                <th
-                  class="text-white hidden sm:table-cell bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]"
-                  >Company Name</th
-                >
-                <th
-                  class="text-white text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]"
-                  >Market Cap</th
-                >
-                {#each displayRules as row (row?.rule)}
-                  {#if row?.rule !== "marketCap"}
-                    <th
-                      class="text-white text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold border-b-[#09090B]"
-                    >
-                      {row?.label?.length > 20
-                        ? row?.label?.slice(0, 20) + "..."
-                        : row?.label}
-                    </th>
-                  {/if}
-                {/each}
-              </tr>
+              <TableHeader {columns} {sortOrders} {sortData} />
             </thead>
             <tbody>
               {#each displayResults as item (item?.symbol)}
