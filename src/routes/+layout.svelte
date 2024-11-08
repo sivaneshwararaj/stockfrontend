@@ -407,6 +407,7 @@ const handleTwitchMessage = (event) => {
                               >Market Mover</a
                             >
                           </Button>
+                          <!--
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -418,6 +419,7 @@ const handleTwitchMessage = (event) => {
                               >Heatmaps</a
                             >
                           </Button>
+                          -->
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -992,10 +994,12 @@ const handleTwitchMessage = (event) => {
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Market Mover</a
                           >
+                          <!--
                           <a
                             href="/heatmaps"
                             class="text-[1rem] text-white ml-4 mt-4">Heatmaps</a
                           >
+                            -->
                           <a
                             href="/list"
                             class="text-[1rem] text-white ml-4 mt-4"
