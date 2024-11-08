@@ -1,11 +1,94 @@
 <script lang="ts">
   import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
   let rawData = data?.getIndustryOverview;
 
   $: charNumber = $screenWidth < 640 ? 20 : 30;
+
+  let displayList = rawData;
+
+  let columns = [
+    { key: "industry", label: "Industry Name", align: "left" },
+    { key: "numStocks", label: "# Stocks", align: "right" },
+    { key: "totalMarketCap", label: "Market Cap", align: "right" },
+    { key: "avgDividendYield", label: "Div. Yield", align: "right" },
+    { key: "pe", label: "PE Ratio", align: "right" },
+    { key: "profitMargin", label: "Profit Margin", align: "right" },
+    { key: "avgChange1M", label: "1M Change", align: "right" },
+    { key: "avgChange1Y", label: "1Y Change", align: "right" },
+  ];
+
+  let sortOrders = {
+    industry: { order: "none", type: "string" },
+    numStocks: { order: "none", type: "number" },
+    totalMarketCap: { order: "none", type: "number" },
+    avgDividendYield: { order: "none", type: "number" },
+    pe: { order: "none", type: "number" },
+    profitMargin: { order: "none", type: "number" },
+    avgChange1M: { order: "none", type: "number" },
+    avgChange1Y: { order: "none", type: "number" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = rawData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      displayList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    displayList = [...originalData].sort(compareValues);
+  };
 </script>
 
 <section class="w-full overflow-hidden m-auto">
@@ -15,32 +98,10 @@
     <div class="w-full overflow-x-scroll">
       <table class="table rounded-none sm:rounded-md w-full m-auto mt-4">
         <thead>
-          <tr class="border border-slate-800">
-            <th class="text-white font-semibold text-[1rem]">Industry Name</th>
-            <th class="text-white text-end font-semibold text-[1rem]">Stocks</th
-            >
-            <th class="text-white font-semibold text-end text-[1rem]"
-              >Market Cap</th
-            >
-            <th class="text-white font-semibold text-[1rem] text-end"
-              >Div. Yield</th
-            >
-            <th class="text-white font-semibold text-[1rem] text-end"
-              >PE Ratio</th
-            >
-            <th class="text-white font-semibold text-[1rem] text-end"
-              >Profit Margin</th
-            >
-            <th class="text-white font-semibold text-[1rem] text-end"
-              >1M Change</th
-            >
-            <th class="text-white font-semibold text-[1rem] text-end"
-              >1Y Change</th
-            >
-          </tr>
+          <TableHeader {columns} {sortOrders} {sortData} />
         </thead>
         <tbody>
-          {#each rawData as item}
+          {#each displayList as item}
             <!-- row -->
             <tr
               class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
@@ -50,7 +111,7 @@
               >
                 <a
                   href={`/list/industry/${item?.industry?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
-                  class="sm:hover:text-white text-blue-400"
+                  class="sm:hover:underline sm:hover:underline-offset-4 text-white"
                 >
                   {item?.industry?.length > charNumber
                     ? item?.industry?.slice(0, charNumber) + "..."
@@ -83,9 +144,11 @@
               </td>
 
               <td
-                class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                class=" {item?.profitMargin >= 0
+                  ? "before:content-['+'] text-[#00FC50]"
+                  : 'text-[#FF2F1F]'}  font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
               >
-                {item?.profitMargin?.toFixed(2)}%
+                {abbreviateNumber(item?.profitMargin)}%
               </td>
 
               <td

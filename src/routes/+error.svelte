@@ -34,7 +34,7 @@
                     We will fix it asap!
                 </div>
 
-                <a href="/home" class="flex justify-center items-center w-1/2 m-auto py-2.5 mt-10 rounded-md duration-100 bg-purple-600 sm:hover:bg-purple-700 text-white font-medium">
+                <a href="/home" class="flex justify-center items-center w-1/2 m-auto py-2.5 mt-10 rounded-md duration-100 bg-[#fff] sm:hover:hover:bg-gray-300 text-black font-semibold">
                     Back to Home Page
                 </a>
                 

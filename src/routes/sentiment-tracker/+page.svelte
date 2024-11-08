@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
