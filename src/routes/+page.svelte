@@ -143,10 +143,9 @@
 <div
   class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B] mb-40"
 >
-  <!--
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
     <div
-      class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#fff] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
+      class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#FFC233] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
     >
       <div
         class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
@@ -169,27 +168,24 @@
       <div
         class="w-full m-auto flex flex-col sm:flex-row justify-center items-center gap-x-4 gap-y-2"
       >
-        <p class="text-[1rem] text-white">
-          <strong class="font-semibold text-lg text-[1rem] text-white"
-            >🎃 Limited Halloween Special</strong
-          ><svg
+        <p class="text-md text-black font-semibold">
+          <span class="text-black font-bold">Last Chance</span><svg
             viewBox="0 0 2 2"
             class="mx-2 inline h-0.5 w-0.5 fill-current"
             aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg
           >
-          Save <strong class="text-[#fff]">16%</strong> on Pro Subscription and
-          boost your investing game!
+          Lock the Pro Subscription at just $1.99/month
         </p>
         <a
-          href="/pricing"
-          class="flex-none rounded-full m-auto sm:m-0 px-3.5 py-1 text-[1rem] font-semibold text-black shadow-sm bg-[#fff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          href="/price-plan"
+          class="flex-none rounded-full m-auto sm:m-0 px-3.5 py-1 text-[1rem] font-semibold text-black shadow-sm sm:hover:bg-gray-100 bg-[#fff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
         >
-          Get Pro Now <span aria-hidden="true">&rarr;</span>
+          Read more
         </a>
       </div>
     </div>
   {/if}
--->
+
   <div class="flex flex-col m-auto justify-center items-center">
     <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10">
       {#if Feedback}
