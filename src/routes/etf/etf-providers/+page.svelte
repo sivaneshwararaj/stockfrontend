@@ -1,9 +1,84 @@
 <script lang="ts">
   import { abbreviateNumber, formatETFName } from "$lib/utils";
   import { numberOfUnreadNotification } from "$lib/store";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
   let etfProviderList = data?.getAllETFProviders;
+
+  let columns = [
+    { key: "etfProvider", label: "Provider Name", align: "left" },
+    { key: "totalAssets", label: "Total Assets", align: "right" },
+    { key: "funds", label: "Funds", align: "right" },
+    { key: "avgExpenseRatio", label: "Avg. Cost", align: "right" },
+    { key: "avgHoldings", label: "Avg. Holdings", align: "right" },
+  ];
+
+  let sortOrders = {
+    etfProvider: { order: "none", type: "string" },
+    totalAssets: { order: "none", type: "number" },
+    funds: { order: "none", type: "number" },
+    avgExpenseRatio: { order: "none", type: "number" },
+    avgHoldings: { order: "none", type: "number" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = data?.getAllETFProviders;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      etfProviderList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    etfProviderList = [...originalData].sort(compareValues);
+  };
 </script>
 
 <svelte:head>
@@ -69,17 +144,7 @@
         class="table rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
       >
         <thead>
-          <tr class="border border-slate-800">
-            <th class="text-white font-semibold text-sm">Provider Name</th>
-            <th class="text-white font-semibold text-end text-sm"
-              >Total Assets</th
-            >
-            <th class="text-white font-semibold text-sm text-end">Funds</th>
-            <th class="text-white font-semibold text-sm text-end">Avg. Cost</th>
-            <th class="text-white font-semibold text-sm text-end"
-              >Avg. Holdings</th
-            >
-          </tr>
+          <TableHeader {columns} {sortOrders} {sortData} />
         </thead>
         <tbody>
           {#each etfProviderList as item, index}
@@ -92,7 +157,7 @@
               >
                 <a
                   href={"/etf/etf-providers/" + item?.etfProvider}
-                  class="sm:hover:text-white text-blue-400"
+                  class="sm:hover:underline sm:hover:underline-offset-4 text-white"
                 >
                   {formatETFName(item?.etfProvider)}
                 </a>
