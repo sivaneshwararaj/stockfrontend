@@ -4,7 +4,6 @@ const cleanString = (input) => {
     "Inc.",
     "Incorporated",
     "Holdings",
-    "Corporation",
     "Corporations",
     "LLC",
     "Holdings plc American Depositary Shares",

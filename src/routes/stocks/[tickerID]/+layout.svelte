@@ -301,7 +301,7 @@ function handleTypeOfTrade(state:string)
       item.user === data?.user?.id && item.ticker?.includes($stockTicker),
   );
 
-  $: charNumber = $screenWidth < 640 ? 12 : 25;
+  $: charNumber = $screenWidth < 640 ? 15 : 25;
 
   $: {
     if (
@@ -693,25 +693,12 @@ function handleTypeOfTrade(state:string)
                         <div
                           class="flex flex-row justify-start w-full items-center"
                         >
-                          <!--<img class="rounded-full w-10 h-10" src={logoUrl} alt="" />-->
-                          <div
-                            class="flex-shrink-0 rounded-full w-10 h-10 relative bg-[#141417] flex items-center justify-center border border-slate-800"
-                          >
-                            <img
-                              style="clip-path: circle(50%);"
-                              class="avatar w-6 h-6"
-                              src={`https://financialmodelingprep.com/image-stock/${$stockTicker?.toUpperCase()}.png`}
-                              alt=" "
-                              loading="lazy"
-                            />
-                          </div>
-
                           <div class="flex flex-col items-start ml-2 sm:ml-3">
-                            <span class="text-xs text-blue-400">
+                            <span class="text-md sm:text-lg text-blue-400">
                               {$stockTicker?.toUpperCase()}
                             </span>
                             <span
-                              class="text-sm sm:text-xl font-medium text-slate-100"
+                              class="text-xl sm:text-2xl font-semibold sm:font-bold text-white"
                             >
                               {$displayCompanyName?.length > charNumber
                                 ? $displayCompanyName?.slice(0, charNumber) +

@@ -8,10 +8,23 @@
   import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
   import { abbreviateNumber } from "$lib/utils";
   import * as Tabs from "$lib/components/shadcn/tabs/index.js";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
 
+  /*
+  import { Chart } from 'svelte-echarts'
+  import { init, use } from 'echarts/core'
+  import { BarChart } from 'echarts/charts'
+  import { GridComponent } from 'echarts/components'
+  import { CanvasRenderer } from 'echarts/renderers'
+
+  // now with tree-shaking
+  use([BarChart, GridComponent, CanvasRenderer])
+  */
+
   export let data;
+  let isLoaded = false;
   let optionsMode = "premium";
 
   function compareTimes(time1, time2) {
@@ -83,6 +96,7 @@
   let Feedback;
 
   onMount(async () => {
+    isLoaded = true;
     Feedback = (await import("$lib/components/Feedback.svelte")).default;
   });
 
@@ -207,11 +221,11 @@
         Clear & <span class="italic text-[#fff]">Simple</span> Market Insight.
       </h1>
 
-      <h2
+      <h1
         class="text-white text-2xl font-semibold text-start w-full pb-4 sm:pl-4 sm:pb-2"
       >
         Dashboard
-      </h2>
+      </h1>
 
       <main class="flex flex-1 flex-col gap-4 sm:p-4 md:gap-8">
         <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
@@ -271,9 +285,7 @@
                   {#each gainersList as item}
                     <Table.Row>
                       <Table.Cell>
-                        {#await import("$lib/components/HoverStockChart.svelte") then { default: Comp }}
-                          <svelte:component this={Comp} symbol={item?.symbol} />
-                        {/await}
+                        <HoverStockChart symbol={item?.symbol} />
                       </Table.Cell>
                       <Table.Cell
                         class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
@@ -366,9 +378,7 @@
                   {#each losersList as item}
                     <Table.Row>
                       <Table.Cell>
-                        {#await import("$lib/components/HoverStockChart.svelte") then { default: Comp }}
-                          <svelte:component this={Comp} symbol={item?.symbol} />
-                        {/await}
+                        <HoverStockChart symbol={item?.symbol} />
                       </Table.Cell>
                       <Table.Cell
                         class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
@@ -485,13 +495,10 @@
                   {#each optionsTable as item}
                     <Table.Row>
                       <Table.Cell>
-                        {#await import("$lib/components/HoverStockChart.svelte") then { default: Comp }}
-                          <svelte:component
-                            this={Comp}
-                            symbol={item?.ticker}
-                            assetType={item?.underlying_type}
-                          />
-                        {/await}
+                        <HoverStockChart
+                          symbol={item?.ticker}
+                          assetType={item?.underlying_type}
+                        />
                       </Table.Cell>
                       <Table.Cell
                         class="text-right xl:table.-column text-sm sm:text-[1rem] {item?.put_call ===
@@ -553,13 +560,11 @@
               {#if data?.getDashboard?.recentDividends?.length !== 0}
                 <ul style="padding-left: 5px;">
                   {#each data?.getDashboard?.recentDividends as item}
-                    <strong>{item?.name}</strong>
-                    ({#await import("$lib/components/HoverStockChart.svelte") then { default: Comp }}
-                      <svelte:component
-                        this={Comp}
-                        symbol={item?.symbol}
-                      />{/await}) has announced its upcoming dividend details as
-                    of {convertTimestamp(item?.updated)}:
+                    <strong>{item?.name}</strong> (<HoverStockChart
+                      symbol={item?.symbol}
+                    />) has announced its upcoming dividend details as of {convertTimestamp(
+                      item?.updated,
+                    )}:
 
                     <li
                       style="color: #fff; line-height: 22px; margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
@@ -661,12 +666,9 @@
                     <li
                       style="margin-left: 8px; line-height: 22px; margin-bottom: 30px; list-style-type: disc;"
                     >
-                      <strong>{item?.name}</strong>
-                      ({#await import("$lib/components/HoverStockChart.svelte") then { default: Comp }}
-                        <svelte:component
-                          this={Comp}
-                          symbol={item?.symbol}
-                        />{/await})
+                      <strong>{item?.name}</strong> (<HoverStockChart
+                        symbol={item?.symbol}
+                      />)
                       {item?.isToday === true
                         ? "will report today"
                         : [
@@ -741,12 +743,9 @@
               {#if data?.getDashboard?.recentEarnings?.length !== 0}
                 <ul style="padding-left: 5px;">
                   {#each data?.getDashboard?.recentEarnings as item}
-                    <strong>{item?.name}</strong>
-                    ({#await import("$lib/components/HoverStockChart.svelte") then { default: Comp }}
-                      <svelte:component
-                        this={Comp}
-                        symbol={item?.symbol}
-                      />{/await}) has released its quarterly earnings at {formatTime(
+                    <strong>{item?.name}</strong> (<HoverStockChart
+                      symbol={item?.symbol}
+                    />) has released its quarterly earnings at {formatTime(
                       item?.time,
                     )}:
 
