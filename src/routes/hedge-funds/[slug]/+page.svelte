@@ -4,10 +4,11 @@
     screenWidth,
     numberOfUnreadNotification,
     displayCompanyName,
+    assetType,
   } from "$lib/store";
   import cardBackground from "$lib/images/bg-hedge-funds.png";
   import { abbreviateNumber, formatString, sectorNavigation } from "$lib/utils";
-
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import PercentIcon from "lucide-svelte/icons/percent";
   import MoneyIcon from "lucide-svelte/icons/circle-dollar-sign";
 
@@ -19,6 +20,7 @@
   use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   import { onMount } from "svelte";
+  import { symbol } from "zod";
 
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
@@ -1346,7 +1348,7 @@
                         <th
                           class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
                         >
-                          Avg. Buy Price
+                          Avg. Price
                         </th>
                         {#if changeAssetType === "Options"}
                           <th
@@ -1360,18 +1362,17 @@
                     <tbody class="p-0">
                       {#each displayList as item}
                         <tr
-                          on:click={() =>
-                            goto(`/${item?.type}/${item?.symbol}`)}
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A] cursor-pointer"
+                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A]"
                         >
                           <td
                             class="pb-3 border-b border-b-[#27272A] text-sm sm:text-[1rem] whitespace-nowrap"
                           >
                             <div class="flex flex-row items-center">
                               <div class="flex flex-col">
-                                <span class="text-blue-400"
-                                  >{item?.symbol?.replace("_", " ")}</span
-                                >
+                                <HoverStockChart
+                                  symbol={item?.symbol}
+                                  assetType={item?.type}
+                                />
                                 <span class="text-white text-sm"
                                   >{formatString(item?.securityName)}</span
                                 >
@@ -1392,7 +1393,7 @@
                             <td
                               class="text-center text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] {item?.changeInSharesNumberPercentage >
                               0
-                                ? 'text-[#00FC50]'
+                                ? "before:content-[' + '] text-[#00FC50]"
                                 : item?.changeInSharesNumberPercentage < 0
                                   ? 'text-[#FF2F1F]'
                                   : 'text-white'}"
@@ -1420,13 +1421,13 @@
                           <td
                             class="text-center text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
                           >
-                            {abbreviateNumber(item?.marketValue, true)}
+                            {abbreviateNumber(item?.marketValue)}
                           </td>
 
                           <td
                             class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
                           >
-                            ${item?.avgPricePaid}
+                            {item?.avgPricePaid}
                           </td>
                           {#if changeAssetType === "Options"}
                             <td
