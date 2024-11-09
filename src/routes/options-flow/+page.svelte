@@ -90,15 +90,7 @@
     },
     execution_estimate: {
       label: "Execution",
-      step: [
-        "At Ask",
-        "At Bid",
-        "At Midpoint",
-        "Above Ask",
-        "Above Bid",
-        "Below Ask",
-        "Below Bid",
-      ],
+      step: ["At Ask", "At Bid", "At Midpoint", "Above Ask", "Below Bid"],
       defaultValue: "any",
     },
     option_activity_type: {
