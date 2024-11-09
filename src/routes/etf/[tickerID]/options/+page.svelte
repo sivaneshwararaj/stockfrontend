@@ -696,7 +696,7 @@
 
           <div class="flex flex-row items-center w-full mt-10">
             <select
-              class="ml-1 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]"
+              class="ml-1 w-40 select select-bordered select-sm p-0 pl-5 bg-[#313131]"
               on:change={changeTimePeriod}
             >
               <option disabled>Choose a time period</option>
@@ -708,7 +708,7 @@
             </select>
 
             <select
-              class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]"
+              class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#313131]"
               on:change={changeVolumeOI}
             >
               <option disabled>Choose a category</option>
@@ -808,7 +808,7 @@
             {#if activeIdx === 1}
               <div class="relative mb-6">
                 <select
-                  class="w-48 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]"
+                  class="w-48 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
                   on:change={changeStatement}
                 >
                   <option disabled>Choose an Expiration Date</option>

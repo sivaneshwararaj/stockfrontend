@@ -595,7 +595,7 @@
                       class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule ===
                       'annual'
                         ? 'bg-[#fff]'
-                        : 'bg-[#2A303C]'} font-semibold border-r border-gray-600"
+                        : 'bg-[#313131]'} font-semibold border-r border-gray-600"
                       aria-current="page"
                     >
                       Annual
@@ -608,14 +608,14 @@
                         class="cursor-pointer inline-block w-full py-2.5 {filterRule ===
                         'quarterly'
                           ? 'bg-[#fff]'
-                          : 'bg-[#2A303C]'} font-semibold text-white rounded-r-lg"
+                          : 'bg-[#313131]'} font-semibold text-white rounded-r-lg"
                       >
                         Quartely
                       </label>
                     {:else}
                       <a
                         href="/pricing"
-                        class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#2A303C] font-semibold text-white rounded-r-lg"
+                        class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#313131] font-semibold text-white rounded-r-lg"
                       >
                         <span class="">Quarterly</span>
                         <svg

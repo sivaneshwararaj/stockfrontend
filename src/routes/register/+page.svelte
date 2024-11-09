@@ -80,7 +80,7 @@
 <!--
 	<label class="w-full max-w-lg">
 		<input
-		  class="input input-bordered w-full max-w-lg bg-[#2A303C] whitespace-normal ring-2"
+		  class="input input-bordered w-full max-w-lg bg-[#313131] whitespace-normal ring-2"
 		  type="password"
 		  bind:value={password}
 		  on:input={checkPassword}

@@ -176,7 +176,7 @@
         </div>
 
         <select
-          class="mt-1 sm:mt-3 ml-1 w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]"
+          class="mt-1 sm:mt-3 ml-1 w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
           on:change={changeStatement}
         >
           <option disabled>Choose Time Period</option>

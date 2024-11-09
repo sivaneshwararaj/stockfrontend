@@ -416,7 +416,7 @@
                   class="cursor-pointer rounded-l-md inline-block w-full text-sm py-1.5 {filterRule ===
                   'annual'
                     ? 'bg-[#fff] text-black'
-                    : 'bg-[#2A303C] text-white'} font-semibold"
+                    : 'bg-[#313131] text-white'} font-semibold"
                   aria-current="page"
                 >
                   Annual
@@ -429,14 +429,14 @@
                     class="cursor-pointer inline-block w-full py-1.5 text-sm {filterRule ===
                     'quartely'
                       ? 'bg-[#fff] text-black'
-                      : 'bg-[#2A303C] text-white'} font-semibold rounded-r-md"
+                      : 'bg-[#313131] text-white'} font-semibold rounded-r-md"
                   >
                     Quartely
                   </label>
                 {:else}
                   <a
                     href="/pricing"
-                    class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-1.5 bg-[#2A303C] font-semibold text-white rounded-r-md"
+                    class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-1.5 bg-[#313131] font-semibold text-white rounded-r-md"
                   >
                     <span class="">Quarterly</span>
                     <svg
@@ -560,7 +560,7 @@
               <div class="sm:w-full">
                 <div class="relative">
                   <select
-                    class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#2A303C]"
+                    class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
                     on:change={changeStatement}
                   >
                     <option disabled>Choose an Income Variable</option>

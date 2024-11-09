@@ -310,7 +310,10 @@
         type: "line",
         areaStyle: { opacity: 0.2 },
         smooth: true,
-        showSymbol: false,
+        symbol: "none",
+        itemStyle: {
+          color: "#fff",
+        },
       },
       tooltip: {
         trigger: "axis",
@@ -561,7 +564,10 @@
         type: "line",
         areaStyle: { opacity: 0.2 },
         smooth: true,
-        showSymbol: false,
+        symbol: "none",
+        itemStyle: {
+          color: "#fff",
+        },
       },
       tooltip: {
         trigger: "axis",
@@ -766,7 +772,7 @@
               <div class="w-full text-white">
                 <div class="relative flex justify-end">
                   <select
-                    class="w-24 select select-bordered select-sm p-0 pl-5 bg-[#2A303C]"
+                    class="w-24 select select-bordered select-sm p-0 pl-5 bg-[#313131]"
                     on:change={changeStatement}
                   >
                     <option disabled>Choose a Time Period</option>
@@ -794,7 +800,7 @@
                     class="cursor-pointer rounded-l-md inline-block w-full py-1.5 {filterRule ===
                     'annual'
                       ? 'bg-[#fff] text-black'
-                      : 'bg-[#2A303C] text-white'} font-semibold border-r border-gray-600"
+                      : 'bg-[#313131] text-white'} font-semibold border-r border-gray-600"
                     aria-current="page"
                   >
                     Annual
@@ -807,14 +813,14 @@
                       class="cursor-pointer inline-block w-full py-1.5 {filterRule ===
                       'quarterly'
                         ? 'bg-[#fff] text-black'
-                        : 'bg-[#2A303C] text-white'} font-semibold rounded-r-md"
+                        : 'bg-[#313131] text-white'} font-semibold rounded-r-md"
                     >
                       Quartely
                     </label>
                   {:else}
                     <a
                       href="/pricing"
-                      class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#2A303C] font-semibold text-white rounded-r-lg"
+                      class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#313131] font-semibold text-white rounded-r-lg"
                     >
                       <span class="">Quarterly</span>
                       <svg

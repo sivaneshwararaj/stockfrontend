@@ -102,7 +102,7 @@
         </div>
         <div class="relative mt-4">
           <select
-            class="select text-white select-bordered select-sm w-36 p-0 pl-5 overflow-y-auto bg-[#2A303C]"
+            class="select text-white select-bordered select-sm w-36 p-0 pl-5 overflow-y-auto bg-[#313131]"
             on:change={changeTimePeriod}
           >
             <option disabled>Select time period</option>
