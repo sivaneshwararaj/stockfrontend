@@ -48,7 +48,7 @@
           <div class=" w-full bg-[#09090B] m-auto">
             <div class="">
               <p class="text-gray-200 italic mb-2 text-sm">
-                Last updated: 24.07.2024
+                Last updated: 09.11.2024
               </p>
 
               <p class="text-white mb-10">
@@ -245,9 +245,11 @@
                 (e.g., rent, interest and other financing costs, costs of
                 personnel, service providers and services, IT systems, energy),
                 as well as state-imposed fees, contributions, taxes and duties.
-                Any price changes will apply no earlier than 7 days following
-                notice to you. You can cancel your membership at any time during
-                the notice period to avoid future charges.
+                Existing subscribers will retain access to their current price
+                plans as long as they remain subscribed. Any changes to pricing
+                will take effect immediately following notice to you. You may
+                cancel your membership at any time during the notice period to
+                avoid future charges.
               </p>
 
               <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
