@@ -58,6 +58,7 @@
                 >
                 <tbody>
                   {#each similarStocks?.slice(0, 8) as item}
+                  {#if item?.marketCap > 0}
                     <tr class="border-gray-600 border-b"
                       ><td class="text-left"
                         ><a
@@ -70,6 +71,7 @@
                         >{abbreviateNumber(item?.marketCap)}</td
                       >
                     </tr>
+                    {/if}
                   {/each}
                 </tbody>
               </table>

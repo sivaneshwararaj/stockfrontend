@@ -69,7 +69,8 @@
                         ></td
                       >
                       <td class="text-right cursor-normal"
-                        >{item?.dividendYield !== null
+                        >{item?.dividendYield !== null &&
+                        item?.dividendYield !== undefined
                           ? item?.dividendYield + "%"
                           : "n/a"}</td
                       >

@@ -67,10 +67,16 @@
                         ></td
                       >
                       <td class="text-right cursor-normal"
-                        >{parseFloat(item?.employees).toLocaleString("en-US", {
-                          maximumFractionDigits: 2,
-                          minimumFractionDigits: 0,
-                        })}</td
+                        >{item?.employees !== null &&
+                        item?.employees !== undefined
+                          ? parseFloat(item?.employees).toLocaleString(
+                              "en-US",
+                              {
+                                maximumFractionDigits: 2,
+                                minimumFractionDigits: 0,
+                              },
+                            )
+                          : "n/a"}</td
                       >
                     </tr>
                   {/each}
