@@ -20,6 +20,8 @@ export const load = async ({ locals, params }) => {
     return output;
   };
 
+  
+
   // Make sure to return a promise
   return {
     getHistoricalMarketCap: await getHistoricalMarketCap(),

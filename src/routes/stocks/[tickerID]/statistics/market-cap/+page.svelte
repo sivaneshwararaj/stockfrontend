@@ -407,7 +407,7 @@
             {#if rawData?.length !== 0}
               <div class="grid grid-cols-1 gap-2">
                 <div
-                  class="text-white p-3 sm:p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+                  class="text-white p-3 sm:p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
                 >
                   <svg
                     class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -436,39 +436,52 @@
                 </div>
 
                 <div
-                  class="mt-5 grid grid-cols-2 gap-3 px-1 text-base xs:mt-6 bp:mt-7 bp:text-lg sm:grid-cols-3 sm:gap-6 sm:px-4 sm:text-xl"
+                  class="mb-4 mt-5 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
                 >
-                  <div>
-                    Market Cap
-                    <div
-                      class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
-                    >
-                      {abbreviateNumber(data?.getStockQuote?.marketCap)}
+                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                    <div class="flex items-center justify-between sm:block">
+                      <div class="text-sm font-normal text-white">
+                        Market Cap
+                      </div>
+                      <div
+                        class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+                      >
+                        {abbreviateNumber(data?.getStockQuote?.marketCap)}
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    Category
-                    <div
-                      class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
-                    >
-                      {#if capCategory}
-                        <a
-                          class="sm:hover:text-white text-blue-400"
-                          href={capCategory.link}
-                        >
-                          {capCategory.name}
-                        </a>
-                      {:else}
-                        n/a
-                      {/if}
+                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                    <div class="flex items-center justify-between sm:block">
+                      <div class="text-sm font-normal text-white">Category</div>
+                      <div
+                        class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+                      >
+                        {#if capCategory}
+                          <a
+                            class="sm:hover:text-white text-blue-400"
+                            href={capCategory.link}
+                          >
+                            {capCategory.name}
+                          </a>
+                        {:else}
+                          n/a
+                        {/if}
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    1-Year Change
-                    <div
-                      class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
-                    >
-                      198.62%
+                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                    <div class="flex items-center justify-between sm:block">
+                      <div class="text-sm font-normal text-white">
+                        1-Year Change
+                      </div>
+                      <div
+                        class="mt-1 break-words font-semibold leading-8 tiny:text-lg xs:text-xl sm:text-2xl {changePercentageYearAgo >
+                        0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : 'text-[#FF2F1F]'}"
+                      >
+                        {abbreviateNumber(changePercentageYearAgo?.toFixed(2))}%
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -592,10 +605,10 @@
                   <li class="w-full">
                     <label
                       on:click={() => changeTablePeriod("annual")}
-                      class="cursor-pointer rounded-l-lg inline-block w-full py-2.5 text-white {filterRule ===
+                      class="cursor-pointer rounded-l-md inline-block w-full py-1.5 {filterRule ===
                       'annual'
-                        ? 'bg-[#fff]'
-                        : 'bg-[#313131]'} font-semibold border-r border-gray-600"
+                        ? 'bg-[#fff] text-black'
+                        : 'bg-[#313131] text-white'} font-semibold"
                       aria-current="page"
                     >
                       Annual
@@ -605,17 +618,17 @@
                     {#if data?.user?.tier === "Pro"}
                       <label
                         on:click={() => changeTablePeriod("quarterly")}
-                        class="cursor-pointer inline-block w-full py-2.5 {filterRule ===
+                        class="cursor-pointer inline-block w-full py-1.5 {filterRule ===
                         'quarterly'
-                          ? 'bg-[#fff]'
-                          : 'bg-[#313131]'} font-semibold text-white rounded-r-lg"
+                          ? 'bg-[#fff] text-black'
+                          : 'bg-[#313131]'} font-semibold rounded-r-md"
                       >
                         Quartely
                       </label>
                     {:else}
                       <a
                         href="/pricing"
-                        class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#313131] font-semibold text-white rounded-r-lg"
+                        class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-1.5 bg-[#313131] font-semibold text-white rounded-r-md"
                       >
                         <span class="">Quarterly</span>
                         <svg
@@ -637,7 +650,7 @@
                     class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
                   >
                     <thead>
-                      <tr class="border border-slate-800">
+                      <tr class="border border-gray-600">
                         <th
                           class="text-white font-semibold text-start text-sm sm:text-[1rem]"
                           >Date</th
