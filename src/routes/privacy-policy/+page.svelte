@@ -1,7 +1,5 @@
 <script>
-  import logo from "$lib/images/privacy_policy_logo_v2.png";
   import { numberOfUnreadNotification } from "$lib/store";
-  import { goto } from "$app/navigation";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   const emailAddress = "support@stocknear.com";
 </script>
@@ -26,7 +24,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden pb-20 pt-5 px-4 lg:px-3"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
@@ -41,76 +39,26 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
-          <div
-            class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
-          >
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <!-- Start Column -->
-              <div>
-                <div class="flex flex-row justify-center items-center">
-                  <h1
-                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
-                  >
-                    Privacy Policy
-                  </h1>
-                </div>
-
-                <span
-                  class="text-white text-md font-medium text-center flex justify-center items-center"
-                >
-                  We don't sell data; we're not a garage sale like Facebook!
-                </span>
-              </div>
-              <!-- End Column -->
-
-              <!-- Start Column -->
-              <div class="relative m-auto">
-                <svg
-                  class="w-40 -my-5"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="5" result="glow" />
-                      <feMerge>
-                        <feMergeNode in="glow" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    fill="#1E40AF"
-                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
-                    transform="translate(100 100)"
-                    filter="url(#glow)"
-                  />
-                </svg>
-
-                <div class="z-1 absolute top-5">
-                  <img class="w-24 ml-7" src={logo} alt="logo" />
-                </div>
-              </div>
-              <!-- End Column -->
-            </div>
+          <div class="mb-6 border-b-[2px]">
+            <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
+              Privacy Policy
+            </h1>
           </div>
 
-          <div
-            class="card w-full bg-[#09090B] border-t sm:border rounded-none sm:rounded-xl border-slate-700 m-auto"
-          >
-            <div class="card-body">
-              <p class="text-gray-400 italic mb-2 text-sm">
+          <div class="w-full bg-[#09090B] m-auto">
+            <div class="">
+              <p class="text-gray-200 italic mb-2 text-sm">
                 Last updated: 22.06.2023
               </p>
 
-              <p class="text-gray-300 mb-5">
+              <p class="text-white mb-10">
                 Stocknear (the "website" or "site") respects your privacy. This
                 privacy statement describes what information and data we collect
                 from you and how we use it. Please read the whole privacy policy
                 as well as our
                 <a
                   href="/terms-of-use"
-                  class="text-blue-400 hover:underline hover:text-white"
+                  class="text-blue-400 sm:hover:underline sm:hover:text-white"
                   >Terms of use</a
                 >
                 The use of our website is generally possible without providing personal
@@ -128,10 +76,11 @@
                 sending of advertising information, such as spam e-mails.
               </p>
 
-              <h1 class="text-white text-2xl font-medium text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Cookies
-              </h1>
-              <p class="text-gray-300">
+              </h2>
+
+              <p class="text-white mb-10">
                 Cookies are used by us. By visiting stocknear.com, you accepted
                 to use cookies in accordance with the stocknear Privacy Policy.
                 Most interactive websites employ cookies to allow us to retrieve
@@ -140,13 +89,11 @@
                 making it easier for visitors.
               </p>
 
-              <h1
-                class="text-white text-2xl font-medium text-start mt-5 underline"
-              >
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Links to other Sites
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 Our Service may contain connections to websites that we do not
                 control. When you click on a third-party link, you will be sent
                 to that third-party's website. We strongly recommend that you
@@ -157,13 +104,11 @@
                 website or services' content, privacy policies, or practices.
               </div>
 
-              <h1
-                class="text-white text-2xl font-medium text-start mt-5 underline"
-              >
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Security of Data
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 We care about the security of your data, but keep in mind that
                 no form of Internet transmission or electronic storage is
                 completely safe. While we endeavor to protect your Personal Data
@@ -171,14 +116,12 @@
                 its ultimate security.
               </div>
 
-              <h1
-                class="text-white text-2xl font-medium text-start mt-5 underline"
-              >
+              <h2 class="text-white text-2xl sm:text-3xl font-bold mb-3">
                 Your Data Protection Rights Under General Data Protection
                 Regulation (GDPR)
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 If you are a resident of the European Union (EU) and European
                 Economic Area (EEA), you have certain data protection rights,
                 covered by GDPR.
@@ -244,14 +187,12 @@
                 Economic Area (EEA).
               </div>
 
-              <h1
-                class="text-white text-2xl font-medium text-start mt-5 underline"
-              >
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Your Data Protection Rights under the California Privacy
                 Protection Act (CalOPPA)
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 CalOPPA is the nation's first state law requiring commercial
                 websites and online services to disclose a privacy policy. The
                 law's scope extends far beyond California, requiring any person
@@ -294,13 +235,11 @@
                 the Preferences or Settings page of your web browser.
               </div>
 
-              <h1
-                class="text-white text-2xl font-medium text-start mt-5 underline"
-              >
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Childrens Privacy
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 Children under the age of 18 ("Child" or "Children") are not
                 permitted to use our Services. We do not collect personally
                 identifying information from children under the age of 18.
@@ -310,13 +249,11 @@
                 erase that information from our servers.
               </div>
 
-              <h1
-                class="text-white text-2xl font-medium text-start mt-5 underline"
-              >
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Changes to this Privacy Policy
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 We reserve the right to change our Privacy Policy at any moment.
                 Any changes will be communicated to you by posting the revised
                 Privacy Policy on this page.
@@ -332,54 +269,60 @@
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           <div
-            on:click={() => goto("/pricing")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/pricing"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Pro Subscription 🔥
+                  Pro Subscription
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Upgrade now for unlimited access to all data and tools.
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/donation")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/donation"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Donation ❤
+                  Sponsor Us
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Learn more about why we're doing this here
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/contact")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/contact"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Contact Us 💬
+                  Contact Us
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Let me know if you need something
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>

@@ -1,7 +1,5 @@
 <script>
-  import logo from "$lib/images/terms_of_use_logo_v3.png";
   import { numberOfUnreadNotification } from "$lib/store";
-  import { goto } from "$app/navigation";
 
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 </script>
@@ -26,7 +24,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden pb-20 pt-5 px-4 lg:px-3"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
@@ -41,69 +39,19 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
-          <div
-            class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
-          >
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <!-- Start Column -->
-              <div>
-                <div class="flex flex-row justify-center items-center">
-                  <h1
-                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
-                  >
-                    Terms of Use
-                  </h1>
-                </div>
-
-                <span
-                  class="text-white text-md font-medium text-center flex justify-center items-center"
-                >
-                  The best unread bedtime story you agree to in your sleep.
-                </span>
-              </div>
-              <!-- End Column -->
-
-              <!-- Start Column -->
-              <div class="relative m-auto">
-                <svg
-                  class="w-40 -my-5"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="5" result="glow" />
-                      <feMerge>
-                        <feMergeNode in="glow" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    fill="#1E40AF"
-                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
-                    transform="translate(100 100)"
-                    filter="url(#glow)"
-                  />
-                </svg>
-
-                <div class="z-1 absolute top-5">
-                  <img class="w-28 ml-5" src={logo} alt="logo" />
-                </div>
-              </div>
-              <!-- End Column -->
-            </div>
+          <div class="mb-6 border-b-[2px]">
+            <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
+              Terms of Use
+            </h1>
           </div>
 
-          <div
-            class="card w-full bg-[#09090B] border-t sm:border rounded-none sm:rounded-xl border-slate-700 m-auto"
-          >
-            <div class="card-body">
-              <p class="text-gray-400 italic mb-2 text-sm">
+          <div class=" w-full bg-[#09090B] m-auto">
+            <div class="">
+              <p class="text-gray-200 italic mb-2 text-sm">
                 Last updated: 24.07.2024
               </p>
 
-              <p class="text-gray-300 mb-5">
+              <p class="text-white mb-10">
                 Please carefully read the terms and conditions before using this
                 website. By using the site, you agree to these terms as well as
                 our
@@ -116,10 +64,11 @@
                 time.
               </p>
 
-              <h1 class="text-white text-2xl font-medium text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Stocknear does not provide investment advice
-              </h1>
-              <p class="text-gray-300 mb-5">
+              </h2>
+
+              <p class="text-white mb-10">
                 The information provided is solely for educational purposes
                 only. Before making any investments or financial decisions, we
                 recommend that you consult with a knowledgeable financial
@@ -159,10 +108,11 @@
                 BROKERAGE, OR TAX ADVICE.
               </p>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Stocknear does not guarantee accuracy of data
-              </h1>
-              <p class="text-gray-300 mb-5">
+              </h2>
+
+              <p class="text-white mb-10">
                 Our stock data comes from a variety of sources. Although every
                 attempt is made to assure correctness, it cannot always be
                 guaranteed. Before making an investment choice, stocknear
@@ -170,20 +120,21 @@
                 reviewing a company's SEC filings.
               </p>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Use of our content
-              </h1>
-              <p class="text-gray-300 mb-5">
+              </h2>
+              <p class="text-white mb-10">
                 It is not permitted to republish our content in its entirety
                 without our express authorization. You can, however, utilize
                 snippets of the content as long as you do not edit it and
                 clearly mention where you received it.
               </p>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Liability of stocknear and its authors
-              </h1>
-              <p class="text-gray-300 mb-5">
+              </h2>
+
+              <p class="text-white mb-10">
                 Stocknear or its authors will not be liable to any party for any
                 damages resulting from the use of the site's content. The
                 contents of our pages were created with the utmost care.
@@ -201,10 +152,11 @@
                 infringements, we will remove this content immediately.
               </p>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Copyright
-              </h1>
-              <p class="text-gray-300 mb-5">
+              </h2>
+
+              <p class="text-white mb-10">
                 The content and works created by the site operators on these
                 pages are subject to German copyright law. The reproduction,
                 editing, distribution and any kind of exploitation outside the
@@ -247,10 +199,11 @@
                 >.
               </p>
 
-              <h3 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Subscriptions
-              </h3>
-              <p class="text-gray-300 mb-5">
+              </h2>
+
+              <p class="text-white mb-10">
                 We may offer you the ability to purchase subscriptions via Lemon
                 Squeezy. Terms specific to a subscription will be disclosed to
                 you at or prior to the time at which you purchase the
@@ -276,10 +229,11 @@
                 to support@stocknear.com.
               </p>
 
-              <h3 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Changes to the Price and Service Plans.
-              </h3>
-              <p class="text-gray-300 mb-5">
+              </h2>
+
+              <p class="text-white mb-10">
                 We may at our reasonable discretion change the price of our
                 subscription plans from time to time to reflect the effect of
                 changes in the total costs associated with our service. Examples
@@ -291,16 +245,16 @@
                 (e.g., rent, interest and other financing costs, costs of
                 personnel, service providers and services, IT systems, energy),
                 as well as state-imposed fees, contributions, taxes and duties.
-                Any price changes will apply no earlier than 30 days following
+                Any price changes will apply no earlier than 7 days following
                 notice to you. You can cancel your membership at any time during
                 the notice period to avoid future charges.
               </p>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Lifetime Access
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 Lifetime access refers to the right to use our Services for as
                 long as they are provided by Stocknear.
                 <br />
@@ -317,11 +271,11 @@
                 lifetime access will terminate.
               </div>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Termination
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 We may cancel or suspend your account and deny access to the
                 Service at any time, without prior notice or responsibility, for
                 any reason whatsoever and without limitation, including but not
@@ -337,11 +291,11 @@
                 sections, warranty disclaimers, indemnification, and liability limitations.
               </div>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Amendments To Terms
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 We may amend Terms at any time by posting the amended terms on
                 this site. It is your responsibility to review these Terms
                 periodically.
@@ -358,11 +312,11 @@
                 not agree to the new terms, you are no longer authorized to use Service.
               </div>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Data Disclaimer
-              </h1>
+              </h2>
 
-              <div class="text-gray-300">
+              <div class="text-white mb-10">
                 All data on this website is provided solely for informational
                 reasons and should not be used to make trading or investing
                 decisions.
@@ -374,6 +328,7 @@
                 at support@stocknear.com.
                 <br />
                 <br />
+                <!--
                 Our Financial Data is provided soley by
                 <a
                   href="https://site.financialmodelingprep.com/"
@@ -384,12 +339,14 @@
                   href="https://docs.benzinga.com/home"
                   class="text-blue-400 hover:underline">Benzinga</a
                 >.
+              -->
               </div>
 
-              <h1 class="text-2xl font-medium text-white text-start underline">
+              <h2 class="mb-1 text-white text-2xl sm:text-3xl font-bold mb-3">
                 Complete Agreement
-              </h1>
-              <p class="text-gray-300 mb-5">
+              </h2>
+
+              <p class="text-white mb-10">
                 These terms and conditions of use, together with our
                 <a
                   href="/privacy-policy"
@@ -421,54 +378,60 @@
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           <div
-            on:click={() => goto("/pricing")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/pricing"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Pro Subscription 🔥
+                  Pro Subscription
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Upgrade now for unlimited access to all data and tools.
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/donation")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/donation"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Donation ❤
+                  Sponsor Us
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Learn more about why we're doing this here
               </span>
-            </div>
+            </a>
           </div>
 
           <div
-            on:click={() => goto("/contact")}
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+            <a
+              href="/contact"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Contact Us 💬
+                  Contact Us
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
                 Let me know if you need something
               </span>
-            </div>
+            </a>
           </div>
         </aside>
       </div>

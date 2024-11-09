@@ -37,7 +37,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden pb-20 pt-5 px-4 lg:px-3"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
@@ -52,70 +52,15 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
-          <div
-            class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
-          >
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
-              <!-- Start Column -->
-              <div>
-                <div class="flex flex-row justify-center items-center">
-                  <h1
-                    class="text-3xl sm:text-4xl text-white text-center font-bold mb-5"
-                  >
-                    Sponsor
-                  </h1>
-                </div>
-
-                <span
-                  class="text-white text-[1rem] font-medium text-center flex justify-center items-center"
-                >
-                  Apes together sponsor strong—because when we unite our
-                  bananas, we can move mountains!
-                </span>
-              </div>
-              <!-- End Column -->
-
-              <!-- Start Column -->
-              <div class="relative m-auto">
-                <svg
-                  class="w-40 -my-5"
-                  viewBox="0 0 200 200"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <filter id="glow">
-                      <feGaussianBlur stdDeviation="5" result="glow" />
-                      <feMerge>
-                        <feMergeNode in="glow" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
-                  </defs>
-                  <path
-                    fill="#1E40AF"
-                    d="M57.6,-58.7C72.7,-42.6,81.5,-21.3,82,0.5C82.5,22.3,74.7,44.6,59.7,60.1C44.6,75.6,22.3,84.3,0,84.3C-22.3,84.2,-44.6,75.5,-61.1,60.1C-77.6,44.6,-88.3,22.3,-87.6,0.7C-86.9,-20.8,-74.7,-41.6,-58.2,-57.7C-41.6,-73.8,-20.8,-85.2,0.2,-85.4C21.3,-85.6,42.6,-74.7,57.6,-58.7Z"
-                    transform="translate(100 100)"
-                    filter="url(#glow)"
-                  />
-                </svg>
-
-                <div class="z-1 absolute top-5">
-                  <img
-                    class="w-32 sm:w-36 ml-3 sm:ml-2"
-                    src={cloudFrontUrl + "/assets/donation_logo.png"}
-                    alt="logo"
-                  />
-                </div>
-              </div>
-              <!-- End Column -->
-            </div>
+          <div class="mb-6 border-b-[2px]">
+            <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
+              Sponsor
+            </h1>
           </div>
 
-          <div
-            class="card w-full bg-[#09090B] border-t sm:border rounded-none sm:rounded-lg border-gray-600 m-auto"
-          >
-            <div class="card-body">
-              <h2 class="text-white text-xl font-semibold">Hey,</h2>
+          <div class="w-full bg-[#09090B] m-auto">
+            <div class="">
+              <h2 class="text-white text-xl font-semibold mb-5">Hey 👋,</h2>
               <p class="text-white mb-5 text-[1rem]">
                 Thank you for considering supporting our mission. As the sole
                 person behind Stocknear—handling everything from backend
@@ -125,8 +70,7 @@
                 <br />
                 Our Pro Membership is priced to be less than a cup of coffee, ensuring
                 that high-quality stock data is within reach for retail investors
-                of all backgrounds. This pricing reflects our core mission:
-                <strong class="italic">Apes together strong</strong>.
+                of all backgrounds.
               </p>
               <div class="text-white mb-5 text-[1rem]">
                 While the Pro Membership is designed to sustain our basic
