@@ -1,7 +1,7 @@
 <script lang="ts">
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { sectorNavigation } from "$lib/utils";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import { onMount } from "svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   export let data;
@@ -42,6 +42,83 @@
   });
 
   $: charNumber = $screenWidth < 640 ? 20 : 40;
+
+  let columns = [
+    { key: "ticker", label: "Name", align: "left" },
+    { key: "rating_current", label: "Action", align: "left" },
+    { key: "adjusted_pt_current", label: "Price Target", align: "right" },
+    { key: "price", label: "Current", align: "right" },
+    { key: "upside", label: "% Upside", align: "right" },
+    { key: "date", label: "Updated", align: "right" },
+  ];
+
+  let sortOrders = {
+    ticker: { order: "none", type: "string" },
+    rating_current: { order: "none", type: "string" },
+    adjusted_pt_current: { order: "none", type: "number" },
+    marketCap: { order: "none", type: "number" },
+    price: { order: "none", type: "number" },
+    upside: { order: "none", type: "number" },
+    date: { order: "none", type: "date" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = rawData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      stockList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    stockList = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
 </script>
 
 <svelte:head>
@@ -98,7 +175,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-5">
+        <main class="w-full">
           <div class="w-full m-auto mt-12">
             <div class="items-center justify-between lg:flex">
               <div
@@ -160,7 +237,7 @@
                 </div>
               </div>
               <div
-                class="mt-4 grid grid-cols-2 overflow-hidden rounded-lg border border-gray-600 py-2 text-center md:grid-cols-4 md:p-0 lg:mt-0 lg:border-none"
+                class="mt-4 grid grid-cols-2 overflow-hidden rounded border border-gray-600 py-2 text-center md:grid-cols-4 md:p-0 lg:mt-0 lg:border-none"
               >
                 <div class="flex flex-col px-4 py-2 bp:px-6 md:py-6">
                   <div class="text-2xl font-semibold tracking-tight text-white">
@@ -211,26 +288,36 @@
               </div>
             </div>
 
-            <div class="mb-10 mt-10">
+            <div class="mb-10 mt-10 text-white">
               <div
-                class="text-white p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
+                class="relative my-3 space-y-2 rounded border border-gray-600 sm:my-6 p-4"
               >
-                <div class="flex flex-col items-start">
-                  <span class="text-white font-semibold text-lg sm:text-xl">
-                    Main Sectors:
-                  </span>
-
-                  <div
-                    class="mt-5 mb-3 flex flex-wrap gap-3 flex-row items-center"
-                  >
-                    {#each data?.getAnalystStats?.mainSectors as sector}
+                <div class="flex flex-col sm:flex-row">
+                  <div class="mb-2 font-semibold sm:mb-0">Main Sectors:</div>
+                  <div class="flex flex-wrap gap-x-2 gap-y-px sm:ml-2">
+                    {#each data?.getAnalystStats?.mainSectors as item}
                       <a
                         href={sectorNavigation?.find(
-                          (listItem) => listItem?.title === sector,
+                          (listItem) => listItem?.title === item,
                         )?.link}
-                        class="cursor-pointer w-fit border border-gray-600 px-3 sm:px-4 py-2 text-sm sm:text-[1rem] font-medium rounded-md sm:hover:text-blue-400 text-white underline underline-offset-4"
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
                       >
-                        {sector}
+                        {item}
+                      </a>
+                    {/each}
+                  </div>
+                </div>
+                <div class="flex flex-col sm:flex-row">
+                  <div class="mb-2 whitespace-nowrap font-semibold sm:mb-0">
+                    Top Industries:
+                  </div>
+                  <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
+                    {#each data?.getAnalystStats?.mainIndustries as item}
+                      <a
+                        href={`/list/industry/${item?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                      >
+                        {item}
                       </a>
                     {/each}
                   </div>
@@ -238,7 +325,7 @@
               </div>
             </div>
 
-            <span class="text-[#F5F5F5] font-bold text-2xl">
+            <span class="text-white font-semibold text-xl sm:text-2xl">
               {numOfStocks} Stocks
             </span>
 
@@ -250,27 +337,7 @@
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
                 >
                   <thead>
-                    <tr class="bg-[#09090B]">
-                      <th
-                        class="text-start bg-[#09090B] text-white text-sm font-semibold"
-                      >
-                        Stock
-                      </th>
-                      <th
-                        class="text-start bg-[#09090B] text-white text-sm font-semibold"
-                      >
-                        Action
-                      </th>
-
-                      <th
-                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
-                      >
-                        Price Target
-                      </th>
-                      <th class="text-white font-semibold text-end text-sm">
-                        Updated
-                      </th>
-                    </tr>
+                    <TableHeader {columns} {sortOrders} {sortData} />
                   </thead>
                   <tbody>
                     {#each stockList as item, index}
@@ -395,6 +462,20 @@
                         <td
                           class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
+                          {item?.price !== null ? item?.price : "n/a"}
+                        </td>
+
+                        <td
+                          class="{item?.upside >= 0
+                            ? "before:content-['+'] text-[#00FC50]"
+                            : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
+                          {item?.upside !== null ? item?.upside + "%" : "n/a"}
+                        </td>
+
+                        <td
+                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
                           {new Date(item?.date).toLocaleString("en-US", {
                             month: "short",
                             day: "numeric",
@@ -410,67 +491,6 @@
             </div>
           </div>
         </main>
-
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
-            <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-            >
-              <a
-                href={"/pricing"}
-                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-              >
-                <div class="w-full flex justify-between items-center p-3 mt-3">
-                  <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription
-                  </h2>
-                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-                </div>
-                <span class="text-white p-3 ml-3 mr-3">
-                  Upgrade now for unlimited access to all data and tools
-                </span>
-              </a>
-            </div>
-          {/if}
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/analysts"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Top Analyst
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Wall Street analyst ratings
-              </span>
-            </a>
-          </div>
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/analysts/top-stocks"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Top Stocks Picks
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Wall Street analyst ratings.
-              </span>
-            </a>
-          </div>
-        </aside>
       </div>
     </div>
   </div>
