@@ -71,10 +71,7 @@
                   class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-[#09090B]"
                   >Company</th
                 >
-                <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
-                  >Market Value</th
-                >
+
                 <th
                   class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
                   >Portfolio</th
@@ -119,12 +116,6 @@
                       </div>
                     </td>
 
-                    <td class="text-white text-end font-semibold">
-                      {item?.marketValue !== null
-                        ? abbreviateNumber(item?.marketValue, true)
-                        : "-"}
-                    </td>
-
                     <td class="text-white font-semibold text-end">
                       {abbreviateNumber(item?.weightPercentage?.toFixed(2))}%
                     </td>
@@ -138,9 +129,9 @@
         <label
           for="topHoldingModal"
           on:click={() => goto(`/etf/${$etfTicker}/holdings`)}
-          class="rounded-lg cursor-pointer w-11/12 md:w-3/4 lg:w-11/12 py-2 h-full mt-8 lg:mt-6 text-[1rem] text-center font-semibold text-white m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100 ease-in"
+          class="rounded-md cursor-pointer w-11/12 md:w-3/4 lg:w-11/12 py-2 h-full mt-8 lg:mt-6 text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100 ease-in"
         >
-          View All Holdings
+          All Holdings
         </label>
       {:else}
         <h2

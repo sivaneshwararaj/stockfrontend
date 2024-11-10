@@ -24,7 +24,7 @@
     : 'hidden'}"
 >
   <div
-    class="sm:rounded-lg shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-slate-800 h-auto {$screenWidth <=
+    class="sm:rounded-md shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-slate-800 h-auto {$screenWidth <=
     800
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px]"
@@ -96,9 +96,9 @@
         <label
           for="dividendModal"
           on:click={() => goto(`/etf/${$etfTicker}/dividends`)}
-          class="rounded-lg cursor-pointer w-11/12 md:w-3/4 lg:w-11/12 py-2 h-full mt-8 lg:mt-6 text-[1rem] text-center font-semibold text-white m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100 ease-in"
+          class="rounded-md cursor-pointer w-11/12 md:w-3/4 lg:w-11/12 py-2 h-full mt-8 lg:mt-6 text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100 ease-in"
         >
-          View Dividend History
+          Dividend History
         </label>
       {:else}
         <h2
