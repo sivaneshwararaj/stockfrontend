@@ -207,8 +207,11 @@
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
                 The PE ratio is {rawData?.priceEarningsRatio} and the forward PE
-                ratio is {rawData?.forwardPE}. {companyName}'s PEG ratio is
-                {rawData?.peg}.
+                ratio is {rawData?.forwardPE}.
+                {rawData?.peg !== null
+                  ? `${companyName}'s PEG ratio is
+                ${rawData?.peg}.`
+                  : ""}
               </p>
 
               <table class="w-full">
@@ -267,7 +270,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.peg}</td
+                      >{rawData?.peg !== null ? rawData?.peg : "n/a"}</td
                     >
                   </tr></tbody
                 >

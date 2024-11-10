@@ -353,6 +353,11 @@ export function formatString(inputString) {
 }
 
 export function abbreviateNumber(number, addDollarSign = false) {
+  // Check if number is null or undefined, return "-" if true
+  if (number == null) {
+    return "-";
+  }
+
   const negative = number < 0;
 
   // Handle special case for exactly 1000
@@ -362,8 +367,8 @@ export function abbreviateNumber(number, addDollarSign = false) {
         ? "-$1K"
         : "$1K"
       : negative
-        ? "-1K"
-        : "1K";
+      ? "-1K"
+      : "1K";
   }
 
   if (Math.abs(number) !== 0 && Math.abs(number) > 1000) {

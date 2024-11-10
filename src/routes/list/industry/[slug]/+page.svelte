@@ -108,6 +108,8 @@
           name: "PE Ratio",
           data: valueList,
           type: "line",
+          areaStyle: { opacity: 0.2 },
+          smooth: true,
           symbol: "none",
           itemStyle: {
             color: "#fff",
@@ -293,7 +295,7 @@
               <td
                 class="text-sm sm:text-[1rem] whitespace-nowrap {item?.changesPercentage !==
                   null && item?.changesPercentage >= 0
-                  ? 'text-[#00FC50]'
+                  ? "before:content-['+'] text-[#00FC50]"
                   : item?.changesPercentage < 0
                     ? 'text-[#FF2F1F]'
                     : 'text-white'} text-end"
