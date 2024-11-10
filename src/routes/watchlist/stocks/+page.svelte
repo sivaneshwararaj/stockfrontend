@@ -1233,10 +1233,11 @@
                   ></div>
 
                   <h2
-                    class="text-start text-white ml-2 text-xl font-bold text-black mb-3"
+                    class="text-start text-white text-xl sm:text-2xl font-bold mb-3"
                   >
-                    Latest News
+                    News
                   </h2>
+
                   <div class="relative text-gray-800 m-auto">
                     <div class="flex flex-wrap md:flex-row">
                       {#each news as item}
