@@ -9,6 +9,7 @@
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
   import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
@@ -23,6 +24,16 @@
   let optionsFedFundRate;
 
   let filterRule = "annual";
+  let activeIdx = 0;
+
+  const tabs = [
+    {
+      title: "Annual",
+    },
+    {
+      title: "Quarterly",
+    },
+  ];
 
   let timePeriod = "threeYears";
   const monthNames = [
@@ -107,12 +118,16 @@
     return quarterlyData;
   }
 
-  function changeTablePeriod(state: string) {
-    filterRule = state;
-    if (state === "annual") {
+  function changeTablePeriod(index) {
+    activeIdx = index;
+    if (activeIdx === 0) {
       tableList = filterEndOfYearDates(rawData);
     } else {
-      tableList = filterEndOfQuarterDates(rawData);
+      if (data?.user?.tier === "Pro") {
+        tableList = filterEndOfQuarterDates(rawData);
+      } else {
+        goto("/pricing");
+      }
     }
     tableList?.sort((a, b) => new Date(b?.date) - new Date(a?.date));
   }
@@ -791,51 +806,42 @@
                 </div>
               </Lazy>
 
-              <ul
-                class="text-[0.8rem] font-medium text-center w-56 pt-10 sm:w-56 mb-5 flex justify-center sm:justify-end items-center ml-auto"
+              <div
+                class="mt-10 mb-4 bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 flex justify-center sm:justify-end items-center ml-auto"
               >
-                <li class="w-full">
-                  <label
-                    on:click={() => changeTablePeriod("annual")}
-                    class="cursor-pointer rounded-l-md inline-block w-full py-1.5 {filterRule ===
-                    'annual'
-                      ? 'bg-[#fff] text-black'
-                      : 'bg-[#313131] text-white'} font-semibold border-r border-gray-600"
-                    aria-current="page"
+                {#each tabs as item, i}
+                  <button
+                    on:click={() => changeTablePeriod(i)}
+                    class="group relative z-[1] rounded-full px-6 py-1 {activeIdx ===
+                    i
+                      ? 'z-0'
+                      : ''} "
                   >
-                    Annual
-                  </label>
-                </li>
-                <li class="w-full">
-                  {#if data?.user?.tier === "Pro"}
-                    <label
-                      on:click={() => changeTablePeriod("quarterly")}
-                      class="cursor-pointer inline-block w-full py-1.5 {filterRule ===
-                      'quarterly'
-                        ? 'bg-[#fff] text-black'
-                        : 'bg-[#313131] text-white'} font-semibold rounded-r-md"
+                    {#if activeIdx === i}
+                      <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
+                    {/if}
+                    <span
+                      class="relative text-sm block font-semibold {activeIdx ===
+                      i
+                        ? 'text-black'
+                        : 'text-white'}"
                     >
-                      Quartely
-                    </label>
-                  {:else}
-                    <a
-                      href="/pricing"
-                      class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-2.5 bg-[#313131] font-semibold text-white rounded-r-lg"
-                    >
-                      <span class="">Quarterly</span>
+                      {item.title}
                       <svg
-                        class="ml-1 -mt-0.5 w-3.5 h-3.5"
+                        class="{data?.user?.tier !== 'Pro' && i === 1
+                          ? ''
+                          : 'hidden'} inline-block ml-0.5 -mt-1 w-3.5 h-3.5"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         ><path
-                          fill="#A3A3A3"
+                          fill="#fff"
                           d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
                         /></svg
                       >
-                    </a>
-                  {/if}
-                </li>
-              </ul>
+                    </span>
+                  </button>
+                {/each}
+              </div>
 
               <div class="w-full overflow-x-scroll">
                 <table
