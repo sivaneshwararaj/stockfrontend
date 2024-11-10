@@ -213,24 +213,21 @@
     for (const [key, value] of formData?.entries()) {
       postData[key] = value;
     }
-    postData["path"] = "create-watchlist";
     try {
-      const response = await fetch("/api/fastify-post-data", {
+      const response = await fetch("/api/create-watchlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(postData),
       }); // make a POST request to the server with the FormData object
-
-      if (response.ok) {
+      if (response?.ok) {
         toast.success("Watchlist created successfully!", {
           style: "border-radius: 200px; background: #333; color: #fff;",
         });
 
         const clicked = document.getElementById("addWatchlist");
         clicked?.dispatchEvent(new MouseEvent("click"));
-
         const anchor = document.createElement("a");
         anchor.href = "/watchlist/stocks";
         anchor.dispatchEvent(new MouseEvent("click"));
@@ -262,7 +259,7 @@
     };
 
     try {
-      const response = await fetch("/api/fastify-post-data", {
+      const response = await fetch("/api/delete-watchlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -270,7 +267,7 @@
         body: JSON.stringify(postData),
       });
 
-      const output = (await response.json())?.items;
+      const output = await response.json();
 
       if (output === "success") {
         toast.success("Watchlist deleted successfully!", {
