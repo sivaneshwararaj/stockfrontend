@@ -6,7 +6,7 @@
 <footer
   class="bg-[#09090B] border-t border-slate-800 z-20 sm:z-50 relative bottom-0 w-full sm:px-10 m-auto"
 >
-  <div class="container mx-auto px-3">
+  <div class="container mx-auto px-5 sm:px-3">
     <div class="w-full flex flex-col md:flex-row py-6">
       <div class="flex-1 mb-8">
         <div class="flex flex-row items-center mt-4">
@@ -17,7 +17,7 @@
             class="flex flex-row items-center"
           >
             <svg
-              class="w-6 h-6 ml-4"
+              class="w-6 h-6"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               ><path

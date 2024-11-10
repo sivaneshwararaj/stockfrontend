@@ -1,12 +1,5 @@
 <script lang="ts">
-  import {
-    format,
-    startOfWeek,
-    addDays,
-    addWeeks,
-    subWeeks,
-    differenceInWeeks,
-  } from "date-fns";
+  import { format, startOfWeek, addDays, addWeeks, subWeeks } from "date-fns";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber, listOfRelevantCountries } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
@@ -21,7 +14,7 @@
   let weekdayFiltered = [];
   let syncWorker: Worker | undefined;
 
-  const maxWeeksChange = 4;
+  const maxWeeksChange = 6;
   const today = new Date();
   let currentWeek = startOfWeek(today, { weekStartsOn: 1 });
   let previousMax = false;
@@ -34,8 +27,20 @@
   $: formattedWeekday = daysOfWeek.map((day) => format(day.date, "EEE, MMM d"));
   $: weekday = getWeekdayData(economicCalendar, daysOfWeek);
   $: rawData = weekday;
-  $: previousMax = differenceInWeeks(currentWeek, today) <= -maxWeeksChange;
-  $: nextMax = differenceInWeeks(currentWeek, today) >= maxWeeksChange;
+
+  // Calculate start and end boundaries
+  const startBoundary = subWeeks(
+    startOfWeek(today, { weekStartsOn: 1 }),
+    maxWeeksChange,
+  );
+  const endBoundary = addWeeks(
+    startOfWeek(today, { weekStartsOn: 1 }),
+    maxWeeksChange,
+  );
+
+  // Update max checks based on boundaries
+  $: previousMax = currentWeek <= startBoundary;
+  $: nextMax = currentWeek >= endBoundary;
 
   let currentDate = new Date();
   let selectedWeekday = Math.min((currentDate.getDay() + 6) % 7, 4);
@@ -90,10 +95,15 @@
   }
 
   function changeWeek(state) {
-    currentWeek =
+    const newWeek =
       state === "previous"
         ? subWeeks(currentWeek, 1)
         : addWeeks(currentWeek, 1);
+
+    // Only update if within boundaries
+    if (newWeek >= startBoundary && newWeek <= endBoundary) {
+      currentWeek = newWeek;
+    }
   }
 
   onMount(async () => {
@@ -115,7 +125,6 @@
         testList =
           rawList?.filter((item) => {
             const index = item?.toLowerCase();
-            // Check if country starts with searchQuery
             return index?.startsWith(searchQuery);
           }) || [];
       }
@@ -150,11 +159,13 @@
     formattedWeekday = daysOfWeek.map((day) => format(day.date, "EEE, MMM d"));
     weekday = getWeekdayData(economicCalendar, daysOfWeek);
     rawData = weekday;
-    previousMax = differenceInWeeks(currentWeek, today) <= -maxWeeksChange;
-    nextMax = differenceInWeeks(currentWeek, today) >= maxWeeksChange;
 
     currentWeek = startOfWeek(today, { weekStartsOn: 1 });
     selectedWeekday = Math.min((currentDate.getDay() + 6) % 7, 4);
+
+    // Reset max checks based on boundaries
+    previousMax = currentWeek <= startBoundary;
+    nextMax = currentWeek >= endBoundary;
   }
 </script>
 
