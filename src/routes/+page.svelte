@@ -143,6 +143,7 @@
 <div
   class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B] mb-40"
 >
+  <!--
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
     <div
       class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#FFC233] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
@@ -185,6 +186,7 @@
       </div>
     </div>
   {/if}
+  -->
 
   <div class="flex flex-col m-auto justify-center items-center">
     <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10">
