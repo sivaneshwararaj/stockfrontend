@@ -280,7 +280,7 @@
                 <Table.Body>
                   {#each gainersList as item}
                     <Table.Row>
-                      <Table.Cell>
+                      <Table.Cell class="text-sm sm:text-[1rem]">
                         <HoverStockChart symbol={item?.symbol} />
                       </Table.Cell>
                       <Table.Cell
@@ -373,7 +373,7 @@
                 <Table.Body>
                   {#each losersList as item}
                     <Table.Row>
-                      <Table.Cell>
+                      <Table.Cell class="text-sm sm:text-[1rem]">
                         <HoverStockChart symbol={item?.symbol} />
                       </Table.Cell>
                       <Table.Cell
@@ -490,7 +490,7 @@
                 <Table.Body>
                   {#each optionsTable as item}
                     <Table.Row>
-                      <Table.Cell>
+                      <Table.Cell class="text-sm sm:text-[1rem]">
                         <HoverStockChart
                           symbol={item?.ticker}
                           assetType={item?.underlying_type}
