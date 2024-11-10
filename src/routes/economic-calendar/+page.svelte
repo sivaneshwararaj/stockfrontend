@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { format, startOfWeek, addDays, addWeeks, subWeeks } from "date-fns";
+  import {
+    format,
+    startOfWeek,
+    addDays,
+    addWeeks,
+    subWeeks,
+    differenceInWeeks,
+  } from "date-fns";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber, listOfRelevantCountries } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
@@ -12,6 +19,7 @@
   let rawData;
   let filterList = [];
   let weekdayFiltered = [];
+  let weekday; // Added declaration
   let syncWorker: Worker | undefined;
 
   const maxWeeksChange = 6;
@@ -25,10 +33,15 @@
   $: economicCalendar = data?.getEconomicCalendar;
   $: daysOfWeek = getDaysOfWeek(currentWeek);
   $: formattedWeekday = daysOfWeek.map((day) => format(day.date, "EEE, MMM d"));
-  $: weekday = getWeekdayData(economicCalendar, daysOfWeek);
-  $: rawData = weekday;
+  $: {
+    weekday = getWeekdayData(economicCalendar, daysOfWeek);
+    rawData = weekday;
+    // Reapply filters whenever weekday data changes
+    if (filterList.length > 0 && syncWorker) {
+      loadWorker();
+    }
+  }
 
-  // Calculate start and end boundaries
   const startBoundary = subWeeks(
     startOfWeek(today, { weekStartsOn: 1 }),
     maxWeeksChange,
@@ -38,7 +51,6 @@
     maxWeeksChange,
   );
 
-  // Update max checks based on boundaries
   $: previousMax = currentWeek <= startBoundary;
   $: nextMax = currentWeek >= endBoundary;
 
@@ -71,7 +83,7 @@
   };
 
   const loadWorker = async () => {
-    syncWorker.postMessage({ rawData, filterList });
+    syncWorker?.postMessage({ rawData, filterList });
   };
 
   function toggleDate(index) {
@@ -100,7 +112,6 @@
         ? subWeeks(currentWeek, 1)
         : addWeeks(currentWeek, 1);
 
-    // Only update if within boundaries
     if (newWeek >= startBoundary && newWeek <= endBoundary) {
       currentWeek = newWeek;
     }
@@ -163,7 +174,6 @@
     currentWeek = startOfWeek(today, { weekStartsOn: 1 });
     selectedWeekday = Math.min((currentDate.getDay() + 6) % 7, 4);
 
-    // Reset max checks based on boundaries
     previousMax = currentWeek <= startBoundary;
     nextMax = currentWeek >= endBoundary;
   }
