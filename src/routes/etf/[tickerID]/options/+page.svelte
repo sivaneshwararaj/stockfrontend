@@ -3,7 +3,7 @@
     numberOfUnreadNotification,
     displayCompanyName,
     screenWidth,
-    etfTicker,
+    stockTicker,
     setCache,
     getCache,
   } from "$lib/store";
@@ -228,7 +228,7 @@
           yAxisIndex: 1, // Use the second y-axis on the right
           data: ivData, // iv60Data (assumed to be passed as ivData)
           itemStyle: {
-            color: "#FFD700", // Choose a color for the line (gold in this case)
+            color: "#fff", // Choose a color for the line (gold in this case)
           },
           lineStyle: {
             width: 2, // Set the width of the line
@@ -311,7 +311,7 @@
           type: "line",
           yAxisIndex: 0,
           itemStyle: {
-            color: "#fff", // Change bar color to white
+            color: "#fff",
           },
           showSymbol: false,
         },
@@ -474,7 +474,7 @@
     isLoaded = false;
     optionDetailsDesktopModal?.showModal();
 
-    rawDataHistory = await getDailyTransactions($etfTicker + "-" + date);
+    rawDataHistory = await getDailyTransactions($stockTicker + "-" + date);
 
     rawDataHistory?.forEach((item) => {
       item.dte = daysLeft(item?.date_expiration);
@@ -538,21 +538,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Options Activity · stocknear
+    {$displayCompanyName} ({$stockTicker}) Options Activity · stocknear
   </title>
   <meta
     name="description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
+    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Options Activity · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Options Activity · stocknear`}
   />
   <meta
     property="og:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
+    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -561,11 +561,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Options Activity · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Options Activity · stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
+    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -764,7 +764,9 @@
                     <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
                   {/if}
                   <span
-                    class="relative text-sm block font-medium duration-200 text-white"
+                    class="relative text-sm block font-semibold {activeEX === i
+                      ? 'text-black'
+                      : 'text-white'}"
                   >
                     {item.title}
                   </span>
@@ -797,7 +799,9 @@
                     <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
                   {/if}
                   <span
-                    class="relative text-sm block font-medium duration-200 text-white"
+                    class="relative text-sm block font-semibold {activeIdx === i
+                      ? 'text-black'
+                      : 'text-white'}"
                   >
                     {item.title}
                   </span>
@@ -873,7 +877,7 @@
                       <tr
                         on:click={() => handleViewData(item?.date)}
                         on:mouseover={() =>
-                          getDailyTransactions($etfTicker + "+" + item?.date)}
+                          getDailyTransactions($stockTicker + "+" + item?.date)}
                         class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index +
                           1 ===
                           optionList?.slice(0, 3)?.length &&

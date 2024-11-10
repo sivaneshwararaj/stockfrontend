@@ -447,7 +447,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{abbreviateNumber(rawData?.revenuePerEmployee, true)}</td
+                      >{abbreviateNumber(rawData?.revenuePerEmployee)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -455,7 +455,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{abbreviateNumber(rawData?.profitPerEmployee, true)}</td
+                      >{abbreviateNumber(rawData?.profitPerEmployee)}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"

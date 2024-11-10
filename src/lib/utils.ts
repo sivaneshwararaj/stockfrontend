@@ -405,12 +405,15 @@ export function abbreviateNumber(number, addDollarSign = false) {
       : formattedNumber;
   } else if (Math.abs(number) >= 0 && Math.abs(number) < 1000) {
     return addDollarSign
-      ? (negative ? "-$" : "$") + number
+      ? (negative ? "-$" : "$") + Math.abs(number)
+      : negative
+      ? "-" + Math.abs(number)
       : number.toString();
   } else {
     return addDollarSign ? "$0" : "0";
   }
 }
+
 
 
 export const formatDate = (dateString) => {

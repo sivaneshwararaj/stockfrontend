@@ -30,6 +30,15 @@
   let optionsGrowth;
   let dateDistance = false;
 
+  function formatWithDollarSign(value) {
+    if (value == null) return "-";
+
+    const negative = value < 0;
+    const formattedValue = new Intl.NumberFormat("en").format(Math.abs(value));
+
+    return negative ? `-$${formattedValue}` : `$${formattedValue}`;
+  }
+
   let sortBy = "Total";
 
   function sortByDate(liste) {
@@ -487,9 +496,7 @@
               class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
             >
               {#if Number(data?.getStockDeck?.profitPerEmployee)}
-                ${new Intl.NumberFormat("en")?.format(
-                  data?.getStockDeck?.profitPerEmployee,
-                )}
+                {formatWithDollarSign(data?.getStockDeck?.profitPerEmployee)}
               {:else}
                 n/a
               {/if}
