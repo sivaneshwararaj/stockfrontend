@@ -48,22 +48,23 @@
                 At our current rate, Stocknear is on track to reach profitability
                 in about 2–2.5 years, a timeline that may not be sustainable for
                 our platform. To give us a stronger chance of sustaining the platform
-                over the next 12 months, we're considering a new price point of $4.99/month,
-                which still keeps us among the the most affordable option for premium
-                Wall Street data.
+                over the next 12 months, we're considering a new price point of
+                <strong>$4.99/month</strong>, which still keeps us among the
+                most affordable option for premium Wall Street data.
               </p>
               <div class="text-white mb-5 text-[1rem]">
                 If you're already a Pro Member, your current rate will remain
                 locked in as long as your subscription stays active.
                 <br />
                 <br />
-                This new price plan will take effect on Monday, November 11, 2024.
-                Now is the last chance to secure the
+                This new price plan will take effect on
+                <strong>Monday, November 11, 2024</strong>. Now is the last
+                chance to secure the
                 <a href="/pricing" class="sm:hover:text-white text-blue-400"
                   >Pro Subscription</a
                 >
-                at $1.99/month—after this, the introductory price will no longer
-                be available.
+                at <strong>$1.99/month</strong>—after this, the introductory
+                price will no longer be available.
                 <br />
                 <br />
                 To my Pro Members, I want to take a moment to say thank you. You're
