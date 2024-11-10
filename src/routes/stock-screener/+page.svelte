@@ -1466,13 +1466,14 @@
   }
 
   function changeRule(state: string) {
-    searchTerm = "";
-    selectedPopularStrategy = "";
-    ruleName = state;
-    handleAddRule();
-
-    //const closePopup = document.getElementById("ruleModal");
-    //closePopup?.dispatchEvent(new MouseEvent('click'))
+    if (data?.user?.tier !== "Pro" && state === "score") {
+      goto("/pricing");
+    } else {
+      searchTerm = "";
+      selectedPopularStrategy = "";
+      ruleName = state;
+      handleAddRule();
+    }
   }
 
   const handleMessage = (event) => {
@@ -1856,10 +1857,7 @@ const handleKeyDown = (event) => {
           { condition: "over", name: "marketCap", value: "100M" },
         ],
       },
-      topAIStocks: {
-        name: "Top AI Stocks",
-        rules: [{ condition: "", name: "score", value: "Strong Buy" }],
-      },
+
       momentumTAStocks: {
         name: "Momentum TA Stocks",
         rules: [
@@ -2217,12 +2215,7 @@ const handleKeyDown = (event) => {
                   >
                     Top Shorted Stocks
                   </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    on:click={() => popularStrategy("topAIStocks")}
-                    class="cursor-pointer hover:bg-[#27272A]"
-                  >
-                    Top AI Stocks
-                  </DropdownMenu.Item>
+
                   <DropdownMenu.Item
                     on:click={() => popularStrategy("momentumTAStocks")}
                     class="cursor-pointer hover:bg-[#27272A]"
@@ -3156,9 +3149,23 @@ const handleKeyDown = (event) => {
                         >
                       {/if}
                     </td>
-                    <td class="text-start border-b border-[#262626]"
-                      >{row?.label}</td
-                    >
+                    <td class="text-start border-b border-[#262626]">
+                      {row?.label}
+                      {#if row?.rule === "score"}
+                        <svg
+                          class="{data?.user?.tier === 'Pro'
+                            ? 'hidden'
+                            : ''} ml-1 -mt-0.5 w-3.5 h-3.5 inline-block"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="#A3A3A3"
+                            d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                          />
+                        </svg>
+                      {/if}
+                    </td>
                   </tr>
                 {/each}
               </tbody>
