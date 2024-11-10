@@ -1363,9 +1363,9 @@
 
         <button
           type="submit"
-          class="mt-10 btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-md m-auto text-white font-bold text-md"
+          class="mt-10 btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-md m-auto text-black font-semibold text-md"
         >
-          Create List
+          Create Watchlist
         </button>
       </form>
     </div>
