@@ -262,7 +262,7 @@
                 })}
               </span>
             {/if}
-            <div class="flex flex-col justify-start items-start mt-4">
+            <div class="flex flex-col justify-start items-start mt-4 mb-4">
               <span class="text-white font-medium mr-2 text-lg">
                 Current Plan:
               </span>
@@ -310,7 +310,7 @@
             {:else if subscriptionData?.status_formatted === "Cancelled"}
               <label
                 for="reactivateSubscriptionModal"
-                class="cursor-pointer text-white bg-[#fff] sm:hover:bg-gray-300 text-sm sm:text-[1rem] px-4 py-2 rounded-md mt-5"
+                class="cursor-pointer text-black bg-[#fff] sm:hover:bg-gray-300 text-sm sm:text-[1rem] px-4 py-2 rounded-md"
               >
                 Reactivate Subscription
               </label>
@@ -434,7 +434,7 @@
     method="POST"
     action="?/reactivateSubscription"
     use:enhance={submitReactivate}
-    class="modal-box w-full bg-[#09090B] flex flex-col items-center"
+    class="modal-box w-full bg-[#272727A] flex flex-col items-center"
   >
     <div
       class="mx-auto mb-8 h-1.5 w-20 flex-shrink-0 rounded-full bg-[#404040]"
@@ -451,9 +451,9 @@
       on:click={() => (isClicked = !isClicked)}
       class="{!isClicked
         ? ''
-        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-full bg-[#417143] text-center text-white text-[1rem] font-normal"
+        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-md bg-[#fff] sm:hover:bg-gray-300 text-center text-black text-[1rem] font-medium"
     >
-      Reactivate Subscription
+      Proceed
       <input
         class="hidden"
         name="subscriptionId"
