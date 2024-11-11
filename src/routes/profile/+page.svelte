@@ -377,7 +377,7 @@
     method="POST"
     action="?/cancelSubscription"
     use:enhance={submitCancellation}
-    class="modal-box w-full bg-[#09090B] flex flex-col items-center"
+    class="modal-box w-full bg-[#272727A] flex flex-col items-center"
   >
     <div
       class="mx-auto mb-8 h-1.5 w-20 flex-shrink-0 rounded-full bg-[#404040]"
@@ -394,7 +394,7 @@
       on:click={() => (isClicked = !isClicked)}
       class="{!isClicked
         ? ''
-        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-full bg-red-600 text-center text-white text-[1rem] font-normal"
+        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-md bg-red-600 text-center text-white text-[1rem] font-normal"
     >
       Cancel Subscription
       <input
