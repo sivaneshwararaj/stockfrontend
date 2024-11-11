@@ -3,7 +3,6 @@
     searchBarData,
     screenWidth,
     numberOfUnreadNotification,
-    switchWatchList,
   } from "$lib/store";
   import { formatDate, abbreviateNumber } from "$lib/utils";
   import toast from "svelte-french-toast";
@@ -17,6 +16,7 @@
   export let data;
 
   let searchQuery = "";
+  let switchWatchlist = false;
   let editMode = false;
   let numberOfChecked = 0;
   let deleteTickerList = [];
@@ -425,7 +425,7 @@
 
   function changeWatchList(newWatchList) {
     displayWatchList = newWatchList;
-    $switchWatchList = true;
+    switchWatchlist = true;
   }
 
   function saveRules() {
@@ -502,10 +502,6 @@
     }
   });
 
-  onDestroy(() => {
-    $switchWatchList = false;
-  });
-
   function handleWatchlistModal() {
     const closePopup = document.getElementById("addWatchlist");
     closePopup?.dispatchEvent(new MouseEvent("click"));
@@ -579,11 +575,11 @@
   $: charNumber = $screenWidth < 640 ? 15 : 20;
 
   $: {
-    if ($switchWatchList && typeof window !== "undefined") {
+    if (switchWatchlist && typeof window !== "undefined") {
       isLoaded = false;
       getWatchlistData();
       isLoaded = true;
-      $switchWatchList = false;
+      switchWatchlist = false;
     }
   }
 

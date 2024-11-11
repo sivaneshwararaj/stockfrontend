@@ -120,7 +120,6 @@ export const oauthState = writable(<string>"");
 export const oauthVerifier = writable(<string>"");
 export const oauthProvider = writable(<string>"");
 
-export const switchWatchList = writable(<boolean>false);
 
 export const cachedPosts = writable(<Array<any>>{});
 export const currentPagePosition = writable(<Number>0);
