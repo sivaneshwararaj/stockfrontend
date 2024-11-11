@@ -597,6 +597,7 @@ function convertNYTimeToLocalTime(nyTimeString) {
 export function getPartyForPoliticians(name) {
   // Predefined list of senators and their parties
   const senatorPartyMap = {
+    "Bryon Donalds": "Republican",
     "Blake Moore": "Republican",
     "Bill Hagerty": "Republican",
     "Scott Peters": "Democratic",

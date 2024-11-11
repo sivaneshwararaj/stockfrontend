@@ -14,55 +14,19 @@
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let rawData = data?.getPoliticianRSS;
-  let slicedRawData = [];
-  let displayList = [];
-
-  let isLoaded = false;
-  let displayStructure = "Table";
-  let displayRows = 100;
-
-  let filterList = [];
-
-  let changeRowFilter = false;
-  let changeRuleFilter = false;
+  let displayList = rawData?.slice(0, 50) || [];
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
-    if (isBottom && displayList?.length !== slicedRawData?.length) {
+    if (isBottom && displayList?.length !== rawData?.length) {
       const nextIndex = displayList?.length;
-      const filteredNewResults = slicedRawData?.slice(nextIndex, nextIndex + 9);
+      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 9);
       displayList = [...displayList, ...filteredNewResults];
     }
   }
 
   onMount(async () => {
-    rawData?.forEach((item) => {
-      let representative = item?.representative || "";
-
-      representative = representative
-        ?.replace("Jr", "")
-        .replace(/Dr./g, "")
-        .replace(/Dr_/g, "");
-
-      const fullName = representative
-        ?.replace(/(\s(?:Dr\s)?\w(?:\.|(?=\s)))?\s/g, "_")
-        .trim();
-      item.representative = fullName?.replace(/_/g, " ");
-    });
-
-    rawData = rawData?.map((item) => {
-      const party = getPartyForPoliticians(item?.representative);
-      return {
-        ...item,
-        party: party,
-      };
-    });
-
-    slicedRawData = rawData?.slice(0, displayRows) ?? [];
-    displayList = slicedRawData?.slice(0, 20) ?? [];
-    isLoaded = true;
-
     window.addEventListener("scroll", handleScroll);
     //window.addEventListener('keydown', handleKeyDown);
 
@@ -135,7 +99,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden pb-20 pt-5 px-4 lg:px-3"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
@@ -157,192 +121,170 @@
           </div>
 
           <body class="w-full overflow-hidden m-auto">
-            {#if isLoaded}
-              <section class="w-full overflow-hidden m-auto sm:mt-10">
-                <div class=" flex justify-center w-full m-auto overflow-hidden">
-                  <div
-                    class="relative flex justify-center items-center overflow-hidden w-full"
-                  >
-                    <main class="w-full">
-                      <div class="w-full m-auto mt-4">
-                        <div
-                          class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+            <section class="w-full overflow-hidden m-auto sm:mt-10">
+              <div class=" flex justify-center w-full m-auto overflow-hidden">
+                <div
+                  class="relative flex justify-center items-center overflow-hidden w-full"
+                >
+                  <main class="w-full">
+                    <div class="w-full m-auto mt-4">
+                      <div
+                        class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+                      >
+                        <table
+                          class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
                         >
-                          <table
-                            class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
-                          >
-                            <thead>
+                          <thead>
+                            <tr class="bg-[#09090B] border-b border-[#27272A]">
+                              <th
+                                class="bg-[#09090B] text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                              >
+                                Person
+                              </th>
+                              <td
+                                class="text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                              >
+                                Company
+                              </td>
+
+                              <td
+                                class="text-end bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                              >
+                                Date
+                              </td>
+                              <td
+                                class="text-center bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                              >
+                                Amount
+                              </td>
+                              <td
+                                class="text-white text-end text-sm font-medium sm:font-semibold"
+                                >Type</td
+                              >
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {#each displayList as item, index}
                               <tr
-                                class="bg-[#09090B] border-b border-[#27272A]"
+                                class="odd:bg-[#27272A] border-b-[#09090B] {index +
+                                  1 ===
+                                  rawData?.length && data?.user?.tier !== 'Pro'
+                                  ? 'opacity-[0.1]'
+                                  : ''}"
                               >
                                 <th
-                                  class="bg-[#09090B] text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                                  class="{index % 2
+                                    ? 'bg-[#09090B]'
+                                    : 'bg-[#27272A]'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
-                                  Person
-                                </th>
-                                <td
-                                  class="text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
-                                >
-                                  Company
-                                </td>
-
-                                <td
-                                  class="text-end bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
-                                >
-                                  Date
-                                </td>
-                                <td
-                                  class="text-center bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
-                                >
-                                  Amount
-                                </td>
-                                <td
-                                  class="text-white text-end text-sm font-medium sm:font-semibold"
-                                  >Type</td
-                                >
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {#each displayList as item, index}
-                                <tr
-                                  class="odd:bg-[#27272A] border-b-[#09090B] {index +
-                                    1 ===
-                                    rawData?.length &&
-                                  data?.user?.tier !== 'Pro'
-                                    ? 'opacity-[0.1]'
-                                    : ''}"
-                                >
-                                  <th
-                                    class="{index % 2
-                                      ? 'bg-[#09090B]'
-                                      : 'bg-[#27272A]'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
-                                  >
-                                    <div class="flex flex-row items-center">
-                                      <div
-                                        class="flex-shrink-0 rounded-full border border-slate-700 w-9 h-9 relative {item?.party ===
-                                        'Republican'
-                                          ? 'bg-[#98272B]'
-                                          : item?.party === 'Democratic'
-                                            ? 'bg-[#295AC7]'
-                                            : 'bg-[#4E2153]'} flex items-center justify-center"
-                                      >
-                                        <img
-                                          style="clip-path: circle(50%);"
-                                          class="rounded-full w-7"
-                                          src={`${cloudFrontUrl}/assets/senator/${item?.representative?.replace(/\s+/g, "_")}.png`}
-                                          loading="lazy"
-                                        />
-                                      </div>
-                                      <div
-                                        class="flex flex-col ml-3 font-normal"
-                                      >
-                                        <a
-                                          href={`/politicians/${item?.id}`}
-                                          class="sm:hover:text-white text-blue-400"
-                                          >{getAbbreviatedName(
-                                            item?.representative?.replace(
-                                              "_",
-                                              " ",
-                                            ),
-                                          )}</a
-                                        >
-                                        <span class="text-gray-300"
-                                          >{item?.party}</span
-                                        >
-                                      </div>
-                                    </div>
-                                    <!--{item?.firstName} {item?.lastName}-->
-                                  </th>
-
-                                  <td
-                                    class="text-start whitespace-nowrap text-sm sm:text-[1rem] text-blue-400"
-                                  >
-                                    <div class="flex flex-col items-start">
-                                      <HoverStockChart
-                                        symbol={item?.ticker}
-                                        assetType={item?.assetType}
+                                  <div class="flex flex-row items-center">
+                                    <div
+                                      class="flex-shrink-0 rounded-full border border-slate-700 w-9 h-9 relative {item?.party ===
+                                      'Republican'
+                                        ? 'bg-[#98272B]'
+                                        : item?.party === 'Democratic'
+                                          ? 'bg-[#295AC7]'
+                                          : 'bg-[#4E2153]'} flex items-center justify-center"
+                                    >
+                                      <img
+                                        style="clip-path: circle(50%);"
+                                        class="rounded-full w-7"
+                                        src={`${cloudFrontUrl}/assets/senator/${item?.representative?.replace(/\s+/g, "_")}.png`}
+                                        loading="lazy"
                                       />
-
-                                      <span class="text-white"
-                                        >{item?.assetDescription.length >
-                                        charNumber
-                                          ? formatString(
-                                              item?.assetDescription.slice(
-                                                0,
-                                                charNumber,
-                                              ),
-                                            ) + "..."
-                                          : formatString(item?.assetDescription)
-                                              ?.replace("- Common Stock", "")
-                                              ?.replace(
-                                                "Common Stock",
-                                                "",
-                                              )}</span
+                                    </div>
+                                    <div class="flex flex-col ml-3 font-normal">
+                                      <a
+                                        href={`/politicians/${item?.id}`}
+                                        class="sm:hover:text-white text-blue-400"
+                                        >{getAbbreviatedName(
+                                          item?.representative?.replace(
+                                            "_",
+                                            " ",
+                                          ),
+                                        )}</a
+                                      >
+                                      <span class="text-gray-300"
+                                        >{item?.party}</span
                                       >
                                     </div>
-                                  </td>
+                                  </div>
+                                  <!--{item?.firstName} {item?.lastName}-->
+                                </th>
 
-                                  <td
-                                    class="text-end text-sm sm:text-[1rem] text-white whitespace-nowrap"
-                                  >
-                                    {new Date(
-                                      item?.disclosureDate,
-                                    )?.toLocaleString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                      year: "numeric",
-                                      daySuffix: "2-digit",
-                                    })}
-                                  </td>
+                                <td
+                                  class="text-start whitespace-nowrap text-sm sm:text-[1rem] text-blue-400"
+                                >
+                                  <div class="flex flex-col items-start">
+                                    <HoverStockChart
+                                      symbol={item?.ticker}
+                                      assetType={item?.assetType}
+                                    />
 
-                                  <td
-                                    class="text-center text-sm sm:text-[1rem] text-white whitespace-nowrap"
-                                  >
-                                    {item?.amount?.replace(
-                                      "$1,000,001 - $5,000,000",
-                                      "$1Mio - $5Mio",
-                                    )}
-                                  </td>
-                                  <td
-                                    class="text-sm sm:text-[1rem] text-end text-white"
-                                  >
-                                    {#if item?.type === "Bought"}
-                                      <span class="text-[#00FC50]">Bought</span>
-                                    {:else if item?.type === "Sold"}
-                                      <span class="text-[#FF2F1F]">Sold</span>
-                                    {/if}
-                                  </td>
-                                </tr>
-                              {/each}
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--<InfiniteLoading on:infinite={infiniteHandler} />-->
+                                    <span class="text-white"
+                                      >{item?.assetDescription.length >
+                                      charNumber
+                                        ? formatString(
+                                            item?.assetDescription.slice(
+                                              0,
+                                              charNumber,
+                                            ),
+                                          ) + "..."
+                                        : formatString(item?.assetDescription)
+                                            ?.replace("- Common Stock", "")
+                                            ?.replace("Common Stock", "")}</span
+                                    >
+                                  </div>
+                                </td>
 
-                        <!--<UpgradeToPro data={data} title="Track the latest trades of corrupt US Politicians"/>-->
+                                <td
+                                  class="text-end text-sm sm:text-[1rem] text-white whitespace-nowrap"
+                                >
+                                  {new Date(
+                                    item?.disclosureDate,
+                                  )?.toLocaleString("en-US", {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                    daySuffix: "2-digit",
+                                  })}
+                                </td>
+
+                                <td
+                                  class="text-center text-sm sm:text-[1rem] text-white whitespace-nowrap"
+                                >
+                                  {item?.amount?.replace(
+                                    "$1,000,001 - $5,000,000",
+                                    "$1Mio - $5Mio",
+                                  )}
+                                </td>
+                                <td
+                                  class="text-sm sm:text-[1rem] text-end text-white"
+                                >
+                                  {#if item?.type === "Bought"}
+                                    <span class="text-[#00FC50]">Bought</span>
+                                  {:else if item?.type === "Sold"}
+                                    <span class="text-[#FF2F1F]">Sold</span>
+                                  {/if}
+                                </td>
+                              </tr>
+                            {/each}
+                          </tbody>
+                        </table>
                       </div>
-                    </main>
-                  </div>
-                </div>
-              </section>
-            {:else}
-              <div class="flex justify-center items-center h-80">
-                <div class="relative">
-                  <label
-                    class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  >
-                    <span
-                      class="loading loading-spinner loading-md text-gray-400"
-                    ></span>
-                  </label>
+                      <!--<InfiniteLoading on:infinite={infiniteHandler} />-->
+
+                      <!--<UpgradeToPro data={data} title="Track the latest trades of corrupt US Politicians"/>-->
+                    </div>
+                  </main>
                 </div>
               </div>
-            {/if}
+            </section>
           </body>
         </main>
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
+          {#if data?.user?.tier !== "Pro"}
             <div
               class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
