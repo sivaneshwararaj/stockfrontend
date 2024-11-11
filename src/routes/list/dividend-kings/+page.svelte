@@ -1,6 +1,9 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { screenWidth } from "$lib/store";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import DownloadData from "$lib/components/DownloadData.svelte";
+
   import { onMount } from "svelte";
 
   export let data;
@@ -24,6 +27,84 @@
     };
   });
 
+  let columns = [
+    { key: "rank", label: "Rank", align: "center" },
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "price", label: "Price", align: "right" },
+    { key: "changesPercentage", label: "% Change", align: "right" },
+    { key: "dividendYield", label: "Div. Yield", align: "right" },
+    { key: "years", label: "Years", align: "right" },
+  ];
+
+  let sortOrders = {
+    rank: { order: "none", type: "number" },
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    price: { order: "none", type: "number" },
+    changesPercentage: { order: "none", type: "number" },
+    dividendYield: { order: "none", type: "number" },
+    years: { order: "none", type: "number" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = rawData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      displayList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    displayList = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
+
   $: charNumber = $screenWidth < 640 ? 15 : 40;
 </script>
 
@@ -46,6 +127,14 @@
     the US stock market.
   </div>
 
+  <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
+    <DownloadData
+      {data}
+      rawData={data?.getDividendKings}
+      title="dividend_aristocrats"
+    />
+  </div>
+
   <!-- Page wrapper -->
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
     <!-- Content area -->
@@ -54,79 +143,38 @@
         class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
       >
         <thead>
-          <tr class="border border-slate-800">
-            <th class="text-white font-semibold text-sm sm:text-[1rem]">No.</th>
-            <th
-              class="text-slate-200 hidden sm:table-cell sm:font-bold text-sm sm:text-[1rem]"
-              >Symbol</th
-            >
-            <th class="text-white font-semibold text-sm sm:text-[1rem]"
-              >Company</th
-            >
-            <th class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-              >Stock Price</th
-            >
-            <th
-              class="text-white font-semibold text-center text-sm sm:text-[1rem]"
-              >% Change</th
-            >
-            <th
-              class="text-white font-semibold text-center text-sm sm:text-[1rem]"
-              >Div. Yield</th
-            >
-            <!--<th class="text-white font-semibold text-center text-sm sm:text-[1rem] ">Sector</th>-->
-            <th class="text-white font-semibold text-sm sm:text-[1rem] text-end"
-              >Years</th
-            >
-          </tr>
+          <TableHeader {columns} {sortOrders} {sortData} />
         </thead>
         <tbody>
-          {#each displayList as item, index}
+          {#each displayList as item}
             <!-- row -->
             <tr
-              on:click={() => goto("/stocks/" + item?.symbol)}
               class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
             >
               <td
                 class="text-white font-semibold sm:font-normal text-center text-sm sm:text-[1rem] border-b-[#09090B]"
               >
-                {index + 1}
+                {item?.rank}
+              </td>
+
+              <td class="text-[1rem] border-b-[#09090B]">
+                <HoverStockChart symbol={item?.symbol} />
+              </td>
+
+              <td class="text-white border-b-[#09090B] whitespace-nowrap">
+                {item?.name?.length > charNumber
+                  ? item?.name?.slice(0, charNumber) + "..."
+                  : item?.name}
               </td>
 
               <td
-                class="hidden sm:table-cell text-blue-400 font-normal text-[1rem] border-b-[#09090B]"
-              >
-                {item?.symbol}
-              </td>
-
-              <td class="text-gray-200 border-b-[#09090B] whitespace-nowrap">
-                <span
-                  class="hidden sm:inline-block text-white font-semibold sm:font-normal text-sm sm:text-[1rem]"
-                  >{item?.name?.length > charNumber
-                    ? item?.name?.slice(0, charNumber) + "..."
-                    : item?.name}</span
-                >
-                <div class="sm:hidden flex flex-row">
-                  <div class="flex flex-col">
-                    <span class="text-blue-400 font-medium">{item?.symbol}</span
-                    >
-                    <span class="text-gray-200 font-medium"
-                      >{item?.name?.length > charNumber
-                        ? item?.name?.slice(0, charNumber) + "..."
-                        : item?.name}</span
-                    >
-                  </div>
-                </div>
-              </td>
-
-              <td
-                class="text-white font-semibold sm:font-normal text-end text-sm sm:text-[1rem] border-b-[#09090B]"
+                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
               >
                 {item?.price}
               </td>
 
               <td
-                class="text-white font-semibold sm:font-normal text-center text-sm sm:text-[1rem] border-b-[#09090B]"
+                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
               >
                 {#if item?.changesPercentage >= 0}
                   <span class="text-[#00FC50]"
@@ -140,19 +188,13 @@
               </td>
 
               <td
-                class="text-white font-semibold sm:font-normal text-center text-sm sm:text-[1rem] border-b-[#09090B]"
+                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
               >
-                {item?.dividiendYield}%
+                {item?.dividendYield}%
               </td>
 
-              <!--
-                        <td class="text-white font-semibold sm:font-normal text-center text-sm sm:text-[1rem] border-b-[#09090B]">
-                          {item?.sector}
-                        </td>
-                        -->
-
               <td
-                class="text-white font-semibold sm:font-normal text-end text-sm sm:text-[1rem] border-b-[#09090B]"
+                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
               >
                 {item?.years}
               </td>
