@@ -124,13 +124,7 @@
       class="flex flex-col items-center space-y-2 w-full max-w-lg pt-4 pl-3 pr-3 sm:pl-0 sm:pr-0 ml-auto mr-auto"
     >
       <!--<Input id="name" label="Your first and last name" value={form?.data?.name} errors={form?.errors?.name} />-->
-      <Input
-        id="username"
-        label="Username"
-        value={form?.data?.username}
-        errors={form?.errors?.username}
-        disabled={loading}
-      />
+
       <Input
         type="email"
         id="email"

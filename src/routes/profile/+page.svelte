@@ -324,6 +324,39 @@
               </a>
             {/if}
           </div>
+
+          <div
+            class="mt-6 rounded-md border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
+          >
+            <h2 class="text-white text-2xl font-semibold mb-3">Need help?</h2>
+            <div class="mt-1">
+              <strong>Here's how to get support:</strong>
+            </div>
+            <div class="mt-2 mb-1">
+              <ul class="list-disc pl-5">
+                <li>Send an email to support@stocknear.com.</li>
+                <li>
+                  Join our official Subreddit
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://www.reddit.com/r/stocknear/"
+                    class="text-blue-400"
+                  >
+                    r/stocknear</a
+                  >.
+                </li>
+                <li>
+                  Join our official <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://discord.com/invite/hCwZMMZ2MT"
+                    class="text-blue-400">Discord Channel</a
+                  >.
+                </li>
+              </ul>
+            </div>
+          </div>
         </main>
       </div>
     </div>

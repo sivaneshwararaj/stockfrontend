@@ -35,7 +35,7 @@ export const actions = {
     //let username = generateUsername(formData.name.split(' ').join('')).toLowerCase();
 
     try {
-      const newUser = await locals.pb.collection("users").create(formData);
+       await locals.pb.collection("users").create(formData);
       /*
       await locals.pb?.collection('users').update(
               newUser?.id, {
