@@ -9,15 +9,6 @@ export const loginUserSchema = z.object({
 
 export const registerUserSchema = z
   .object({
-    username: z
-      .string({ required_error: "Username is required" })
-      .regex(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/, {
-        message:
-          "Username can only contain letters, numbers, and special characters.",
-      }) // Updated regex pattern
-      .min(3, { message: "Username must be at least 2 characters" })
-      .max(64, { message: "Username must be less than 64 characters" })
-      .trim(),
     email: z
       .string({ required_error: "Email is required" })
       .email({ message: "Email must be a valid email" }),

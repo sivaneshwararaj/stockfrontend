@@ -10,8 +10,6 @@
   import { onMount } from "svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-
   export let data;
 
   const rawData = data?.getMiniPlotsIndex;
