@@ -69,8 +69,6 @@ const pages = [
   { title: "/market-mover/active" },
   { title: "/market-mover/premarket" },
   { title: "/market-mover/afterhours" },
-  { title: "/community" },
-  { title: "/community/create-post" },
   { title: "/hedge-funds" },
   { title: "/login" },
   { title: "/register" },
@@ -99,17 +97,7 @@ export async function GET({ locals }) {
   //get all posts;
   const { apiKey, apiURL } = locals;
 
-  const outputPost = await locals.pb.collection("posts").getFullList();
 
-  const outputBlogPost = await locals.pb.collection("articles").getFullList();
-
-  const posts = outputPost?.map((item) => ({
-    id: item.id,
-  }));
-
-  const articles = outputBlogPost?.map((item) => ({
-    id: item.id,
-  }));
 
   const rawData = await fetch(apiURL + "/searchbar-data", {
     method: "GET",
@@ -125,7 +113,7 @@ export async function GET({ locals }) {
     type: item?.type,
   }));
 
-  const body = sitemap(posts, articles, stocks, pages);
+  const body = sitemap(stocks, pages);
   const response = new Response(body);
   response.headers.set("Cache-Control", "max-age=0, s-maxage=3600");
   response.headers.set("Content-Type", "application/xml");
@@ -134,8 +122,6 @@ export async function GET({ locals }) {
 
 // Modified sitemap function
 const sitemap = (
-  posts,
-  articles,
   stocks,
   pages,
 ) => `<?xml version="1.0" encoding="UTF-8" ?>
@@ -171,23 +157,5 @@ const sitemap = (
     </url>
     `;
     })
-    .join("")}
-  ${articles
-    .map(
-      (article) => `
-  <url>
-    <loc>${website}/blog/article/${article.id}</loc>
-  </url>
-  `,
-    )
-    .join("")}
-  ${posts
-    .map(
-      (post) => `
-  <url>
-    <loc>${website}/community/post/${post.id}</loc>
-  </url>
-  `,
-    )
     .join("")}
 </urlset>`;

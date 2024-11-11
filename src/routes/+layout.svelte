@@ -31,10 +31,7 @@
     etfTicker,
     loginData,
     numberOfUnreadNotification,
-    cachedPosts,
-    currentPagePosition,
     clientSideCache,
-    twitchStatus,
   } from "$lib/store";
 
   import { Button } from "$lib/components/shadcn/button/index.ts";
@@ -53,7 +50,6 @@
   import Layers from "lucide-svelte/icons/layers";
   import Boxes from "lucide-svelte/icons/boxes";
   import Newspaper from "lucide-svelte/icons/newspaper";
-  import MessageCircle from "lucide-svelte/icons/message-circle";
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
 
@@ -108,9 +104,7 @@
       hideHeader = true; // Hide the header for other routes under "/etf/"
     } else {
       // Specify conditions for other routes where you want to hide the header
-      hideHeader =
-        currentPath.startsWith("/community/post") ||
-        currentPath.startsWith("/stocks/");
+      hideHeader = currentPath.startsWith("/stocks/");
     }
   }
 
@@ -120,10 +114,7 @@
     $page.url.pathname.startsWith("/login") ||
     $page.url.pathname.startsWith("/etf") ||
     $page.url.pathname.startsWith("/portfolio") ||
-    $page.url.pathname.startsWith("/hedge-funds") ||
-    $page.url.pathname.startsWith("/community");
-
-  //$: hideSidebar = $page.url.pathname.startsWith('/contact') || $page.url.pathname.startsWith('/imprint') || $page.url.pathname.startsWith('/privacy-policy') || $page.url.pathname.startsWith('/terms-of-use') || $page.url.pathname.startsWith('/about') || $page.url.pathname.startsWith('/community/create-post') || $page.url.pathname.startsWith('/login') || $page.url.pathname.startsWith('/register')
+    $page.url.pathname.startsWith("/hedge-funds");
 
   let hasUnreadElement = false;
   let notificationList = [];
@@ -213,18 +204,6 @@ const handleTwitchMessage = (event) => {
   afterNavigate(async () => {
     NProgress.done();
   });
-
-  //Delete cached Posts when going to other directories
-  $: {
-    if (
-      $page.url.pathname === "/community" ||
-      $page.url.pathname.startsWith("/community/post")
-    ) {
-    } else {
-      $cachedPosts = [];
-      $currentPagePosition = 0;
-    }
-  }
 
   $: {
     if ($page.url.pathname) {
@@ -783,7 +762,9 @@ const handleTwitchMessage = (event) => {
                       >
                         <Gem class="h-5.5 w-5.5" />
                       </div>
-                      <span class="ml-3 text-white text-[1rem]">Pricing</span>
+                      <span class="ml-3 text-white text-[1rem]"
+                        >Stock Analysis Pro</span
+                      >
                     </div>
                   </a>
                 </Button>
@@ -852,27 +833,23 @@ const handleTwitchMessage = (event) => {
             <DropdownMenu.Trigger asChild let:builder>
               <Button
                 size="icon"
-                class="overflow-hidden rounded-full"
+                class="overflow-hidden rounded-lg bg-[#09090B] border border-gray-600 w-10 h-10"
                 builders={[builder]}
               >
-                <img
-                  src={data?.user?.avatar
-                    ? getImageURL(
-                        data?.user.collectionId,
-                        data?.user.id,
-                        data?.user.avatar,
-                      )
-                    : defaultAvatar}
-                  width={36}
-                  height={36}
-                  alt="Avatar"
-                  class="overflow-hidden rounded-full"
-                />
+                <svg
+                  class="h-[28px] w-[28px] overflow-hidden rounded-full text-gray-300"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  ><path
+                    fill="currentColor"
+                    d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"
+                  /></svg
+                >
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content align="end">
               <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
-                <a href="/community/profile"> My Account </a>
+                <a href="/profile"> My Account </a>
               </DropdownMenu.Item>
               <DropdownMenu.Separator />
               <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
@@ -1185,7 +1162,7 @@ const handleTwitchMessage = (event) => {
                   >
                     <Gem class="h-5.5 w-5.5" />
                   </div>
-                  <span class="ml-3 text-white">Pricing</span>
+                  <span class="ml-3 text-white">Stock Analysis Pro</span>
                 </a>
               </nav>
               {#if !data?.user || data?.user?.tier === "Free" || data?.user?.freeTrial === true}

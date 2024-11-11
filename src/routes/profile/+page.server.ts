@@ -20,46 +20,9 @@ export const load = async ({ locals }) => {
     return output;
   };
 
-  const getModerators = async () => {
-    let output;
-    try {
-      output = await pb.collection("moderators").getFullList({
-        expand: "user",
-      });
-    } catch (e) {
-      output = [];
-    }
-    return output;
-  };
-
-  const getUserStats = async () => {
-    let output;
-
-    try {
-      const getNumberOfPosts = await pb.collection("posts").getList(1, 1, {
-        filter: `user="${user?.id}"`,
-      });
-      const numberOfPosts = getNumberOfPosts?.totalItems;
-
-      const getNumberOfComments = await pb
-        .collection("comments")
-        .getList(1, 1, {
-          filter: `user="${user?.id}"`,
-        });
-      const numberOfComments = getNumberOfComments?.totalItems;
-
-      output = { numberOfPosts, numberOfComments };
-    } catch (e) {
-      output = { numberOfPosts: 0, numberOfComments: 0 };
-    }
-
-    return output;
-  };
 
   return {
     getSubscriptionData: await getSubscriptionData(),
-    getModerators: await getModerators(),
-    getUserStats: await getUserStats(),
   };
 };
 
@@ -87,7 +50,7 @@ export const actions = {
       error(err.status, err.message);
     }
 
-    redirect(302, "/community/profile");
+    redirect(302, "/profile");
   },
 
   reactivateSubscription: async ({ request, locals }) => {
@@ -124,7 +87,7 @@ export const actions = {
       error(err.status, err.message);
     }
 
-    redirect(302, "/community/profile");
+    redirect(302, "/profile");
   },
 
   changeSubscription: async ({ request, locals }) => {
@@ -164,6 +127,6 @@ export const actions = {
       error(err.status, err.message);
     }
 
-    redirect(302, "/community/profile");
+    redirect(302, "/profile");
   },
 };

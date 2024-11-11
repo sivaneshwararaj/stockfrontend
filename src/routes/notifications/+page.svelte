@@ -121,7 +121,6 @@
                   <div class="flex flex-row items-center w-full">
                     <!-- svelte-ignore a11y-label-has-associated-control -->
                     <a
-                      href={"/community/user/" + item?.expand?.user?.id}
                       class="avatar w-11 h-11 flex-shrink-0 cursor-pointer mr-4"
                     >
                       <img
@@ -139,24 +138,7 @@
                     </a>
 
                     <div class="text-white text-sm sm:text-[1rem]">
-                      {#if item?.notifyType === "vote"}
-                        <div class="flex flex-col items-start">
-                          <div>
-                            <a
-                              href={"/community/user/" + item?.expand?.user?.id}
-                              class="sm:hover:text-white text-blue-400 cursor-pointer"
-                            >
-                              {item?.expand?.user?.username}
-                            </a>
-                            <span class="text-white text-sm sm:text-[1rem]">
-                              upvoted your {item?.comment ? "comment" : "post"}
-                            </span>
-                          </div>
-                          <span class="text-sm sm:text-[1rem] text-[#A6ADBB0"
-                            >{formatDate(item?.created)} ago</span
-                          >
-                        </div>
-                      {:else if item?.notifyType === "priceAlert"}
+                      {#if item?.notifyType === "priceAlert"}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <!-- svelte-ignore a11y-label-has-associated-control -->
                         <div class="flex flex-col items-start">
@@ -181,27 +163,6 @@
                                 >
                               </div>
                             </a>
-                          </div>
-                          <span class="text-sm sm:text-[1rem] text-[#A6ADBB0"
-                            >{formatDate(item?.created)} ago</span
-                          >
-                        </div>
-                      {:else if item?.notifyType === "comment"}
-                        <div class="flex flex-col items-start">
-                          <div>
-                            <a
-                              href={"/community/user/" + item?.expand?.user?.id}
-                              class="sm:hover:text-white text-blue-400 cursor-pointer"
-                            >
-                              {item?.expand?.user?.username}
-                            </a>
-                            <span class="text-white text-sm sm:text-[1rem]">
-                              commented on your post:
-                            </span>
-                            {@html item?.expand?.comment?.comment?.length > 30
-                              ? item?.expand?.comment?.comment?.slice(0, 30) +
-                                "..."
-                              : item?.expand?.comment?.comment}
                           </div>
                           <span class="text-sm sm:text-[1rem] text-[#A6ADBB0"
                             >{formatDate(item?.created)} ago</span
