@@ -848,24 +848,34 @@ const handleTwitchMessage = (event) => {
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content align="end">
-              <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
-                <a href="/profile"> My Account </a>
-              </DropdownMenu.Item>
+              <a href="/profile" class="cursor-pointer">
+                <DropdownMenu.Item class="sm:hover:bg-[#27272A] cursor-pointer">
+                  My Account
+                </DropdownMenu.Item>
+              </a>
               <DropdownMenu.Separator />
-              <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
-                <a href="/watchlist/stocks"> Watchlist </a>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
-                <a href="/price-alert"> Price Alert </a>
-              </DropdownMenu.Item>
+
+              <a href="/watchlist/stocks" class="cursor-pointer">
+                <DropdownMenu.Item class="sm:hover:bg-[#27272A] cursor-pointer">
+                  Watchlist
+                </DropdownMenu.Item>
+              </a>
+              <a href="/price-alert" class="cursor-pointer">
+                <DropdownMenu.Item class="sm:hover:bg-[#27272A] cursor-pointer">
+                  Price Alert
+                </DropdownMenu.Item>
+              </a>
+
               <DropdownMenu.Separator />
-              <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
-                <form class="cursor-pointer" action="/logout" method="POST">
-                  <button type="submit" class="w-full text-start">
+              <form class="cursor-pointer" action="/logout" method="POST">
+                <button type="submit" class="w-full text-start cursor-pointer">
+                  <DropdownMenu.Item
+                    class="sm:hover:bg-[#27272A] cursor-pointer"
+                  >
                     <span class="text-start">Logout</span>
-                  </button>
-                </form>
-              </DropdownMenu.Item>
+                  </DropdownMenu.Item>
+                </button>
+              </form>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         {:else}
