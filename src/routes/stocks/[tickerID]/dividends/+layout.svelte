@@ -54,7 +54,7 @@
                     >
                     <th
                       class="whitespace-nowrap border-b font-semibold text-sm text-right"
-                      >Employees</th
+                      >Dividend Yield</th
                     ></tr
                   ></thead
                 >
