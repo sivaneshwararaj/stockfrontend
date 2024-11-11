@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { getImageURL, formatDate } from "$lib/utils";
+  import { formatDate } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import { goto } from "$app/navigation";
+  import avatar from "$lib/images/visual_mod.webp";
+
   import { onMount } from "svelte";
   import { numberOfUnreadNotification } from "$lib/store";
-  import defaultAvatar from "$lib/images/default_avatar.png";
 
   export let data;
   export let form;
@@ -112,33 +112,25 @@
           {#if notificationList?.length !== 0}
             <div class="flex flex-col items-start w-full text-white">
               {#each notificationList as item}
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div
-                  class="sm:hover:bg-[#2B2B2B] pb-3 sm:p-3 mb-6 sm:mb-3 text-gray-200 w-full {!item?.readed
-                    ? 'bg-[#F9AB00] bg-opacity-[0.1]'
-                    : ''} "
-                >
-                  <div class="flex flex-row items-center w-full">
-                    <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <a
-                      class="avatar w-11 h-11 flex-shrink-0 cursor-pointer mr-4"
-                    >
-                      <img
-                        style="clip-path: circle(50%);"
-                        class="flex-shrink-0 w-11 h-11 rounded-full inline-block"
-                        src={item?.expand?.user?.avatar
-                          ? getImageURL(
-                              item?.expand?.user?.collectionId,
-                              item?.expand?.user?.id,
-                              item?.expand?.user?.avatar,
-                            )
-                          : defaultAvatar}
-                        alt="User avatar"
-                      />
-                    </a>
+                {#if item?.notifyType === "priceAlert"}
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <div
+                    class="sm:hover:bg-[#2B2B2B] pb-3 sm:p-3 mb-6 sm:mb-3 text-gray-200 w-full {!item?.readed
+                      ? 'bg-[#F9AB00] bg-opacity-[0.1]'
+                      : ''} "
+                  >
+                    <div class="flex flex-row items-center w-full">
+                      <!-- svelte-ignore a11y-label-has-associated-control -->
+                      <a class="avatar w-11 h-11 flex-shrink-0 mr-4">
+                        <img
+                          style="clip-path: circle(50%);"
+                          class="flex-shrink-0 w-11 h-11 rounded-full inline-block"
+                          src={avatar}
+                          alt="User avatar"
+                        />
+                      </a>
 
-                    <div class="text-white text-sm sm:text-[1rem]">
-                      {#if item?.notifyType === "priceAlert"}
+                      <div class="text-white text-sm sm:text-[1rem]">
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <!-- svelte-ignore a11y-label-has-associated-control -->
                         <div class="flex flex-col items-start">
@@ -168,19 +160,10 @@
                             >{formatDate(item?.created)} ago</span
                           >
                         </div>
-                      {/if}
+                      </div>
                     </div>
-                    <!--
-             {#if item?.expand?.post?.thumbnail}
-             <img 
-             src="{getImageURL(item?.expand?.post?.collectionId, item?.expand?.post?.id, item?.expand?.post?.thumbnail)}" 
-             class="w-24 sm:w-20 max-h-[50px] rounded-md inline-block"
-             alt="post thumbnail"
-             />
-             {/if}
-             -->
                   </div>
-                </div>
+                {/if}
               {/each}
             </div>
           {:else}
