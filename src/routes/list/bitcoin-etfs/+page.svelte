@@ -183,7 +183,7 @@
               </td>
 
               <td class="text-[1rem] border-b-[#09090B]">
-                <HoverStockChart symbol={item?.symbol} />
+                <HoverStockChart symbol={item?.symbol} assetType="etf" />
               </td>
 
               <td
