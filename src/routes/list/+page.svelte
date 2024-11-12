@@ -208,7 +208,7 @@
       <ul class="list-disc space-y-1 pl-3">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/canadian-stocks-us"
+            href="/list/country/ca"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Canada
@@ -216,7 +216,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/chinese-stocks-us"
+            href="/list/country/cn"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             China
@@ -224,7 +224,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/indian-stocks-us"
+            href="/list/country/in"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             India
@@ -232,7 +232,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/japanese-stocks-us"
+            href="/list/country/jp"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Japan
@@ -241,7 +241,7 @@
 
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/german-stocks-us"
+            href="/list/country/de"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Germany
@@ -249,7 +249,7 @@
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/israeli-stocks-us"
+            href="/list/country/il"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Israel
@@ -257,7 +257,7 @@
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/uk-stocks-us"
+            href="/list/country/gb"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             United Kingdom
@@ -270,7 +270,7 @@
       <ul class="list-disc space-y-1 pl-5">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/german-stocks-us"
+            href="/list/country/de"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Germany
@@ -278,7 +278,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/israeli-stocks-us"
+            href="/list/country/il"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Israel
@@ -286,7 +286,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/uk-stocks-us"
+            href="/list/country/gb"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             United Kingdom

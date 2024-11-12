@@ -79,11 +79,11 @@
     },
     {
       title: "German Companies on the US Stock Market",
-      link: "/list/german-stocks-us",
+      link: "/list/country/de",
     },
     {
       title: "Canadian Companies on the US Stock Market",
-      link: "/list/canadian-stocks-us",
+      link: "/list/country/ca",
     },
     {
       title: "Chinese Companies on the US Stock Market",
@@ -91,19 +91,19 @@
     },
     {
       title: "Indian Companies on the US Stock Market",
-      link: "/list/indian-stocks-us",
+      link: "/list/country/in",
     },
     {
       title: "Israeli Companies on the US Stock Market",
-      link: "/list/israeli-stocks-us",
+      link: "/list/country/il",
     },
     {
       title: "UK Companies on the US Stock Market",
-      link: "/list/uk-stocks-us",
+      link: "/list/country/gb",
     },
     {
       title: "Japanese Companies on the US Stock Market",
-      link: "/list/japanese-stocks-us",
+      link: "/list/country/jp",
     },
     {
       title: "Financials Sector Stocks",
