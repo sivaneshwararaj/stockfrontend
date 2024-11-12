@@ -87,7 +87,7 @@
     },
     {
       title: "Chinese Companies on the US Stock Market",
-      link: "/list/chinese-stocks-us",
+      link: "/list/cn",
     },
     {
       title: "Indian Companies on the US Stock Market",
