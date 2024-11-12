@@ -7,9 +7,12 @@
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import DownloadData from "$lib/components/DownloadData.svelte";
+  import { page } from "$app/stores";
 
   export let data;
   export let rawData;
+
+  let pagePathName = $page?.url?.pathname;
   let testList = [];
   let searchQuery = "";
 
@@ -22,7 +25,7 @@
     { name: "Avg. Volume", rule: "avgVolume", type: "int" },
     { name: "Market Cap", rule: "marketCap", type: "int" },
     { name: "Price", rule: "price", type: "float" },
-    { name: "Change", rule: "changesPercentage", type: "percentSign" },
+    { name: "% Change", rule: "changesPercentage", type: "percentSign" },
     { name: "EPS", rule: "eps", type: "float" },
     { name: "PE", rule: "pe", type: "float" },
     { name: "PB Ratio", rule: "priceToBookRatio", type: "float" },
@@ -66,7 +69,7 @@
     { name: "Value-at-Risk", rule: "var", type: "percentSign" },
     { name: "Asset Turnover", rule: "assetTurnover", type: "int" },
     { name: "Earnings Yield", rule: "earningsYield", type: "percent" },
-    { name: "Altman-Z-Score Yield", rule: "altmanZScore", type: "float" },
+    { name: "Altman-Z-Score", rule: "altmanZScore", type: "float" },
     { name: "Piotroski F-Score", rule: "piotroskiScore", type: "float" },
     { name: "Total Liabilities", rule: "totalLiabilities", type: "int" },
     { name: "Short Ratio", rule: "shortRatio", type: "int" },
@@ -106,15 +109,17 @@
   ];
 
   let ruleOfList = [
-    { name: "Market Cap", rule: "marketCap", type: "int" },
-    { name: "Price", rule: "price", type: "float" },
-    { name: "Change", rule: "changesPercentage", type: "percentSign" },
+    { name: "Market Cap", rule: "marketCap" },
+    { name: "Price", rule: "price" },
+    { name: "% Change", rule: "changesPercentage" },
+    { name: "Revenue", rule: "revenue" },
   ];
 
   const excludedRules = new Set([
     "volume",
     "price",
     "changesPercentage",
+    "revenue",
     "eps",
   ]);
   const proOnlyItems = new Set(
@@ -136,18 +141,11 @@
 
     for (let i = 0; i < updateData.length; i++) {
       if (rawData[i]) {
-        // Get all keys from rawData[i] that don't exist in updateData[i]
-        const missingKeys = Object.keys(rawData[i])?.filter(
-          (key) => !(key in updateData[i]),
-        );
-
-        // Add all missing keys to updateData[i]
-        if (missingKeys?.length > 0) {
+        // Check if "rank" is missing in updateData[i] and only add that key if it is
+        if (!("rank" in updateData[i]) && "rank" in rawData[i]) {
           updateData[i] = {
             ...updateData[i],
-            ...Object.fromEntries(
-              missingKeys?.map((key) => [key, rawData[i][key]]),
-            ),
+            rank: rawData[i]["rank"],
           };
         }
       }
@@ -168,7 +166,7 @@
   function saveRules() {
     try {
       // Save the version along with the rules
-      localStorage?.setItem("index-dowjones", JSON?.stringify(ruleOfList));
+      localStorage?.setItem(pagePathName, JSON?.stringify(ruleOfList));
     } catch (e) {
       console.log("Failed saving indicator rules: ", e);
     }
@@ -177,10 +175,10 @@
   async function handleResetAll() {
     searchQuery = "";
     ruleOfList = [
-      { name: "Volume", rule: "volume", type: "int" },
-      { name: "Market Cap", rule: "marketCap", type: "int" },
-      { name: "Price", rule: "price", type: "float" },
-      { name: "Change", rule: "changesPercentage", type: "percentSign" },
+      { name: "Market Cap", rule: "marketCap" },
+      { name: "Price", rule: "price" },
+      { name: "% Change", rule: "changesPercentage" },
+      { name: "Revenue", rule: "revenue" },
     ];
     ruleOfList = [...ruleOfList];
     checkedItems = new Set(ruleOfList.map((item) => item.name));
@@ -265,22 +263,68 @@
 
   onMount(async () => {
     // Initialize the download worker if not already done
-    if (!downloadWorker) {
-      const DownloadWorker = await import("$lib/workers/downloadWorker?worker");
-      downloadWorker = new DownloadWorker.default();
-      downloadWorker.onmessage = handleDownloadMessage;
-    }
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    try {
+      const savedRules = localStorage?.getItem(pagePathName);
+
+      if (savedRules) {
+        const parsedRules = JSON.parse(savedRules);
+
+        // Compare and update ruleOfList based on allRows
+        ruleOfList = parsedRules.map((rule) => {
+          const matchingRow = allRows.find((row) => row.name === rule.name);
+          if (matchingRow && matchingRow.type !== rule.type) {
+            return { ...rule, type: matchingRow.type };
+          }
+          return rule;
+        });
+
+        // Check for the user's tier and filter out paywalled features
+        if (data?.user?.tier !== "Pro") {
+          ruleOfList = ruleOfList.filter((item) =>
+            excludedRules.has(item?.rule),
+          );
+        }
+
+        // Save the updated ruleOfList back to localStorage
+        localStorage?.setItem(pagePathName, JSON.stringify(ruleOfList));
+      } else {
+        // If no saved rules, initialize with the current ruleOfList
+        localStorage?.setItem(pagePathName, JSON.stringify(ruleOfList));
+      }
+
+      // Update checked items and sort the indicators
+      checkedItems = new Set(ruleOfList.map((item) => item.name));
+      allRows = sortIndicatorCheckMarks(allRows);
+
+      if (!downloadWorker) {
+        const DownloadWorker = await import(
+          "$lib/workers/downloadWorker?worker"
+        );
+        downloadWorker = new DownloadWorker.default();
+        downloadWorker.onmessage = handleDownloadMessage;
+      }
+      await updateStockScreenerData();
+
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   // Function to generate columns based on keys in rawData
   function generateColumns(data) {
     const leftAlignKeys = new Set(["rank", "symbol", "name"]);
-
+    // Custom labels for specific keys
+    const customLabels = {
+      changesPercentage: "% Change",
+      score: "AI Score",
+      researchAndDevelopmentExpenses: "R&D",
+      // Add more key-label mappings here as needed
+    };
     // Define preferred order for columns
     const preferredOrder = [
       "rank",
@@ -290,22 +334,29 @@
       "changesPercentage",
     ];
 
-    // Separate preferred keys and other keys, excluding "type"
-    const keys = Object.keys(data[0]).filter((key) => key !== "type");
-    const orderedKeys = [
-      ...preferredOrder.filter((key) => keys.includes(key)),
-      ...keys.filter((key) => !preferredOrder.includes(key)),
-    ];
+    // Create a mapping of rule to name and type from allRows
+    const ruleToMetadataMap = Object.fromEntries(
+      allRows.map((row) => [row.rule, { name: row.name, type: row.type }]),
+    );
 
-    return orderedKeys.map((key) => ({
-      key: key,
+    // Separate preferred keys and other keys, excluding "type"
+    const keys = Object?.keys(data[0])?.filter((key) => key !== "type");
+    const orderedKeys =
+      ruleOfList?.length === 0
+        ? ["rank", "symbol", "name"]
+        : [
+            ...preferredOrder?.filter((key) => keys?.includes(key)),
+            ...keys?.filter((key) => !preferredOrder?.includes(key)),
+          ];
+
+    return orderedKeys?.map((key) => ({
+      key,
       label:
-        key === "changesPercentage"
-          ? "% Change"
-          : key === "score"
-            ? "AI Score"
-            : key.charAt(0).toUpperCase() +
-              key.slice(1).replace(/([A-Z])/g, " $1"),
+        customLabels[key] ||
+        ruleToMetadataMap[key]?.name || // Check allRows mapping first
+        key?.charAt(0)?.toUpperCase() +
+          key?.slice(1).replace(/([A-Z])/g, " $1"),
+      type: ruleToMetadataMap[key]?.type || "string", // Add type from allRows or default to 'string'
       align: leftAlignKeys.has(key) ? "left" : "right",
     }));
   }
@@ -321,7 +372,7 @@
       "analystRating",
     ]);
 
-    return Object.keys(data[0]).reduce((orders, key) => {
+    return Object.keys(data[0])?.reduce((orders, key) => {
       orders[key] = {
         order: "none",
         type: stringKeys.has(key) ? "string" : "number",
@@ -408,7 +459,7 @@
       >
         <span class="w-fit text-white text-sm sm:text-[1rem]">Indicators</span>
         <svg
-          class="-mr-1 ml-2 h-5 w-5 inline-block shrink-0"
+          class="ml-0.5 mt-1 h-5 w-5 inline-block shrink-0"
           viewBox="0 0 20 20"
           fill="currentColor"
           style="max-width:40px"
@@ -552,13 +603,17 @@
                 {:else}
                   {item[column.key]}
                 {/if}
-              {:else if column.key === "marketCap" || column.key === "revenue"}
+              {:else if column?.type === "int"}
                 {item[column.key] !== null
                   ? abbreviateNumber(item[column.key])
                   : "-"}
               {:else if column.key === "price"}
                 {item[column.key]?.toFixed(2)}
-              {:else if column.key === "changesPercentage"}
+              {:else if column.type === "percent"}
+                {item[column.key] !== null
+                  ? item[column.key]?.toFixed(2) + "%"
+                  : "-"}
+              {:else if column.type === "percentSign"}
                 {#if item[column.key] >= 0}
                   <span class="text-[#00FC50]"
                     >+{item[column.key]?.toFixed(2)}%</span
@@ -569,7 +624,7 @@
                   >
                 {/if}
               {:else}
-                {item[column.key]}
+                {item[column.key] !== null ? item[column.key] : "-"}
               {/if}
             </td>
           {/each}
