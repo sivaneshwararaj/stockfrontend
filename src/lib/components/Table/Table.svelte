@@ -2,14 +2,256 @@
   import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import { Button } from "$lib/components/shadcn/button/index.js";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import DownloadData from "$lib/components/DownloadData.svelte";
 
   export let data;
   export let rawData;
+  let testList = [];
+  let searchQuery = "";
+
+  let downloadWorker: Worker | undefined;
+  let checkedItems;
 
   let stockList = rawData?.slice(0, 50);
+  let allRows = [
+    { name: "Volume", rule: "volume", type: "int" },
+    { name: "Avg. Volume", rule: "avgVolume", type: "int" },
+    { name: "Market Cap", rule: "marketCap", type: "int" },
+    { name: "Price", rule: "price", type: "float" },
+    { name: "Change", rule: "changesPercentage", type: "percentSign" },
+    { name: "EPS", rule: "eps", type: "float" },
+    { name: "PE", rule: "pe", type: "float" },
+    { name: "PB Ratio", rule: "priceToBookRatio", type: "float" },
+    { name: "PS Ratio", rule: "priceToSalesRatio", type: "float" },
+    { name: "AI Score", rule: "score", type: "rating" },
+    { name: "Revenue", rule: "revenue", type: "int" },
+    { name: "EBITDA", rule: "ebitda", type: "int" },
+    { name: "Net Income", rule: "netIncome", type: "int" },
+    { name: "FCF", rule: "freeCashFlow", type: "int" },
+    { name: "Industry", rule: "industry", type: "str" },
+    { name: "Sector", rule: "sector", type: "str" },
+    { name: "Price Change 1W", rule: "change1W", type: "percentSign" },
+    { name: "Price Change 1M", rule: "change1M", type: "percentSign" },
+    { name: "Price Change 3M", rule: "change3M", type: "percentSign" },
+    { name: "Price Change 6M", rule: "change6M", type: "percentSign" },
+    { name: "Price Change 1Y", rule: "change1Y", type: "percentSign" },
+    { name: "Enterprise Value", rule: "enterpriseValue", type: "int" },
+    { name: "Forward PE", rule: "forwardPE", type: "float" },
+    { name: "Forward PS", rule: "forwardPS", type: "float" },
+    { name: "Dividend Yield", rule: "dividendYield", type: "percent" },
+    { name: "Current Ratio", rule: "currentRatio", type: "float" },
+    { name: "Quick Ratio", rule: "quickRatio", type: "float" },
+    { name: "Analyst Rating", rule: "analystRating", type: "rating" },
+    { name: "Analyst Count", rule: "analystCounter", type: "int" },
+    { name: "Price Target", rule: "priceTarget", type: "float" },
+    { name: "Price Target Upside", rule: "upside", type: "percentSign" },
+    { name: "Country", rule: "country", type: "str" },
+    { name: "Gross Profit", rule: "grossProfit", type: "int" },
+    { name: "Revenue Growth", rule: "growthRevenue", type: "percentSign" },
+    {
+      name: "Gross Profit Growth",
+      rule: "growthGrossProfit",
+      type: "percentSign",
+    },
+    { name: "Net Income Growth", rule: "growthNetIncome", type: "percentSign" },
+    { name: "EBITDA Growth", rule: "growthEBITDA", type: "percentSign" },
+    { name: "EPS Growth", rule: "growthEPS", type: "percentSign" },
+    { name: "Total Debt", rule: "totalDebt", type: "int" },
+    { name: "Return on Assets", rule: "returnOnAssets", type: "int" },
+    { name: "Return on Equity", rule: "returnOnEquity", type: "int" },
+    { name: "Value-at-Risk", rule: "var", type: "percentSign" },
+    { name: "Asset Turnover", rule: "assetTurnover", type: "int" },
+    { name: "Earnings Yield", rule: "earningsYield", type: "percent" },
+    { name: "Altman-Z-Score Yield", rule: "altmanZScore", type: "float" },
+    { name: "Piotroski F-Score", rule: "piotroskiScore", type: "float" },
+    { name: "Total Liabilities", rule: "totalLiabilities", type: "int" },
+    { name: "Short Ratio", rule: "shortRatio", type: "int" },
+    { name: "Short Interest", rule: "sharesShort", type: "int" },
+    { name: "Short % Float", rule: "shortFloatPercent", type: "percent" },
+    {
+      name: "Short % Shares",
+      rule: "shortOutStandingPercent",
+      type: "percent",
+    },
+    { name: "FCF Yield", rule: "freeCashFlowYield", type: "percent" },
+    { name: "Employees", rule: "employees", type: "int" },
+    { name: "Debt Ratio", rule: "debtRatio", type: "float" },
+    { name: "Debt / Equity", rule: "debtEquityRatio", type: "int" },
+    { name: "Profit Margin", rule: "netProfitMargin", type: "percent" },
+    { name: "FTD Shares", rule: "failToDeliver", type: "int" },
+    { name: "Interest Income", rule: "interestIncome", type: "int" },
+    { name: "Operating Income", rule: "operatingIncome", type: "int" },
+    {
+      name: "Operating Income Growth",
+      rule: "growthOperatingIncome",
+      type: "percentSign",
+    },
+    {
+      name: "Research & Development",
+      rule: "researchAndDevelopmentExpenses",
+      type: "int",
+    },
+    { name: "Shares Outstanding", rule: "sharesOutStanding", type: "int" },
+    { name: "Profit Per Employee", rule: "profitPerEmployee", type: "int" },
+    { name: "Revenue Per Employee", rule: "revenuePerEmployee", type: "int" },
+    {
+      name: "Institutional Ownership",
+      rule: "institutionalOwnership",
+      type: "percent",
+    },
+  ];
+
+  let ruleOfList = [
+    { name: "Market Cap", rule: "marketCap", type: "int" },
+    { name: "Price", rule: "price", type: "float" },
+    { name: "Change", rule: "changesPercentage", type: "percentSign" },
+  ];
+
+  const excludedRules = new Set([
+    "volume",
+    "price",
+    "changesPercentage",
+    "eps",
+  ]);
+  const proOnlyItems = new Set(
+    allRows
+      ?.filter((item) => !excludedRules?.has(item?.rule)) // Exclude the items based on the rule
+      ?.map((item) => item?.name), // Map the remaining items to their names
+  );
+
+  checkedItems = new Set(ruleOfList.map((item) => item.name));
+  allRows = sortIndicatorCheckMarks(allRows);
+
+  const handleDownloadMessage = (event) => {
+    let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
+
+    // Check if both arrays exist and have data
+    if (!updateData?.length || !rawData?.length) {
+      return;
+    }
+
+    for (let i = 0; i < updateData.length; i++) {
+      if (rawData[i]) {
+        // Get all keys from rawData[i] that don't exist in updateData[i]
+        const missingKeys = Object.keys(rawData[i])?.filter(
+          (key) => !(key in updateData[i]),
+        );
+
+        // Add all missing keys to updateData[i]
+        if (missingKeys?.length > 0) {
+          updateData[i] = {
+            ...updateData[i],
+            ...Object.fromEntries(
+              missingKeys?.map((key) => [key, rawData[i][key]]),
+            ),
+          };
+        }
+      }
+    }
+    rawData = updateData;
+    stockList = rawData?.slice(0, 50); // Assign to stockList instead of rawData directly
+    columns = generateColumns(rawData);
+    sortOrders = generateSortOrders(rawData);
+  };
+
+  const updateStockScreenerData = async () => {
+    downloadWorker.postMessage({
+      ruleOfList: ruleOfList,
+      tickerList: rawData?.map((item) => item?.symbol),
+    });
+  };
+
+  function saveRules() {
+    try {
+      // Save the version along with the rules
+      localStorage?.setItem("index-dowjones", JSON?.stringify(ruleOfList));
+    } catch (e) {
+      console.log("Failed saving indicator rules: ", e);
+    }
+  }
+
+  async function handleResetAll() {
+    searchQuery = "";
+    ruleOfList = [
+      { name: "Volume", rule: "volume", type: "int" },
+      { name: "Market Cap", rule: "marketCap", type: "int" },
+      { name: "Price", rule: "price", type: "float" },
+      { name: "Change", rule: "changesPercentage", type: "percentSign" },
+    ];
+    ruleOfList = [...ruleOfList];
+    checkedItems = new Set(ruleOfList.map((item) => item.name));
+    allRows = sortIndicatorCheckMarks(allRows);
+    await updateStockScreenerData();
+
+    saveRules();
+  }
+
+  function handleInput(event) {
+    searchQuery = event.target.value?.toLowerCase() || "";
+
+    setTimeout(() => {
+      testList = [];
+
+      if (searchQuery.length > 0) {
+        const rawList = allRows;
+        testList =
+          rawList?.filter((item) => {
+            const index = item?.name?.toLowerCase();
+            // Check if country starts with searchQuery
+            return index?.startsWith(searchQuery);
+          }) || [];
+      }
+    }, 50);
+  }
+
+  function isChecked(item) {
+    return checkedItems?.has(item);
+  }
+
+  function sortIndicatorCheckMarks(allRows) {
+    return allRows.sort((a, b) => {
+      const isAChecked = checkedItems.has(a?.name);
+      const isBChecked = checkedItems.has(b?.name);
+
+      // Sort checked items first
+      if (isAChecked !== isBChecked) return isAChecked ? -1 : 1;
+
+      // Check if the user is not Pro
+      if (data?.user?.tier !== "Pro") {
+        const isAPriority = proOnlyItems.has(a?.name);
+        const isBPriority = proOnlyItems.has(b?.name);
+
+        // If both are priority items or both are not, sort alphabetically
+        if (isAPriority === isBPriority) return a.name.localeCompare(b.name);
+
+        // Move priority items to the bottom for non-Pro users
+        return isAPriority ? 1 : -1;
+      }
+
+      // If the user is Pro, sort alphabetically
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  async function handleChangeValue(value) {
+    if (checkedItems.has(value)) {
+      checkedItems.delete(value); // Remove the value if it's already in the Set
+    } else {
+      checkedItems.add(value); // Add the value if it's not in the Set
+      // Update ruleOfList based on checked items from indicatorList
+    }
+    ruleOfList = allRows.filter((item) => checkedItems.has(item.name)); // Assuming each item has a `value` property
+    allRows = [...allRows];
+    ruleOfList = [...ruleOfList];
+
+    await updateStockScreenerData();
+    allRows = sortIndicatorCheckMarks(allRows);
+    saveRules();
+  }
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -22,6 +264,13 @@
   }
 
   onMount(async () => {
+    // Initialize the download worker if not already done
+    if (!downloadWorker) {
+      const DownloadWorker = await import("$lib/workers/downloadWorker?worker");
+      downloadWorker = new DownloadWorker.default();
+      downloadWorker.onmessage = handleDownloadMessage;
+    }
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -30,21 +279,19 @@
 
   // Function to generate columns based on keys in rawData
   function generateColumns(data) {
-    const alignments = {
-      rank: "left",
-      symbol: "left",
-      name: "left",
-      marketCap: "right",
-      price: "right",
-      changesPercentage: "right",
-      revenue: "right",
-    };
+    const leftAlignKeys = new Set(["rank", "symbol", "name"]);
 
     // Define preferred order for columns
-    const preferredOrder = ["rank", "symbol", "name"];
+    const preferredOrder = [
+      "rank",
+      "symbol",
+      "name",
+      "price",
+      "changesPercentage",
+    ];
 
-    // Separate preferred keys and other keys
-    const keys = Object.keys(data[0]);
+    // Separate preferred keys and other keys, excluding "type"
+    const keys = Object.keys(data[0]).filter((key) => key !== "type");
     const orderedKeys = [
       ...preferredOrder.filter((key) => keys.includes(key)),
       ...keys.filter((key) => !preferredOrder.includes(key)),
@@ -53,32 +300,39 @@
     return orderedKeys.map((key) => ({
       key: key,
       label:
-        key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1"),
-      align: alignments[key] || "left",
+        key === "changesPercentage"
+          ? "% Change"
+          : key === "score"
+            ? "AI Score"
+            : key.charAt(0).toUpperCase() +
+              key.slice(1).replace(/([A-Z])/g, " $1"),
+      align: leftAlignKeys.has(key) ? "left" : "right",
     }));
   }
 
   // Function to generate sortOrders based on keys in rawData
   function generateSortOrders(data) {
-    const types = {
-      rank: "number",
-      symbol: "string",
-      name: "string",
-      marketCap: "number",
-      price: "number",
-      changesPercentage: "number",
-      revenue: "number",
-    };
+    const stringKeys = new Set([
+      "symbol",
+      "name",
+      "industry",
+      "score",
+      "sector",
+      "analystRating",
+    ]);
 
     return Object.keys(data[0]).reduce((orders, key) => {
-      orders[key] = { order: "none", type: types[key] || "string" };
+      orders[key] = {
+        order: "none",
+        type: stringKeys.has(key) ? "string" : "number",
+      };
       return orders;
     }, {});
   }
 
   // Generate columns and sortOrders
-  const columns = generateColumns(rawData);
-  const sortOrders = generateSortOrders(rawData);
+  let columns = generateColumns(rawData);
+  let sortOrders = generateSortOrders(rawData);
 
   const sortData = (key) => {
     // Reset all other keys to 'none' except the current key
@@ -95,8 +349,8 @@
 
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
-      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
-    const sortOrder = sortOrders[key].order;
+      orderCycle[(currentOrderIndex + 1) % orderCycle?.length];
+    const sortOrder = sortOrders[key]?.order;
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
@@ -115,11 +369,11 @@
           valueB = new Date(b[key]);
           break;
         case "string":
-          valueA = a[key].toUpperCase();
-          valueB = b[key].toUpperCase();
+          valueA = a[key]?.toUpperCase();
+          valueB = b[key]?.toUpperCase();
           return sortOrder === "asc"
-            ? valueA.localeCompare(valueB)
-            : valueB.localeCompare(valueA);
+            ? valueA?.localeCompare(valueB)
+            : valueB?.localeCompare(valueA);
         case "number":
         default:
           valueA = parseFloat(a[key]);
@@ -144,11 +398,132 @@
 <!-- Content area -->
 
 <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
-  <DownloadData
-    {data}
-    rawData={data?.getIndexCategory}
-    title={data?.getParams}
-  />
+  <DownloadData {data} {rawData} title={data?.getParams} />
+
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger asChild let:builder>
+      <Button
+        builders={[builder]}
+        class=" min-w-[110px] w-fit ml-3 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md"
+      >
+        <span class="w-fit text-white text-sm sm:text-[1rem]">Indicators</span>
+        <svg
+          class="-mr-1 ml-2 h-5 w-5 inline-block shrink-0"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          style="max-width:40px"
+          aria-hidden="true"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </Button>
+    </DropdownMenu.Trigger>
+
+    <DropdownMenu.Content
+      class="w-60 max-h-[400px] overflow-y-auto scroller relative"
+    >
+      <!-- Search Input -->
+      <div
+        class="sticky fixed -top-1 z-40 bg-[#09090B] p-2 border-b border-gray-600"
+      >
+        <div class="relative w-full">
+          <!-- Input Field -->
+          <input
+            bind:value={searchQuery}
+            on:input={handleInput}
+            autocomplete="off"
+            autofocus=""
+            class="text-sm w-full border-0 bg-[#09090B] focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8"
+            type="text"
+            placeholder=""
+          />
+
+          <!-- Clear Button - Shown only when searchQuery has input -->
+          {#if searchQuery?.length > 0}
+            <button
+              on:click={() => (searchQuery = "")}
+              aria-label="Clear"
+              title="Clear"
+              tabindex="0"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2"
+            >
+              <svg
+                class="h-5 w-5 text-icon cursor-pointer"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          {/if}
+        </div>
+      </div>
+      <!-- Dropdown items -->
+      <DropdownMenu.Group class="pb-2">
+        <!-- Added padding to avoid overlapping with Reset button -->
+        {#each searchQuery?.length !== 0 ? testList : allRows as item}
+          <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+            <div class="flex items-center">
+              {#if data?.user?.tier === "Pro" || excludedRules?.has(item?.rule)}
+                <label
+                  on:click|capture={(event) => {
+                    event.preventDefault();
+                    handleChangeValue(item?.name);
+                  }}
+                  class="cursor-pointer text-white"
+                  for={item?.name}
+                >
+                  <input
+                    type="checkbox"
+                    class="rounded"
+                    checked={isChecked(item?.name)}
+                  />
+                  <span class="ml-2">{item?.name}</span>
+                </label>
+              {:else}
+                <a href="/pricing" class="cursor-pointer text-white">
+                  <svg
+                    class="h-[18px] w-[18px] inline-block text-icon group-hover:text-dark-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    style="max-width:40px"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span class="ml-2">{item?.name}</span>
+                </a>
+              {/if}
+            </div>
+          </DropdownMenu.Item>
+        {/each}
+      </DropdownMenu.Group>
+      <!-- Reset Selection button -->
+      <div
+        class="sticky -bottom-1 bg-[#09090B] z-50 p-2 border-t border-gray-600 w-full"
+      >
+        <label
+          on:click={handleResetAll}
+          class="w-full sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
+        >
+          Reset Selection
+        </label>
+      </div>
+    </DropdownMenu.Content>
+  </DropdownMenu.Root>
 </div>
 
 <div class="w-full overflow-x-scroll text-white">
@@ -165,7 +540,7 @@
         >
           {#each columns as column}
             <td
-              class="text-sm sm:text-[1rem] border-b-[#09090B]"
+              class="text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap"
               class:text-left={column.align === "left"}
               class:text-right={column.align === "right"}
             >

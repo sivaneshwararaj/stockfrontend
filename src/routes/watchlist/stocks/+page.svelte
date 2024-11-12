@@ -6,7 +6,7 @@
   } from "$lib/store";
   import { formatDate, abbreviateNumber } from "$lib/utils";
   import toast from "svelte-french-toast";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   import Input from "$lib/components/Input.svelte";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";

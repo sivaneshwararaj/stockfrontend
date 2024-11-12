@@ -1,7 +1,7 @@
 // Cache to store previous requests
 let cache = new Map();
 
-const getData = async (rules, tickerList) => {
+const getIndicatorData = async (rules, tickerList) => {
   console.log("Checking cache and fetching new data if needed");
 
   // Extract the rule names
@@ -34,7 +34,7 @@ const getData = async (rules, tickerList) => {
 
 onmessage = async (event) => {
   const { ruleOfList, tickerList } = event.data || {};
-  const rawData = await getData(ruleOfList, tickerList);
+  const rawData = await getIndicatorData(ruleOfList, tickerList);
 
   postMessage({ message: "success", rawData });
 };
