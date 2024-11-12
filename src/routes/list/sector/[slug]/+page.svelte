@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import DownloadData from "$lib/components/DownloadData.svelte";
 
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
@@ -11,46 +12,6 @@
 
   let rawData = [];
   let marketCapList = [];
-
-  const BILLION = 1_000_000_000;
-  const MILLION = 1_000_000;
-
-  const marketCapNavigation = [
-    {
-      threshold: 200 * BILLION,
-      name: "Mega Cap",
-      link: "/list/market-cap/mega-cap-stocks",
-    },
-    {
-      minThreshold: 10 * BILLION,
-      maxThreshold: 200 * BILLION,
-      name: "Large Cap",
-      link: "/list/market-cap/large-cap-stocks",
-    },
-    {
-      minThreshold: 2 * BILLION,
-      maxThreshold: 10 * BILLION,
-      name: "Mid Cap",
-      link: "/list/market-cap/mid-cap-stocks",
-    },
-    {
-      minThreshold: 300 * MILLION,
-      maxThreshold: 2 * BILLION,
-      name: "Small Cap",
-      link: "/list/market-cap/small-cap-stocks",
-    },
-    {
-      minThreshold: 50 * MILLION,
-      maxThreshold: 300 * MILLION,
-      name: "Micro Cap",
-      link: "/list/market-cap/micro-cap-stocks",
-    },
-    {
-      maxThreshold: 50 * MILLION,
-      name: "Nano Cap",
-      link: "/list/market-cap/nano-cap-stocks",
-    },
-  ];
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -214,6 +175,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
+    <DownloadData
+      {data}
+      rawData={data?.getSectorCategory}
+      title={data?.getParams}
+    />
   </div>
 
   <!-- Page wrapper -->

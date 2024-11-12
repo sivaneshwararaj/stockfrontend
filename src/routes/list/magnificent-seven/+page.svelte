@@ -1,11 +1,14 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import InfoModal from "$lib/components/InfoModal.svelte";
+  import DownloadData from "$lib/components/DownloadData.svelte";
 
   export let data;
   let rawData = data?.getMagnificentSeven;
+  let stockList = rawData;
 
   let totalMarketCap =
     rawData?.reduce((total, stock) => total + stock?.marketCap, 0) ?? 0;
@@ -18,12 +21,91 @@
     rawData?.length
   )?.toFixed(2);
 
+  let columns = [
+    { key: "rank", label: "Rank", align: "center" },
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "price", label: "Price", align: "right" },
+    { key: "changesPercentage", label: "% Change", align: "right" },
+
+    { key: "marketCap", label: "Market Cap", align: "right" },
+    { key: "revenue", label: "Revenue", align: "right" },
+  ];
+
+  let sortOrders = {
+    rank: { order: "none", type: "number" },
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    price: { order: "none", type: "number" },
+    changesPercentage: { order: "none", type: "number" },
+    marketCap: { order: "none", type: "number" },
+    revenue: { order: "none", type: "number" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = rawData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      stockList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    stockList = [...originalData].sort(compareValues);
+  };
+
   $: charNumber = $screenWidth < 640 ? 15 : 20;
 </script>
 
 <section class="w-full overflow-hidden m-auto">
   <div
-    class="w-full border border-gray-800 sm:flex sm:flex-row sm:items-center m-auto text-gray-100 bg-[#09090B] sm:rounded-lg h-auto p-5 mb-4"
+    class="w-full border border-gray-600 sm:flex sm:flex-row sm:items-center m-auto text-white bg-[#09090B] sm:rounded-lg h-auto p-5 mb-4"
   >
     <svg
       class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -35,128 +117,48 @@
       /></svg
     >
 
-    The term "Magnificent 7" refers to a group of 7 well-known technological
-    stocks that made large contributions to the market's overall performance.
+    The "magnificent seven" stocks are 7 technology stocks that drove a large
+    portion of the market's returns in 2023 and 2024. The list includes Apple,
+    Microsoft, Amazon, Alphabet (Google), Tesla, Nvidia and Meta Platforms.
   </div>
 
-  <div class="stats stats-horizontal bg-[#27272A] w-full rounded-lg">
-    <div class="grid grid-cols-2 sm:grid-cols-3">
-      <div class="stat">
-        <div class="flex flex-row items-center">
-          <label
-            for="stocksInfo"
-            class="cursor-pointer stat-title text-md sm:text-lg font-semibold text-gray-300"
-          >
-            Stocks
-          </label>
-          <InfoModal
-            title={"Stocks"}
-            content={"The total number of companies who operates in this sector."}
-            id={"stocksInfo"}
-          />
-        </div>
-        <div class="stat-value mt-1 text-lg font-semibold text-gray-200">
-          {rawData?.length}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="flex flex-row items-center">
-          <label
-            for="marketCapModal"
-            class="cursor-pointer stat-title text-md sm:text-lg font-semibold text-gray-300"
-          >
-            Market Cap
-          </label>
-          <InfoModal
-            title={"Market Cap"}
-            content={"Combined market cap of all companies in this group."}
-            id={"marketCapModal"}
-          />
-        </div>
-
-        <div class="stat-value mt-1 text-lg font-semibold text-gray-200">
-          {abbreviateNumber(totalMarketCap, true)}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="flex flex-row items-center">
-          <label
-            for="revenueInfo"
-            class="cursor-pointer stat-title text-md sm:text-lg font-semibold text-gray-300"
-          >
-            Revenue
-          </label>
-          <InfoModal
-            title={"Revenue"}
-            content={"The total revenue of all companies in this group"}
-            id={"revenueInfo"}
-          />
-        </div>
-        <div class="stat-value text-lg font-semibold text-gray-200">
-          {abbreviateNumber(totalRevenue, true)}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="flex flex-row items-center">
-          <label
-            for="profitsInfo"
-            class="cursor-pointer stat-title text-md sm:text-lg font-semibold text-gray-300"
-          >
-            Profits
-          </label>
-          <InfoModal
-            title={"Profits"}
-            content={"The total net income of all companies in this group"}
-            id={"profitsInfo"}
-          />
-        </div>
-        <div class="stat-value text-lg font-semibold text-gray-200">
-          {abbreviateNumber(totalProfits, true)}
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="flex flex-row items-center">
-          <label
-            for="profitMarginInfo"
-            class="cursor-pointer stat-title text-md sm:text-lg font-semibold text-gray-300"
-          >
-            Profit Margin
-          </label>
-          <InfoModal
-            title={"Profit Margin"}
-            content={"The magnificent seven profit margin, calculated by dividing the total net income of all constituents by the total revenue."}
-            id={"profitMarginInfo"}
-          />
-        </div>
-
-        <div class="stat-value text-lg font-semibold text-gray-200">
-          {((totalProfits / totalRevenue) * 100)?.toFixed(2)}%
-        </div>
-      </div>
-
-      <div class="stat">
-        <div class="flex flex-row items-center">
-          <label
-            for="peRatioInfo"
-            class="cursor-pointer stat-title text-md sm:text-lg font-semibold text-gray-300"
-          >
-            Avg. PE Ratio
-          </label>
-          <InfoModal
-            title={"PE Ratio"}
-            content={"The magnificent seven average PE Ratio, calculated by dividing total PE Ratio of all constituents by the number of constituents."}
-            id={"peRatioInfo"}
-          />
-        </div>
-        <div class="stat-value text-lg font-semibold text-gray-200">
-          {avgPERatio}
+  <div
+    class="mb-4 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+  >
+    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+      <div class="flex items-center justify-between sm:block">
+        <div class="text-sm font-normal text-white">Total Stocks</div>
+        <div
+          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+        >
+          {new Intl.NumberFormat("en")?.format(rawData?.length)}
         </div>
       </div>
     </div>
+    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+      <div class="flex items-center justify-between sm:block">
+        <div class="text-sm font-normal text-white">Total Market Cap</div>
+        <div
+          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+        >
+          {abbreviateNumber(totalMarketCap)}
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+      <div class="flex items-center justify-between sm:block">
+        <div class="text-sm font-normal text-white">Total Revenue</div>
+        <div
+          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+        >
+          {abbreviateNumber(totalRevenue)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
+    <DownloadData {data} {rawData} title="magnificent-seven" />
   </div>
 
   <!-- Page wrapper -->
@@ -167,32 +169,24 @@
         class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
       >
         <thead>
-          <tr class="border border-slate-800">
-            <th class="text-white font-semibold text-[1rem]">Symbol</th>
-            <th class="text-white font-semibold text-[1rem]">Company</th>
-            <th class="text-white font-semibold text-end text-[1rem]"
-              >Market Cap</th
-            >
-            <th class="text-white font-semibold text-center text-[1rem]"
-              >Revenue</th
-            >
-            <th class="text-white font-semibold text-center text-[1rem]"
-              >Profits</th
-            >
-            <th class="text-white font-semibold text-[1rem] text-end">Price</th>
-          </tr>
+          <TableHeader {columns} {sortOrders} {sortData} />
         </thead>
         <tbody>
-          {#each rawData as item}
+          {#each stockList as item}
             <!-- row -->
             <tr
-              on:click={() => goto("/stocks/" + item?.symbol)}
-              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] text-white"
             >
+              <td
+                class="text-center text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]"
+              >
+                {item?.rank}
+              </td>
+
               <td
                 class="text-blue-400 text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]"
               >
-                {item?.symbol}
+                <HoverStockChart symbol={item?.symbol} />
               </td>
 
               <td
@@ -206,74 +200,34 @@
               <td
                 class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
               >
-                {abbreviateNumber(item?.marketCap, true)}
+                {item.price?.toFixed(2)}
               </td>
 
               <td
-                class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-center border-b-[#09090B]"
+                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
               >
-                {item?.revenue !== null
-                  ? abbreviateNumber(item?.revenue, true)
+                {#if item?.changesPercentage >= 0}
+                  <span class="text-[#00FC50]"
+                    >+{item.changesPercentage?.toFixed(2)}%</span
+                  >
+                {:else}
+                  <span class="text-[#FF2F1F]"
+                    >{item.changesPercentage?.toFixed(2)}%
+                  </span>
+                {/if}
+              </td>
+
+              <td
+                class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+              >
+                {item?.marketCap !== null
+                  ? abbreviateNumber(item?.marketCap)
                   : "-"}
               </td>
-
               <td
-                class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-center border-b-[#09090B]"
+                class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
               >
-                {item?.netIncome !== null
-                  ? abbreviateNumber(item?.netIncome, true)
-                  : "-"}
-              </td>
-
-              <td
-                class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
-              >
-                <div class="flex flex-row justify-end items-center">
-                  <div class="flex flex-col">
-                    <span class="text-white font-semibold text-md ml-auto"
-                      >${item.price?.toFixed(2)}</span
-                    >
-                    <div class="flex flex-row mt-0.5 ml-auto">
-                      {#if item.changesPercentage >= 0}
-                        <svg
-                          class="w-5 h-5 -mr-0.5 -mt-0.5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          ><g id="evaArrowUpFill0"
-                            ><g id="evaArrowUpFill1"
-                              ><path
-                                id="evaArrowUpFill2"
-                                fill="#00FC50"
-                                d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"
-                              /></g
-                            ></g
-                          ></svg
-                        >
-                        <span class="text-[#00FC50]"
-                          >+{item.changesPercentage?.toFixed(2)}%</span
-                        >
-                      {:else}
-                        <svg
-                          class="w-5 h-5 -mr-0.5 -mt-0.5 rotate-180"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          ><g id="evaArrowUpFill0"
-                            ><g id="evaArrowUpFill1"
-                              ><path
-                                id="evaArrowUpFill2"
-                                fill="#FF2F1F"
-                                d="M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1a2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1Z"
-                              /></g
-                            ></g
-                          ></svg
-                        >
-                        <span class="text-[#FF2F1F]"
-                          >{item.changesPercentage?.toFixed(2)}%
-                        </span>
-                      {/if}
-                    </div>
-                  </div>
-                </div>
+                {item?.revenue !== null ? abbreviateNumber(item?.revenue) : "-"}
               </td>
             </tr>
           {/each}

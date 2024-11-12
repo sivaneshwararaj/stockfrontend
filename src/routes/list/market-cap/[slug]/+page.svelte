@@ -5,6 +5,7 @@
   import { page } from "$app/stores";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import DownloadData from "$lib/components/DownloadData.svelte";
 
   export let data;
 
@@ -268,6 +269,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
+    <DownloadData
+      {data}
+      rawData={data?.getMarketCapCategory}
+      title={data?.getParams}
+    />
   </div>
 
   <!-- Page wrapper -->
