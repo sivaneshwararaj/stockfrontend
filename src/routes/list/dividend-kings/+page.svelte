@@ -161,7 +161,9 @@
                 <HoverStockChart symbol={item?.symbol} />
               </td>
 
-              <td class="text-white border-b-[#09090B] whitespace-nowrap">
+              <td
+                class="text-white border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+              >
                 {item?.name?.length > charNumber
                   ? item?.name?.slice(0, charNumber) + "..."
                   : item?.name}

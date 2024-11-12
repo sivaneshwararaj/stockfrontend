@@ -109,7 +109,7 @@
 
 <section class="w-full overflow-hidden m-auto">
   <div
-    class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5 mb-4"
+    class="w-full sm:flex sm:flex-row sm:items-center m-auto text-white border border-gray-600 sm:rounded-lg h-auto p-5 mb-4"
   >
     <svg
       class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -161,7 +161,9 @@
                 <HoverStockChart symbol={item?.symbol} />
               </td>
 
-              <td class="text-white border-b-[#09090B] whitespace-nowrap">
+              <td
+                class="text-white text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap"
+              >
                 {item?.name?.length > charNumber
                   ? item?.name?.slice(0, charNumber) + "..."
                   : item?.name}
