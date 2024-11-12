@@ -8,7 +8,7 @@
 
   export let data;
 
-  let rawData = data?.getCountryCategory;
+  let rawData = data?.getIndexCategory;
   let stockList = rawData?.slice(0, 50);
 
   let totalMarketCap = rawData?.reduce(
@@ -20,15 +20,15 @@
     0,
   );
 
-  const countryNavigation = {
-    ca: "Canadian",
-    de: "German",
-    in: "Indian",
-    il: "Israeli",
-    jp: "Japanese",
-    gb: "UK",
-    cn: "Chinese",
+  const indexNavigation = {
+    nasdaq100:
+      "A list of all stocks in the NASDAQ 100, an index of the top 100 non-financial companies on the Nasdaq exchange. Although there are 100 companies, there are 101 stock tickers, as Alphabet has two symbols.",
+    dowjones:
+      "A list of the 30 stocks in the Dow Jones Industrial Average stock index, which is an index of 30 major companies listed on stock exchanges in the U.S.",
+    sp500:
+      "A list of all stocks in the S&P 500, an index of the 500 largest U.S.-listed companies. There are over 500 tickers, as some companies have multiple symbols.",
   };
+
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
@@ -80,7 +80,7 @@
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
 
-    let originalData = data?.getCountryCategory;
+    let originalData = data?.getIndexCategory;
 
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
@@ -134,8 +134,7 @@
   <div
     class="w-full m-auto text-white border border-gray-600 rounded-md h-auto p-5 mb-4"
   >
-    A complete list of the {countryNavigation[data?.getParams?.toLowerCase()]} companies
-    that are listed on the US stock market.
+    {indexNavigation[data?.getParams?.toLowerCase()]}
   </div>
 
   <div
@@ -176,7 +175,7 @@
   <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
     <DownloadData
       {data}
-      rawData={data?.getCountryCategory}
+      rawData={data?.getIndexCategory}
       title={data?.getParams}
     />
   </div>

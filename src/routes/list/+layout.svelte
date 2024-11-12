@@ -51,31 +51,27 @@
     },
     {
       title: "All Stocks Listed on the NASDAQ",
-      link: "/list/nasdaq-stocks",
+      link: "/list/exchange/nasdaq",
     },
     {
       title: "All Stocks Listed on the NYSE",
-      link: "/list/nyse-stocks",
-    },
-    {
-      title: "All Stocks Listed on XETRA",
-      link: "/list/xetra-stocks",
+      link: "/list/exchange/nyse",
     },
     {
       title: "All Stocks Listed on AMEX",
-      link: "/list/amex-stocks",
+      link: "/list/exchange/amex",
     },
     {
       title: "Dow Jones Industrial Average Stocks List",
-      link: "/list/dow-jones-stocks",
+      link: "/list/index/dowjones",
     },
     {
       title: "NASDAQ 100 Index Stocks List",
-      link: "/list/nasdaq-100-stocks",
+      link: "/list/index/nasdaq100",
     },
     {
       title: "S&P 500 Index Stocks List",
-      link: "/list/sp-500-stocks",
+      link: "/list/index/sp500",
     },
     {
       title: "German Companies on the US Stock Market",

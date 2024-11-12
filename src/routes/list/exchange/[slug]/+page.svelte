@@ -8,7 +8,7 @@
 
   export let data;
 
-  let rawData = data?.getCountryCategory;
+  let rawData = data?.getExchangeCategory;
   let stockList = rawData?.slice(0, 50);
 
   let totalMarketCap = rawData?.reduce(
@@ -20,15 +20,12 @@
     0,
   );
 
-  const countryNavigation = {
-    ca: "Canadian",
-    de: "German",
-    in: "Indian",
-    il: "Israeli",
-    jp: "Japanese",
-    gb: "UK",
-    cn: "Chinese",
+  const exchangeNavigation = {
+    amex: "AMEX (American Stock Exchange)",
+    nyse: "NYSE (New York Stock Exchange)",
+    nasdaq: "NASDAQ",
   };
+
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
@@ -80,7 +77,7 @@
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
 
-    let originalData = data?.getCountryCategory;
+    let originalData = data?.getExchangeCategory;
 
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
@@ -134,7 +131,7 @@
   <div
     class="w-full m-auto text-white border border-gray-600 rounded-md h-auto p-5 mb-4"
   >
-    A complete list of the {countryNavigation[data?.getParams?.toLowerCase()]} companies
+    A complete list of the {exchangeNavigation[data?.getParams?.toLowerCase()]} companies
     that are listed on the US stock market.
   </div>
 
@@ -176,7 +173,7 @@
   <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
     <DownloadData
       {data}
-      rawData={data?.getCountryCategory}
+      rawData={data?.getExchangeCategory}
       title={data?.getParams}
     />
   </div>

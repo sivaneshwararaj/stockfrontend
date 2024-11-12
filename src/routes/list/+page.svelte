@@ -93,27 +93,21 @@
       <ul class="list-disc space-y-1 pl-3">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/nasdaq-stocks"
+            href="/list/exchange/nasdaq"
             class="sm:hover:text-white text-blue-400 text-lg"
             >Listed on NASDAQ</a
           >
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/nyse-stocks"
+            href="/list/exchange/nyse"
             class="sm:hover:text-white text-blue-400 text-lg">Listed on NYSE</a
           >
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/amex-stocks"
+            href="/list/exchange/amex"
             class="sm:hover:text-white text-blue-400 text-lg">Listed on AMEX</a
-          >
-        </li>
-        <li class="mb-2 cursor-pointer sm:hidden">
-          <a
-            href="/list/xetra-stocks"
-            class="sm:hover:text-white text-blue-400 text-lg">Listed on XETRA</a
           >
         </li>
       </ul>
@@ -124,16 +118,11 @@
       <ul class="list-disc space-y-1 pl-5">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/amex-stocks"
+            href="/list/exchange/amex"
             class="sm:hover:text-white text-blue-400 text-lg">Listed on AMEX</a
           >
         </li>
-        <li class="mb-2 cursor-pointer">
-          <a
-            href="/list/xetra-stocks"
-            class="sm:hover:text-white text-blue-400 text-lg">Listed on XETRA</a
-          >
-        </li>
+
         <!-- ...other list items -->
       </ul>
     </div>
@@ -153,7 +142,7 @@
       <ul class="list-disc space-y-1 pl-3">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/dow-jones-stocks"
+            href="/list/index/dowjones"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on Dow Jones
@@ -161,7 +150,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/nasdaq-100-stocks"
+            href="/list/index/nasdaq100"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on NASDAQ 100
@@ -169,7 +158,7 @@
         </li>
         <li class="mb-2 cursor-pointer sm:hidden">
           <a
-            href="/list/sp-500-stocks"
+            href="/list/index/sp500"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on S&P 500
@@ -183,7 +172,7 @@
       <ul class="list-disc space-y-1 pl-5">
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/sp-500-stocks"
+            href="/list/index/sp500"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Listed on S&P 500
