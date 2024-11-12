@@ -1,9 +1,10 @@
 export const load = async ({ locals }) => {
-  const getAllREITs = async () => {
-    const { apiKey, apiURL } = locals;
 
-    const postData = { filterList: "reit" };
-    const response = await fetch(apiURL + "/filter-stock-list", {
+  const getAllREITS = async () => {
+    const { apiKey, apiURL } = locals;
+    const postData = { filterList: 'reits' };
+
+    const response = await fetch(apiURL + "/list-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -19,6 +20,6 @@ export const load = async ({ locals }) => {
 
   // Make sure to return a promise
   return {
-    getAllREITs: await getAllREITs(),
+    getAllREITS: await getAllREITS(),
   };
 };

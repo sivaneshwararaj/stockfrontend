@@ -541,14 +541,6 @@
             All REITs
           </a>
         </li>
-        <li class="mb-2 cursor-pointer sm:hidden">
-          <a
-            href="/list/delisted-stocks"
-            class="sm:hover:text-white text-blue-400 text-lg"
-          >
-            Delisted Companies
-          </a>
-        </li>
       </ul>
     </div>
 
@@ -563,14 +555,7 @@
             All REITs
           </a>
         </li>
-        <li class="mb-2 cursor-pointer">
-          <a
-            href="/list/delisted-stocks"
-            class="sm:hover:text-white text-blue-400 text-lg"
-          >
-            Delisted Companies
-          </a>
-        </li>
+
         <!-- ...other list items -->
       </ul>
     </div>

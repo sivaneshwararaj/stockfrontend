@@ -149,10 +149,7 @@
       title: "Consumer Defensive Sector Stocks",
       link: "/list/sector/consumer-defensive",
     },
-    {
-      title: "Delisted Companies",
-      link: "/list/delisted-stocks",
-    },
+
     {
       title: "Bitcoin ETFs",
       link: "/list/bitcoin-etfs",
