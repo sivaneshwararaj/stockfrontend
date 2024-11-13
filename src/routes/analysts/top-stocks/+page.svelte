@@ -1,118 +1,27 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { numberOfUnreadNotification } from "$lib/store";
+  import Table from "$lib/components/Table/Table.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-  import { onMount } from "svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
-  let isLoaded = false;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-  let rawData = data?.getTopAnalystStocks;
+  const excludedRules = new Set([
+    "volume",
+    "price",
+    "upside",
+    "priceTarget",
+    "marketCap",
+    "changesPercentage",
+  ]);
 
-  let analytRatingList = rawData?.slice(0, 50) ?? [];
-
-  async function handleScroll() {
-    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
-    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
-    if (isBottom && analytRatingList?.length !== rawData?.length) {
-      const nextIndex = analytRatingList?.length;
-      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
-      analytRatingList = [...analytRatingList, ...filteredNewResults];
-    }
-  }
-
-  onMount(async () => {
-    isLoaded = true;
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
-
-  let columns = [
-    { key: "rank", label: "Rank", align: "left" },
-    { key: "ticker", label: "Symbol", align: "left" },
-    { key: "name", label: "Name", align: "left" },
-    { key: "counter", label: "Ratings Count", align: "right" },
-    { key: "priceTarget", label: "Price Target", align: "right" },
-    { key: "price", label: "Current Price", align: "right" },
-    { key: "marketCap", label: "Market Cap", align: "right" },
-    { key: "upside", label: "Upside", align: "right" },
+  const defaultList = [
+    { name: "Ratings Count", rule: "counter" },
+    { name: "Price Target", rule: "priceTarget" },
+    { name: "Price", rule: "price" },
+    { name: "Upside", rule: "upside" },
   ];
-
-  let sortOrders = {
-    rank: { order: "none", type: "number" },
-    ticker: { order: "none", type: "string" },
-    name: { order: "none", type: "string" },
-    counter: { order: "none", type: "number" },
-    priceTarget: { order: "none", type: "number" },
-    price: { order: "none", type: "number" },
-    marketCap: { order: "none", type: "number" },
-    upside: { order: "none", type: "number" },
-  };
-
-  const sortData = (key) => {
-    // Reset all other keys to 'none' except the current key
-    let finalList = [];
-    for (const k in sortOrders) {
-      if (k !== key) {
-        sortOrders[k].order = "none";
-      }
-    }
-
-    // Cycle through 'none', 'asc', 'desc' for the clicked key
-    const orderCycle = ["none", "asc", "desc"];
-    const originalData = rawData?.slice(0, 40);
-    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
-    sortOrders[key].order =
-      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
-    const sortOrder = sortOrders[key].order;
-
-    // Reset to original data when 'none' and stop further sorting
-    if (sortOrder === "none") {
-      analytRatingList = [...originalData]; // Reset to original data (spread to avoid mutation)
-      return;
-    }
-
-    // Define a generic comparison function
-    const compareValues = (a, b) => {
-      const { type } = sortOrders[key];
-      let valueA, valueB;
-
-      switch (type) {
-        case "date":
-          valueA = new Date(a[key]);
-          valueB = new Date(b[key]);
-          break;
-        case "string":
-          valueA = a[key].toUpperCase();
-          valueB = b[key].toUpperCase();
-          return sortOrder === "asc"
-            ? valueA.localeCompare(valueB)
-            : valueB.localeCompare(valueA);
-        case "number":
-        default:
-          valueA = parseFloat(a[key]);
-          valueB = parseFloat(b[key]);
-          break;
-      }
-
-      if (sortOrder === "asc") {
-        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-      } else {
-        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
-      }
-    };
-
-    // Sort using the generic comparison function
-    analytRatingList = [...originalData].sort(compareValues);
-  };
-
-  $: charNumber = $screenWidth < 640 ? 30 : 20;
+  const hideLastRow = true;
 </script>
 
 <svelte:head>
@@ -193,258 +102,163 @@
           </div>
 
           <div class="w-full m-auto mt-10">
-            {#if isLoaded}
-              <div
-                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll sm:overflow-hidden"
-              >
-                <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
-                >
-                  <thead>
-                    <TableHeader {columns} {sortOrders} {sortData} />
-                  </thead>
-                  <tbody>
-                    {#each analytRatingList as item, index}
-                      <tr
-                        class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index +
-                          1 ===
-                          rawData?.length && data?.user?.tier !== 'Pro'
-                          ? 'opacity-[0.1]'
-                          : ''}"
-                      >
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white text-center"
-                        >
-                          {item?.rank}
-                        </td>
-
-                        <td
-                          class="text-sm sm:text-[1rem] whitespace-nowrap text-start"
-                        >
-                          <a
-                            href={"/stocks/" + item?.ticker}
-                            class="sm:hover:text-white text-blue-400"
-                          >
-                            {item?.ticker}
-                          </a>
-                        </td>
-
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-white text-start"
-                        >
-                          {item?.name?.length > charNumber
-                            ? item?.name?.slice(0, charNumber) + "..."
-                            : item?.name}
-                        </td>
-
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
-                        >
-                          {item?.counter}
-                        </td>
-
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
-                        >
-                          {item?.priceTarget?.toFixed(2)}
-                        </td>
-
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
-                        >
-                          {item?.price?.toFixed(2)}
-                        </td>
-                        <td
-                          class="text-end font-medium text-white text-sm sm:text-[1rem] whitespace-nowrap"
-                        >
-                          {item?.marketCap !== null
-                            ? abbreviateNumber(item?.marketCap)
-                            : "-"}
-                        </td>
-
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
-                        >
-                          {#if Number(item?.upside) >= 0}
-                            <span class="text-[#00FC50]"
-                              >+{Number(item?.upside)?.toFixed(2)}%</span
-                            >
-                          {:else}
-                            <span class="text-[#B84242]"
-                              >{Number(item?.upside)?.toFixed(2)}%</span
-                            >
-                          {/if}
-                        </td>
-                      </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-            {:else}
-              <div class="flex justify-center items-center h-80">
-                <div class="relative">
-                  <label
-                    class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  >
-                    <span
-                      class="loading loading-spinner loading-md text-gray-400"
-                    ></span>
-                  </label>
-                </div>
-              </div>
-            {/if}
-          </div>
-          {#if isLoaded}
-            <UpgradeToPro
+            <Table
               {data}
-              title="Get stock forecasts from Wall Street's highest rated professionals"
+              rawData={data?.getTopAnalystStocks}
+              {defaultList}
+              {excludedRules}
+              {hideLastRow}
             />
-            <div class="mt-4 py-6 xl:mt-10 border-t border-gray-200">
-              <div class="mx-auto max-w-7xl px-3 xs:px-6 lg:px-8">
-                <div class="mx-auto max-w-2xl md:text-center">
-                  <h3
-                    class="mt-2 text-2xl font-bold tracking-tight text-white bp:text-3xl"
-                  >
-                    Analyst Star Rankings
-                  </h3>
-                  <p
-                    class="mt-3 text-base leading-8 text-muted dark:text-faded xl:text-lg"
-                  >
-                    Our analyst star rankings are based on these four factors
-                  </p>
-                </div>
-                <div class="mx-auto mt-6 max-w-2xl lg:max-w-5xl">
-                  <dl
-                    class="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:max-w-none lg:grid-cols-4 lg:gap-y-16"
-                  >
-                    <div class="relative pl-14">
-                      <dt
-                        class="text-base font-semibold leading-4 text-white md:leading-7"
+          </div>
+          <UpgradeToPro
+            {data}
+            title="Get stock forecasts from Wall Street's highest rated professionals"
+          />
+          <div class="mt-4 py-6 xl:mt-10 border-t border-gray-200">
+            <div class="mx-auto max-w-7xl px-3 xs:px-6 lg:px-8">
+              <div class="mx-auto max-w-2xl md:text-center">
+                <h3
+                  class="mt-2 text-2xl font-bold tracking-tight text-white bp:text-3xl"
+                >
+                  Analyst Star Rankings
+                </h3>
+                <p
+                  class="mt-3 text-base leading-8 text-muted dark:text-faded xl:text-lg"
+                >
+                  Our analyst star rankings are based on these four factors
+                </p>
+              </div>
+              <div class="mx-auto mt-6 max-w-2xl lg:max-w-5xl">
+                <dl
+                  class="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:max-w-none lg:grid-cols-4 lg:gap-y-16"
+                >
+                  <div class="relative pl-14">
+                    <dt
+                      class="text-base font-semibold leading-4 text-white md:leading-7"
+                    >
+                      <div
+                        class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                       >
-                        <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="h-6 w-6 text-black"
+                          ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          ></path></svg
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="h-6 w-6 text-black"
-                            ><path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            ></path></svg
-                          >
-                        </div>
-                        Success Rate
-                      </dt>
-                      <dd
-                        class="mt-2 text-base leading-7 text-muted dark:text-faded"
+                      </div>
+                      Success Rate
+                    </dt>
+                    <dd
+                      class="mt-2 text-base leading-7 text-muted dark:text-faded"
+                    >
+                      The percentage of ratings that are profitable.
+                    </dd>
+                  </div>
+                  <div class="relative pl-14">
+                    <dt
+                      class="text-base font-semibold leading-4 text-white md:leading-7"
+                    >
+                      <div
+                        class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                       >
-                        The percentage of ratings that are profitable.
-                      </dd>
-                    </div>
-                    <div class="relative pl-14">
-                      <dt
-                        class="text-base font-semibold leading-4 text-white md:leading-7"
-                      >
-                        <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="h-6 w-6 text-black"
+                          ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+                          ></path></svg
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="h-6 w-6 text-black"
-                            ><path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
-                            ></path></svg
-                          >
-                        </div>
-                        Average Return
-                      </dt>
-                      <dd
-                        class="mt-2 text-base leading-7 text-muted dark:text-faded"
+                      </div>
+                      Average Return
+                    </dt>
+                    <dd
+                      class="mt-2 text-base leading-7 text-muted dark:text-faded"
+                    >
+                      The average percentage return within one year of the
+                      rating.
+                    </dd>
+                  </div>
+                  <div class="relative pl-14">
+                    <dt
+                      class="text-base font-semibold leading-4 text-white md:leading-7"
+                    >
+                      <div
+                        class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                       >
-                        The average percentage return within one year of the
-                        rating.
-                      </dd>
-                    </div>
-                    <div class="relative pl-14">
-                      <dt
-                        class="text-base font-semibold leading-4 text-white md:leading-7"
-                      >
-                        <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="h-6 w-6 text-black"
+                          ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"
+                          ></path></svg
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="h-6 w-6 text-black"
-                            ><path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"
-                            ></path></svg
-                          >
-                        </div>
-                        Rating Count
-                      </dt>
-                      <dd
-                        class="mt-2 text-base leading-7 text-muted dark:text-faded"
+                      </div>
+                      Rating Count
+                    </dt>
+                    <dd
+                      class="mt-2 text-base leading-7 text-muted dark:text-faded"
+                    >
+                      The more ratings the analyst has provided, the higher the
+                      score.
+                    </dd>
+                  </div>
+                  <div class="relative pl-14">
+                    <dt
+                      class="text-base font-semibold leading-4 text-white md:leading-7"
+                    >
+                      <div
+                        class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
                       >
-                        The more ratings the analyst has provided, the higher
-                        the score.
-                      </dd>
-                    </div>
-                    <div class="relative pl-14">
-                      <dt
-                        class="text-base font-semibold leading-4 text-white md:leading-7"
-                      >
-                        <div
-                          class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-md bg-[#fff]"
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="h-6 w-6 text-black"
+                          ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                          ></path></svg
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="h-6 w-6 text-black"
-                            ><path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                            ></path></svg
-                          >
-                        </div>
-                        Recency
-                      </dt>
-                      <dd
-                        class="mt-2 text-base leading-7 text-muted dark:text-faded"
-                      >
-                        Ratings provided within the past year contribute to a
-                        higher score.
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
+                      </div>
+                      Recency
+                    </dt>
+                    <dd
+                      class="mt-2 text-base leading-7 text-muted dark:text-faded"
+                    >
+                      Ratings provided within the past year contribute to a
+                      higher score.
+                    </dd>
+                  </div>
+                </dl>
               </div>
             </div>
-          {/if}
+          </div>
         </main>
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
+          {#if data?.user?.tier !== "Pro"}
             <div
               class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >

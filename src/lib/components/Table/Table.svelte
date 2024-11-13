@@ -71,7 +71,7 @@
     { name: "Analyst Rating", rule: "analystRating", type: "rating" },
     { name: "Analyst Count", rule: "analystCounter", type: "int" },
     { name: "Price Target", rule: "priceTarget", type: "float" },
-    { name: "Price Target Upside", rule: "upside", type: "percentSign" },
+    { name: "Upside", rule: "upside", type: "percentSign" },
     { name: "Country", rule: "country", type: "str" },
     { name: "Gross Profit", rule: "grossProfit", type: "int" },
     { name: "Revenue Growth", rule: "growthRevenue", type: "percentSign" },
@@ -136,10 +136,8 @@
 
   checkedItems = new Set(ruleOfList.map((item) => item.name));
   allRows = sortIndicatorCheckMarks(allRows);
-
   const handleDownloadMessage = (event) => {
     let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
-
     // Check if both arrays exist and have data
     if (!updateData?.length || !rawData?.length) {
       return;
@@ -147,15 +145,25 @@
 
     for (let i = 0; i < updateData.length; i++) {
       if (rawData[i]) {
-        // Merge only the fields from rawData that are in defaultRules
-        let newData = { ...updateData[i] };
+        // Create a new object to merge the data
+        let newData = {};
 
-        // Merge fields from defaultList (marketCap, price, etc.)
+        // Merge fields from updateData
+        Object.assign(newData, updateData[i]);
+
+        // Merge fields from defaultRules that are missing in updateData
         defaultRules.forEach((rule) => {
           if (!(rule in updateData[i]) && rule in rawData[i]) {
             newData[rule] = rawData[i][rule];
           }
         });
+
+        // Preserve the original 'priceTarget' value from rawData
+        for (let rule of defaultRules) {
+          if (rule in rawData[i]) {
+            newData[rule] = rawData[i][rule];
+          }
+        }
 
         // Ensure 'rank' and 'years' are added if they are missing in updateData
         if (!("rank" in updateData[i]) && "rank" in rawData[i]) {
@@ -231,6 +239,13 @@
 
       // Sort checked items first
       if (isAChecked !== isBChecked) return isAChecked ? -1 : 1;
+
+      // Prioritize items based on default rules
+      const isADefaultRule = defaultRules?.includes(a?.rule);
+      const isBDefaultRule = defaultRules?.includes(b?.rule);
+      if (isADefaultRule !== isBDefaultRule) {
+        return isADefaultRule ? -1 : 1;
+      }
 
       // Check if the user is not Pro
       if (data?.user?.tier !== "Pro") {
@@ -332,21 +347,18 @@
   // Function to generate columns based on keys in rawData
   function generateColumns(data) {
     const leftAlignKeys = new Set(["rank", "symbol", "name"]);
+
     // Custom labels for specific keys
     const customLabels = {
       changesPercentage: "% Change",
       score: "AI Score",
       researchAndDevelopmentExpenses: "R&D",
+      counter: "Ratings Count",
       // Add more key-label mappings here as needed
     };
+
     // Define preferred order for columns
-    const preferredOrder = [
-      "rank",
-      "symbol",
-      "name",
-      "price",
-      "changesPercentage",
-    ];
+    const preferredOrder = ["rank", "symbol", "name"];
 
     // Create a mapping of rule to name and type from allRows
     const ruleToMetadataMap = Object.fromEntries(
@@ -355,13 +367,19 @@
 
     // Separate preferred keys and other keys, excluding "type"
     const keys = Object?.keys(data[0])?.filter((key) => key !== "type");
-    const orderedKeys =
-      ruleOfList?.length === 0
-        ? ["rank", "symbol", "name"]
-        : [
-            ...preferredOrder?.filter((key) => keys?.includes(key)),
-            ...keys?.filter((key) => !preferredOrder?.includes(key)),
-          ];
+
+    // Merge the preferred order with the default list order
+    const orderedKeys = [
+      ...preferredOrder?.filter((key) => keys?.includes(key)),
+      ...defaultList
+        ?.map((item) => item.rule)
+        .filter((key) => keys?.includes(key)),
+      ...keys?.filter(
+        (key) =>
+          !preferredOrder?.includes(key) &&
+          !defaultList?.some((item) => item.rule === key),
+      ),
+    ];
 
     return orderedKeys?.map((key) => ({
       key,
@@ -539,7 +557,24 @@
         {#each searchQuery?.length !== 0 ? testList : allRows as item}
           <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
             <div class="flex items-center">
-              {#if data?.user?.tier === "Pro" || excludedRules?.has(item?.rule)}
+              {#if defaultRules?.includes(item?.rule)}
+                <label
+                  on:click|capture={(event) => {
+                    event.preventDefault();
+                  }}
+                  class="text-white"
+                >
+                  <input
+                    disabled={defaultRules?.includes(item?.rule) ? true : false}
+                    type="checkbox"
+                    class="rounded {defaultRules?.includes(item?.rule)
+                      ? 'checked:bg-gray-700'
+                      : 'checked:bg-blue-700'}"
+                    checked={isChecked(item?.name)}
+                  />
+                  <span class="ml-2">{item?.name}</span>
+                </label>
+              {:else if data?.user?.tier === "Pro" || excludedRules?.has(item?.rule)}
                 <label
                   on:click|capture={(event) => {
                     event.preventDefault();
@@ -549,8 +584,11 @@
                   for={item?.name}
                 >
                   <input
+                    disabled={defaultRules?.includes(item?.rule) ? true : false}
                     type="checkbox"
-                    class="rounded"
+                    class="rounded {defaultRules?.includes(item?.rule)
+                      ? 'checked:bg-gray-800'
+                      : 'checked:bg-blue-700'}"
                     checked={isChecked(item?.name)}
                   />
                   <span class="ml-2">{item?.name}</span>
