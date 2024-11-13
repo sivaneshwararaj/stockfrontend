@@ -653,7 +653,9 @@
               class:text-left={column.align === "left"}
               class:text-right={column.align === "right"}
             >
-              {#if column.key === "symbol"}
+              {#if item[column.key] === null || item[column.key] === undefined}
+                -
+              {:else if column.key === "symbol"}
                 <HoverStockChart symbol={item[column.key]} />
               {:else if column.key === "name"}
                 {#if item[column.key]?.length > charNumber}
@@ -662,15 +664,11 @@
                   {item[column.key]}
                 {/if}
               {:else if column?.type === "int"}
-                {item[column.key] !== null
-                  ? abbreviateNumber(item[column.key])
-                  : "-"}
+                {abbreviateNumber(item[column.key])}
               {:else if column.key === "price"}
                 {item[column.key]?.toFixed(2)}
               {:else if column.type === "percent"}
-                {item[column.key] !== null
-                  ? item[column.key]?.toFixed(2) + "%"
-                  : "-"}
+                {item[column.key]?.toFixed(2) + "%"}
               {:else if column.type === "percentSign"}
                 {#if item[column.key] >= 0}
                   <span class="text-[#00FC50]"
@@ -692,9 +690,7 @@
                   -
                 {/if}
               {:else}
-                {item[column.key] !== null && item[column.key] !== undefined
-                  ? item[column.key]
-                  : "-"}
+                {item[column.key]}
               {/if}
             </td>
           {/each}
