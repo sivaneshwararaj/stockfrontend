@@ -14,7 +14,6 @@
   import Footer from "$lib/components/Footer.svelte";
   import Searchbar from "$lib/components/Searchbar.svelte";
   import NotificationBell from "$lib/components/NotificationBell.svelte";
-  import defaultAvatar from "$lib/images/default_avatar.png";
   import { goto } from "$app/navigation";
   //import PullToRefresh from '$lib/components/PullToRefresh.svelte';
 
@@ -833,7 +832,7 @@ const handleTwitchMessage = (event) => {
             <DropdownMenu.Trigger asChild let:builder>
               <Button
                 size="icon"
-                class="overflow-hidden rounded-lg bg-[#09090B] border border-gray-600 w-10 h-10"
+                class="overflow-hidden rounded-lg bg-[#09090B] sm:hover:bg-[#27272A] border border-gray-600 w-10 h-10"
                 builders={[builder]}
               >
                 <svg

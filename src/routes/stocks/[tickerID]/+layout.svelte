@@ -2,7 +2,6 @@
   import {
     wsBidPrice,
     wsAskPrice,
-    searchBarData,
     globalForm,
     scoreComponent,
     screenWidth,
@@ -27,22 +26,6 @@
 
   export let data;
   $: $realtimePrice = data?.getStockQuote?.price?.toFixed(2);
-
-  async function loadSearchData() {
-    if ($searchBarData?.length !== 0) {
-      return;
-    } else {
-      // make the GET request to the endpoint
-      const response = await fetch("/api/searchbar-data", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      $searchBarData = await response.json();
-    }
-  }
 
   let previousRealtimePrice = null;
   let previousTicker;
@@ -392,11 +375,7 @@ function handleTypeOfTrade(state:string)
                     </div>
 
                     <!--Start Search Button-->
-                    <label
-                      on:click={loadSearchData}
-                      class="ml-auto mr-4"
-                      for="searchBarModal"
-                    >
+                    <label class="ml-auto mr-4" for="searchBarModal">
                       <svg
                         class="w-6 h-6 inline-block"
                         xmlns="http://www.w3.org/2000/svg"

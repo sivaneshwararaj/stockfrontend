@@ -1,40 +1,50 @@
 <script lang="ts">
-  import { searchBarData, screenWidth } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import { onMount } from "svelte";
   import Search from "lucide-svelte/icons/search";
   import { goto } from "$app/navigation";
   let searchHistory = [];
-  let searchResults = [];
   let updatedSearchHistory = [];
+  let searchBarData = [];
 
-  let dataLoaded = false; // Flag to track data loading
-
+  let timeoutId;
   let assetType = "";
   let focusedSuggestion = "";
   let arrowMovement = false;
   let showSuggestions = false;
-  let notFoundTicker = false;
   let searchQuery = "";
 
   let searchOpen = false;
   let searchBarModalChecked = false; // Initialize it to false
   let inputElement;
 
-  async function loadSearchData() {
-    if ($searchBarData.length !== 0 || dataLoaded) return;
-    else {
-      dataLoaded = true;
-      // make the GET request to the endpoint
-      const response = await fetch("/api/searchbar-data", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      $searchBarData = await response.json();
-    }
-  }
+  const popularList = [
+    {
+      symbol: "KO",
+      name: "Coca Cola Company",
+      type: "Stock",
+    },
+    {
+      symbol: "TSLA",
+      name: "Tesla Inc",
+      type: "Stock",
+    },
+    {
+      symbol: "AMD",
+      name: "Advanced Micro Devices",
+      type: "Stock",
+    },
+    {
+      symbol: "SPY",
+      name: "SPDR S&P 500 ETF Trust",
+      type: "ETF",
+    },
+    {
+      symbol: "NVDA",
+      name: "Nvidia",
+      type: "Stock",
+    },
+  ];
 
   async function popularTicker(state) {
     searchOpen = false;
@@ -44,7 +54,7 @@
     const upperState = state.toUpperCase();
 
     // Find the matching ticker data
-    const newSearchItem = $searchBarData?.find(
+    const newSearchItem = searchBarData?.find(
       ({ symbol }) => symbol === upperState,
     );
 
@@ -68,10 +78,11 @@
     // Early return if state is empty or ticker not found
     if (
       !state ||
-      !$searchBarData?.find((item) => item?.symbol === state?.toUpperCase())
+      !searchBarData?.find((item) => item?.symbol === state?.toUpperCase())
     ) {
-      notFoundTicker = false;
       searchQuery = "";
+      const closePopup = document.getElementById("searchBarModal");
+      closePopup?.dispatchEvent(new MouseEvent("click"));
       return;
     }
 
@@ -79,7 +90,7 @@
     const upperState = state.toUpperCase();
 
     // Find the matching ticker data
-    const newSearchItem = $searchBarData?.find(
+    const newSearchItem = searchBarData?.find(
       ({ symbol }) => symbol === upperState,
     );
 
@@ -101,79 +112,34 @@
     searchQuery = "";
   }
 
-  function search() {
-    const normalizedSearchQuery = searchQuery?.toLowerCase();
+  async function search() {
+    clearTimeout(timeoutId); // Clear any existing timeout
 
-    // Define names for which symbols without dots should be prioritized
-    const prioritizeWithoutDotsForNames = [
-      "apple" /* Add more names as needed */,
-    ];
+    if (!searchQuery.trim()) {
+      // Skip if query is empty or just whitespace
+      searchBarData = []; // Clear previous results
+      return;
+    }
 
-    const filteredList = $searchBarData
-      ?.map((item) => ({
-        ...item,
-        nameLower: item?.name?.toLowerCase(),
-        symbolLower: item?.symbol?.toLowerCase(),
-      }))
-      ?.filter(
-        ({ nameLower, symbolLower }) =>
-          nameLower?.includes(normalizedSearchQuery) ||
-          symbolLower?.includes(normalizedSearchQuery),
+    timeoutId = setTimeout(async () => {
+      const response = await fetch(
+        `/api/searchbar?query=${encodeURIComponent(searchQuery)}&limit=10`,
       );
-
-    filteredList?.sort((a, b) => {
-      const aSymbolLower = a?.symbolLower;
-      const bSymbolLower = b?.symbolLower;
-      const aNameLower = a?.nameLower;
-      const bNameLower = b?.nameLower;
-
-      // Check for exact symbol matches
-      const isExactMatchA = aSymbolLower === normalizedSearchQuery;
-      const isExactMatchB = bSymbolLower === normalizedSearchQuery;
-
-      if (isExactMatchA && !isExactMatchB) {
-        return -1; // Prioritize exact symbol match for A
-      } else if (!isExactMatchA && isExactMatchB) {
-        return 1; // Prioritize exact symbol match for B
-      }
-
-      const aSymbolIndex = aSymbolLower?.indexOf(normalizedSearchQuery);
-      const bSymbolIndex = bSymbolLower?.indexOf(normalizedSearchQuery);
-
-      const aNameIndex = aNameLower?.indexOf(normalizedSearchQuery);
-      const bNameIndex = bNameLower?.indexOf(normalizedSearchQuery);
-
-      // If no exact symbol match, prioritize based on the combined position in name and symbol
-      const positionComparison =
-        aSymbolIndex + aNameIndex - (bSymbolIndex + bNameIndex);
-
-      // Additional condition for prioritizing symbols without dots for specific names
-      if (prioritizeWithoutDotsForNames.includes(normalizedSearchQuery)) {
-        const aHasDot = aSymbolLower?.includes(".") || false;
-        const bHasDot = bSymbolLower?.includes(".") || false;
-
-        // Prioritize results without dots for the specified names
-        return aHasDot - bHasDot || positionComparison;
-      }
-
-      return positionComparison;
-    });
-
-    searchResults = filteredList?.slice(0, 5);
-    showSuggestions = normalizedSearchQuery !== "";
+      searchBarData = await response?.json();
+    }, 50); // delay
+    console.log(searchBarData);
   }
 
   const onKeyPress = (e) => {
-    if (e?.charCode === 13) {
+    if (e?.charCode === 13 && searchBarData?.length > 0) {
       const assetActions = {
         ETF: () => goto(`/etf/${searchQuery}`),
         Stock: () => goto(`/stocks/${searchQuery}`),
         Crypto: () => goto(`/crypto/${searchQuery}`),
       };
-      console.log(arrowMovement);
-      if (!arrowMovement && searchResults?.length > 0) {
-        searchQuery = searchResults.at(0).symbol;
-        assetType = searchResults.at(0).type;
+      if (!arrowMovement && searchBarData?.length > 0) {
+        searchQuery = searchBarData.at(0).symbol;
+        assetType = searchBarData.at(0).type;
       }
 
       // Call the function for the selected asset type
@@ -182,8 +148,6 @@
       // Trigger search bar action
       searchBarTicker(searchQuery);
     }
-
-    console.log(focusedSuggestion);
   };
 
   function handleKeyDown(event) {
@@ -192,7 +156,7 @@
     event.preventDefault(); // Prevent scrolling
 
     const list = showSuggestions
-      ? searchResults
+      ? searchBarData
       : searchHistory?.length > 0
         ? searchHistory
         : popularList;
@@ -223,8 +187,6 @@
       const keyboardSearch = document.getElementById("searchBarModal");
       keyboardSearch?.dispatchEvent(new MouseEvent("click"));
       event.preventDefault();
-
-      await loadSearchData();
     }
   };
 
@@ -265,42 +227,6 @@
 
   let charNumber = 20;
 
-  let popularList = [];
-  const popularSymbols = [
-    "BTCUSD",
-    "ETHUSD",
-    "SOLUSD",
-    "SPY",
-    "ADBE",
-    "DBX",
-    "HOOD",
-    "AMZN",
-    "TSLA",
-    "AMD",
-    "MCD",
-    "NVDA",
-    "PYPL",
-    "AAPL",
-    "BYND",
-    "KO",
-  ];
-
-  $: {
-    if ($searchBarData && popularList?.length === 0) {
-      popularList = $searchBarData?.filter(({ symbol }) =>
-        popularSymbols?.includes(symbol),
-      );
-
-      // Fisher-Yates (Knuth) Shuffle Algorithm
-      for (let i = popularList?.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [popularList[i], popularList[j]] = [popularList[j], popularList[i]];
-      }
-
-      popularList = popularList?.slice(0, 5);
-    }
-  }
-
   $: {
     if (searchBarModalChecked === true && typeof window !== "undefined") {
       if ($screenWidth > 640) {
@@ -319,12 +245,6 @@
   }
 
   $: {
-    if (searchQuery?.length !== 0) {
-      notFoundTicker = false;
-    }
-  }
-
-  $: {
     if (updatedSearchHistory?.length > 0 && searchBarModalChecked === false) {
       (async () => {
         // Add 500 ms delay is important otherwise bug since #each has searchHistory and updates too quickly and redirects to wrong symbol
@@ -337,83 +257,24 @@
       })();
     }
   }
+
+  $: {
+    if (searchBarData) {
+      if (searchBarData?.length > 0) {
+        showSuggestions = true;
+      } else {
+        showSuggestions = false;
+      }
+    }
+  }
 </script>
 
 <label
-  on:mouseover={loadSearchData}
-  on:click={loadSearchData}
   for="searchBarModal"
   class="cursor-pointer p-2 sm:hover:bg-[#27272A] text-gray-300 sm:hover:text-white flex-shrink-0 flex items-center justify-center border border-gray-600 rounded-lg"
 >
   <Search class="h-[20px] w-[20px]" />
 </label>
-
-<!--
-<div class="ml-5 w-96 grow">
-    <div class="relative flex items-center">
-      <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
-        <svg 
-          class="text-icon h-5 w-5" 
-          fill="none" 
-          stroke-linecap="round" 
-          stroke-linejoin="round" 
-          stroke-width="3" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24" 
-          style="max-width: 40px" 
-          aria-hidden="true"
-        >
-          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
-      </div>
-      <input 
-        class="rounded-lg py-1.5 pl-10 text-sm placeholder-gray-400 border border-[#313131] delay-100 transition ease-out focus:outline-none focus:ring-1 tiny:pl-8 xs:pl-10 xs:text-base md:py-2 w-full bg-[#313131]" 
-        type="text" 
-        aria-label="Search" 
-        role="combobox" 
-        aria-expanded="false" 
-        aria-controls="owned_listbox" 
-        autocomplete="off" 
-        spellcheck="false" 
-        aria-autocomplete="list" 
-        placeholder="Company or stock symbol..." 
-        name="q"
-      >
-    </div>
-
-    <div class="absolute top-11 z-40 max-h-[265px] w-96 overflow-y-auto border-default bg-[#313131] border border-[#313131]">
-      <h4 class="border-b px-2 py-1.5 text-left text-md font-semibold sm:px-3">
-        Popular
-      </h4>
-      <ul class="text-sm" >
-        {#if !showSuggestions }
-          {#each popularList as item}
-            <li>
-              <a href={`/${item?.type === 'ETF' ? 'etf' : item?.type === 'Crypto' ? 'crypto' : 'stocks'}/${item?.symbol}`} on:click={() => popularTicker(item?.symbol, item?.assetType) } class="mb-2 {item?.symbol === focusedSuggestion ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group' : 'shake-ticker cursor-pointer border-b border-gray-600 flex justify-start items-center p-2 text-white  group'} w-full">
-                <div class="flex flex-row items-center w-full">
-                  <div class="flex flex-col ml-2">
-                    <span class="text-blue-400">{item?.symbol}</span>
-                    <span class="text-white">{item?.name.length > 150 ? item?.name?.slice(0,150) + "..." : item?.name}</span>
-                  </div>
-
-                  <div class="text-white text-sm font-medium ml-auto">
-                    {item?.type}
-                  </div>
-                
-                </div>
-                 
-
-              </a>
-              
-          </li>
-          {/each}
-          {/if}
-      </ul>
-    </div>
-
-
-</div>
--->
 
 <!--Start Desktop Searchbar-->
 <!--Don't remove if since input.focus does not work anymore-->
@@ -469,125 +330,108 @@
         </div>
       </div>
 
-      {#if $searchBarData?.length !== 0}
-        <div class="py-4">
-          <!-- Popular searches -->
-          <div class="mb-3 last:mb-0 mt-3">
-            {#if notFoundTicker}
-              <p class="text-xs font-semibold text-[#FB6A67] px-2 mb-4">
-                Oh snapp, ticker does not exist in our database
-              </p>
-            {/if}
+      <div class="py-4">
+        <!-- Popular searches -->
+        <div class="mb-3 last:mb-0 mt-3">
+          {#if !showSuggestions}
+            <div class="text-start text-sm font-semibold text-white mb-2">
+              {searchHistory?.length > 0 ? "Recent" : "Popular"}
+            </div>
+          {/if}
+
+          <ul class="text-sm">
             {#if !showSuggestions}
-              <div class="text-start text-sm font-semibold text-white mb-2">
-                {searchHistory?.length > 0 ? "Recent" : "Popular"}
-              </div>
-            {/if}
-            <ul class="text-sm">
-              {#if !showSuggestions}
-                {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
-                  <li class="border-b border-gray-600">
-                    <a
-                      href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
-                      on:click={() => popularTicker(item?.symbol)}
-                      class="mb-2 {item?.symbol === focusedSuggestion
-                        ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                        : 'shake-ticker cursor-pointer bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white  group'} w-full"
-                    >
-                      <div class="flex flex-row items-center w-full">
-                        <div
-                          class="rounded-full w-10 h-10 relative bg-[#000] flex items-center justify-center"
-                        >
-                          <img
-                            style="clip-path: circle(50%);"
-                            class="w-6 h-6"
-                            src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`}
-                            loading="lazy"
-                          />
-                        </div>
-                        <div class="flex flex-col ml-2">
-                          <span class="text-blue-400">{item?.symbol}</span>
-                          <span class="text-white"
-                            >{item?.name.length > 150
-                              ? item?.name?.slice(0, 150) + "..."
-                              : item?.name}</span
-                          >
-                        </div>
-
-                        <div class="text-white font-medium ml-auto">
-                          {item?.type}
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                {/each}
-              {:else if showSuggestions && searchResults?.length > 0}
-                <div class="text-start text-sm font-semibold text-white mb-2">
-                  Suggestions
-                </div>
-                {#each searchResults as item}
-                  <li class="border-b border-gray-600">
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <a
-                      href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
-                      on:click={() => searchBarTicker(item?.symbol)}
-                      class="mb-2 {item?.symbol === focusedSuggestion
-                        ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                        : 'cursor-pointer mb-2 bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white group'}"
-                    >
-                      <div class="flex flex-row items-center w-full">
-                        <div class="flex flex-col">
-                          <span class="text-blue-400">{item?.symbol}</span>
-                          <span class="text-white"
-                            >{item?.name?.length > 150
-                              ? item?.name?.slice(0, 150) + "..."
-                              : item?.name}</span
-                          >
-                        </div>
-
-                        <div class="text-white font-medium ml-auto">
-                          {item?.type}
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                {/each}
-              {:else if showSuggestions && searchResults?.length === 0}
-                <li>
-                  <label
-                    class="flex items-center p-2 text-white hover:text-white hover:bg-[#27272A] rounded group"
+              {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
+                <li class="border-b border-gray-600">
+                  <a
+                    href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                    on:click={() => popularTicker(item?.symbol)}
+                    class="mb-2 {item?.symbol === focusedSuggestion
+                      ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
+                      : 'shake-ticker cursor-pointer bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white  group'} w-full"
                   >
-                    <svg
-                      class="w-3 h-3 fill-slate-400 shrink-0 mr-3 dark:fill-slate-500"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M11.953 4.29a.5.5 0 0 0-.454-.292H6.14L6.984.62A.5.5 0 0 0 6.12.173l-6 7a.5.5 0 0 0 .379.825h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z"
-                      />
-                    </svg>
-                    <span>No results found</span>
-                  </label>
+                    <div class="flex flex-row items-center w-full">
+                      <div
+                        class="rounded-full w-10 h-10 relative bg-[#000] flex items-center justify-center"
+                      >
+                        <img
+                          style="clip-path: circle(50%);"
+                          class="w-6 h-6"
+                          src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`}
+                          loading="lazy"
+                        />
+                      </div>
+                      <div class="flex flex-col ml-2">
+                        <span class="text-blue-400">{item?.symbol}</span>
+                        <span class="text-white"
+                          >{item?.name.length > 150
+                            ? item?.name?.slice(0, 150) + "..."
+                            : item?.name}</span
+                        >
+                      </div>
+
+                      <div class="text-white font-medium ml-auto">
+                        {item?.type}
+                      </div>
+                    </div>
+                  </a>
                 </li>
-              {/if}
-            </ul>
-          </div>
+              {/each}
+            {:else if showSuggestions && searchBarData?.length > 0}
+              <div class="text-start text-sm font-semibold text-white mb-2">
+                Suggestions
+              </div>
+              {#each searchBarData as item}
+                <li class="border-b border-gray-600">
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <!-- svelte-ignore a11y-label-has-associated-control -->
+                  <a
+                    href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                    on:click={() => searchBarTicker(item?.symbol)}
+                    class="mb-2 {item?.symbol === focusedSuggestion
+                      ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
+                      : 'cursor-pointer mb-2 bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white group'}"
+                  >
+                    <div class="flex flex-row items-center w-full">
+                      <div class="flex flex-col">
+                        <span class="text-blue-400">{item?.symbol}</span>
+                        <span class="text-white"
+                          >{item?.name?.length > 150
+                            ? item?.name?.slice(0, 150) + "..."
+                            : item?.name}</span
+                        >
+                      </div>
+
+                      <div class="text-white font-medium ml-auto">
+                        {item?.type}
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              {/each}
+            {:else if showSuggestions && searchBarData?.length === 0}
+              <li>
+                <label
+                  class="flex items-center p-2 text-white hover:text-white hover:bg-[#27272A] rounded group"
+                >
+                  <svg
+                    class="w-3 h-3 fill-slate-400 shrink-0 mr-3 dark:fill-slate-500"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M11.953 4.29a.5.5 0 0 0-.454-.292H6.14L6.984.62A.5.5 0 0 0 6.12.173l-6 7a.5.5 0 0 0 .379.825h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z"
+                    />
+                  </svg>
+                  <span>No results found</span>
+                </label>
+              </li>
+            {/if}
+          </ul>
         </div>
-      {:else}
-        <div class="flex justify-center items-center m-auto mt-4 py-20">
-          <div class="relative">
-            <label
-              class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-              <span class="loading loading-spinner loading-md text-gray-400"
-              ></span>
-            </label>
-          </div>
-        </div>
-      {/if}
+      </div>
 
       <label for="searchBarModal" class="absolute left-6 top-4 sm:hidden">
         <svg
@@ -658,119 +502,107 @@
           </div>
         </div>
 
-        {#if $searchBarData?.length !== 0}
-          <div class="py-4">
-            <!-- Popular searches -->
-            <div class="mb-3 last:mb-0 mt-3">
-              {#if notFoundTicker}
-                <p class="text-xs font-semibold text-[#FB6A67] px-2 mb-4">
-                  Oh snapp, ticker does not exist in our database
-                </p>
-              {/if}
+        <div class="py-4">
+          <!-- Popular searches -->
+          <div class="mb-3 last:mb-0 mt-3">
+            {#if !showSuggestions}
+              <div class="text-start text-sm font-semibold text-white mb-2">
+                {searchHistory?.length > 0 ? "Recent" : "Popular"}
+              </div>
+            {/if}
+            <ul class="text-sm">
               {#if !showSuggestions}
-                <div class="text-start text-sm font-semibold text-white mb-2">
-                  {searchHistory?.length > 0 ? "Recent" : "Popular"}
-                </div>
-              {/if}
-              <ul class="text-sm">
-                {#if !showSuggestions}
-                  {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
-                    <li class="border-b border-gray-600">
-                      <a
-                        href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
-                        on:click={() => popularTicker(item?.symbol)}
-                        class="mb-2 {item?.symbol === focusedSuggestion
-                          ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                          : 'cursor-pointer bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'} w-full"
-                      >
-                        <div class="flex flex-row items-center w-full">
-                          <div
-                            class="rounded-full w-10 h-10 relative bg-[#000] flex items-center justify-center"
-                          >
-                            <img
-                              style="clip-path: circle(50%);"
-                              class="w-6 h-6"
-                              src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`}
-                              loading="lazy"
-                            />
-                          </div>
-                          <div class="flex flex-col ml-2">
-                            <span class="text-blue-400">{item?.symbol}</span>
-                            <span class="text-white"
-                              >{item?.name.length > charNumber
-                                ? item?.name.slice(0, charNumber) + "..."
-                                : item?.name}</span
-                            >
-                          </div>
-
-                          <div class="text-white font-medium ml-auto mr-2">
-                            {item?.type}
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  {/each}
-                {:else if showSuggestions && searchResults?.length > 0}
-                  <div class="text-start text-sm font-semibold text-white mb-2">
-                    Suggestions
-                  </div>
-                  {#each searchResults as item}
-                    <li class="border-b border-gray-600">
-                      <!-- svelte-ignore a11y-click-events-have-key-events -->
-                      <!-- svelte-ignore a11y-label-has-associated-control -->
-                      <a
-                        href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
-                        on:click={() => searchBarTicker(item?.symbol)}
-                        class="mb-2 {item?.symbol === focusedSuggestion
-                          ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                          : 'cursor-pointer mb-2 bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'}"
-                      >
-                        <div class="flex flex-row items-center w-full">
-                          <div class="flex flex-col ml-1">
-                            <span class="text-blue-400">{item?.symbol}</span>
-                            <span class="text-white"
-                              >{item?.name.length > charNumber
-                                ? item?.name.slice(0, charNumber) + "..."
-                                : item?.name}</span
-                            >
-                          </div>
-
-                          <div class="text-white font-medium ml-auto mr-2">
-                            {item?.type}
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  {/each}
-                {:else if showSuggestions && searchResults?.length === 0}
-                  <li>
-                    <label
-                      class="flex items-center p-2 text-white hover:text-white hover:bg-[#27272A] rounded group"
+                {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
+                  <li class="border-b border-gray-600">
+                    <a
+                      href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                      on:click={() => popularTicker(item?.symbol)}
+                      class="mb-2 {item?.symbol === focusedSuggestion
+                        ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
+                        : 'cursor-pointer bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'} w-full"
                     >
-                      <svg
-                        class="w-3 h-3 fill-slate-400 shrink-0 mr-3 dark:fill-slate-500"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 12 12"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M11.953 4.29a.5.5 0 0 0-.454-.292H6.14L6.984.62A.5.5 0 0 0 6.12.173l-6 7a.5.5 0 0 0 .379.825h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z"
-                        />
-                      </svg>
-                      <span>No results found</span>
-                    </label>
+                      <div class="flex flex-row items-center w-full">
+                        <div
+                          class="rounded-full w-10 h-10 relative bg-[#000] flex items-center justify-center"
+                        >
+                          <img
+                            style="clip-path: circle(50%);"
+                            class="w-6 h-6"
+                            src={`https://financialmodelingprep.com/image-stock/${item?.symbol}.png`}
+                            loading="lazy"
+                          />
+                        </div>
+                        <div class="flex flex-col ml-2">
+                          <span class="text-blue-400">{item?.symbol}</span>
+                          <span class="text-white"
+                            >{item?.name.length > charNumber
+                              ? item?.name.slice(0, charNumber) + "..."
+                              : item?.name}</span
+                          >
+                        </div>
+
+                        <div class="text-white font-medium ml-auto mr-2">
+                          {item?.type}
+                        </div>
+                      </div>
+                    </a>
                   </li>
-                {/if}
-              </ul>
-            </div>
+                {/each}
+              {:else if showSuggestions && searchBarData?.length > 0}
+                <div class="text-start text-sm font-semibold text-white mb-2">
+                  Suggestions
+                </div>
+                {#each searchBarData as item}
+                  <li class="border-b border-gray-600">
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <a
+                      href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                      on:click={() => searchBarTicker(item?.symbol)}
+                      class="mb-2 {item?.symbol === focusedSuggestion
+                        ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
+                        : 'cursor-pointer mb-2 bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'}"
+                    >
+                      <div class="flex flex-row items-center w-full">
+                        <div class="flex flex-col ml-1">
+                          <span class="text-blue-400">{item?.symbol}</span>
+                          <span class="text-white"
+                            >{item?.name.length > charNumber
+                              ? item?.name.slice(0, charNumber) + "..."
+                              : item?.name}</span
+                          >
+                        </div>
+
+                        <div class="text-white font-medium ml-auto mr-2">
+                          {item?.type}
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                {/each}
+              {:else if showSuggestions && searchBarData?.length === 0}
+                <li>
+                  <label
+                    class="flex items-center p-2 text-white hover:text-white hover:bg-[#27272A] rounded group"
+                  >
+                    <svg
+                      class="w-3 h-3 fill-slate-400 shrink-0 mr-3 dark:fill-slate-500"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11.953 4.29a.5.5 0 0 0-.454-.292H6.14L6.984.62A.5.5 0 0 0 6.12.173l-6 7a.5.5 0 0 0 .379.825h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z"
+                      />
+                    </svg>
+                    <span>No results found</span>
+                  </label>
+                </li>
+              {/if}
+            </ul>
           </div>
-        {:else}
-          <div class="flex justify-center items-center m-auto mt-4 py-20">
-            <span class="loading loading-lg loading-spinner text-success"
-            ></span>
-          </div>
-        {/if}
+        </div>
 
         <label for="searchBarModal" class="absolute left-6 top-4 sm:hidden">
           <svg
