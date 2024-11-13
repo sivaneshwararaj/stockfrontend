@@ -508,7 +508,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/dividend-kings"
+            href="/list/dividend/dividend-kings"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Dividend Kings
@@ -516,7 +516,7 @@
         </li>
         <li class="mb-2 cursor-pointer">
           <a
-            href="/list/dividend-aristocrats"
+            href="/list/dividend/dividend-aristocrats"
             class="sm:hover:text-white text-blue-400 text-lg"
           >
             Dividend Aristocrats

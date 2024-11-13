@@ -17,12 +17,13 @@
     { name: "Price", rule: "price" },
     { name: "% Change", rule: "changesPercentage" },
     { name: "Dividend Yield", rule: "dividendYield" },
+    { name: "Years", rule: "years" },
   ];
 </script>
 
 <section class="w-full overflow-hidden m-auto">
   <div
-    class="border border-gray-800 w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 bg-[#09090B] sm:rounded-lg h-auto p-5 mb-4"
+    class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5 mb-4"
   >
     <svg
       class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -34,10 +35,16 @@
       /></svg
     >
 
-    These are all the actively traded REITs (Real Estate Investment Trusts) on
+    Dividend Kings are companies that have been raising their dividend payments
+    every year for 50 or more years. This is a list of all the dividend kings on
     the US stock market.
   </div>
 
   <!-- Page wrapper -->
-  <Table {data} rawData={data?.getAllREITS} {excludedRules} {defaultList} />
+  <Table
+    {data}
+    rawData={data?.getDividendCategory}
+    {excludedRules}
+    {defaultList}
+  />
 </section>

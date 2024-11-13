@@ -11,6 +11,23 @@
 
   export let data;
   export let rawData;
+  export let excludedRules = new Set([
+    "volume",
+    "price",
+    "changesPercentage",
+    "revenue",
+    "eps",
+    "marketCap",
+  ]);
+
+  export let defaultList = [
+    { name: "Market Cap", rule: "marketCap" },
+    { name: "Price", rule: "price" },
+    { name: "% Change", rule: "changesPercentage" },
+    { name: "Revenue", rule: "revenue" },
+  ];
+
+  let ruleOfList = defaultList;
 
   let pagePathName = $page?.url?.pathname;
   let testList = [];
@@ -108,20 +125,6 @@
     },
   ];
 
-  let ruleOfList = [
-    { name: "Market Cap", rule: "marketCap" },
-    { name: "Price", rule: "price" },
-    { name: "% Change", rule: "changesPercentage" },
-    { name: "Revenue", rule: "revenue" },
-  ];
-
-  const excludedRules = new Set([
-    "volume",
-    "price",
-    "changesPercentage",
-    "revenue",
-    "eps",
-  ]);
   const proOnlyItems = new Set(
     allRows
       ?.filter((item) => !excludedRules?.has(item?.rule)) // Exclude the items based on the rule
@@ -141,15 +144,23 @@
 
     for (let i = 0; i < updateData.length; i++) {
       if (rawData[i]) {
-        // Check if "rank" is missing in updateData[i] and only add that key if it is
+        // Check if "rank" is missing in updateData[i] and add it if it exists in rawData[i]
         if (!("rank" in updateData[i]) && "rank" in rawData[i]) {
           updateData[i] = {
             ...updateData[i],
             rank: rawData[i]["rank"],
           };
         }
+        // Check if "years" is missing in updateData[i] and add it if it exists in rawData[i]
+        if (!("years" in updateData[i]) && "years" in rawData[i]) {
+          updateData[i] = {
+            ...updateData[i],
+            years: rawData[i]["years"],
+          };
+        }
       }
     }
+
     rawData = updateData;
     stockList = rawData?.slice(0, 50); // Assign to stockList instead of rawData directly
     columns = generateColumns(rawData);
@@ -174,12 +185,7 @@
 
   async function handleResetAll() {
     searchQuery = "";
-    ruleOfList = [
-      { name: "Market Cap", rule: "marketCap" },
-      { name: "Price", rule: "price" },
-      { name: "% Change", rule: "changesPercentage" },
-      { name: "Revenue", rule: "revenue" },
-    ];
+    ruleOfList = defaultList;
     ruleOfList = [...ruleOfList];
     checkedItems = new Set(ruleOfList.map((item) => item.name));
     allRows = sortIndicatorCheckMarks(allRows);
@@ -449,7 +455,7 @@
 <!-- Content area -->
 
 <div class="flex flex-row items-end justify-end w-fit ml-auto mt-5 mb-2">
-  <DownloadData {data} {rawData} title={data?.getParams} />
+  <DownloadData {data} {rawData} title={data?.getParams ?? "data"} />
 
   <DropdownMenu.Root>
     <DropdownMenu.Trigger asChild let:builder>

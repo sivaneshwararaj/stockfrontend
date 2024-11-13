@@ -156,11 +156,11 @@
     },
     {
       title: "Dividend Kings",
-      link: "/list/dividend-kings",
+      link: "/list/dividend/dividend-kings",
     },
     {
       title: "Dividend Aristocrats",
-      link: "/list/dividend-aristocrats",
+      link: "/list/dividend/dividend-aristocrats",
     },
     {
       title: "All Active REITs on the US Stock Market",

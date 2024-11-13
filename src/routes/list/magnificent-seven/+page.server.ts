@@ -1,4 +1,5 @@
 export const load = async ({ locals }) => {
+  
   const getMagnificentSeven = async () => {
     const { apiURL, apiKey } = locals;
 

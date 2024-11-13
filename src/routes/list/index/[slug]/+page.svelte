@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
-  import DownloadData from "$lib/components/DownloadData.svelte";
 
   export let data;
 
@@ -25,8 +23,6 @@
     sp500:
       "A list of all stocks in the S&P 500, an index of the 500 largest U.S.-listed companies. There are over 500 tickers, as some companies have multiple symbols.",
   };
-
-  $: charNumber = $screenWidth < 640 ? 15 : 20;
 </script>
 
 <section class="w-full overflow-hidden m-auto">
