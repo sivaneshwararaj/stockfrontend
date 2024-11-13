@@ -30,7 +30,6 @@
   ];
 
   let activeIdx = 0;
-
   function changeTab(index) {
     activeIdx = index;
 
@@ -52,14 +51,72 @@
             )?.toFixed(2)
           : "-";
     }
-    if (activeIdx === 1) {
-      rawData = data?.getAnalystTickerHistory?.filter(
+
+    const now = new Date();
+    const oneYearAgo = new Date(now);
+    oneYearAgo.setFullYear(now.getFullYear() - 1);
+
+    rawData =
+      data?.getAnalystTickerHistory?.filter(
         (item) => item?.analystScore >= 4,
-      );
-      historyList = rawData?.slice(0, 30);
+      ) ?? [];
+
+    if (activeIdx === 1) {
+      const recentData = rawData?.filter((item) => {
+        const date = new Date(item?.date);
+        return date >= oneYearAgo;
+      });
+
+      const filteredAnalystCount = recentData.length;
+      const priceTargets = recentData
+        ?.map((item) => parseFloat(item.adjusted_pt_current))
+        ?.filter((pt) => !isNaN(pt));
+      const medianPriceTarget = priceTargets?.length
+        ? priceTargets?.sort((a, b) => a - b)[
+            Math.floor(priceTargets?.length / 2)
+          ]
+        : "-";
+
+      numOfAnalyst = filteredAnalystCount;
+      priceTarget = medianPriceTarget;
+      changesPercentage =
+        medianPriceTarget !== "-" && data?.getStockQuote?.price != null
+          ? ((medianPriceTarget / data.getStockQuote.price - 1) * 100).toFixed(
+              2,
+            )
+          : "-";
+
+      // Consensus rating calculation based on rating_current
+      const ratingScores = {
+        "Strong Buy": 5,
+        Buy: 4,
+        Hold: 3,
+        Sell: 2,
+        "Strong Sell": 1,
+      };
+
+      const totalRatingScore = recentData
+        .map((item) => ratingScores[item.rating_current] || 0)
+        .reduce((sum, score) => sum + score, 0);
+
+      const averageRatingScore = filteredAnalystCount
+        ? totalRatingScore / filteredAnalystCount
+        : 0;
+
+      consensusRating =
+        averageRatingScore >= 4.5
+          ? "Strong Buy"
+          : averageRatingScore >= 3.5
+            ? "Buy"
+            : averageRatingScore >= 2.5
+              ? "Hold"
+              : averageRatingScore >= 1.5
+                ? "Sell"
+                : "Strong Sell";
+
+      historyList = recentData.slice(0, 30);
     } else {
-      rawData = data?.getAnalystTickerHistory ?? [];
-      historyList = rawData?.slice(0, 30);
+      historyList = rawData.slice(0, 30);
     }
   }
 
