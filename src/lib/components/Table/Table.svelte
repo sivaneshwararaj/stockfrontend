@@ -27,7 +27,10 @@
     { name: "Revenue", rule: "revenue" },
   ];
 
+  export let hideLastRow = false;
+
   let ruleOfList = defaultList;
+  const defaultRules = defaultList?.map((item) => item?.rule);
 
   let pagePathName = $page?.url?.pathname;
   let testList = [];
@@ -144,20 +147,25 @@
 
     for (let i = 0; i < updateData.length; i++) {
       if (rawData[i]) {
-        // Check if "rank" is missing in updateData[i] and add it if it exists in rawData[i]
+        // Merge only the fields from rawData that are in defaultRules
+        let newData = { ...updateData[i] };
+
+        // Merge fields from defaultList (marketCap, price, etc.)
+        defaultRules.forEach((rule) => {
+          if (!(rule in updateData[i]) && rule in rawData[i]) {
+            newData[rule] = rawData[i][rule];
+          }
+        });
+
+        // Ensure 'rank' and 'years' are added if they are missing in updateData
         if (!("rank" in updateData[i]) && "rank" in rawData[i]) {
-          updateData[i] = {
-            ...updateData[i],
-            rank: rawData[i]["rank"],
-          };
+          newData.rank = rawData[i]["rank"];
         }
-        // Check if "years" is missing in updateData[i] and add it if it exists in rawData[i]
         if (!("years" in updateData[i]) && "years" in rawData[i]) {
-          updateData[i] = {
-            ...updateData[i],
-            years: rawData[i]["years"],
-          };
+          newData.years = rawData[i]["years"];
         }
+
+        updateData[i] = newData;
       }
     }
 
@@ -591,9 +599,15 @@
       <TableHeader {columns} {sortOrders} {sortData} />
     </thead>
     <tbody>
-      {#each stockList as item}
+      {#each stockList as item, index}
         <tr
-          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
+          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index +
+            1 ===
+            rawData?.length &&
+          data?.user?.tier !== 'Pro' &&
+          hideLastRow
+            ? 'opacity-[0.1]'
+            : ''}"
         >
           {#each columns as column}
             <td
@@ -629,8 +643,20 @@
                     >{item[column.key]?.toFixed(2)}%</span
                   >
                 {/if}
+              {:else if column?.type === "rating"}
+                {#if ["Strong Buy", "Buy"].includes(item[column.key])}
+                  <span class="text-[#00FC50]">{item[column.key]}</span>
+                {:else if ["Strong Sell", "Sell"].includes(item[column.key])}
+                  <span class="text-[#FF2F1F]">{item[column.key]}</span>
+                {:else if item[column.key] === "Hold"}
+                  <span class="text-[#FFA838]">{item[column.key]}</span>
+                {:else}
+                  -
+                {/if}
               {:else}
-                {item[column.key] !== null ? item[column.key] : "-"}
+                {item[column.key] !== null && item[column.key] !== undefined
+                  ? item[column.key]
+                  : "-"}
               {/if}
             </td>
           {/each}
