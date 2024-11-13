@@ -114,9 +114,11 @@
                 ? "Sell"
                 : "Strong Sell";
 
-      historyList = recentData.slice(0, 30);
+      rawData = recentData;
+      historyList = rawData.slice(0, 50);
     } else {
-      historyList = rawData.slice(0, 30);
+      rawData = data?.getAnalystTickerHistory;
+      historyList = rawData.slice(0, 50);
     }
   }
 
