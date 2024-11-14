@@ -20,6 +20,8 @@
     "marketCap",
   ]);
 
+  export let specificRows = [];
+
   export let defaultList = [
     { name: "Market Cap", rule: "marketCap" },
     { name: "Price", rule: "price" },
@@ -80,7 +82,11 @@
       rule: "growthGrossProfit",
       type: "percentSign",
     },
-    { name: "Net Income Growth", rule: "growthNetIncome", type: "percentSign" },
+    {
+      name: "Net Income Growth",
+      rule: "growthNetIncome",
+      type: "percentSign",
+    },
     { name: "EBITDA Growth", rule: "growthEBITDA", type: "percentSign" },
     { name: "EPS Growth", rule: "growthEPS", type: "percentSign" },
     { name: "Total Debt", rule: "totalDebt", type: "int" },
@@ -126,8 +132,9 @@
       rule: "institutionalOwnership",
       type: "percent",
     },
-    { name: "Sentiment", rule: "sentiment", type: "sentiment" },
   ];
+
+  allRows = [...allRows, ...specificRows];
 
   const proOnlyItems = new Set(
     allRows

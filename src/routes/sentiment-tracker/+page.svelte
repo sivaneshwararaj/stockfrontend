@@ -24,6 +24,10 @@
     { name: "Sentiment", rule: "sentiment" },
   ];
 
+  const specificRows = [
+    { name: "Sentiment", rule: "sentiment", type: "sentiment" },
+  ];
+
   const hideLastRow = true;
 </script>
 
@@ -103,6 +107,7 @@
               {excludedRules}
               {defaultList}
               {hideLastRow}
+              {specificRows}
             />
 
             <UpgradeToPro
