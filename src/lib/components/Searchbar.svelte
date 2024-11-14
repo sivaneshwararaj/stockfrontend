@@ -127,7 +127,6 @@
       );
       searchBarData = await response?.json();
     }, 50); // delay
-    console.log(searchBarData);
   }
 
   const onKeyPress = (e) => {
