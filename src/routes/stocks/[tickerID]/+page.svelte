@@ -547,11 +547,11 @@
     crosshair: {
       horzLine: {
         visible: true,
-        labelBackgroundColor: "#7E3AF2",
+        labelBackgroundColor: "#fff",
       },
       vertLine: {
         labelVisible: true,
-        labelBackgroundColor: "#7E3AF2",
+        labelBackgroundColor: "#fff",
         style: 0,
       },
     },
@@ -869,7 +869,7 @@
                   </div>
                   {#if $isBeforeMarketOpen && !$isOpen && !$isWeekend}
                     <div
-                      class="flex flex-row items-center justify-end text-white text-[0.65rem] sm:text-sm font-normal text-end w-24"
+                      class="flex flex-row items-center justify-end text-white text-xs sm:text-sm font-normal text-end w-24"
                     >
                       <span>Pre-market:</span>
                       <svg
@@ -884,9 +884,9 @@
                     </div>
                   {:else}
                     <div
-                      class="flex flex-row items-center justify-end text-white text-[0.65rem] sm:text-sm font-normal text-end w-28"
+                      class="flex flex-row items-center justify-end text-white text-xs sm:text-sm font-normal text-end w-28"
                     >
-                      <span>Post-market:</span>
+                      <span>After-hours:</span>
                       <svg
                         class="ml-1 w-4 h-4 inline-block"
                         xmlns="http://www.w3.org/2000/svg"
