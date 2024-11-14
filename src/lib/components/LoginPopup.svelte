@@ -864,13 +864,7 @@ const output = await response.json();
               class="flex flex-col items-center space-y-2 w-full md:w-5/6 pt-4 md:ml-auto md:mr-auto"
             >
               <!--<Input id="name" label="Your first and last name" value={form?.data?.name} errors={form?.errors?.name} />-->
-              <Input
-                id="username"
-                label="Username"
-                value={form?.data?.username}
-                errors={form?.errors?.username}
-                disabled={loading}
-              />
+
               <Input
                 type="email"
                 id="email"
@@ -2297,13 +2291,7 @@ const output = await response.json();
                 class="flex flex-col items-center space-y-2 w-full md:w-5/6 pt-4 md:ml-auto md:mr-auto"
               >
                 <!--<Input id="name" label="Your first and last name" value={form?.data?.name} errors={form?.errors?.name} />-->
-                <Input
-                  id="username"
-                  label="Username"
-                  value={form?.data?.username}
-                  errors={form?.errors?.username}
-                  disabled={loading}
-                />
+
                 <Input
                   type="email"
                   id="email"

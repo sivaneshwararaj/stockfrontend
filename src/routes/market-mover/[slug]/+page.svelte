@@ -4,6 +4,7 @@
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { goto } from "$app/navigation";
+  import InfoModal from "$lib/components/InfoModal.svelte";
 
   import { afterUpdate } from "svelte";
   export let data;
@@ -262,9 +263,16 @@
               <h1 class="text-white text-xl sm:text-2xl font-semibold">
                 {displayTitle[timePeriod]?.replace("title", title)}
               </h1>
+              {#if timePeriod === "1D" && ["Gainers", "Losers"]?.includes(title)}
+                <InfoModal
+                  title={`${title} Today`}
+                  content={`The stocks with the highest percentage ${title === "Gainers" ? "gains" : "loss"} today, updated every two minutes during market open. Excludes stocks with a market cap under 10M and volume under 50K.`}
+                  id={"marketmoverId"}
+                />
+              {/if}
 
               <div
-                class="mb-0 ml-3 mt-1 whitespace-nowrap text-sm font-semiboldt text-white"
+                class="mb-0 ml-5 mt-1 whitespace-nowrap text-sm font-semiboldt text-white"
               >
                 <span class="hidden lg:inline">Updated</span>
                 {lastTradingDay}

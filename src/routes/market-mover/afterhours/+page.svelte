@@ -3,6 +3,7 @@
   import { abbreviateNumber, getLastTradingDay } from "$lib/utils";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import InfoModal from "$lib/components/InfoModal.svelte";
 
   import { goto } from "$app/navigation";
 
@@ -214,9 +215,14 @@
               <h1 class="text-white text-xl sm:text-2xl font-semibold">
                 Afterhours {categoryType === "gainers" ? "Gainers" : "Losers"}
               </h1>
+              <InfoModal
+                title={`${categoryType === "gainers" ? "Afterhours Gainers" : "Afterhours Losers"} Today`}
+                content={`The stocks with the highest percentage ${categoryType === "gainers" ? "gains" : "loss"} in the afterhours, updated every two minutes during market closing. Excludes stocks with a market cap under 10M.`}
+                id={"aftermarketId"}
+              />
 
               <div
-                class="mb-0 ml-3 mt-1 whitespace-nowrap text-sm font-semiboldt text-white"
+                class="mb-0 ml-5 mt-1 whitespace-nowrap text-sm font-semiboldt text-white"
               >
                 <span class="hidden lg:inline">Updated</span>
                 {lastTradingDay}
