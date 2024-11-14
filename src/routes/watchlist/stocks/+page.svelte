@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    searchBarData,
-    screenWidth,
-    numberOfUnreadNotification,
-  } from "$lib/store";
+  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { formatDate, abbreviateNumber } from "$lib/utils";
   import toast from "svelte-french-toast";
   import { onMount } from "svelte";
@@ -14,7 +10,8 @@
   import { Combobox } from "bits-ui";
 
   export let data;
-
+  let timeoutId;
+  let searchBarData = [];
   let searchQuery = "";
   let switchWatchlist = false;
   let editMode = false;
@@ -150,22 +147,6 @@
       tickerList: watchList?.map((item) => item?.symbol),
     });
   };
-
-  async function loadSearchData() {
-    if ($searchBarData.length !== 0 || searchDataLoaded) return;
-    else {
-      searchDataLoaded = true;
-      // make the GET request to the endpoint
-      const response = await fetch("/api/searchbar-data", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      $searchBarData = await response.json();
-    }
-  }
 
   async function getWatchlistData() {
     const postData = {
@@ -586,55 +567,21 @@
   let inputValue = "";
   let touchedInput = false;
 
-  $: filteredStocks = inputValue ? search() : [];
+  async function search() {
+    clearTimeout(timeoutId); // Clear any existing timeout
 
-  function search() {
-    const normalizedSearchQuery = inputValue.toLowerCase();
+    if (!inputValue.trim()) {
+      // Skip if query is empty or just whitespace
+      searchBarData = []; // Clear previous results
+      return;
+    }
 
-    const filteredList = $searchBarData
-      .map((item) => ({
-        ...item,
-        nameLower: item?.name?.toLowerCase(),
-        symbolLower: item?.symbol?.toLowerCase(),
-      }))
-      .filter(
-        ({ nameLower, symbolLower }) =>
-          nameLower.includes(normalizedSearchQuery) ||
-          symbolLower.includes(normalizedSearchQuery),
+    timeoutId = setTimeout(async () => {
+      const response = await fetch(
+        `/api/searchbar?query=${encodeURIComponent(inputValue)}&limit=10`,
       );
-
-    filteredList.sort((a, b) => {
-      const aSymbolLower = a.symbolLower;
-      const bSymbolLower = b.symbolLower;
-      const aNameLower = a.nameLower;
-      const bNameLower = b.nameLower;
-
-      // Check for exact symbol matches
-      const isExactMatchA = aSymbolLower === normalizedSearchQuery;
-      const isExactMatchB = bSymbolLower === normalizedSearchQuery;
-
-      if (isExactMatchA && !isExactMatchB) {
-        return -1; // Prioritize exact symbol match for A
-      } else if (!isExactMatchA && isExactMatchB) {
-        return 1; // Prioritize exact symbol match for B
-      }
-
-      const aSymbolIndex = aSymbolLower.indexOf(normalizedSearchQuery);
-      const bSymbolIndex = bSymbolLower.indexOf(normalizedSearchQuery);
-
-      const aNameIndex = aNameLower.indexOf(normalizedSearchQuery);
-      const bNameIndex = bNameLower.indexOf(normalizedSearchQuery);
-
-      // If no exact symbol match, prioritize based on the combined position in name and symbol
-      const positionComparison =
-        aSymbolIndex + aNameIndex - (bSymbolIndex + bNameIndex);
-
-      return positionComparison;
-    });
-
-    // Limit results to 5
-    const resultList = filteredList?.slice(0, 5);
-    return resultList;
+      searchBarData = await response?.json();
+    }, 50); // delay
   }
 </script>
 
@@ -847,7 +794,7 @@
                     : ''}"
                 >
                   <Combobox.Root
-                    items={filteredStocks}
+                    items={searchBarData}
                     bind:inputValue
                     bind:touchedInput
                   >
@@ -871,7 +818,7 @@
                         </svg>
                       </div>
                       <Combobox.Input
-                        on:click={loadSearchData}
+                        on:input={search}
                         class="text-sm sm:text-[1rem] controls-input text-white bg-[#09090B] focus:outline-none border border-gray-600 rounded-md placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs"
                         placeholder="Add new stock"
                         aria-label="Add new stock"
@@ -882,7 +829,7 @@
                         class="w-auto z-10 rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
                         sideOffset={8}
                       >
-                        {#each filteredStocks as item}
+                        {#each searchBarData as item}
                           <Combobox.Item
                             class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-[#27272A]"
                             value={item.symbol}
