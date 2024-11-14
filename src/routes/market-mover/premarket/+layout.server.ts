@@ -1,6 +1,7 @@
 export const load = async ({ locals }) => {
   const { apiURL, apiKey } = locals;
 
+
   const getMarketMover = async () => {
     const postData = { params: "premarket" };
     const response = await fetch(apiURL + "/pre-after-market-movers", {

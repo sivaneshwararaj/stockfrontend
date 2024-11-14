@@ -235,7 +235,7 @@
                 <div class="flex flex-row w-full items-center">
                   <Card.Title
                     ><a
-                      href={`/market-mover/${marketStatus === 0 ? "gainers" : marketStatus === 1 ? "premarket" : "afterhours"}`}
+                      href={`/market-mover/${marketStatus === 0 ? "gainers" : marketStatus === 1 ? "premarket/gainers" : "afterhours/gainers"}`}
                       class="text-xl sm:text-2xl tex-white font-semibold cursor-pointer sm:hover:underline sm:hover:underline-offset-4"
                     >
                       {marketStatus === 0
@@ -328,7 +328,7 @@
                 <div class="flex flex-row w-full items-center">
                   <Card.Title>
                     <a
-                      href={`/market-mover/${marketStatus === 0 ? "losers" : marketStatus === 1 ? "premarket" : "afterhours"}`}
+                      href={`/market-mover/${marketStatus === 0 ? "losers" : marketStatus === 1 ? "premarket/losers" : "afterhours/losers"}`}
                       class="text-xl sm:text-2xl tex-white font-semibold cursor-pointer sm:hover:underline sm:hover:underline-offset-4"
                     >
                       {marketStatus === 0

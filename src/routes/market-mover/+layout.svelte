@@ -20,11 +20,11 @@
     },
     {
       title: "Pre-Market",
-      path: "/market-mover/premarket",
+      path: "/market-mover/premarket/gainers",
     },
     {
       title: "After-Hours",
-      path: "/market-mover/afterhours",
+      path: "/market-mover/afterhours/gainers",
     },
   ];
 
