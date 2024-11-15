@@ -506,11 +506,11 @@
               ? "< 0.01%"
               : topHolders?.toFixed(2) + "%"}</span
           >
-          of the {$displayCompanyName}.
+          of the {$displayCompanyName}
         </span>
       {/if}
 
-      <div class="flex justify-end items-end ml-auto w-fit">
+      <div class="flex justify-end items-end ml-auto w-fit mt-5">
         <DownloadData
           {data}
           rawData={shareholderList}

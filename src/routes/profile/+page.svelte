@@ -226,7 +226,8 @@
                     class="relative inline-flex rounded-full h-2 w-2 {subscriptionData?.status_formatted ===
                       'Active' ||
                     subscriptionData?.status_formatted === 'Paid' ||
-                    subscriptionData?.status_formatted === 'On Trial'
+                    subscriptionData?.status_formatted === 'On Trial' ||
+                    data?.user?.freeTrial === true
                       ? 'bg-[#00FC50]'
                       : 'bg-[#FF3131]'}"
                   ></span>
@@ -269,6 +270,8 @@
               <span class="text-[1rem]">
                 {#if subscriptionData?.first_order_item?.product_name === "Pro Subscription (Life Time Access)"}
                   Lifetime Access
+                {:else if data?.user?.freeTrial === true}
+                  Pro Subscription (Free Trial)
                 {:else}
                   {["Active", "Paid", "Cancelled"]?.includes(
                     subscriptionData?.status_formatted,
