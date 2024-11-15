@@ -10,16 +10,13 @@
   export let form;
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-
+  let mode = true;
   //let mode = false;
   const emailAddress = "support@stocknear.com";
 
-  /*
-function toggleMode()
-{
+  function toggleMode() {
     mode = !mode;
-}
-*/
+  }
 
   let LoginPopup;
 
@@ -47,8 +44,10 @@ function toggleMode()
 
       if (subscriptionType === "lifeTime") {
         subId = import.meta.env.VITE_LEMON_SQUEEZY_LIFE_TIME_ACCESS_ID;
-      } else {
+      } else if (mode) {
         subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_ID;
+      } else {
+        subId = import.meta.env.VITE_LEMON_SQUEEZY_MONTHLY_ID;
       }
 
       const isDarkMode =
@@ -147,29 +146,30 @@ function toggleMode()
         </p>
       </div>
 
-      <!--
-            <div class="flex flex-row items-center justify-center mt-6 pb-5">
-                <span class="text-sm font-semibold text-white mr-3">
-                    Pay Monthly
-                </span>
-    
-                <label class="inline-flex cursor-pointer relative ">
-                    
-                    <input on:click={toggleMode} type="checkbox" checked={mode} value={mode} class="sr-only peer">
-                    <div class="w-14 h-7 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[0.40rem] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#1563F9] {mode === false ? 'after:translate-x-[-0.2rem]' : ''} "></div>
-                </label>
-                
-                <div class="ml-3 -mb-4 flex flex-col items-start">
-                    <span class="text-sm font-semibold text-white">
-                        Pay Yearly
-                    </span>
-                    <span class="text-[#fff] text-sm font-semibold">
-                        Save up 16%
-                    </span>
-                </div>
-              
-            </div>
-            -->
+      <div class="flex flex-row items-center justify-center mt-6 pb-5">
+        <span class="text-sm font-semibold text-white mr-3"> Pay Monthly </span>
+
+        <label class="inline-flex cursor-pointer relative">
+          <input
+            on:click={toggleMode}
+            type="checkbox"
+            checked={mode}
+            value={mode}
+            class="sr-only peer"
+          />
+          <div
+            class="w-14 h-7 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[0.40rem] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#1563F9] {mode ===
+            false
+              ? 'after:translate-x-[-0.2rem]'
+              : ''} "
+          ></div>
+        </label>
+
+        <div class="ml-3 -mb-4 flex flex-col items-start">
+          <span class="text-sm font-semibold text-white"> Pay Yearly </span>
+          <span class="text-[#fff] text-sm font-semibold"> Save 50% </span>
+        </div>
+      </div>
     </div>
 
     <!--<Discount/>-->
@@ -347,37 +347,41 @@ function toggleMode()
       <div
         class="sm:order-2 rounded-md box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]"
       >
-        <!--<div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right"><span class="text-white">Discount</span></div>-->
-
-        <div
-          class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row items-center bg-red-600 p-2"
-        >
-          <svg
-            class="w-6 h-6 mr-2"
-            fill="#D6D6DC"
-            viewBox="0 0 48 48"
-            xmlns="http://www.w3.org/2000/svg"
-            stroke=""
-            ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g><g id="SVGRepo_iconCarrier">
-              <title>star-solid</title>
-              <g id="Layer_2" data-name="Layer 2">
-                <g id="invisible_box" data-name="invisible box">
-                  <rect width="48" height="48" fill="none"></rect>
-                </g>
-                <g id="icons_Q2" data-name="icons Q2">
-                  <path
-                    d="M24,3a2.1,2.1,0,0,0-1.8,1.1L16.5,15.7,3.7,17.5A2.1,2.1,0,0,0,2.6,21l9.2,8.9L9.7,42.7A2,2,0,0,0,11.6,45l1-.2,11.4-6,11.4,6,1,.2a2,2,0,0,0,1.9-2.3L36.2,29.9,45.4,21a2.1,2.1,0,0,0-1.1-3.5L31.5,15.7,25.8,4.1A2.1,2.1,0,0,0,24,3Z"
-                  ></path>
-                </g>
-              </g>
-            </g></svg
-          >
-          <span class="text-white text-md font-medium"> Most Popular </span>
+        <div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right">
+          <span class="text-white">Discount</span>
         </div>
+
+        {#if mode}
+          <div
+            class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row items-center bg-red-600 p-2"
+          >
+            <svg
+              class="w-6 h-6 mr-2"
+              fill="#fff"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+              stroke=""
+              ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g><g id="SVGRepo_iconCarrier">
+                <title>star-solid</title>
+                <g id="Layer_2" data-name="Layer 2">
+                  <g id="invisible_box" data-name="invisible box">
+                    <rect width="48" height="48" fill="none"></rect>
+                  </g>
+                  <g id="icons_Q2" data-name="icons Q2">
+                    <path
+                      d="M24,3a2.1,2.1,0,0,0-1.8,1.1L16.5,15.7,3.7,17.5A2.1,2.1,0,0,0,2.6,21l9.2,8.9L9.7,42.7A2,2,0,0,0,11.6,45l1-.2,11.4-6,11.4,6,1,.2a2,2,0,0,0,1.9-2.3L36.2,29.9,45.4,21a2.1,2.1,0,0,0-1.1-3.5L31.5,15.7,25.8,4.1A2.1,2.1,0,0,0,24,3Z"
+                    ></path>
+                  </g>
+                </g>
+              </g></svg
+            >
+            <span class="text-white text-md font-semibold"> Most Popular </span>
+          </div>
+        {/if}
 
         <div class="flex flex-row justify-start items-center mt-10 mb-3">
           <img
@@ -392,13 +396,17 @@ function toggleMode()
 
         <div class="flex flex-col mb-6 items-center">
           <div class="flex flex-row items-center">
-            <span class="mr-2 text-4xl font-bold">$4.99</span>
+            <span class="mr-2 text-4xl font-bold"
+              >{mode ? "$4.99" : "$9.99"}</span
+            >
             <span class="text-white text-xl">/month</span>
           </div>
-          <div class="text-white">(Billed Annually)</div>
-          <div class="flex items-center mt-2 text-[1rem] text-center">
-            less than a 🍔
-          </div>
+          {#if mode}
+            <div class="text-white">(Billed Annually)</div>
+            <div class="flex items-center mt-2 text-[1rem] text-center">
+              less than a 🍔
+            </div>
+          {/if}
           <!--
                     <div class="flex flex-col items-center">
                         <div class="flex flex-row items-center">
