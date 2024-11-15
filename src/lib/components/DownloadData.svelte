@@ -12,6 +12,13 @@
       const csvRows = [];
 
       if (rawData.length > 0) {
+        // Sanitize the "name" field in rawData by removing commas
+        rawData?.forEach((row) => {
+          if (row["name"]) {
+            row["name"] = row["name"].replace(/,/g, "");
+          }
+        });
+        console.log(rawData);
         // Dynamically get the headers from the keys of the first object in rawData
         let headers = Object.keys(rawData[0]);
 

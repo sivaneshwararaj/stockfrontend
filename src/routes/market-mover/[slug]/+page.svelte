@@ -3,8 +3,8 @@
   import { abbreviateNumber, getLastTradingDay } from "$lib/utils";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
-  import { goto } from "$app/navigation";
   import InfoModal from "$lib/components/InfoModal.svelte";
+  import DownloadData from "$lib/components/DownloadData.svelte";
 
   import { afterUpdate } from "svelte";
   export let data;
@@ -123,34 +123,6 @@
   });
 
   $: charNumber = $screenWidth < 640 ? 20 : 30;
-
-  const exportData = (format = "csv") => {
-    if (data?.user?.tier === "Pro") {
-      // Add headers row
-      const csvRows = [];
-      csvRows.push("Rank,Symbol,Name,Change, Price, Market Cap, Volume");
-
-      // Add data rows
-      stockList?.forEach((item) => {
-        const csvRow = `${item?.rank},${item?.symbol},${item?.name},${item?.changesPercentage},${item?.price},${item?.marketCap},${item?.volume}`;
-        csvRows.push(csvRow);
-      });
-
-      // Create CSV blob and trigger download
-      const csv = csvRows.join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.setAttribute("hidden", "");
-      a.setAttribute("href", url);
-      a.setAttribute("download", `${data?.getParams}_${timePeriod}.csv`);
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else {
-      goto("/pricing");
-    }
-  };
 </script>
 
 <svelte:head>
@@ -281,23 +253,11 @@
               <div
                 class="flex flex-row items-center justify-end w-fit sm:w-[50%] md:w-auto ml-auto"
               >
-                <label
-                  on:click={() => exportData("csv")}
-                  class="cursor-pointer w-fit border-gray-600 border bg-[#09090B] text-sm px-3 sm:px-4 py-1.5 sm:py-2 sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center text-white rounded-md"
-                >
-                  <span class="truncate">Download</span>
-                  <svg
-                    class="{data?.user?.tier === 'Pro'
-                      ? 'hidden'
-                      : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><path
-                      fill="#A3A3A3"
-                      d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                    /></svg
-                  >
-                </label>
+                <DownloadData
+                  {data}
+                  rawData={rawData[timePeriod]}
+                  title={data?.getParams + "_" + timePeriod ?? "data"}
+                />
               </div>
             </div>
           </div>
