@@ -491,7 +491,7 @@
     method="POST"
     action="?/changeSubscription"
     use:enhance={submitChangePlan}
-    class="modal-box w-full bg-[#09090B] flex flex-col items-center"
+    class="modal-box w-full bg-[#272727A] flex flex-col items-center"
   >
     <div
       class="mx-auto mb-8 h-1.5 w-20 flex-shrink-0 rounded-full bg-[#404040]"
@@ -507,9 +507,9 @@
       on:click={() => (isClicked = !isClicked)}
       class="{!isClicked
         ? ''
-        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-full text-center bg-[#00FC50] text-black font-semibold text-[1rem] font-normal"
+        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-full text-center bg-[#fff] text-black font-semibold text-[1rem] font-semibold"
     >
-      Change to Annual Plan
+      Proceed
       <input
         class="hidden"
         name="subscriptionId"
@@ -518,7 +518,7 @@
     </button>
     {#if isClicked === true}
       <label
-        class="cursor-pointer px-7 py-2 mb-5 rounded-full bg-[#0DDE00] text-center text-black text-[1rem] font-normal"
+        class="cursor-pointer px-7 py-2 mb-5 rounded-full bg-[#fff] text-center text-black text-[1rem] font-normal"
       >
         <div class="flex flex-row m-auto">
           <span class="loading loading-infinity"></span>
