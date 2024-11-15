@@ -40,6 +40,7 @@
   if (!displaySubSection || displaySubSection.length === 0) {
     const parts = $page?.url?.pathname.split("/");
     const sectionMap = {
+      institute: "institute",
       "congress-trading": "congress-trading",
       transcripts: "transcripts",
     };
@@ -57,6 +58,7 @@
   function changeSubSection(state) {
     const subSectionMap = {
       "congress-trading": "/insider/congress-trading",
+      institute: "/insider/institute",
       transcripts: "/insider/transcripts",
     };
 
@@ -78,7 +80,7 @@
       >
         <main class="w-full lg:w-3/4">
           <nav
-            class="sm:ml-4 pt-1 overflow-x-scroll md:overflow-hidden text-sm sm:text-[1rem] whitespace-nowrap"
+            class="mb-5 sm:mb-0 sm:ml-4 pt-1 overflow-x-scroll md:overflow-hidden text-sm sm:text-[1rem] whitespace-nowrap"
           >
             <ul class="flex flex-row items-center w-full text-white">
               <a
@@ -89,6 +91,17 @@
                   : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
               >
                 Insider Trading
+              </a>
+
+              <a
+                href={`/stocks/${$stockTicker}/insider/institute`}
+                on:click={() => changeSubSection("institute")}
+                class="p-2 px-5 cursor-pointer {displaySubSection ===
+                'institute'
+                  ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+              >
+                13F Institute
               </a>
 
               <a

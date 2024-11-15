@@ -7,7 +7,7 @@
 {#if data?.user?.tier !== "Pro"}
   <div class="px-0 flex justify-center items-center">
     <div
-      class="rounded bg-[{color}] pl-10 pr-10 text-center pb-10 pt-5 w-full h-full m-auto -mt-5 relative"
+      class="rounded bg-[{color}] pl-10 pr-10 text-center pb-10 pt-5 w-full h-full m-auto -mt-2 relative"
     >
       <h3 class="text-white font-bold text-xl sm:text-2xl text-center">
         Upgrade to Pro
