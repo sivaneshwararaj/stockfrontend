@@ -1,4 +1,4 @@
-export const load = async ({ locals, params }) => {
+export const load = async ({ locals }) => {
   const { apiURL, apiKey } = locals;
 
   const getMarketMover = async () => {
@@ -14,12 +14,9 @@ export const load = async ({ locals, params }) => {
 
     return output;
   };
-  const getParams = async () => {
-    return params.slug;
-  };
+
 
   return {
     getMarketMover: await getMarketMover(),
-    getParams: await getParams(),
   };
 };
