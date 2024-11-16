@@ -8,6 +8,7 @@
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import DownloadData from "$lib/components/DownloadData.svelte";
   import { page } from "$app/stores";
+  import toast from "svelte-french-toast";
 
   export let data;
   export let rawData;
@@ -216,6 +217,23 @@
     await updateStockScreenerData();
 
     saveRules();
+  }
+
+  async function handleSelectAll() {
+    if (data?.user?.tier === "Pro") {
+      searchQuery = "";
+      ruleOfList = allRows;
+      ruleOfList = [...ruleOfList];
+      checkedItems = new Set(ruleOfList?.map((item) => item.name));
+      allRows = sortIndicatorCheckMarks(allRows);
+      await updateStockScreenerData();
+
+      saveRules();
+    } else {
+      toast.error("Only for Pro Members", {
+        style: "border-radius: 200px; background: #333; color: #fff;",
+      });
+    }
   }
 
   function handleInput(event) {
@@ -624,13 +642,19 @@
       </DropdownMenu.Group>
       <!-- Reset Selection button -->
       <div
-        class="sticky -bottom-1 bg-[#09090B] z-50 p-2 border-t border-gray-600 w-full"
+        class="sticky -bottom-1 bg-[#09090B] z-50 p-2 border-t border-gray-600 w-full flex justify-between items-center"
       >
         <label
           on:click={handleResetAll}
           class="w-full sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
         >
           Reset Selection
+        </label>
+        <label
+          on:click={handleSelectAll}
+          class="w-full flex justify-end sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
+        >
+          Select All
         </label>
       </div>
     </DropdownMenu.Content>
