@@ -17,6 +17,26 @@
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
+  function getAbbreviatedName(fullName) {
+    if (fullName === null) {
+      return "-";
+    }
+
+    const names = fullName?.split(" ");
+    let firstName = names[0];
+    // Remove any title prefix (e.g. Dr., Mr., Mrs., Ms.)
+    if (names.length > 1 && /^(Dr|Mr|Mrs|Ms)\.?$/i.test(names[0])) {
+      firstName = names[1];
+      names?.splice(0, 1);
+    }
+    const initials = names
+      ?.slice(0, -1)
+      ?.map((name) => name?.charAt(0))
+      ?.join(". ");
+    const lastName = names[names?.length - 1];
+    return `${firstName?.charAt(0)}. ${lastName}`;
+  }
+
   function backToTop() {
     window.scrollTo({
       top: 0,
@@ -308,7 +328,7 @@
                         >
                           <div class="flex flex-row items-center">
                             <div
-                              class="flex-shrink-0 rounded-full border border-slate-700 w-10 h-10 sm:w-12 sm:h-12 relative {item?.party ===
+                              class="flex-shrink-0 rounded-full border border-slate-700 w-9 h-9 relative {item?.party ===
                               'Republican'
                                 ? 'bg-[#98272B]'
                                 : item?.party === 'Democratic'
@@ -317,18 +337,20 @@
                             >
                               <img
                                 style="clip-path: circle(50%);"
-                                class="avatar rounded-full w-7 sm:w-9"
+                                class="rounded-full w-7"
                                 src={`${cloudFrontUrl}/assets/senator/${item?.representative?.replace(/\s+/g, "_")}.png`}
                                 loading="lazy"
                               />
                             </div>
-                            <div class="flex flex-col ml-3">
+                            <div class="flex flex-col ml-3 font-normal">
                               <a
                                 href={`/politicians/${item?.id}`}
                                 class="sm:hover:text-white text-blue-400"
-                                >{item?.representative?.replace("_", " ")}</a
+                                >{getAbbreviatedName(
+                                  item?.representative?.replace("_", " "),
+                                )}</a
                               >
-                              <span class="">{item?.party}</span>
+                              <span class="text-gray-300">{item?.party}</span>
                             </div>
                           </div>
                           <!--{item?.firstName} {item?.lastName}-->

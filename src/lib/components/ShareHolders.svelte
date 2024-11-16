@@ -244,7 +244,7 @@
               maximumFractionDigits: 0,
             }).format(rawData?.investorsHolding)}</span
           >
-          Hedge Funds hold a total of
+          Institutions hold a total of
           <span class="font-semibold"
             >{abbreviateNumber(rawData?.numberOf13Fshares)}</span
           >
@@ -309,7 +309,7 @@
         </h1>
 
         <div class="mt-3 text-white text-md">
-          Hedge Funds are holding {callPercentage > 55
+          Institutions are holding {callPercentage > 55
             ? "more Calls Contracts as Puts Contracts, indicating a bullish sentiment."
             : callPercentage < 45
               ? "more Puts Contracts as Calls Contracts, indicating a bearish sentiment."
