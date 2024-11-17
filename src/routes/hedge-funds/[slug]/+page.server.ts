@@ -1,6 +1,5 @@
-import { displayCompanyName, getCache, setCache } from "$lib/store";
 
-export const load = async ({ params, locals, setHeaders }) => {
+export const load = async ({ params, locals }) => {
   const getCIKNumber = async () => {
     return params.slug;
   };
@@ -23,9 +22,6 @@ export const load = async ({ params, locals, setHeaders }) => {
         (item) => item?.sharesNumber && item?.symbol
       );
     }
-    //displayCompanyName.update(() => output?.name ?? params.slug);
-    setHeaders({ "cache-control": "public, max-age=3000" });
-
     return output;
   };
 

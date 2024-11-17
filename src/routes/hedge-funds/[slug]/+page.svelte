@@ -1,504 +1,142 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import {
-    screenWidth,
-    numberOfUnreadNotification,
-    displayCompanyName,
-    assetType,
-  } from "$lib/store";
-  import cardBackground from "$lib/images/bg-hedge-funds.png";
-  import { abbreviateNumber, formatString, sectorNavigation } from "$lib/utils";
-  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
-  import PercentIcon from "lucide-svelte/icons/percent";
-  import MoneyIcon from "lucide-svelte/icons/circle-dollar-sign";
-
-  import { Chart } from "svelte-echarts";
-  import { init, use } from "echarts/core";
-  import { BarChart } from "echarts/charts";
-  import { GridComponent, TooltipComponent } from "echarts/components";
-  import { CanvasRenderer } from "echarts/renderers";
-  use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
-
+  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { formatString, sectorNavigation, abbreviateNumber } from "$lib/utils";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import { onMount } from "svelte";
-  import { symbol } from "zod";
-
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   export let data;
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-  let isLoaded = false;
-  let rawData = data?.getHedgeFundsData;
-  displayCompanyName.update(() => rawData?.name ?? "Company Data");
-  let rawList = [];
-  let displayList = [];
-  let optionsData = {};
-  let currentPage = 1;
-  const itemsPerPage = 50;
+  let hedgeFundStats = data?.getHedgeFundsData;
+  let rawData = data?.getHedgeFundsData?.holdings;
+  let stockList = rawData?.slice(0, 50) ?? [];
+  let companyName = data?.getHedgeFundsData?.name ?? "Company Data";
 
-  let numOfAssets;
-  let changeAssetType = "Stocks";
-  const spyData = [
-    { date: "1993-03-31", price: 25.51 },
-    { date: "1993-06-30", price: 25.62 },
-    { date: "1993-09-30", price: 26.28 },
-    { date: "1993-12-31", price: 26.83 },
-    { date: "1994-03-31", price: 25.83 },
-    { date: "1994-06-30", price: 25.93 },
-    { date: "1994-09-30", price: 27.08 },
-    { date: "1994-12-31", price: 26.94 },
-    { date: "1995-03-31", price: 29.79 },
-    { date: "1995-06-30", price: 32.53 },
-    { date: "1995-09-30", price: 35.16 },
-    { date: "1995-12-31", price: 37.19 },
-    { date: "1996-03-31", price: 39.3 },
-    { date: "1996-06-30", price: 40.99 },
-    { date: "1996-09-30", price: 42.13 },
-    { date: "1996-12-31", price: 45.56 },
-    { date: "1997-03-31", price: 46.68 },
-    { date: "1997-06-30", price: 54.91 },
-    { date: "1997-09-30", price: 58.89 },
-    { date: "1997-12-31", price: 60.81 },
-    { date: "1998-03-31", price: 69.07 },
-    { date: "1998-06-30", price: 71.42 },
-    { date: "1998-09-30", price: 64.36 },
-    { date: "1998-12-31", price: 78.26 },
-    { date: "1999-03-31", price: 81.67 },
-    { date: "1999-06-30", price: 87.42 },
-    { date: "1999-09-30", price: 82.38 },
-    { date: "1999-12-31", price: 94.21 },
-    { date: "2000-03-31", price: 96.7 },
-    { date: "2000-06-30", price: 93.65 },
-    { date: "2000-09-30", price: 92.81 },
-    { date: "2000-12-31", price: 85.03 },
-    { date: "2001-03-31", price: 75.84 },
-    { date: "2001-06-30", price: 79.91 },
-    { date: "2001-09-30", price: 68.33 },
-    { date: "2001-12-31", price: 75.04 },
-    { date: "2002-03-31", price: 75.4 },
-    { date: "2002-06-30", price: 65.38 },
-    { date: "2002-09-30", price: 54.28 },
-    { date: "2002-12-31", price: 58.84 },
-    { date: "2003-03-31", price: 56.74 },
-    { date: "2003-06-30", price: 65.61 },
-    { date: "2003-09-30", price: 67.42 },
-    { date: "2003-12-31", price: 75.42 },
-    { date: "2004-03-31", price: 76.92 },
-    { date: "2004-06-30", price: 78.18 },
-    { date: "2004-09-30", price: 76.61 },
-    { date: "2004-12-31", price: 83.49 },
-    { date: "2005-03-31", price: 81.8 },
-    { date: "2005-06-30", price: 82.98 },
-    { date: "2005-09-30", price: 86.03 },
-    { date: "2005-12-31", price: 87.52 },
-    { date: "2006-03-31", price: 91.62 },
-    { date: "2006-06-30", price: 90.22 },
-    { date: "2006-09-30", price: 95.1 },
-    { date: "2006-12-31", price: 101.39 },
-    { date: "2007-03-31", price: 102.06 },
-    { date: "2007-06-30", price: 108.59 },
-    { date: "2007-09-30", price: 110.66 },
-    { date: "2007-12-31", price: 106.61 },
-    { date: "2008-03-31", price: 96.7 },
-    { date: "2008-06-30", price: 94.25 },
-    { date: "2008-09-30", price: 85.91 },
-    { date: "2008-12-31", price: 67.38 },
-    { date: "2009-03-31", price: 59.8 },
-    { date: "2009-06-30", price: 69.54 },
-    { date: "2009-09-30", price: 80.24 },
-    { date: "2009-12-31", price: 85.14 },
-    { date: "2010-03-31", price: 89.75 },
-    { date: "2010-06-30", price: 79.56 },
-    { date: "2010-09-30", price: 88.44 },
-    { date: "2010-12-31", price: 97.96 },
-    { date: "2011-03-31", price: 103.73 },
-    { date: "2011-06-30", price: 103.76 },
-    { date: "2011-09-30", price: 89.42 },
-    { date: "2011-12-31", price: 99.81 },
-    { date: "2012-03-31", price: 112.48 },
-    { date: "2012-06-30", price: 109.28 },
-    { date: "2012-09-30", price: 116.22 },
-    { date: "2012-12-31", price: 115.77 },
-    { date: "2013-03-31", price: 127.93 },
-    { date: "2013-06-30", price: 131.69 },
-    { date: "2013-09-30", price: 138.59 },
-    { date: "2013-12-31", price: 153.17 },
-    { date: "2014-03-31", price: 155.78 },
-    { date: "2014-06-30", price: 163.82 },
-    { date: "2014-09-30", price: 165.68 },
-    { date: "2014-12-31", price: 173.8 },
-    { date: "2015-03-31", price: 175.33 },
-    { date: "2015-06-30", price: 175.69 },
-    { date: "2015-09-30", price: 164.4 },
-    { date: "2015-12-31", price: 175.94 },
-    { date: "2016-03-31", price: 178.28 },
-    { date: "2016-06-30", price: 182.66 },
-    { date: "2016-09-30", price: 189.56 },
-    { date: "2016-12-31", price: 197.05 },
-    { date: "2017-03-31", price: 208.72 },
-    { date: "2017-06-30", price: 215.13 },
-    { date: "2017-09-30", price: 224.63 },
-    { date: "2017-12-31", price: 239.82 },
-    { date: "2018-03-31", price: 237.44 },
-    { date: "2018-06-30", price: 245.87 },
-    { date: "2018-09-30", price: 264.68 },
-    { date: "2018-12-31", price: 228.87 },
-    { date: "2019-03-31", price: 259.82 },
-    { date: "2019-06-30", price: 270.81 },
-    { date: "2019-09-30", price: 275.56 },
-    { date: "2019-12-31", price: 300.33 },
-    { date: "2020-03-31", price: 241.92 },
-    { date: "2020-06-30", price: 290.7 },
-    { date: "2020-09-30", price: 316.97 },
-    { date: "2020-12-31", price: 355.38 },
-    { date: "2021-03-31", price: 377.95 },
-    { date: "2021-06-30", price: 409.55 },
-    { date: "2021-09-30", price: 411.9 },
-    { date: "2021-12-31", price: 457.48 },
-    { date: "2022-03-31", price: 436.37 },
-    { date: "2022-06-30", price: 366.07 },
-    { date: "2022-09-30", price: 348.02 },
-    { date: "2022-12-31", price: 374.33 },
-    { date: "2023-03-31", price: 402.25 },
-    { date: "2023-06-30", price: 437.17 },
-    { date: "2023-09-30", price: 423.07 },
-    { date: "2023-12-31", price: 472.31 },
-    { date: "2024-03-31", price: 521.39 },
-    { date: "2024-06-30", price: 544.22 },
-  ];
-  const tabs = [
-    {
-      title: "Stocks",
-    },
-    {
-      title: "Options",
-    },
-  ];
+  let analystName = hedgeFundStats?.analystName;
 
-  let activeIdx = 0;
-
-  function changeTab(index) {
-    activeIdx = index;
-    switch (activeIdx) {
-      case 0:
-        changeAssetType = "Stocks";
-        break;
-      case 1:
-        changeAssetType = "Options";
-        break;
-      // Default case in case changeType doesn't match any of the specified cases
-      default:
-        // Handle the default case or leave it empty if not needed
-        break;
+  async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && stockList?.length !== rawData?.length) {
+      const nextIndex = stockList?.length;
+      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+      stockList = [...stockList, ...filteredNewResults];
     }
-  }
-
-  // Helper function to get the last day of the quarter for a given date
-  function getQuarterEndDate(date) {
-    const d = new Date(date);
-    const month = d.getMonth();
-    const year = d.getFullYear();
-
-    if (month < 3) return `${year}-03-31`;
-    if (month < 6) return `${year}-06-30`;
-    if (month < 9) return `${year}-09-30`;
-    return `${year}-12-31`;
-  }
-
-  // Efficient function to add spyPerformance and convert dates to quarter-end dates
-  function addSpyPerformance(data, spyPriceData) {
-    // Create a map for quick lookup of spy prices by date
-    const spyPriceMap = new Map(
-      spyPriceData.map((entry) => [entry.date, entry.price]),
-    );
-
-    // Convert data dates to quarter-end dates
-    const quarterData = data?.map((item) => ({
-      ...item,
-      date: getQuarterEndDate(item.date),
-    }));
-
-    // Map the spy price for each quarter-end date with previous and next prices
-    return quarterData?.map((item, index) => {
-      const currentSpyPrice = spyPriceMap.get(item.date);
-      const previousSpyPrice =
-        index > 0 ? spyPriceMap.get(quarterData[index - 1]?.date) : null;
-      const nextSpyPrice =
-        index < quarterData.length - 1
-          ? spyPriceMap.get(quarterData[index + 1]?.date)
-          : null;
-
-      if (currentSpyPrice === undefined) {
-        console.warn(
-          `Price for date ${item.date} not found in spyPriceData. Skipping spyPerformance calculation for this date.`,
-        );
-        return {
-          ...item,
-          previousSpyPrice: previousSpyPrice,
-          nextSpyPrice: nextSpyPrice,
-        };
-      }
-
-      return {
-        ...item,
-        previousSpyPrice: previousSpyPrice,
-        nextSpyPrice: nextSpyPrice,
-      };
-    });
-  }
-
-  // Function to format date to FY and quarter
-  function formatToFY(dateString) {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1; // getMonth() returns 0-11, so we add 1
-
-    // Fiscal year starts in April
-    const fiscalYear = month >= 4 ? year : year - 1;
-    const fiscalYearString = fiscalYear.toString().slice(-2);
-
-    // Determine fiscal quarter
-    let quarter;
-    if (month >= 4 && month <= 6) {
-      quarter = 1;
-    } else if (month >= 7 && month <= 9) {
-      quarter = 2;
-    } else if (month >= 10 && month <= 12) {
-      quarter = 3;
-    } else {
-      quarter = 4;
-    }
-
-    return `FY${fiscalYearString} Q${quarter}`;
-  }
-
-  const plotTabs = [
-    {
-      title: "Performance",
-    },
-    {
-      title: "Market Value",
-    },
-  ];
-
-  let activePlotIdx = 0;
-
-  async function handleMode(i) {
-    activePlotIdx = i;
-    if (activePlotIdx === 0) {
-      optionsData = await getPerformancePlot();
-    } else {
-      optionsData = await getValuePlot();
-    }
-  }
-
-  async function getPerformancePlot() {
-    // Initialize boughtList and soldList arrays
-    const data = rawData?.summary?.slice(0, 20)?.map((item) => ({
-      date: item?.date,
-      performancePercentage: item?.performancePercentage,
-    }));
-
-    data.sort((a, b) => new Date(a?.date) - new Date(b?.date));
-
-    const updatedData = addSpyPerformance(data, spyData);
-    const dates = updatedData?.map((item) => formatToFY(item?.date));
-
-    const hedgeFundPerformance = updatedData?.map((item) =>
-      item?.performancePercentage?.toFixed(2),
-    );
-    const spyPerformance = updatedData?.map((item) => {
-      const { nextSpyPrice, previousSpyPrice } = item;
-
-      // Check if both prices exist before performing the calculation
-      if (
-        nextSpyPrice != null &&
-        previousSpyPrice != null &&
-        previousSpyPrice !== 0
-      ) {
-        const percentageChange = (nextSpyPrice / previousSpyPrice - 1) * 100;
-        return +percentageChange.toFixed(2); // Return the result as a number
-      }
-
-      // Return null or a default value if prices are missing or invalid
-      return null;
-    });
-
-    const option = {
-      silent: true,
-      animation: false,
-      tooltip: {
-        trigger: "axis",
-        hideDelay: 100, // Set the delay in milliseconds
-      },
-      grid: {
-        left: $screenWidth < 640 ? "0.5%" : "2%",
-        right: $screenWidth < 640 ? "1%" : "10%",
-        bottom: "0%",
-        containLabel: true,
-      },
-      xAxis: {
-        data: dates,
-        type: "category",
-        axisLabel: {
-          color: "#fff",
-        },
-      },
-      yAxis: [
-        {
-          type: "value",
-          splitLine: {
-            show: false, // Disable x-axis grid lines
-          },
-
-          axisLabel: {
-            show: false, // Hide y-axis labels
-          },
-        },
-      ],
-      series: [
-        {
-          name: "SPY [%]",
-          data: spyPerformance,
-          type: "bar",
-          showSymbol: false,
-          itemStyle: {
-            color: "#fff", // Change bar color to white
-          },
-        },
-        {
-          name: "Hedge Fund [%]",
-          data: hedgeFundPerformance,
-          type: "bar",
-          showSymbol: false,
-          itemStyle: {
-            color: "#36A2EB", // Change bar color to white
-          },
-        },
-      ],
-    };
-
-    return option;
-  }
-
-  async function getValuePlot() {
-    // Initialize boughtList and soldList arrays
-    const data = rawData?.summary
-      ?.slice(0, 20)
-      ?.map((item) => ({ date: item?.date, marketValue: item?.marketValue }));
-
-    data.sort((a, b) => new Date(a?.date) - new Date(b?.date));
-
-    const dates = data?.map((item) => formatToFY(item?.date));
-
-    const hedgeFundValue = data?.map((item) => item?.marketValue);
-
-    const option = {
-      silent: true,
-      animation: false,
-      tooltip: {
-        trigger: "axis",
-        hideDelay: 100, // Set the delay in milliseconds
-      },
-      grid: {
-        left: $screenWidth < 640 ? "0.5%" : "2%",
-        right: $screenWidth < 640 ? "1%" : "10%",
-        bottom: "0%",
-        containLabel: true,
-      },
-      xAxis: {
-        data: dates,
-        type: "category",
-        axisLabel: {
-          color: "#fff",
-        },
-      },
-      yAxis: [
-        {
-          type: "value",
-          splitLine: {
-            show: false, // Disable x-axis grid lines
-          },
-
-          axisLabel: {
-            show: false, // Hide y-axis labels
-          },
-        },
-      ],
-      series: [
-        {
-          name: "Market Value",
-          data: hedgeFundValue,
-          type: "bar",
-          showSymbol: false,
-          itemStyle: {
-            color: "#36A2EB", // Change bar color to white
-          },
-        },
-      ],
-    };
-
-    return option;
   }
 
   onMount(async () => {
-    optionsData = await getPerformancePlot();
-    isLoaded = true;
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   });
 
-  function prevPage() {
-    if (currentPage > 1) {
-      currentPage -= 1;
-    }
-  }
+  $: charNumber = $screenWidth < 640 ? 20 : 40;
 
-  function nextPage() {
-    if (currentPage < totalPages) {
-      currentPage += 1;
-    }
-  }
+  let columns = [
+    { key: "rank", label: "Rank", align: "left" },
+    { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "sharesNumber", label: "Shares", align: "right" },
+    {
+      key: "changeInSharesNumberPercentage",
+      label: "% Change Shares",
+      align: "right",
+    },
+    { key: "marketValue", label: "Market Value", align: "right" },
+    { key: "avgPricePaid", label: "Avg Price", align: "right" },
+    { key: "weight", label: "% Weight", align: "right" },
+  ];
 
-  $: {
-    if (changeAssetType && typeof window !== "undefined") {
-      let liste;
-      rawList = rawData?.holdings ?? [];
-      if (changeAssetType === "Stocks") {
-        liste = rawList?.filter((item) => item?.putCallShare === "Share");
-      } else {
-        liste = rawList?.filter((item) => item?.putCallShare !== "Share");
+  let sortOrders = {
+    rank: { order: "none", type: "number" },
+    symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    sharesNumber: { order: "none", type: "number" },
+    changeInSharesNumberPercentage: { order: "none", type: "number" },
+    marketValue: { order: "none", type: "number" },
+    avgPricePaid: { order: "none", type: "number" },
+    weight: { order: "none", type: "date" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
       }
-      numOfAssets = liste?.length; //new Set(liste?.map(item => item?.symbol))?.size;
-      rawList = liste;
-      displayList = rawList?.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage,
-      );
     }
-  }
 
-  $: totalPages = Math?.ceil(rawList.length / itemsPerPage);
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
 
-  $: charNumber = $screenWidth < 640 ? 15 : 40;
+    let originalData = rawData;
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      stockList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    stockList = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
 </script>
 
 <svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {formatString($displayCompanyName)} - Hedge Fund · stocknear</title
-  >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
-
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
+    Wall Street Stock Analysts · stocknear
+  </title>
   <meta
     name="description"
-    content="Get detailed information about portfolio size, market value, win rate, turn over, and peformance of the hedge fund."
+    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
   />
+
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content="{formatString($displayCompanyName)} - Hedge Fund · stocknear"
+    content={`Top Wall Street Stock Analysts · stocknear`}
   />
   <meta
     property="og:description"
-    content="Get detailed information about portfolio size, market value, win rate, turn over, and peformance of the hedge fund."
+    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -507,1178 +145,234 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content="{formatString($displayCompanyName)} - Hedge Fund · stocknear"
+    content={`Top Wall Street Stock Analysts · stocknear`}
   />
   <meta
     name="twitter:description"
-    content="Get detailed information about portfolio size, market value, win rate, turn over, and peformance of the hedge fund."
+    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
 >
-  <div class="sm:ml-10 w-full overflow-hidden m-auto px-3 sm:px-0">
-    <div class="text-sm sm:text-[1rem] breadcrumbs pb-10">
-      <ul>
-        <li><a href="/" class="text-gray-300">Home</a></li>
-        <li><a href="/hedge-funds" class="text-gray-300">Hedge Funds</a></li>
-        <li class="text-gray-300">Company Data</li>
-      </ul>
-    </div>
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
+    <ul>
+      <li><a href="/" class="text-gray-300">Home</a></li>
+      <li><a href="/hedge-funds" class="text-gray-300">Hedge Fund</a></li>
 
-    <div class="flex justify-center w-full m-auto overflow-hidden">
+      <li class="text-gray-300">{formatString(companyName)}</li>
+    </ul>
+  </div>
+
+  <div class="w-full overflow-hidden m-auto">
+    <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
       <div
-        class="relative flex flex-col sm:flex-row justify-between items-start overflow-hidden w-full"
+        class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <aside class="relative fixed w-full sm:w-1/3">
-          <!--Start Card-->
-          <div
-            class="w-full bg-[#141417] border border-gray-800 rounded-md h-auto pb-4"
-          >
-            <div class="flex flex-col relative">
-              <img
-                class="absolute w-full m-auto rounded-md"
-                src={cardBackground}
-              />
-              <div class="flex flex-col justify-center items-center rounded-md">
-                <div
-                  class="mt-10 rounded-full border border-slate-600 w-24 h-24 relative hedge-fund-striped bg-[#20202E] flex items-center justify-center"
-                >
-                  <img
-                    style="clip-path: circle(50%);"
-                    class="rounded-full w-20"
-                    src={`${cloudFrontUrl}/assets/hedge_funds/default-avatar.png`}
-                    loading="lazy"
-                  />
+        <main class="w-full">
+          <div class="w-full m-auto mt-12">
+            <div class="items-center justify-between lg:flex">
+              <div
+                class="flex space-x-3 border-b-[2px] border-below-title pb-3 lg:border-none lg:pb-0"
+              >
+                <div class="flex-shrink-0">
+                  <svg
+                    class="h-16 w-16 sm:h-20 sm:w-20 text-gray-200"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    style="max-width:100px"
+                    ><path
+                      fill-rule="evenodd"
+                      d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                      clip-rule="evenodd"
+                    ></path></svg
+                  >
                 </div>
-                <span
-                  class="text-white text-md font-semibold mt-2 mb-2 w-64 text-center"
-                >
-                  {formatString($displayCompanyName)}
-                </span>
+                <div class="mt-0 pt-0.5 text-left">
+                  <h1 class="mb-0 text-2xl font-bold text-white">
+                    {formatString(companyName)}
+                  </h1>
+                  <p class="mb-0.5 text-sm font-semibold text-gray-300">
+                    CIK Number: {data?.getHedgeFundsData?.cik}
+                  </p>
+                </div>
               </div>
-
-              <div class="relative bottom-0 w-full px-8 mt-8">
-                <div
-                  class="flex flex-row justify-between items-center w-full mb-6"
-                >
-                  <label class="cursor-pointer flex flex-col items-start">
-                    <span class="text-white text-[1rem] font-semibold"
-                      >{abbreviateNumber(rawData.numberOfStocks)}</span
-                    >
-                    <span class="text-slate-300 font-medium text-sm"
-                      ># of Holdings</span
-                    >
-                  </label>
-
-                  <div class="flex flex-col items-end">
-                    <span class="text-white text-[1rem] font-semibold">
-                      {rawData.turnover?.toFixed(2)}
-                    </span>
-                    <span class="text-slate-300 font-medium text-sm"
-                      >Turnover</span
-                    >
+              <div
+                class="mt-4 grid grid-cols-2 overflow-hidden rounded border border-gray-600 py-2 text-center md:grid-cols-5 md:p-0 lg:mt-0 lg:border-none"
+              >
+                <div class="flex flex-col px-4 py-2 bp:px-6 md:py-6">
+                  <div class="text-2xl font-bold tracking-tight text-white">
+                    {abbreviateNumber(hedgeFundStats?.marketValue)}
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Market Value
                   </div>
                 </div>
 
-                <div class="flex flex-row justify-between items-center w-full">
-                  <label class="cursor-pointer flex flex-col items-start">
-                    <div
-                      class="flex flex-row mt-1 text-white text-[1rem] font-semibold"
-                    >
-                      {rawData?.averageHoldingPeriod} months
-                    </div>
-                    <span class="text-slate-300 font-medium text-sm"
-                      >Avg. Holding</span
-                    >
-                  </label>
-
-                  <div class="flex flex-col items-end">
-                    <div class="flex flex-row mt-1 text-[1rem] font-semibold">
-                      {#if rawData.winRate >= 0}
-                        <span class="text-[#00FC50]"
-                          >+{abbreviateNumber(
-                            rawData.winRate?.toFixed(2),
-                          )}%</span
-                        >
-                      {:else}
-                        <span class="text-[#FF2F1F]"
-                          >{abbreviateNumber(rawData.winRate?.toFixed(2))}%
-                        </span>
-                      {/if}
-                    </div>
-                    <span class="text-slate-300 font-medium text-sm"
-                      >Win Rate</span
-                    >
+                <div
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
+                >
+                  <div class="text-2xl font-semibold tracking-tight text-white">
+                    {hedgeFundStats?.numberOfStocks?.toLocaleString("en-US")}
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    # of Holdings
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="w-full bg-[#141417] border border-gray-800 rounded-md h-fit pb-4 mt-5"
-          >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-              <h2
-                class="text-start text-xl font-semibold text-white p-3 mt-3 ml-1"
-              >
-                Top Sectors
-              </h2>
-              {#if rawData?.topSectors?.length !== 0}
-                <div class="flex justify-start items-center w-full m-auto">
-                  <table
-                    class="table table-sm table-compact mt-3 text-start flex justify-start items-center w-full px-3 m-auto"
-                  >
-                    <thead>
-                      <tr class="border-b border-[#141417">
-                        <th
-                          class="text-white font-semibold text-sm sm:text-[1rem] text-start bg-[#141417]"
-                          >Sector</th
-                        >
-                        <th
-                          class="text-white font-semibold text-sm sm:text-[1rem] text-end bg-[#141417]"
-                          >% Portfolio</th
-                        >
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {#each rawData?.topSectors as item}
-                        {#each Object?.entries(item) as [name, value]}
-                          <tr
-                            class="text-white sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#141417] border-b border-[#141417]"
-                          >
-                            <td class="text-[1rem] whitespace-nowrap">
-                              <a
-                                href={sectorNavigation?.find(
-                                  (item) => item?.title === name,
-                                )?.link}
-                                class="text-blue-400 sm:hover:text-white"
-                              >
-                                {name}
-                              </a>
-                            </td>
-                            <td
-                              class="text-white text-[1rem] whitespace-nowrap text-end"
-                            >
-                              {value?.toFixed(2)}%
-                            </td>
-                          </tr>
-                        {/each}
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-              {:else}
                 <div
-                  class=" mt-20 flex justify-center items-center text-2xl font-bold text-slate-700 mb-20 m-auto"
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
                 >
-                  No data available
+                  <div class="text-2xl font-bold tracking-tight text-white">
+                    {hedgeFundStats?.averageHoldingPeriod} months
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Avg. Holding Period
+                  </div>
                 </div>
-              {/if}
-            </div>
-          </div>
 
-          <!--End Card-->
-
-          <!--Start Widget-->
-          <div
-            class="w-full mt-5 mb-10 m-auto flex justify-center items-center"
-          >
-            <div
-              class="sm:hidden w-full grid grid-cols-2 gap-y-3 lg:gap-y-3 gap-x-3"
-            >
-              <!--Start Total Amount Traded-->
-              <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span class="font-medium text-gray-200 text-sm">AUM</span>
-                  <span
-                    class="text-start text-[1rem] font-medium text-white mt-0.5"
-                  >
-                    {abbreviateNumber(rawData?.marketValue, true)}
-                  </span>
-                </div>
-              </div>
-              <!--End Total Amount Traded-->
-
-              <!--Start-->
-              <div
-                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span
-                    class="font-medium text-gray-200 text-sm sm:text-[0.85rem]"
-                    >3 Year Perf.</span
-                  >
-                  <span
-                    class="text-start text-[1rem] sm:text-sm font-semibold text-white mt-0.5"
-                  >
-                    {#if rawData?.performancePercentage3year >= 0}
-                      <span class="text-[#00FC50]"
-                        >+{abbreviateNumber(
-                          rawData?.performancePercentage3year?.toFixed(2),
-                        )}%</span
-                      >
-                    {:else}
-                      <span class="text-[#FF2F1F]"
-                        >{abbreviateNumber(
-                          rawData?.performancePercentage3year?.toFixed(2),
-                        )}%
-                      </span>
-                    {/if}
-                  </span>
-                </div>
-                <!-- Circular Progress -->
-                <div class="relative size-10 ml-auto">
-                  <svg
-                    class="size-full w-10 h-10"
-                    viewBox="0 0 36 36"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <!-- Background Circle -->
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#3E3E3E]"
-                      stroke-width="3"
-                    ></circle>
-                    <!-- Progress Circle inside a group with rotation -->
-                    <g class="origin-center -rotate-90 transform">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        class="stroke-current {rawData?.performancePercentage3year >=
-                        0.5
-                          ? 'text-[#00FC50]'
-                          : 'text-[#EE5365]'} "
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 -
-                          rawData?.performancePercentage3year >=
-                        0
-                          ? 100 -
-                            rawData?.performancePercentage3year?.toFixed(2)
-                          : 0}
-                      ></circle>
-                    </g>
-                  </svg>
-                  <!-- Percentage Text -->
-                  <!--
-                          <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                            <span class="text-center text-white text-sm">{rawData?.performancePercentage3year?.toFixed(2)}</span>
-                          </div>
-                        </div>
-                        -->
-                  <!-- End Circular Progress -->
-                </div>
-              </div>
-              <!--End-->
-
-              <!--Start-->
-              <div
-                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span
-                    class="font-medium text-gray-200 text-sm sm:text-[0.85rem]"
-                    >5 Year Perf.</span
-                  >
-                  <span
-                    class="text-start text-[1rem] sm:text-sm font-semibold text-white mt-0.5"
-                  >
-                    {#if rawData?.performancePercentage5year >= 0}
-                      <span class="text-[#00FC50]"
-                        >+{abbreviateNumber(
-                          rawData?.performancePercentage5year?.toFixed(2),
-                        )}%</span
-                      >
-                    {:else}
-                      <span class="text-[#FF2F1F]"
-                        >{abbreviateNumber(
-                          rawData?.performancePercentage5year?.toFixed(2),
-                        )}%
-                      </span>
-                    {/if}
-                  </span>
-                </div>
-                <!-- Circular Progress -->
-                <div class="relative size-10 ml-auto">
-                  <svg
-                    class="size-full w-10 h-10"
-                    viewBox="0 0 36 36"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <!-- Background Circle -->
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#3E3E3E]"
-                      stroke-width="3"
-                    ></circle>
-                    <!-- Progress Circle inside a group with rotation -->
-                    <g class="origin-center -rotate-90 transform">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        class="stroke-current {rawData?.performancePercentage5year >=
-                        0.5
-                          ? 'text-[#00FC50]'
-                          : 'text-[#EE5365]'} "
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 -
-                          rawData?.performancePercentage5year >=
-                        0
-                          ? 100 -
-                            rawData?.performancePercentage5year?.toFixed(2)
-                          : 0}
-                      ></circle>
-                    </g>
-                  </svg>
-                  <!-- Percentage Text -->
-                  <!--
-                        <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                          <span class="text-center text-white text-sm">{rawData?.performancePercentage5year?.toFixed(2)}</span>
-                        </div>
-                      </div>
-                      -->
-                  <!-- End Circular Progress -->
-                </div>
-              </div>
-              <!--End-->
-
-              <!--Start-->
-              <div
-                class="sm:hidden flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span
-                    class="font-medium text-gray-200 text-sm sm:text-[0.85rem]"
-                    >Incept. Perf.</span
-                  >
-                  <span
-                    class="text-start text-[1rem] sm:text-sm font-semibold text-white mt-0.5"
-                  >
-                    {#if rawData?.performanceSinceInceptionPercentage >= 0}
-                      <span class="text-[#00FC50]"
-                        >+{abbreviateNumber(
-                          rawData?.performanceSinceInceptionPercentage?.toFixed(
-                            2,
-                          ),
-                        )}%</span
-                      >
-                    {:else}
-                      <span class="text-[#FF2F1F]"
-                        >{abbreviateNumber(
-                          rawData?.performanceSinceInceptionPercentage?.toFixed(
-                            2,
-                          ),
-                        )}%
-                      </span>
-                    {/if}
-                  </span>
-                </div>
-                <!-- Circular Progress -->
-                <div class="relative size-10 ml-auto">
-                  <svg
-                    class="size-full w-10 h-10"
-                    viewBox="0 0 36 36"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <!-- Background Circle -->
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#3E3E3E]"
-                      stroke-width="3"
-                    ></circle>
-                    <!-- Progress Circle inside a group with rotation -->
-                    <g class="origin-center -rotate-90 transform">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        class="stroke-current {rawData?.performanceSinceInceptionPercentage >=
-                        0.5
-                          ? 'text-[#00FC50]'
-                          : 'text-[#EE5365]'} "
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 -
-                          rawData?.performanceSinceInceptionPercentage >=
-                        0
-                          ? 100 -
-                            rawData?.performanceSinceInceptionPercentage?.toFixed(
-                              2,
-                            )
-                          : 0}
-                      ></circle>
-                    </g>
-                  </svg>
-                  <!-- Percentage Text -->
-                  <!--
-                        <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                          <span class="text-center text-white text-sm">{rawData?.performanceSinceInceptionPercentage?.toFixed(2)}</span>
-                        </div>
-                      </div>
-                      -->
-                  <!-- End Circular Progress -->
-                </div>
-              </div>
-              <!--End-->
-            </div>
-            <!--End Widget-->
-          </div>
-        </aside>
-
-        <main class="w-full mt-10 sm:mt-0 sm:pl-10">
-          {#if isLoaded && Object?.keys(optionsData)?.length !== 0}
-            <div class="bg-[#09090B] rounded-md sm:min-h-[330px] mb-10 sm:mb-6">
-              <div class="flex flex-row justify-start items-center">
-                {#if activePlotIdx === 0}
-                  <PercentIcon class="h-6 w-6 shrink-0 inline-block" />
-                  <span class="ml-3 text-white text-xl"
-                    >Performance History</span
-                  >
-                {:else}
-                  <MoneyIcon class="h-6 w-6 shrink-0 inline-block" />
-                  <span class="ml-3 text-white text-xl"
-                    >Portofolio Value History</span
-                  >
-                {/if}
-              </div>
-
-              <div
-                class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-5"
-              >
-                {#each plotTabs as item, i}
-                  <button
-                    on:click={() => handleMode(i)}
-                    class="group relative rounded-full px-6 py-1 z-30 flex items-center justify-center {activePlotIdx ===
-                    i
-                      ? 'z-0'
-                      : ''} "
-                  >
-                    {#if activePlotIdx === i}
-                      <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
-                    {/if}
+                <div
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
+                >
+                  <div class="text-2xl font-bold tracking-tight">
                     <span
-                      class="relative block text-sm font-semibold {activePlotIdx ===
-                      i
-                        ? 'text-black'
-                        : 'text-white'}"
+                      class={hedgeFundStats?.winRate >= 0
+                        ? "before:content-['+'] text-[#36D984]"
+                        : "text-[#EF4444]"}
+                      >{hedgeFundStats?.winRate?.toFixed(2)}%</span
                     >
-                      {item?.title}
-                    </span>
-                  </button>
-                {/each}
-              </div>
-
-              <div class="app w-full">
-                <Chart {init} options={optionsData} class="chart" />
-              </div>
-
-              <div
-                class="{activePlotIdx !== 0
-                  ? 'invisible'
-                  : ''} flex flex-row items-center justify-between mx-auto mt-10 sm:mt-5 w-56 sm:w-80"
-              >
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Win Rate
+                  </div>
+                </div>
                 <div
-                  class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
                 >
-                  <div
-                    class="h-full bg-[#313131] transform -translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <div
-                    class="w-3 h-3 bg-[#FFAD24] border-4 box-content border-[#313131] rounded-full transform sm:-translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <span
-                    class="mt-2 sm:mt-0 text-white text-xs sm:text-md sm:font-medium inline-block"
-                  >
-                    SPY
-                  </span>
-                </div>
-
-                <div
-                  class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
-                >
-                  <div
-                    class="h-full bg-[#313131] transform -translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <div
-                    class="w-3 h-3 bg-[#36A2EB] border-4 box-content border-[#313131] rounded-full transform sm:-translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <span
-                    class="mt-2 sm:mt-0 text-white text-center sm:text-start text-xs sm:text-md inline-block"
-                  >
-                    Hedge Fund
-                  </span>
-                </div>
-              </div>
-            </div>
-          {/if}
-
-          <!--Start Widget-->
-          <div
-            class="hidden sm:flex justify-center items-center w-full sm:w-11/12 mt-5 mb-10"
-          >
-            <div class="w-full grid grid-cols-4 gap-y-3 lg:gap-y-3 gap-x-3">
-              <!--Start Total Amount Traded-->
-              <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span class="font-medium text-gray-200 text-[1rem]">AUM</span>
-                  <span
-                    class="text-start text-[1rem] font-medium text-white mt-0.5"
-                  >
-                    {abbreviateNumber(rawData?.marketValue, true)}
-                  </span>
-                </div>
-              </div>
-              <!--End Total Amount Traded-->
-
-              <!--Start-->
-              <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span class="font-medium text-gray-200 text-[1rem]"
-                    >3 Year Perf.</span
-                  >
-                  <span
-                    class="text-start text-[1rem] font-semibold text-white mt-0.5"
-                  >
-                    {#if rawData?.performancePercentage3year >= 0}
-                      <span class="text-[#00FC50]"
-                        >+{abbreviateNumber(
-                          rawData?.performancePercentage3year?.toFixed(2),
-                        )}%</span
-                      >
-                    {:else}
-                      <span class="text-[#FF2F1F]"
-                        >{abbreviateNumber(
-                          rawData?.performancePercentage3year?.toFixed(2),
-                        )}%
-                      </span>
-                    {/if}
-                  </span>
-                </div>
-                <!-- Circular Progress -->
-                <div class="relative size-10 ml-auto">
-                  <svg
-                    class="size-full w-10 h-10"
-                    viewBox="0 0 36 36"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <!-- Background Circle -->
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#3E3E3E]"
-                      stroke-width="3"
-                    ></circle>
-                    <!-- Progress Circle inside a group with rotation -->
-                    <g class="origin-center -rotate-90 transform">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        class="stroke-current {rawData?.performancePercentage3year >=
-                        0.5
-                          ? 'text-[#00FC50]'
-                          : 'text-[#EE5365]'} "
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 -
-                          rawData?.performancePercentage3year >=
-                        0
-                          ? 100 -
-                            rawData?.performancePercentage3year?.toFixed(2)
-                          : 0}
-                      ></circle>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-              <!--End-->
-
-              <!--Start-->
-              <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span class="font-medium text-gray-200 text-[1rem]"
-                    >5 Year Perf.</span
-                  >
-                  <span
-                    class="text-start text-[1rem] font-semibold text-white mt-0.5"
-                  >
-                    {#if rawData?.performancePercentage5year >= 0}
-                      <span class="text-[#00FC50]"
-                        >+{abbreviateNumber(
-                          rawData?.performancePercentage5year?.toFixed(2),
-                        )}%</span
-                      >
-                    {:else}
-                      <span class="text-[#FF2F1F]"
-                        >{abbreviateNumber(
-                          rawData?.performancePercentage5year?.toFixed(2),
-                        )}%
-                      </span>
-                    {/if}
-                  </span>
-                </div>
-                <!-- Circular Progress -->
-                <div class="relative size-10 ml-auto">
-                  <svg
-                    class="size-full w-10 h-10"
-                    viewBox="0 0 36 36"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <!-- Background Circle -->
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#3E3E3E]"
-                      stroke-width="3"
-                    ></circle>
-                    <!-- Progress Circle inside a group with rotation -->
-                    <g class="origin-center -rotate-90 transform">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        class="stroke-current {rawData?.performancePercentage5year >=
-                        0.5
-                          ? 'text-[#00FC50]'
-                          : 'text-[#EE5365]'} "
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 -
-                          rawData?.performancePercentage5year >=
-                        0
-                          ? 100 -
-                            rawData?.performancePercentage5year?.toFixed(2)
-                          : 0}
-                      ></circle>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-              <!--End-->
-
-              <!--Start-->
-              <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] rounded-md h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span class="font-medium text-gray-200 text-[1rem]"
-                    >Incept. Perf.</span
-                  >
-                  <span
-                    class="text-start text-[1rem] font-semibold text-white mt-0.5"
-                  >
-                    {#if rawData?.performanceSinceInceptionPercentage >= 0}
-                      <span class="text-[#00FC50]"
-                        >+{abbreviateNumber(
-                          rawData?.performanceSinceInceptionPercentage?.toFixed(
-                            2,
-                          ),
-                        )}%</span
-                      >
-                    {:else}
-                      <span class="text-[#FF2F1F]"
-                        >{abbreviateNumber(
-                          rawData?.performanceSinceInceptionPercentage?.toFixed(
-                            2,
-                          ),
-                        )}%
-                      </span>
-                    {/if}
-                  </span>
-                </div>
-                <!-- Circular Progress -->
-                <div class="relative size-10 ml-auto">
-                  <svg
-                    class="size-full w-10 h-10"
-                    viewBox="0 0 36 36"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <!-- Background Circle -->
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#3E3E3E]"
-                      stroke-width="3"
-                    ></circle>
-                    <!-- Progress Circle inside a group with rotation -->
-                    <g class="origin-center -rotate-90 transform">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        class="stroke-current {rawData?.performanceSinceInceptionPercentage >=
-                        0.5
-                          ? 'text-[#00FC50]'
-                          : 'text-[#EE5365]'} "
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 -
-                          rawData?.performanceSinceInceptionPercentage >=
-                        0
-                          ? 100 -
-                            rawData?.performanceSinceInceptionPercentage?.toFixed(
-                              2,
-                            )
-                          : 0}
-                      ></circle>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-              <!--End-->
-            </div>
-          </div>
-
-          <div class="bg-[#09090B] sm:bg-[#09090B] sm:min-h-[430px] pt-6">
-            <div class="h-auto w-full sm:w-11/12">
-              <span class="text-[#F5F5F5] font-bold text-2xl">
-                {numOfAssets} Assets
-              </span>
-
-              <div class="w-64 mt-5">
-                <div class="relative right-0 bg-[#313131] rounded-md">
-                  <div
-                    class="relative flex flex-row items-center p-1 list-none rounded-md"
-                  >
-                    {#each tabs as item, i}
-                      <button
-                        on:click={() => changeTab(i)}
-                        class="group relative z-[1] rounded-md px-6 py-1 border z-30 flex items-center justify-center w-full px-0 py-1 mb-0 border-0 bg-inherit {activeIdx ===
-                        i
-                          ? 'z-0'
-                          : ''} "
-                      >
-                        {#if activeIdx === i}
-                          <div
-                            class="absolute inset-0 rounded-md bg-[#fff]"
-                          ></div>
-                        {/if}
-
-                        <span
-                          class="relative text-sm block font-semibold {activeIdx ===
-                          i
-                            ? 'text-black'
-                            : 'text-white'}"
-                        >
-                          {item?.title}
-                        </span>
-                      </button>
-                    {/each}
+                  <div class="text-2xl font-bold tracking-tight text-white">
+                    <span
+                      class={hedgeFundStats?.performancePercentage3Year >= 0
+                        ? "before:content-['+'] text-[#36D984]"
+                        : "text-[#EF4444]"}
+                      >{hedgeFundStats?.performancePercentage3Year?.toFixed(
+                        2,
+                      )}%</span
+                    >
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Peformance 3-Years
                   </div>
                 </div>
               </div>
+            </div>
 
-              {#if rawList?.length !== 0}
-                <div
-                  class="hidden sm:block sm:overflow-hidden sm:overflow-y-scroll scroller w-full m-auto h-auto sm:max-h-[700px]"
+            <div class="mb-10 mt-10 text-white">
+              <div
+                class="relative my-3 space-y-2 rounded border border-gray-600 sm:my-6 p-4"
+              >
+                <div class="flex flex-col sm:flex-row">
+                  <div class="mb-2 font-semibold sm:mb-0">Main Sectors:</div>
+                  <div class="flex flex-wrap gap-x-2 gap-y-px sm:ml-2"></div>
+                </div>
+                <div class="flex flex-col sm:flex-row">
+                  <div class="mb-2 whitespace-nowrap font-semibold sm:mb-0">
+                    Top Industries:
+                  </div>
+                  <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2"></div>
+                </div>
+              </div>
+            </div>
+
+            <span class="text-white font-semibold text-xl sm:text-2xl">
+              {data?.getHedgeFundsData?.holdings?.length?.toLocaleString(
+                "en-US",
+              )} Stocks
+            </span>
+
+            <div class="w-full m-auto mt-10">
+              <div
+                class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll"
+              >
+                <table
+                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
                 >
-                  <table
-                    class=" table table-sm table-compact table-pin-rows table-pin-cols rounded-none sm:rounded-md w-full bg-[#09090B] m-auto mt-5"
-                  >
-                    <!-- head -->
-                    <thead>
-                      <tr class="bg-[#09090B]">
-                        <th
-                          class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
+                  <thead>
+                    <TableHeader {columns} {sortOrders} {sortData} />
+                  </thead>
+                  <tbody>
+                    {#each stockList as item}
+                      <tr
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] text-white"
+                      >
+                        <td
+                          class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
                         >
-                          Name
-                        </th>
-                        <th
-                          class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
+                          {item?.rank}
+                        </td>
+
+                        <td
+                          class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
                         >
-                          Portfolio
-                        </th>
-                        {#if changeAssetType === "Stocks"}
-                          <th
-                            class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Change of Shares
-                          </th>
-                          <th
-                            class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Shares Owned
-                          </th>
-                        {/if}
-                        <th
-                          class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
+                          <HoverStockChart
+                            symbol={item?.symbol}
+                            assetType={item?.type}
+                          />
+                        </td>
+
+                        <td
+                          class="text-sm sm:text-[1rem] text-start whitespace-nowrap text-white"
                         >
-                          Value Owned
-                        </th>
-                        <th
-                          class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
+                          {item?.name?.length > charNumber
+                            ? item?.name?.slice(0, charNumber) + "..."
+                            : item?.name}
+                        </td>
+
+                        <td
+                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
-                          Avg. Price
-                        </th>
-                        {#if changeAssetType === "Options"}
-                          <th
-                            class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Type
-                          </th>
-                        {/if}
+                          {item?.sharesNumber !== null
+                            ? abbreviateNumber(item?.sharesNumber)
+                            : "n/a"}
+                        </td>
+
+                        <td
+                          class="{item?.changeInSharesNumberPercentage >= 0
+                            ? "before:content-['+'] text-[#00FC50]"
+                            : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
+                          {item?.changeInSharesNumberPercentage !== null
+                            ? abbreviateNumber(
+                                item?.changeInSharesNumberPercentage?.toFixed(
+                                  2,
+                                ),
+                              ) + "%"
+                            : "n/a"}
+                        </td>
+
+                        <td
+                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
+                          {item?.marketValue !== null
+                            ? abbreviateNumber(item?.marketValue)
+                            : "n/a"}
+                        </td>
+
+                        <td
+                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
+                          {item?.avgPricePaid}
+                        </td>
+                        <td
+                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
+                          {item?.weight?.toFixed(2)}%
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody class="p-0">
-                      {#each displayList as item}
-                        <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A]"
-                        >
-                          <td
-                            class="pb-3 border-b border-b-[#27272A] text-sm sm:text-[1rem] whitespace-nowrap"
-                          >
-                            <div class="flex flex-row items-center">
-                              <div class="flex flex-col">
-                                <HoverStockChart
-                                  symbol={item?.symbol}
-                                  assetType={item?.type}
-                                />
-                                <span class="text-white text-sm"
-                                  >{formatString(item?.securityName)}</span
-                                >
-                              </div>
-                            </div>
-                            <!--{item?.firstName} {item?.lastName}-->
-                          </td>
-
-                          <td
-                            class="text-center text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
-                          >
-                            {item?.weight >= 0.01
-                              ? item?.weight?.toFixed(2)
-                              : "< 0.01"}%
-                          </td>
-
-                          {#if changeAssetType === "Stocks"}
-                            <td
-                              class="text-center text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] {item?.changeInSharesNumberPercentage >
-                              0
-                                ? "before:content-[' + '] text-[#00FC50]"
-                                : item?.changeInSharesNumberPercentage < 0
-                                  ? 'text-[#FF2F1F]'
-                                  : 'text-white'}"
-                            >
-                              {item?.changeInSharesNumberPercentage !== 0
-                                ? abbreviateNumber(
-                                    item?.changeInSharesNumberPercentage?.toFixed(
-                                      2,
-                                    ),
-                                  ) + "%"
-                                : "-"}
-                            </td>
-
-                            <td
-                              class="text-center text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] text-white"
-                            >
-                              {item?.sharesNumber !== 0
-                                ? abbreviateNumber(
-                                    item?.sharesNumber?.toFixed(2),
-                                  )
-                                : "-"}
-                            </td>
-                          {/if}
-
-                          <td
-                            class="text-center text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
-                          >
-                            {abbreviateNumber(item?.marketValue)}
-                          </td>
-
-                          <td
-                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
-                          >
-                            {item?.avgPricePaid}
-                          </td>
-                          {#if changeAssetType === "Options"}
-                            <td
-                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap border-b border-b-[#27272A] {item?.putCallShare ===
-                              'CALL'
-                                ? 'text-[#00FC50]'
-                                : 'text-[#FF2F1F]'}"
-                            >
-                              {formatString(item?.putCallShare)}
-                            </td>
-                          {/if}
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="hidden sm:flex flex-col items-center mt-10">
-                  <!-- Help text -->
-                  <span class="text-sm text-gray-200">
-                    Showing <span class="font-semibold text-white"
-                      >{currentPage}</span
-                    >
-                    of
-                    <span class="font-semibold text-white">{totalPages}</span> Pages
-                  </span>
-                  <!-- Buttons -->
-                  <div class="inline-flex mt-2 xs:mt-0">
-                    <button
-                      on:click={prevPage}
-                      class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-[#313131] {currentPage ===
-                      1
-                        ? 'opacity-60'
-                        : ''} rounded-s"
-                      disabled={currentPage === 1}
-                    >
-                      Prev
-                    </button>
-                    <button
-                      on:click={nextPage}
-                      class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-[#313131] border-0 border-s border-gray-700 {currentPage ===
-                      totalPages
-                        ? 'opacity-60'
-                        : ''} rounded-e"
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-
-                <div
-                  class="sm:hidden flex flex-col justify-center w-full m-auto h-full overflow-hidden"
-                >
-                  <!-- Content area -->
-                  <div class="mt-4 w-full overflow-x-auto scroller">
-                    <table
-                      class="-ml-1 table table-sm table-compact mt-3 w-screen"
-                    >
-                      <thead>
-                        <tr class="bg-[#09090B]">
-                          <td
-                            class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Name
-                          </td>
-                          <td
-                            class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            % of Portfolio
-                          </td>
-                          {#if changeAssetType === "Stocks"}
-                            <td
-                              class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                            >
-                              Change of Shares
-                            </td>
-                            <th
-                              class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                            >
-                              Shares Owned
-                            </th>
-                          {/if}
-                          <td
-                            class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Value Owned
-                          </td>
-                          <td
-                            class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Avg. Buy Price
-                          </td>
-                          {#if changeAssetType === "Options"}
-                            <td
-                              class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                            >
-                              Type
-                            </td>
-                          {/if}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {#each displayList as item}
-                          <!-- row -->
-                          <tr
-                            on:click={() =>
-                              goto(`/${item?.type}/${item?.symbol}`)}
-                            class="odd:bg-[#27272A] cursor-pointer"
-                          >
-                            <td
-                              class="text-white border-b border-b-[#09090B] whitespace-nowrap"
-                            >
-                              <div class="flex flex-row items-center">
-                                <div class="flex flex-col">
-                                  <span class="text-blue-400 font-medium"
-                                    >{item?.symbol?.replace("_", " ")}</span
-                                  >
-                                  <span class="text-sm"
-                                    >{item?.securityName?.length > charNumber
-                                      ? formatString(
-                                          item?.securityName?.slice(
-                                            0,
-                                            charNumber,
-                                          ),
-                                        ) + "..."
-                                      : formatString(item?.securityName)}</span
-                                  >
-                                </div>
-                              </div>
-                              <!--{item?.firstName} {item?.lastName}-->
-                            </td>
-
-                            <td
-                              class="text-end text-sm font-semibold text-white border-b border-b-[#09090B]"
-                            >
-                              {item?.weight >= 0.01
-                                ? item?.weight?.toFixed(2)
-                                : "< 0.01"}%
-                            </td>
-
-                            {#if changeAssetType === "Stocks"}
-                              <td
-                                class="text-end text-sm font-semibold border-b border-b-[#09090B] {item?.changeInSharesNumberPercentage >
-                                0
-                                  ? 'text-[#00FC50]'
-                                  : item?.changeInSharesNumberPercentage < 0
-                                    ? 'text-[#FF2F1F]'
-                                    : 'text-white'}"
-                              >
-                                {item?.changeInSharesNumberPercentage !== 0
-                                  ? abbreviateNumber(
-                                      item?.changeInSharesNumberPercentage?.toFixed(
-                                        2,
-                                      ),
-                                    ) + "%"
-                                  : "-"}
-                              </td>
-                              <td
-                                class="text-end text-sm font-semibold border-b border-b-[#09090B] text-white"
-                              >
-                                {item?.sharesNumber !== 0
-                                  ? abbreviateNumber(
-                                      item?.sharesNumber?.toFixed(2),
-                                    )
-                                  : "-"}
-                              </td>
-                            {/if}
-
-                            <td
-                              class="text-end text-sm text-white border-b border-b-[#09090B]"
-                            >
-                              {abbreviateNumber(item?.marketValue, true)}
-                            </td>
-
-                            <td
-                              class="text-end text-sm text-white font-semibold border-b border-b-[#09090B]"
-                            >
-                              ${item?.avgPricePaid}
-                            </td>
-                            {#if changeAssetType === "Options"}
-                              <td
-                                class="text-end text-sm font-semibold border-b border-b-[#09090B] {item?.putCallShare ===
-                                'CALL'
-                                  ? 'text-[#00FC50]'
-                                  : 'text-[#FF2F1F]'}"
-                              >
-                                {formatString(item?.putCallShare)}
-                              </td>
-                            {/if}
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="sm:hidden flex flex-col items-center mt-10">
-                    <!-- Help text -->
-                    <span class="text-[1rem] text-gray-200">
-                      Showing <span class="font-semibold text-white"
-                        >{currentPage}</span
-                      >
-                      of
-                      <span class="font-semibold text-white">{totalPages}</span>
-                      Pages
-                    </span>
-                    <!-- Buttons -->
-                    <div class="inline-flex mt-2 xs:mt-0">
-                      <button
-                        on:click={prevPage}
-                        class="flex items-center justify-center px-5 h-8 text-sm font-medium text-white bg-[#313131] {currentPage ===
-                        1
-                          ? 'opacity-60'
-                          : ''} rounded-s"
-                        disabled={currentPage === 1}
-                      >
-                        Prev
-                      </button>
-                      <button
-                        on:click={nextPage}
-                        class="flex items-center justify-center px-5 h-8 text-sm font-medium text-white bg-[#313131] border-0 border-s border-gray-700 {currentPage ===
-                        totalPages
-                          ? 'opacity-60'
-                          : ''} rounded-e"
-                        disabled={currentPage === totalPages}
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              {:else}
-                <div
-                  class="flex justify-center items-center m-auto sm:mt-24 mt-32 mb-6"
-                >
-                  <div
-                    class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-gray-800 p-4"
-                  >
-                    <svg
-                      class="w-5 h-5 inline-block mr-2 flex-shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 256 256"
-                      ><path
-                        fill="#fff"
-                        d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                      /></svg
-                    >
-                    No Trading activity found
-                  </div>
-                </div>
-              {/if}
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </main>
@@ -1686,34 +380,3 @@
     </div>
   </div>
 </section>
-
-<style>
-  .scroller {
-    scrollbar-width: thin;
-  }
-  .app {
-    height: 400px;
-    width: 100%;
-  }
-
-  @media (max-width: 560px) {
-    .app {
-      width: 100%;
-      height: 300px;
-    }
-  }
-
-  .chart {
-    width: 100%;
-  }
-
-  .hedge-fund-striped {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      #a77120,
-      #a77120 10px,
-      #90621c 10px,
-      #90621c 20px
-    );
-  }
-</style>
