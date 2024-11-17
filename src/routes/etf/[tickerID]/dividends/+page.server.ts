@@ -1,6 +1,9 @@
-export const load = async ({ locals, params }) => {
+export const load = async ({ params, locals }) => {
   const getStockDividend = async () => {
-    const { apiKey, apiURL } = locals;
+    let newsList;
+
+    const { apiURL, apiKey } = locals;
+
     const postData = {
       ticker: params.tickerID,
     };
@@ -15,9 +18,9 @@ export const load = async ({ locals, params }) => {
       body: JSON.stringify(postData),
     });
 
-    const output = await response.json();
+    newsList = await response.json();
 
-    return output;
+    return newsList;
   };
 
   // Make sure to return a promise

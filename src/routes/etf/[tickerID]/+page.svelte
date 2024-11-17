@@ -1351,12 +1351,20 @@
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                      >Short % of Shares Out</td
+                      >Inception Date</td
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.shortOutStandingPercent !== null
-                        ? stockDeck?.shortOutStandingPercent + "%"
+                      >{stockDeck?.inceptionDate !== null
+                        ? new Date(stockDeck?.inceptionDate)?.toLocaleString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                              daySuffix: "2-digit",
+                            },
+                          )
                         : "n/a"}</td
                     ></tr
                   >

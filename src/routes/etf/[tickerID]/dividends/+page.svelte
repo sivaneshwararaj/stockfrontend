@@ -81,6 +81,9 @@
           data: dividendList,
           type: "bar",
           smooth: true,
+          itemStyle: {
+            color: "#fff",
+          },
         },
       ],
     };
@@ -132,21 +135,19 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section
-  class="w-full bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0"
->
+<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="w-full mb-6">
-          <h1 class="text-xl sm:text-2xl text-white font-bold mb-4">
+          <h1 class="text-xl sm:text-2xl text-gray-200 font-bold mb-4 w-full">
             Dividends
           </h1>
 
           <div
-            class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+            class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
           >
             <svg
               class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -191,14 +192,16 @@
                 dividends for over 12 months.
               {/if}
             {:else}
-              No dividend history available for {$displayCompanyName}.
+              <div class="w-full">
+                No dividend history available for {$displayCompanyName}.
+              </div>
             {/if}
           </div>
         </div>
 
         {#if rawData?.history?.length !== 0}
           <div
-            class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-500 rounded-lg border border-gray-600 bg-[#272727] shadow md:grid-cols-3 md:grid-rows-1 divide-x"
+            class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-600 rounded-md border border-gray-600 md:grid-cols-3 md:grid-rows-1 divide-x"
           >
             <div class="p-4 bp:p-5 sm:p-6">
               <label
@@ -222,7 +225,7 @@
               <div
                 class="mt-1 break-words font-semibold leading-8 text-light text-xl"
               >
-                ${annualDividend !== "0.00" ? annualDividend : "0"}
+                {annualDividend !== "0.00" ? annualDividend : "0"}
               </div>
             </div>
             <div class="p-4 bp:p-5 sm:p-6 border-r border-contrast">
@@ -349,7 +352,7 @@
                         <td
                           class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
                         >
-                          ${item?.adjDividend?.toFixed(3)}
+                          {item?.adjDividend?.toFixed(3)}
                         </td>
                         <td
                           class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"

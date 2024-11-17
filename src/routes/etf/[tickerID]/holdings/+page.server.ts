@@ -1,10 +1,10 @@
 export const load = async ({ locals, params }) => {
-  const { apiKey, apiURL } = locals;
+  const { apiKey, apiURL, user } = locals;
   const getETFHoldings = async () => {
     const postData = {
       ticker: params.tickerID,
     };
-
+    
     // make the POST request to the endpoint
     const response = await fetch(apiURL + "/etf-holdings", {
       method: "POST",

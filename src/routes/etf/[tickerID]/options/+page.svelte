@@ -3,7 +3,7 @@
     numberOfUnreadNotification,
     displayCompanyName,
     screenWidth,
-    stockTicker,
+    etfTicker,
     setCache,
     getCache,
   } from "$lib/store";
@@ -474,7 +474,7 @@
     isLoaded = false;
     optionDetailsDesktopModal?.showModal();
 
-    rawDataHistory = await getDailyTransactions($stockTicker + "-" + date);
+    rawDataHistory = await getDailyTransactions($etfTicker + "-" + date);
 
     rawDataHistory?.forEach((item) => {
       item.dte = daysLeft(item?.date_expiration);
@@ -538,21 +538,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Options Activity · stocknear
+    {$displayCompanyName} ({$etfTicker}) Options Activity · stocknear
   </title>
   <meta
     name="description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
+    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Options Activity · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Options Activity · stocknear`}
   />
   <meta
     property="og:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
+    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -561,11 +561,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Options Activity · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Options Activity · stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
+    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -877,7 +877,7 @@
                       <tr
                         on:click={() => handleViewData(item?.date)}
                         on:mouseover={() =>
-                          getDailyTransactions($stockTicker + "+" + item?.date)}
+                          getDailyTransactions($etfTicker + "+" + item?.date)}
                         class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index +
                           1 ===
                           optionList?.slice(0, 3)?.length &&

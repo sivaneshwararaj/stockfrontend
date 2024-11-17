@@ -280,14 +280,10 @@
     if ($page?.url?.pathname && typeof window !== "undefined") {
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
-        statistics: "statistics",
-        financials: "financials",
+        holdings: "holdings",
         options: "options",
-        metrics: "metrics",
         insider: "insider",
         dividends: "dividends",
-        forecast: "forecast",
-        news: "news",
       };
       displaySection =
         sectionMap[
@@ -688,49 +684,16 @@
                           Overview
                         </a>
                         <a
-                          href={`/etf/${$etfTicker}/financials`}
-                          on:click={() => changeSection("financials")}
+                          href={`/etf/${$etfTicker}/holdings`}
+                          on:click={() => changeSection("holdings")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
-                          'financials'
+                          'holdings'
                             ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
                         >
-                          Financials
+                          Holdings
                         </a>
-                        <a
-                          href={`/etf/${$etfTicker}/statistics`}
-                          on:click={() => changeSection("statistics")}
-                          class="p-2 px-5 cursor-pointer {displaySection ===
-                          'statistics'
-                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
-                          >Statistics</a
-                        >
 
-                        {#if ["amd", "save", "ba", "adbe", "nflx", "pltr", "msft", "meta", "tsla", "nvda", "aapl", "gme"]?.includes($etfTicker?.toLowerCase())}
-                          <a
-                            href={`/etf/${$etfTicker}/metrics`}
-                            on:click={() => changeSection("metrics")}
-                            class="p-2 px-5 cursor-pointer {displaySection ===
-                            'metrics'
-                              ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
-                            >Metrics</a
-                          >
-                        {/if}
-
-                        {#if Object?.keys(data?.getAnalystRating ?? {})?.length > 0}
-                          <a
-                            href={`/etf/${$etfTicker}/forecast`}
-                            on:click={() => changeSection("forecast")}
-                            class="p-2 px-5 cursor-pointer {displaySection ===
-                            'forecast'
-                              ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
-                          >
-                            Forecast
-                          </a>
-                        {/if}
                         <a
                           href={`/etf/${$etfTicker}/options`}
                           on:click={() => changeSection("options")}
