@@ -361,13 +361,13 @@
                               ? 'text-[#FF2F1F]'
                               : 'text-white'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
-                          {item?.changeInSharesNumberPercentage !== null
+                          {item?.changeInSharesNumberPercentage !== 0
                             ? abbreviateNumber(
                                 item?.changeInSharesNumberPercentage?.toFixed(
                                   2,
                                 ),
                               ) + "%"
-                            : "n/a"}
+                            : "-"}
                         </td>
 
                         <td
@@ -386,7 +386,9 @@
                         <td
                           class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
-                          {item?.weight?.toFixed(2)}%
+                          {item?.weight >= 0.01
+                            ? item?.weight?.toFixed(2)
+                            : "< 0.01"}%
                         </td>
                       </tr>
                     {/each}
