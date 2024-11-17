@@ -11,8 +11,6 @@
   let stockList = rawData?.slice(0, 50) ?? [];
   let companyName = data?.getHedgeFundsData?.name ?? "Company Data";
 
-  let analystName = hedgeFundStats?.analystName;
-
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
@@ -273,13 +271,33 @@
               >
                 <div class="flex flex-col sm:flex-row">
                   <div class="mb-2 font-semibold sm:mb-0">Main Sectors:</div>
-                  <div class="flex flex-wrap gap-x-2 gap-y-px sm:ml-2"></div>
+                  <div class="flex flex-wrap gap-x-2 gap-y-px sm:ml-2">
+                    {#each data?.getHedgeFundsData?.mainSectors as item}
+                      <a
+                        href={sectorNavigation?.find(
+                          (listItem) => listItem?.title === item,
+                        )?.link}
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                      >
+                        {item}
+                      </a>
+                    {/each}
+                  </div>
                 </div>
                 <div class="flex flex-col sm:flex-row">
                   <div class="mb-2 whitespace-nowrap font-semibold sm:mb-0">
                     Top Industries:
                   </div>
-                  <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2"></div>
+                  <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
+                    {#each data?.getHedgeFundsData?.mainIndustries as item}
+                      <a
+                        href={`/list/industry/${item?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                      >
+                        {item}
+                      </a>
+                    {/each}
+                  </div>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@
   import cardBackground from "$lib/images/bg-hedge-funds.png";
 
   import { numberOfUnreadNotification } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { abbreviateNumber, formatString } from "$lib/utils";
   import { onMount } from "svelte";
   //  import * as XLSX from 'xlsx';
 
@@ -13,8 +13,6 @@
   let rawData = data?.getAllHedgeFunds;
   let displayList = rawData?.slice(0, 20) ?? [];
   let filterQuery = "";
-
-  let isLoaded = true;
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -191,7 +189,7 @@
                         <span
                           class="text-white text-md font-semibold mt-2 mb-2 w-64 text-center"
                         >
-                          {item?.name}
+                          {formatString(item?.name)}
                         </span>
                         <span class="text-white text-md mb-8">
                           AUM: {abbreviateNumber(item?.marketValue, true)}
