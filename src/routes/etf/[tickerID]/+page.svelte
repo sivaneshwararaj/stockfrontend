@@ -743,8 +743,7 @@
       prePostData = {};
       output = null;
 
-      stockDeck = data?.getStockDeck; // Essential otherwise chart will not be updated since we wait until #layout.server.ts server response is finished
-
+      stockDeck = data?.getETFProfile?.at(0); // Essential otherwise chart will not be updated since we wait until #layout.server.ts server response is finished
       const asyncFunctions = [getPrePostQuote()];
 
       Promise.all(asyncFunctions)
@@ -1283,12 +1282,12 @@
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                      >Revenue (ttm)</td
+                      >AUM</td
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.revenueTTM !== null
-                        ? abbreviateNumber(stockDeck?.revenueTTM)
+                      >{stockDeck?.aum !== null
+                        ? abbreviateNumber(stockDeck?.aum)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1296,12 +1295,12 @@
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                      >Net Income (ttm)</td
+                      >NAV</td
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.netIncomeTTM !== null
-                        ? abbreviateNumber(stockDeck?.netIncomeTTM)
+                      >{stockDeck?.nav !== null
+                        ? abbreviateNumber(stockDeck?.nav)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1314,7 +1313,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockQuote?.eps}</td
+                      >{data?.getStockQuote?.eps !== null
+                        ? data?.getStockQuote?.eps?.toFixed(2)
+                        : "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1325,20 +1326,12 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{data?.getStockQuote?.pe}</td
+                      >{data?.getStockQuote?.pe !== null
+                        ? data?.getStockQuote?.pe?.toFixed(2)
+                        : "n/a"}</td
                     ></tr
                   >
-                  <tr
-                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                    ><td
-                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                      >Forward PE</td
-                    >
-                    <td
-                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.forwardPE ?? "n/a"}</td
-                    ></tr
-                  >
+
                   <tr
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
@@ -1446,27 +1439,17 @@
                       )}</td
                     ></tr
                   >
+
                   <tr
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                      >Beta</td
-                    >
-                    <td
-                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.beta?.toFixed(2)}</td
-                    ></tr
-                  >
-                  <tr
-                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                    ><td
-                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                      >Shares Float
+                      >Holdings
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.floatShares !== null
-                        ? abbreviateNumber(stockDeck?.floatShares)
+                      >{stockDeck?.holdingsCount !== null
+                        ? abbreviateNumber(stockDeck?.holdingsCount)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1474,12 +1457,12 @@
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2"
-                      >Short % of Float</td
+                      >Expense Ratio</td
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.shortFloatPercent !== null
-                        ? stockDeck?.shortFloatPercent + "%"
+                      >{stockDeck?.expenseRatio !== null
+                        ? stockDeck?.expenseRatio?.toFixed(2) + "%"
                         : "n/a"}</td
                     ></tr
                   >
@@ -1500,17 +1483,19 @@
               <div class="lg:sticky lg:top-20"></div>
             </div>
 
-            <div
-              class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {data
-                ?.getWhyPriceMoved?.length !== 0
-                ? ''
-                : 'hidden'}"
-            >
-              <WIIM {data} />
-            </div>
+            <div class="w-full">
+              <div
+                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {data
+                  ?.getWhyPriceMoved?.length !== 0
+                  ? ''
+                  : 'hidden'}"
+              >
+                <WIIM {data} />
+              </div>
 
-            <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
-              <News {data} />
+              <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
+                <News {data} />
+              </div>
             </div>
           </div>
         </div>
