@@ -1,4 +1,4 @@
-export const load = async ({ locals }) => {
+export const load = async ({ locals, setHeaders }) => {
   const getAllHedgeFunds = async () => {
     const { apiURL, apiKey } = locals;
     const response = await fetch(apiURL + "/all-hedge-funds", {
@@ -10,6 +10,7 @@ export const load = async ({ locals }) => {
     });
 
     const output = await response.json();
+    setHeaders({ "cache-control": "public, max-age=3000" });
 
     return output;
   };

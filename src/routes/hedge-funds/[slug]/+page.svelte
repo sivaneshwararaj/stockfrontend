@@ -355,9 +355,11 @@
                         </td>
 
                         <td
-                          class="{item?.changeInSharesNumberPercentage >= 0
+                          class="{item?.changeInSharesNumberPercentage > 0
                             ? "before:content-['+'] text-[#00FC50]"
-                            : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                            : item?.changeInSharesNumberPercentage < 0
+                              ? 'text-[#FF2F1F]'
+                              : 'text-white'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
                           {item?.changeInSharesNumberPercentage !== null
                             ? abbreviateNumber(
