@@ -1,11 +1,11 @@
 import {
-  displayCompanyName,
-  etfTicker,
-  assetType,
   isOpen,
   isAfterMarketClose,
   isBeforeMarketOpen,
   isWeekend,
+  etfTicker,
+  displayCompanyName,
+  assetType,
 } from "$lib/store";
 
 const checkMarketHour = async () => {
@@ -52,9 +52,9 @@ const checkMarketHour = async () => {
   isAfterMarketClose.set(isAfterMarketCloseValue);
 };
 
-export const load = async ({ params, data }) => {
-  etfTicker.update((value) => params.tickerID?.toUpperCase());
-  assetType.update((value) => "etf");
-  displayCompanyName.update((value) => data?.companyName);
+export const load = async ({  data }) => {
+  etfTicker.set(data?.getParams?.toUpperCase());
+  assetType.set("etf");
+  displayCompanyName.set(data?.companyName);
   await checkMarketHour();
 };

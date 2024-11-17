@@ -2,7 +2,6 @@
   import { goto } from "$app/navigation";
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
-  import { page } from "$app/stores";
   import logo from "$lib/images/box_logo.png";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { onMount } from "svelte";

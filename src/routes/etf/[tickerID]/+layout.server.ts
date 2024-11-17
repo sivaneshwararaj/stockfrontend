@@ -1,14 +1,9 @@
-export const config = {
-  runtime: "nodejs20.x",
-};
-
 const cleanString = (input) => {
   const substringsToRemove = [
     "Depositary",
     "Inc.",
     "Incorporated",
     "Holdings",
-    "Corporation",
     "Corporations",
     "LLC",
     "Holdings plc American Depositary Shares",
@@ -47,51 +42,48 @@ const fetchWatchlist = async (pb, userId) => {
   return output;
 };
 
-export const load = async ({ params, locals, setHeaders }) => {
+export const load = async ({ params, locals }) => {
   const { apiURL, apiKey, pb, user } = locals;
   const { tickerID } = params;
 
   const endpoints = [
     "/etf-profile",
-    "/similar-etfs",
-    "/etf-country-weighting",
     "/etf-holdings",
     "/stock-dividend",
     "/stock-quote",
     "/wiim",
     "/one-day-price",
+    "/stock-news",
   ];
 
   const promises = [
     ...endpoints.map((endpoint) =>
-      fetchData(apiURL, apiKey, endpoint, tickerID)
+      fetchData(apiURL, apiKey, endpoint, tickerID),
     ),
     fetchWatchlist(pb, user?.id),
-    //fetchFromFastify(fastifyURL, '/get-portfolio-data', user?.id)
   ];
 
   const [
     getETFProfile,
-    getSimilarETFs,
-    getCountryWeighting,
     getETFHoldings,
     getStockDividend,
     getStockQuote,
     getWhyPriceMoved,
     getOneDayPrice,
+    getNews,
     getUserWatchlist,
   ] = await Promise.all(promises);
 
   return {
     getETFProfile,
-    getSimilarETFs,
-    getCountryWeighting,
     getETFHoldings,
     getStockDividend,
     getStockQuote,
     getWhyPriceMoved,
     getOneDayPrice,
+    getNews,
     getUserWatchlist,
     companyName: cleanString(getETFProfile?.at(0)?.name),
+    getParams: params.tickerID,
   };
 };

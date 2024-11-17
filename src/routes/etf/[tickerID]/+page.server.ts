@@ -34,10 +34,10 @@ export const actions = {
       error(err.status, err.message);
     }
 
-    redirect(301, "/");
+    redirect(302, "/");
   },
 
-  register: async ({ locals, request, params }) => {
+  register: async ({ locals, request }) => {
     const { formData, errors } = await validateData(
       await request.formData(),
       registerUserSchema,
@@ -59,6 +59,7 @@ await locals.pb?.collection('users').update(
 					'tier': 'Pro', //Give new users a free trial for the Pro Subscription
 			});
 */
+
       await locals.pb.collection("users").requestVerification(formData.email);
     } catch (err) {
       console.log("Error: ", err);
@@ -74,7 +75,7 @@ await locals.pb?.collection('users').update(
       error(err.status, err.message);
     }
 
-    redirect(303, "/etf/" + params.tickerID);
+    redirect(303, "/");
   },
 
   oauth2: async ({ url, locals, request, cookies, params }) => {

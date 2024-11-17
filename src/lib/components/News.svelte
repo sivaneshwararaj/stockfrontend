@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { stockTicker } from "$lib/store";
+  import { stockTicker, etfTicker } from "$lib/store";
 
   export let data;
 
@@ -57,7 +57,7 @@
   }
 
   $: {
-    if ($stockTicker && typeof window !== "undefined") {
+    if (($stockTicker || $etfTicker) && typeof window !== "undefined") {
       rawData = data?.getNews;
       newsList = rawData?.slice(0, 20) ?? [];
     }
