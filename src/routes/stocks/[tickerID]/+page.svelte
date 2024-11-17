@@ -12,7 +12,7 @@
     wsBidPrice,
     wsAskPrice,
     currentPortfolioPrice,
-    etfTicker,
+    stockTicker,
     displayCompanyName,
     isOpen,
     isBeforeMarketOpen,
@@ -156,7 +156,7 @@
   //==========================//
 
   $: {
-    if ($etfTicker && typeof window !== "undefined") {
+    if ($stockTicker && typeof window !== "undefined") {
       // add a check to see if running on client-side
       if ($realtimePrice !== null && $realtimePrice !== 0) {
         $realtimePrice =
@@ -291,7 +291,7 @@
   let maxPrice = [];
 
   async function historicalPrice(timePeriod: string) {
-    const cachedData = getCache($etfTicker, "historicalPrice" + timePeriod);
+    const cachedData = getCache($stockTicker, "historicalPrice" + timePeriod);
     if (cachedData) {
       switch (timePeriod) {
         case "one-week":
@@ -316,7 +316,7 @@
       output = null;
 
       const postData = {
-        ticker: $etfTicker,
+        ticker: $stockTicker,
         timePeriod: timePeriod,
       };
 
@@ -362,7 +362,7 @@
           default:
             console.log(`Unsupported time period: ${timePeriod}`);
         }
-        setCache($etfTicker, mappedData, "historicalPrice" + timePeriod);
+        setCache($stockTicker, mappedData, "historicalPrice" + timePeriod);
       } catch (e) {
         console.log(e);
       }
@@ -423,7 +423,7 @@
 
   async function getPrePostQuote() {
     if (!$isOpen) {
-      const postData = { ticker: $etfTicker, path: "pre-post-quote" };
+      const postData = { ticker: $stockTicker, path: "pre-post-quote" };
       const response = await fetch("/api/ticker-data", {
         method: "POST",
         headers: {
@@ -636,7 +636,7 @@
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ticker: $etfTicker, timePeriod: timePeriod }),
+        body: JSON.stringify({ ticker: $stockTicker, timePeriod: timePeriod }),
       });
 
       exportList = await response.json();
@@ -670,7 +670,7 @@
       const a = document.createElement("a");
       a.setAttribute("hidden", "");
       a.setAttribute("href", url);
-      a.setAttribute("download", `${$etfTicker}_${timePeriod}.csv`);
+      a.setAttribute("download", `${$stockTicker}_${timePeriod}.csv`);
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -738,7 +738,7 @@
   });
 
   $: {
-    if ($etfTicker && typeof window !== "undefined") {
+    if ($stockTicker && typeof window !== "undefined") {
       // add a check to see if running on client-side
       shouldUpdatePriceChart.set(false);
       oneDayPrice = [];
@@ -769,21 +769,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Stock Price, Quote & News · stocknear
+    {$displayCompanyName} ({$stockTicker}) Stock Price, Quote & News · stocknear
   </title>
 
   <meta
     name="description"
-    content={`Get a real-time ${$displayCompanyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
   />
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Stock Price, Quote & News · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`}
   />
   <meta
     property="og:description"
-    content={`Get a real-time ${$displayCompanyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
   />
   <!--<meta property="og:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <meta property="og:type" content="website" />
@@ -793,11 +793,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Stock Price, Quote & News · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Stock Price, Quote & News · stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Get a real-time ${$displayCompanyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Get a real-time ${$displayCompanyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
   />
   <!--<meta name="twitter:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <!-- Add more Twitter meta tags as needed -->
@@ -907,7 +907,7 @@
           <div
             class="hidden sm:flex flex-row items-center pl-1 sm:pl-6 w-full mt-4"
           >
-            {#if !$etfTicker?.includes(".")}
+            {#if !$stockTicker?.includes(".")}
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
