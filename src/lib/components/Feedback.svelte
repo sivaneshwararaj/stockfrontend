@@ -1,5 +1,3 @@
-<svelte:options immutable={true} />
-
 <script lang="ts">
   import toast from "svelte-french-toast";
   import veryGoodEmoji from "$lib/assets/veryGoodEmoji.svg";
@@ -7,12 +5,13 @@
   import badEmoji from "$lib/assets/badEmoji.svg";
   import veryBadEmoji from "$lib/assets/veryBadEmoji.svg";
   export let data;
+  import * as Tabs from "$lib/components/shadcn/tabs/index.js";
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let rating = "";
   let inputValue = "";
-
+  let category = "general";
   /*
   async function handleReturn() {
     rating = '';
@@ -29,7 +28,7 @@
       return;
     }
 
-    if (rating?.length === 0) {
+    if (rating?.length === 0 && category === "general") {
       toast.error("Please select an emoji", {
         style: "border-radius: 200px; background: #333; color: #fff;",
       });
@@ -41,7 +40,12 @@
 
     const userId = data?.user?.id ?? "";
 
-    const postData = { user: userId, rating: rating, description: inputValue };
+    const postData = {
+      user: userId,
+      rating: rating,
+      description: inputValue,
+      category: category,
+    };
 
     const response = await fetch("/api/feedback", {
       method: "POST",
@@ -51,20 +55,12 @@
       body: JSON.stringify(postData),
     });
 
-    const output = (await response.json())?.items;
-
-    if (output === "success") {
-      toast.success("Thank you for your feedback", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
-      });
-      inputValue = "";
-    } else {
-      toast.error("Something went wrong. Please try again later!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
-      });
-    }
+    toast.success("Thank you for your feedback", {
+      style: "border-radius: 200px; background: #333; color: #fff;",
+    });
 
     rating = "";
+    inputValue = "";
   }
 
   function handleInput(event) {
@@ -111,7 +107,7 @@
 >
   <label
     for="feedbackInfo"
-    class="cursor-pointer modal-backdrop bg-[#fff] bg-opacity-[0.1]"
+    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.9]"
   ></label>
 
   <div class="modal-box w-full bg-[#09090B] border border-gray-600">
@@ -121,9 +117,29 @@
       </h1>
     </div>
 
+    <Tabs.Root value="general" class="w-full mt-5 m-auto">
+      <Tabs.List class="grid w-full grid-cols-3 bg-[#09090B]">
+        <Tabs.Trigger
+          on:click={() => (category = "general")}
+          value="general"
+          class="text-sm">General</Tabs.Trigger
+        >
+        <Tabs.Trigger
+          on:click={() => (category = "feature-request")}
+          value="feature-request"
+          class="text-sm">Feature Request</Tabs.Trigger
+        >
+        <Tabs.Trigger
+          on:click={() => (category = "bug-report")}
+          value="bug-report"
+          class="text-sm">Bug Report</Tabs.Trigger
+        >
+      </Tabs.List>
+    </Tabs.Root>
+
     <div class="p-2 mt-5 w-full h-[200px] max-h-[1000px]">
       <textarea
-        class="max-h-[1000px] h-[200px] textarea textarea-bordered placeholder-gray-300 w-full bg-[#09090B] text-white border border-gray-600"
+        class="max-h-[1000px] h-[200px] textarea textarea-bordered placeholder-gray-300 w-full bg-[#27272A] ring-1 text-white border border-gray-600"
         placeholder="Your feedback..."
         value={inputValue}
         on:input={handleInput}
@@ -131,62 +147,69 @@
     </div>
 
     <ul class="flex gap-5 justify-center mt-5 mb-5">
-      <li on:click={() => (rating = "Very Good")} class="cursor-pointer">
-        <div
-          class="rounded-full w-16 h-16 relative {rating === 'Very Good'
-            ? 'bg-[#333333]'
-            : ''} hover:bg-[#333333] flex items-center justify-center"
-        >
-          <img
-            class="w-8 h-8 sm:w-10 sm:h-10"
-            src={veryGoodEmoji}
-            loading="lazy"
-          />
-        </div>
-      </li>
-      <li on:click={() => (rating = "Good")} class="cursor-pointer">
-        <div
-          class="rounded-full w-16 h-16 relative {rating === 'Good'
-            ? 'bg-[#333333]'
-            : ''} hover:bg-[#333333] flex items-center justify-center"
-        >
-          <img class="w-8 h-8 sm:w-10 sm:h-10" src={goodEmoji} loading="lazy" />
-        </div>
-      </li>
-      <li on:click={() => (rating = "Bad")} class="cursor-pointer">
-        <div
-          class="rounded-full w-16 h-16 relative {rating === 'Bad'
-            ? 'bg-[#333333]'
-            : ''} hover:bg-[#333333] flex items-center justify-center"
-        >
-          <img class="w-8 h-8 sm:w-10 sm:h-10" src={badEmoji} loading="lazy" />
-        </div>
-      </li>
-      <li on:click={() => (rating = "Very Bad")} class="cursor-pointer">
-        <div
-          class="rounded-full w-16 h-16 relative {rating === 'Very Bad'
-            ? 'bg-[#333333]'
-            : ''} hover:bg-[#333333] flex items-center justify-center"
-        >
-          <img
-            class="w-8 h-8 sm:w-10 sm:h-10"
-            src={veryBadEmoji}
-            loading="lazy"
-          />
-        </div>
-      </li>
+      {#if category === "general"}
+        <li on:click={() => (rating = "Very Good")} class="cursor-pointer">
+          <div
+            class="rounded-full w-16 h-16 relative {rating === 'Very Good'
+              ? 'bg-[#333333]'
+              : ''} hover:bg-[#333333] flex items-center justify-center"
+          >
+            <img
+              class="w-8 h-8 sm:w-10 sm:h-10"
+              src={veryGoodEmoji}
+              loading="lazy"
+            />
+          </div>
+        </li>
+        <li on:click={() => (rating = "Good")} class="cursor-pointer">
+          <div
+            class="rounded-full w-16 h-16 relative {rating === 'Good'
+              ? 'bg-[#333333]'
+              : ''} hover:bg-[#333333] flex items-center justify-center"
+          >
+            <img
+              class="w-8 h-8 sm:w-10 sm:h-10"
+              src={goodEmoji}
+              loading="lazy"
+            />
+          </div>
+        </li>
+        <li on:click={() => (rating = "Bad")} class="cursor-pointer">
+          <div
+            class="rounded-full w-16 h-16 relative {rating === 'Bad'
+              ? 'bg-[#333333]'
+              : ''} hover:bg-[#333333] flex items-center justify-center"
+          >
+            <img
+              class="w-8 h-8 sm:w-10 sm:h-10"
+              src={badEmoji}
+              loading="lazy"
+            />
+          </div>
+        </li>
+        <li on:click={() => (rating = "Very Bad")} class="cursor-pointer">
+          <div
+            class="rounded-full w-16 h-16 relative {rating === 'Very Bad'
+              ? 'bg-[#333333]'
+              : ''} hover:bg-[#333333] flex items-center justify-center"
+          >
+            <img
+              class="w-8 h-8 sm:w-10 sm:h-10"
+              src={veryBadEmoji}
+              loading="lazy"
+            />
+          </div>
+        </li>
+      {/if}
     </ul>
-
-    <span
-      class="hidden text-white flex justify-center text-lg sm:text-xl font-bold"
-    >
-      I think this website is {rating?.length !== 0 ? `"${rating}"` : ""}
-    </span>
 
     <button
       on:click={() => sendFeedback()}
-      class="mb-4 px-3 py-2 bg-[#fff] sm:hover:bg-gray-300 {rating?.length !==
-        0 && inputValue?.length !== 0
+      class="mb-4 px-3 py-2 bg-[#fff] sm:hover:bg-gray-300 {(category ===
+        'general' &&
+        rating?.length !== 0 &&
+        inputValue?.length !== 0) ||
+      (category !== 'general' && inputValue?.length !== 0)
         ? 'opacity-100 cursor-pointer'
         : 'opacity-60 cursor-not-allowed'} w-11/12 rounded-lg m-auto text-black font-semibold text-md"
     >
