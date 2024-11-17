@@ -163,9 +163,9 @@
             </thead>
             <tbody>
               {#each topHoldingList?.slice(0, 5) as item}
-                {#if item?.asset !== null}
+                {#if item?.symbol !== null}
                   <tr
-                    on:click={() => stockSelector(item?.asset)}
+                    on:click={() => stockSelector(item?.symbol)}
                     class="lg:shake-ticker sm:hover:text-white text-blue-400 cursor-pointer lg:hover:bg-[#245073] lg:hover:bg-opacity-[0.2] bg-[#000] lg:bg-[#09090B] border-b border-[#000] lg:border-[#27272A]"
                   >
                     <td class="">
@@ -176,15 +176,15 @@
                           <img
                             style="clip-path: circle(50%);"
                             class="w-6 h-6 rounded-full"
-                            src={item?.asset?.length !== 0
-                              ? `https://financialmodelingprep.com/image-stock/${item?.asset}.png`
+                            src={item?.symbol?.length !== 0
+                              ? `https://financialmodelingprep.com/image-stock/${item?.symbol}.png`
                               : defaultLogo}
                             loading="lazy"
                           />
                         </div>
                         <div class="flex flex-col ml-3 w-full">
                           <span class="text-sm font-medium"
-                            >{item?.asset ?? "-"}</span
+                            >{item?.symbol ?? "-"}</span
                           >
                           <span class="text-white text-sm">
                             {#if typeof item?.name !== "undefined"}
