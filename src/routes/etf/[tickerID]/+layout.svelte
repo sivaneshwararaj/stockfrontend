@@ -170,6 +170,7 @@
           } else if (type === "Q") {
             $wsBidPrice = typeof bp !== "undefined" ? bp : null;
             $wsAskPrice = typeof ap !== "undefined" ? ap : null;
+            $realtimePrice = $wsAskPrice;
           }
 
           // Update price increase state
