@@ -159,8 +159,9 @@
     if ($stockTicker && typeof window !== "undefined") {
       // add a check to see if running on client-side
       if ($realtimePrice !== null && $realtimePrice !== 0) {
-        $realtimePrice =
-          $realtimePrice !== 0 ? $realtimePrice : data?.getStockQuote?.price;
+        $currentPortfolioPrice = $realtimePrice;
+      } else if ($realtimePrice === null || $realtimePrice === 0) {
+        $realtimePrice = data?.getStockQuote?.price;
         $currentPortfolioPrice = $realtimePrice;
       } else if (oneDayPrice?.length !== 0) {
         const length = oneDayPrice?.length;
@@ -819,7 +820,7 @@
               <div
                 class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full"
               >
-                {displayLegend?.close}
+                {$realtimePrice ?? displayLegend?.close}
 
                 {#if $priceIncrease === true}
                   <div
