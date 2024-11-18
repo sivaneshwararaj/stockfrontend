@@ -229,7 +229,7 @@
                   <div
                     class="text-xl sm:text-2xl font-bold tracking-tight text-white"
                   >
-                    {buySellRatio}
+                    {buySellRatio?.toFixed(2)}
                   </div>
                   <div class="text-sm font-semibold leading-6 text-gray-300">
                     Buy/Sell
@@ -325,7 +325,7 @@
                         class="text-start text-sm sm:text-[1rem] border-b border-b-[#27272A] whitespace-nowrap"
                       >
                         <HoverStockChart
-                          symbol={item?.symbol}
+                          symbol={item?.symbol ?? item?.ticker}
                           assetType={item?.assetType}
                         />
                       </td>
