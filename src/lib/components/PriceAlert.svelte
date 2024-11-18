@@ -44,7 +44,7 @@
       };
 
       // Make the POST request to the endpoint
-      const response = await fetch("/api/fastify-post-data", {
+      const response = await fetch("/api/create-price-alert", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@
         body: JSON.stringify(postData),
       });
 
-      const output = (await response.json())?.items;
+      const output = await response.json();
 
       if (output === "success") {
         toast.success(`Successfully created price alert`, {

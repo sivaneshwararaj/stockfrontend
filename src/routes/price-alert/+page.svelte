@@ -7,7 +7,6 @@
   import { goto } from "$app/navigation";
   import { screenWidth } from "$lib/store";
   import MiniPlot from "$lib/components/MiniPlot.svelte";
-  import { onMount } from "svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   export let data;
@@ -133,7 +132,6 @@
     },
   );
 
-  let isLoaded = false;
   let priceAlertList = data?.getPriceAlert;
 
   function stockSelector(symbol, assetType) {
@@ -175,10 +173,9 @@
 
       const postData = {
         priceAlertIdList: deletePriceAlertList,
-        path: "delete-price-alert",
       };
 
-      const response = await fetch("/api/fastify-post-data", {
+      const response = await fetch("/api/delete-price-alert", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -190,10 +187,6 @@
       editMode = !editMode;
     }
   }
-
-  onMount(async () => {
-    isLoaded = true;
-  });
 
   $: charNumber = $screenWidth < 640 ? 15 : 40;
 </script>
@@ -251,249 +244,232 @@
             </h1>
           </div>
 
-          {#if isLoaded}
-            <div class="sm:hidden">
-              <div class="text-white text-xs sm:text-sm pb-5 sm:pb-2">
-                Stock Indexes - {getCurrentDateFormatted()}
-              </div>
-
-              <div
-                class="w-full -mt-4 sm:mt-0 mb-8 m-auto flex justify-start sm:justify-center items-center"
-              >
-                <div
-                  class="w-full grid grid-cols-2 md:grid-cols-4 gap-y-3 lg:gap-y-0 gap-x-3"
-                >
-                  <MiniPlot
-                    title="S&P500"
-                    priceData={priceDataSP500}
-                    changesPercentage={changeSP500}
-                    previousClose={previousCloseSP500}
-                  />
-                  <MiniPlot
-                    title="Nasdaq"
-                    priceData={priceDataNasdaq}
-                    changesPercentage={changeNasdaq}
-                    previousClose={previousCloseNasdaq}
-                  />
-                  <MiniPlot
-                    title="Dow"
-                    priceData={priceDataDowJones}
-                    changesPercentage={changeDowJones}
-                    previousClose={previousCloseDowJones}
-                  />
-                  <MiniPlot
-                    title="Russel"
-                    priceData={priceDataRussel2000}
-                    changesPercentage={changeRussel2000}
-                    previousClose={previousCloseRussel2000}
-                  />
-                </div>
-              </div>
+          <div class="sm:hidden">
+            <div class="text-white text-xs sm:text-sm pb-5 sm:pb-2">
+              Stock Indexes - {getCurrentDateFormatted()}
             </div>
 
-            {#if priceAlertList?.length === 0}
+            <div
+              class="w-full -mt-4 sm:mt-0 mb-8 m-auto flex justify-start sm:justify-center items-center"
+            >
               <div
-                class="flex flex-col justify-center items-center m-auto pt-8"
+                class="w-full grid grid-cols-2 md:grid-cols-4 gap-y-3 lg:gap-y-0 gap-x-3"
               >
-                <span
-                  class="text-white font-bold text-white text-xl sm:text-3xl"
-                >
-                  No Alerts set
-                </span>
-
-                <span
-                  class="text-white text-sm sm:text-[1rem] m-auto p-4 text-center"
-                >
-                  Create price alerts for your stocks that have the most
-                  potential in your opinion.
-                </span>
-                {#if !data?.user}
-                  <a
-                    class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
-                    href="/register"
-                  >
-                    Get Started
-                    <span
-                      class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
-                    >
-                      <svg
-                        class="w-4 h-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        ><g transform="rotate(90 12 12)"
-                          ><g fill="none"
-                            ><path
-                              d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
-                            /><path
-                              fill="white"
-                              d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
-                            /></g
-                          ></g
-                        ></svg
-                      >
-                    </span>
-                  </a>
-                {/if}
+                <MiniPlot
+                  title="S&P500"
+                  priceData={priceDataSP500}
+                  changesPercentage={changeSP500}
+                  previousClose={previousCloseSP500}
+                />
+                <MiniPlot
+                  title="Nasdaq"
+                  priceData={priceDataNasdaq}
+                  changesPercentage={changeNasdaq}
+                  previousClose={previousCloseNasdaq}
+                />
+                <MiniPlot
+                  title="Dow"
+                  priceData={priceDataDowJones}
+                  changesPercentage={changeDowJones}
+                  previousClose={previousCloseDowJones}
+                />
+                <MiniPlot
+                  title="Russel"
+                  priceData={priceDataRussel2000}
+                  changesPercentage={changeRussel2000}
+                  previousClose={previousCloseRussel2000}
+                />
               </div>
-            {:else}
-              <div class="flex flex-row justify-end items-center pb-2">
-                {#if editMode}
-                  <label
-                    on:click={handleDelete}
-                    class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
+            </div>
+          </div>
+
+          {#if priceAlertList?.length === 0}
+            <div class="flex flex-col justify-center items-center m-auto pt-8">
+              <span class="text-white font-bold text-white text-xl sm:text-3xl">
+                No Alerts set
+              </span>
+
+              <span
+                class="text-white text-sm sm:text-[1rem] m-auto p-4 text-center"
+              >
+                Create price alerts for your stocks that have the most potential
+                in your opinion.
+              </span>
+              {#if !data?.user}
+                <a
+                  class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
+                  href="/register"
+                >
+                  Get Started
+                  <span
+                    class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
                   >
                     <svg
-                      class="inline-block w-5 h-5"
+                      class="w-4 h-4"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      ><path
-                        fill="white"
-                        d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"
-                      /></svg
+                      ><g transform="rotate(90 12 12)"
+                        ><g fill="none"
+                          ><path
+                            d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                          /><path
+                            fill="white"
+                            d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                          /></g
+                        ></g
+                      ></svg
                     >
-                    <span class="ml-1 text-white text-sm">
-                      {numberOfChecked}
-                    </span>
-                  </label>
-                {/if}
+                  </span>
+                </a>
+              {/if}
+            </div>
+          {:else}
+            <div class="flex flex-row justify-end items-center pb-2">
+              {#if editMode}
                 <label
-                  on:click={() => (editMode = !editMode)}
+                  on:click={handleDelete}
                   class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
                 >
                   <svg
                     class="inline-block w-5 h-5"
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 1024 1024"
+                    viewBox="0 0 24 24"
                     ><path
                       fill="white"
-                      d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"
-                    /><path
-                      fill="white"
-                      d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"
+                      d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"
                     /></svg
                   >
-                  {#if !editMode}
-                    <span class="ml-1 text-white text-sm"> Edit </span>
-                  {:else}
-                    <span class="ml-1 text-white text-sm"> Cancel </span>
-                  {/if}
+                  <span class="ml-1 text-white text-sm">
+                    {numberOfChecked}
+                  </span>
                 </label>
-              </div>
-              <!--Start Table-->
-              <div
-                class="w-full rounded-lg overflow-hidden overflow-x-scroll no-scrollbar"
+              {/if}
+              <label
+                on:click={() => (editMode = !editMode)}
+                class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
               >
-                <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
+                <svg
+                  class="inline-block w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 1024 1024"
+                  ><path
+                    fill="white"
+                    d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"
+                  /><path
+                    fill="white"
+                    d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"
+                  /></svg
                 >
-                  <!-- head -->
-                  <thead>
-                    <tr class="">
-                      <th class="text-white font-semibold text-sm">Symbol</th>
-                      <th class="text-white font-semibold text-sm">Company</th>
-                      <th class="text-white font-semibold text-end text-sm"
-                        >Volume</th
-                      >
-                      <th class="text-white font-semibold text-end text-sm"
-                        >Price when Created</th
-                      >
-                      <th class="text-white font-semibold text-end text-sm"
-                        >Price Target</th
-                      >
-                      <th class="text-white font-semibold text-end text-sm"
-                        >Current Price</th
-                      >
-                      <th class="text-white font-semibold text-end text-sm"
-                        >Change</th
-                      >
-                    </tr>
-                  </thead>
-                  <tbody class="p-3">
-                    {#each priceAlertList as item, index}
-                      <!-- row -->
-                      <tr
-                        on:click={() =>
-                          stockSelector(item?.symbol, item?.assetType)}
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] cursor-pointer"
-                      >
-                        <td
-                          on:click={() => handleFilter(item?.id)}
-                          class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] flex flex-row items-center"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={deletePriceAlertList?.includes(item?.id) ??
-                              false}
-                            class="{!editMode
-                              ? 'hidden'
-                              : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3"
-                          />
-                          {item?.symbol}
-                        </td>
-
-                        <td
-                          on:click={() => handleFilter(item?.id)}
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
-                        >
-                          {item?.name?.length > charNumber
-                            ? item?.name?.slice(0, charNumber) + "..."
-                            : item?.name}
-                        </td>
-
-                        <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                        >
-                          {abbreviateNumber(item?.volume)}
-                        </td>
-                        <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                        >
-                          {item?.priceWhenCreated}
-                        </td>
-
-                        <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                        >
-                          {item?.targetPrice}
-                        </td>
-
-                        <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                        >
-                          {item.price?.toFixed(2)}
-                        </td>
-
-                        <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                        >
-                          {#if item?.changesPercentage >= 0}
-                            <span class="text-[#00FC50]"
-                              >+{item?.changesPercentage?.toFixed(2)}%</span
-                            >
-                          {:else}
-                            <span class="text-[#FF2F1F]"
-                              >{item?.changesPercentage?.toFixed(2)}%
-                            </span>
-                          {/if}
-                        </td>
-                      </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-              <!--End Table-->
-            {/if}
-          {:else}
-            <div class="flex justify-center items-center h-80">
-              <div class="relative">
-                <label
-                  class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                >
-                  <span class="loading loading-spinner loading-md text-gray-400"
-                  ></span>
-                </label>
-              </div>
+                {#if !editMode}
+                  <span class="ml-1 text-white text-sm"> Edit </span>
+                {:else}
+                  <span class="ml-1 text-white text-sm"> Cancel </span>
+                {/if}
+              </label>
             </div>
+            <!--Start Table-->
+            <div
+              class="w-full rounded-lg overflow-hidden overflow-x-scroll no-scrollbar"
+            >
+              <table
+                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
+              >
+                <!-- head -->
+                <thead>
+                  <tr class="">
+                    <th class="text-white font-semibold text-sm">Symbol</th>
+                    <th class="text-white font-semibold text-sm">Company</th>
+                    <th class="text-white font-semibold text-end text-sm"
+                      >Volume</th
+                    >
+                    <th class="text-white font-semibold text-end text-sm"
+                      >Price when Created</th
+                    >
+                    <th class="text-white font-semibold text-end text-sm"
+                      >Price Target</th
+                    >
+                    <th class="text-white font-semibold text-end text-sm"
+                      >Current Price</th
+                    >
+                    <th class="text-white font-semibold text-end text-sm"
+                      >Change</th
+                    >
+                  </tr>
+                </thead>
+                <tbody class="p-3">
+                  {#each priceAlertList as item, index}
+                    <!-- row -->
+                    <tr
+                      on:click={() =>
+                        stockSelector(item?.symbol, item?.assetType)}
+                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] cursor-pointer"
+                    >
+                      <td
+                        on:click={() => handleFilter(item?.id)}
+                        class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] flex flex-row items-center"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={deletePriceAlertList?.includes(item?.id) ??
+                            false}
+                          class="{!editMode
+                            ? 'hidden'
+                            : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3"
+                        />
+                        {item?.symbol}
+                      </td>
+
+                      <td
+                        on:click={() => handleFilter(item?.id)}
+                        class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                      >
+                        {item?.name?.length > charNumber
+                          ? item?.name?.slice(0, charNumber) + "..."
+                          : item?.name}
+                      </td>
+
+                      <td
+                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      >
+                        {abbreviateNumber(item?.volume)}
+                      </td>
+                      <td
+                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      >
+                        {item?.priceWhenCreated}
+                      </td>
+
+                      <td
+                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      >
+                        {item?.targetPrice}
+                      </td>
+
+                      <td
+                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      >
+                        {item.price?.toFixed(2)}
+                      </td>
+
+                      <td
+                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      >
+                        {#if item?.changesPercentage >= 0}
+                          <span class="text-[#00FC50]"
+                            >+{item?.changesPercentage?.toFixed(2)}%</span
+                          >
+                        {:else}
+                          <span class="text-[#FF2F1F]"
+                            >{item?.changesPercentage?.toFixed(2)}%
+                          </span>
+                        {/if}
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+            <!--End Table-->
           {/if}
         </main>
 

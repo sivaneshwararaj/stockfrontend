@@ -28,21 +28,23 @@ const ensureAllEmaParameters = (params) => {
 };
 
 export const load = async ({ locals }) => {
-  const { apiURL, apiKey, fastifyURL, user } = locals;
+  const { apiURL, apiKey,  user, pb } = locals;
 
   const getAllStrategies = async () => {
-    const postData = { userId: user?.id };
-    const response = await fetch(fastifyURL + "/all-strategies", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
+    let output = [];
 
-    const output = (await response.json())?.items;
+     try {
+        output = await pb.collection("stockscreener").getFullList({
+        filter: `user="${user?.id}"`,
+        });
+            output?.sort((a, b) => new Date(b?.updated) - new Date(a?.updated));
 
-    output?.sort((a, b) => new Date(b?.updated) - new Date(a?.updated));
+    }
+    catch(e) {
+        output = [];
+    }
+
+   
 
     return output;
   };

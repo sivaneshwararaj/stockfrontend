@@ -1305,7 +1305,7 @@
   }
 
   async function handleCreateStrategy() {
-    if (data?.user?.tier === "Pro" && !data?.user?.freeTrial) {
+    if (data?.user?.tier === "Pro") {
       const closePopup = document.getElementById("addStrategy");
       closePopup?.dispatchEvent(new MouseEvent("click"));
     } else {
@@ -1314,9 +1314,9 @@
   }
 
   async function handleDeleteStrategy() {
-    const postData = { strategyId: selectedStrategy, path: "delete-strategy" };
+    const postData = { strategyId: selectedStrategy };
 
-    const response = await fetch("/api/fastify-post-data", {
+    const response = await fetch("/api/delete-strategy", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1324,7 +1324,7 @@
       body: JSON.stringify(postData),
     });
 
-    const output = (await response.json())?.items;
+    const output = await response.json();
 
     if (output === "success") {
       toast.success("Strategy deleted successfully!", {
@@ -1398,9 +1398,8 @@
     for (const [key, value] of formData.entries()) {
       postData[key] = value;
     }
-    postData["path"] = "create-strategy";
 
-    const response = await fetch("/api/fastify-post-data", {
+    const response = await fetch("/api/create-strategy", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1408,7 +1407,7 @@
       body: JSON.stringify(postData),
     });
 
-    const output = (await response.json())?.items;
+    const output = await response?.json();
     if (output?.id && output?.id?.length !== 0) {
       toast.success("Strategy created successfully!", {
         style: "border-radius: 200px; background: #333; color: #fff;",
@@ -1686,10 +1685,9 @@ const handleKeyDown = (event) => {
         const postData = {
           strategyId: selectedStrategy,
           rules: ruleOfList,
-          path: "save-strategy",
         };
 
-        const response = await fetch("/api/fastify-post-data", {
+        const response = await fetch("/api/save-strategy", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -1697,18 +1695,10 @@ const handleKeyDown = (event) => {
           body: JSON.stringify(postData),
         });
 
-        const output = (await response.json())?.items;
-
         if (printToast === true) {
-          if (output?.id && output?.id?.length !== 0) {
-            toast.success("Strategy saved!", {
-              style: "border-radius: 200px; background: #333; color: #fff;",
-            });
-          } else {
-            toast.error("Something went wrong. Please try again later!", {
-              style: "border-radius: 200px; background: #333; color: #fff;",
-            });
-          }
+          toast.success("Strategy saved!", {
+            style: "border-radius: 200px; background: #333; color: #fff;",
+          });
         }
 
         //isSaved = true;
