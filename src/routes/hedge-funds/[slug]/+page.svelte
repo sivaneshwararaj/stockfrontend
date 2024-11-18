@@ -44,21 +44,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
-    Wall Street Stock Analysts · stocknear
+    Wall Street Hedge Funds · stocknear
   </title>
   <meta
     name="description"
-    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
+    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Top Wall Street Stock Analysts · stocknear`}
+    content={`Top Wall Street hedge funds · stocknear`}
   />
   <meta
     property="og:description"
-    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
+    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -67,11 +67,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Top Wall Street Stock Analysts · stocknear`}
+    content={`Top Wall Street hedge funds · stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
+    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
