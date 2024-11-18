@@ -1,18 +1,16 @@
 <script lang="ts">
   import { numberOfUnreadNotification } from "$lib/store";
   import { formatString, sectorNavigation, abbreviateNumber } from "$lib/utils";
-  import republicanBackground from "$lib/images/bg-republican.png";
-  import democraticBackground from "$lib/images/bg-democratic.png";
-  import otherBackground from "$lib/images/bg-other.png";
-  import Table from "$lib/components/Table/Table.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-  let hedgeFundStats = data?.getHedgeFundsData;
   let rawData = data?.getPolitician?.output;
   let name = rawData?.history?.at(0)?.representative ?? "n/a";
   let numOfTrades = rawData?.history?.length;
+  let mainSectors = rawData?.mainSectors || [];
+  let mainIndustries = rawData?.mainIndustries || [];
 
   const typeCounts = rawData?.history?.reduce((counts, item) => {
     counts[item?.type] = (counts[item?.type] || 0) + 1;
@@ -238,6 +236,159 @@
                   </div>
                 </div>
               </div>
+            </div>
+
+            {#if mainSectors?.length !== 0}
+              <div class="mb-10 mt-10 text-white">
+                <div
+                  class="relative my-3 space-y-2 rounded border border-gray-600 sm:my-6 p-4"
+                >
+                  <div class="flex flex-col sm:flex-row">
+                    <div class="mb-2 font-semibold sm:mb-0">Main Sectors:</div>
+                    <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
+                      {#each mainSectors as item}
+                        <a
+                          href={sectorNavigation?.find(
+                            (listItem) => listItem?.title === item,
+                          )?.link}
+                          class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        >
+                          {item}
+                        </a>
+                      {/each}
+                    </div>
+                  </div>
+                  <div class="flex flex-col sm:flex-row">
+                    <div class="mb-2 whitespace-nowrap font-semibold sm:mb-0">
+                      Top Industries:
+                    </div>
+                    <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
+                      {#each mainIndustries as item}
+                        <a
+                          href={`/list/industry/${item?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
+                          class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        >
+                          {item}
+                        </a>
+                      {/each}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {/if}
+
+            <div class="w-full overflow-x-scroll mt-10">
+              <table
+                class=" table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] m-auto mt-5"
+              >
+                <!-- head -->
+                <thead>
+                  <tr class="bg-[#09090B]">
+                    <th
+                      class="text-start bg-[#09090B] text-white text-sm font-semibold"
+                    >
+                      Symbol
+                    </th>
+                    <th
+                      class="text-start bg-[#09090B] text-white text-sm font-semibold"
+                    >
+                      Name
+                    </th>
+                    <th
+                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                    >
+                      Transaction Type
+                    </th>
+                    <th
+                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                    >
+                      Amount
+                    </th>
+                    <th
+                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                    >
+                      Traded
+                    </th>
+                    <th
+                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                    >
+                      Filed
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="p-0">
+                  {#each rawData?.history as item}
+                    <tr
+                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A] text-white"
+                    >
+                      <td
+                        class="text-start text-sm sm:text-[1rem] border-b border-b-[#27272A] whitespace-nowrap"
+                      >
+                        <HoverStockChart
+                          symbol={item?.symbol}
+                          assetType={item?.assetType}
+                        />
+                      </td>
+
+                      <td
+                        class="text-sm sm:text-[1rem] border-b border-b-[#27272A] whitespace-nowrap"
+                      >
+                        {item?.name?.length > 20
+                          ? item?.name?.slice(0, 20) + "..."
+                          : item?.name}
+                      </td>
+
+                      <td
+                        class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
+                      >
+                        <span class="font-semibold">
+                          {#if item?.type === "Bought"}
+                            <span class="text-[#57D7BA]">Purchase</span>
+                          {:else if item?.type === "Sold"}
+                            <span class="text-[#fe5555]">Sale</span>
+                          {:else if item?.type === "Exchange"}
+                            <span class="text-[#C6A755]">Exchange</span>
+                          {/if}
+                        </span></td
+                      >
+
+                      <td
+                        class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
+                      >
+                        {item?.amount}</td
+                      >
+
+                      <td
+                        class="text-end text-sm sm:text-[1rem] text-white border-b border-b-[#27272A] whitespace-nowrap"
+                      >
+                        {new Date(item?.transactionDate)?.toLocaleString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            daySuffix: "2-digit",
+                          },
+                        )}
+                      </td>
+
+                      <td
+                        class="text-end text-sm sm:text-[1rem] text-white border-b border-b-[#27272A] whitespace-nowrap"
+                      >
+                        {new Date(item?.disclosureDate)?.toLocaleString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            daySuffix: "2-digit",
+                          },
+                        )}
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
             </div>
           </div>
         </main>
