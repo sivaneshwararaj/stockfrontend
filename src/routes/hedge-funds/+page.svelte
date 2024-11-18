@@ -233,10 +233,10 @@
                             <div
                               class="flex flex-row mt-1 text-[1rem] font-semibold"
                             >
-                              {#if item?.performancePercentage3year >= 0}
+                              {#if item?.performancePercentage3Year >= 0}
                                 <span class="text-[#00FC50]"
                                   >+{abbreviateNumber(
-                                    item?.performancePercentage3year?.toFixed(
+                                    item?.performancePercentage3Year?.toFixed(
                                       2,
                                     ),
                                   )}%</span
@@ -244,7 +244,7 @@
                               {:else}
                                 <span class="text-[#FF2F1F]"
                                   >{abbreviateNumber(
-                                    item?.performancePercentage3year?.toFixed(
+                                    item?.performancePercentage3Year?.toFixed(
                                       2,
                                     ),
                                   )}%

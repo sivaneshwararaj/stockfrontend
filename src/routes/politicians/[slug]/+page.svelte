@@ -1,92 +1,41 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { numberOfUnreadNotification } from "$lib/store";
+  import { formatString, sectorNavigation, abbreviateNumber } from "$lib/utils";
   import republicanBackground from "$lib/images/bg-republican.png";
   import democraticBackground from "$lib/images/bg-democratic.png";
   import otherBackground from "$lib/images/bg-other.png";
-  import { abbreviateNumber } from "$lib/utils";
-  import InfiniteLoading from "$lib/components/InfiniteLoading.svelte";
-  import { Chart } from "svelte-echarts";
-
-  import { init, use } from "echarts/core";
-  import { BarChart } from "echarts/charts";
-  import { GridComponent, TooltipComponent } from "echarts/components";
-  import { CanvasRenderer } from "echarts/renderers";
-  use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
-
-  import { onMount } from "svelte";
+  import Table from "$lib/components/Table/Table.svelte";
 
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
-  let isLoaded = false;
+  let hedgeFundStats = data?.getHedgeFundsData;
   let rawData = data?.getPolitician?.output;
-  let displayList = [];
-  let optionsData = {};
-
   let name = rawData?.history?.at(0)?.representative ?? "n/a";
   let numOfTrades = rawData?.history?.length;
-  let lastTradedDate = rawData?.history?.at(0)?.transactionDate;
-  let buySellRatio = 0;
-  let totalAmountTraded = 0;
+
+  const typeCounts = rawData?.history?.reduce((counts, item) => {
+    counts[item?.type] = (counts[item?.type] || 0) + 1;
+    return counts;
+  }, {});
+
+  let buySellRatio =
+    typeCounts["Bought"] > 0 && typeCounts["Sold"] === undefined
+      ? 1
+      : typeCounts["Bought"] === undefined
+        ? 0
+        : typeCounts["Bought"] / typeCounts["Sold"];
+
+  let totalAmountTraded = rawData?.history?.reduce((sum, item) => {
+    const amount = item?.amount;
+    const parsedAmount = extractNumberFromAmount(amount);
+    return sum + parsedAmount;
+  }, 0);
   let politicianDistrict = data?.getPolitician?.politicianDistrict;
   let politicianCongress = data?.getPolitician?.politicianCongress;
-  let numOfAssets = new Set(rawData?.history?.map((item) => item?.ticker))
-    ?.size;
+  let lastTradedDate = rawData?.history?.at(0)?.transactionDate;
+
   let politicianParty = data?.getPolitician?.politicianParty;
-
-  function sectorSelector(sector) {
-    let path;
-    switch (sector) {
-      case "Financials":
-        path = "financial";
-        break;
-      case "Healthcare":
-        path = "healthcare";
-        break;
-      case "Information Technology":
-        path = "technology";
-        break;
-      case "Technology":
-        path = "technology";
-        break;
-      case "Financial Services":
-        path = "financial";
-        break;
-      case "Industrials":
-        path = "industrials";
-        break;
-      case "Energy":
-        path = "energy";
-        break;
-      case "Utilities":
-        path = "utilities";
-        break;
-      case "Consumer Cyclical":
-        path = "consumer-cyclical";
-        break;
-      case "Real Estate":
-        path = "real-estate";
-        break;
-      case "Basic Materials":
-        path = "basic-materials";
-        break;
-      case "Communication Services":
-        path = "communication-services";
-        break;
-      case "Consumer Defensive":
-        path = "consumer-defensive";
-        break;
-      default:
-        // Handle default case if needed
-        break;
-    }
-    return path;
-  }
-
-  function getYearFromDate(dateString) {
-    return new Date(dateString).getFullYear();
-  }
 
   // Function to extract the number from the amount string
   function extractNumberFromAmount(amount) {
@@ -107,183 +56,55 @@
     return 0;
   }
 
-  // Calculate the total sum
-  totalAmountTraded = rawData?.history?.reduce((sum, item) => {
-    const amount = item?.amount;
-    const parsedAmount = extractNumberFromAmount(amount);
-    return sum + parsedAmount;
-  }, 0);
+  const excludedRules = new Set([
+    "sharesNumber",
+    "changeInSharesNumberPercentage",
+    "marketValue",
+    "avgPricePaid",
+    "weight",
+  ]);
 
-  async function infiniteHandler({ detail: { loaded, complete } }) {
-    if (displayList?.length === rawData?.history?.length) {
-      complete();
-    } else {
-      const nextIndex = displayList?.length;
-      const newArticles = rawData?.history?.slice(nextIndex, nextIndex + 20);
-      displayList = [...displayList, ...newArticles];
-      loaded();
-    }
-  }
+  const defaultList = [
+    { name: "Shares", rule: "sharesNumber" },
+    { name: "% Change Shares", rule: "changeInSharesNumberPercentage" },
+    { name: "Market Value", rule: "marketValue" },
+    { name: "Avg Price", rule: "avgPricePaid" },
+    { name: "% Weight", rule: "weight" },
+  ];
 
-  function normalizer(value) {
-    if (Math?.abs(value) >= 1e12) {
-      return { unit: "T", denominator: 1e12 };
-    } else if (Math?.abs(value) >= 1e9) {
-      return { unit: "B", denominator: 1e9 };
-    } else if (Math?.abs(value) >= 1e6) {
-      return { unit: "M", denominator: 1e6 };
-    } else if (Math?.abs(value) >= 1e5) {
-      return { unit: "K", denominator: 1e5 };
-    } else {
-      return { unit: "", denominator: 1 };
-    }
-  }
-
-  async function getPlotOptions() {
-    // Get unique years from the data
-    const uniqueYears = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]; //[...new Set(rawData?.map(item => getYearFromDate(item?.transactionDate)))]?.reverse();
-    // Initialize boughtList and soldList arrays
-    const boughtList = [];
-    const soldList = [];
-    const dates = [];
-
-    // Calculate the total bought and sold amounts for each year
-    uniqueYears?.forEach((year) => {
-      const boughtAmount = rawData?.history
-        ?.filter(
-          (item) =>
-            getYearFromDate(item?.transactionDate) === year &&
-            item?.type === "Bought",
-        )
-        ?.reduce((sum, item) => sum + extractNumberFromAmount(item?.amount), 0);
-
-      const soldAmount = rawData?.history
-        ?.filter(
-          (item) =>
-            getYearFromDate(item.transactionDate) === year &&
-            item?.type === "Sold",
-        )
-        ?.reduce((sum, item) => sum + extractNumberFromAmount(item?.amount), 0);
-
-      boughtList.push(boughtAmount);
-      soldList.push(soldAmount);
-
-      const fiscalYear = "FY" + String(year)?.slice(2);
-      dates?.push(fiscalYear);
-    });
-
-    const maxBought = Math.max(...boughtList) ?? 0;
-    const maxSold = Math.max(...soldList) ?? 0;
-    const { unit, denominator } = normalizer(
-      maxBought > maxSold ? maxBought : maxSold,
-    );
-
-    const option = {
-      silent: true,
-      animation: false,
-      tooltip: {
-        trigger: "axis",
-        hideDelay: 100, // Set the delay in milliseconds
-      },
-      grid: {
-        left: $screenWidth < 640 ? "5.2%" : "0.5%",
-        right: $screenWidth < 640 ? "5%" : "0.5%",
-        bottom: "0%",
-        containLabel: true,
-      },
-      xAxis: {
-        data: dates,
-        type: "category",
-        axisLabel: {
-          color: "#fff",
-        },
-      },
-
-      yAxis: [
-        {
-          type: "value",
-          splitLine: {
-            show: false, // Disable x-axis grid lines
-          },
-          axisLabel: {
-            color: "#fff", // Change label color to white
-            formatter: function (value, index) {
-              // Display every second tick
-              if (index % 2 === 0) {
-                value = Math.max(value, 0);
-                return (value / denominator)?.toFixed(0) + unit; // Format value in millions
-              } else {
-                return ""; // Hide this tick
-              }
-            },
-          },
-        },
-      ],
-      series: [
-        {
-          name: "Bought",
-          data: boughtList,
-          type: "bar",
-          itemStyle: {
-            color: "#22C55E", // Change bar color to white
-          },
-        },
-
-        {
-          name: "Sold",
-          data: soldList,
-          type: "bar",
-          itemStyle: {
-            color: "#F71F4F", // Change bar color to white
-          },
-        },
-      ],
-    };
-
-    return option;
-  }
-
-  onMount(async () => {
-    optionsData = await getPlotOptions();
-
-    const typeCounts = rawData?.history?.reduce((counts, item) => {
-      counts[item?.type] = (counts[item?.type] || 0) + 1;
-      return counts;
-    }, {});
-
-    buySellRatio =
-      typeCounts["Bought"] > 0 && typeCounts["Sold"] === undefined
-        ? 1
-        : typeCounts["Bought"] === undefined
-          ? 0
-          : typeCounts["Bought"] / typeCounts["Sold"];
-
-    displayList = rawData?.history?.slice(0, 20) ?? [];
-
-    isLoaded = true;
-  });
+  const specificRows = [
+    { name: "Shares", rule: "sharesNumber", type: "int" },
+    {
+      name: "% Change Shares",
+      rule: "changeInSharesNumberPercentage",
+      type: "percentSign",
+    },
+    { name: "% Weight", rule: "weight", type: "percent" },
+    { name: "Avg Price", rule: "avgPricePaid", type: "float" },
+    { name: "Market Value", rule: "marketValue", type: "int" },
+  ];
 </script>
 
 <svelte:head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Which
-    stocks is {name} trading? · stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
+    Wall Street Hedge Funds · stocknear
   </title>
   <meta
     name="description"
-    content={`A list of all trades from the US Politician ${name}.`}
+    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Which stocks is ${name} trading? · stocknear`}
+    content={`Top Wall Street hedge funds · stocknear`}
   />
   <meta
     property="og:description"
-    content={`A list of all trades from the US Politician ${name}.`}
+    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -292,98 +113,105 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Which stocks is ${name} trading? · stocknear`}
+    content={`Top Wall Street hedge funds · stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`A list of all trades from the US Politician ${name}.`}
+    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
 >
-  <div class="sm:ml-10 w-full overflow-hidden m-auto px-3 sm:px-0">
-    <div class="text-sm sm:text-[1rem] breadcrumbs pb-10">
-      <ul>
-        <li><a href="/" class="text-gray-300">Home</a></li>
-        <li><a href="/politicians" class="text-gray-300">Politicians</a></li>
-        <li class="text-gray-300">{name}</li>
-      </ul>
-    </div>
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
+    <ul>
+      <li><a href="/" class="text-gray-300">Home</a></li>
+      <li>
+        <a href="/politicians/flow-data" class="text-gray-300">Congress</a>
+      </li>
 
-    <div class="flex justify-center w-full m-auto overflow-hidden">
+      <li class="text-gray-300">{name}</li>
+    </ul>
+  </div>
+
+  <div class="w-full overflow-hidden m-auto">
+    <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
       <div
-        class="relative flex flex-col sm:flex-row justify-between items-start overflow-hidden w-full"
+        class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <aside class="relative fixed w-full sm:w-1/3">
-          <!--Start Card-->
-          <div
-            class="w-full bg-[#141417] border border-gray-800 rounded-lg h-auto pb-4"
-          >
-            <div class="flex flex-col relative">
-              {#if politicianParty === "Republican"}
-                <img
-                  class="absolute w-full m-auto rounded-lg"
-                  src={republicanBackground}
-                />
-              {:else if politicianParty === "Democratic"}
-                <img
-                  class="absolute w-[500px] m-auto rounded-lg"
-                  src={democraticBackground}
-                />
-              {:else}
-                <img
-                  class="absolute w-[500px] m-auto rounded-lg"
-                  src={otherBackground}
-                />
-              {/if}
+        <main class="w-full">
+          <div class="w-full m-auto mt-12">
+            <div class="items-center justify-between lg:flex">
               <div
-                class="flex flex-col justify-center items-center rounded-2xl"
+                class="flex space-x-3 border-b-[2px] border-below-title pb-3 lg:border-none lg:pb-0"
               >
-                <div
-                  class="mt-10 rounded-full border border-slate-600 w-24 h-24 relative {politicianParty ===
-                  'Republican'
-                    ? 'republican-striped bg-[#98272B]'
-                    : politicianParty === 'Democratic'
-                      ? 'democratic-striped bg-[#295AC7]'
-                      : 'other-striped bg-[#20202E]'} flex items-center justify-center"
-                >
-                  <img
-                    style="clip-path: circle(50%);"
-                    class="rounded-full w-20"
-                    src={`${cloudFrontUrl}/assets/senator/${name?.replace(/\s+/g, "_")}.png`}
-                    loading="lazy"
-                  />
+                <div class="flex-shrink-0">
+                  <div
+                    class="h-16 w-16 sm:h-20 sm:w-20 relative rounded-full {politicianParty ===
+                    'Republican'
+                      ? 'republican-striped bg-[#98272B]'
+                      : politicianParty === 'Democratic'
+                        ? 'democratic-striped bg-[#295AC7]'
+                        : 'other-striped bg-[#20202E]'} flex items-center justify-center"
+                  >
+                    <img
+                      style="clip-path: circle(50%);"
+                      class="rounded-full w-12 sm:w-16"
+                      src={`${cloudFrontUrl}/assets/senator/${name?.replace(/\s+/g, "_")}.png`}
+                      loading="lazy"
+                    />
+                  </div>
                 </div>
-                <span
-                  class="text-white text-lg sm:text-xl font-medium mt-6 mb-2"
-                >
-                  {name?.replace("Dr", "")}
-                </span>
-                <span class="text-white text-md mb-8">
-                  {politicianParty ?? "n/a"} / {politicianCongress}
-                  {#if politicianDistrict !== undefined && politicianDistrict?.length !== 0}
-                    / {politicianDistrict}
-                  {/if}
-                </span>
+                <div class="mt-0 pt-0.5 text-left">
+                  <h1 class="mb-0 text-xl sm:text-2xl font-bold text-white">
+                    {formatString(name)}
+                  </h1>
+                  <p class="mb-0.5 text-sm font-semibold text-gray-300">
+                    {politicianParty ?? "n/a"} / {politicianCongress}
+                    {#if politicianDistrict !== undefined && politicianDistrict?.length !== 0}
+                      / {politicianDistrict}
+                    {/if}
+                  </p>
+                </div>
               </div>
-
               <div
-                class="flex flex-row justify-between items-center w-full px-10 pb-4"
+                class="mt-4 grid grid-cols-2 overflow-hidden rounded border border-gray-600 py-2 text-center md:grid-cols-4 md:p-0 lg:mt-0 lg:border-none"
               >
-                <label class="cursor-pointer flex flex-col items-center">
-                  <span class="text-white text-[1rem] font-semibold"
-                    >{abbreviateNumber(numOfTrades)}</span
+                <div class="flex flex-col px-4 py-2 bp:px-6 md:py-6">
+                  <div
+                    class="text-xl sm:text-2xl font-bold tracking-tight text-white"
                   >
-                  <span class="text-slate-300 font-medium text-[1rem]"
-                    >Total Trades</span
-                  >
-                </label>
+                    ${new Intl.NumberFormat("en", {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }).format(totalAmountTraded)}
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Total Amount Traded
+                  </div>
+                </div>
 
-                <div class="flex flex-col items-center">
-                  <span class="text-white text-[1rem] font-semibold">
+                <div
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
+                >
+                  <div
+                    class="text-xl sm:text-2xl font-semibold tracking-tight text-white"
+                  >
+                    {numOfTrades?.toLocaleString("en-US")}
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Total Trades
+                  </div>
+                </div>
+
+                <div
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
+                >
+                  <div
+                    class="text-xl sm:text-2xl font-semibold tracking-tight text-white"
+                  >
                     {lastTradedDate?.length !== undefined
                       ? new Date(lastTradedDate)?.toLocaleString("en-US", {
                           month: "short",
@@ -392,491 +220,24 @@
                           daySuffix: "2-digit",
                         })
                       : "n/a"}
-                  </span>
-                  <span class="text-slate-300 font-medium text-[1rem]"
-                    >Last Traded</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--End Card-->
-
-          <!--Start Widget-->
-          <div class="w-full mt-5 mb-5 m-auto flex justify-center items-center">
-            <div class="w-full grid grid-cols-2 gap-y-3 lg:gap-y-3 gap-x-3">
-              <!--Start Total Amount Traded-->
-              <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#141417] border border-gray-800 rounded-2xl h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span class="font-medium text-gray-200 text-sm sm:text-[1rem]"
-                    >Total Amount</span
-                  >
-                  <span
-                    class="text-start text-lg font-medium text-white mt-0.5"
-                  >
-                    ${new Intl.NumberFormat("en", {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(totalAmountTraded)}
-                  </span>
-                </div>
-              </div>
-              <!--End Total Amount Traded-->
-              <!--Start Buy/Sell-->
-              <div
-                class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#141417] border border-gray-800 rounded-2xl h-20"
-              >
-                <div class="flex flex-col items-start">
-                  <span class="font-medium text-gray-200 text-sm sm:text-[1rem]"
-                    >Buy/Sell</span
-                  >
-                  <span
-                    class="text-start text-sm sm:text-lg font-medium text-white mt-0.5"
-                  >
-                    {buySellRatio?.toFixed(3)}
-                  </span>
-                </div>
-                <!-- Circular Progress -->
-                <div class="relative size-12 ml-auto">
-                  <svg
-                    class="size-full w-12 h-12"
-                    viewBox="0 0 36 36"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <!-- Background Circle -->
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#3E3E3E]"
-                      stroke-width="3"
-                    ></circle>
-                    <!-- Progress Circle inside a group with rotation -->
-                    <g class="origin-center -rotate-90 transform">
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        class="stroke-current {buySellRatio >= 0.5
-                          ? 'text-[#00FC50]'
-                          : 'text-[#EE5365]'} "
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 - buySellRatio * 100 >= 0
-                          ? 100 - (buySellRatio * 100)?.toFixed(2)
-                          : 0}
-                      ></circle>
-                    </g>
-                  </svg>
-                  <!-- Percentage Text -->
-                  <div
-                    class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2"
-                  >
-                    <span class="text-center text-white text-sm"
-                      >{buySellRatio?.toFixed(2)}</span
-                    >
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Last Traded
                   </div>
                 </div>
-                <!-- End Circular Progress -->
-              </div>
-              <!--End Buy/Sell-->
-            </div>
-          </div>
-          <!--End Widget-->
-
-          <div
-            class="w-full bg-[#141417] border border-gray-800 rounded-lg h-fit pb-4"
-          >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-              <h2
-                class="text-start text-xl font-semibold text-white p-3 mt-3 ml-1"
-              >
-                Top Sectors
-              </h2>
-              {#if rawData?.topSectors?.length !== 0}
-                <div class="flex justify-start items-center w-full m-auto">
-                  <table
-                    class="table table-sm table-compact mt-3 text-start flex justify-start items-center w-full px-3 m-auto"
-                  >
-                    <thead>
-                      <tr class="border-b border-[#141417">
-                        <th
-                          class="text-white font-semibold text-sm sm:text-[1rem] text-start bg-[#141417]"
-                          >Sector</th
-                        >
-                        <th
-                          class="text-white font-semibold text-sm sm:text-[1rem] text-end bg-[#141417]"
-                          >% Portfolio</th
-                        >
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {#each rawData?.topSectors as item}
-                        {#each Object?.entries(item) as [name, value]}
-                          <tr
-                            class="text-white sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#141417] border-b border-[#141417]"
-                          >
-                            <td class="text-[1rem] whitespace-nowrap">
-                              <a
-                                href={"/list/sector/" + sectorSelector(name)}
-                                class="sm:hover:text-white text-blue-400"
-                              >
-                                {name}
-                              </a>
-                            </td>
-                            <td
-                              class="text-white text-[1rem] whitespace-nowrap text-end"
-                            >
-                              {value?.toFixed(2)}%
-                            </td>
-                          </tr>
-                        {/each}
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-              {:else}
                 <div
-                  class=" mt-20 flex justify-center items-center text-2xl font-bold text-slate-700 mb-20 m-auto"
-                >
-                  No data available
-                </div>
-              {/if}
-            </div>
-          </div>
-        </aside>
-
-        <main class="w-full mt-10 sm:mt-0 sm:w-3/4 sm:ml-5">
-          {#if isLoaded && Object?.keys(optionsData)?.length !== 0}
-            <div
-              class="p-0 sm:p-10 bg-[#09090B] sm:bg-[#09090B] rounded-lg sm:min-h-[330px] mb-10 sm:mb-6"
-            >
-              <div
-                class="flex flex-row justify-center sm:justify-start items-center"
-              >
-                <svg
-                  class="w-7 h-7 inline-block"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 640 512"
-                  ><path
-                    fill="#849AAE"
-                    d="M576 0c17.7 0 32 14.3 32 32v448c0 17.7-14.3 32-32 32s-32-14.3-32-32V32c0-17.7 14.3-32 32-32M448 96c17.7 0 32 14.3 32 32v352c0 17.7-14.3 32-32 32s-32-14.3-32-32V128c0-17.7 14.3-32 32-32m-96 128v256c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32s32 14.3 32 32m-160 64c17.7 0 32 14.3 32 32v160c0 17.7-14.3 32-32 32s-32-14.3-32-32V320c0-17.7 14.3-32 32-32M96 416v64c0 17.7-14.3 32-32 32s-32-14.3-32-32v-64c0-17.7 14.3-32 32-32s32 14.3 32 32"
-                  /></svg
-                >
-                <span class="ml-3 text-white text-xl">Trade Amount by Year</span
-                >
-              </div>
-              <div class="app w-full h-[300px]">
-                <Chart {init} options={optionsData} class="chart" />
-              </div>
-
-              <div
-                class="flex flex-row items-center justify-between mx-auto mt-10 sm:mt-5 w-56 sm:w-80"
-              >
-                <div
-                  class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
+                  class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
                 >
                   <div
-                    class="h-full bg-[#313131] transform -translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <div
-                    class="w-3 h-3 bg-[#22C55E] border-4 box-content border-[#313131] rounded-full transform sm:-translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <span
-                    class="mt-2 sm:mt-0 text-white text-center sm:text-start text-xs sm:text-md inline-block"
+                    class="text-xl sm:text-2xl font-bold tracking-tight text-white"
                   >
-                    Bought
-                  </span>
-                </div>
-                <div
-                  class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
-                >
-                  <div
-                    class="h-full bg-[#313131] transform -translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <div
-                    class="w-3 h-3 bg-[#F71F4F] border-4 box-content border-[#313131] rounded-full transform sm:-translate-x-1/2"
-                    aria-hidden="true"
-                  ></div>
-                  <span
-                    class="mt-2 sm:mt-0 text-white text-xs sm:text-md sm:font-medium inline-block"
-                  >
-                    Sold
-                  </span>
-                </div>
-              </div>
-            </div>
-          {/if}
-          <div
-            class="p-0 sm:p-10 bg-[#09090B] sm:bg-[#09090B] rounded-lg sm:min-h-[330px]"
-          >
-            <div
-              class="w-full m-auto h-auto sm:max-h-[500px] sm:overflow-y-scroll scroller"
-            >
-              {#if rawData?.history?.length !== 0}
-                <div class="hidden sm:block">
-                  <span class="text-[#F5F5F5] font-bold text-2xl">
-                    {numOfAssets} Assets
-                  </span>
-
-                  <table
-                    class="-ml-2 table table-sm table-compact table-pin-rows table-pin-cols rounded-none sm:rounded-md w-full bg-[#09090B] m-auto mt-5"
-                  >
-                    <!-- head -->
-                    <thead>
-                      <tr class="bg-[#09090B]">
-                        <th
-                          class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
-                        >
-                          Name
-                        </th>
-                        <th
-                          class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
-                        >
-                          Transaction
-                        </th>
-                        <th
-                          class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                        >
-                          Traded
-                        </th>
-                        <th
-                          class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                        >
-                          Filed
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody class="p-0">
-                      {#each displayList as item}
-                        <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A]"
-                        >
-                          <td
-                            class="pb-3 border-b border-b-[#27272A] whitespace-nowrap"
-                          >
-                            <div class="flex flex-row items-center">
-                              <div
-                                class="flex-shrink-0 rounded-full w-8 h-8 relative bg-[#09090B] flex items-center justify-center"
-                              >
-                                <img
-                                  style="clip-path: circle(50%);"
-                                  class="avatar w-5 h-5"
-                                  src={`https://financialmodelingprep.com/image-stock/${item?.ticker}.png`}
-                                  alt="stock logo"
-                                />
-                              </div>
-                              <div class="flex flex-col ml-2">
-                                <a
-                                  href={`/${item?.assetType === "stock" ? "stocks" : item?.assetType === "etf" ? "etf" : "crypto"}/${item?.ticker}`}
-                                  class="text-sm sm:text-[1rem] sm:hover:text-white text-blue-400"
-                                  >{item?.ticker?.replace("_", " ")}</a
-                                >
-                                <span class="text-white text-sm"
-                                  >{item?.name?.length > 20
-                                    ? item?.name?.slice(0, 20) + "..."
-                                    : item?.name}</span
-                                >
-                              </div>
-                            </div>
-                            <!--{item?.firstName} {item?.lastName}-->
-                          </td>
-
-                          <td
-                            class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
-                          >
-                            <div class="flex flex-col items-start">
-                              <span class="font-semibold">
-                                {#if item?.type === "Bought"}
-                                  <span class="text-[#57D7BA]">Purchase</span>
-                                {:else if item?.type === "Sold"}
-                                  <span class="text-[#fe5555]">Sale</span>
-                                {:else if item?.type === "Exchange"}
-                                  <span class="text-[#C6A755]">Exchange</span>
-                                {/if}
-                              </span>
-                              <span>
-                                {item?.amount}
-                              </span>
-                            </div>
-                          </td>
-
-                          <td
-                            class="text-end text-sm sm:text-[1rem] text-white border-b border-b-[#27272A] whitespace-nowrap"
-                          >
-                            {new Date(item?.transactionDate)?.toLocaleString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                                daySuffix: "2-digit",
-                              },
-                            )}
-                          </td>
-
-                          <td
-                            class="text-end text-sm sm:text-[1rem] text-white border-b border-b-[#27272A] whitespace-nowrap"
-                          >
-                            {new Date(item?.disclosureDate)?.toLocaleString(
-                              "en-US",
-                              {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                                daySuffix: "2-digit",
-                              },
-                            )}
-                          </td>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div
-                  class="sm:hidden flex flex-col justify-center w-full m-auto h-full overflow-hidden mt-3"
-                >
-                  <span class="ml-3 text-[#F5F5F5] font-bold text-2xl">
-                    {numOfAssets} Assets
-                  </span>
-
-                  <!-- Content area -->
-                  <div class="mt-4 w-full overflow-x-auto scroller">
-                    <table class="-ml-2 table mt-3 w-screen">
-                      <thead>
-                        <tr class="">
-                          <th
-                            class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Name
-                          </th>
-                          <th
-                            class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Transaction
-                          </th>
-                          <th
-                            class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Traded
-                          </th>
-                          <th
-                            class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
-                          >
-                            Filed
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {#each displayList as item}
-                          <!-- row -->
-                          <tr
-                            on:click={() =>
-                              goto(
-                                `/${item?.assetType === "stock" ? "stocks" : item?.assetType === "etf" ? "etf" : "crypto"}/${item?.ticker}`,
-                              )}
-                            class="w-screen odd:bg-[#27272A] border-b-[#09090B]"
-                          >
-                            <td
-                              class="text-gray-200 pb-3 border-b border-b-[#09090B] whitespace-nowrap"
-                            >
-                              <div class="flex flex-row items-center">
-                                <div class="flex flex-col">
-                                  <span class="text-blue-400 text-sm"
-                                    >{item?.ticker?.replace("_", " ")}</span
-                                  >
-                                  <span class="text-white text-xs"
-                                    >{item?.name?.length > 15
-                                      ? item?.name?.slice(0, 15) + "..."
-                                      : item?.name}</span
-                                  >
-                                </div>
-                              </div>
-                              <!--{item?.firstName} {item?.lastName}-->
-                            </td>
-
-                            <td
-                              class="text-start text-sm text-white border-b border-b-[#09090B] whitespace-nowrap"
-                            >
-                              <div class="flex flex-col items-start">
-                                <span class="font-semibold">
-                                  {#if item?.type === "Bought"}
-                                    <span class="text-[#57D7BA]">Purchase</span>
-                                  {:else if item?.type === "Sold"}
-                                    <span class="text-[#fe5555]">Sale</span>
-                                  {:else if item?.type === "Exchange"}
-                                    <span class="text-[#C6A755]">Exchange</span>
-                                  {/if}
-                                </span>
-                                <span>
-                                  {item?.amount}
-                                </span>
-                              </div>
-                            </td>
-
-                            <td
-                              class="text-end text-sm text-white border-b border-b-[#09090B] whitespace-nowrap"
-                            >
-                              {new Date(item?.transactionDate)?.toLocaleString(
-                                "en-US",
-                                {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                  daySuffix: "2-digit",
-                                },
-                              )}
-                            </td>
-
-                            <td
-                              class="text-end text-sm text-white border-b border-b-[#09090B] whitespace-nowrap"
-                            >
-                              {new Date(item?.disclosureDate)?.toLocaleString(
-                                "en-US",
-                                {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                  daySuffix: "2-digit",
-                                },
-                              )}
-                            </td>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
+                    {buySellRatio}
+                  </div>
+                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                    Buy/Sell
                   </div>
                 </div>
-
-                <InfiniteLoading on:infinite={infiniteHandler} />
-              {:else}
-                <div
-                  class="flex justify-center items-center m-auto sm:mt-24 mt-32 mb-6"
-                >
-                  <div
-                    class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-lg h-auto border border-slate-800 p-4"
-                  >
-                    <svg
-                      class="w-5 h-5 inline-block mr-2 flex-shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 256 256"
-                      ><path
-                        fill="#fff"
-                        d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                      /></svg
-                    >
-                    No Trading activity found
-                  </div>
-                </div>
-              {/if}
+              </div>
             </div>
           </div>
         </main>
