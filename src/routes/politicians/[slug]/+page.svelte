@@ -87,22 +87,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
-    Wall Street Hedge Funds · stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Which
+    stocks is {name} trading? · stocknear
   </title>
   <meta
     name="description"
-    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
+    content={`A list of all trades from the US Politician ${name}.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Top Wall Street hedge funds · stocknear`}
+    content={`Which stocks is ${name} trading? · stocknear`}
   />
   <meta
     property="og:description"
-    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
+    content={`A list of all trades from the US Politician ${name}.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -111,11 +111,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Top Wall Street hedge funds · stocknear`}
+    content={`Which stocks is ${name} trading? · stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
+    content={`A list of all trades from the US Politician ${name}.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
