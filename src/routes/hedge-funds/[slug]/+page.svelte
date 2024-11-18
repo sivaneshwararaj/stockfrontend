@@ -10,12 +10,11 @@
   let companyName = data?.getHedgeFundsData?.name ?? "Company Data";
 
   const excludedRules = new Set([
-    "volume",
-    "price",
-    "sentiment",
-    "changesPercentage",
-    "eps",
-    "marketCap",
+    "sharesNumber",
+    "changeInSharesNumberPercentage",
+    "marketValue",
+    "avgPricePaid",
+    "weight",
   ]);
 
   const defaultList = [
@@ -195,7 +194,7 @@
               >
                 <div class="flex flex-col sm:flex-row">
                   <div class="mb-2 font-semibold sm:mb-0">Main Sectors:</div>
-                  <div class="flex flex-wrap gap-x-2 gap-y-px sm:ml-2">
+                  <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
                     {#each data?.getHedgeFundsData?.mainSectors as item}
                       <a
                         href={sectorNavigation?.find(
