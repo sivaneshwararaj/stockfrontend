@@ -1,6 +1,6 @@
 <script lang="ts">
   import { numberOfUnreadNotification } from "$lib/store";
-  import { formatString, sectorNavigation, abbreviateNumber } from "$lib/utils";
+  import { formatString, sectorNavigation } from "$lib/utils";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
