@@ -634,7 +634,7 @@ const handleTwitchMessage = (event) => {
                               >Insider Tracker</a
                             >
                           </Button>
-
+                          <!--
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -646,6 +646,7 @@ const handleTwitchMessage = (event) => {
                               >Reddit Tracker</a
                             >
                           </Button>
+                          -->
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -1105,11 +1106,13 @@ const handleTwitchMessage = (event) => {
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Insider Tracker</a
                           >
+                          <!--
                           <a
                             href="/reddit-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Reddit Tracker</a
                           >
+                            -->
                           <a
                             href="/corporate-lobbying-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"

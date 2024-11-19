@@ -310,7 +310,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screenpb-40"
+  class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pb-40"
 >
   <div class="flex flex-col w-full m-auto justify-center items-center">
     <div class="text-center mb-10 w-full px-4 3xl:px-10 mt-10 3xl:ml-20">
@@ -558,26 +558,35 @@
                     <Table.Root class="overflow-x-scroll w-full">
                       <Table.Header>
                         <Table.Row>
-                          <Table.Head class="text-white text-[1rem]"
+                          <Table.Head class="text-white text-sm font-semibold"
                             >Rank</Table.Head
                           >
-                          <Table.Head class="text-white text-[1rem]"
+                          <Table.Head class="text-white text-sm font-semibold"
                             >Symbol</Table.Head
                           >
-                          <Table.Head class="text-white text-[1rem] text-end"
+                          <Table.Head
+                            class="text-white text-sm font-semibold text-end"
                             >Mentions</Table.Head
                           >
-                          <Table.Head class="text-white text-[1rem] text-end"
+                          <Table.Head
+                            class="text-white text-sm font-semibold text-end"
                             >Calls</Table.Head
                           >
-                          <Table.Head class="text-white text-[1rem] text-end"
+                          <Table.Head
+                            class="text-white text-sm font-semibold text-end"
                             >Puts</Table.Head
                           >
-                          <Table.Head class="text-white text-[1rem] text-end"
+                          <Table.Head
+                            class="text-white text-sm font-semibold text-end"
                             >Sentiment</Table.Head
                           >
-                          <Table.Head class="text-white text-[1rem] text-end"
+                          <Table.Head
+                            class="text-white text-sm font-semibold text-end"
                             >Price</Table.Head
+                          >
+                          <Table.Head
+                            class="text-white text-sm text-right whitespace-nowrap"
+                            >% Change</Table.Head
                           >
                         </Table.Row>
                       </Table.Header>
@@ -626,27 +635,24 @@
                                   ? "Bearish"
                                   : "Neutral"}</Table.Cell
                             >
-                            <Table.Cell>
-                              <div
-                                class="flex flex-row justify-end items-center text-[1rem]"
+
+                            <Table.Cell
+                              class="text-right text-[1rem] text-white"
+                              >{item?.price?.toFixed(2)}</Table.Cell
+                            >
+
+                            <Table.Cell class="text-right text-[1rem] ">
+                              <span
+                                class="{item?.changesPercentage > 0
+                                  ? 'text-[#00FC50]'
+                                  : 'text-[#FF2F1F]'} text-end"
                               >
-                                <div class="flex flex-col mt-3">
-                                  <span class="text-white ml-auto"
-                                    >${item.price?.toFixed(2)}</span
-                                  >
-                                  <span
-                                    class="{item?.changesPercentage > 0
-                                      ? 'text-[#00FC50]'
-                                      : 'text-[#FF2F1F]'} font-semibold text-end"
-                                  >
-                                    {#if item?.changesPercentage > 0}
-                                      +{item?.changesPercentage?.toFixed(2)}%
-                                    {:else}
-                                      {item?.changesPercentage?.toFixed(2)}%
-                                    {/if}
-                                  </span>
-                                </div>
-                              </div>
+                                {#if item?.changesPercentage > 0}
+                                  +{item?.changesPercentage?.toFixed(2)}%
+                                {:else}
+                                  {item?.changesPercentage?.toFixed(2)}%
+                                {/if}
+                              </span>
                             </Table.Cell>
                           </Table.Row>
                         {/each}

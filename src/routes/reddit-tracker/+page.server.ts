@@ -1,4 +1,4 @@
-export const load = async ({ locals, setHeaders }) => {
+export const load = async ({ locals }) => {
   const getRedditTracker = async () => {
     let output;
 
@@ -14,7 +14,6 @@ export const load = async ({ locals, setHeaders }) => {
 
     output = await response.json();
 
-    setHeaders({ "cache-control": "public, max-age=300" });
 
     return output;
   };
