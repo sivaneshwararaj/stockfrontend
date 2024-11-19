@@ -1609,7 +1609,7 @@
         ) // Only include specific rules
         ?.map((rule) => [rule.name, new Set(rule.value)]), // Create Map from filtered rules
     );
-    Object.keys(allRules).forEach((ruleName) => {
+    Object?.keys(allRules)?.forEach((ruleName) => {
       ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
       valueMappings[ruleName] = allRules[ruleName].defaultValue;
     });
@@ -1697,7 +1697,7 @@ const handleKeyDown = (event) => {
 
   async function handleSave(printToast) {
     if (data?.user) {
-      if (isSaved === false) {
+      if (isSaved === false && strategyList?.length > 0) {
         strategyList.find((item) => item.id === selectedStrategy).rules =
           ruleOfList;
 
