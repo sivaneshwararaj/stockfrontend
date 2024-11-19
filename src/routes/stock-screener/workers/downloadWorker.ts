@@ -65,7 +65,6 @@ const getStockScreenerData = async (rules) => {
 
 onmessage = async (event) => {
   const { ruleOfList } = event.data || {};
-
   const output = await getStockScreenerData(ruleOfList);
 
   const stockScreenerData = output?.filter((item) =>
@@ -79,7 +78,6 @@ onmessage = async (event) => {
           ))
     )
   );
-
   postMessage({ message: "success", stockScreenerData });
 };
 

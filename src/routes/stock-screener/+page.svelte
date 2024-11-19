@@ -47,6 +47,7 @@
   let displayRules = [];
   let selectedPopularStrategy = "";
   let displayTableTab = "general";
+  let otherTabRules = [];
 
   let stockScreenerData = data?.getStockScreenerData?.filter((item) =>
     Object?.values(item)?.every(
@@ -217,7 +218,7 @@
       step: ["20%", "10%", "5%", "1%", "-1%", "-5%", "-10%", "-20%"],
       category: "ta",
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     change1M: {
       label: "Price Change 1M",
@@ -236,7 +237,7 @@
       ],
       category: "ta",
       defaultCondition: "over",
-      defaultValue: "10%",
+      defaultValue: "any",
     },
     change3M: {
       label: "Price Change 3M",
@@ -255,7 +256,7 @@
       ],
       category: "ta",
       defaultCondition: "over",
-      defaultValue: "10%",
+      defaultValue: "any",
     },
     change6M: {
       label: "Price Change 6M",
@@ -274,7 +275,7 @@
       ],
       category: "ta",
       defaultCondition: "over",
-      defaultValue: "10%",
+      defaultValue: "any",
     },
     change1Y: {
       label: "Price Change 1Y",
@@ -293,7 +294,7 @@
       ],
       category: "ta",
       defaultCondition: "over",
-      defaultValue: "10%",
+      defaultValue: "any",
     },
     change3Y: {
       label: "Price Change 3Y",
@@ -312,7 +313,7 @@
       ],
       category: "ta",
       defaultCondition: "over",
-      defaultValue: "10%",
+      defaultValue: "any",
     },
     marketCap: {
       label: "Market Cap",
@@ -1478,8 +1479,9 @@
 
   const handleMessage = (event) => {
     displayRules = allRows?.filter((row) =>
-      ruleOfList.some((rule) => rule.name === row.rule),
+      ruleOfList?.some((rule) => rule.name === row.rule),
     );
+
     filteredData = event.data?.filteredData ?? [];
     displayResults = filteredData?.slice(0, 50);
   };
@@ -1490,11 +1492,27 @@
   };
 
   const loadWorker = async () => {
-    syncWorker.postMessage({ stockScreenerData, ruleOfList });
+    if (displayTableTab === "performance") {
+      syncWorker.postMessage({
+        stockScreenerData,
+        ruleOfList: [...ruleOfList, ...otherTabRules],
+      });
+    } else {
+      syncWorker.postMessage({
+        stockScreenerData,
+        ruleOfList,
+      });
+    }
   };
 
   const updateStockScreenerData = async () => {
-    downloadWorker.postMessage({ ruleOfList: ruleOfList });
+    if (displayTableTab === "performance") {
+      downloadWorker.postMessage({
+        ruleOfList: [...ruleOfList, ...otherTabRules],
+      });
+    } else {
+      downloadWorker.postMessage({ ruleOfList: ruleOfList });
+    }
   };
 
   function handleAddRule() {
@@ -1988,8 +2006,8 @@ const handleKeyDown = (event) => {
     { key: "symbol", label: "Symbol", align: "left" },
     { key: "name", label: "Name", align: "left" },
     { key: "marketCap", label: "Market Cap", align: "right" },
-    { key: "changesPercentage", label: "% Change", align: "right" },
     { key: "price", label: "Price", align: "right" },
+    { key: "changesPercentage", label: "% Change", align: "right" },
     { key: "volume", label: "Volume", align: "right" },
     { key: "pe", label: "PE Ratio", align: "right" },
   ];
@@ -2002,19 +2020,6 @@ const handleKeyDown = (event) => {
     price: { order: "none", type: "number" },
     volume: { order: "none", type: "number" },
     pe: { order: "none", type: "number" },
-  };
-
-  // Initial columns and sort orders for other tabs
-  const baseColumns = [
-    { key: "symbol", label: "Symbol", align: "left" },
-    { key: "name", label: "Name", align: "left" },
-    { key: "marketCap", label: "Market Cap", align: "right" },
-  ];
-
-  const baseSortOrders = {
-    symbol: { order: "none", type: "string" },
-    name: { order: "none", type: "string" },
-    marketCap: { order: "none", type: "number" },
   };
 
   const stringTypeRules = [
@@ -2032,18 +2037,43 @@ const handleKeyDown = (event) => {
 
   $: {
     if (displayTableTab) {
+      const baseColumnsMap = {
+        performance: [
+          { key: "symbol", label: "Symbol", align: "left" },
+          { key: "name", label: "Name", align: "left" },
+          { key: "marketCap", label: "Market Cap", align: "right" },
+        ],
+        filters: [
+          { key: "symbol", label: "Symbol", align: "left" },
+          { key: "name", label: "Name", align: "left" },
+          { key: "marketCap", label: "Market Cap", align: "right" },
+        ],
+      };
+
+      const baseSortOrdersMap = {
+        performance: {
+          symbol: { order: "none", type: "string" },
+          name: { order: "none", type: "string" },
+          marketCap: { order: "none", type: "number" },
+        },
+        filters: {
+          symbol: { order: "none", type: "string" },
+          name: { order: "none", type: "string" },
+          marketCap: { order: "none", type: "number" },
+        },
+      };
+
       if (displayTableTab === "general") {
-        // Set columns and sortOrders for the "general" tab
         columns = [...generalColumns];
         sortOrders = { ...generalSortOrders };
       } else {
-        // Set base columns and sortOrders, then extend with displayRules
-        columns = [...baseColumns];
-        sortOrders = { ...baseSortOrders };
+        columns = [...(baseColumnsMap[displayTableTab] || [])];
+        sortOrders = { ...(baseSortOrdersMap[displayTableTab] || {}) };
 
-        displayRules?.forEach((rule) => {
+        const rulesList =
+          displayTableTab === "performance" ? tabRuleList : displayRules;
+        rulesList?.forEach((rule) => {
           if (rule.rule !== "marketCap") {
-            // Ignore "marketCap" if it's present in displayRules
             columns.push({
               key: rule.rule,
               label: rule.label,
@@ -2053,6 +2083,26 @@ const handleKeyDown = (event) => {
           }
         });
       }
+    }
+  }
+
+  let tabRuleList = [];
+  async function changeTab(state) {
+    displayTableTab = state;
+
+    if (displayTableTab === "performance") {
+      otherTabRules = [
+        { name: "marketCap", value: "any" },
+        { name: "change1W", value: "any" },
+        { name: "change1M", value: "any" },
+        { name: "change3M", value: "any" },
+        { name: "change1Y", value: "any" },
+      ];
+      tabRuleList = otherTabRules
+        .map((rule) => allRows.find((row) => row.rule === rule.name))
+        .filter(Boolean);
+
+      await updateStockScreenerData();
     }
   }
 </script>
@@ -2757,9 +2807,9 @@ const handleKeyDown = (event) => {
       {filteredData?.length} Stocks
     </h2>
     <div
-      class="hide-scroll col-span-2 flex flex-row items-center border-t border-gray-600 lg:order-2 lg:grow lg:border-0 lg:pl-1 xl:pl-3"
+      class="col-span-2 flex flex-row items-center border-t border-gray-600 lg:order-2 lg:grow lg:border-0 lg:pl-1 xl:pl-3"
     >
-      <nav class="grow flex flex-row items-center py-2.5 sm:py-3 lg:py-1">
+      <nav class="w-full flex flex-row items-center py-2.5 sm:py-3 lg:py-1">
         <ul
           class="flex flex-row items-center space-x-2 whitespace-nowrap text-base"
         >
@@ -2794,8 +2844,19 @@ const handleKeyDown = (event) => {
               </span>
             </button>
           </li>
+          <li>
+            <button
+              on:click={() => changeTab("performance")}
+              class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-[#27272A] {displayTableTab ===
+              'performance'
+                ? 'font-semibold bg-[#27272A]'
+                : ''}"
+            >
+              Performance
+            </button>
+          </li>
         </ul>
-        <div class="w-fit ml-auto">
+        <div class="w-fit ml-auto hidden sm:inline-block">
           <DownloadData
             {data}
             rawData={filteredData}
@@ -2848,6 +2909,12 @@ const handleKeyDown = (event) => {
                   </td>
 
                   <td
+                    class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]"
+                  >
+                    {item?.price < 0.01 ? "< 0.01" : item?.price?.toFixed(2)}
+                  </td>
+
+                  <td
                     class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]"
                   >
                     {#if item?.changesPercentage >= 0}
@@ -2863,12 +2930,6 @@ const handleKeyDown = (event) => {
                           : item?.changesPercentage?.toFixed(2)}%
                       </span>
                     {/if}
-                  </td>
-
-                  <td
-                    class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]"
-                  >
-                    {item?.price < 0.01 ? "< 0.01" : item?.price?.toFixed(2)}
                   </td>
 
                   <td
@@ -2929,13 +2990,70 @@ const handleKeyDown = (event) => {
                       >
                         {#if ["ema20", "ema50", "ema100", "ema200", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           {item[row?.rule]}
-                        {:else if ["fundamentalAnalysis", "trendAnalysis"]?.includes(row?.rule)}
-                          {item[row?.rule]?.accuracy}%
                         {:else}
                           {abbreviateNumber(item[row?.rule])}
                         {/if}
                       </td>
                     {/if}
+                  {/each}
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {:else if displayTableTab === "performance"}
+        <div class="w-full rounded-md overflow-x-scroll">
+          <table
+            class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
+          >
+            <thead>
+              <TableHeader {columns} {sortOrders} {sortData} />
+            </thead>
+            <tbody>
+              {#each displayResults as item (item?.symbol)}
+                <tr
+                  on:click={() => {
+                    handleSave(false);
+                  }}
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]"
+                >
+                  <td class="border-b-[#09090B] whitespace-nowrap">
+                    <a
+                      href={"/stocks/" + item?.symbol}
+                      class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
+                      >{item?.symbol}</a
+                    >
+                  </td>
+                  <td
+                    class="whitespace-nowrap text-[1rem] text-white border-b-[#09090B]"
+                  >
+                    {item?.name?.length > charNumber
+                      ? item?.name?.slice(0, charNumber) + "..."
+                      : item?.name}
+                  </td>
+
+                  {#each tabRuleList as row (row?.rule)}
+                    <td
+                      class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
+                    >
+                      {#if row?.rule === "marketCap"}
+                        {abbreviateNumber(item[row?.rule])}
+                      {:else if item[row?.rule] > 0}
+                        <span class="text-[#00FC50]"
+                          >+{abbreviateNumber(
+                            item[row?.rule]?.toFixed(2),
+                          )}%</span
+                        >
+                      {:else if item[row?.rule] < 0}
+                        <span class="text-[#FF2F1F]"
+                          >{abbreviateNumber(
+                            item[row?.rule]?.toFixed(2),
+                          )}%</span
+                        >
+                      {:else}
+                        <span class="text-[#fff]">-</span>
+                      {/if}
+                    </td>
                   {/each}
                 </tr>
               {/each}
