@@ -19,6 +19,7 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import DownloadData from "$lib/components/DownloadData.svelte";
 
   import Input from "$lib/components/Input.svelte";
 
@@ -2054,37 +2055,6 @@ const handleKeyDown = (event) => {
       }
     }
   }
-
-  const exportData = (format = "csv") => {
-    if (data?.user?.tier === "Pro") {
-      // Add headers row dynamically based on columns
-      const csvRows = [];
-      const headers = columns.map((col) => col.label).join(",");
-      csvRows.push(headers);
-
-      // Add data rows dynamically based on columns
-      filteredData?.forEach((item) => {
-        const csvRow = columns
-          .map((col) => item[col.key]) // Dynamically map item values based on column keys
-          .join(",");
-        csvRows.push(csvRow);
-      });
-
-      // Create CSV blob and trigger download
-      const csv = csvRows.join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.setAttribute("hidden", "");
-      a.setAttribute("href", url);
-      a.setAttribute("download", `stock_screener_data.csv`);
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else {
-      goto("/pricing");
-    }
-  };
 </script>
 
 <svelte:head>
@@ -2787,7 +2757,7 @@ const handleKeyDown = (event) => {
       {filteredData?.length} Stocks
     </h2>
     <div
-      class="hide-scroll col-span-2 overflow-x-auto border-t border-gray-600 lg:order-2 lg:grow lg:border-0 lg:pl-1 xl:pl-3"
+      class="hide-scroll col-span-2 flex flex-row items-center border-t border-gray-600 lg:order-2 lg:grow lg:border-0 lg:pl-1 xl:pl-3"
     >
       <nav class="grow flex flex-row items-center py-2.5 sm:py-3 lg:py-1">
         <ul
@@ -2796,7 +2766,7 @@ const handleKeyDown = (event) => {
           <li>
             <button
               on:click={() => (displayTableTab = "general")}
-              class="text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-[#27272A] {displayTableTab ===
+              class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-[#27272A] {displayTableTab ===
               'general'
                 ? 'font-semibold bg-[#27272A]'
                 : ''}"
@@ -2807,7 +2777,7 @@ const handleKeyDown = (event) => {
           <li>
             <button
               on:click={() => (displayTableTab = "filters")}
-              class="text-lg flex flex-row items-center relative block rounded-md px-2 py-1 sm:hover:bg-[#27272A] {displayTableTab ===
+              class="text-[1rem] sm:text-lg flex flex-row items-center relative block rounded-md px-2 py-1 sm:hover:bg-[#27272A] {displayTableTab ===
               'filters'
                 ? 'font-semibold bg-[#27272A]'
                 : ''} focus:outline-none"
@@ -2825,24 +2795,13 @@ const handleKeyDown = (event) => {
             </button>
           </li>
         </ul>
-
-        <Button
-          on:click={() => exportData("csv")}
-          class="ml-auto w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-        >
-          <span class="truncate text-white">Download</span>
-          <svg
-            class="{data?.user?.tier === 'Pro'
-              ? 'hidden'
-              : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            ><path
-              fill="#A3A3A3"
-              d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-            /></svg
-          >
-        </Button>
+        <div class="w-fit ml-auto">
+          <DownloadData
+            {data}
+            rawData={filteredData}
+            title={"stock_screener_data"}
+          />
+        </div>
       </nav>
     </div>
   </div>
