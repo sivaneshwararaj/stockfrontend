@@ -1492,7 +1492,7 @@
   };
 
   const loadWorker = async () => {
-    if (displayTableTab === "performance") {
+    if (displayTableTab === "performance" || hoverStatus) {
       syncWorker.postMessage({
         stockScreenerData,
         ruleOfList: [...ruleOfList, ...otherTabRules],
@@ -1506,7 +1506,7 @@
   };
 
   const updateStockScreenerData = async () => {
-    if (displayTableTab === "performance") {
+    if (displayTableTab === "performance" || hoverStatus) {
       downloadWorker.postMessage({
         ruleOfList: [...ruleOfList, ...otherTabRules],
       });
@@ -2087,10 +2087,12 @@ const handleKeyDown = (event) => {
   }
 
   let tabRuleList = [];
+  let hoverStatus = false;
   async function changeTab(state) {
     displayTableTab = state;
 
     if (displayTableTab === "performance") {
+      hoverStatus = false;
       otherTabRules = [
         { name: "marketCap", value: "any" },
         { name: "change1W", value: "any" },
@@ -2101,6 +2103,24 @@ const handleKeyDown = (event) => {
       tabRuleList = otherTabRules
         .map((rule) => allRows.find((row) => row.rule === rule.name))
         .filter(Boolean);
+
+      await updateStockScreenerData();
+    }
+  }
+
+  async function handleMouseOver() {
+    if (displayTableTab !== "performance") {
+      hoverStatus = true;
+      otherTabRules = [
+        { name: "marketCap", value: "any" },
+        { name: "change1W", value: "any" },
+        { name: "change1M", value: "any" },
+        { name: "change3M", value: "any" },
+        { name: "change1Y", value: "any" },
+      ];
+      tabRuleList = otherTabRules
+        ?.map((rule) => allRows.find((row) => row.rule === rule.name))
+        ?.filter(Boolean);
 
       await updateStockScreenerData();
     }
@@ -2846,6 +2866,7 @@ const handleKeyDown = (event) => {
           </li>
           <li>
             <button
+              on:mouseover={handleMouseOver}
               on:click={() => changeTab("performance")}
               class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-[#27272A] {displayTableTab ===
               'performance'
