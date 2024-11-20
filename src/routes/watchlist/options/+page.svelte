@@ -1,7 +1,7 @@
 <script lang="ts">
   import { numberOfUnreadNotification } from "$lib/store";
 
-  //import MiniPlot from '$lib/components/MiniPlot.svelte';
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { abbreviateNumber } from "$lib/utils";
 
   import { onMount } from "svelte";
@@ -313,15 +313,10 @@
                                 : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3"
                             />
                             {#if !editMode}
-                              <a
-                                class="inline-block sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
-                                href={item?.underlying_type === "stock"
-                                  ? `/stocks/${item?.ticker}`
-                                  : `/etf/${item?.ticker}`}
-                                on:click|stopPropagation
-                              >
-                                {item?.ticker}
-                              </a>
+                              <HoverStockChart
+                                symbol={item?.ticker}
+                                assetType={item?.underlying_type}
+                              />
                             {:else}
                               <span class="text-blue-400 cursor-pointer"
                                 >{item?.ticker}</span

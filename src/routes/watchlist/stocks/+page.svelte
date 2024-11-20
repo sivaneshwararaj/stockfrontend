@@ -8,6 +8,7 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { Combobox } from "bits-ui";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
   let timeoutId;
@@ -1118,12 +1119,10 @@
                                   {item?.symbol}
                                 </label>
                               {:else}
-                                <a
-                                  href={`/${item?.type === "stock" ? "stocks" : item?.type === "etf" ? "etf" : "crypto"}/${item?.symbol}`}
-                                  class="text-blue-400 sm:hover:text-white"
-                                >
-                                  {item?.symbol}
-                                </a>
+                                <HoverStockChart
+                                  symbol={item?.symbol}
+                                  assetType={item?.type}
+                                />
                               {/if}
                             </td>
 
