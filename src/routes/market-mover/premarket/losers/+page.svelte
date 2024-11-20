@@ -2,7 +2,7 @@
   import Table from "$lib/components/Table/Table.svelte";
   export let data;
 
-  let rawData = data?.getMarketMover?.losers;
+  let rawData = data?.getMarketMover || [];
 
   const excludedRules = new Set([
     "volume",

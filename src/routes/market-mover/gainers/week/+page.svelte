@@ -3,7 +3,7 @@
 
   export let data;
 
-  let rawData = data?.getMarketMover?.gainers["1W"];
+  let rawData = data?.getMarketMover["1W"];
 
   let excludedRules = new Set([
     "volume",

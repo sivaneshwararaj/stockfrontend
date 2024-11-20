@@ -1,9 +1,9 @@
-export const load = async ({ locals }) => {
+export const load = async ({ locals, setHeaders }) => {
   const { apiURL, apiKey } = locals;
 
 
   const getMarketMover = async () => {
-    const postData = { params: "premarket" };
+    const postData = { category: "premarket", params: 'losers' };
     const response = await fetch(apiURL + "/pre-after-market-movers", {
       method: "POST",
       headers: {
@@ -14,6 +14,7 @@ export const load = async ({ locals }) => {
     });
 
     const output = await response.json();
+    setHeaders({ "cache-control": "public, max-age=60*5" });
 
     return output;
   };
