@@ -17,7 +17,7 @@
   <main class="overflow-hidden">
     <div class="w-full">
       <div
-        class="flex flex-col items-center w-auto p-4 sm:p-4 bg-[#09090B] sm:bg-[#09090B] rounded-lg relative"
+        class="flex flex-col items-center w-auto p-4 sm:p-4 bg-[#09090B] sm:bg-[#09090B] rounded-md relative"
       >
         <div class="relative">
           <h3 class="text-center text-white text-sm sm:text-[1rem] mb-2">

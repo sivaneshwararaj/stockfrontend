@@ -182,7 +182,7 @@
 
     {#if isLoaded}
       {#if Object?.keys(rawData)?.length !== 0}
-        <div class="mt-2 pb-8 sm:pb-2 rounded-lg bg-[#09090B] sm:bg-[#09090B]">
+        <div class="mt-2 pb-8 sm:pb-2 rounded-md bg-[#09090B] sm:bg-[#09090B]">
           <div class="w-full flex flex-col items-start">
             <div class="text-white text-[1rem] mt-1 sm:mt-3 mb-1 w-full">
               Examine how sensitive {$displayCompanyName}'s stock price is to

@@ -40,7 +40,7 @@
             <option value="252dclshv"> 1 Year historical volatility </option>
           </select>
 
-          <div class="pb-2 rounded-lg bg-[#09090B]">
+          <div class="pb-2 rounded-md bg-[#09090B]">
             <div class="app w-full h-[300px] mt-5">
               <Chart {init} options={optionsData} class="chart" />
             </div>

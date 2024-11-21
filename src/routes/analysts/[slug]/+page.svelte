@@ -300,7 +300,7 @@
                         href={sectorNavigation?.find(
                           (listItem) => listItem?.title === item,
                         )?.link}
-                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
                       >
                         {item}
                       </a>
@@ -315,7 +315,7 @@
                     {#each data?.getAnalystStats?.mainIndustries as item}
                       <a
                         href={`/list/industry/${item?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
-                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
                       >
                         {item}
                       </a>
@@ -331,7 +331,7 @@
 
             <div class="w-full m-auto mt-10">
               <div
-                class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll"
+                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
               >
                 <table
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"

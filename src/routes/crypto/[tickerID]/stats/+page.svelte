@@ -123,7 +123,7 @@ updateYearRange()
       </h1>
 
       <div
-        class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+        class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
       >
         <svg
           class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -145,7 +145,7 @@ updateYearRange()
             class="w-full grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-3 gap-x-3"
           >
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-lg h-auto"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-md h-auto"
             >
               <div class="flex flex-col items-center w-full p-3">
                 <span class="font-medium text-white text-xl font-semibold"
@@ -197,7 +197,7 @@ updateYearRange()
             </div>
 
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-lg h-auto"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-md h-auto"
             >
               <div class="flex flex-col items-center w-full p-3">
                 <span class="font-medium text-white text-xl font-semibold"
@@ -249,7 +249,7 @@ updateYearRange()
             </div>
 
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-lg h-auto"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-md h-auto"
             >
               <div class="flex flex-col items-center w-full p-3">
                 <span class="font-medium text-white text-xl font-semibold"

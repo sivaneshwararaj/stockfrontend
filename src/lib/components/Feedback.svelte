@@ -211,7 +211,7 @@
         inputValue?.length !== 0) ||
       (category !== 'general' && inputValue?.length !== 0)
         ? 'opacity-100 cursor-pointer'
-        : 'opacity-60 cursor-not-allowed'} w-11/12 rounded-lg m-auto text-black font-semibold text-md"
+        : 'opacity-60 cursor-not-allowed'} w-11/12 rounded-md m-auto text-black font-semibold text-md"
     >
       Send Feedback
     </button>

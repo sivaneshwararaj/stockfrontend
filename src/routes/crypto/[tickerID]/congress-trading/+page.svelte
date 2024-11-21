@@ -166,7 +166,7 @@
           </h1>
 
           <div
-            class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+            class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
           >
             <svg
               class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -195,7 +195,7 @@
               >
                 <!--Start Buy/Sell-->
                 <div
-                  class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-lg h-20"
+                  class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-md h-20"
                 >
                   <div class="flex flex-col items-start">
                     <span
@@ -257,7 +257,7 @@
                 <!--End Buy/Sell-->
                 <!--Start Dem/Rep-->
                 <div
-                  class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-lg h-20"
+                  class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 bg-[#262626] shadow-lg rounded-md h-20"
                 >
                   <div class="flex flex-col items-start">
                     <span
@@ -321,7 +321,7 @@
 
             <label
               on:click={changeStructure}
-              class="sm:hidden w-24 sm:ml-3 mr-2 sm:mr-0 cursor-pointer bg-[#27272A] px-4 py-2 rounded-lg shadow-md"
+              class="sm:hidden w-24 sm:ml-3 mr-2 sm:mr-0 cursor-pointer bg-[#27272A] px-4 py-2 rounded-md shadow-md"
             >
               <span class="m-auto mr-0.5 text-white text-sm">
                 Switch To: {displayStructure}
@@ -330,7 +330,7 @@
 
             {#if displayStructure === "Card"}
               <div
-                class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll"
+                class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
               >
                 <table
                   class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
@@ -453,7 +453,7 @@
                         />
                       {/if}
                       <div
-                        class="flex flex-col justify-center items-center rounded-lg"
+                        class="flex flex-col justify-center items-center rounded-md"
                       >
                         <div
                           class="-mt-3 shadow-lg rounded-full border border-slate-600 w-20 h-20 relative {item?.party ===

@@ -200,7 +200,7 @@
                         href={sectorNavigation?.find(
                           (listItem) => listItem?.title === item,
                         )?.link}
-                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
                       >
                         {item}
                       </a>
@@ -215,7 +215,7 @@
                     {#each data?.getHedgeFundsData?.mainIndustries as item}
                       <a
                         href={`/list/industry/${item?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
-                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-lg bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
                       >
                         {item}
                       </a>

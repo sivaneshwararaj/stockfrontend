@@ -369,7 +369,7 @@
             </div>
             <!--Start Table-->
             <div
-              class="w-full rounded-lg overflow-hidden overflow-x-scroll no-scrollbar"
+              class="w-full rounded-md overflow-hidden overflow-x-scroll no-scrollbar"
             >
               <table
                 class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"

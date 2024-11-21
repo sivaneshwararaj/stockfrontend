@@ -230,7 +230,7 @@
     </div>
 
     {#if shareholderList?.length !== 0}
-      <div class="pb-2 rounded-lg bg-[#09090B] sm:bg-[#09090B]">
+      <div class="pb-2 rounded-md bg-[#09090B] sm:bg-[#09090B]">
         <div class="text-white text-[1rem] mt-3">
           As of {new Date(rawData?.date)?.toLocaleString("en-US", {
             month: "short",

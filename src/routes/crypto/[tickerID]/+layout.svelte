@@ -1073,7 +1073,7 @@
             class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
           >
             <div
-              class="flex flex-row items-center w-full bg-[#313131] p-3 rounded-lg {item?.ticker?.includes(
+              class="flex flex-row items-center w-full bg-[#313131] p-3 rounded-md {item?.ticker?.includes(
                 $cryptoTicker,
               )
                 ? 'ring-2 ring-[#04E000]'

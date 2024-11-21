@@ -290,7 +290,7 @@
               <!--End Widget-->
 
               <div
-                class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll"
+                class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
               >
                 <table
                   class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"

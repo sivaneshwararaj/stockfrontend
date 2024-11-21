@@ -74,7 +74,7 @@
       <div class="dropdown dropdown-end">
         <button
           tabindex="0"
-          class="bg-[#000] h-[33px] flex flex-row justify-between items-center w-[150px] xs:w-[140px] sm:w-[150px] px-3 text-white rounded-lg truncate"
+          class="bg-[#000] h-[33px] flex flex-row justify-between items-center w-[150px] xs:w-[140px] sm:w-[150px] px-3 text-white rounded-md truncate"
         >
           <span class="truncate ml-2">
             {#if value === "" || condition === ""}

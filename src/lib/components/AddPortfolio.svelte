@@ -98,7 +98,7 @@
         </div>
 
         <div
-          class="text-white text-sm border bg-[#313131] border-gray-800 p-3 rounded-lg overflow-y-scroll h-56"
+          class="text-white text-sm border bg-[#313131] border-gray-800 p-3 rounded-md overflow-y-scroll h-56"
         >
           <ol class="text-white list-decimal ml-3 p-2">
             <li class="p-1">
@@ -244,7 +244,7 @@
           >
             <button
               type="submit"
-              class="btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+              class="btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-md m-auto text-white font-bold text-md"
             >
               Create Portfolio
             </button>
@@ -252,7 +252,7 @@
         {:else}
           <div class="w-full max-w-lg pt-5 m-auto pb-8">
             <label
-              class="opacity-[0.4] cursor-not-allowed btn bg-[#fff] btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+              class="opacity-[0.4] cursor-not-allowed btn bg-[#fff] btn-md w-full rounded-md m-auto text-white font-bold text-md"
             >
               {#if !isClicked}
                 Create Portfolio
@@ -290,7 +290,7 @@
         </div>
 
         <div
-          class="text-white text-sm border bg-[#09090B] border-gray-800 p-3 rounded-lg overflow-y-scroll h-56"
+          class="text-white text-sm border bg-[#09090B] border-gray-800 p-3 rounded-md overflow-y-scroll h-56"
         >
           <ol class="text-white list-decimal ml-3 p-2">
             <li class="p-1">
@@ -436,7 +436,7 @@
           >
             <button
               type="submit"
-              class="btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+              class="btn bg-[#fff] sm:hover:bg-gray-300 btn-md w-full rounded-md m-auto text-white font-bold text-md"
             >
               Create Portfolio
             </button>
@@ -444,7 +444,7 @@
         {:else}
           <div class="w-full max-w-lg m-auto pb-8 mt-10">
             <label
-              class="opacity-[0.4] cursor-not-allowed btn bg-[#fff] btn-md w-full rounded-lg m-auto text-white font-bold text-md"
+              class="opacity-[0.4] cursor-not-allowed btn bg-[#fff] btn-md w-full rounded-md m-auto text-white font-bold text-md"
             >
               {#if !isClicked}
                 Create Portfolio

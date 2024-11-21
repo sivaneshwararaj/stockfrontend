@@ -261,7 +261,7 @@
         </div>
 
         <div
-          class="mb-4 grid grid-cols-2 grid-rows-2 divide-contrast rounded-lg border border-gray-600 md:grid-cols-4 md:grid-rows-1 md:divide-x"
+          class="mb-4 grid grid-cols-2 grid-rows-2 divide-contrast rounded-md border border-gray-600 md:grid-cols-4 md:grid-rows-1 md:divide-x"
         >
           <div class="p-4 bp:p-5 sm:p-6">
             <div class="text-sm font-normal text-default xs:text-base">

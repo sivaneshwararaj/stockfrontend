@@ -272,7 +272,7 @@
           </h1>
           {#if insiderTradingList?.length === 0}
             <div
-              class="w-fit text-white p-3 sm:p-5 mb-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+              class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
             >
               <svg
                 class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -299,7 +299,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white">Year: {year}</span>
                         <svg
@@ -342,7 +342,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white"
                           >Quarter: Q{quarter}</span
@@ -587,7 +587,7 @@
             {/if}
 
             <div
-              class="flex justify-start items-center w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll no-scrollbar"
+              class="flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll no-scrollbar"
             >
               <table
                 class="table table-sm table-pin-rows table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
@@ -661,7 +661,7 @@
                                   ?.class} {transactionStyles[
                                   item?.transactionType
                                 ]
-                                  ?.border} ml-2 px-1.5 py-1.5 border text-center rounded-lg text-xs font-semibold"
+                                  ?.border} ml-2 px-1.5 py-1.5 border text-center rounded-md text-xs font-semibold"
                               >
                                 {transactionStyles[item?.transactionType].text}
                               </div>

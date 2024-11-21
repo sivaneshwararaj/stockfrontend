@@ -200,7 +200,7 @@
                 errors=''
             />
             <div class="w-full sm:w-5/6 max-w-lg m-auto pb-5">
-                <button type="submit" class="py-3 bg-[#fff] text-white sm:hover:bg-gray-300 w-full rounded-lg m-auto font-bold text-md">
+                <button type="submit" class="py-3 bg-[#fff] text-white sm:hover:bg-gray-300 w-full rounded-md m-auto font-bold text-md">
                     Subscribe
                 </button>
             </div>

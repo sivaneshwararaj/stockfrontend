@@ -244,7 +244,7 @@
       {#if isLoaded}
         {#if fairPrice !== null}
           <div
-            class="p-3 sm:p-0 mt-2 pb-8 sm:pb-2 rounded-lg bg-[#09090B] sm:bg-[#09090B]"
+            class="p-3 sm:p-0 mt-2 pb-8 sm:pb-2 rounded-md bg-[#09090B] sm:bg-[#09090B]"
           >
             <div
               class="mt-4 text-white text-[1rem] sm:text-xl pb-4 sm:pb-0 m-auto text-start"
@@ -340,7 +340,7 @@
 
             {#if Math?.abs(change) > 30}
               <div
-                class=" mb-5 text-gray-100 text-sm sm:text-[1rem] sm:rounded-lg h-auto border border-slate-800 p-4"
+                class=" mb-5 text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-slate-800 p-4"
               >
                 <svg
                   class="w-5 h-5 inline-block mr-0.5 flex-shrink-0"

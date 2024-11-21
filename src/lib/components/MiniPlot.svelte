@@ -128,7 +128,7 @@
 
 <label
   on:click={etfSelector}
-  class="sm:hover:border-[#3C74D4] duration-100 transition ease-in-out cursor-pointer flex flex-row items-center rounded-lg shadow-lg border border-gray-600 bg-[#09090B]"
+  class="sm:hover:border-[#3C74D4] duration-100 transition ease-in-out cursor-pointer flex flex-row items-center rounded-md shadow-lg border border-gray-600 bg-[#09090B]"
 >
   <div class="flex flex-col items-center lg:mr-5">
     <span

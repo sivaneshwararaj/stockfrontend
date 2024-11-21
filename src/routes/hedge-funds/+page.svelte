@@ -166,11 +166,11 @@
                 {#each displayList as item}
                   <a
                     href={`/hedge-funds/${item?.cik}`}
-                    class="w-full cursor-pointer bg-[#141417] sm:hover:bg-[#000] transition-colors ease-in-out border sm:hover:border-[#000] sm:hover:shadow-[#8C5F1B] border-gray-800 shadow-md rounded-lg h-auto pb-4 pt-4 mb-7"
+                    class="w-full cursor-pointer bg-[#141417] sm:hover:bg-[#000] transition-colors ease-in-out border sm:hover:border-[#000] sm:hover:shadow-[#8C5F1B] border-gray-800 shadow-md rounded-md h-auto pb-4 pt-4 mb-7"
                   >
                     <div class="flex flex-col relative">
                       <img
-                        class="absolute -mt-4 w-full m-auto rounded-lg"
+                        class="absolute -mt-4 w-full m-auto rounded-md"
                         src={cardBackground}
                       />
                       <div

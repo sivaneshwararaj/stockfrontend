@@ -51,7 +51,7 @@
     : 'hidden'}"
 >
   <div
-    class="sm:rounded-lg shadow-lg bg-[#000] sm:bg-[#09090B] sm:border sm:border-slate-800 h-auto sm:h-[470px] {$screenWidth <
+    class="sm:rounded-md shadow-lg bg-[#000] sm:bg-[#09090B] sm:border sm:border-slate-800 h-auto sm:h-[470px] {$screenWidth <
     640
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px] -mx-1 sm:mx-0"
@@ -70,7 +70,7 @@
           its ESG (Environmental, Social, and Governance) scores.
         </p>
 
-        <div class="flex flex-col m-auto items-center rounded-lg w-full mb-16">
+        <div class="flex flex-col m-auto items-center rounded-md w-full mb-16">
           <div class="flex flex-col items-center w-full">
             <div class="flex flex-row items-center w-11/12 mt-2 mb-2">
               <span class="text-white font-medium text-start mr-auto">
@@ -178,10 +178,10 @@
 
     {#if esgScore && esgRiskRating && environmentalScore && governanceScore !== "n/a"}
       <div
-        class="mt-5 flex flex-col m-auto items-center rounded-lg w-full mb-16 p-3"
+        class="mt-5 flex flex-col m-auto items-center rounded-md w-full mb-16 p-3"
       >
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-lg p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">
@@ -205,7 +205,7 @@
         </div>
 
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-lg p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">
@@ -229,7 +229,7 @@
         </div>
 
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-lg p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">
@@ -253,7 +253,7 @@
         </div>
 
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-lg p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">

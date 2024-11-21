@@ -255,7 +255,7 @@
 
           {#if isLoaded}
             <div
-              class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5"
+              class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-md h-auto p-5"
             >
               <svg
                 class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -278,7 +278,7 @@
 
             <div class="w-full m-auto mt-20 sm:mt-10">
               <div
-                class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll"
+                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
               >
                 <table
                   class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"

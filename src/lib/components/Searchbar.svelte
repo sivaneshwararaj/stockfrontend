@@ -270,7 +270,7 @@
 
 <label
   for="searchBarModal"
-  class="cursor-pointer p-2 sm:hover:bg-[#27272A] text-gray-300 sm:hover:text-white flex-shrink-0 flex items-center justify-center border border-gray-600 rounded-lg"
+  class="cursor-pointer p-2 sm:hover:bg-[#27272A] text-gray-300 sm:hover:text-white flex-shrink-0 flex items-center justify-center border border-gray-600 rounded-md"
 >
   <Search class="h-[20px] w-[20px]" />
 </label>
@@ -298,7 +298,7 @@
           <label for="modal-search" class="sr-only">Search</label>
           <input
             id="modal-search"
-            class="rounded-lg w-full text-white bg-[#09090B] border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
+            class="rounded-md w-full text-white bg-[#09090B] border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
             type="search"
             placeholder="Search Anything…"
             bind:value={searchQuery}
@@ -347,7 +347,7 @@
                     on:click={() => popularTicker(item?.symbol)}
                     class="mb-2 {item?.symbol === focusedSuggestion
                       ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                      : 'shake-ticker cursor-pointer bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white  group'} w-full"
+                      : 'shake-ticker cursor-pointer bg-[#09090B] sm:hover:bg-[#27272A] rounded-md flex justify-start items-center p-2 text-white  group'} w-full"
                   >
                     <div class="flex flex-row items-center w-full">
                       <div
@@ -389,7 +389,7 @@
                     on:click={() => searchBarTicker(item?.symbol)}
                     class="mb-2 {item?.symbol === focusedSuggestion
                       ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                      : 'cursor-pointer mb-2 bg-[#09090B] sm:hover:bg-[#27272A] rounded-lg flex justify-start items-center p-2 text-white group'}"
+                      : 'cursor-pointer mb-2 bg-[#09090B] sm:hover:bg-[#27272A] rounded-md flex justify-start items-center p-2 text-white group'}"
                   >
                     <div class="flex flex-row items-center w-full">
                       <div class="flex flex-col">
@@ -469,7 +469,7 @@
             <label for="modal-search" class="sr-only">Search</label>
             <input
               id="modal-search"
-              class="rounded-lg w-full text-white bg-[#09090B] border border-slate-800 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
+              class="rounded-md w-full text-white bg-[#09090B] border border-slate-800 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
               type="search"
               placeholder="Search Anything…"
               bind:value={searchQuery}
@@ -518,7 +518,7 @@
                       on:click={() => popularTicker(item?.symbol)}
                       class="mb-2 {item?.symbol === focusedSuggestion
                         ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                        : 'cursor-pointer bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'} w-full"
+                        : 'cursor-pointer bg-[#09090B] bg-opacity-[0.4] rounded-md flex justify-start items-center p-2 text-white group'} w-full"
                     >
                       <div class="flex flex-row items-center w-full">
                         <div
@@ -560,7 +560,7 @@
                       on:click={() => searchBarTicker(item?.symbol)}
                       class="mb-2 {item?.symbol === focusedSuggestion
                         ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#27272A] rounded group'
-                        : 'cursor-pointer mb-2 bg-[#09090B] bg-opacity-[0.4] rounded-lg flex justify-start items-center p-2 text-white group'}"
+                        : 'cursor-pointer mb-2 bg-[#09090B] bg-opacity-[0.4] rounded-md flex justify-start items-center p-2 text-white group'}"
                     >
                       <div class="flex flex-row items-center w-full">
                         <div class="flex flex-col ml-1">

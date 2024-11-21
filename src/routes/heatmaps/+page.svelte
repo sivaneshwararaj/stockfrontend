@@ -374,7 +374,7 @@ async function exportTreemap() {
           >
             <main class="w-full">
               <div
-                class="w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-lg h-auto p-5 mb-4"
+                class="w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-md h-auto p-5 mb-4"
               >
                 <svg
                   class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -512,7 +512,7 @@ async function exportTreemap() {
           class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
         >
           <div
-            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-lg {displayIndex ===
+            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-md {displayIndex ===
             'S&P500'
               ? 'ring-2 ring-[#04E000]'
               : ''}"
@@ -527,7 +527,7 @@ async function exportTreemap() {
           class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
         >
           <div
-            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-lg {displayIndex ===
+            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-md {displayIndex ===
             'Dow Jones'
               ? 'ring-2 ring-[#04E000]'
               : ''}"
@@ -542,7 +542,7 @@ async function exportTreemap() {
           class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
         >
           <div
-            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-lg {displayIndex ===
+            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-md {displayIndex ===
             'Nasdaq'
               ? 'ring-2 ring-[#04E000]'
               : ''}"
@@ -587,7 +587,7 @@ async function exportTreemap() {
           class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
         >
           <div
-            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-lg ring-2 ring-[#04E000]"
+            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-md ring-2 ring-[#04E000]"
           >
             <span class="ml-1 text-white font-medium mr-auto">
               Save as PNG
@@ -600,7 +600,7 @@ async function exportTreemap() {
           class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
         >
           <div
-            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-lg ring-2 ring-[#04E000]"
+            class="flex flex-row items-center w-full bg-[#09090B] bg-opacity-[0.7] sm:bg-opacity-[1.0] sm:bg-[#303030] p-3 rounded-md ring-2 ring-[#04E000]"
           >
             <span class="ml-1 text-white font-medium mr-auto">
               Save as JPG

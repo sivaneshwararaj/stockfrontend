@@ -227,7 +227,7 @@
 
               <!--Start Table-->
               <div
-                class="w-full rounded-lg overflow-hidden overflow-x-scroll no-scrollbar"
+                class="w-full rounded-md overflow-hidden overflow-x-scroll no-scrollbar"
               >
                 <table
                   class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
@@ -428,7 +428,7 @@
                 </span>
                 <a
                   href="/options-flow"
-                  class="py-3 sm:hover:bg-[#27272A] rounded-lg w-64 flex mt-5 justify-center items-center m-auto text-white border border-gray-600 group"
+                  class="py-3 sm:hover:bg-[#27272A] rounded-md w-64 flex mt-5 justify-center items-center m-auto text-white border border-gray-600 group"
                 >
                   <span class="font-semibold text-[1rem]"
                     >Follow the Whales

@@ -294,7 +294,7 @@ const handleTwitchMessage = (event) => {
                     class="w-full flex flex-row items-center mr-auto mt-5"
                   >
                     <div
-                      class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                      class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                     >
                       <Home class="h-5.5 w-5.5" />
                     </div>
@@ -688,7 +688,7 @@ const handleTwitchMessage = (event) => {
                   >
                     <div class="flex flex-row items-center mr-auto">
                       <div
-                        class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                        class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                       >
                         <Option class="h-5.5 w-5.5" />
                       </div>
@@ -712,7 +712,7 @@ const handleTwitchMessage = (event) => {
                   >
                     <div class="flex flex-row items-center mr-auto">
                       <div
-                        class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                        class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                       >
                         <Boxes class="h-5.5 w-5.5" />
                       </div>
@@ -736,7 +736,7 @@ const handleTwitchMessage = (event) => {
                   >
                     <div class="flex flex-row items-center mr-auto">
                       <div
-                        class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                        class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                       >
                         <Newspaper class="h-5.5 w-5.5" />
                       </div>
@@ -758,7 +758,7 @@ const handleTwitchMessage = (event) => {
                   >
                     <div class="flex flex-row items-center mr-auto">
                       <div
-                        class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                        class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                       >
                         <Gem class="h-5.5 w-5.5" />
                       </div>
@@ -819,7 +819,7 @@ const handleTwitchMessage = (event) => {
             <Input
               type="search"
               placeholder="Search..."
-              class="w-full rounded-lg bg-[#202327] placeholder-gray-400 border-none pl-8 md:w-[300px] lg:w-[700px] border-transparent focus:border-transparent focus:ring-0 "
+              class="w-full rounded-md bg-[#202327] placeholder-gray-400 border-none pl-8 md:w-[300px] lg:w-[700px] border-transparent focus:border-transparent focus:ring-0 "
               autocomplete="off"
               />
             -->
@@ -833,7 +833,7 @@ const handleTwitchMessage = (event) => {
             <DropdownMenu.Trigger asChild let:builder>
               <Button
                 size="icon"
-                class="overflow-hidden rounded-lg bg-[#09090B] sm:hover:bg-[#27272A] border border-gray-600 w-10 h-10"
+                class="overflow-hidden rounded-md bg-[#09090B] sm:hover:bg-[#27272A] border border-gray-600 w-10 h-10"
                 builders={[builder]}
               >
                 <svg
@@ -909,7 +909,7 @@ const handleTwitchMessage = (event) => {
 
                 <a href="/" class="flex flex-row items-center ml-9 w-full">
                   <div
-                    class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                   >
                     <Home class="h-5.5 w-5.5" />
                   </div>
@@ -1134,7 +1134,7 @@ const handleTwitchMessage = (event) => {
                   class="flex flex-row items-center ml-9 w-full mt-3"
                 >
                   <div
-                    class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                   >
                     <Option class="h-5.5 w-5.5" />
                   </div>
@@ -1146,7 +1146,7 @@ const handleTwitchMessage = (event) => {
                   class="flex flex-row items-center ml-9 w-full mt-3"
                 >
                   <div
-                    class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                   >
                     <Boxes class="h-5.5 w-5.5" />
                   </div>
@@ -1158,7 +1158,7 @@ const handleTwitchMessage = (event) => {
                   class="flex flex-row items-center ml-9 w-full mt-3"
                 >
                   <div
-                    class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                   >
                     <Newspaper class="h-5.5 w-5.5" />
                   </div>
@@ -1170,7 +1170,7 @@ const handleTwitchMessage = (event) => {
                   class="flex flex-row items-center ml-9 w-full mt-3"
                 >
                   <div
-                    class="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:text-white md:h-8 md:w-8"
+                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
                   >
                     <Gem class="h-5.5 w-5.5" />
                   </div>
@@ -1192,7 +1192,7 @@ const handleTwitchMessage = (event) => {
                     <Card.Content class="p-2 pt-0 md:p-4 md:pt-0">
                       <a
                         href="/pricing"
-                        class="flex justify-center items-center text-center rounded-lg text-sm py-2 m-auto text-center w-full bg-white text-black font-semibold hover:bg-white/80"
+                        class="flex justify-center items-center text-center rounded-md text-sm py-2 m-auto text-center w-full bg-white text-black font-semibold hover:bg-white/80"
                       >
                         Become Pro
                       </a>

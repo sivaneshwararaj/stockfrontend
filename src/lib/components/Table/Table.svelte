@@ -744,7 +744,7 @@
                             : "Bearish"}
                     </div>
                     <div
-                      class="ml-2 px-1.5 py-1.5 border text-center rounded-lg text-xs font-semibold"
+                      class="ml-2 px-1.5 py-1.5 border text-center rounded-md text-xs font-semibold"
                     >
                       {item[column.key]}
                     </div>

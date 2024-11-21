@@ -1,13 +1,22 @@
 <script lang="ts">
-  import { varComponent, displayCompanyName, stockTicker, etfTicker, cryptoTicker, assetType, getCache, setCache } from '$lib/store';
-  import InfoModal from '$lib/components/InfoModal.svelte';
+  import {
+    varComponent,
+    displayCompanyName,
+    stockTicker,
+    etfTicker,
+    cryptoTicker,
+    assetType,
+    getCache,
+    setCache,
+  } from "$lib/store";
+  import InfoModal from "$lib/components/InfoModal.svelte";
 
-  import { Chart } from 'svelte-echarts';
+  import { Chart } from "svelte-echarts";
 
-  import { init, use } from 'echarts/core';
-  import { LineChart } from 'echarts/charts';
-  import { GridComponent, TooltipComponent } from 'echarts/components';
-  import { CanvasRenderer } from 'echarts/renderers';
+  import { init, use } from "echarts/core";
+  import { LineChart } from "echarts/charts";
+  import { GridComponent, TooltipComponent } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
 
   export let data;
 
@@ -36,43 +45,46 @@
     const option = {
       silent: true,
       tooltip: {
-        trigger: 'axis',
+        trigger: "axis",
         hideDelay: 100,
       },
       animation: false,
       grid: {
-        left: '2%',
-        right: '2%',
-        bottom: '2%',
-        top: '5%',
+        left: "2%",
+        right: "2%",
+        bottom: "2%",
+        top: "5%",
         containLabel: true,
       },
       xAxis: {
-        type: 'category',
+        type: "category",
         boundaryGap: false,
         data: dates,
         axisLabel: {
-          color: '#fff',
+          color: "#fff",
           formatter: (value: string) => {
-            const date = new Date(value + '-01');
-            return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short' }).format(date);
+            const date = new Date(value + "-01");
+            return new Intl.DateTimeFormat("en-US", {
+              year: "numeric",
+              month: "short",
+            }).format(date);
           },
         },
       },
       yAxis: [
         {
-          type: 'value',
+          type: "value",
           splitLine: { show: false },
           axisLabel: { show: false },
         },
       ],
       series: [
         {
-          name: 'VaR',
+          name: "VaR",
           data: varList,
-          type: 'line',
+          type: "line",
           areaStyle: { opacity: 0.8 },
-          itemStyle: { color: '#E11D48' },
+          itemStyle: { color: "#E11D48" },
           showSymbol: false,
         },
       ],
@@ -82,27 +94,32 @@
   }
 
   const getVaR = async (ticker: string) => {
-    const cachedData = getCache(ticker, 'getVaR');
+    const cachedData = getCache(ticker, "getVaR");
     if (cachedData) {
       varDict = cachedData;
     } else {
-      const postData = { ticker, path: 'value-at-risk' };
-      const response = await fetch('/api/ticker-data', {
-        method: 'POST',
+      const postData = { ticker, path: "value-at-risk" };
+      const response = await fetch("/api/ticker-data", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postData),
       });
 
       varDict = await response.json();
-      setCache(ticker, varDict, 'getVaR');
+      setCache(ticker, varDict, "getVaR");
     }
 
     $varComponent = Object.keys(varDict).length !== 0;
   };
 
   $: {
-    const ticker = $assetType === 'stock' ? $stockTicker : $assetType === 'etf' ? $etfTicker : $cryptoTicker;
-    if (ticker && typeof window !== 'undefined') {
+    const ticker =
+      $assetType === "stock"
+        ? $stockTicker
+        : $assetType === "etf"
+          ? $etfTicker
+          : $cryptoTicker;
+    if (ticker && typeof window !== "undefined") {
       isLoaded = false;
 
       getVaR(ticker)
@@ -112,7 +129,7 @@
           valueAtRisk = varDict.history?.slice(-1)?.at(0)?.var ?? "n/a";
           optionsData = getPlotOptions();
         })
-        .catch((error) => console.error('An error occurred:', error))
+        .catch((error) => console.error("An error occurred:", error))
         .finally(() => {
           isLoaded = true;
         });
@@ -120,7 +137,6 @@
   }
 </script>
 
-    
 <section class="overflow-hidden text-white h-full pb-10 sm:pb-0">
   <main class="overflow-hidden">
     <div class="flex flex-row items-center">
@@ -140,7 +156,7 @@
     {#if Object?.keys(varDict)?.length !== 0}
       <div class="pb-4 w-full mt-5">
         <div
-          class="w-auto p-4 sm:p-6 bg-[#09090B] sm:bg-[#09090B] rounded-lg relative"
+          class="w-auto p-4 sm:p-6 bg-[#09090B] sm:bg-[#09090B] rounded-md relative"
         >
           <div class="flex flex-row items-center justify-between">
             <div class="relative size-[60px] sm:size-[90px] ml-auto">

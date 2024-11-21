@@ -218,9 +218,9 @@
           </div>
         </div>
 
-        <div class="pb-2 rounded-lg bg-[#09090B]">
+        <div class="pb-2 rounded-md bg-[#09090B]">
           <div
-            class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 mt-4"
+            class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
           >
             {#each tabs as item, i}
               <button
@@ -231,7 +231,7 @@
                   : ''} "
               >
                 {#if activeIdx === i}
-                  <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
+                  <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
                 {/if}
                 <span
                   class="relative text-sm block font-medium duration-200 text-white"

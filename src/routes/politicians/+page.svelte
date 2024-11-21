@@ -273,22 +273,22 @@
                         ? 'sm:hover:shadow-[#80000D]'
                         : item?.party === 'Democratic'
                           ? 'sm:hover:shadow-[#1358C3]'
-                          : 'sm:hover:shadow-[#636465]'} border-slate-800 shadow-md rounded-lg h-auto pb-4 pt-4 mb-7"
+                          : 'sm:hover:shadow-[#636465]'} border-slate-800 shadow-md rounded-md h-auto pb-4 pt-4 mb-7"
                     >
                       <div class="flex flex-col relative">
                         {#if item?.party === "Republican"}
                           <img
-                            class="absolute -mt-4 w-full m-auto rounded-lg"
+                            class="absolute -mt-4 w-full m-auto rounded-md"
                             src={republicanBackground}
                           />
                         {:else if item?.party === "Democratic"}
                           <img
-                            class="absolute -mt-4 w-[500px] m-auto rounded-lg"
+                            class="absolute -mt-4 w-[500px] m-auto rounded-md"
                             src={democraticBackground}
                           />
                         {:else}
                           <img
-                            class="absolute -mt-4 w-[500px] m-auto rounded-lg"
+                            class="absolute -mt-4 w-[500px] m-auto rounded-md"
                             src={otherBackground}
                           />
                         {/if}

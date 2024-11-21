@@ -283,7 +283,7 @@
             for={imageId}
             class="{imageInput.length !== 0
               ? 'hidden'
-              : ''} inline-flex mr-auto items-center py-2.5 px-4 text-xs font-medium text-center text-white rounded-lg hover:bg-gray-800 cursor-pointer"
+              : ''} inline-flex mr-auto items-center py-2.5 px-4 text-xs font-medium text-center text-white rounded-md hover:bg-gray-800 cursor-pointer"
           >
             <svg
               class="w-5 h-5 inline-block"
@@ -336,7 +336,7 @@
         <div class="relative flex justify-end items-center ml-auto mr-2">
           <label
             on:click={handleCancel}
-            class="inline-flex justify-end items-center py-2.5 px-4 text-xs font-medium text-center text-white rounded-lg hover:bg-gray-800 cursor-pointer mr-3"
+            class="inline-flex justify-end items-center py-2.5 px-4 text-xs font-medium text-center text-white rounded-md hover:bg-gray-800 cursor-pointer mr-3"
           >
             Cancel
           </label>
@@ -345,7 +345,7 @@
             class="inline-flex justify-end items-center bg-[#fff] {inputValue.length !==
             0
               ? 'opacity-100 cursor-pointer'
-              : 'opacity-60'}  py-2.5 px-4 text-xs font-medium text-center text-white rounded-lg focus:ring-purple-300"
+              : 'opacity-60'}  py-2.5 px-4 text-xs font-medium text-center text-white rounded-md focus:ring-purple-300"
           >
             Post
           </label>

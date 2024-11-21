@@ -393,7 +393,7 @@
 
             <div class="grid grid-cols-1 gap-2">
               <div
-                class="text-white p-3 sm:p-5 mb-10 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+                class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
               >
                 <svg
                   class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -497,7 +497,7 @@
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button
                           builders={[builder]}
-                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                         >
                           <span class="truncate text-white">{timeFrame}</span>
                           <svg
@@ -547,7 +547,7 @@
                   </div>
                   <Button
                     on:click={() => exportFundamentalData("csv")}
-                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Download</span>
                     <svg
@@ -712,7 +712,7 @@
                 </div>
               {:else}
                 <div
-                  class="w-full rounded-none sm:rounded-lg m-auto overflow-x-auto"
+                  class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
                 >
                   <table class="table table-sm table-compact w-full">
                     <thead>

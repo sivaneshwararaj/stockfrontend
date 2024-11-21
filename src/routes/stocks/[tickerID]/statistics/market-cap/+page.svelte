@@ -407,7 +407,7 @@
             {#if rawData?.length !== 0}
               <div class="grid grid-cols-1 gap-2">
                 <div
-                  class="text-white p-3 sm:p-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
+                  class="text-white p-3 sm:p-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
                 >
                   <svg
                     class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -498,7 +498,7 @@
                         <DropdownMenu.Trigger asChild let:builder>
                           <Button
                             builders={[builder]}
-                            class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                            class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                           >
                             <span class="truncate text-white">{timePeriod}</span
                             >
@@ -573,7 +573,7 @@
                     </div>
                     <Button
                       on:click={() => exportData("csv")}
-                      class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-lg truncate"
+                      class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                     >
                       <span class="truncate text-white">Download</span>
                       <svg

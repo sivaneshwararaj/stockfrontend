@@ -465,7 +465,7 @@
                     <Card.Content class="p-3 sm:p-6">
                       {#each data?.getRedditTracker?.posts as item}
                         <div
-                          class="flex flex-col items-start mb-3 p-3 border border-gray-800 rounded-lg bg-[#141417]"
+                          class="flex flex-col items-start mb-3 p-3 border border-gray-800 rounded-md bg-[#141417]"
                         >
                           <a
                             href={"https://www.reddit.com" + item?.permalink}
@@ -512,7 +512,7 @@
                           </div>
 
                           <label
-                            class="mt-2 mb-2 text-xs bg-white rounded-lg px-3 py-1 text-black"
+                            class="mt-2 mb-2 text-xs bg-white rounded-md px-3 py-1 text-black"
                           >
                             {item?.link_flair_text}
                           </label>

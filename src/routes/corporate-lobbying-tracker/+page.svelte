@@ -182,7 +182,7 @@
             class="w-screen sm:w-full flex flex-row items-start mt-20 sm:mt-10"
           >
             <div
-              class="w-screen sm:w-full rounded-none sm:rounded-lg mb-4 overflow-x-scroll lg:overflow-hidden"
+              class="w-screen sm:w-full rounded-none sm:rounded-md mb-4 overflow-x-scroll lg:overflow-hidden"
             >
               <table
                 class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"

@@ -53,13 +53,19 @@
             >
               Earnings Surprise
             </h3>
+            <label
+              class="{latestInfoDate(rawData?.date)
+                ? ''
+                : 'hidden'} text-black bg-[#fff] ml-2 font-semibold not-italic text-xs rounded px-2 py-0.5"
+              >New</label
+            >
           </div>
         </div>
       </div>
 
       <div
         class="text-white text-[1rem] {latestInfoDate(rawData?.date)
-          ? 'bg-[#F9AB00] bg-opacity-[0.1] p-3 rounded-lg'
+          ? 'bg-[#F9AB00] bg-opacity-[0.1] p-3 rounded-md'
           : 'bg-[#09090B] pl-1'} "
       >
         <div class="mt-1">

@@ -588,7 +588,7 @@
           </div>
 
           <div
-            class="w-fit text-white p-3 sm:p-5 mb-5 rounded-lg sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+            class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
           >
             <svg
               class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -725,7 +725,7 @@
                 class="text-xl text-white m-auto flex justify-center items-center h-full"
               >
                 <div
-                  class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-lg h-auto border border-slate-800 p-4"
+                  class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-slate-800 p-4"
                 >
                   <svg
                     class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -750,7 +750,7 @@
             </h3>
 
             <div
-              class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 mt-6 mb-6"
+              class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
             >
               {#each tabEX as item, i}
                 <button
@@ -761,7 +761,7 @@
                     : ''} "
                 >
                   {#if activeEX === i}
-                    <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
+                    <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
                   {/if}
                   <span
                     class="relative text-sm block font-semibold {activeEX === i
@@ -785,7 +785,7 @@
 
           {#if optionList?.length !== 0}
             <div
-              class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-lg p-1 mt-6 mb-6"
+              class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
             >
               {#each tabs as item, i}
                 <button
@@ -796,7 +796,7 @@
                     : ''} "
                 >
                   {#if activeIdx === i}
-                    <div class="absolute inset-0 rounded-lg bg-[#fff]"></div>
+                    <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
                   {/if}
                   <span
                     class="relative text-sm block font-semibold {activeIdx === i
@@ -1093,7 +1093,7 @@
                             : 'text-[#FF2F1F]'} text-end"
                         >
                           <div
-                            class="rounded-lg w-fit px-2 text-center font-semibold badge gap-2 bg-[#fff] text-black m-auto flex justify-center items-center"
+                            class="rounded-md w-fit px-2 text-center font-semibold badge gap-2 bg-[#fff] text-black m-auto flex justify-center items-center"
                           >
                             {item?.strike_price}
                           </div>
@@ -1130,7 +1130,7 @@
           {:else}
             <div class="flex justify-center items-center m-auto mt-16 mb-6">
               <div
-                class="text-gray-100 text-sm sm:text-[1rem] rounded-lg h-auto border border-slate-800 p-4"
+                class="text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-slate-800 p-4"
               >
                 <svg
                   class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"

@@ -112,10 +112,10 @@
         {#if newsList.length !== 0}
           <div class="grid grid-cols-1 gap-2 pb-5">
             {#each newsList as item}
-              <div class="w-full flex flex-col bg-[#09090B] rounded-lg m-auto">
+              <div class="w-full flex flex-col bg-[#09090B] rounded-md m-auto">
                 {#if (videoId = checkIfYoutubeVideo(item.url))}
                   <iframe
-                    class="w-full h-96 rounded-lg border border-gray-800"
+                    class="w-full h-96 rounded-md border border-gray-800"
                     src={`https://www.youtube.com/embed/${videoId}`}
                     frameborder="0"
                     allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -126,12 +126,12 @@
                     href={item?.url}
                     rel="noopener noreferrer"
                     target="_blank"
-                    class="border border-gray-800 rounded-lg"
+                    class="border border-gray-800 rounded-md"
                   >
                     <div class="flex-shrink-0 m-auto">
                       <img
                         src={item?.image}
-                        class=" w-full rounded-lg"
+                        class=" w-full rounded-md"
                         alt="news image"
                         loading="lazy"
                       />
@@ -165,14 +165,14 @@
           {#if newsList?.length !== rawNews?.length}
             <label
               on:click={loadMoreData}
-              class="shadow-lg rounded-lg cursor-pointer w-5/6 sm:w-3/5 sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-white m-auto hover:bg-[#fff] bg-[#fff] bg-opacity-[0.6]"
+              class="shadow-lg rounded-md cursor-pointer w-5/6 sm:w-3/5 sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-white m-auto hover:bg-[#fff] bg-[#fff] bg-opacity-[0.6]"
             >
               Load More News
             </label>
           {/if}
         {:else}
           <div
-            class="w-screen max-w-xl sm:flex sm:flex-row sm:items-center justify-center m-auto text-gray-100 font-medium bg-[#09090B] sm:rounded-lg h-auto p-5 mb-4"
+            class="w-screen max-w-xl sm:flex sm:flex-row sm:items-center justify-center m-auto text-gray-100 font-medium bg-[#09090B] sm:rounded-md h-auto p-5 mb-4"
           >
             <svg
               class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"

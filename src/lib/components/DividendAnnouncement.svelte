@@ -43,13 +43,19 @@
             >
               Dividend Announcement
             </h3>
+            <label
+              class="{latestInfoDate(rawData?.date)
+                ? ''
+                : 'hidden'} text-black bg-[#fff] ml-2 font-semibold not-italic text-xs rounded px-2 py-0.5"
+              >New</label
+            >
           </div>
         </div>
       </div>
 
       <div
         class="text-white text-[1rem] {latestInfoDate(rawData?.date)
-          ? 'bg-[#F9AB00] bg-opacity-[0.1] p-3 rounded-lg'
+          ? 'bg-[#F9AB00] bg-opacity-[0.1] p-3 rounded-md'
           : 'bg-[#09090B] pl-1'}"
       >
         <div class="mt-1">
@@ -72,10 +78,19 @@
               style="color: #fff; line-height: 22px; margin-bottom: 15px; list-style-type: disc;"
             >
               <span class="font-bold">Dividend:</span> ${rawData?.dividend} per share
-              ({rawData?.dividend / rawData?.dividendPrior - 1 > 0 ? "+" : ""}{(
-                (rawData?.dividend / rawData?.dividendPrior - 1) *
-                100
-              )?.toFixed(2)}% YoY)
+              (<span
+                class="font-semibold {rawData?.dividend /
+                  rawData?.dividendPrior -
+                  1 >
+                0
+                  ? "before:content-['+'] text-[#00FC50]"
+                  : 'text-[#FF2F1F]'}"
+              >
+                {(
+                  (rawData?.dividend / rawData?.dividendPrior - 1) *
+                  100
+                )?.toFixed(2)}%
+              </span> YoY)
             </li>
             <li
               class="ml-[20px]"

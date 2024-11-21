@@ -72,7 +72,7 @@
               <!--Start Item-->
               <div class="flex flex-row items-center w-full mb-6">
                 <div
-                  class="w-full rounded-lg {latestInfoDate(
+                  class="w-full rounded-md {latestInfoDate(
                     data?.getAnalystInsight?.date,
                   )
                     ? 'bg-[#F9AB00] bg-opacity-[0.1]'
@@ -85,7 +85,7 @@
                       >
                       {#if latestInfoDate(data?.getAnalystInsight?.date)}
                         <label
-                          class="bg-[#2D4F8A] text-white font-medium text-xs rounded-lg px-2 py-0.5 ml-3"
+                          class="bg-[#2D4F8A] text-white font-medium text-xs rounded-md px-2 py-0.5 ml-3"
                           >New</label
                         >
                       {/if}

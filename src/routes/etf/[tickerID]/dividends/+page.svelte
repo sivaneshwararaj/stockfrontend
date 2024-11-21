@@ -307,7 +307,7 @@
               </div>
 
               <div
-                class="overflow-x-scroll no-scrollbar flex justify-start items-center w-full m-auto shadow-md rounded-none sm:rounded-lg mb-4"
+                class="overflow-x-scroll no-scrollbar flex justify-start items-center w-full m-auto shadow-md rounded-none sm:rounded-md mb-4"
               >
                 <table
                   class="table table-sm table-compact flex justify-start items-center w-full m-auto"

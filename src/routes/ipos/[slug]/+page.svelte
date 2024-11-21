@@ -232,7 +232,7 @@
       {:else}
         <div class="flex justify-center items-center m-auto mt-10 mb-6">
           <div
-            class="text-gray-100 text-center text-sm sm:text-[1rem] rounded-lg h-auto border border-slate-800 p-4"
+            class="text-gray-100 text-center text-sm sm:text-[1rem] rounded-md h-auto border border-slate-800 p-4"
           >
             <svg
               class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
