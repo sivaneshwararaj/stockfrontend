@@ -62,10 +62,12 @@
       ) ?? [];
 
     if (activeIdx === 1) {
-      const recentData = rawData?.filter((item) => {
-        const date = new Date(item?.date);
-        return date >= oneYearAgo;
-      });
+      const recentData = rawData
+        ?.filter((item) => {
+          const date = new Date(item?.date);
+          return date >= oneYearAgo;
+        })
+        ?.slice(0, 30); //Consider only the last 30 ratings in the last 12 months
 
       const filteredAnalystCount = recentData.length;
       const priceTargets = recentData
