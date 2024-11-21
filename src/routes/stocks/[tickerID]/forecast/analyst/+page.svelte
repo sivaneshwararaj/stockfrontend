@@ -224,15 +224,15 @@
                 />
               </div>
               <div
-                class="inline-flex justify-center w-full rounded-md shadow-sm sm:w-auto"
+                class="inline-flex justify-center w-full rounded-md sm:w-auto"
               >
                 <div
-                  class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                  class="bg-[#313131] w-full sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                 >
                   {#each tabs as item, i}
                     <button
                       on:click={() => changeTab(i)}
-                      class="group relative z-[1] rounded-full px-5 py-1 {activeIdx ===
+                      class="group relative z-[1] rounded-full w-1/2 md:w-auto px-5 py-1 {activeIdx ===
                       i
                         ? 'z-0'
                         : ''} "
@@ -315,7 +315,7 @@
         {#if rawData?.length !== 0}
           <div class="sm:w-full m-auto mt-10">
             <div
-              class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll sm:overflow-hidden"
+              class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll lg:overflow-hidden"
             >
               <table
                 class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"

@@ -56,7 +56,7 @@
 
 <section class="w-full bg-[#09090B] overflow-hidden h-full">
   <div class="m-auto h-full overflow-hidden">
-    <main class="w-full">
+    <main class="w-full mb-4 sm:mb-0">
       <div class="m-auto">
         <nav
           class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
