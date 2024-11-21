@@ -997,7 +997,7 @@ function sendMessage(message) {
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<body class="xl:fixed h-screen w-full max-w-screen-xl">
+<body class="overflow-y-auto">
   <section
     class="w-full max-w-screen sm:max-w-6xl xl:max-w-7xl flex justify-center items-center bg-[#09090B] pb-20"
   >
@@ -1297,7 +1297,7 @@ function sendMessage(message) {
                           </Button>
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Content
-                          class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                          class="w-56 h-fit max-h-72 overflow-y-auto "
                         >
                           {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
                             <DropdownMenu.Label
@@ -1611,7 +1611,7 @@ function sendMessage(message) {
         <!-- Page wrapper -->
         <div class="flex w-full m-auto h-full overflow-hidden">
           {#if displayedData?.length !== 0}
-            <div class="mt-8 w-full overflow-x-auto overflow-y-auto h-[850px]">
+            <div class="mt-8 w-full overflow-x-auto h-[850px] overflow-hidden">
               <div class="table-container">
                 <div class="table">
                   <VirtualList

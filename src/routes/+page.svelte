@@ -227,7 +227,7 @@
       <main class="flex flex-1 flex-col gap-4 sm:p-4 md:gap-8">
         <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
           <Card.Root
-            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar max-h-[450px]"
+            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar max-h-[450px]"
           >
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
@@ -320,7 +320,7 @@
             </Card.Content>
           </Card.Root>
           <Card.Root
-            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar max-h-[450px]"
+            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar max-h-[450px]"
           >
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
@@ -415,9 +415,7 @@
         </div>
 
         <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
-          <Card.Root
-            class="overflow-x-scroll overflow-hidden overflow-y-scroll"
-          >
+          <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-auto">
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
                 <div class="flex flex-row w-full items-center">
@@ -438,7 +436,7 @@
                 <Card.Description class="mt-2 text-sm sm:text-[1rem]"
                   >Recent unusual options with the highest ...</Card.Description
                 >
-                <Tabs.Root value="premium" class="w-fit mt-5 ">
+                <Tabs.Root value="premium" class="w-full sm:w-fit mt-5 ">
                   <Tabs.List class="grid w-full grid-cols-3 bg-[#313131]">
                     <Tabs.Trigger
                       on:click={() => changeTable("premium")}
@@ -539,7 +537,7 @@
           </Card.Root>
 
           <Card.Root
-            class="order-3 sm:order-1 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[470px]"
+            class="order-3 sm:order-1 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[470px]"
           >
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
@@ -635,7 +633,7 @@
           </Card.Root>
 
           <Card.Root
-            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[550px]"
+            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[550px]"
           >
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
@@ -722,7 +720,7 @@
           </Card.Root>
 
           <Card.Root
-            class="order-2 sm:order-3 overflow-x-scroll overflow-hidden overflow-y-scroll no-scrollbar sm:max-h-[550px]"
+            class="order-2 sm:order-3 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[550px]"
           >
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
