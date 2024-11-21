@@ -53,34 +53,6 @@
     }
     return 0;
   }
-
-  const excludedRules = new Set([
-    "sharesNumber",
-    "changeInSharesNumberPercentage",
-    "marketValue",
-    "avgPricePaid",
-    "weight",
-  ]);
-
-  const defaultList = [
-    { name: "Shares", rule: "sharesNumber" },
-    { name: "% Change Shares", rule: "changeInSharesNumberPercentage" },
-    { name: "Market Value", rule: "marketValue" },
-    { name: "Avg Price", rule: "avgPricePaid" },
-    { name: "% Weight", rule: "weight" },
-  ];
-
-  const specificRows = [
-    { name: "Shares", rule: "sharesNumber", type: "int" },
-    {
-      name: "% Change Shares",
-      rule: "changeInSharesNumberPercentage",
-      type: "percentSign",
-    },
-    { name: "% Weight", rule: "weight", type: "percent" },
-    { name: "Avg Price", rule: "avgPricePaid", type: "float" },
-    { name: "Market Value", rule: "marketValue", type: "int" },
-  ];
 </script>
 
 <svelte:head>

@@ -267,6 +267,7 @@
             <div class="text-sm font-normal text-default xs:text-base">
               Total Analysts
             </div>
+
             <div
               class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
             >
@@ -315,198 +316,203 @@
         </div>
 
         {#if rawData?.length !== 0}
-          <div class="sm:w-full m-auto mt-10">
-            <div
-              class="w-full m-auto rounded-none sm:rounded-lg mb-4 overflow-x-scroll lg:overflow-hidden"
-            >
-              <table
-                class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
-              >
-                <thead class="">
-                  <tr class="border-b border-[#27272A]">
-                    <td class="text-white font-semibold text-sm text-start"
-                      >Analyst</td
-                    >
-                    <td class="text-white font-semibold text-sm text-start"
-                      >Firm</td
-                    >
-                    <td class="text-white font-semibold text-sm text-end"
-                      >Rating</td
-                    >
-                    <td class="text-white font-semibold text-sm text-end"
-                      >Action</td
-                    >
-                    <td class="text-white font-semibold text-sm text-end"
-                      >Price Target</td
-                    >
-
-                    <td class="text-white font-semibold text-sm text-end"
-                      >Date</td
-                    >
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each data?.user?.tier === "Pro" ? historyList : historyList?.slice(0, 3) as item, index}
-                    <tr
-                      class="{latestInfoDate(item?.date)
-                        ? 'bg-[#F9AB00] bg-opacity-[0.1]'
-                        : 'odd:bg-[#27272A]'} border-b-[#09090B] {index + 1 ===
-                        historyList?.slice(0, 3)?.length &&
-                      data?.user?.tier !== 'Pro'
-                        ? 'opacity-[0.1]'
-                        : ''}"
-                    >
-                      <td
-                        class="text-sm sm:text-[1rem] whitespace-nowrap text-start"
-                      >
-                        <div class="flex flex-col items-start">
-                          <a
-                            href={item?.analystId !== null
-                              ? `/analysts/${item?.analystId}`
-                              : "#"}
-                            class="sm:hover:text-white text-blue-400"
-                            >{item?.analyst_name}
-                          </a>
-
-                          <div class="flex flex-row items-center mt-1">
-                            {#each Array.from({ length: 5 }) as _, i}
-                              {#if i < Math.floor(item?.analystScore)}
-                                <svg
-                                  class="w-3 h-3 text-[#FBCE3C]"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="currentColor"
-                                  viewBox="0 0 22 20"
-                                >
-                                  <path
-                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                                  />
-                                </svg>
-                              {:else}
-                                <svg
-                                  class="w-3 h-3 text-gray-300 dark:text-gray-500"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="currentColor"
-                                  viewBox="0 0 22 20"
-                                >
-                                  <path
-                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                                  />
-                                </svg>
-                              {/if}
-                            {/each}
-
-                            <span class="ml-1 text-sm">
-                              ({item?.analystScore !== null
-                                ? item?.analystScore
-                                : 0})
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td
-                        class="text-sm sm:text-[1rem] whitespace-nowrap text-start text-white"
-                      >
-                        {item?.analyst?.length > charNumber
-                          ? item?.analyst?.slice(0, charNumber) + "..."
-                          : item?.analyst}
-                      </td>
-
-                      <td
-                        class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
-                      >
-                        <span
-                          class="text-[1rem] font-medium {[
-                            'Strong Buy',
-                            'Buy',
-                          ]?.includes(item?.rating_current)
-                            ? 'text-[#00FC50]'
-                            : item?.rating_current === 'Hold'
-                              ? 'text-[#FF7070]'
-                              : ['Strong Sell', 'Sell']?.includes(
-                                    item?.rating_current,
-                                  )
-                                ? 'text-[#FF2F1F]'
-                                : ''}"
-                        >
-                          {item?.rating_current}
-                        </span>
-                      </td>
-
-                      <td
-                        class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
-                      >
-                        {item?.action_company?.replace(
-                          "Initiates Coverage On",
-                          "Initiates",
-                        )}
-                      </td>
-
-                      <td
-                        class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
-                      >
-                        <div class="flex flex-col items-end">
-                          <div class="flex flex-row items-center">
-                            {#if Math?.ceil(item?.adjusted_pt_prior) !== 0}
-                              <span class="text-gray-100 font-normal"
-                                >${Math?.ceil(item?.adjusted_pt_prior)}</span
-                              >
-                              <svg
-                                class="w-3 h-3 ml-1 mr-1 inline-block"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="none"
-                                  stroke="white"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="1.5"
-                                  d="M4 12h16m0 0l-6-6m6 6l-6 6"
-                                /></svg
-                              >
-                              <span class="text-white font-semibold"
-                                >${Math?.ceil(item?.adjusted_pt_current)}</span
-                              >
-                            {:else if Math?.ceil(item?.adjusted_pt_current) !== 0}
-                              <span class="text-white font-semibold"
-                                >${Math?.ceil(item?.adjusted_pt_current)}</span
-                              >
-                            {/if}
-                          </div>
-                        </div>
-                      </td>
-
-                      <td
-                        class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
-                      >
-                        <div class="flex flex-col items-end">
-                          {#if latestInfoDate(item?.date)}
-                            <label
-                              class="bg-[#2D4F8A] text-white font-medium text-xs rounded-lg px-2 py-0.5 ml-3 mb-1"
-                            >
-                              New
-                            </label>
-                          {/if}
-                          {new Date(item?.date).toLocaleString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                            daySuffix: "2-digit",
-                          })}
-                        </div>
-                      </td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
+          <div
+            class="mt-10 mb-5 items-center justify-between py-0 md:mt-8 md:flex md:py-2"
+          >
+            <div class="flex justify-between md:block">
+              <h2 class="text-xl font-semibold bp:mb-2 bp:text-2xl">
+                Ratings History
+              </h2>
             </div>
+          </div>
+
+          <div class=" w-full m-auto mb-4 overflow-x-scroll lg:overflow-hidden">
+            <table
+              class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+            >
+              <thead class="">
+                <tr class="border-b border-[#27272A]">
+                  <td class="text-white font-semibold text-sm text-start"
+                    >Analyst</td
+                  >
+                  <td class="text-white font-semibold text-sm text-start"
+                    >Firm</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end"
+                    >Rating</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end"
+                    >Action</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end"
+                    >Price Target</td
+                  >
+
+                  <td class="text-white font-semibold text-sm text-end">Date</td
+                  >
+                </tr>
+              </thead>
+              <tbody>
+                {#each data?.user?.tier === "Pro" ? historyList : historyList?.slice(0, 3) as item, index}
+                  <tr
+                    class="{latestInfoDate(item?.date)
+                      ? 'bg-[#F9AB00] bg-opacity-[0.1]'
+                      : 'odd:bg-[#27272A]'} border-b-[#09090B] {index + 1 ===
+                      historyList?.slice(0, 3)?.length &&
+                    data?.user?.tier !== 'Pro'
+                      ? 'opacity-[0.1]'
+                      : ''}"
+                  >
+                    <td
+                      class="text-sm sm:text-[1rem] whitespace-nowrap text-start"
+                    >
+                      <div class="flex flex-col items-start">
+                        <a
+                          href={item?.analystId !== null
+                            ? `/analysts/${item?.analystId}`
+                            : "#"}
+                          class="sm:hover:text-white text-blue-400"
+                          >{item?.analyst_name}
+                        </a>
+
+                        <div class="flex flex-row items-center mt-1">
+                          {#each Array.from({ length: 5 }) as _, i}
+                            {#if i < Math.floor(item?.analystScore)}
+                              <svg
+                                class="w-3 h-3 text-[#FBCE3C]"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 22 20"
+                              >
+                                <path
+                                  d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                                />
+                              </svg>
+                            {:else}
+                              <svg
+                                class="w-3 h-3 text-gray-300 dark:text-gray-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 22 20"
+                              >
+                                <path
+                                  d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                                />
+                              </svg>
+                            {/if}
+                          {/each}
+
+                          <span class="ml-1 text-sm">
+                            ({item?.analystScore !== null
+                              ? item?.analystScore
+                              : 0})
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td
+                      class="text-sm sm:text-[1rem] whitespace-nowrap text-start text-white"
+                    >
+                      {item?.analyst?.length > charNumber
+                        ? item?.analyst?.slice(0, charNumber) + "..."
+                        : item?.analyst}
+                    </td>
+
+                    <td
+                      class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                    >
+                      <span
+                        class="text-[1rem] font-medium {[
+                          'Strong Buy',
+                          'Buy',
+                        ]?.includes(item?.rating_current)
+                          ? 'text-[#00FC50]'
+                          : item?.rating_current === 'Hold'
+                            ? 'text-[#FF7070]'
+                            : ['Strong Sell', 'Sell']?.includes(
+                                  item?.rating_current,
+                                )
+                              ? 'text-[#FF2F1F]'
+                              : ''}"
+                      >
+                        {item?.rating_current}
+                      </span>
+                    </td>
+
+                    <td
+                      class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                    >
+                      {item?.action_company?.replace(
+                        "Initiates Coverage On",
+                        "Initiates",
+                      )}
+                    </td>
+
+                    <td
+                      class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                    >
+                      <div class="flex flex-col items-end">
+                        <div class="flex flex-row items-center">
+                          {#if Math?.ceil(item?.adjusted_pt_prior) !== 0}
+                            <span class="text-gray-100 font-normal"
+                              >${Math?.ceil(item?.adjusted_pt_prior)}</span
+                            >
+                            <svg
+                              class="w-3 h-3 ml-1 mr-1 inline-block"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              ><path
+                                fill="none"
+                                stroke="white"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.5"
+                                d="M4 12h16m0 0l-6-6m6 6l-6 6"
+                              /></svg
+                            >
+                            <span class="text-white font-semibold"
+                              >${Math?.ceil(item?.adjusted_pt_current)}</span
+                            >
+                          {:else if Math?.ceil(item?.adjusted_pt_current) !== 0}
+                            <span class="text-white font-semibold"
+                              >${Math?.ceil(item?.adjusted_pt_current)}</span
+                            >
+                          {/if}
+                        </div>
+                      </div>
+                    </td>
+
+                    <td
+                      class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                    >
+                      <div class="flex flex-col items-end">
+                        {#if latestInfoDate(item?.date)}
+                          <label
+                            class="bg-[#fff] text-black font-semibold text-xs rounded-md px-2 py-0.5 ml-3 mb-1"
+                          >
+                            New
+                          </label>
+                        {/if}
+                        {new Date(item?.date).toLocaleString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                          daySuffix: "2-digit",
+                        })}
+                      </div>
+                    </td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
           </div>
         {:else if activeIdx === 1}
           <div class="w-full flex justify-start items-center m-auto mt-10 mb-6">
             <div
-              class="text-center w-fit text-gray-100 text-sm sm:text-[1rem] rounded-lg h-auto border border-slate-800 p-4"
+              class="text-center w-fit text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-slate-800 p-4"
             >
               <svg
                 class="w-5 h-5 inline-block sm:mr-1 flex-shrink-0"
