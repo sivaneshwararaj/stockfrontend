@@ -26,7 +26,6 @@
   import toast from "svelte-french-toast";
   import Markethour from "$lib/components/Markethour.svelte";
   import AIScore from "$lib/components/AIScore.svelte";
-  import { convertTimestamp } from "$lib/utils";
 
   export let data;
   let prePostData = data?.getPrePostQuote || {};
@@ -722,7 +721,7 @@ function handleTypeOfTrade(state:string)
                                 >
                                   {$displayLegend?.change}%
                                 </div>
-                                <div class="mt-0.5 text-sm bp:text-sm">
+                                <div class="mt-0.5 text-xs sm:text-sm">
                                   <span class="block font-semibold sm:inline"
                                     >At close:</span
                                   >
@@ -748,7 +747,7 @@ function handleTypeOfTrade(state:string)
                                       2,
                                     )}%
                                   </div>
-                                  <div class="mt-1 text-sm sm:flex">
+                                  <div class="mt-1 text-xs sm:text-sm sm:flex">
                                     <span class="flex items-center"
                                       ><svg
                                         class="h-4 w-4 inline text-blue-400"
@@ -769,9 +768,7 @@ function handleTypeOfTrade(state:string)
                                       ></span
                                     >
                                     <span class="sm:ml-1"
-                                      >{convertTimestamp(
-                                        prePostData?.time / 1000,
-                                      )}</span
+                                      >{prePostData?.time}</span
                                     >
                                   </div>
                                 </div>
