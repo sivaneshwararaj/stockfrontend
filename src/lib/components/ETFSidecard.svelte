@@ -37,7 +37,7 @@
   $: {
     if ($etfTicker && typeof window !== "undefined") {
       info = data?.getETFProfile?.at(0);
-      topHoldingList = data?.getETFHoldings;
+      topHoldingList = data?.getETFHoldings?.holdings;
       dividendHistoryList = data?.getStockDividend?.history;
       dividendYield = data?.getStockDividend?.dividendYield;
       provider = info?.etfProvider;
