@@ -722,7 +722,8 @@ function handleTypeOfTrade(state:string)
                                   {$displayLegend?.change}%
                                 </div>
                                 <div class="mt-0.5 text-xs sm:text-sm">
-                                  <span class="block font-semibold sm:inline"
+                                  <span
+                                    class="block font-semibold sm:inline mb-0.5 sm:mb-0"
                                     >At close:</span
                                   >
                                   {$displayLegend?.date}
@@ -751,7 +752,7 @@ function handleTypeOfTrade(state:string)
                                     <span class="flex items-center">
                                       {#if prePostData?.time?.includes("AM")}
                                         <svg
-                                          class="h-6 w-6 sm:h-4 sm:w-4 text-yellow-500"
+                                          class="h-4 w-4 inline text-yellow-500"
                                           fill="none"
                                           viewBox="0 0 24 24"
                                           stroke="currentColor"
@@ -779,7 +780,7 @@ function handleTypeOfTrade(state:string)
                                         >
                                       {/if}
                                       <span
-                                        class="ml-0.5 whitespace-nowrap font-semibold md:ml-1"
+                                        class="ml-0.5 whitespace-nowrap font-semibold md:ml-1 mb-0.5 sm:mb-0"
                                         >{prePostData?.time?.includes("AM")
                                           ? "Pre-market"
                                           : "After-hours"}</span
