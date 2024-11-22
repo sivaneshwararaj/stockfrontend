@@ -310,7 +310,7 @@
           </div>
 
           {#if isLoaded}
-            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:gap-8">
+            <div class=" grid gap-4 grid-cols-1 sm:grid-cols-2 md:gap-8">
               <Card.Root class="bg-[#141417]">
                 <Card.Header class="flex flex-col items-start space-y-0 pb-2">
                   <Card.Title
@@ -375,25 +375,27 @@
               </Card.Root>
             </div>
 
-            <div class="mt-10 grid gap-4 md:gap-8 grid-cols-1 text-start">
+            <div
+              class="mt-10 grid gap-4 md:gap-8 grid-cols-1 text-start text-white"
+            >
               <Lazy>
-                <Card.Root class="order-1 overflow-x-scroll h-full">
-                  <Card.Header class="flex flex-row items-center">
+                <div class="order-1 overflow-x-scroll h-full mt-5 sm:mt-0">
+                  <div class="flex flex-row items-center">
                     <div class="flex flex-col items-start w-full">
                       <div class="flex flex-row w-full items-center">
-                        <Card.Title
-                          class="text-start text-xl w-full flex flex-col sm:flex-row items-start sm:items-center"
+                        <div
+                          class="text-start text-xl w-full flex flex-row items-center mb-3"
                         >
-                          <span>Trending Posts</span>
+                          <span class="font-semibold">Trending Posts</span>
                           <span
-                            class="text-sm sm:text-[1rem] mt-2 sm:mt-0 sm:ml-auto font-normal"
+                            class="text-sm sm:text-[1rem] ml-auto font-normal"
                             >Updated {formattedDate}</span
                           >
-                        </Card.Title>
+                        </div>
                       </div>
                     </div>
-                  </Card.Header>
-                  <Card.Content class="p-3 sm:p-6">
+                  </div>
+                  <div class="">
                     {#each data?.getRedditTracker?.posts as item}
                       <div
                         class="flex flex-col items-start mb-3 p-3 border border-gray-800 rounded-md bg-[#141417]"
@@ -471,7 +473,7 @@
                             href={"https://www.reddit.com/user/" + item?.author}
                             rel="noopener noreferrer"
                             target="_blank"
-                            class="text-sm text-white sm:hover:text-blue-400"
+                            class="hidden sm:inline-block text-sm text-white sm:hover:text-blue-400"
                           >
                             Posted by {item?.author}
                           </a>
@@ -489,16 +491,25 @@
                         </div>
                       </div>
                     {/each}
-                  </Card.Content>
-                </Card.Root>
+                  </div>
+                </div>
               </Lazy>
               <Card.Root class="order-0 overflow-x-scroll no-scrollbar">
                 <Card.Header>
+                  <div
+                    class="text-start text-xl w-full flex flex-col sm:flex-row items-start sm:items-center mb-3"
+                  >
+                    <span class="font-semibold">Trending Companies</span>
+                    <span
+                      class="text-sm sm:text-[1rem] mt-2 sm:mt-0 sm:ml-auto font-normal"
+                      >Updated {formattedDate}</span
+                    >
+                  </div>
                   <nav
                     class="border-b-[2px] overflow-x-scroll whitespace-nowrap"
                   >
                     <ul
-                      class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
+                      class="flex flex-row items-center w-full text-sm sm:text-[1rem] text-white"
                     >
                       {#each tabs as item, index}
                         <label
