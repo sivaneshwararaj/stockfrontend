@@ -578,7 +578,7 @@
                     <!-----Start-Header-CandleChart-Indicators------>
 
                     <div
-                      class="m-auto pl-0 sm:pl-4 overflow-hidden mb-3 md:mt-10 xl:pr-7"
+                      class="m-auto pl-0 sm:pl-4 overflow-hidden mb-3 xl:pr-7"
                     >
                       <div
                         class="hidden sm:flex flex-row w-full justify-between items-center"
