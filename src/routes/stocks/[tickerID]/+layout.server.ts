@@ -45,6 +45,7 @@ const fetchWatchlist = async (pb, userId) => {
 export const load = async ({ params, locals, setHeaders }) => {
   const { apiURL, apiKey, pb, user } = locals;
   const { tickerID } = params;
+    setHeaders({ "cache-control": "public, max-age=60" });
 
   const endpoints = [
     "/stockdeck",
@@ -82,7 +83,6 @@ export const load = async ({ params, locals, setHeaders }) => {
     getUserWatchlist,
   ] = await Promise.all(promises);
 
-      setHeaders({ "cache-control": "public, max-age=60" });
 
 
   return {
