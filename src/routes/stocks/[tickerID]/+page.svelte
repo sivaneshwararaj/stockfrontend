@@ -1129,7 +1129,9 @@
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
                       >{$wsBidPrice !== 0 && $wsBidPrice !== null
                         ? $wsBidPrice
-                        : (data?.getStockQuote?.bid ?? "-")}</td
+                        : ((data?.getStockQuote?.bid !== 0
+                            ? data?.getStockQuote?.bid
+                            : "-") ?? "n/a")}</td
                     ></tr
                   >
                   <tr
@@ -1151,7 +1153,8 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
-                      >{stockDeck?.revenueTTM !== null
+                      >{stockDeck?.revenueTTM !== null &&
+                      stockDeck?.revenueTTM !== 0
                         ? abbreviateNumber(stockDeck?.revenueTTM)
                         : "n/a"}</td
                     ></tr
@@ -1248,7 +1251,9 @@
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-smaller font-semibold tiny:text-base xs:px-1 sm:py-2 sm:text-right sm:text-small"
                       >{$wsAskPrice !== 0 && $wsAskPrice !== null
                         ? $wsAskPrice
-                        : (data?.getStockQuote?.ask ?? "-")}</td
+                        : ((data?.getStockQuote?.ask !== 0
+                            ? data?.getStockQuote?.ask
+                            : "-") ?? "n/a")}</td
                     ></tr
                   >
                   <tr
