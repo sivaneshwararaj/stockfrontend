@@ -42,8 +42,10 @@ const fetchWatchlist = async (pb, userId) => {
   return output;
 };
 
-export const load = async ({ params, locals }) => {
+export const load = async ({ params, locals, setHeaders }) => {
   const { apiURL, apiKey, pb, user } = locals;
+      setHeaders({ "cache-control": "public, max-age=60" });
+
   const { tickerID } = params;
 
   const endpoints = [

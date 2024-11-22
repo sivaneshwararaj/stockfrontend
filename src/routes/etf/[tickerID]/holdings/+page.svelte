@@ -8,7 +8,11 @@
   import Table from "$lib/components/Table/Table.svelte";
 
   export let data;
-  let rawData = data?.getETFHoldings;
+  let rawData = data?.getETFHoldings?.holdings || [];
+  const lastUpdate = new Date(data?.getETFHoldings?.lastUpdate);
+  const options = { month: "short", day: "numeric", year: "numeric" };
+  const formattedDate = lastUpdate?.toLocaleDateString("en-US", options);
+
   const excludedRules = new Set([
     "price",
     "changesPercentage",
@@ -67,7 +71,7 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full"
+  class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full mt-5 sm:mt-0"
 >
   <div class="flex justify-center m-auto h-full overflow-hidden w-full">
     <div
@@ -75,10 +79,6 @@
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="mb-6">
-          <h2 class="text-2xl sm:text-3xl text-gray-200 font-bold mb-4">
-            {$etfTicker} Holdings List
-          </h2>
-
           <div
             class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
           >
@@ -105,6 +105,19 @@
         </div>
 
         {#if rawData?.length !== 0}
+          <div class="text-white">
+            <div class="flex flex-row items-center md:space-x-4 md:border-0">
+              <h1 class=" text-xl sm:text-2xl font-semibold">
+                {$etfTicker} Holdings List
+              </h1>
+              <div
+                class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] font-semibold md:ml-0"
+              >
+                <span class="inline">As of </span>{formattedDate}
+              </div>
+            </div>
+          </div>
+
           <Table
             {data}
             {rawData}
