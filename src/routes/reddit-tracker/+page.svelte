@@ -657,17 +657,17 @@
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
-              href="cramer-tracker"
+              href="/sentiment-tracker"
               class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Cramer Tracker
+                  Sentiment Tracker
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Follow Jim Cramer latest stock picks
+                Follow the latest trends in realtime on social media
               </span>
             </a>
           </div>
@@ -676,17 +676,17 @@
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
-              href="/reddit-tracker"
+              href="/insider-tracker"
               class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Reddit Tracker
+                  Insider Tracker
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Get the latest trends of r/Wallstreetbets
+                Get the latest unusual insider trading in realtime
               </span>
             </a>
           </div>
