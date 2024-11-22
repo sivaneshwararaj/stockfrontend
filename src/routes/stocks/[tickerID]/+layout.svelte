@@ -744,14 +744,22 @@
                             <div
                               class="-mt-5 sm:-mt-8 mb-5 flex flex-row items-end space-x-2 xs:space-x-3 sm:space-x-5 text-white"
                             >
-                              <div class="max-w-[50%] whitespace-nowrap">
+                              <div class="w-full max-w-[50%] whitespace-nowrap">
                                 <div
-                                  class="text-3xl sm:text-4xl font-bold block sm:inline"
+                                  class="text-3xl sm:text-4xl font-bold {Object?.keys(
+                                    prePostData,
+                                  )?.length === 0
+                                    ? 'inline'
+                                    : 'block sm:inline'}"
                                 >
                                   {displayLegend?.close}
                                 </div>
                                 <div
-                                  class="font-semibold block text-lg xs:text-xl sm:inline sm:text-2xl {displayLegend?.change >=
+                                  class="font-semibold {Object?.keys(
+                                    prePostData,
+                                  )?.length === 0
+                                    ? 'inline'
+                                    : 'block sm:inline'} text-lg xs:text-xl sm:text-2xl {displayLegend?.change >=
                                   0
                                     ? "before:content-['+'] text-[#00FC50]"
                                     : 'text-[#FF2F1F]'}"
@@ -767,7 +775,11 @@
                                   {/if}
                                   {displayLegend?.date}
                                   {#if $isOpen}
-                                    <span class="block sm:inline mb-0.5 sm:mb-0"
+                                    <span
+                                      class="{Object?.keys(prePostData)
+                                        ?.length !== 0
+                                        ? 'block sm:inline'
+                                        : 'inline'} mb-0.5 sm:mb-0"
                                       >- Market open</span
                                     >
                                   {/if}
@@ -830,7 +842,7 @@
                                           : "After-hours"}</span
                                       ></span
                                     >
-                                    <span class="sm:ml-1"
+                                    <span class="sm:ml-1 whitespace-nowrap"
                                       >{prePostData?.time}</span
                                     >
                                   </div>
