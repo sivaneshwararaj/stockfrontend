@@ -42,7 +42,7 @@ const fetchWatchlist = async (pb, userId) => {
   return output;
 };
 
-export const load = async ({ params, locals }) => {
+export const load = async ({ params, locals, setHeaders }) => {
   const { apiURL, apiKey, pb, user } = locals;
   const { tickerID } = params;
 
@@ -50,6 +50,7 @@ export const load = async ({ params, locals }) => {
     "/stockdeck",
     "/analyst-summary-rating",
     "/stock-quote",
+    "/pre-post-quote",
     "/bull-bear-say",
     "/wiim",
     "/one-day-price",
@@ -70,6 +71,7 @@ export const load = async ({ params, locals }) => {
     getStockDeck,
     getAnalystRating,
     getStockQuote,
+    getPrePostQuote,
     getBullBearSay,
     getWhyPriceMoved,
     getOneDayPrice,
@@ -80,10 +82,14 @@ export const load = async ({ params, locals }) => {
     getUserWatchlist,
   ] = await Promise.all(promises);
 
+      setHeaders({ "cache-control": "public, max-age=60" });
+
+
   return {
     getStockDeck,
     getAnalystRating,
     getStockQuote,
+    getPrePostQuote,
     getBullBearSay,
     getWhyPriceMoved,
     getOneDayPrice,

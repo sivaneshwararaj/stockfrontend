@@ -43,6 +43,9 @@ export const clearCache = () => {
   clientSideCache.set({});
 };
 
+export const displayLegend = writable(<Array<any>>{});
+
+
 export const showCookieConsent = writable(<boolean>false);
 export const shouldUpdatePriceChart = writable(<boolean>false);
 export const coolMode = writable(<boolean>false);

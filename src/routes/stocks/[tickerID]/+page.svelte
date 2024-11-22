@@ -6,17 +6,14 @@
     setCache,
     numberOfUnreadNotification,
     globalForm,
-    isCrosshairMoveActive,
     realtimePrice,
     priceIncrease,
     wsBidPrice,
     wsAskPrice,
+    displayLegend,
     currentPortfolioPrice,
     stockTicker,
     displayCompanyName,
-    isOpen,
-    isBeforeMarketOpen,
-    isWeekend,
     shouldUpdatePriceChart,
     priceChartData,
   } from "$lib/store";
@@ -38,7 +35,6 @@
   export let data;
   export let form;
 
-  let prePostData = {};
   let stockDeck = {};
 
   $: previousClose = data?.getStockQuote?.previousClose;
@@ -60,52 +56,55 @@
   $: {
     if (output !== null) {
       let change;
+      let graphChange;
       let currentDataRow;
-      let baseClose;
+      let currentDataRowOneDay;
+      let baseClose = previousClose;
+      let graphBaseClose;
+
+      const length = oneDayPrice?.length;
+      for (let i = length - 1; i >= 0; i--) {
+        if (!isNaN(oneDayPrice[i]?.close)) {
+          currentDataRowOneDay = oneDayPrice[i];
+          break;
+        }
+      }
 
       // Determine current data row and base close price based on displayData
       switch (displayData) {
-        case "1D":
-          const length = oneDayPrice?.length;
-          for (let i = length - 1; i >= 0; i--) {
-            if (!isNaN(oneDayPrice[i]?.close)) {
-              currentDataRow = oneDayPrice[i];
-              break;
-            }
-          }
-          baseClose = previousClose;
-          break;
-
         case "1W":
           currentDataRow = oneWeekPrice?.at(-1); // Latest entry for 1 week
-          baseClose = oneWeekPrice?.[0]?.close;
+          graphBaseClose = oneWeekPrice?.at(0)?.close;
           break;
 
         case "1M":
           currentDataRow = oneMonthPrice?.at(-1); // Latest entry for 1 month
-          baseClose = oneMonthPrice?.[0]?.close;
+          graphBaseClose = oneMonthPrice?.at(0)?.close;
           break;
 
         case "6M":
           currentDataRow = sixMonthPrice?.at(-1); // Latest entry for 6 months
-          baseClose = sixMonthPrice?.[0]?.close;
+          graphBaseClose = sixMonthPrice?.at(0)?.close;
           break;
 
         case "1Y":
           currentDataRow = oneYearPrice?.at(-1); // Latest entry for 1 year
-          baseClose = oneYearPrice?.[0]?.close;
+          graphBaseClose = oneYearPrice?.at(0)?.close;
           break;
 
         case "MAX":
           currentDataRow = maxPrice?.at(-1); // Latest entry for MAX range
-          baseClose = maxPrice?.[0]?.close;
+          graphBaseClose = maxPrice?.at(0)?.close;
           break;
       }
 
       // Calculate percentage change if baseClose and currentDataRow are valid
       const closeValue =
-        displayData === "1D" &&
-        !$isCrosshairMoveActive &&
+        $realtimePrice !== null
+          ? $realtimePrice
+          : (currentDataRowOneDay?.close ?? currentDataRowOneDay?.value);
+
+      const graphCloseValue =
         $realtimePrice !== null
           ? $realtimePrice
           : (currentDataRow?.close ?? currentDataRow?.value);
@@ -114,8 +113,12 @@
         change = ((closeValue / baseClose - 1) * 100).toFixed(2);
       }
 
+      if (graphCloseValue && graphBaseClose) {
+        graphChange = ((graphCloseValue / graphBaseClose - 1) * 100).toFixed(2);
+      }
+
       // Format date
-      const date = new Date(currentDataRow?.time * 1000);
+      const date = new Date(currentDataRowOneDay?.time * 1000);
 
       const options = {
         day: "2-digit",
@@ -127,14 +130,7 @@
       };
 
       //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      const formattedDate =
-        displayData === "1D" || displayData === "1W" || displayData === "1M"
-          ? date.toLocaleString("en-US", options)
-          : new Date(currentDataRow?.time)?.toLocaleDateString("en-US", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            });
+      const formattedDate = date?.toLocaleString("en-US", options);
 
       const safeFormattedDate =
         formattedDate === "Invalid Date"
@@ -142,13 +138,13 @@
           : formattedDate;
 
       // Set display legend
-      displayLegend = {
+      $displayLegend = {
         close:
-          currentDataRow?.value ??
-          currentDataRow?.close ??
-          data?.getStockQuote?.price,
+          currentDataRowOneDay?.close?.toFixed(2) ??
+          data?.getStockQuote?.price?.toFixed(2),
         date: safeFormattedDate,
         change,
+        graphChange: displayData === "1D" ? change : graphChange,
       };
     }
   }
@@ -422,33 +418,7 @@
     }
   }
 
-  async function getPrePostQuote() {
-    if (!$isOpen) {
-      const postData = { ticker: $stockTicker, path: "pre-post-quote" };
-      const response = await fetch("/api/ticker-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-
-      prePostData = await response.json();
-    }
-  }
-
-  let currentDataRow = { value: "-", date: "-" };
-
-  let lineLegend = null;
-  let displayLegend = { close: "-", date: "-" };
-
-  function handleSeriesReference(ref) {
-    try {
-      lineLegend = ref;
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  $displayLegend = { close: "-", date: "-" };
 
   let displayLastLogicalRangeValue;
 
@@ -747,20 +717,11 @@
       oneMonthPrice = [];
       oneYearPrice = [];
       maxPrice = [];
-      prePostData = {};
       output = null;
 
       stockDeck = data?.getStockDeck; // Essential otherwise chart will not be updated since we wait until #layout.server.ts server response is finished
 
-      const asyncFunctions = [getPrePostQuote()];
-
-      Promise.all(asyncFunctions)
-        .then((results) => {
-          initializePrice();
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
+      initializePrice();
     }
   }
 </script>
@@ -812,99 +773,6 @@
       <!-- Main content -->
       <div class="pb-12 md:pb-20 w-full sm:pr-6 xl:pr-0">
         <div class="xl:pr-10">
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-
-          <div class="flex flex-row items-start w-full sm:pl-6 mt-4">
-            <div class="flex flex-col items-start justify-start w-full">
-              <div
-                class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full"
-              >
-                {$realtimePrice ?? displayLegend?.close}
-
-                {#if $priceIncrease === true}
-                  <div
-                    style="background-color: green;"
-                    class="inline-block pulse rounded-full w-3 h-3 ml-2"
-                  ></div>
-                {:else if $priceIncrease === false}
-                  <div
-                    style="background-color: red;"
-                    class="inline-block pulse rounded-full w-3 h-3 ml-2"
-                  ></div>
-                {/if}
-              </div>
-
-              <div class="flex flex-row items-center w-full">
-                <span
-                  class="items-center justify-start {displayLegend?.change > 0
-                    ? "before:content-['+'] text-[#00FC50]"
-                    : 'text-[#FF2F1F]'} font-medium text-xs sm:text-sm"
-                  >{displayLegend?.change ?? "-"}%</span
-                >
-
-                <span class="ml-3 text-white text-xs sm:text-sm"
-                  >{displayLegend?.date}</span
-                >
-              </div>
-            </div>
-
-            <div class="ml-auto">
-              {#if Object?.keys(prePostData)?.length !== 0 && prePostData?.price !== 0}
-                <div class="flex flex-col justify-end items-end">
-                  <div class="flex flex-row items-center justify-end">
-                    <span class="text-white text-lg sm:text-2xl font-bold">
-                      {prePostData?.price}
-                    </span>
-                    {#if prePostData?.changesPercentage >= 0}
-                      <span
-                        class="ml-1 items-center justify-start text-[#00FC50] font-medium text-xs sm:text-sm"
-                        >({prePostData?.changesPercentage}%)</span
-                      >
-                    {:else if prePostData?.changesPercentage < 0}
-                      <span
-                        class="ml-1 items-center justify-start text-[#FF2F1F] font-medium text-xs sm:text-sm"
-                        >({prePostData?.changesPercentage}%)</span
-                      >
-                    {/if}
-                  </div>
-                  {#if $isBeforeMarketOpen && !$isOpen && !$isWeekend}
-                    <div
-                      class="flex flex-row items-center justify-end text-white text-xs sm:text-sm font-normal text-end w-24"
-                    >
-                      <span>Pre-market:</span>
-                      <svg
-                        class="ml-1 w-4 h-4 inline-block"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 256 256"
-                        ><path
-                          fill="#EA9703"
-                          d="M120 40V16a8 8 0 0 1 16 0v24a8 8 0 0 1-16 0m72 88a64 64 0 1 1-64-64a64.07 64.07 0 0 1 64 64m-16 0a48 48 0 1 0-48 48a48.05 48.05 0 0 0 48-48M58.34 69.66a8 8 0 0 0 11.32-11.32l-16-16a8 8 0 0 0-11.32 11.32Zm0 116.68l-16 16a8 8 0 0 0 11.32 11.32l16-16a8 8 0 0 0-11.32-11.32M192 72a8 8 0 0 0 5.66-2.34l16-16a8 8 0 0 0-11.32-11.32l-16 16A8 8 0 0 0 192 72m5.66 114.34a8 8 0 0 0-11.32 11.32l16 16a8 8 0 0 0 11.32-11.32ZM48 128a8 8 0 0 0-8-8H16a8 8 0 0 0 0 16h24a8 8 0 0 0 8-8m80 80a8 8 0 0 0-8 8v24a8 8 0 0 0 16 0v-24a8 8 0 0 0-8-8m112-88h-24a8 8 0 0 0 0 16h24a8 8 0 0 0 0-16"
-                        /></svg
-                      >
-                    </div>
-                  {:else}
-                    <div
-                      class="flex flex-row items-center justify-end text-white text-xs sm:text-sm font-normal text-end w-28"
-                    >
-                      <span>After-hours:</span>
-                      <svg
-                        class="ml-1 w-4 h-4 inline-block"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 256 256"
-                        ><path
-                          fill="#70A1EF"
-                          d="M232.13 143.64a6 6 0 0 0-6-1.49a90.07 90.07 0 0 1-112.27-112.3a6 6 0 0 0-7.49-7.48a102.88 102.88 0 0 0-51.89 36.31a102 102 0 0 0 142.84 142.84a102.88 102.88 0 0 0 36.31-51.89a6 6 0 0 0-1.5-5.99m-42 48.29a90 90 0 0 1-126-126a90.9 90.9 0 0 1 35.52-28.27a102.06 102.06 0 0 0 118.69 118.69a90.9 90.9 0 0 1-28.24 35.58Z"
-                        /></svg
-                      >
-                    </div>
-                  {/if}
-                </div>
-              {/if}
-            </div>
-          </div>
-          <!-----End-Header-CandleChart-Indicators------>
-          <!--Start Time Interval-->
           <div
             class="hidden sm:flex flex-row items-center pl-1 sm:pl-6 w-full mt-4"
           >
@@ -1046,20 +914,6 @@
                       {/each}
                     </ul>
                   </div>
-                  <div
-                    class="flex shrink flex-row space-x-1 pr-1 text-sm sm:text-[1rem]"
-                  >
-                    <span
-                      class={displayLegend?.change >= 0
-                        ? "before:content-['+'] text-[#00FC50]"
-                        : "text-[#FF2F1F]"}
-                    >
-                      {displayLegend?.change ?? "-"}%
-                    </span>
-                    <span class="hidden text-gray-200 sm:block"
-                      >({displayData})</span
-                    >
-                  </div>
                 </div>
                 <div class="h-[250px] sm:h-[350px]">
                   <div
@@ -1107,11 +961,11 @@
                     class="flex shrink flex-row space-x-1 pr-1 text-sm sm:text-[1rem]"
                   >
                     <span
-                      class={displayLegend?.change >= 0
+                      class={$displayLegend?.graphChange >= 0
                         ? "before:content-['+'] text-[#00FC50]"
                         : "text-[#FF2F1F]"}
                     >
-                      {displayLegend?.change}%
+                      {$displayLegend?.graphChange}%
                     </span>
                     <span class="hidden text-gray-200 sm:block"
                       >({displayData})</span
@@ -1137,7 +991,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1157,7 +1010,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1177,7 +1029,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1197,7 +1048,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1217,7 +1067,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1237,7 +1086,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine

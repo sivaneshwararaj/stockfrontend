@@ -13,7 +13,10 @@
     priceIncrease,
     stockTicker,
     displayCompanyName,
+    displayLegend,
     isOpen,
+    isBeforeMarketOpen,
+    isWeekend,
     shouldUpdatePriceChart,
     priceChartData,
   } from "$lib/store";
@@ -23,8 +26,10 @@
   import toast from "svelte-french-toast";
   import Markethour from "$lib/components/Markethour.svelte";
   import AIScore from "$lib/components/AIScore.svelte";
+  import { convertTimestamp } from "$lib/utils";
 
   export let data;
+  let prePostData = data?.getPrePostQuote || {};
   $: $realtimePrice = data?.getStockQuote?.price?.toFixed(2);
 
   let previousRealtimePrice = null;
@@ -277,6 +282,7 @@ function handleTypeOfTrade(state:string)
       // add a check to see if running on client-side
 
       $currentPortfolioPrice = data?.getStockQuote?.price;
+      prePostData = data?.getPrePostQuote || {};
     }
   }
 
@@ -285,7 +291,7 @@ function handleTypeOfTrade(state:string)
       item.user === data?.user?.id && item.ticker?.includes($stockTicker),
   );
 
-  $: charNumber = $screenWidth < 640 ? 15 : 25;
+  $: charNumber = $screenWidth < 640 ? 25 : 40;
 
   $: {
     if (
@@ -326,7 +332,7 @@ function handleTypeOfTrade(state:string)
   class="bg-[#09090B] w-full max-w-screen sm:max-w-7xl min-h-screen xl:max-w-screen-2xl overflow-hidden"
 >
   <!-- Page wrapper -->
-  <div class="flex flex-col w-full mt-5 relative w-full">
+  <div class="mt-5 flex flex-col w-full relative w-full">
     <main class="grow w-full">
       <section class="w-full">
         <div class="w-full">
@@ -361,9 +367,7 @@ function handleTypeOfTrade(state:string)
                         ? "hidden"
                         : "flex flex-col items-center ml-6 transition-transform ease-in"}
                     >
-                      <span
-                        class="text-white text-[0.70rem] font-medium text-opacity-[0.6]"
-                      >
+                      <span class="text-white text-xs font-semibold">
                         {$stockTicker}
                       </span>
                       <span class="text-white font-medium text-sm">
@@ -673,29 +677,106 @@ function handleTypeOfTrade(state:string)
                         <div
                           class="flex flex-row justify-start w-full items-center"
                         >
-                          <div class="flex flex-col items-start ml-2 sm:ml-3">
-                            <span class="text-md sm:text-lg text-blue-400">
-                              {$stockTicker?.toUpperCase()}
-                            </span>
-                            <span
-                              class="text-xl sm:text-2xl font-semibold sm:font-bold text-white"
-                            >
-                              {$displayCompanyName?.length > charNumber
-                                ? $displayCompanyName?.slice(0, charNumber) +
-                                  "..."
-                                : $displayCompanyName}
-                            </span>
-                          </div>
-
                           <div
-                            class="ml-auto {$scoreComponent === false
-                              ? 'invisible'
-                              : ''}"
+                            class="flex flex-col items-start ml-2 sm:ml-3 w-full"
                           >
-                            <AIScore
-                              score={data?.getStockDeck?.score}
-                              tier={data?.user?.tier}
-                            />
+                            <div
+                              class="flex flex-row justify-between items-center w-full"
+                            >
+                              <span
+                                class="text-2xl lg:text-3xl font-bold text-white"
+                              >
+                                {$displayCompanyName?.length > charNumber
+                                  ? $displayCompanyName?.slice(0, charNumber) +
+                                    "..."
+                                  : $displayCompanyName}
+                                ({$stockTicker?.toUpperCase()})
+                              </span>
+                              <div
+                                class="items-end justify-end {$scoreComponent ===
+                                false
+                                  ? '-mt-8 invisible'
+                                  : ''}"
+                              >
+                                <AIScore
+                                  score={data?.getStockDeck?.score}
+                                  tier={data?.user?.tier}
+                                />
+                              </div>
+                            </div>
+
+                            <div
+                              class="sm:-mt-8 mb-5 flex flex-row items-end space-x-2 xs:space-x-3 sm:space-x-5 text-white"
+                            >
+                              <div class="max-w-[50%]">
+                                <div
+                                  class="text-3xl sm:text-4xl font-bold block sm:inline"
+                                >
+                                  {$displayLegend?.close}
+                                </div>
+                                <div
+                                  class="font-semibold block text-lg xs:text-xl sm:inline sm:text-2xl {$displayLegend?.change >=
+                                  0
+                                    ? "before:content-['+'] text-[#00FC50]"
+                                    : 'text-[#FF2F1F]'}"
+                                >
+                                  {$displayLegend?.change}%
+                                </div>
+                                <div class="mt-0.5 text-sm bp:text-sm">
+                                  <span class="block font-semibold sm:inline"
+                                    >At close:</span
+                                  >
+                                  {$displayLegend?.date}
+                                </div>
+                              </div>
+                              {#if Object?.keys(prePostData)?.length !== 0}
+                                <div
+                                  class="border-l border-default pl-3 bp:pl-5"
+                                >
+                                  <div
+                                    class="block text-2xl sm:text-[1.7rem] font-semibold leading-5 text-faded sm:inline"
+                                  >
+                                    {prePostData?.price?.toFixed(2)}
+                                  </div>
+                                  <div
+                                    class="mt-1.5 block text-sm xs:text-base sm:mt-0 sm:inline sm:text-lg {prePostData?.changesPercentage >=
+                                    0
+                                      ? "before:content-['+'] text-[#00FC50]"
+                                      : 'text-[#FF2F1F]'}"
+                                  >
+                                    {prePostData?.changesPercentage?.toFixed(
+                                      2,
+                                    )}%
+                                  </div>
+                                  <div class="mt-1 text-sm sm:flex">
+                                    <span class="flex items-center"
+                                      ><svg
+                                        class="h-4 w-4 inline text-blue-400"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        style="max-width:40px"
+                                        ><path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                        ></path></svg
+                                      >
+                                      <span
+                                        class="ml-0.5 whitespace-nowrap font-semibold md:ml-1"
+                                        >After-hours:</span
+                                      ></span
+                                    >
+                                    <span class="sm:ml-1"
+                                      >{convertTimestamp(
+                                        prePostData?.time / 1000,
+                                      )}</span
+                                    >
+                                  </div>
+                                </div>
+                              {/if}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -818,102 +899,10 @@ function handleTypeOfTrade(state:string)
 {/if}
 <!--End Login Modal-->
 
-<!--
-{#if BuyTrade}
-<BuyTrade
-  data = {data}
-  holdingShares={holdingShares}
-  availableCash = {availableCash}
-/>
-{/if}
-
-{#if SellTrade}
-<SellTrade 
-  data = {data}
-  holdingShares={holdingShares}
-  availableCash = {availableCash}
-/>
-{/if}
-{#if AddPortfolio}
-<AddPortfolio data={data}/>
-{/if}
--->
-
 <!--Start SellTrade Modal-->
 {#if PriceAlert}
   <PriceAlert {data} />
 {/if}
-
-<!--End SellTrade Modal-->
-
-<!--Start Type of Trade-->
-
-<!--
-<input type="checkbox" id="typeOfTrade" class="modal-toggle" />
-
-<dialog id="typeOfTrade" class="modal modal-bottom sm:modal-middle overflow-hidden">
-
-
-  <label for="typeOfTrade"  class="cursor-pointer modal-backdrop bg-[#fff] bg-opacity-[0.08]"></label>
-  
-  <div class="modal-box w-full bg-[#000] border border-slate-600 pb-10">
-
-
-
-    <div class= "flex flex-col">
-      <div class="text-white text-md flex flex-col flex-shrink-0">
-          <div class="rounded-full w-10 h-10 relative bg-gray-900 mb-2">
-              <img class="rounded-full w-6 h-6 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2" src={`https://financialmodelingprep.com/image-stock/${$stockTicker}.png`} />
-          </div>
-          <span class="mb-1">
-              {$displayCompanyName?.length > 30 ? $displayCompanyName?.slice(0, 30) + "..." : $displayCompanyName}
-          </span>
-          <div class="flex flex-row items-center mb-10">
-
-            <span class="mb-1 text-sm font-medium">
-                Current Price: ${$currentPortfolioPrice}
-            </span>
-            <span class="text-blue-400 text-sm font-medium ml-auto">
-              Holding Shares: {holdingShares}
-            </span>
-
-          </div>
-      </div>
-  </div>
-
-
-  <div class="text-white">
-    <h3 class="font-bold text-2xl mb-5">
-      Type of Trade
-    </h3>
-
-
-    <ul class="menu dropdown-content text-white bg-[#000] rounded -ml-6">
-      <li class="mb-3">
-        <label for="typeOfTrade" on:click={() => handleTypeOfTrade('buy')} class="cursor-pointer flex flex-row justify-start items-center">
-          <div class="rounded-full w-10 h-10 relative bg-gray-800">
-            <svg class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="green"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect width="16" height="16" id="icon-bound" fill="none"></rect> <path d="M0,11h11.2l-2.6,2.6L10,15l6-6H0V11z M4.8,5l2.6-2.6L6,1L0,7h16V5H4.8z"></path> </g></svg>
-          </div>
-          <span class="ml-1 text-white text-lg font-medium">Buy {$stockTicker} Shares</span>
-          
-        </label>
-      </li>
-      <li class="mb-3">
-        <label for="typeOfTrade" on:click={() => handleTypeOfTrade('sell')} class="cursor-pointer flex flex-row justify-start items-center">
-          <div class="rounded-full w-10 h-10 relative bg-gray-800">
-            <svg class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="red" d="M14.25 21.4q-.575.575-1.425.575T11.4 21.4l-8.8-8.8q-.275-.275-.438-.65T2 11.15V4q0-.825.588-1.413T4 2h7.15q.425 0 .8.163t.65.437l8.8 8.825q.575.575.575 1.413T21.4 14.25l-7.15 7.15ZM6.5 8q.625 0 1.063-.438T8 6.5q0-.625-.438-1.063T6.5 5q-.625 0-1.063.438T5 6.5q0 .625.438 1.063T6.5 8Z"/></svg>
-          </div>
-          <span class="ml-1 text-white text-lg font-medium">
-            Sell {$stockTicker} Shares
-          </span>
-        </label>
-      </li>
-    </ul>
-  </div>
-  </div>
-</dialog>
--->
-<!--End Type of Trade-->
 
 <!--Start Add Watchlist Modal-->
 <input type="checkbox" id="addWatchListModal" class="modal-toggle" />
