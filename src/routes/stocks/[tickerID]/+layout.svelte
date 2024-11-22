@@ -22,7 +22,6 @@
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
   import { convertTimestamp } from "$lib/utils";
-  import Markethour from "$lib/components/Markethour.svelte";
   import AIScore from "$lib/components/AIScore.svelte";
 
   export let data;
@@ -584,8 +583,6 @@
                       <div
                         class="hidden sm:flex flex-row w-full justify-between items-center"
                       >
-                        <Markethour />
-
                         <!--Start Watchlist-->
 
                         {#if data?.user}
@@ -762,11 +759,18 @@
                                   {displayLegend?.change}%
                                 </div>
                                 <div class="mt-0.5 text-xs sm:text-sm">
-                                  <span
-                                    class="block font-semibold sm:inline mb-0.5 sm:mb-0"
-                                    >At close:</span
-                                  >
+                                  {#if !$isOpen}
+                                    <span
+                                      class="block font-semibold sm:inline mb-0.5 sm:mb-0"
+                                      >At close:</span
+                                    >
+                                  {/if}
                                   {displayLegend?.date}
+                                  {#if $isOpen}
+                                    <span class="block sm:inline mb-0.5 sm:mb-0"
+                                      >- Market open</span
+                                    >
+                                  {/if}
                                 </div>
                               </div>
                               {#if Object?.keys(prePostData)?.length !== 0}

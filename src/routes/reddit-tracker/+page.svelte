@@ -512,14 +512,35 @@
                       class="flex flex-row items-center w-full text-sm sm:text-[1rem] text-white"
                     >
                       {#each tabs as item, index}
-                        <label
-                          on:click={() => changeTimePeriod(index)}
-                          class="p-2 px-5 cursor-pointer {activeIdx === index
-                            ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
-                        >
-                          {item.title}
-                        </label>
+                        {#if data?.user?.tier === "Pro" || index === 0}
+                          <label
+                            on:click={() => changeTimePeriod(index)}
+                            class="p-2 px-5 cursor-pointer {activeIdx === index
+                              ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                          >
+                            {item.title}
+                          </label>
+                        {:else if data?.user?.tier !== "Pro"}
+                          <a
+                            href="/pricing"
+                            class="flex flex-row items-center p-2 px-5 cursor-pointer {activeIdx ===
+                            index
+                              ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
+                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                          >
+                            <span class="">{item.title}</span>
+                            <svg
+                              class="ml-2 w-3.5 h-3.5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              ><path
+                                fill="#A3A3A3"
+                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                              /></svg
+                            >
+                          </a>
+                        {/if}
                       {/each}
                     </ul>
                   </nav>
