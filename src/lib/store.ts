@@ -43,7 +43,6 @@ export const clearCache = () => {
   clientSideCache.set({});
 };
 
-export const displayLegend = writable(<Array<any>>{});
 
 
 export const showCookieConsent = writable(<boolean>false);

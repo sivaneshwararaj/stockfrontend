@@ -677,7 +677,7 @@
               </table>
             </div>
 
-            {#if rawData?.length === insiderTradingList?.length && data?.user?.tier === "Pro"}
+            {#if rawData?.length > 5 && rawData?.length === insiderTradingList?.length && data?.user?.tier === "Pro"}
               <label
                 on:click={backToTop}
                 class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-slate-800 rounded-full"

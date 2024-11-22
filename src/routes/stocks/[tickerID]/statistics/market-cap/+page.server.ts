@@ -1,4 +1,4 @@
-export const load = async ({ locals, params }) => {
+export const load = async ({ locals, params, setHeaders }) => {
   const getHistoricalMarketCap = async () => {
     const { apiKey, apiURL } = locals;
     const postData = {
@@ -16,6 +16,7 @@ export const load = async ({ locals, params }) => {
     });
 
     const output = await response.json();
+    setHeaders({ "cache-control": "public, max-age=60*15" });
 
     return output;
   };

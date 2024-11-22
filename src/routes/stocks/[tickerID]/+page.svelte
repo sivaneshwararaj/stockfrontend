@@ -10,7 +10,6 @@
     priceIncrease,
     wsBidPrice,
     wsAskPrice,
-    displayLegend,
     currentPortfolioPrice,
     stockTicker,
     displayCompanyName,
@@ -129,7 +128,6 @@
         timeZone: "UTC",
       };
 
-      //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
       const formattedDate = date?.toLocaleString("en-US", options);
 
       const safeFormattedDate =
@@ -138,7 +136,7 @@
           : formattedDate;
 
       // Set display legend
-      $displayLegend = {
+      displayLegend = {
         close:
           currentDataRowOneDay?.close?.toFixed(2) ??
           data?.getStockQuote?.price?.toFixed(2),
@@ -418,7 +416,7 @@
     }
   }
 
-  $displayLegend = { close: "-", date: "-" };
+  let displayLegend = { close: "-", date: "-" };
 
   let displayLastLogicalRangeValue;
 
@@ -961,11 +959,11 @@
                     class="flex shrink flex-row space-x-1 pr-1 text-sm sm:text-[1rem]"
                   >
                     <span
-                      class={$displayLegend?.graphChange >= 0
+                      class={displayLegend?.graphChange >= 0
                         ? "before:content-['+'] text-[#00FC50]"
                         : "text-[#FF2F1F]"}
                     >
-                      {$displayLegend?.graphChange}%
+                      {displayLegend?.graphChange}%
                     </span>
                     <span class="hidden text-gray-200 sm:block"
                       >({displayData})</span

@@ -13,10 +13,7 @@
     priceIncrease,
     stockTicker,
     displayCompanyName,
-    displayLegend,
     isOpen,
-    isBeforeMarketOpen,
-    isWeekend,
     shouldUpdatePriceChart,
     priceChartData,
   } from "$lib/store";
@@ -24,13 +21,14 @@
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
+  import { convertTimestamp } from "$lib/utils";
   import Markethour from "$lib/components/Markethour.svelte";
   import AIScore from "$lib/components/AIScore.svelte";
 
   export let data;
   let prePostData = data?.getPrePostQuote || {};
   $: $realtimePrice = data?.getStockQuote?.price?.toFixed(2);
-
+  let oneDayPrice = [];
   let previousRealtimePrice = null;
   let previousTicker;
   let socket;
@@ -45,6 +43,7 @@
   //let availableCash = 0;
 
   let displaySection = "";
+  let displayLegend = {};
 
   function shareContent(url) {
     if (navigator.share) {
@@ -61,23 +60,6 @@
       });
     }
   }
-
-  /*
-function handleTypeOfTrade(state:string)
-{
-  if (state === 'buy')
-  {
-    const closePopup = document.getElementById("buyTradeModal");
-    closePopup?.dispatchEvent(new MouseEvent('click'))
-  }
-
-  else if (state === 'sell')
-  {
-    const closePopup = document.getElementById("sellTradeModal");
-    closePopup?.dispatchEvent(new MouseEvent('click'))
-  } 
-}
-*/
 
   function changeSection(state) {
     const sectionMap = {
@@ -282,6 +264,64 @@ function handleTypeOfTrade(state:string)
 
       $currentPortfolioPrice = data?.getStockQuote?.price;
       prePostData = data?.getPrePostQuote || {};
+      const output = [...data?.getOneDayPrice] ?? [];
+      oneDayPrice = output?.map((item) => ({
+        time: Date?.parse(item?.time + "Z") / 1000,
+        open: item?.open !== null ? item?.open : NaN,
+        high: item?.high !== null ? item?.high : NaN,
+        low: item?.low !== null ? item?.low : NaN,
+        close: item?.close !== null ? item?.close : NaN,
+      }));
+
+      let change;
+      let currentDataRowOneDay;
+      let baseClose = data?.getStockQuote?.previousClose;
+
+      const length = oneDayPrice?.length;
+      for (let i = length - 1; i >= 0; i--) {
+        if (!isNaN(oneDayPrice[i]?.close)) {
+          currentDataRowOneDay = oneDayPrice[i];
+          break;
+        }
+      }
+
+      // Calculate percentage change if baseClose and currentDataRow are valid
+      const closeValue =
+        $realtimePrice !== null
+          ? $realtimePrice
+          : (currentDataRowOneDay?.close ?? currentDataRowOneDay?.value);
+
+      if (closeValue && baseClose) {
+        change = ((closeValue / baseClose - 1) * 100)?.toFixed(2);
+      }
+
+      // Format date
+      const date = new Date(currentDataRowOneDay?.time * 1000);
+
+      const options = {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZone: "UTC",
+      };
+
+      const formattedDate = date?.toLocaleString("en-US", options);
+
+      const safeFormattedDate =
+        formattedDate === "Invalid Date"
+          ? convertTimestamp(data?.getStockQuote?.timestamp)
+          : formattedDate;
+
+      // Set display legend
+      displayLegend = {
+        close:
+          currentDataRowOneDay?.close?.toFixed(2) ??
+          data?.getStockQuote?.price?.toFixed(2),
+        date: safeFormattedDate,
+        change,
+      };
     }
   }
 
@@ -711,22 +751,22 @@ function handleTypeOfTrade(state:string)
                                 <div
                                   class="text-3xl sm:text-4xl font-bold block sm:inline"
                                 >
-                                  {$displayLegend?.close}
+                                  {displayLegend?.close}
                                 </div>
                                 <div
-                                  class="font-semibold block text-lg xs:text-xl sm:inline sm:text-2xl {$displayLegend?.change >=
+                                  class="font-semibold block text-lg xs:text-xl sm:inline sm:text-2xl {displayLegend?.change >=
                                   0
                                     ? "before:content-['+'] text-[#00FC50]"
                                     : 'text-[#FF2F1F]'}"
                                 >
-                                  {$displayLegend?.change}%
+                                  {displayLegend?.change}%
                                 </div>
                                 <div class="mt-0.5 text-xs sm:text-sm">
                                   <span
                                     class="block font-semibold sm:inline mb-0.5 sm:mb-0"
                                     >At close:</span
                                   >
-                                  {$displayLegend?.date}
+                                  {displayLegend?.date}
                                 </div>
                               </div>
                               {#if Object?.keys(prePostData)?.length !== 0}
