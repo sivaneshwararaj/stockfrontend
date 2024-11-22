@@ -1,18 +1,12 @@
 <script lang="ts">
-  import {
-    format,
-    startOfWeek,
-    addDays,
-    addWeeks,
-    subWeeks,
-    differenceInWeeks,
-  } from "date-fns";
+  import { format, startOfWeek, addDays, addWeeks, subWeeks } from "date-fns";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber, listOfRelevantCountries } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { onMount } from "svelte";
+  import { page } from "$app/stores";
 
   export let data;
 
@@ -21,6 +15,7 @@
   let weekdayFiltered = [];
   let weekday; // Added declaration
   let syncWorker: Worker | undefined;
+  let pagePathName = $page?.url?.pathname;
 
   const maxWeeksChange = 6;
   const today = new Date();
@@ -71,7 +66,7 @@
       const dayData = calendar.filter(
         (item) => item.date === format(day.date, "yyyy-MM-dd"),
       );
-      return dayData.sort(
+      return dayData?.sort(
         (a, b) =>
           new Date(`1970-01-01T${a.time}`) - new Date(`1970-01-01T${b.time}`),
       );
@@ -117,11 +112,32 @@
     }
   }
 
+  function saveRules() {
+    try {
+      // Save the version along with the rules
+      localStorage?.setItem(pagePathName, JSON?.stringify(filterList));
+    } catch (e) {
+      console.log("Failed saving filterlist: ", e);
+    }
+  }
+
   onMount(async () => {
-    if (!syncWorker) {
-      const SyncWorker = await import("./workers/filterWorker?worker");
-      syncWorker = new SyncWorker.default();
-      syncWorker.onmessage = handleMessage;
+    try {
+      const savedRules = localStorage?.getItem(pagePathName);
+
+      if (savedRules) {
+        filterList = JSON.parse(savedRules);
+      }
+
+      checkedItems = new Set(filterList);
+
+      if (!syncWorker) {
+        const SyncWorker = await import("./workers/filterWorker?worker");
+        syncWorker = new SyncWorker.default();
+        syncWorker.onmessage = handleMessage;
+      }
+    } catch (e) {
+      console.log(e);
     }
   });
 
@@ -159,6 +175,7 @@
     } else {
       weekday = rawData;
     }
+    saveRules();
   }
 
   function handleReset() {
@@ -176,6 +193,8 @@
 
     previousMax = currentWeek <= startBoundary;
     nextMax = currentWeek >= endBoundary;
+
+    saveRules();
   }
 </script>
 
@@ -524,10 +543,28 @@
                 {#each filterList?.length === 0 ? weekday : weekdayFiltered as day, index}
                   {#if index === selectedWeekday}
                     {#if day?.length !== 0}
-                      <h2 class="font-semibold text-white text-xl mt-5">
-                        {formattedWeekday[index]?.split(", ")[1]} · {day?.length}
-                        Events
-                      </h2>
+                      <div class="flex flex-row items-center mt-5">
+                        <h2 class="font-semibold text-white text-xl">
+                          {formattedWeekday[index]?.split(", ")[1]} · {day?.length}
+                          Events
+                        </h2>
+                        {#if filterList?.length !== 0}
+                          <div
+                            class="ml-auto text-[1rem] sm:text-lg flex flex-row items-center relative block rounded-md px-2 py-1 focus:outline-none"
+                          >
+                            <span class="text-white">Filters</span>
+                            <span
+                              class="ml-2 rounded-full avatar w-5 h-5 text-xs font-semibold text-white text-center flex-shrink-0
+                                                  flex items-center justify-center bg-red-500 {filterList?.length !==
+                              0
+                                ? 'bg-red-500'
+                                : 'bg-gray-600'}"
+                            >
+                              {filterList?.length}
+                            </span>
+                          </div>
+                        {/if}
+                      </div>
 
                       <div class="w-full overflow-x-scroll no-scrollbar">
                         <table

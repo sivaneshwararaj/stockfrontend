@@ -705,7 +705,7 @@ function handleTypeOfTrade(state:string)
                             </div>
 
                             <div
-                              class="sm:-mt-8 mb-5 flex flex-row items-end space-x-2 xs:space-x-3 sm:space-x-5 text-white"
+                              class="-mt-5 sm:-mt-8 mb-5 flex flex-row items-end space-x-2 xs:space-x-3 sm:space-x-5 text-white"
                             >
                               <div class="max-w-[50%] whitespace-nowrap">
                                 <div
