@@ -707,7 +707,7 @@ function handleTypeOfTrade(state:string)
                             <div
                               class="sm:-mt-8 mb-5 flex flex-row items-end space-x-2 xs:space-x-3 sm:space-x-5 text-white"
                             >
-                              <div class="max-w-[50%]">
+                              <div class="max-w-[50%] whitespace-nowrap">
                                 <div
                                   class="text-3xl sm:text-4xl font-bold block sm:inline"
                                 >
@@ -748,23 +748,41 @@ function handleTypeOfTrade(state:string)
                                     )}%
                                   </div>
                                   <div class="mt-1 text-xs sm:text-sm sm:flex">
-                                    <span class="flex items-center"
-                                      ><svg
-                                        class="h-4 w-4 inline text-blue-400"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        style="max-width:40px"
-                                        ><path
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          stroke-width="2"
-                                          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                                        ></path></svg
-                                      >
+                                    <span class="flex items-center">
+                                      {#if prePostData?.time?.includes("AM")}
+                                        <svg
+                                          class="h-6 w-6 sm:h-4 sm:w-4 text-yellow-500"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                          style="max-width:40px"
+                                          ><path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                                          ></path></svg
+                                        >
+                                      {:else}
+                                        <svg
+                                          class="h-4 w-4 inline text-blue-400"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                          style="max-width:40px"
+                                          ><path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                          ></path></svg
+                                        >
+                                      {/if}
                                       <span
                                         class="ml-0.5 whitespace-nowrap font-semibold md:ml-1"
-                                        >After-hours:</span
+                                        >{prePostData?.time?.includes("AM")
+                                          ? "Pre-market"
+                                          : "After-hours"}</span
                                       ></span
                                     >
                                     <span class="sm:ml-1"
