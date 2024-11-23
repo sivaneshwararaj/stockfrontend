@@ -37,8 +37,8 @@
   $: {
     if ($etfTicker && typeof window !== "undefined") {
       info = data?.getETFProfile?.at(0);
-      topHoldingList = data?.getETFHoldings?.holdings;
-      dividendHistoryList = data?.getStockDividend?.history;
+      topHoldingList = data?.getETFHoldings?.holdings || [];
+      dividendHistoryList = data?.getStockDividend?.history || [];
       dividendYield = data?.getStockDividend?.dividendYield;
       provider = info?.etfProvider;
       assetClass = info?.assetClass;
@@ -129,8 +129,7 @@
 
 {#if topHoldingList?.length !== 0}
   <div
-    class="space-y-3 sm:pt-5 hidden sm:block sm:{(topHoldingList?.length ?? [])
-      ?.length !== 0
+    class="space-y-3 sm:pt-5 hidden sm:block sm:{topHoldingList?.length !== 0
       ? ''
       : 'hidden'}"
   >
