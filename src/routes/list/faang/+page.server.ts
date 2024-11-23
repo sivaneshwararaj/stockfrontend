@@ -1,7 +1,7 @@
 export const load = async ({ locals }) => {
-  const getMagnificentSeven = async () => {
+  const getFAANG = async () => {
     const { apiKey, apiURL } = locals;
-    const postData = {'filterList': 'magnificent-seven'}
+    const postData = {'filterList': 'faang'}
     // make the POST request to the endpoint
     const response = await fetch(apiURL + "/list-category", {
       method: "POST",
@@ -13,12 +13,11 @@ export const load = async ({ locals }) => {
     });
 
     const output = await response.json();
-
     return output;
   };
 
   // Make sure to return a promise
   return {
-    getMagnificentSeven: await getMagnificentSeven(),
+    getFAANG: await getFAANG(),
   };
 };

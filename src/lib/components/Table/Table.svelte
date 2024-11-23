@@ -380,6 +380,7 @@
       score: "AI Score",
       researchAndDevelopmentExpenses: "R&D",
       counter: "Ratings Count",
+      rsi: "RSI",
       // Add more key-label mappings here as needed
     };
 

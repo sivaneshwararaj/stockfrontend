@@ -3,7 +3,7 @@
   import Table from "$lib/components/Table/Table.svelte";
 
   export let data;
-  let rawData = data?.getMagnificentSeven;
+  let rawData = data?.getFAANG;
 
   let totalMarketCap =
     rawData?.reduce((total, stock) => total + stock?.marketCap, 0) ?? 0;
@@ -25,9 +25,10 @@
       /></svg
     >
 
-    The "magnificent seven" stocks are 7 technology stocks that drove a large
-    portion of the market's returns in 2023 and 2024. The list includes Apple,
-    Microsoft, Amazon, Alphabet (Google), Tesla, Nvidia and Meta Platforms.
+    The "FAANG" stocks refer to five major U.S. tech companies: Meta (formerly
+    Facebook), Amazon, Apple, Netflix, and Alphabet (Google). Originally
+    popularized by Jim Cramer as "FANG," the list did not initially include
+    Apple.
   </div>
 
   <div
@@ -65,5 +66,5 @@
     </div>
   </div>
 
-  <Table {data} rawData={data?.getMagnificentSeven} />
+  <Table {data} {rawData} />
 </section>

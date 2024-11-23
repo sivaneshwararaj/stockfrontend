@@ -166,6 +166,22 @@
       title: "All Active REITs on the US Stock Market",
       link: "/list/reit-stocks",
     },
+    {
+      title: "FAANG Companies",
+      link: "/list/faang",
+    },
+    {
+      title: "Actively Traded Penny Stocks",
+      link: "/list/penny-stocks",
+    },
+    {
+      title: "Oversold Stocks",
+      link: "/list/oversold-stocks",
+    },
+    {
+      title: "Overbought Stocks",
+      link: "/list/overbought-stocks",
+    },
   ];
 
   navigation = [...navigationIndustry, ...navigation];
