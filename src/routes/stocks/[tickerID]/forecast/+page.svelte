@@ -51,6 +51,7 @@
     rawAnalystList?.length > 5 ? rawAnalystList?.slice(-6) : rawAnalystList;
   const categories = ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"];
 
+  console.log(rawAnalystList);
   function findIndex(data) {
     const currentYear = new Date().getFullYear();
 
