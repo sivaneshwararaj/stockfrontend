@@ -100,7 +100,7 @@
     Feedback = (await import("$lib/components/Feedback.svelte")).default;
   });
 
-  $: charNumber = $screenWidth < 640 ? 20 : 20;
+  $: charNumber = $screenWidth < 640 ? 20 : 15;
 </script>
 
 <svelte:head>
@@ -276,6 +276,10 @@
                     <Table.Head class="text-white text-right font-semibold"
                       >Change</Table.Head
                     >
+                    <Table.Head
+                      class="text-white text-right font-semibold whitespace-nowrap"
+                      >Market Cap</Table.Head
+                    >
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -312,6 +316,11 @@
                               : item?.changesPercentage?.toFixed(2)}%
                           </span>
                         {/if}
+                      </Table.Cell>
+                      <Table.Cell
+                        class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                      >
+                        {abbreviateNumber(item?.marketCap)}
                       </Table.Cell>
                     </Table.Row>
                   {/each}
@@ -369,6 +378,10 @@
                     <Table.Head class="text-white text-right font-semibold"
                       >Change</Table.Head
                     >
+                    <Table.Head
+                      class="text-white text-right font-semibold whitespace-nowrap"
+                      >Market Cap</Table.Head
+                    >
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -405,6 +418,11 @@
                               : item?.changesPercentage?.toFixed(2)}%
                           </span>
                         {/if}
+                      </Table.Cell>
+                      <Table.Cell
+                        class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                      >
+                        {abbreviateNumber(item?.marketCap)}
                       </Table.Cell>
                     </Table.Row>
                   {/each}

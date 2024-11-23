@@ -1,4 +1,7 @@
-export const load = async () => {
+export const load = async ({setHeaders}) => {
+
+      setHeaders({ "cache-control": "public, max-age=60*15" });
+
   const getFrontendStars = async () => {
     // make the POST request to the endpoint
     const response = await fetch(
