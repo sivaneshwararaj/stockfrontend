@@ -29,7 +29,7 @@
     Index (RSI), which is an indicator often used in technical analysis. An RSI
     of under 30 on a daily chart is generally used to determine that an asset is
     oversold and indicates that the stock may soon bounce back from the oversold
-    conditions. See also the list of overbought stocks.
+    conditions.
   </div>
 
   <!-- Page wrapper -->
