@@ -440,7 +440,7 @@
                             <MessageCircle
                               class="h-5 w-5 inline-block -mt-1 shrink-0 mr-1"
                             />
-                            {item?.num_comments}
+                            {item?.num_comments?.toLocaleString("en-US")}
                           </label>
                         </div>
 
