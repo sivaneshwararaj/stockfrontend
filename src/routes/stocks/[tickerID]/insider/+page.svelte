@@ -272,7 +272,7 @@
           </h1>
           {#if insiderTradingList?.length === 0}
             <div
-              class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+              class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
             >
               <svg
                 class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -680,7 +680,7 @@
             {#if rawData?.length > 5 && rawData?.length === insiderTradingList?.length && data?.user?.tier === "Pro"}
               <label
                 on:click={backToTop}
-                class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-slate-800 rounded-full"
+                class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-gray-600 rounded-full"
               >
                 Back to top
               </label>

@@ -395,7 +395,7 @@
               {#if rawData?.length >= 20}
                 <label
                   on:click={backToTop}
-                  class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-slate-800 rounded-full"
+                  class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-gray-600 rounded-full"
                 >
                   Back to top
                 </label>

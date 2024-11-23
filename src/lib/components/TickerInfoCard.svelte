@@ -81,7 +81,7 @@
 
 <div class="sm:space-y-3">
   <div
-    class="sm:rounded-md lg:border lg:border-slate-800 bg-[#000] lg:bg-[#09090B] h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
+    class="sm:rounded-md lg:border lg:border-gray-600 bg-[#000] lg:bg-[#09090B] h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
   >
     <!--Start Header-->
     <div
@@ -112,7 +112,7 @@
     </div>
     <!--End Header-->
     <!--Start Content-->
-    <div class="w-full flex flex-wrap border-t border-slate-800 px-2">
+    <div class="w-full flex flex-wrap border-t border-gray-600 px-2">
       <h2 class="text-start ml-2 text-2xl font-bold text-white pb-2 mt-3">
         Company Info
       </h2>

@@ -380,7 +380,7 @@
               <div class="navbar w-full px-4 py-2">
                 <div
                   class="{isScrolled
-                    ? 'border-b border-slate-800 ease-in'
+                    ? 'border-b border-gray-600 ease-in'
                     : 'ease-out'} m-auto w-full"
                 >
                   <div

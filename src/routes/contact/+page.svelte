@@ -109,7 +109,7 @@
           </div>
 
           <div
-            class="card w-full rounded-none sm:rounded-xl border-t border-slate-800 sm:border sm:border-slate-800 m-auto"
+            class="card w-full rounded-none sm:rounded-xl border-t border-gray-600 sm:border sm:border-gray-600 m-auto"
           >
             <div class="card-body">
               <h2 class="card-title text-2xl mb-5 text-white">Support</h2>

@@ -357,7 +357,7 @@
               <div class="navbar w-full px-4 py-2">
                 <div
                   class="{isScrolled
-                    ? 'border-b border-slate-800 ease-in'
+                    ? 'border-b border-gray-600 ease-in'
                     : 'ease-out'} m-auto w-full"
                 >
                   <div
@@ -699,7 +699,7 @@
                         >
                           <!--<img class="rounded-full w-10 h-10" src={logoUrl} alt="" />-->
                           <div
-                            class="rounded-full w-10 h-10 relative bg-[#141417] flex items-center justify-center border border-slate-800"
+                            class="rounded-full w-10 h-10 relative bg-[#141417] flex items-center justify-center border border-gray-600"
                           >
                             <img
                               style="clip-path: circle(50%);"
@@ -729,14 +729,14 @@
                                         <div class="hidden sm:flex ml-auto">
                                         {#if holdingShares !== 0 && data?.user}
                                         
-                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length !== 0 ? 'typeOfTrade' : ''}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-[#313131] border border-slate-800 normal-case cursor-pointer items-center">
+                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length !== 0 ? 'typeOfTrade' : ''}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-[#313131] border border-gray-600 normal-case cursor-pointer items-center">
                                           <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M8 2.5a.5.5 0 0 0-1 0V7H2.5a.5.5 0 0 0 0 1H7v4.5a.5.5 0 0 0 1 0V8h4.5a.5.5 0 0 0 0-1H8z"/></svg>
                                           <span class="text-white font-medium">
                                             Portfolio
                                           </span>
                                         </label>
                                         {:else}
-                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length === 0 ? 'addPortfolio' : 'buyTradeModal'}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-[#313131] border border-slate-800 normal-case  cursor-pointer items-center">
+                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length === 0 ? 'addPortfolio' : 'buyTradeModal'}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-[#313131] border border-gray-600 normal-case  cursor-pointer items-center">
                                           <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M8 2.5a.5.5 0 0 0-1 0V7H2.5a.5.5 0 0 0 0 1H7v4.5a.5.5 0 0 0 1 0V8h4.5a.5.5 0 0 0 0-1H8z"/></svg>
                                           <span class="text-white font-medium">
                                             Portfolio

@@ -273,7 +273,7 @@
                         ? 'sm:hover:shadow-[#80000D]'
                         : item?.party === 'Democratic'
                           ? 'sm:hover:shadow-[#1358C3]'
-                          : 'sm:hover:shadow-[#636465]'} border-slate-800 shadow-md rounded-md h-auto pb-4 pt-4 mb-7"
+                          : 'sm:hover:shadow-[#636465]'} border-gray-600 shadow-md rounded-md h-auto pb-4 pt-4 mb-7"
                     >
                       <div class="flex flex-col relative">
                         {#if item?.party === "Republican"}
@@ -394,7 +394,7 @@
     ></label>
 
     <div
-      class="modal-box w-full bg-[#09090B] sm:border sm:border-slate-800 max-h-[600px] overflow-y-scroll"
+      class="modal-box w-full bg-[#09090B] sm:border sm:border-gray-600 max-h-[600px] overflow-y-scroll"
     >
       <label
         for="filterList"

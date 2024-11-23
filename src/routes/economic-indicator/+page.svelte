@@ -848,7 +848,7 @@
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
                 >
                   <thead>
-                    <tr class="border border-slate-800">
+                    <tr class="border border-gray-600">
                       <th
                         class="text-white font-semibold text-start text-sm sm:text-[1rem]"
                         >Date</th

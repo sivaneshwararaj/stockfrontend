@@ -41,7 +41,7 @@
   class="space-y-3 lg:pt-5 lg:{topHoldingList?.length !== 0 ? '' : 'hidden'}"
 >
   <div
-    class="sm:rounded-sm shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-slate-800 h-auto {$screenWidth <=
+    class="sm:rounded-sm shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-gray-600 h-auto {$screenWidth <=
     800
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px]"

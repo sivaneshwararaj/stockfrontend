@@ -180,7 +180,7 @@
       {#if mk?.id === id}
         <div class="flex flex-col">
           <span class="text-gray-400 mb-4">[{outputCounter}] : </span>
-          <div class="border-b border-slate-800 rounded-md">
+          <div class="border-b border-gray-600 rounded-md">
             {#if hasContent(value)}
               {@html value}
             {:else}

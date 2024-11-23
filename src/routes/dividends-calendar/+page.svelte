@@ -540,7 +540,7 @@
                     </div>
                   {:else}
                     <div
-                      class="text-white p-5 mt-5 w-fit m-auto rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-[1rem]"
+                      class="text-white p-5 mt-5 w-fit m-auto rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-[1rem]"
                     >
                       <svg
                         class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"

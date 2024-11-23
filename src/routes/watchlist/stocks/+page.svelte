@@ -1191,7 +1191,7 @@
                   </div>
 
                   <div
-                    class="w-full m-auto border-b border-slate-800 mt-16 mb-16"
+                    class="w-full m-auto border-b border-gray-600 mt-16 mb-16"
                   ></div>
 
                   <h2

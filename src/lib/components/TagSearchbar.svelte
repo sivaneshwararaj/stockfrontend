@@ -305,7 +305,7 @@
           <label for="modal-search" class="sr-only">Search</label>
           <input
             id="modal-search"
-            class="rounded-md w-full text-white bg-[#09090B] border border-slate-800 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
+            class="rounded-md w-full text-white bg-[#09090B] border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
             type="search"
             placeholder="Search Anything…"
             bind:value={searchQuery}
@@ -484,7 +484,7 @@
             <label for="modal-search" class="sr-only">Search</label>
             <input
               id="modal-search"
-              class="rounded-md w-full text-white bg-[#09090B] border border-slate-800 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
+              class="rounded-md w-full text-white bg-[#09090B] border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
               type="search"
               placeholder="Search Anything…"
               bind:value={searchQuery}

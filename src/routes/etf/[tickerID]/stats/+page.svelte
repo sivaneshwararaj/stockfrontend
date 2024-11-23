@@ -123,7 +123,7 @@ updateYearRange()
       </h1>
 
       <div
-        class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+        class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
       >
         <svg
           class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -319,7 +319,7 @@ updateYearRange()
               >
                 <thead>
                   <tr
-                    class="bg-[#09090B] border-slate-800 rounded text-white font-semibold"
+                    class="bg-[#09090B] border-gray-600 rounded text-white font-semibold"
                   >
                     <th class="text-start text-sm sm:text-[1rem]">Started</th>
                     <th class="text-sm sm:text-[1rem] text-end">Recovered</th>

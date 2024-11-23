@@ -340,7 +340,7 @@
 
             {#if Math?.abs(change) > 30}
               <div
-                class=" mb-5 text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-slate-800 p-4"
+                class=" mb-5 text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-gray-600 p-4"
               >
                 <svg
                   class="w-5 h-5 inline-block mr-0.5 flex-shrink-0"

@@ -51,7 +51,7 @@
     : 'hidden'}"
 >
   <div
-    class="sm:rounded-md shadow-lg bg-[#000] sm:bg-[#09090B] sm:border sm:border-slate-800 h-auto sm:h-[470px] {$screenWidth <
+    class="sm:rounded-md shadow-lg bg-[#000] sm:bg-[#09090B] sm:border sm:border-gray-600 h-auto sm:h-[470px] {$screenWidth <
     640
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px] -mx-1 sm:mx-0"

@@ -49,7 +49,7 @@
 
 <div class="sm:space-y-3">
   <div
-    class="lg:rounded-md shadow-lg sm:border sm:border-slate-800 bg-[#000] lg:bg-[#09090B] h-auto h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
+    class="lg:rounded-md shadow-lg sm:border sm:border-gray-600 bg-[#000] lg:bg-[#09090B] h-auto h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
   >
     <!--Start Header-->
     <div
@@ -80,7 +80,7 @@
     <!--End Header-->
 
     <!--Start Content-->
-    <div class="w-full flex flex-wrap border-t border-slate-800">
+    <div class="w-full flex flex-wrap border-t border-gray-600">
       <h2 class="text-start ml-4 text-2xl font-bold text-white pb-2 mt-3">
         Crypto Info
       </h2>

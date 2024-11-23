@@ -31,6 +31,16 @@
 
   $coolMode = false;
   let timeFrame = "10Y";
+  let activeIdx = 0;
+
+  const tabs = [
+    {
+      title: "Annual",
+    },
+    {
+      title: "Quarterly",
+    },
+  ];
 
   const statementConfig = [
     {
@@ -322,10 +332,12 @@
   };
 
   $: {
-    if (timeFrame || displayStatement || filterRule) {
-      if (filterRule === "annual") {
+    if (timeFrame || displayStatement || activeIdx) {
+      if (activeIdx === 0) {
+        filterRule = "annual";
         fullStatement = data?.getIncomeStatement?.annual;
       } else {
+        filterRule = "quarterly";
         fullStatement = data?.getIncomeStatement?.quarter;
       }
       income = filterStatement(fullStatement, timeFrame);
@@ -370,7 +382,9 @@
 </svelte:head>
 
 <section class="bg-[#09090B] w-full overflow-hidden text-white h-full">
-  <div class="w-full flex justify-center w-full sm-auto h-full overflow-hidden">
+  <div
+    class="w-full flex justify-center w-full sm-auto h-full overflow-hidden mt-4 sm:mt-0"
+  >
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
@@ -393,7 +407,7 @@
 
             <div class="grid grid-cols-1 gap-2">
               <div
-                class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+                class="text-white p-3 sm:p-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
               >
                 <svg
                   class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -416,51 +430,37 @@
                 {/if}
               </div>
 
-              <ul
-                class="text-[0.8rem] font-medium text-center w-56 w-56 pb-6 flex justify-center sm:justify-end items-center m-auto sm:m-0 sm:ml-auto"
+              <div
+                class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
               >
-                <li class="w-full">
-                  <label
-                    on:click={() => (filterRule = "annual")}
-                    class="cursor-pointer rounded-l-md inline-block w-full text-sm py-1.5 {filterRule ===
-                    'annual'
-                      ? 'bg-[#fff] text-black'
-                      : 'bg-[#313131] text-white'} font-semibold"
-                    aria-current="page"
-                  >
-                    Annual
-                  </label>
-                </li>
-                <li class="w-full">
-                  {#if data?.user?.tier === "Pro"}
-                    <label
-                      on:click={() => (filterRule = "quartely")}
-                      class="cursor-pointer inline-block w-full py-1.5 text-sm {filterRule ===
-                      'quartely'
-                        ? 'bg-[#fff] text-black'
-                        : 'bg-[#313131] text-white'} font-semibold rounded-r-md"
+                <div
+                  class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                >
+                  {#each tabs as item, i}
+                    <button
+                      on:click={() => (activeIdx = i)}
+                      class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                      i
+                        ? 'z-0'
+                        : ''} "
                     >
-                      Quartely
-                    </label>
-                  {:else}
-                    <a
-                      href="/pricing"
-                      class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-1.5 bg-[#313131] font-semibold text-white rounded-r-md"
-                    >
-                      <span class="">Quarterly</span>
-                      <svg
-                        class="ml-1 -mt-0.5 w-3.5 h-3.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        ><path
-                          fill="#A3A3A3"
-                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                        /></svg
+                      {#if activeIdx === i}
+                        <div
+                          class="absolute inset-0 rounded-md bg-[#fff]"
+                        ></div>
+                      {/if}
+                      <span
+                        class="relative text-sm block font-semibold {activeIdx ===
+                        i
+                          ? 'text-black'
+                          : 'text-white'}"
                       >
-                    </a>
-                  {/if}
-                </li>
-              </ul>
+                        {item.title}
+                      </span>
+                    </button>
+                  {/each}
+                </div>
+              </div>
 
               <div
                 class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center"
@@ -621,7 +621,7 @@
                     class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
                   >
                     <thead>
-                      <tr class="border border-slate-800">
+                      <tr class="border border-gray-600">
                         <th
                           class="text-white font-semibold text-start text-sm sm:text-[1rem]"
                           >{filterRule === "annual"

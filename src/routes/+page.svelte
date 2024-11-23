@@ -633,7 +633,7 @@
                 </ul>
               {:else}
                 <div
-                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
+                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-gray-600 text-[1rem]"
                 >
                   <svg
                     class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
@@ -719,7 +719,7 @@
                 </ul>
               {:else}
                 <div
-                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
+                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-gray-600 text-[1rem]"
                 >
                   <svg
                     class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
@@ -798,7 +798,7 @@
                 </ul>
               {:else}
                 <div
-                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-slate-800 text-[1rem]"
+                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-gray-600 text-[1rem]"
                 >
                   <svg
                     class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"

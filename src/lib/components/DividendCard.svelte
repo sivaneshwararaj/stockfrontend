@@ -24,7 +24,7 @@
     : 'hidden'}"
 >
   <div
-    class="sm:rounded-md shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-slate-800 h-auto {$screenWidth <=
+    class="sm:rounded-md shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-gray-600 h-auto {$screenWidth <=
     800
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px]"

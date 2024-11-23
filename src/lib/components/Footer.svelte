@@ -4,7 +4,7 @@
 
 <!--Footer-->
 <footer
-  class="bg-[#09090B] border-t border-slate-800 z-20 sm:z-50 relative bottom-0 w-full sm:px-10 m-auto"
+  class="bg-[#09090B] border-t border-gray-600 z-20 sm:z-50 relative bottom-0 w-full sm:px-10 m-auto"
 >
   <div class="container mx-auto px-5 sm:px-3">
     <div class="w-full flex flex-col md:flex-row py-6">

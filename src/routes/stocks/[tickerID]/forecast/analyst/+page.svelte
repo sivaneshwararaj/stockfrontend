@@ -52,6 +52,31 @@
           : "-";
     }
 
+    function filterLatestEntries(data) {
+      const latestEntries = {};
+
+      data?.forEach((entry) => {
+        try {
+          // Create a unique key by combining 'analyst' and 'name'
+          const key = `${entry.analyst}-${entry.name}`;
+
+          // Convert date and time to a Date object
+          const dateTimeStr = `${entry.date} ${entry.time}`;
+          const dateTime = new Date(dateTimeStr);
+
+          // Check if this entry is the latest for the given key
+          if (!latestEntries[key] || dateTime > latestEntries[key].dateTime) {
+            latestEntries[key] = { dateTime, entry };
+          }
+        } catch (e) {
+          console.error(`Error processing entry: ${e}`);
+        }
+      });
+
+      // Return only the latest entries
+      return Object?.values(latestEntries)?.map(({ entry }) => entry);
+    }
+
     const now = new Date();
     const oneYearAgo = new Date(now);
     oneYearAgo.setFullYear(now.getFullYear() - 1);
@@ -60,6 +85,7 @@
       data?.getAnalystTickerHistory?.filter(
         (item) => item?.analystScore >= 4,
       ) ?? [];
+    rawData = filterLatestEntries(rawData);
 
     if (activeIdx === 1) {
       const recentData = rawData
@@ -292,7 +318,7 @@
               class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
             >
               {priceTarget !== null && priceTarget !== undefined
-                ? "$" + priceTarget
+                ? priceTarget
                 : "n/a"}
             </div>
           </div>
@@ -316,6 +342,24 @@
         </div>
 
         {#if rawData?.length !== 0}
+          {#if activeIdx === 1}
+            <div
+              class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
+            >
+              <svg
+                class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                ><path
+                  fill="#fff"
+                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+                /></svg
+              >
+              Considering only the latest rating within the past 12 months from each
+              unique analyst with a 4-star or higher rating.
+            </div>
+          {/if}
+
           <div
             class="mt-10 mb-5 items-center justify-between py-0 md:mt-8 md:flex md:py-2"
           >
@@ -422,13 +466,12 @@
                     </td>
 
                     <td
-                      class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                      class="text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end text-white"
                     >
                       <span
-                        class="text-[1rem] font-medium {[
-                          'Strong Buy',
-                          'Buy',
-                        ]?.includes(item?.rating_current)
+                        class=" {['Strong Buy', 'Buy']?.includes(
+                          item?.rating_current,
+                        )
                           ? 'text-[#00FC50]'
                           : item?.rating_current === 'Hold'
                             ? 'text-[#FF7070]'
@@ -452,13 +495,13 @@
                     </td>
 
                     <td
-                      class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white"
+                      class="text-sm sm:text-[1rem] whitespace-nowrap text-end text-white font-semibold"
                     >
                       <div class="flex flex-col items-end">
                         <div class="flex flex-row items-center">
                           {#if Math?.ceil(item?.adjusted_pt_prior) !== 0}
                             <span class="text-gray-100 font-normal"
-                              >${Math?.ceil(item?.adjusted_pt_prior)}</span
+                              >{Math?.ceil(item?.adjusted_pt_prior)}</span
                             >
                             <svg
                               class="w-3 h-3 ml-1 mr-1 inline-block"
@@ -469,17 +512,19 @@
                                 stroke="white"
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="1.5"
+                                stroke-width="2.5"
                                 d="M4 12h16m0 0l-6-6m6 6l-6 6"
                               /></svg
                             >
-                            <span class="text-white font-semibold"
-                              >${Math?.ceil(item?.adjusted_pt_current)}</span
+                            <span class=""
+                              >{Math?.ceil(item?.adjusted_pt_current)}</span
                             >
                           {:else if Math?.ceil(item?.adjusted_pt_current) !== 0}
-                            <span class="text-white font-semibold"
-                              >${Math?.ceil(item?.adjusted_pt_current)}</span
+                            <span class=""
+                              >{Math?.ceil(item?.adjusted_pt_current)}</span
                             >
+                          {:else}
+                            <span class="">n/a</span>
                           {/if}
                         </div>
                       </div>
@@ -512,7 +557,7 @@
         {:else if activeIdx === 1}
           <div class="w-full flex justify-start items-center m-auto mt-10 mb-6">
             <div
-              class="text-center w-fit text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-slate-800 p-4"
+              class="text-center w-fit text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-gray-600 p-4"
             >
               <svg
                 class="w-5 h-5 inline-block sm:mr-1 flex-shrink-0"

@@ -123,7 +123,7 @@
   </div>
 
   <div
-    class="bg-[#09090B] sm:mt-10 sm:rounded-xl border-t sm:border hover:border-slate-700 border-slate-800 pb-10"
+    class="bg-[#09090B] sm:mt-10 sm:rounded-xl border-t sm:border hover:border-slate-700 border-gray-600 pb-10"
   >
     <div
       class="text-white w-5/6 sm:w-full m-auto sm:m-0 text-center sm:text-start font-bold text-2xl flex justify-center sm:justify-start items-center pt-10 sm:ml-10"

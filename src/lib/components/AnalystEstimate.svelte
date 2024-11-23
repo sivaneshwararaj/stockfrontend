@@ -323,7 +323,7 @@
                       {item?.val === "0.00" ||
                       item?.val === null ||
                       item?.val === 0
-                        ? "-"
+                        ? "n/a"
                         : abbreviateNumber(item?.val.toFixed(2))}
                     </td>
                   {/each}
@@ -340,30 +340,42 @@
                       class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
                       {#if index === 0 || tableActualRevenue?.length === 0}
-                        -
+                        n/a
                       {:else if item?.val === null}
                         {#if tableForecastRevenue[index]?.val - tableForecastRevenue[index - 1]?.val > 0}
                           <span class="text-orange-400">
-                            {(
-                              ((tableForecastRevenue[index]?.val -
-                                tableForecastRevenue[index - 1]?.val) /
-                                Math.abs(
-                                  tableForecastRevenue[index - 1]?.val,
-                                )) *
-                              100
-                            )?.toFixed(2)}%&#42;
+                            {(() => {
+                              const previousVal =
+                                tableForecastRevenue[index - 1]?.val ?? 0;
+                              const currentVal =
+                                tableForecastRevenue[index]?.val ?? 0;
+                              const change =
+                                ((currentVal - previousVal) /
+                                  Math.abs(previousVal)) *
+                                100;
+                              return isFinite(change)
+                                ? `${change.toFixed(2)}%*`
+                                : "n/a";
+                            })()}
                           </span>
                         {:else if tableForecastRevenue[index]?.val - tableForecastRevenue[index - 1]?.val < 0}
                           <span class="text-orange-400">
-                            {(
-                              ((tableForecastRevenue[index]?.val -
-                                tableForecastRevenue[index - 1]?.val) /
-                                Math.abs(
-                                  tableForecastRevenue[index - 1]?.val,
-                                )) *
-                              100
-                            )?.toFixed(2)}%&#42;
+                            {(() => {
+                              const previousVal =
+                                tableForecastRevenue[index - 1]?.val ?? 0;
+                              const currentVal =
+                                tableForecastRevenue[index]?.val ?? 0;
+                              const change =
+                                ((currentVal - previousVal) /
+                                  Math.abs(previousVal)) *
+                                100;
+                              return isFinite(change)
+                                ? `${change.toFixed(2)}%*`
+                                : "n/a";
+                            })()}
                           </span>
+                        {:else}
+                          n/a
                         {/if}
                       {:else if item?.val - tableActualRevenue[index - 1]?.val > 0}
                         <span class="text-[#00FC50]">
@@ -418,7 +430,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
                       {#if index === 0 || tableActualEPS?.length === 0}
-                        -
+                        n/a
                       {:else if item?.val === null}
                         {#if tableForecastEPS[index]?.val - tableForecastEPS[index - 1]?.val > 0}
                           <span class="text-orange-400">
@@ -491,7 +503,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
                       {item?.numOfAnalysts === (null || 0)
-                        ? "-"
+                        ? "n/a"
                         : item?.numOfAnalysts}
                     </td>
                   {/each}
@@ -504,7 +516,7 @@
             &#42; This value depends on the forecast
           </div>
           <!--
-            <div class="mt-5 text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-slate-800 p-4">
+            <div class="mt-5 text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-gray-600 p-4">
               <svg class="w-5 h-5 inline-block mr-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
                 ><path fill="#fff" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16" /></svg
               >

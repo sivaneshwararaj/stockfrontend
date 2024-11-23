@@ -1250,7 +1250,7 @@ afterUpdate(async () => {
 
             <label
               on:click={changeChartType}
-              class="ml-auto mr-5 -mt-1 sm:hidden border border-slate-800 px-2.5 py-1 rounded-xl"
+              class="ml-auto mr-5 -mt-1 sm:hidden border border-gray-600 px-2.5 py-1 rounded-xl"
             >
               {#if displayChartType === "line"}
                 <svg

@@ -51,7 +51,6 @@
     rawAnalystList?.length > 5 ? rawAnalystList?.slice(-6) : rawAnalystList;
   const categories = ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"];
 
-  console.log(rawAnalystList);
   function findIndex(data) {
     const currentYear = new Date().getFullYear();
 
@@ -718,50 +717,62 @@
                   <div
                     class="flex items-baseline text-2xl font-semibold text-white"
                   >
-                    {abbreviateNumber(
-                      data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg,
-                    )}
-                    <div
-                      class="ml-2 block text-sm font-semibold text-white lg:hidden"
-                    >
-                      from {abbreviateNumber(
-                        data?.getAnalystEstimate[index - 2]?.revenue,
-                      )}
-                    </div>
-                  </div>
-                  <div
-                    class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 {changeRevenue >
-                    0
-                      ? 'bg-[#00FC50]'
-                      : 'bg-[#FF2F1F]'} text-black"
-                  >
-                    <svg
-                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-black {changeRevenue >
+                    {data?.getAnalystEstimate[index - 1]
+                      ?.estimatedRevenueAvg !== null &&
+                    data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !==
                       0
-                        ? ''
-                        : 'rotate-180 '}"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      style="max-width:40px"
-                      aria-hidden="true"
-                      ><path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 11l5-5m0 0l5 5m-5-5v12"
-                      ></path></svg
-                    > <span class="sr-only">Increased by</span>
-                    {abbreviateNumber(changeRevenue?.toFixed(1))}%
+                      ? abbreviateNumber(
+                          data?.getAnalystEstimate[index - 1]
+                            ?.estimatedRevenueAvg,
+                        )
+                      : "n/a"}
+                    {#if data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== 0}
+                      <div
+                        class="ml-2 block text-sm font-semibold text-white lg:hidden"
+                      >
+                        from {abbreviateNumber(
+                          data?.getAnalystEstimate[index - 2]?.revenue,
+                        )}
+                      </div>
+                    {/if}
                   </div>
+                  {#if data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== 0}
+                    <div
+                      class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 {changeRevenue >
+                      0
+                        ? 'bg-[#00FC50]'
+                        : 'bg-[#FF2F1F]'} text-black"
+                    >
+                      <svg
+                        class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-black {changeRevenue >
+                        0
+                          ? ''
+                          : 'rotate-180 '}"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        style="max-width:40px"
+                        aria-hidden="true"
+                        ><path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M7 11l5-5m0 0l5 5m-5-5v12"
+                        ></path></svg
+                      > <span class="sr-only">Increased by</span>
+                      {abbreviateNumber(changeRevenue?.toFixed(1))}%
+                    </div>
+                  {/if}
                 </div>
-                <div
-                  class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
-                >
-                  from {abbreviateNumber(
-                    data?.getAnalystEstimate[index - 2]?.revenue,
-                  )}
-                </div>
+                {#if data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== 0}
+                  <div
+                    class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
+                  >
+                    from {abbreviateNumber(
+                      data?.getAnalystEstimate[index - 2]?.revenue,
+                    )}
+                  </div>
+                {/if}
               </div>
               <div
                 class="border-b px-3 py-5 last:border-b-0 xs:px-4 sm:p-6 md:border-b md:border-l lg:border-b-0"
@@ -942,7 +953,7 @@
             </div>
           {:else}
             <div
-              class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+              class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
             >
               <svg
                 class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"

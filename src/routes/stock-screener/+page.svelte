@@ -2639,7 +2639,7 @@ const handleKeyDown = (event) => {
                                 >
                                   <input
                                     type="radio"
-                                    class="radio ring-0 checked:bg-[#fff] bg-[#09090B] border border-slate-800 mr-2"
+                                    class="radio ring-0 checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
                                     checked={ruleCondition[row?.rule] ===
                                       "under"}
                                     name={row?.rule}
@@ -2655,7 +2655,7 @@ const handleKeyDown = (event) => {
                                 >
                                   <input
                                     type="radio"
-                                    class="radio checked:bg-[#fff] bg-[#09090B] border border-slate-800 mr-2"
+                                    class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
                                     checked={ruleCondition[row?.rule] ===
                                       "over"}
                                     name={row?.rule}
@@ -2779,12 +2779,12 @@ const handleKeyDown = (event) => {
     <!--Start Rules Preview -->
 
     <!--
-                  <div id="step-3" class="m-auto w-5/6 bg-[#09090B] sm:ml-10 h-auto max-h-[400px] no-scrollbar overflow-hidden overflow-y-scroll p-5 sm:rounded-md border-b sm:border sm:hover:border-slate-700 border-slate-800 pb-10">
+                  <div id="step-3" class="m-auto w-5/6 bg-[#09090B] sm:ml-10 h-auto max-h-[400px] no-scrollbar overflow-hidden overflow-y-scroll p-5 sm:rounded-md border-b sm:border sm:hover:border-slate-700 border-gray-600 pb-10">
                     <div class="flex flex-row items-center pb-5 sm:pb-0">
                       <div class="text-white font-bold text-xl sm:text-2xl flex justify-start items-center">
                         {ruleOfList.length} Rules Preview
                       </div>
-                      <label on:click={handleResetAll} class="ml-auto cursor-pointer transition  bg-[#fff] sm:hover:bg-gray-300 border border-slate-800 py-2 px-3 rounded-md text-white text-sm">
+                      <label on:click={handleResetAll} class="ml-auto cursor-pointer transition  bg-[#fff] sm:hover:bg-gray-300 border border-gray-600 py-2 px-3 rounded-md text-white text-sm">
                         Reset All
                       </label>
                     </div>
@@ -3084,7 +3084,7 @@ const handleKeyDown = (event) => {
       {/if}
     {:else}
       <div
-        class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+        class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
       >
         <svg
           class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"

@@ -166,7 +166,7 @@
           </h1>
 
           <div
-            class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+            class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
           >
             <svg
               class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -433,7 +433,7 @@
               <div class="relative w-full mt-10">
                 {#each senateTradingList as item}
                   <div
-                    class="w-full bg-[#09090B] border border-slate-800 shadow-lg h-auto pb-4 pt-4 mb-7"
+                    class="w-full bg-[#09090B] border border-gray-600 shadow-lg h-auto pb-4 pt-4 mb-7"
                   >
                     <div class="flex flex-col relative">
                       {#if item?.party === "Republican"}
@@ -492,7 +492,7 @@
                       </div>
 
                       <div
-                        class="border-1 border-b border-slate-800 w-full mt-5 mb-5"
+                        class="border-1 border-b border-gray-600 w-full mt-5 mb-5"
                       />
 
                       <div class="flex flex-row items-center pr-4 pl-4">
@@ -536,7 +536,7 @@
                       </div>
 
                       <div
-                        class="border-1 border-b border-slate-800 w-full mt-5 mb-5"
+                        class="border-1 border-b border-gray-600 w-full mt-5 mb-5"
                       />
 
                       <div class="flex flex-row items-center pr-4 pl-4">
@@ -575,7 +575,7 @@
               {#if rawData?.length >= 20}
                 <label
                   on:click={backToTop}
-                  class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-slate-800 rounded-full"
+                  class="w-32 py-1.5 mt-10 hover:bg-white hover:bg-opacity-[0.05] cursor-pointer m-auto flex justify-center items-center border border-gray-600 rounded-full"
                 >
                   Back to top
                 </label>

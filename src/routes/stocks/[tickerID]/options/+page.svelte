@@ -588,7 +588,7 @@
           </div>
 
           <div
-            class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-slate-800 text-sm sm:text-[1rem]"
+            class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
           >
             <svg
               class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
@@ -725,7 +725,7 @@
                 class="text-xl text-white m-auto flex justify-center items-center h-full"
               >
                 <div
-                  class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-slate-800 p-4"
+                  class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-gray-600 p-4"
                 >
                   <svg
                     class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -1130,7 +1130,7 @@
           {:else}
             <div class="flex justify-center items-center m-auto mt-16 mb-6">
               <div
-                class="text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-slate-800 p-4"
+                class="text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-gray-600 p-4"
               >
                 <svg
                   class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"

@@ -491,7 +491,7 @@ async function exportTreemap() {
   ></label>
 
   <div
-    class="modal-box w-full bg-[#000] sm:bg-[#09090B] sm:border sm:border-slate-800"
+    class="modal-box w-full bg-[#000] sm:bg-[#09090B] sm:border sm:border-gray-600"
   >
     <label
       for="indexModal"
@@ -566,7 +566,7 @@ async function exportTreemap() {
   ></label>
 
   <div
-    class="modal-box w-full bg-[#000] sm:bg-[#09090B] sm:border sm:border-slate-800"
+    class="modal-box w-full bg-[#000] sm:bg-[#09090B] sm:border sm:border-gray-600"
   >
     <label
       for="exportDataModal"
