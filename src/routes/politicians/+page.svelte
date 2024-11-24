@@ -3,25 +3,26 @@
   import democraticBackground from "$lib/images/bg-democratic.png";
   import otherBackground from "$lib/images/bg-other.png";
 
-  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
+  import { page } from "$app/stores";
+
   import { compareTwoStrings } from "string-similarity";
   //  import * as XLSX from 'xlsx';
 
   export let data;
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+  let pagePathName = $page?.url?.pathname;
 
   let rawData = data?.getAllPolitician;
   let displayList = [];
   let filterQuery = "";
-
   let isLoaded = false;
-
-  let filterList = [];
-
-  let changeRuleFilter = false;
+  let animationClass = "";
+  let animationId = "";
+  let favoriteList = [];
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -34,6 +35,28 @@
   }
 
   onMount(async () => {
+    try {
+      const savedList = localStorage?.getItem(pagePathName);
+
+      if (savedList) {
+        favoriteList = JSON?.parse(savedList);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    rawData?.sort((a, b) => {
+      // Check if each id is in the favoriteList
+      const aIsFavorite = favoriteList?.includes(a?.id);
+      const bIsFavorite = favoriteList?.includes(b?.id);
+
+      // If both are favorites or both are not, keep their order
+      if (aIsFavorite === bIsFavorite) return 0;
+
+      // If a is favorite and b is not, a comes first; otherwise, b comes first
+      return aIsFavorite ? -1 : 1;
+    });
+
     displayList = rawData?.slice(0, 20) ?? [];
     isLoaded = true;
 
@@ -46,59 +69,6 @@
       //window.removeEventListener('keydown', handleKeyDown);
     };
   });
-
-  async function handleFilter(e, newFilter) {
-    //e.preventDefault();
-
-    changeRuleFilter = true;
-    const filterSet = new Set(filterList);
-
-    // Check if the new filter already exists in the list
-    if (filterSet?.has(newFilter)) {
-      // If it exists, remove it from the list
-      filterSet?.delete(newFilter);
-    } else {
-      // If it doesn't exist, add it to the list
-      filterSet?.add(newFilter);
-    }
-    filterList = Array?.from(filterSet);
-    //console.log(filterList)
-    changeRuleFilter = true;
-  }
-
-  function filterData(data) {
-    const newData = data?.filter((item) => {
-      //Democratic Party nested conditions
-      if (
-        filterList?.includes("Democratic") &&
-        item?.party &&
-        item?.party?.toLowerCase() === "democratic"
-      ) {
-        return true;
-      }
-      //Republican Party nested conditions
-      if (
-        filterList?.includes("Republican") &&
-        item?.party &&
-        item?.party?.toLowerCase() === "republican"
-      ) {
-        return true;
-      }
-
-      //Other Party nested conditions
-      if (
-        filterList?.includes("Other") &&
-        item?.party &&
-        item?.party?.toLowerCase() === "other"
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    return newData;
-  }
 
   function handleInput(event) {
     filterQuery = event.target.value?.toLowerCase();
@@ -134,13 +104,40 @@
     }, 500);
   }
 
-  $: {
-    if (filterList && changeRuleFilter === true) {
-      displayList = filterList?.length !== 0 ? filterData(rawData) : rawData;
-      displayList = [...displayList];
-      changeRuleFilter = false;
-      //console.log(slicedRawData?.length)
+  function saveList() {
+    try {
+      // Save the version along with the rules
+      localStorage?.setItem(pagePathName, JSON?.stringify(favoriteList));
+    } catch (e) {
+      console.log("Failed saving indicator rules: ", e);
     }
+  }
+
+  async function addToFavorite(event, itemId) {
+    event?.preventDefault();
+    if (favoriteList.includes(itemId)) {
+      // Remove ticker from the watchlist.
+      favoriteList = favoriteList?.filter((item) => item !== itemId);
+    } else {
+      // Add ticker to the watchlist.
+      animationId = itemId;
+      animationClass = "heartbeat";
+      const removeAnimation = () => {
+        animationId = "";
+        animationClass = "";
+      };
+      favoriteList = [...favoriteList, itemId];
+      const heartbeatElement = document.getElementById(itemId);
+      if (heartbeatElement) {
+        // Only add listener if it's not already present
+        if (!heartbeatElement.classList.contains("animation-added")) {
+          heartbeatElement.addEventListener("animationend", removeAnimation);
+          heartbeatElement.classList.add("animation-added"); // Prevent re-adding listener
+        }
+      }
+    }
+
+    saveList();
   }
 </script>
 
@@ -233,7 +230,7 @@
                         >
                       </label>
                     </li>
-
+                    <!--
                     <li
                       class="pl-3 py-1.5 flex-auto text-center bg-[#2E3238] rounded-[3px]"
                     >
@@ -257,6 +254,7 @@
                         >
                       </label>
                     </li>
+                    -->
                   </ul>
                 </div>
               </div>
@@ -276,6 +274,26 @@
                           : 'sm:hover:shadow-[#636465]'} border-gray-600 shadow-md rounded-md h-auto pb-4 pt-4 mb-7"
                     >
                       <div class="flex flex-col relative">
+                        <div
+                          id={item?.id}
+                          on:click|stopPropagation={(event) =>
+                            addToFavorite(event, item?.id)}
+                          class=" {favoriteList?.includes(item?.id)
+                            ? 'text-[#FBCE3C]'
+                            : 'text-white'} absolute top-0 right-5 z-20"
+                        >
+                          <svg
+                            class="{item?.id === animationId
+                              ? animationClass
+                              : ''} w-[22px] h-[22px] inline-block cursor-pointer flex-shrink-0"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            ><path
+                              fill="currentColor"
+                              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327l4.898.696c.441.062.612.636.282.95l-3.522 3.356l.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                            /></svg
+                          >
+                        </div>
                         {#if item?.party === "Republican"}
                           <img
                             class="absolute -mt-4 w-full m-auto rounded-md"
@@ -382,249 +400,6 @@
   </body>
 </section>
 
-{#if $screenWidth >= 640}
-  <!--Start View All List-->
-  <input type="checkbox" id="filterList" class="modal-toggle" />
-
-  <dialog id="filterList" class="modal modal-bottom sm:modal-middle">
-    <label
-      id="filterList"
-      for="filterList"
-      class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"
-    ></label>
-
-    <div
-      class="modal-box w-full bg-[#09090B] sm:border sm:border-gray-600 max-h-[600px] overflow-y-scroll"
-    >
-      <label
-        for="filterList"
-        class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-[1.8rem] text-white"
-      >
-        ✕
-      </label>
-
-      <div class="text-white mt-5 pb-5">
-        <div class="flex flex-col items-center justify-start">
-          <!--Start Political Party-->
-          <div class="grid grid-cols-2 mt-4 w-full ml-auto mt-4">
-            <div class="mb-4 mr-auto">
-              <h2 class="text-xl sm:text-2xl text-white font-bold mb-3">
-                Political Party
-              </h2>
-              <ul class="space-y-1">
-                <li class="mb-2 cursor-pointer">
-                  <label
-                    on:click|stopPropagation={(event) =>
-                      handleFilter(event, "Democratic")}
-                    class="cursor-pointer flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                  >
-                    <input
-                      checked={filterList?.includes("Democratic")}
-                      type="checkbox"
-                      class="cursor-pointer bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                    />
-                    <label class="text-white text-md cursor-pointer"
-                      >Democratic</label
-                    >
-                  </label>
-                </li>
-                <li class="mb-2 cursor-pointer">
-                  <label
-                    on:click|stopPropagation={(event) =>
-                      handleFilter(event, "Republican")}
-                    class="cursor-pointer flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                  >
-                    <input
-                      checked={filterList?.includes("Republican")}
-                      type="checkbox"
-                      class="cursor-pointer bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                    />
-                    <label class="text-white text-md cursor-pointer"
-                      >Republican</label
-                    >
-                  </label>
-                </li>
-              </ul>
-            </div>
-            <!-- Column 2 -->
-            <div class="mt-11">
-              <ul class="space-y-1">
-                <li class="mb-2 cursor-pointer">
-                  <label
-                    on:click|stopPropagation={(event) =>
-                      handleFilter(event, "Other")}
-                    class="cursor-pointer flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                  >
-                    <input
-                      checked={filterList?.includes("Other")}
-                      type="checkbox"
-                      class="cursor-pointer bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                    />
-                    <label class="text-white text-md cursor-pointer"
-                      >Other</label
-                    >
-                  </label>
-                </li>
-                <!-- ...other list items -->
-              </ul>
-            </div>
-          </div>
-          <!--End Political Party-->
-        </div>
-      </div>
-    </div>
-  </dialog>
-  <!--End View All List-->
-{:else}
-  <div class="drawer drawer-end z-40 overflow-hidden w-screen">
-    <input id="filterList" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-side overflow-y-scroll overflow-hidden">
-      <div
-        class="bg-[#000] min-h-screen w-screen pb-20 overflow-y-scroll overflow-hidden"
-      >
-        <label for="filterList" class="absolute left-6 top-6">
-          <svg
-            class="w-6 h-6 inline-block mb-0.5"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            ><path
-              fill="#fff"
-              d="M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z"
-            /></svg
-          >
-        </label>
-
-        <div class="w-screen overflow-y-scroll">
-          <div class="space-y-3 sm:pt-5">
-            <div class="bg-[#000] h-auto w-screen">
-              <!--Start Header-->
-              <div
-                class="bg-[#000] w-full p-1 flex flex-col items-center pb-10 h-auto"
-              >
-                <h2
-                  class="text-center m-auto text-[1.1rem] font-medium text-white mt-5"
-                >
-                  Filter List
-                </h2>
-              </div>
-              <!--End Header-->
-
-              <div class="flex flex-col items-center justify-center">
-                <!--Start Political Party-->
-                <div class="grid grid-cols-2 mt-4 w-11/12 ml-auto mt-4">
-                  <div class="mb-4 mr-auto">
-                    <h2 class="text-xl sm:text-2xl text-white font-bold mb-3">
-                      Political Party
-                    </h2>
-                    <ul class="space-y-1">
-                      <li class="mb-2 cursor-pointer">
-                        <label
-                          on:click|stopPropagation={(event) =>
-                            handleFilter(event, "Democratic")}
-                          class="flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                        >
-                          <input
-                            checked={filterList?.includes("Democratic")}
-                            type="checkbox"
-                            class="bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                          />
-                          <label class="text-white text-md">Democratic</label>
-                        </label>
-                      </li>
-                      <li class="mb-2 cursor-pointer">
-                        <label
-                          on:click|stopPropagation={(event) =>
-                            handleFilter(event, "Republican")}
-                          class="flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                        >
-                          <input
-                            checked={filterList?.includes("Republican")}
-                            type="checkbox"
-                            class="bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                          />
-                          <label class="text-white text-md">Republican</label>
-                        </label>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- Column 2 -->
-                  <div class="mt-10">
-                    <ul class="space-y-1">
-                      <li class="mb-2 cursor-pointer">
-                        <label
-                          on:click|stopPropagation={(event) =>
-                            handleFilter(event, "Other")}
-                          class="flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                        >
-                          <input
-                            checked={filterList?.includes("Other")}
-                            type="checkbox"
-                            class="bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                          />
-                          <span class="text-white text-md">Other</span>
-                        </label>
-                      </li>
-                      <!-- ...other list items -->
-                    </ul>
-                  </div>
-                </div>
-                <!--End Political Party-->
-
-                <!--Start Transaction Type-->
-                <div class="grid grid-cols-2 w-11/12 ml-auto mt-4">
-                  <div class="mb-4 mr-auto">
-                    <h2 class="text-xl sm:text-2xl text-white font-bold mb-3">
-                      Transaction Type
-                    </h2>
-                    <ul class="space-y-1">
-                      <li class="mb-2 cursor-pointer">
-                        <label
-                          on:click|stopPropagation={(event) =>
-                            handleFilter(event, "Bought")}
-                          class="flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                        >
-                          <input
-                            checked={filterList?.includes("Bought")}
-                            type="checkbox"
-                            class="bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                          />
-                          <label class="text-white text-md">Bought</label>
-                        </label>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- Column 2 -->
-                  <div class="mt-10">
-                    <ul class="space-y-1">
-                      <li class="mb-2 cursor-pointer">
-                        <label
-                          on:click|stopPropagation={(event) =>
-                            handleFilter(event, "Sold")}
-                          class="flex w-full items-center space-x-2 py-2 md:w-1/2 lg:w-1/3 lg:space-x-1.5 lg:py-[5px]"
-                        >
-                          <input
-                            checked={filterList?.includes("Sold")}
-                            type="checkbox"
-                            class="bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 dark:bg-dark-600 lg:h-4 lg:w-4"
-                          />
-                          <label class="text-white text-md">Sold</label>
-                        </label>
-                      </li>
-                      <!-- ...other list items -->
-                    </ul>
-                  </div>
-                </div>
-
-                <!--End Transaction Type-->
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-{/if}
-
 <style>
   .republican-striped {
     background-image: repeating-linear-gradient(
@@ -654,5 +429,28 @@
       #c0c3c5 10px,
       #c0c3c5 20px
     );
+  }
+
+  .heartbeat {
+    animation: heartbeat-animation 0.3s;
+    animation-timing-function: ease-in-out;
+  }
+
+  @keyframes heartbeat-animation {
+    0% {
+      transform: rotate(0deg) scale(0.95);
+    }
+    25% {
+      transform: rotate(10deg) scale(1.05);
+    }
+    50% {
+      transform: rotate(0deg) scale(1.2);
+    }
+    75% {
+      transform: rotate(-10deg) scale(1.05);
+    }
+    100% {
+      transform: rotate(0deg) scale(0.95);
+    }
   }
 </style>

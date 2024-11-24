@@ -135,7 +135,7 @@
         class="w-full m-auto flex flex-col sm:flex-row justify-center items-center gap-x-4 gap-y-2"
       >
         <p class="text-[1rem] text-black">
-          <strong class="font-semibold text-lg text-[1rem] text-black"
+          <strong class="font-semibold text-[1rem] sm:text-lg text-black"
             >Black Friday Deal</strong
           ><svg
             viewBox="0 0 2 2"
