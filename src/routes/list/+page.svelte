@@ -1,7 +1,38 @@
 <!--Start Market Cap Group-->
 
 <div class="text-white">
-  <h2 class="mb-2 text-xl font-bold">Market Cap Groups</h2>
+  <h2 class="mb-2 text-xl font-bold">Popular Lists</h2>
+  <ul
+    class="list-outside list-disc space-y-1 p-1 pl-6 md:columns-2 md:gap-x-8 md:text-lg"
+  >
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/top-rated-dividend-stocks">Top-Rated Dividend Stocks</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/highest-revenue"
+        >U.S. Companies With The Most Revenue</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/highest-income-tax"
+        >U.S. Companies That Pay The Highest Taxes</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/most-employees"
+        >U.S. Companies With The Most Employees</a
+      >
+    </li>
+  </ul>
+</div>
+
+<div class="text-white">
+  <h2 class="mb-2 text-xl font-bold pt-10">Market Cap Groups</h2>
   <ul
     class="list-outside list-disc space-y-1 p-1 pl-6 md:columns-2 md:gap-x-8 md:text-lg"
   >

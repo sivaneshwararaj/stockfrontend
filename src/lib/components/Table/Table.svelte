@@ -77,6 +77,7 @@
     { name: "Upside", rule: "upside", type: "percentSign" },
     { name: "Country", rule: "country", type: "str" },
     { name: "Gross Profit", rule: "grossProfit", type: "int" },
+    { name: "Income Tax", rule: "incomeTaxExpense", type: "int" },
     { name: "Revenue Growth", rule: "growthRevenue", type: "percentSign" },
     {
       name: "Gross Profit Growth",
@@ -108,7 +109,7 @@
       type: "percent",
     },
     { name: "FCF Yield", rule: "freeCashFlowYield", type: "percent" },
-    { name: "Employees", rule: "employees", type: "int" },
+    { name: "Employees", rule: "employees", type: "decimal" },
     { name: "Debt Ratio", rule: "debtRatio", type: "float" },
     { name: "Debt / Equity", rule: "debtEquityRatio", type: "int" },
     { name: "Profit Margin", rule: "netProfitMargin", type: "percent" },
@@ -698,6 +699,8 @@
                 {/if}
               {:else if column?.type === "int"}
                 {abbreviateNumber(item[column.key])}
+              {:else if column?.type === "decimal"}
+                {item[column.key]?.toLocaleString("en-US")}
               {:else if column.key === "price"}
                 {item[column.key]?.toFixed(2)}
               {:else if column.type === "percent"}

@@ -182,6 +182,22 @@
       title: "Overbought Stocks",
       link: "/list/overbought-stocks",
     },
+    {
+      title: "Top-Rated Dividend Stocks",
+      link: "/list/top-rated-dividend-stocks",
+    },
+    {
+      title: "Biggest U.S. Companies by Revenue",
+      link: "/list/highest-revenue",
+    },
+    {
+      title: "Biggest U.S. Companies by Income Taxes",
+      link: "/list/highest-income-tax",
+    },
+    {
+      title: "Biggest U.S. Employers",
+      link: "/list/most-employees",
+    },
   ];
 
   navigation = [...navigationIndustry, ...navigation];
