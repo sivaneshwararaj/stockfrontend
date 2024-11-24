@@ -107,7 +107,7 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 m-auto"
+  class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-xl pt-10 m-auto"
 >
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
     <div
@@ -731,76 +731,188 @@
       <!--End Pricing Card-->
 
       <!--Start Pricing Card-->
-      <!--
-             <div class="sm:h-[660px] sm:order-2 box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto ring-[1px] ring-gray-400 rounded-md w-full text-center text-white">
 
-                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row border-l border-r border-b border-gray-400 items-center p-2">
-                    <span class="text-white text-md font-semibold px-3">
-                        Limited Offer
-                    </span>
-                </div>          
+      <div
+        class="sm:h-[660px] sm:order-2 box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto ring-[1px] ring-gray-400 rounded-md w-full text-center text-white"
+      >
+        <div
+          class="absolute top-0 left-1/2 transform -translate-x-1/2 rounded-b-2xl flex flex-row border-l border-r border-b border-gray-400 items-center p-2"
+        >
+          <span class="text-white text-md font-semibold px-3">
+            Limited Offer
+          </span>
+        </div>
 
-                <div class="flex flex-row justify-start items-center mt-10">
-                    <img src={cloudFrontUrl+"/assets/life_time_access_logo.png"} class="mr-4 w-28 transform ease-in-out duration-300" loading="lazy" alt="Lifetime tier" />
-                    <h2 class="text-4xl text-center font-bold text-white">
-                        Lifetime
-                    </h2>
-                </div>
-                
+        <div class="flex flex-row justify-start items-center mt-10">
+          <img
+            src={cloudFrontUrl + "/assets/life_time_access_logo.png"}
+            class="mr-4 w-28 transform ease-in-out duration-300"
+            loading="lazy"
+            alt="Lifetime tier"
+          />
+          <h2 class="text-4xl text-center font-bold text-white">Lifetime</h2>
+        </div>
 
-                <div class="flex flex-col mb-6 items-center">
+        <div class="flex flex-col mb-6 items-center">
+          <div class="flex flex-row items-center">
+            <span class="mr-2 text-4xl font-bold">$399</span>
+          </div>
+        </div>
 
-                    <div class="flex flex-row items-center">
-                        <span class="mr-2 text-4xl font-bold">$599</span>
-                    </div>
-                </div>
+        <ol class="mb-8 space-y-4 text-left mt-6">
+          <li class="flex items-center space-x-3">
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Everything in Pro Tier.</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
+            <span class="text-white text-[1rem] font-semibold"
+              >Pay Once and use forever.</span
+            >
+          </li>
+          <li class="flex items-center space-x-3">
+            <svg
+              class="flex-shrink-0 w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              ><mask id="ipSSuccess0"
+                ><g
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                  ><path
+                    fill="#fff"
+                    stroke="#fff"
+                    d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"
+                  /><path stroke="#09090B" d="m17 24l5 5l10-10" /></g
+                ></mask
+              ><path
+                fill="#00FC50"
+                d="M0 0h48v48H0z"
+                mask="url(#ipSSuccess0)"
+              /></svg
+            >
 
+            <span class="text-white text-[1rem] font-semibold"
+              >If you ❤️ Stocknear and want to support us, this is the best way.</span
+            >
+          </li>
+        </ol>
 
-                <ol class="mb-8 space-y-4 text-left mt-6">
-                    <li class="flex items-center space-x-3 ">
-                        
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Everything in Pro Tier.</span>
-                    </li>
-                    <li class="flex items-center space-x-3 ">
-                        
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">Pay Once and use forever.</span>
-                    </li>
-                    <li class="flex items-center space-x-3 "> 
-                        <svg class="flex-shrink-0 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSSuccess0"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="#fff" stroke="#fff" d="m24 4l5.253 3.832l6.503-.012l1.997 6.188l5.268 3.812L41 24l2.021 6.18l-5.268 3.812l-1.997 6.188l-6.503-.012L24 44l-5.253-3.832l-6.503.012l-1.997-6.188l-5.268-3.812L7 24l-2.021-6.18l5.268-3.812l1.997-6.188l6.503.012L24 4Z"/><path stroke="#09090B" d="m17 24l5 5l10-10"/></g></mask><path fill="#00FC50" d="M0 0h48v48H0z" mask="url(#ipSSuccess0)"/></svg>
-                        <span class="text-white text-[1rem] font-semibold">If you ❤️ Stocknear and want to support us, this is the best way.</span>
-                    </li>
-                </ol>
+        <div class="divider"></div>
+        <div class="m-auto w-full text-white font-medium text-sm mb-6">
+          + Unlimited feature updates
+        </div>
 
-                <div class="divider"></div>
-                <div class="m-auto w-full text-white font-medium text-sm mb-6">
-                    + Unlimited feature updates
-                </div>  
+        {#if data?.user?.tier === "Pro" && !data?.user?.freeTrial}
+          <a
+            class="py-3 rounded-md text-black bg-[#fff] font-semibold sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
+            href="#"
+          >
+            Active Plan
+          </a>
+        {:else if data?.user?.tier === "Pro" && data?.user?.freeTrial === true}
+          <label
+            for={!data?.user ? "userLogin" : ""}
+            on:click={() => purchasePlan("lifeTime")}
+            class="py-3 rounded-md text-black bg-[#fff] font-semibold sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
+          >
+            Get Lifetime Access
+            <span
+              class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+            >
+              <svg
+                class="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><g transform="rotate(90 12 12)"
+                  ><g fill="none"
+                    ><path
+                      d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                    /><path
+                      fill="black"
+                      d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                    /></g
+                  ></g
+                ></svg
+              >
+            </span>
+          </label>
+        {:else}
+          <label
+            for={!data?.user ? "userLogin" : ""}
+            on:click={() => purchasePlan("lifeTime")}
+            class="cursor-pointer py-3 rounded-md text-black bg-[#fff] font-semibold sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
+          >
+            Get Lifetime Access
+            <span
+              class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+            >
+              <svg
+                class="w-4 h-4 inline-block"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><g transform="rotate(90 12 12)"
+                  ><g fill="none"
+                    ><path
+                      d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                    /><path
+                      fill="black"
+                      d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                    /></g
+                  ></g
+                ></svg
+              >
+            </span>
+          </label>
+        {/if}
+      </div>
 
-                {#if data?.user?.tier === 'Pro' && !data?.user?.freeTrial}
-                <a class="py-3 rounded-md text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group" href="#">
-                    Active Plan
-               </a>
-               {:else if data?.user?.tier === 'Pro' && data?.user?.freeTrial === true}
-
-                <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan('lifeTime')} class="py-3 rounded-md text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group">
-                    Get Lifetime Access
-                   <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                       <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                   </span>
-                </label>
-                {:else}
-                <label for={!data?.user ? 'userLogin' : ''} on:click={() => purchasePlan('lifeTime')} class="cursor-pointer py-3 rounded-md text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-100 ease-in-out group">
-                    Get Lifetime Access
-                   <span class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out">
-                       <svg class="w-4 h-4 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><g fill="none"><path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="white" d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"/></g></g></svg>
-                   </span>
-                </label>
-                {/if}
-               
-            </div>
-            -->
       <!--End Pricing Card-->
     </div>
 
@@ -1358,6 +1470,7 @@
               </details>
             </li>
             -->
+            <!--
             <li>
               <details class="collapse collapse-arrow">
                 <summary
@@ -1370,7 +1483,7 @@
                     class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
                   >
                     Yes, we do offer a special limited life time deal for <strong
-                      >$599</strong
+                      >$399</strong
                     >.
                     <br />
                     <br />
@@ -1390,6 +1503,7 @@
                 </div>
               </details>
             </li>
+            -->
             <li>
               <details class="collapse collapse-arrow">
                 <summary
