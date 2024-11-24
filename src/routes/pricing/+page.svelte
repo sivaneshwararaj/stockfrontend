@@ -860,14 +860,14 @@
           <label
             for={!data?.user ? "userLogin" : ""}
             on:click={() => purchasePlan("lifeTime")}
-            class="py-3 rounded-md text-black bg-[#fff] font-semibold sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
+            class="cursor-pointer py-3 rounded-md text-black bg-[#fff] font-semibold sm:hover:bg-gray-300 transition duration-100 ease-in-out group"
           >
             Get Lifetime Access
             <span
               class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
             >
               <svg
-                class="w-4 h-4"
+                class="w-4 h-4 inline-block"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 ><g transform="rotate(90 12 12)"
