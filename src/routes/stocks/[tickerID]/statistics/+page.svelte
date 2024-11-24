@@ -14,6 +14,20 @@
     ?.replace("Inc.", "")
     ?.replace(".com", "");
   let quantStats = {};
+
+  function checkValue(val, category) {
+    if (val !== null && val !== undefined) {
+      if (category === "percent") {
+        return `${val}%`;
+      } else if (category === "int") {
+        return abbreviateNumber(val);
+      } else {
+        return val;
+      }
+    } else {
+      return "n/a";
+    }
+  }
 </script>
 
 <svelte:head>
@@ -98,7 +112,10 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.309%">{rawData?.sharesYoY}%</td
+                      >{checkValue(
+                        rawData?.sharesYoYrawData?.sharesYoY,
+                        "percent",
+                      )}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -106,7 +123,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="0.460%">{rawData?.sharesQoQ}%</td
+                      >{checkValue(rawData?.sharesQoQ, "percent")}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -114,7 +131,10 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="45.989%">{rawData?.institutionalOwnership}%</td
+                      >{checkValue(
+                        rawData?.rawData?.institutionalOwnership,
+                        "percent",
+                      )}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -141,8 +161,10 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      title="2,777,647,654"
-                      >{abbreviateNumber(rawData?.relativeFTD)}%</td
+                      >{checkValue(
+                        abbreviateNumber(rawData?.relativeFTD),
+                        "percent",
+                      )}</td
                     >
                   </tr></tbody
                 >
@@ -808,8 +830,13 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                Gross margin is {rawData?.grossProfitMargin}%, with operating
-                and profit margins of {rawData?.operatingProfitMargin}% and {rawData?.netProfitMargin}%.
+                Gross margin is {checkValue(
+                  rawData?.grossProfitMargin,
+                  "int",
+                )}%, with operating and profit margins of {checkValue(
+                  rawData?.operatingProfitMargin,
+                  "int",
+                )}% and {checkValue(rawData?.netProfitMargin, "int")}%.
               </p>
               <table class="w-full">
                 <tbody
@@ -819,7 +846,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.grossProfitMargin}%</td
+                      >{checkValue(rawData?.grossProfitMargin, "int")}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -827,7 +854,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.operatingProfitMargin}%</td
+                      >{checkValue(rawData?.operatingProfitMargin, "int")}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -835,7 +862,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.pretaxProfitMargin}%</td
+                      >{checkValue(rawData?.pretaxProfitMargin, "int")}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -843,7 +870,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.netProfitMargin}%</td
+                      >{checkValue(rawData?.netProfitMargin, "int")}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -851,7 +878,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.ebitdaMargin}%</td
+                      >{checkValue(rawData?.ebitdaMargin, "int")}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -859,7 +886,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.ebitMargin}%</td
+                      >{checkValue(rawData?.ebitMargin, "int")}%</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -867,7 +894,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.freeCashFlowMargin}%</td
+                      >{checkValue(rawData?.freeCashFlowMargin, "int")}%</td
                     >
                   </tr></tbody
                 >
