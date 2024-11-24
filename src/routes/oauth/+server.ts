@@ -1,8 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 
-export const config = {
-  runtime: "nodejs20.x",
-};
+
 
 export const GET = async ({ locals, url, cookies }) => {
   //console.log(url.searchParams);
@@ -22,17 +20,18 @@ export const GET = async ({ locals, url, cookies }) => {
   //console.log('returned code',code)
 
   //as a side effect this will generate a new code verifier, hence why we need to pass the verifier back in through the cookie
-  const authMethods = await locals.pb?.collection("users")?.listAuthMethods();
+  const authMethods = (await locals.pb?.collection("users")?.listAuthMethods())?.oauth2;
 
-  if (!authMethods?.authProviders) {
+  if (!authMethods?.providers) {
     console.log("No Auth Providers");
     redirect(301, "/register");
   }
 
-  const targetItem = authMethods.authProviders.findIndex(
-    (item) => item.name === providerSelected,
-  );
-  const provider = authMethods.authProviders[targetItem];
+ const targetItem = authMethods?.providers?.findIndex(
+      (item) => item?.name === providerSelected,
+    );
+
+  const provider = authMethods?.providers[targetItem];
 
   if (!provider) {
     console.log("Provider Not Found");
@@ -45,7 +44,7 @@ export const GET = async ({ locals, url, cookies }) => {
   }
 
   try {
-    //console.log(provider)
+    //
 
     newUser = await locals.pb
       ?.collection("users")

@@ -77,10 +77,11 @@ await locals.pb?.collection('users').update(
     redirect(303, "/");
   },
 
-  oauth2: async ({ url, locals, request, cookies, params }) => {
-    const authMethods = await locals?.pb
+  oauth2: async ({ url, locals, request, cookies }) => {
+    const authMethods = (await locals?.pb
       ?.collection("users")
-      ?.listAuthMethods();
+      ?.listAuthMethods())?.oauth2;
+
 
     const data = await request?.formData();
     const providerSelected = data?.get("provider");
@@ -93,18 +94,20 @@ await locals.pb?.collection('users').update(
     }
     const redirectURL = `${url.origin}/oauth`;
 
-    const targetItem = authMethods.authProviders?.findIndex(
+    const targetItem = authMethods?.providers?.findIndex(
       (item) => item?.name === providerSelected,
     );
     //console.log("==================")
     //console.log(authMethods.authProviders)
     //console.log('target item is: ', targetItem)
 
-    const provider = authMethods.authProviders[targetItem];
+    const provider = authMethods.providers[targetItem];
     const authProviderRedirect = `${provider.authUrl}${redirectURL}`;
     const state = provider.state;
     const verifier = provider.codeVerifier;
 
+    
+    
     cookies.set("state", state, {
       httpOnly: true,
       sameSite: "lax",
@@ -129,7 +132,7 @@ await locals.pb?.collection('users').update(
       maxAge: 60 * 60,
     });
 
-    cookies.set("path", "/crypto/" + params.tickerID, {
+    cookies.set("path", "/", {
       httpOnly: true,
       sameSite: "lax",
       secure: true,
@@ -140,3 +143,4 @@ await locals.pb?.collection('users').update(
     redirect(302, authProviderRedirect);
   },
 };
+

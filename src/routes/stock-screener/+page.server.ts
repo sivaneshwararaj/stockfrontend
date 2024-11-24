@@ -156,9 +156,10 @@ await locals.pb?.collection('users').update(
   },
 
   oauth2: async ({ url, locals, request, cookies }) => {
-    const authMethods = await locals?.pb
+    const authMethods = (await locals?.pb
       ?.collection("users")
-      ?.listAuthMethods();
+      ?.listAuthMethods())?.oauth2;
+
 
     const data = await request?.formData();
     const providerSelected = data?.get("provider");
@@ -171,18 +172,20 @@ await locals.pb?.collection('users').update(
     }
     const redirectURL = `${url.origin}/oauth`;
 
-    const targetItem = authMethods.authProviders?.findIndex(
-      (item) => item?.name === providerSelected
+    const targetItem = authMethods?.providers?.findIndex(
+      (item) => item?.name === providerSelected,
     );
     //console.log("==================")
     //console.log(authMethods.authProviders)
     //console.log('target item is: ', targetItem)
 
-    const provider = authMethods.authProviders[targetItem];
+    const provider = authMethods.providers[targetItem];
     const authProviderRedirect = `${provider.authUrl}${redirectURL}`;
     const state = provider.state;
     const verifier = provider.codeVerifier;
 
+    
+    
     cookies.set("state", state, {
       httpOnly: true,
       sameSite: "lax",
@@ -205,6 +208,14 @@ await locals.pb?.collection('users').update(
       secure: true,
       path: "/",
       maxAge: 60 * 60,
+    });
+
+    cookies.set("path", "/", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      path: "/",
+      maxAge: 60,
     });
 
     redirect(302, authProviderRedirect);
