@@ -13,9 +13,7 @@
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
 
   export let data;
-  let isLoaded = false;
   let optionsMode = "premium";
-
   function compareTimes(time1, time2) {
     const [hours1, minutes1] = time1.split(":").map(Number);
     const [hours2, minutes2] = time2.split(":").map(Number);
@@ -53,20 +51,6 @@
     );
   }
 
-  function convertTimestamp(unixTimestamp) {
-    // Multiply by 1000 because JavaScript's Date object expects milliseconds
-    const date = new Date(unixTimestamp * 1000);
-
-    // Formatting the date to a human-readable format
-    const formattedDate = date.toLocaleString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-    return formattedDate;
-  }
-
   let optionsTable = data?.getDashboard?.optionsFlow?.premium || [];
   let gainersList = data?.getDashboard?.marketMovers?.gainers || [];
   let losersList = data?.getDashboard?.marketMovers?.losers || [];
@@ -86,7 +70,6 @@
   let Feedback;
 
   onMount(async () => {
-    isLoaded = true;
     Feedback = (await import("$lib/components/Feedback.svelte")).default;
   });
 
@@ -133,6 +116,7 @@
 <div
   class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B] mb-40"
 >
+  <!--
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
     <div
       class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#FFC233] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
@@ -158,10 +142,12 @@
       <div
         class="w-full m-auto flex flex-col sm:flex-row justify-center items-center gap-x-4 gap-y-2"
       >
-        <p class="text-md text-black font-semibold">
+        <p
+          class="text-md text-black font-semibold flex flex-col sm:flex-row items-center"
+        >
           <span class="text-black font-bold">Black Friday Week</span><svg
             viewBox="0 0 2 2"
-            class="mx-2 inline h-0.5 w-0.5 fill-current"
+            class="mx-2 inline h-0.5 w-0.5 fill-current hidden sm:inline-block"
             aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg
           >
           Get 40% Off on Pro Subscription
@@ -176,6 +162,7 @@
       </div>
     </div>
   {/if}
+-->
 
   <div class="flex flex-col m-auto justify-center items-center">
     <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10">
