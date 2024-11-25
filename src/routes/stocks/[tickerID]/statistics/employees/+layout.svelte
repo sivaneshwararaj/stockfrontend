@@ -57,8 +57,12 @@
                   ></thead
                 >
                 <tbody>
-                  {#each similarStocks?.slice(0, 8) as item}
-                    <tr class="border-gray-600 border-b"
+                  {#each similarStocks?.slice(0, 8) as item, index}
+                    <tr
+                      class="border-gray-600 {index !==
+                      similarStocks?.slice(0, 8).length - 1
+                        ? 'border-b'
+                        : ''}"
                       ><td class="text-left"
                         ><a
                           href={`/stocks/${item?.symbol}`}
@@ -82,6 +86,12 @@
                   {/each}
                 </tbody>
               </table>
+              <a
+                href={`/list/most-employees`}
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
+              >
+                Employee Rankings
+              </a>
             </div>
           {/if}
         </aside>
