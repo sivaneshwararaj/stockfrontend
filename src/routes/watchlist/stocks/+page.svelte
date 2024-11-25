@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { screenWidth, numberOfUnreadNotification, isOpen } from "$lib/store";
   import { formatDate, abbreviateNumber } from "$lib/utils";
   import toast from "svelte-french-toast";
-  import { onMount } from "svelte";
-
+  import { onMount, onDestroy, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
@@ -20,8 +19,10 @@
   let deleteTickerList = [];
 
   let watchList: any[] = [];
+
   let news = [];
   let checkedItems;
+  let socket;
 
   let allRows = [
     { name: "Volume", rule: "volume", type: "int" },
@@ -131,10 +132,33 @@
   );
 
   let isLoaded = false;
-  let searchDataLoaded = false; // Flag to track data loading
   let downloadWorker: Worker | undefined;
   let displayWatchList;
   let allList = data?.getAllWatchlist;
+
+  function calculateChange(oldList, newList) {
+    // Create a map for faster lookups
+    const newListMap = new Map(newList.map((item) => [item.symbol, item]));
+
+    // Use for loop instead of forEach for better performance
+    for (let i = 0; i < oldList.length; i++) {
+      const item = oldList[i];
+      const newItem = newListMap.get(item?.symbol);
+
+      if (newItem) {
+        // Calculate the new changePercentage
+        const baseLine = item?.price / (1 + item?.changesPercentage / 100);
+        const newPrice = newItem?.ap;
+        const newChangePercentage = (newPrice / baseLine - 1) * 100;
+
+        // Update the item directly in the oldList
+        item.price = newPrice;
+        item.changesPercentage = newChangePercentage;
+      }
+    }
+
+    return [...oldList];
+  }
 
   const handleDownloadMessage = (event) => {
     isLoaded = false;
@@ -148,6 +172,47 @@
       tickerList: watchList?.map((item) => item?.symbol),
     });
   };
+
+  function sendMessage(message) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON?.stringify(message));
+    } else {
+      console.error("WebSocket is not open. Unable to send message.");
+    }
+  }
+
+  async function websocketRealtimeData() {
+    try {
+      socket = new WebSocket(data?.wsURL + "/multiple-realtime-data");
+
+      socket.addEventListener("open", () => {
+        console.log("WebSocket connection opened");
+        // Initial connection send
+        const tickerList = watchList?.map((item) => item?.symbol) || [];
+        sendMessage(tickerList);
+      });
+
+      socket.addEventListener("message", (event) => {
+        const data = event.data;
+        try {
+          const newList = JSON?.parse(data);
+          if (newList?.length > 0) {
+            console.log("Received message:", newList);
+
+            watchList = calculateChange(watchList, newList);
+          }
+        } catch (e) {
+          console.error("Error parsing WebSocket message:", e);
+        }
+      });
+
+      socket.addEventListener("close", (event) => {
+        console.log("WebSocket connection closed:", event.reason);
+      });
+    } catch (error) {
+      console.error("WebSocket connection error:", error);
+    }
+  }
 
   async function getWatchlistData() {
     const postData = {
@@ -496,6 +561,39 @@
       }
 
       isLoaded = true;
+    } catch (e) {
+      console.log(e);
+    }
+
+    if (!$isOpen) {
+      await websocketRealtimeData();
+    }
+  });
+
+  let previousList = [];
+
+  afterUpdate(async () => {
+    if (
+      JSON?.stringify(previousList) !== JSON?.stringify(watchList) &&
+      typeof socket !== "undefined"
+    ) {
+      previousList = watchList;
+      socket?.close();
+      await new Promise((resolve, reject) => {
+        socket?.addEventListener("close", resolve);
+      });
+
+      if (socket?.readyState === WebSocket?.CLOSED) {
+        await websocketRealtimeData();
+        console.log("connecting again");
+      }
+    }
+  });
+
+  onDestroy(() => {
+    try {
+      //socket?.send('close')
+      socket?.close();
     } catch (e) {
       console.log(e);
     }
@@ -1136,6 +1234,7 @@
                             {#each ruleOfList as row}
                               {#if isChecked(row?.name)}
                                 <td
+                                  id={item?.symbol}
                                   class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
                                 >
                                   {#if item?.[row?.rule] !== undefined && item?.[row?.rule] !== null}

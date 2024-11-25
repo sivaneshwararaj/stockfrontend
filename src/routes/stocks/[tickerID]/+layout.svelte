@@ -213,7 +213,6 @@
     }
 
     if ($isOpen) {
-      //&& currentDateTime > startTime && currentDateTime < endTime
       await websocketRealtimeData();
     }
   });
