@@ -1,17 +1,18 @@
 export const load = async ({ locals }) => {
-  const { apiKey, apiURL, fastifyURL, user } = locals;
+  const { apiKey, apiURL, user } = locals;
 
   const getPriceAlert = async () => {
     const postData = { userId: user?.id };
-    const response = await fetch(fastifyURL + "/get-price-alert", {
+    const response = await fetch(apiURL + "/get-price-alert", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
       },
       body: JSON.stringify(postData),
     });
 
-    let output = (await response.json())?.items;
+    let output = await response.json();
     output = output?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
 
     return output;
