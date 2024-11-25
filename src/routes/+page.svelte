@@ -12,17 +12,6 @@
 
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
 
-  /*
-  import { Chart } from 'svelte-echarts'
-  import { init, use } from 'echarts/core'
-  import { BarChart } from 'echarts/charts'
-  import { GridComponent } from 'echarts/components'
-  import { CanvasRenderer } from 'echarts/renderers'
-
-  // now with tree-shaking
-  use([BarChart, GridComponent, CanvasRenderer])
-  */
-
   export let data;
   let isLoaded = false;
   let optionsMode = "premium";
@@ -82,6 +71,7 @@
   let gainersList = data?.getDashboard?.marketMovers?.gainers || [];
   let losersList = data?.getDashboard?.marketMovers?.losers || [];
   let marketStatus = data?.getDashboard?.marketStatus ?? 0;
+  let analystReport = data?.getDashboard?.analystReport || {};
 
   function changeTable(state) {
     optionsMode = state;
@@ -559,78 +549,99 @@
           >
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
-                <div class="flex flex-row w-full items-center">
+                <div
+                  class="whitespace-nowrap flex flex-row w-full items-center"
+                >
                   <Card.Title
                     class="text-xl sm:text-2xl tex-white font-semibold"
-                    >Dividend Announcement <span class="text-sm text-gray-300"
-                      >(NYSE Time)</span
-                    ></Card.Title
-                  >
+                    >AI Analyst report
+                  </Card.Title>
+                  {#if analystReport?.date}
+                    <label
+                      class="text-black bg-[#fff] inline-block ml-3 mt-1 font-semibold not-italic text-xs rounded px-2 py-0.5"
+                      >New</label
+                    >
+
+                    <label
+                      class="hidden sm:inline-block text-white text-sm italic ml-auto"
+                      >Updated {analystReport?.date}</label
+                    >
+                  {/if}
                 </div>
+                {#if analystReport?.date}
+                  <label class="sm:hidden text-white text-xs italic mt-2"
+                    >Updated {analystReport?.date}</label
+                  >
+                {/if}
               </div>
             </Card.Header>
             <Card.Content>
-              {#if data?.getDashboard?.recentDividends?.length !== 0}
-                <ul style="padding-left: 5px;">
-                  {#each data?.getDashboard?.recentDividends as item}
-                    <strong>{item?.name}</strong> (<HoverStockChart
-                      symbol={item?.symbol}
-                    />) has announced its upcoming dividend details as of {convertTimestamp(
-                      item?.updated,
-                    )}:
+              {#if Object?.keys(analystReport)?.length > 0}
+                {analystReport?.insight}
 
-                    <li
-                      style="color: #fff; line-height: 22px; margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
+                <div class="text-white mt-4">
+                  According to 29 analyst ratings, the average rating for <HoverStockChart
+                    symbol={analystReport?.symbol}
+                  />
+                  stock is "{analystReport?.consensusRating}" The 12-month stock
+                  price forecast is ${analystReport?.medianPriceTarget}, which
+                  is an {analystReport?.medianPriceChange > 0
+                    ? "increase"
+                    : "decreas"} of {analystReport?.medianPriceChange}% from the
+                  latest price.
+                </div>
+                <table
+                  class="w-full text-right text-tiny text-white xs:text-sm sm:text-base mt-5"
+                >
+                  <thead
+                    ><tr
+                      class="border-b border-gray-600 font-normal text-sm sm:text-[1rem]"
+                      ><th class="py-[3px] text-left font-semibold lg:py-0.5"
+                        >Target</th
+                      > <th class="font-semibold">Low</th>
+                      <th class="font-semibold">Average</th>
+                      <th class="font-semibold">Median</th>
+                      <th class="font-semibold">High</th></tr
+                    ></thead
+                  >
+                  <tbody
+                    ><tr
+                      class="border-b border-gray-600 font-normal text-sm sm:text-[1rem]"
+                      ><td class="py-[3px] text-left lg:py-0.5">Price</td>
+                      <td>${analystReport?.lowPriceTarget}</td>
+                      <td>${analystReport?.avgPriceTarget}</td>
+                      <td>${analystReport?.medianPriceTarget}</td>
+                      <td>${analystReport?.highPriceTarget}</td></tr
                     >
-                      <span class="font-bold">Dividend:</span> ${item?.dividend}
-                      per share ({item?.dividend / item?.dividendPrior - 1 > 0
-                        ? "+"
-                        : ""}{(
-                        (item?.dividend / item?.dividendPrior - 1) *
-                        100
-                      )?.toFixed(2)}% YoY)
-                    </li>
-                    <li
-                      style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
-                    >
-                      <span class="font-bold">Dividend Yield:</span>
-                      {item?.dividendYield?.toFixed(2)}%
-                    </li>
-                    <li
-                      style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
-                    >
-                      <span class="font-bold">Ex-Dividend Date:</span>
-                      {new Date(item?.exDividendDate)?.toLocaleString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        daySuffix: "2-digit",
-                      })}
-                    </li>
-                    <li
-                      style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
-                    >
-                      <span class="font-bold">Payable Date:</span>
-                      {new Date(item?.payableDate)?.toLocaleString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        daySuffix: "2-digit",
-                      })}
-                    </li>
-                    <li
-                      style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 30px; list-style-type: disc;"
-                    >
-                      <span class="font-bold">Record Date:</span>
-                      {new Date(item?.recordDate)?.toLocaleString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        daySuffix: "2-digit",
-                      })}
-                    </li>
-                  {/each}
-                </ul>
+                    <tr class="text-sm sm:text-[1rem]"
+                      ><td class="py-[3px] text-left lg:py-0.5">Change</td>
+                      <td
+                        class={analystReport?.lowPriceChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}
+                        >{analystReport?.lowPriceChange}%</td
+                      >
+                      <td
+                        class={analystReport?.avgPriceChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}
+                        >{analystReport?.avgPriceChange}%</td
+                      >
+                      <td
+                        class={analystReport?.medianPriceChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}
+                        >{analystReport?.medianPriceChange}%</td
+                      >
+                      <td
+                        class={analystReport?.highPriceChange > 0
+                          ? "before:content-['+'] text-[#00FC50]"
+                          : "text-[#FF2F1F]"}
+                        >{analystReport?.highPriceChange}%</td
+                      ></tr
+                    ></tbody
+                  >
+                </table>
               {:else}
                 <div
                   class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-gray-600 text-[1rem]"
@@ -644,7 +655,7 @@
                       d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
                     /></svg
                   >
-                  Currently, there are no dividend announcement reports available.
+                  Currently, there are no new analyst reports available.
                 </div>
               {/if}
             </Card.Content>

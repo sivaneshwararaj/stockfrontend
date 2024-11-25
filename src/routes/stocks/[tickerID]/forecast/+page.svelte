@@ -606,7 +606,7 @@
             >
               <div>
                 <div class="flex flex-row items-center">
-                  <h2 class="mb-1 text-xl font-bold">Latest Analyst Report</h2>
+                  <h2 class="mb-1 text-xl font-bold">AI Analyst Report</h2>
                   {#if latestInfoDate(data?.getAnalystInsight?.date)}
                     <label
                       class="bg-[#fff] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3"
