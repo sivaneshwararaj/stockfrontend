@@ -580,7 +580,8 @@
                 {analystReport?.insight}
 
                 <div class="text-white mt-4">
-                  According to 29 analyst ratings, the average rating for <HoverStockChart
+                  According to {analystReport?.numOfAnalyst} analyst ratings, the
+                  average rating for <HoverStockChart
                     symbol={analystReport?.symbol}
                   />
                   stock is "{analystReport?.consensusRating}" The 12-month stock
