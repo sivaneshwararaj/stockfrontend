@@ -23,6 +23,8 @@
   let news = [];
   let checkedItems;
   let socket;
+  let animationClass = "";
+  let animationId = "";
 
   let allRows = [
     { name: "Volume", rule: "volume", type: "int" },
@@ -197,8 +199,7 @@
         try {
           const newList = JSON?.parse(data);
           if (newList?.length > 0) {
-            console.log("Received message:", newList);
-
+            //console.log("Received message:", newList);
             watchList = calculateChange(watchList, newList);
           }
         } catch (e) {
@@ -565,7 +566,7 @@
       console.log(e);
     }
 
-    if (!$isOpen) {
+    if ($isOpen) {
       await websocketRealtimeData();
     }
   });
