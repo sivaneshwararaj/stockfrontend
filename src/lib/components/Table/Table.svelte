@@ -32,6 +32,7 @@
 
   export let hideLastRow = false;
 
+  let originalData = [...rawData]; // Unaltered copy of raw data
   let ruleOfList = defaultList;
   const defaultRules = defaultList?.map((item) => item?.rule);
 
@@ -310,13 +311,13 @@
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
-    if (isBottom && stockList?.length !== rawData?.length) {
+
+    if (isBottom && stockList?.length !== originalData?.length) {
       const nextIndex = stockList?.length;
-      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+      const filteredNewResults = originalData?.slice(nextIndex, nextIndex + 50);
       stockList = [...stockList, ...filteredNewResults];
     }
   }
-
   onMount(async () => {
     // Initialize the download worker if not already done
 
@@ -455,21 +456,23 @@
 
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
-
-    let originalData = rawData;
-
-    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
-    sortOrders[key].order =
-      orderCycle[(currentOrderIndex + 1) % orderCycle?.length];
+    const currentOrderIndex = orderCycle.indexOf(
+      sortOrders[key]?.order || "none",
+    );
+    sortOrders[key] = {
+      ...(sortOrders[key] || {}),
+      order: orderCycle[(currentOrderIndex + 1) % orderCycle.length],
+    };
     const sortOrder = sortOrders[key]?.order;
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      stockList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      originalData = [...rawData]; // Reset originalData to rawData
+      stockList = originalData?.slice(0, 50); // Reset displayed data
       return;
     }
 
-    // Define a generic comparison function
+    // Generic comparison function
     const compareValues = (a, b) => {
       const { type } = sortOrders[key];
       let valueA, valueB;
@@ -483,8 +486,8 @@
           valueA = a[key]?.toUpperCase();
           valueB = b[key]?.toUpperCase();
           return sortOrder === "asc"
-            ? valueA?.localeCompare(valueB)
-            : valueB?.localeCompare(valueA);
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
         case "number":
         default:
           valueA = parseFloat(a[key]);
@@ -499,8 +502,9 @@
       }
     };
 
-    // Sort using the generic comparison function
-    stockList = [...originalData].sort(compareValues)?.slice(0, 50);
+    // Sort and update the originalData and stockList
+    originalData = [...rawData].sort(compareValues);
+    stockList = originalData?.slice(0, 50); // Update the displayed data
   };
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
