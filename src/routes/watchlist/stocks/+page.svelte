@@ -1279,7 +1279,7 @@
                                       <div
                                         class="relative flex items-center justify-end"
                                       >
-                                        {#if item?.previous !== null && item?.previous !== undefined && item?.previous !== item[row?.rule]}
+                                        {#if item?.previous !== null && item?.previous !== undefined && item?.previous !== item[row?.rule] && row?.rule === "price"}
                                           <span
                                             class="absolute h-1 w-1 right-12 sm:right-14 bottom-0 -top-1"
                                           >
