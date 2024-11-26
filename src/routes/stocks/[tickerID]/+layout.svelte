@@ -315,8 +315,10 @@
       // Set display legend
       displayLegend = {
         close:
-          currentDataRowOneDay?.close?.toFixed(2) ??
-          data?.getStockQuote?.price?.toFixed(2),
+          $realtimePrice !== null
+            ? $realtimePrice
+            : (currentDataRowOneDay?.close?.toFixed(2) ??
+              data?.getStockQuote?.price?.toFixed(2)),
         date: safeFormattedDate,
         change,
       };
@@ -784,7 +786,7 @@
                                   {/if}
                                 </div>
                               </div>
-                              {#if Object?.keys(prePostData)?.length !== 0}
+                              {#if Object?.keys(prePostData)?.length !== 0 && !$isOpen}
                                 <div
                                   class="border-l border-default pl-3 bp:pl-5"
                                 >
