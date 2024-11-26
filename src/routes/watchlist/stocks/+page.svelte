@@ -150,7 +150,7 @@
       if (newItem) {
         // Calculate the new changePercentage
         const baseLine = item?.price / (1 + item?.changesPercentage / 100);
-        const newPrice = newItem?.ap;
+        const newPrice = newItem?.lp;
         const newChangePercentage = (newPrice / baseLine - 1) * 100;
 
         // Update the item directly in the oldList

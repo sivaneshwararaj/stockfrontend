@@ -174,7 +174,7 @@
           } else if (type === "Q") {
             $wsBidPrice = typeof bp !== "undefined" ? bp : null;
             $wsAskPrice = typeof ap !== "undefined" ? ap : null;
-            $realtimePrice = $wsAskPrice;
+            $realtimePrice = typeof lp !== "undefined" ? lp : $wsAskPrice;
           }
 
           // Update price increase state
