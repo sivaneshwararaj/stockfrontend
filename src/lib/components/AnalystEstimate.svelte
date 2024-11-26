@@ -28,8 +28,6 @@
   let lowEPSList = [];
   let highEPSList = [];
 
-  let highRevenueGrowthList = [];
-
   let revenueGrowthList = [];
   let epsGrowthList = [];
 
@@ -173,6 +171,23 @@
 
     // Normalize the data if needed (not required in this case, but leaving it here for reference)
 
+    let currentYearSuffix = new Date().getFullYear().toString().slice(-2);
+    let searchString = `FY${currentYearSuffix}`;
+    let currentYearIndex = dates?.findIndex((date) => date === searchString);
+
+    // Assign to global variables based on dataType
+    if (dataType === "Revenue") {
+      revenueDateList = dates?.slice(currentYearIndex) || [];
+      avgRevenueList = avgList?.slice(currentYearIndex) || [];
+      lowRevenueList = lowList?.slice(currentYearIndex) || [];
+      highRevenueList = highList?.slice(currentYearIndex) || [];
+    } else if (dataType === "EPS") {
+      epsDateList = dates?.slice(currentYearIndex) || [];
+      avgEPSList = avgList?.slice(currentYearIndex) || [];
+      lowEPSList = lowList?.slice(currentYearIndex) || [];
+      highEPSList = highList?.slice(currentYearIndex) || [];
+    }
+
     const option = {
       silent: true,
       tooltip: {
@@ -309,29 +324,12 @@
       },
     };
 
-    let currentYearSuffix = new Date().getFullYear().toString().slice(-2);
-    let searchString = `FY${currentYearSuffix}`;
-
-    // Assign to global variables based on dataType
     if (dataType === "Revenue") {
-      let currentYearIndex = dates?.findIndex((date) => date === searchString);
       optionsRevenue = option;
       optionsRevenueGrowth = optionsGrowth;
-      revenueDateList = dates?.slice(currentYearIndex) || [];
-      avgRevenueList = avgList?.slice(currentYearIndex) || [];
-      lowRevenueList = lowList?.slice(currentYearIndex) || [];
-      highRevenueList = highList?.slice(currentYearIndex) || [];
-      highRevenueGrowthList = highList?.slice(currentYearIndex) || [];
     } else if (dataType === "EPS") {
-      let currentYearIndex = dates?.findIndex((date) => date === searchString);
-
       optionsEPS = option;
       optionsEPSGrowth = optionsGrowth;
-
-      epsDateList = dates?.slice(currentYearIndex) || [];
-      avgEPSList = avgList?.slice(currentYearIndex) || [];
-      lowEPSList = lowList?.slice(currentYearIndex) || [];
-      highEPSList = highList?.slice(currentYearIndex) || [];
     }
   }
 
