@@ -23,8 +23,6 @@
   let news = [];
   let checkedItems;
   let socket;
-  let animationClass = "";
-  let animationId = "";
 
   let allRows = [
     { name: "Volume", rule: "volume", type: "int" },
@@ -154,6 +152,7 @@
         const newChangePercentage = (newPrice / baseLine - 1) * 100;
 
         // Update the item directly in the oldList
+        item.previous = item.price;
         item.price = newPrice;
         item.changesPercentage = newChangePercentage;
       }
@@ -201,6 +200,12 @@
           if (newList?.length > 0) {
             //console.log("Received message:", newList);
             watchList = calculateChange(watchList, newList);
+            setTimeout(() => {
+              watchList = watchList?.map((item) => ({
+                ...item,
+                previous: null,
+              }));
+            }, 500);
           }
         } catch (e) {
           console.error("Error parsing WebSocket message:", e);
@@ -1246,9 +1251,25 @@
                                         ? item[row?.rule]
                                         : "-"}
                                     {:else if row?.type === "float"}
-                                      {item[row?.rule] !== null
-                                        ? item[row?.rule]?.toFixed(2)
-                                        : "-"}
+                                      <div
+                                        class="relative flex items-center justify-end"
+                                      >
+                                        {#if item?.previous !== null && item?.previous !== undefined && item?.previous !== item[row?.rule]}
+                                          <span
+                                            class="absolute h-1 w-1 right-12 sm:right-14 bottom-0 -top-1"
+                                          >
+                                            <span
+                                              class="inline-flex rounded-full h-1 w-1 {item?.previous >
+                                              item[row?.rule]
+                                                ? 'bg-[#FF2F1F]'
+                                                : 'bg-[#00FC50]'} pulse-animation"
+                                            ></span>
+                                          </span>
+                                        {/if}
+                                        {item[row?.rule] !== null
+                                          ? item[row?.rule]?.toFixed(2)
+                                          : "-"}
+                                      </div>
                                     {:else if row?.type === "percent"}
                                       {item[row?.rule] !== null
                                         ? item[row?.rule]?.toFixed(2) + "%"
@@ -1473,3 +1494,25 @@
 <!--End Delete Strategy Modal-->
 
 <!--End Delete Strategy Modal-->
+
+<style>
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    70% {
+      transform: scale(1.1); /* Adjust scale as needed for pulse effect */
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1); /* End scale */
+      opacity: 0;
+    }
+  }
+
+  /* Apply the animation styles to the element */
+  .pulse-animation {
+    animation: pulse 500ms ease-out forwards; /* 300ms duration */
+  }
+</style>
