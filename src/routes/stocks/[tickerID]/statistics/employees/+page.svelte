@@ -665,14 +665,14 @@
                             historyList[index + 1]?.employeeCount,
                         )}
                       {:else}
-                        -
+                        n/a
                       {/if}
                     </td>
                     <td
                       class="text-end border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white text-end"
                     >
                       {#if index + 1 - historyList?.length === 0}
-                        -
+                        n/a
                       {:else if item?.employeeCount - historyList[index + 1]?.employeeCount > 0}
                         <span class="text-[#00FC50]">
                           +{(
@@ -692,7 +692,7 @@
                           )?.toFixed(2)}%
                         </span>
                       {:else}
-                        -
+                        n/a
                       {/if}
                     </td>
                   </tr>

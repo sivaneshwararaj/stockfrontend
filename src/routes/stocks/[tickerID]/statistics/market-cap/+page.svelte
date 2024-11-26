@@ -25,9 +25,18 @@
 
   let rawData = data?.getHistoricalMarketCap || [];
   let tableList = [];
-  let filterRule = "annual";
   let changePercentageYearAgo = 0;
   let timePeriod = "3Y";
+
+  const tabs = [
+    {
+      title: "Annual",
+    },
+    {
+      title: "Quarterly",
+    },
+  ];
+  let activeIdx = 0;
 
   function getMarketCapCategory(marketCap) {
     const BILLION = 1_000_000_000;
@@ -36,36 +45,36 @@
     const marketCapNavigation = [
       {
         threshold: 200 * BILLION,
-        name: "Mega Cap",
+        name: "Mega-Cap",
         link: "/list/market-cap/mega-cap-stocks",
       },
       {
         minThreshold: 10 * BILLION,
         maxThreshold: 200 * BILLION,
-        name: "Large Cap",
+        name: "Large-Cap",
         link: "/list/market-cap/large-cap-stocks",
       },
       {
         minThreshold: 2 * BILLION,
         maxThreshold: 10 * BILLION,
-        name: "Mid Cap",
+        name: "Mid-Cap",
         link: "/list/market-cap/mid-cap-stocks",
       },
       {
         minThreshold: 300 * MILLION,
         maxThreshold: 2 * BILLION,
-        name: "Small Cap",
+        name: "Small-Cap",
         link: "/list/market-cap/small-cap-stocks",
       },
       {
         minThreshold: 50 * MILLION,
         maxThreshold: 300 * MILLION,
-        name: "Micro Cap",
+        name: "Micro-Cap",
         link: "/list/market-cap/micro-cap-stocks",
       },
       {
         maxThreshold: 50 * MILLION,
-        name: "Nano Cap",
+        name: "Nano-Cap",
         link: "/list/market-cap/nano-cap-stocks",
       },
     ];
@@ -181,9 +190,9 @@
     return quarterlyData;
   }
 
-  function changeTablePeriod(state: string) {
-    filterRule = state;
-    if (state === "annual") {
+  function changeTablePeriod(index) {
+    activeIdx = index;
+    if (activeIdx === 0) {
       tableList = filterEndOfYearDates(rawData);
     } else {
       tableList = filterEndOfQuarterDates(rawData);
@@ -390,7 +399,9 @@
   />
 </svelte:head>
 
-<section class="bg-[#09090B] w-full overflow-hidden text-white h-full">
+<section
+  class="bg-[#09090B] w-full overflow-hidden min-h-screen text-white h-full"
+>
   <div class="w-full flex justify-center w-full sm-auto h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -599,51 +610,57 @@
                   Market Cap History
                 </h2>
 
-                <ul
-                  class="text-[0.8rem] font-medium text-center w-56 pt-5 sm:pt-3 sm:w-56 mb-5 flex m-auto sm:m-0 sm:justify-end items-center sm:ml-auto"
+                <div
+                  class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mb-6"
                 >
-                  <li class="w-full">
-                    <label
-                      on:click={() => changeTablePeriod("annual")}
-                      class="cursor-pointer rounded-l-md inline-block w-full py-1.5 {filterRule ===
-                      'annual'
-                        ? 'bg-[#fff] text-black'
-                        : 'bg-[#313131] text-white'} font-semibold"
-                      aria-current="page"
-                    >
-                      Annual
-                    </label>
-                  </li>
-                  <li class="w-full">
-                    {#if data?.user?.tier === "Pro"}
-                      <label
-                        on:click={() => changeTablePeriod("quarterly")}
-                        class="cursor-pointer inline-block w-full py-1.5 {filterRule ===
-                        'quarterly'
-                          ? 'bg-[#fff] text-black'
-                          : 'bg-[#313131]'} font-semibold rounded-r-md"
-                      >
-                        Quartely
-                      </label>
-                    {:else}
-                      <a
-                        href="/pricing"
-                        class="flex flex-row items-center m-auto justify-center cursor-pointer inline-block w-full py-1.5 bg-[#313131] font-semibold text-white rounded-r-md"
-                      >
-                        <span class="">Quarterly</span>
-                        <svg
-                          class="ml-1 -mt-0.5 w-3.5 h-3.5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          ><path
-                            fill="#A3A3A3"
-                            d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                          /></svg
+                  <div
+                    class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                  >
+                    {#each tabs as item, i}
+                      {#if data?.user?.tier !== "Pro" && i > 0}
+                        <button
+                          on:click={() => goto("/pricing")}
+                          class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1"
                         >
-                      </a>
-                    {/if}
-                  </li>
-                </ul>
+                          <span class="relative text-sm block font-semibold">
+                            {item.title}
+                            <svg
+                              class="inline-block ml-0.5 -mt-1 w-3.5 h-3.5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              ><path
+                                fill="#A3A3A3"
+                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                              /></svg
+                            >
+                          </span>
+                        </button>
+                      {:else}
+                        <button
+                          on:click={() => changeTablePeriod(i)}
+                          class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                          i
+                            ? 'z-0'
+                            : ''} "
+                        >
+                          {#if activeIdx === i}
+                            <div
+                              class="absolute inset-0 rounded-md bg-[#fff]"
+                            ></div>
+                          {/if}
+                          <span
+                            class="relative text-sm block font-semibold {activeIdx ===
+                            i
+                              ? 'text-black'
+                              : 'text-white'}"
+                          >
+                            {item.title}
+                          </span>
+                        </button>
+                      {/if}
+                    {/each}
+                  </div>
+                </div>
 
                 <div class="w-full overflow-x-scroll">
                   <table
@@ -651,16 +668,13 @@
                   >
                     <thead>
                       <tr class="border border-gray-600">
-                        <th
-                          class="text-white font-semibold text-start text-sm sm:text-[1rem]"
+                        <th class="text-white font-semibold text-start text-sm"
                           >Date</th
                         >
-                        <th
-                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                        <th class="text-white font-semibold text-end text-sm"
                           >Market Cap</th
                         >
-                        <th
-                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                        <th class="text-white font-semibold text-end text-sm"
                           >% Change</th
                         >
                       </tr>
