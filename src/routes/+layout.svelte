@@ -762,9 +762,7 @@ const handleTwitchMessage = (event) => {
                       >
                         <Gem class="h-5.5 w-5.5" />
                       </div>
-                      <span class="ml-3 text-white text-[1rem]"
-                        >Stock Analysis Pro</span
-                      >
+                      <span class="ml-3 text-white text-[1rem]">Get Pro</span>
                     </div>
                   </a>
                 </Button>
@@ -1174,7 +1172,7 @@ const handleTwitchMessage = (event) => {
                   >
                     <Gem class="h-5.5 w-5.5" />
                   </div>
-                  <span class="ml-3 text-white">Stock Analysis Pro</span>
+                  <span class="ml-3 text-white">Get Pro</span>
                 </a>
               </nav>
               {#if !data?.user || data?.user?.tier === "Free" || data?.user?.freeTrial === true}

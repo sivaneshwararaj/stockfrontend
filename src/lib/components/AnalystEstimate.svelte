@@ -28,10 +28,39 @@
   let lowEPSList = [];
   let highEPSList = [];
 
+  let highRevenueGrowthList = [];
+
   let revenueGrowthList = [];
   let epsGrowthList = [];
 
   let displayData = "Revenue";
+
+  function computeGrowthSingleList(data, actualList) {
+    let lastNonNull = actualList
+      ?.filter((value) => value !== null)
+      .slice(-1)[0];
+    const newList = data;
+    newList?.unshift(lastNonNull);
+    // Remove leading null values
+    while (newList?.length > 0 && newList[0] === null) {
+      newList?.shift();
+    }
+
+    let growthPercentages = [];
+
+    for (let i = 1; i < newList?.length; i++) {
+      let previous = newList[i - 1];
+      let current = newList[i];
+
+      // Check if previous or current is null to avoid NaN results
+      if (previous !== null && current !== null) {
+        let growth = (((current - previous) / previous) * 100)?.toFixed(2);
+        growthPercentages.push(Number(growth)); // Convert to number
+      }
+    }
+
+    return growthPercentages;
+  }
 
   function computeGrowthList(tableActualRevenue, tableForecastRevenue) {
     return tableActualRevenue?.map((item, index) => {
@@ -292,6 +321,7 @@
       avgRevenueList = avgList?.slice(currentYearIndex) || [];
       lowRevenueList = lowList?.slice(currentYearIndex) || [];
       highRevenueList = highList?.slice(currentYearIndex) || [];
+      highRevenueGrowthList = highList?.slice(currentYearIndex) || [];
     } else if (dataType === "EPS") {
       let currentYearIndex = dates?.findIndex((date) => date === searchString);
 
@@ -695,7 +725,7 @@
               <table class="w-full text-right">
                 <thead
                   ><tr
-                    class="border-b border-gray-600 align-bottom text-white font-normal"
+                    class="border-b border-gray-600 align-bottom text-white font-normal whitespace-nowrap"
                     ><th
                       class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
                       >Revenue Growth</th
@@ -712,7 +742,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >High</td
                     >
-                    {#each highRevenueList as val, index}
+                    {#each computeGrowthSingleList(highRevenueList, tableActualRevenue) as val, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if data?.user?.tier !== "Pro" && index >= highRevenueList?.length - 2}
                           <a
@@ -729,7 +759,17 @@
                             ></a
                           >
                         {:else}
-                          {abbreviateNumber(val)}
+                          <span
+                            class={val !== null && val > 0
+                              ? "text-[#00FC50] before:content-['+']"
+                              : val < 0
+                                ? "text-[#FF2F1F]"
+                                : "text-white"}
+                          >
+                            {val !== null && Math.abs(val - 0) > 0
+                              ? abbreviateNumber(val) + "%"
+                              : "-"}
+                          </span>
                         {/if}
                       </td>
                     {/each}
@@ -737,7 +777,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Avg</td
                     >
-                    {#each avgRevenueList as val, index}
+                    {#each computeGrowthSingleList(avgRevenueList, tableActualRevenue) as val, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if data?.user?.tier !== "Pro" && index >= avgRevenueList?.length - 2}
                           <a
@@ -754,7 +794,17 @@
                             ></a
                           >
                         {:else}
-                          {abbreviateNumber(val)}
+                          <span
+                            class={val !== null && val > 0
+                              ? "text-[#00FC50] before:content-['+']"
+                              : val < 0
+                                ? "text-[#FF2F1F]"
+                                : "text-white"}
+                          >
+                            {val !== null && Math.abs(val - 0) > 0
+                              ? abbreviateNumber(val) + "%"
+                              : "-"}
+                          </span>
                         {/if}
                       </td>
                     {/each}
@@ -762,7 +812,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Low</td
                     >
-                    {#each lowRevenueList as val, index}
+                    {#each computeGrowthSingleList(lowRevenueList, tableActualRevenue) as val, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if data?.user?.tier !== "Pro" && index >= lowRevenueList?.length - 2}
                           <a
@@ -779,7 +829,17 @@
                             ></a
                           >
                         {:else}
-                          {abbreviateNumber(val)}
+                          <span
+                            class={val !== null && val > 0
+                              ? "text-[#00FC50] before:content-['+']"
+                              : val < 0
+                                ? "text-[#FF2F1F]"
+                                : "text-white"}
+                          >
+                            {val !== null && Math.abs(val - 0) > 0
+                              ? abbreviateNumber(val) + "%"
+                              : "-"}
+                          </span>
                         {/if}
                       </td>
                     {/each}
@@ -908,7 +968,6 @@
             </div>
             <div
               class="mt-3 overflow-x-auto p-0 text-center sm:p-0.5 lg:mt-3.5"
-              data-test="forecast-estimate-table"
             >
               <table class="w-full text-right">
                 <thead
@@ -925,11 +984,12 @@
                   </tr></thead
                 >
                 <tbody
-                  ><tr class="border-b border-gray-600 last:border-0"
+                  ><tr
+                    class="border-b border-gray-600 last:border-0 whitespace-nowrap"
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >High</td
                     >
-                    {#each highEPSList as val, index}
+                    {#each computeGrowthSingleList(highEPSList, tableActualEPS) as val, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if data?.user?.tier !== "Pro" && index >= highEPSList?.length - 2}
                           <a
@@ -946,7 +1006,17 @@
                             ></a
                           >
                         {:else}
-                          {abbreviateNumber(val)}
+                          <span
+                            class={val !== null && val > 0
+                              ? "text-[#00FC50] before:content-['+']"
+                              : val < 0
+                                ? "text-[#FF2F1F]"
+                                : "text-white"}
+                          >
+                            {val !== null && Math.abs(val - 0) > 0
+                              ? abbreviateNumber(val) + "%"
+                              : "-"}
+                          </span>
                         {/if}
                       </td>
                     {/each}
@@ -954,7 +1024,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Avg</td
                     >
-                    {#each avgEPSList as val, index}
+                    {#each computeGrowthSingleList(avgEPSList, tableActualEPS) as val, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if data?.user?.tier !== "Pro" && index >= avgEPSList?.length - 2}
                           <a
@@ -971,7 +1041,17 @@
                             ></a
                           >
                         {:else}
-                          {abbreviateNumber(val)}
+                          <span
+                            class={val !== null && val > 0
+                              ? "text-[#00FC50] before:content-['+']"
+                              : val < 0
+                                ? "text-[#FF2F1F]"
+                                : "text-white"}
+                          >
+                            {val !== null && Math.abs(val - 0) > 0
+                              ? abbreviateNumber(val) + "%"
+                              : "-"}
+                          </span>
                         {/if}
                       </td>
                     {/each}
@@ -979,7 +1059,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Low</td
                     >
-                    {#each lowEPSList as val, index}
+                    {#each computeGrowthSingleList(lowEPSList, tableActualEPS) as val, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if data?.user?.tier !== "Pro" && index >= lowEPSList?.length - 2}
                           <a
@@ -996,7 +1076,17 @@
                             ></a
                           >
                         {:else}
-                          {abbreviateNumber(val)}
+                          <span
+                            class={val !== null && val > 0
+                              ? "text-[#00FC50] before:content-['+']"
+                              : val < 0
+                                ? "text-[#FF2F1F]"
+                                : "text-white"}
+                          >
+                            {val !== null && Math.abs(val - 0) > 0
+                              ? abbreviateNumber(val) + "%"
+                              : "-"}
+                          </span>
                         {/if}
                       </td>
                     {/each}
