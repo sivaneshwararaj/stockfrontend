@@ -188,7 +188,7 @@
 
       socket.addEventListener("open", () => {
         console.log("WebSocket connection opened");
-        // Initial connection send
+        // Send only current watchlist symbols
         const tickerList = watchList?.map((item) => item?.symbol) || [];
         sendMessage(tickerList);
       });
@@ -200,6 +200,7 @@
           if (newList?.length > 0) {
             //console.log("Received message:", newList);
             watchList = calculateChange(watchList, newList);
+
             setTimeout(() => {
               watchList = watchList?.map((item) => ({
                 ...item,
@@ -577,29 +578,53 @@
   });
 
   let previousList = [];
-
+  let reconnectionTimeout;
   afterUpdate(async () => {
+    // Compare only the symbols to detect changes
+    const currentSymbols = watchList?.map((item) => item?.symbol).sort();
+    const previousSymbols = previousList?.map((item) => item?.symbol).sort();
+
+    // Check if symbols have changed
     if (
-      JSON?.stringify(previousList) !== JSON?.stringify(watchList) &&
+      JSON.stringify(currentSymbols) !== JSON.stringify(previousSymbols) &&
       typeof socket !== "undefined"
     ) {
+      // Update previous list
       previousList = watchList;
-      socket?.close();
-      await new Promise((resolve, reject) => {
-        socket?.addEventListener("close", resolve);
-      });
 
-      if (socket?.readyState === WebSocket?.CLOSED) {
-        await websocketRealtimeData();
-        console.log("connecting again");
+      try {
+        // Close existing socket if open
+        if (socket && socket.readyState !== WebSocket.CLOSED) {
+          socket.close();
+        }
+
+        // Wait for socket to close
+        await new Promise((resolve) => {
+          socket.addEventListener("close", resolve, { once: true });
+        });
+
+        // Reconnect with new symbols
+        if ($isOpen) {
+          await websocketRealtimeData();
+          console.log("WebSocket restarted due to watchlist changes");
+        }
+      } catch (error) {
+        console.error("Error restarting WebSocket:", error);
       }
     }
   });
 
   onDestroy(() => {
     try {
-      //socket?.send('close')
-      socket?.close();
+      // Clear any pending reconnection timeout
+      if (reconnectionTimeout) {
+        clearTimeout(reconnectionTimeout);
+      }
+
+      // Close the WebSocket connection
+      if (socket) {
+        socket.close(1000, "Page unloaded");
+      }
     } catch (e) {
       console.log(e);
     }
