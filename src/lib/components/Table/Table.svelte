@@ -482,12 +482,29 @@
           valueA = new Date(a[key]);
           valueB = new Date(b[key]);
           break;
+        case "rating":
         case "string":
-          valueA = a[key]?.toUpperCase();
-          valueB = b[key]?.toUpperCase();
+          // Retrieve values
+          valueA = a[key];
+          valueB = b[key];
+
+          // Handle null or undefined values, always placing them at the bottom
+          if (valueA == null && valueB == null) {
+            return 0; // Both are null/undefined, no need to change the order
+          } else if (valueA == null) {
+            return 1; // null goes to the bottom
+          } else if (valueB == null) {
+            return -1; // null goes to the bottom
+          }
+
+          // Convert the values to uppercase for case-insensitive comparison
+          valueA = valueA?.toUpperCase();
+          valueB = valueB?.toUpperCase();
+
+          // Perform the sorting based on ascending or descending order
           return sortOrder === "asc"
-            ? valueA.localeCompare(valueB)
-            : valueB.localeCompare(valueA);
+            ? valueA?.localeCompare(valueB)
+            : valueB?.localeCompare(valueA);
         case "number":
         default:
           valueA = parseFloat(a[key]);
