@@ -1446,6 +1446,22 @@
                 </div>
               </details>
             </li>
+            <li>
+              <details class="collapse collapse-arrow">
+                <summary
+                  class="collapse-title text-white font-semibold text-[1rem] sm:text-xl flex items-center justify-between w-full text-left py-5"
+                  >Is there an annual option?</summary
+                >
+                <div class="collapse-content">
+                  <p
+                    class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
+                  >
+                    Yes, you can select the annual option. It costs $59.88 per
+                    year, which is equivalent to getting 6 months free.
+                  </p>
+                </div>
+              </details>
+            </li>
             <!--
             <li>
               <details class="collapse collapse-arrow">

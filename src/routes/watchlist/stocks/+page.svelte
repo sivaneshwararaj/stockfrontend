@@ -143,9 +143,9 @@
     const newListMap = new Map(newList.map((item) => [item.symbol, item]));
 
     // Use for loop instead of forEach for better performance
-    for (let i = 0; i < oldList.length; i++) {
+    for (let i = 0; i < oldList?.length; i++) {
       const item = oldList[i];
-      const newItem = newListMap.get(item?.symbol);
+      const newItem = newListMap?.get(item?.symbol);
 
       if (newItem) {
         // Calculate the new changePercentage
