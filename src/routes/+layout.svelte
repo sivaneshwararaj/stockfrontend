@@ -5,7 +5,6 @@
   import "../app.pcss";
 
   import { Toaster } from "svelte-french-toast";
-  import { getImageURL } from "$lib/utils";
 
   import NProgress from "nprogress";
   import "nprogress/nprogress.css";
@@ -24,7 +23,6 @@
   import {
     clearCache,
     showCookieConsent,
-    newAvatar,
     screenWidth,
     stockTicker,
     etfTicker,
@@ -36,7 +34,6 @@
   import { Button } from "$lib/components/shadcn/button/index.ts";
   import * as Card from "$lib/components/shadcn/card/index.ts";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.ts";
-  //import { Input } from "$lib/components/shadcn/input/index.ts";
   import * as Sheet from "$lib/components/shadcn/sheet/index.ts";
   import * as Accordion from "$lib/components/shadcn/accordion/index.js";
 
@@ -51,39 +48,9 @@
   import Newspaper from "lucide-svelte/icons/newspaper";
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
+  import stocknear_logo from "$lib/images/stocknear_logo.png";
 
   export let data;
-
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-
-  //const trialLeftDays = Math?.floor(addDays(data, 7, ''));
-
-  async function pushNotification() {
-    Notification?.requestPermission()?.then((perm) => {
-      if (perm === "granted") {
-        new Notification("Stocknear", {
-          body: "this is more text",
-        });
-      }
-    });
-  }
-
-  //Check Service Worker (SW)
-  async function detectSWUpdate() {
-    const registration = await navigator.serviceWorker.ready;
-
-    registration.addEventListener("updatefound", () => {
-      const newSW = registration.installing;
-      newSW?.addEventListener("statechange", () => {
-        if (newSW.state === "installed") {
-          if (confirm("New Update available! Reload to update?")) {
-            newSW.postMessage({ type: "SKIP_WAITING" });
-            window.location.reload();
-          }
-        }
-      });
-    });
-  }
 
   let hideHeader = false;
 
@@ -107,13 +74,7 @@
     }
   }
 
-  $: hideFooter =
-    $page.url.pathname.startsWith("/options-flow") ||
-    $page.url.pathname.startsWith("/options-zero-dte") ||
-    $page.url.pathname.startsWith("/login") ||
-    $page.url.pathname.startsWith("/etf") ||
-    $page.url.pathname.startsWith("/portfolio") ||
-    $page.url.pathname.startsWith("/hedge-funds");
+  $: hideFooter = $page.url.pathname.startsWith("/options-flow");
 
   let hasUnreadElement = false;
   let notificationList = [];
@@ -125,17 +86,9 @@
     const output = event.data?.output;
     notificationList = output?.notificationList;
     hasUnreadElement = output?.hasUnreadElement;
-    //const unreadNotificationList = output?.unreadNotificationList;
     $numberOfUnreadNotification = output?.numberOfUnreadNotification?.length;
     //pushNotification()
   };
-
-  /*
-const handleTwitchMessage = (event) => {
-    const output = event.data?.output;
-   $twitchStatus = output?.twitchStatus;
-};
-*/
 
   const loadWorker = async () => {
     if ("serviceWorker" in navigator) {
@@ -211,8 +164,6 @@ const handleTwitchMessage = (event) => {
     }
   }
 
-  let innerWidth;
-
   $: {
     if ($stockTicker && !$clientSideCache[$stockTicker]) {
       $clientSideCache[$stockTicker] = {};
@@ -224,22 +175,9 @@ const handleTwitchMessage = (event) => {
       $clientSideCache[$etfTicker] = {};
     }
   }
-
-  $: {
-    if ($newAvatar?.length !== 0) {
-      data.user.avatar = $newAvatar;
-      $newAvatar = "";
-    }
-  }
-
-  $: {
-    if (innerWidth) {
-      $screenWidth = innerWidth;
-    }
-  }
 </script>
 
-<svelte:window bind:innerWidth />
+<svelte:window bind:innerWidth={$screenWidth} />
 
 <div class="app {$page?.url?.pathname === '/' ? 'bg-[#000]' : ''}">
   <div class="flex min-h-screen w-full flex-col bg-[#09090B]">
@@ -276,7 +214,7 @@ const handleTwitchMessage = (event) => {
                   >
                     <img
                       class="avatar w-9 sm:w-10 rounded-full"
-                      src={cloudFrontUrl + "/assets/stocknear_logo.png"}
+                      src={stocknear_logo}
                     />
                     Stocknear
                   </a>
@@ -804,10 +742,7 @@ const handleTwitchMessage = (event) => {
         </Sheet.Root>
 
         <a href="/" class="-ml-2 flex flex-shrink-0">
-          <img
-            class="avatar w-9 3xl:w-10 rounded-full"
-            src={cloudFrontUrl + "/assets/stocknear_logo.png"}
-          />
+          <img class="avatar w-9 3xl:w-10 rounded-full" src={stocknear_logo} />
           <span class="text-white font-semibold ml-2 text-lg">Stocknear</span>
         </a>
 
@@ -900,7 +835,7 @@ const handleTwitchMessage = (event) => {
                 >
                   <img
                     class="avatar w-9 3xl:w-12 rounded-full"
-                    src={cloudFrontUrl + "/assets/stocknear_logo.png"}
+                    src={stocknear_logo}
                   />
                   <span class="text-white text-xl">Stocknear</span>
                 </a>

@@ -7,7 +7,7 @@
   export let data;
   import * as Tabs from "$lib/components/shadcn/tabs/index.js";
 
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+  import feedback_icon from "$lib/images/feedback_icon.png";
 
   let rating = "";
   let inputValue = "";
@@ -92,7 +92,7 @@
     <span class="text-black hidden sm:block text-md px-3"> Feedback </span>
     <img
       class="hidden sm:inline-block w-12 -mt-6 opacity-[0.85]"
-      src={cloudFrontUrl + "/assets/feedback_icon.png"}
+      src={feedback_icon}
       alt="feedback logo"
     />
   </label>

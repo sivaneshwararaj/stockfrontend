@@ -153,7 +153,7 @@
       {#if newsList?.length !== rawData?.length}
         <label
           on:click={loadMoreData}
-          class="shadow-lg rounded-md cursor-pointer w-5/6 sm:w-full sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-white m-auto sm:hover:bg-gray-300 bg-[#fff]"
+          class="shadow-lg rounded-md cursor-pointer w-5/6 sm:w-full sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff]"
         >
           Load More News
         </label>
