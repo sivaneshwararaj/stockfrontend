@@ -193,7 +193,8 @@
     }
 
     rawData = updateData;
-    stockList = rawData?.slice(0, 50); // Assign to stockList instead of rawData directly
+    originalData = rawData;
+    stockList = originalData?.slice(0, 50); // Assign to stockList instead of rawData directly
     columns = generateColumns(rawData);
     sortOrders = generateSortOrders(rawData);
   };

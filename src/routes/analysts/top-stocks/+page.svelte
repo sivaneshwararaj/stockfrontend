@@ -19,6 +19,7 @@
     { name: "Ratings Count", rule: "counter" },
     { name: "Price Target", rule: "priceTarget" },
     { name: "Price", rule: "price" },
+    { name: "% Change", rule: "changesPercentage" },
     { name: "Upside", rule: "upside" },
   ];
   const hideLastRow = true;
