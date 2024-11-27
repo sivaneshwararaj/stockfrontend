@@ -839,6 +839,7 @@ function sendMessage(message) {
     price: "none",
     premium: "none",
     type: "none",
+    exec: "none",
     vol: "none",
     oi: "none",
   };
@@ -929,8 +930,8 @@ function sendMessage(message) {
       },
       sentiment: (a, b) => {
         const sentimentOrder = { BULLISH: 1, NEUTRAL: 2, BEARISH: 3 };
-        const sentimentA = sentimentOrder[a.sentiment?.toUpperCase()] || 4;
-        const sentimentB = sentimentOrder[b.sentiment?.toUpperCase()] || 4;
+        const sentimentA = sentimentOrder[a?.sentiment?.toUpperCase()] || 4;
+        const sentimentB = sentimentOrder[b?.sentiment?.toUpperCase()] || 4;
         return sortOrder === "asc"
           ? sentimentA - sentimentB
           : sentimentB - sentimentA;
@@ -940,6 +941,13 @@ function sendMessage(message) {
         const typeA = typeOrder[a.option_activity_type?.toUpperCase()] || 3;
         const typeB = typeOrder[b.option_activity_type?.toUpperCase()] || 3;
         return sortOrder === "asc" ? typeA - typeB : typeB - typeA;
+      },
+      exec: (a, b) => {
+        const tickerA = a?.execution_estimate?.toUpperCase();
+        const tickerB = b?.execution_estimate?.toUpperCase();
+        return sortOrder === "asc"
+          ? tickerA.localeCompare(tickerB)
+          : tickerB.localeCompare(tickerA);
       },
     };
 
@@ -999,9 +1007,9 @@ function sendMessage(message) {
 
 <body class="overflow-y-auto">
   <section
-    class="w-full max-w-screen sm:max-w-6xl xl:max-w-7xl flex justify-center items-center bg-[#09090B] pb-20"
+    class="w-full max-w-screen sm:max-w-7xl xl:max-w-7xl flex justify-center items-center bg-[#09090B] pb-20"
   >
-    <div class="w-full m-auto pl-3 pr-3">
+    <div class="w-full m-auto px-3">
       <!--
         <div class="text-sm sm:text-[1rem] breadcrumbs mb-5">
           <ul>
@@ -1879,6 +1887,29 @@ function sendMessage(message) {
                         >
                       </div>
                       <div
+                        on:click={() => sortData("exec")}
+                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                      >
+                        Exec
+                        <svg
+                          class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
+                            'exec'
+                          ] === 'asc'
+                            ? 'rotate-180'
+                            : sortOrders['exec'] === 'desc'
+                              ? ''
+                              : 'hidden'} "
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          style="max-width:50px"
+                          ><path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path></svg
+                        >
+                      </div>
+                      <div
                         on:click={() => sortData("vol")}
                         class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
                       >
@@ -1940,7 +1971,7 @@ function sendMessage(message) {
 
                       <div
                         style="justify-content: center;"
-                        class="td text-white pb-3 text-xs sm:text-sm text-start"
+                        class="td text-white text-xs sm:text-sm text-start"
                       >
                         {formatTime(displayedData[index]?.time)}
                       </div>
@@ -1969,7 +2000,7 @@ function sendMessage(message) {
                         <svg
                           class="{displayedData[index]?.id === animationId
                             ? animationClass
-                            : ''} w-5 h-5 inline-block cursor-pointer flex-shrink-0"
+                            : ''} w-4 sm:w-5 sm:h-5 inline-block cursor-pointer flex-shrink-0"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 16 16"
                           ><path
@@ -2058,6 +2089,16 @@ function sendMessage(message) {
                           : 'text-[#976DB7]'}"
                       >
                         {displayedData[index]?.option_activity_type}
+                      </div>
+
+                      <div
+                        style="justify-content: center;"
+                        class="td text-sm sm:text-[1rem] text-start text-[#C6A755]"
+                      >
+                        {displayedData[index]?.execution_estimate?.replace(
+                          "At Midpoint",
+                          "Midpoint",
+                        )}
                       </div>
 
                       <div
