@@ -28,7 +28,6 @@
 
   let displayStatement = "priceEarningsRatio";
 
-  $coolMode = false;
   let timeFrame = "10Y";
   let activeIdx = 0;
 

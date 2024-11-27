@@ -28,7 +28,6 @@
 
   let displayStatement = "cashAndCashEquivalents";
 
-  $: $coolMode = false;
   let timeFrame = "10Y";
 
   let activeIdx = 0;

@@ -29,7 +29,6 @@
   let filterRule = "annual";
   let displayStatement = "revenue";
 
-  $coolMode = false;
   let timeFrame = "10Y";
   let activeIdx = 0;
 

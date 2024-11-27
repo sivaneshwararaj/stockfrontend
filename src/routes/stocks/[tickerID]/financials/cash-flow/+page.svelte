@@ -26,7 +26,6 @@
   let filterRule = "annual";
   let displayStatement = "netIncome";
 
-  $coolMode = false;
   let tableList = [];
 
   let timeFrame = "10Y";

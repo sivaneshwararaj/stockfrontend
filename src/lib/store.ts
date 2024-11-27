@@ -52,8 +52,6 @@ export const coolMode = writable(<boolean>false);
 export const executiveClicked = writable(<boolean>false);
 export const secFilingsClicked = writable(<boolean>false);
 
-export const discordMembers = writable(<Number>380);
-
 export const newAvatar = writable(<string>"");
 export const displayCompanyName = writable(<string>"");
 export const currentPrice = writable(<number>0);
@@ -65,7 +63,6 @@ export const wsAskPrice = writable(null);
 export const priceIncrease = writable(<boolean>false);
 export const isCrosshairMoveActive = writable(<boolean>true);
 
-export const twitchStatus = writable(<boolean>false);
 
 export const screenWidth = writable(<Number>0);
 
