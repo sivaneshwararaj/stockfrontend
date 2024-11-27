@@ -506,12 +506,22 @@
           const high = highList[dataIndex];
           const low = lowList[dataIndex];
 
-          return `
-        <b>${dates[dataIndex]}</b><br>
-        High: ${high ? high?.toFixed(2) : "N/A"}<br>
-        Avg: ${mainValue?.toFixed(2)}<br>
-        Low: ${low ? low?.toFixed(2) : "N/A"}
-      `;
+          // Only show High and Low if they are not "N/A"
+          let tooltipContent = `<b>${dates[dataIndex]}</b><br>`;
+
+          if (high && high !== "N/A") {
+            tooltipContent += `High: ${high.toFixed(2)}<br>`;
+          }
+
+          if (mainValue && mainValue !== "N/A") {
+            tooltipContent += `Avg: ${mainValue.toFixed(2)}<br>`;
+          }
+
+          if (low && low !== "N/A") {
+            tooltipContent += `Low: ${low.toFixed(2)}<br>`;
+          }
+
+          return tooltipContent;
         },
       },
     };
