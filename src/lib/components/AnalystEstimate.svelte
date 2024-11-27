@@ -35,26 +35,37 @@
   let highEPSList = [];
 
   let revenueAvgGrowthList = [];
-  let revenueLowGrowthList = [];
   let epsAvgGrowthList = [];
 
   let displayData = "Revenue";
 
   function fillMissingDates(dates, highGrowthList) {
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+    const currentFiscalYear = `FY${currentYear % 100}`; // Get the current fiscal year (e.g., 2024 => FY24)
+
     // Create a map from the highGrowthList for quick lookup
     const highGrowthMap = new Map(
       highGrowthList?.map((item) => [`FY${item.FY}`, item]),
     );
 
     // Generate the complete list based on the dates array
-    return dates.map(
-      (date) =>
-        highGrowthMap.get(date) || {
-          FY: date?.slice(2),
-          val: null,
-          growth: null,
-        },
-    );
+    return dates?.map((date) => {
+      // Check if the date is the current fiscal year or it exists in the map
+      const data = highGrowthMap?.get(date) || {
+        FY: date?.slice(2),
+        val: null,
+        growth: null,
+      };
+
+      // If the fiscal year is the current one, set val and growth to null
+      if (date === currentFiscalYear) {
+        data.val = null;
+        data.growth = null;
+      }
+
+      return data;
+    });
   }
 
   function computeGrowthSingleList(data, actualList) {
@@ -357,11 +368,9 @@
       lowGrowthList = computeGrowthSingleList(lowEPSList, tableActualEPS);
     }
 
-    console.log(highGrowthList);
     highGrowthList = fillMissingDates(dates, highGrowthList)?.map(
       (item) => item?.growth,
     );
-    console.log(highGrowthList);
 
     lowGrowthList = fillMissingDates(dates, lowGrowthList)?.map(
       (item) => item?.growth,
