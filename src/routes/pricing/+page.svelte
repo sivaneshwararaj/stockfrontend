@@ -142,7 +142,8 @@
             class="mx-2 inline h-0.5 w-0.5 fill-current"
             aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg
           >
-          Save <strong class="text-black">40%</strong> with Promo Code:
+          Save <strong class="text-black">40%</strong> on your Monthly/Annual
+          Plan with Promo Code:
           <strong class="text-black">BLACK</strong>
         </p>
       </div>
