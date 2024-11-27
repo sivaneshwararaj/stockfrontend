@@ -18,6 +18,58 @@ type FlyAndScaleParams = {
   duration?: number;
 };
 
+export const calculateChange = (oldList?: any[], newList?: any[]) => {
+  if (!oldList?.length || !newList?.length) return [...(oldList || [])];
+
+  const newListMap = new Map(newList.map(item => [item.symbol, item]));
+  
+  for (let i = 0, len = oldList.length; i < len; i++) {
+    const item = oldList[i];
+    const newItem = newListMap.get(item.symbol);
+    
+    if (newItem?.ap) {
+      const { price, changesPercentage } = item;
+      const newPrice = newItem.ap;
+
+      if (price != null && changesPercentage != null) {
+        const baseLine = price / (1 + Number(changesPercentage) / 100);
+        item.changesPercentage = ((newPrice / baseLine - 1) * 100);
+      }
+
+      item.previous = price;
+      item.price = newPrice;
+    }
+  }
+
+  return oldList;
+};
+
+export function updateStockList(stockList, originalData) {
+    // Create a Map for O(1) lookup of original data by symbol
+    const originalDataMap = new Map(
+        originalData?.map(item => [item.symbol, item])
+    );
+
+    // Use .map() to create a new array with updated stocks
+    return stockList?.map(stock => {
+        // Find matching stock in originalData
+        const matchingStock = originalDataMap?.get(stock?.symbol);
+
+        // If a match is found, update price and changesPercentage
+        if (matchingStock) {
+            return {
+                ...stock,
+                price: matchingStock?.price,
+                changesPercentage: matchingStock?.changesPercentage,
+                previous: matchingStock?.previous ?? null,
+            };
+        }
+
+        // If no match, return the original stock object unchanged
+        return stock;
+    });
+}
+
 export const flyAndScale = (
   node: Element,
   params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 0 },

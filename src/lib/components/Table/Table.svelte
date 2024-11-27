@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { screenWidth } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
-  import { onMount } from "svelte";
+  import { screenWidth, isOpen } from "$lib/store";
+  import {
+    abbreviateNumber,
+    calculateChange,
+    updateStockList,
+  } from "$lib/utils";
+  import { onMount, afterUpdate, onDestroy } from "svelte";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
@@ -20,7 +24,6 @@
     "eps",
     "marketCap",
   ]);
-
   export let specificRows = [];
 
   export let defaultList = [
@@ -31,9 +34,10 @@
   ];
 
   export let hideLastRow = false;
-
   let originalData = [...rawData]; // Unaltered copy of raw data
   let ruleOfList = defaultList;
+  let socket;
+
   const defaultRules = defaultList?.map((item) => item?.rule);
 
   let pagePathName = $page?.url?.pathname;
@@ -318,9 +322,63 @@
       stockList = [...stockList, ...filteredNewResults];
     }
   }
+
+  function sendMessage(message) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON?.stringify(message));
+    } else {
+      console.error("WebSocket is not open. Unable to send message.");
+    }
+  }
+
+  async function websocketRealtimeData() {
+    try {
+      socket = new WebSocket(data?.wsURL + "/multiple-realtime-data");
+
+      socket.addEventListener("open", () => {
+        console.log("WebSocket connection opened");
+        // Send only current watchlist symbols
+        const tickerList = rawData?.map((item) => item?.symbol) || [];
+        sendMessage(tickerList);
+      });
+
+      socket.addEventListener("message", (event) => {
+        const data = event.data;
+        try {
+          const newList = JSON?.parse(data);
+          if (newList?.length > 0) {
+            //console.log("Received message:", newList);
+            if (originalData.some((item) => "changesPercentage" in item)) {
+              originalData = calculateChange(originalData, newList);
+              stockList = updateStockList(stockList, originalData);
+              setTimeout(() => {
+                stockList = stockList?.map((item) => ({
+                  ...item,
+                  previous: null,
+                }));
+              }, 500);
+            }
+          }
+        } catch (e) {
+          console.error("Error parsing WebSocket message:", e);
+        }
+      });
+
+      socket.addEventListener("close", (event) => {
+        console.log("WebSocket connection closed:", event.reason);
+      });
+    } catch (error) {
+      console.error("WebSocket connection error:", error);
+    }
+  }
+  $: stockList = [...stockList];
+
   onMount(async () => {
     // Initialize the download worker if not already done
-
+    if ($isOpen) {
+      await websocketRealtimeData();
+      console.log("WebSocket restarted due to watchlist changes");
+    }
     try {
       const savedRules = localStorage?.getItem(pagePathName);
 
@@ -367,6 +425,59 @@
       return () => {
         window.removeEventListener("scroll", handleScroll);
       };
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  let previousList = [];
+  let reconnectionTimeout;
+  afterUpdate(async () => {
+    // Compare only the symbols to detect changes
+    const currentSymbols = rawData?.map((item) => item?.symbol).sort();
+    const previousSymbols = previousList?.map((item) => item?.symbol).sort();
+
+    // Check if symbols have changed
+    if (
+      JSON.stringify(currentSymbols) !== JSON.stringify(previousSymbols) &&
+      typeof socket !== "undefined"
+    ) {
+      // Update previous list
+      previousList = rawData;
+
+      try {
+        // Close existing socket if open
+        if (socket && socket.readyState !== WebSocket.CLOSED) {
+          socket?.close();
+        }
+
+        // Wait for socket to close
+        await new Promise((resolve) => {
+          socket?.addEventListener("close", resolve, { once: true });
+        });
+
+        // Reconnect with new symbols
+        if ($isOpen) {
+          await websocketRealtimeData();
+          console.log("WebSocket restarted due to watchlist changes");
+        }
+      } catch (error) {
+        console.error("Error restarting WebSocket:", error);
+      }
+    }
+  });
+
+  onDestroy(() => {
+    try {
+      // Clear any pending reconnection timeout
+      if (reconnectionTimeout) {
+        clearTimeout(reconnectionTimeout);
+      }
+
+      // Close the WebSocket connection
+      if (socket) {
+        socket.close(1000, "Page unloaded");
+      }
     } catch (e) {
       console.log(e);
     }
@@ -723,7 +834,27 @@
               {:else if column?.type === "decimal"}
                 {item[column.key]?.toLocaleString("en-US")}
               {:else if column.key === "price"}
-                {item[column.key]?.toFixed(2)}
+                <div class="relative flex items-center justify-end">
+                  {#if item?.previous !== null && item?.previous !== undefined && item?.previous !== item[column?.key]}
+                    <span
+                      class="absolute h-1 w-1 {item[column?.key] < 10
+                        ? 'right-[35px] sm:right-[40px]'
+                        : item[column?.key] < 100
+                          ? 'right-[40px] sm:right-[45px]'
+                          : 'right-[45px] sm:right-[55px]'} bottom-0 -top-0.5 sm:-top-1"
+                    >
+                      <span
+                        class="inline-flex rounded-full h-1 w-1 {item?.previous >
+                        item[column?.key]
+                          ? 'bg-[#FF2F1F]'
+                          : 'bg-[#00FC50]'} pulse-animation"
+                      ></span>
+                    </span>
+                  {/if}
+                  {item[column.key] !== null
+                    ? item[column.key]?.toFixed(2)
+                    : "-"}
+                </div>
               {:else if column.type === "percent"}
                 {item[column.key]?.toFixed(2) + "%"}
               {:else if column.type === "percentSign"}
@@ -785,3 +916,25 @@
     </tbody>
   </table>
 </div>
+
+<style>
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    70% {
+      transform: scale(1.1); /* Adjust scale as needed for pulse effect */
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1); /* End scale */
+      opacity: 0;
+    }
+  }
+
+  /* Apply the animation styles to the element */
+  .pulse-animation {
+    animation: pulse 500ms ease-out forwards; /* 300ms duration */
+  }
+</style>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { screenWidth, numberOfUnreadNotification, isOpen } from "$lib/store";
-  import { formatDate, abbreviateNumber } from "$lib/utils";
+  import { formatDate, abbreviateNumber, calculateChange } from "$lib/utils";
   import toast from "svelte-french-toast";
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
@@ -135,31 +135,6 @@
   let downloadWorker: Worker | undefined;
   let displayWatchList;
   let allList = data?.getAllWatchlist;
-
-  function calculateChange(oldList, newList) {
-    // Create a map for faster lookups
-    const newListMap = new Map(newList.map((item) => [item.symbol, item]));
-
-    // Use for loop instead of forEach for better performance
-    for (let i = 0; i < oldList?.length; i++) {
-      const item = oldList[i];
-      const newItem = newListMap?.get(item?.symbol);
-
-      if (newItem) {
-        // Calculate the new changePercentage
-        const baseLine = item?.price / (1 + item?.changesPercentage / 100);
-        const newPrice = newItem?.ap;
-        const newChangePercentage = (newPrice / baseLine - 1) * 100;
-
-        // Update the item directly in the oldList
-        item.previous = item.price;
-        item.price = newPrice;
-        item.changesPercentage = newChangePercentage;
-      }
-    }
-
-    return [...oldList];
-  }
 
   const handleDownloadMessage = (event) => {
     isLoaded = false;
@@ -1281,7 +1256,13 @@
                                       >
                                         {#if item?.previous !== null && item?.previous !== undefined && item?.previous !== item[row?.rule] && row?.rule === "price"}
                                           <span
-                                            class="absolute h-1 w-1 right-12 sm:right-14 bottom-0 -top-1"
+                                            class="absolute h-1 w-1 {item[
+                                              row?.rule
+                                            ] < 10
+                                              ? 'right-[35px] sm:right-[40px]'
+                                              : item[row?.rule] < 100
+                                                ? 'right-[40px] sm:right-[45px]'
+                                                : 'right-[45px] sm:right-[55px]'} bottom-0 -top-0.5 sm:-top-1"
                                           >
                                             <span
                                               class="inline-flex rounded-full h-1 w-1 {item?.previous >
@@ -1291,6 +1272,7 @@
                                             ></span>
                                           </span>
                                         {/if}
+
                                         {item[row?.rule] !== null
                                           ? item[row?.rule]?.toFixed(2)
                                           : "-"}
