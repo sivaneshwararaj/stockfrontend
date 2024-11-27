@@ -3,13 +3,19 @@
 
   import { Chart } from "svelte-echarts";
   import { init, use } from "echarts/core";
-  import { LineChart } from "echarts/charts";
+  import { LineChart, CustomChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
   import { abbreviateNumber } from "$lib/utils";
 
   export let data;
-  use([LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
+  use([
+    LineChart,
+    CustomChart,
+    GridComponent,
+    TooltipComponent,
+    CanvasRenderer,
+  ]);
 
   let analystEstimateList = [];
   let isLoaded = false;
@@ -62,43 +68,48 @@
 
   function computeGrowthList(tableActualRevenue, tableForecastRevenue) {
     return tableActualRevenue?.map((item, index) => {
-      // If it's the first item or the list is empty, return null
+      const currentFY = item?.FY;
+
+      // If it's the first item or the list is empty, return null growth
       if (index === 0 || tableActualRevenue.length === 0) {
-        return null;
+        return { FY: currentFY, growth: null };
       }
 
-      // If actual value is null, check forecast
+      // If actual value is null, compute growth based on forecast values
       if (item?.val === null) {
         const prevForecastVal = tableForecastRevenue[index - 1]?.val ?? 0;
         const currentForecastVal = tableForecastRevenue[index]?.val ?? 0;
 
-        // Avoid division by zero when calculating forecast growth
         if (prevForecastVal === 0 || currentForecastVal === 0) {
-          return null; // Return null if previous or current forecast is 0
+          return { FY: currentFY, growth: null };
         }
 
         const forecastGrowth =
           ((currentForecastVal - prevForecastVal) / Math.abs(prevForecastVal)) *
           100;
 
-        // Return rounded forecast growth value, or null if 0
-        return forecastGrowth !== 0 ? Number(forecastGrowth.toFixed(2)) : null;
+        return {
+          FY: currentFY,
+          growth:
+            forecastGrowth !== 0 ? Number(forecastGrowth.toFixed(2)) : null,
+        };
       }
 
       // Compute actual growth for non-null actual values
       const prevActualVal = tableActualRevenue[index - 1]?.val ?? 0;
       const currentActualVal = item?.val ?? 0;
 
-      // Avoid division by zero when calculating actual growth
       if (prevActualVal === 0 || currentActualVal === 0) {
-        return null; // Return null if previous or current actual value is 0
+        return { FY: currentFY, growth: null };
       }
 
       const actualGrowth =
         ((currentActualVal - prevActualVal) / Math.abs(prevActualVal)) * 100;
 
-      // Return rounded actual growth value, or null if 0
-      return actualGrowth !== 0 ? Number(actualGrowth.toFixed(2)) : null;
+      return {
+        FY: currentFY,
+        growth: actualGrowth !== 0 ? Number(actualGrowth.toFixed(2)) : null,
+      };
     });
   }
 
@@ -131,7 +142,6 @@
     let avgList = [];
     let lowList = [];
     let highList = [];
-
     let filteredData =
       analystEstimateList?.filter((item) => item.date >= 2019) ?? [];
     const stopIndex = findIndex(filteredData);
@@ -187,6 +197,16 @@
       lowEPSList = lowList?.slice(currentYearIndex) || [];
       highEPSList = highList?.slice(currentYearIndex) || [];
     }
+
+    const growthList = dates.map((date) => {
+      const fy = parseInt(date.replace("FY", ""), 10); // Extract numeric FY value
+      const listToUse =
+        dataType === "Revenue" ? revenueGrowthList : epsGrowthList; // Select the correct growth list
+      const growth = listToUse.find((r) => r.FY === fy); // Find matching FY
+      return growth ? growth.growth : null; // Return growth or null if not found
+    });
+
+    console.log(growthList);
 
     const option = {
       silent: true,
@@ -297,7 +317,6 @@
           splitLine: {
             show: false, // Disable x-axis grid lines
           },
-
           axisLabel: {
             show: false, // Hide y-axis labels
           },
@@ -306,21 +325,96 @@
       series: [
         {
           name: dataType === "Revenue" ? "Revenue Growth" : "EPS Growth",
-          data: (dataType === "Revenue" ? revenueGrowthList : epsGrowthList)
-            ?.slice(1)
-            .map((value) => ({
-              value,
-              itemStyle: {
-                color: value >= 0 ? "#00FC50" : "#D9220E", // Green for >= 0, Red for < 0
-              },
-            })),
+          data: growthList?.map((value) => ({
+            value,
+            itemStyle: {
+              color: value >= 0 ? "#00FC50" : "#D9220E", // Green for >= 0, Red for < 0
+            },
+          })),
           type: "bar",
           smooth: true,
+          z: 5, // Ensure the bar chart has a lower z-index than the error bars
+        },
+        {
+          name: "Error Bars",
+          type: "custom",
+          renderItem: (params, api) => {
+            const xValue = api.value(0);
+            const yValue = api.value(1);
+            const high = yValue + yValue / 2; // High value (half above the value)
+            const low = yValue - yValue / 2; // Low value (half below the value)
+            const x = api.coord([xValue, yValue])[0];
+            const highCoord = api.coord([xValue, high])[1];
+            const lowCoord = api.coord([xValue, low])[1];
+
+            return {
+              type: "group",
+              children: [
+                {
+                  type: "line",
+                  shape: {
+                    x1: x,
+                    y1: highCoord,
+                    x2: x,
+                    y2: lowCoord,
+                  },
+                  style: {
+                    stroke: "#fff",
+                    lineWidth: 1.5, // Set thicker line width
+                  },
+                },
+                {
+                  type: "line",
+                  shape: {
+                    x1: x - 5,
+                    y1: highCoord,
+                    x2: x + 5,
+                    y2: highCoord,
+                  },
+                  style: {
+                    stroke: "#fff",
+                    lineWidth: 1.5, // Set thicker line width
+                  },
+                },
+                {
+                  type: "line",
+                  shape: {
+                    x1: x - 5,
+                    y1: lowCoord,
+                    x2: x + 5,
+                    y2: lowCoord,
+                  },
+                  style: {
+                    stroke: "#fff",
+                    lineWidth: 1.5, // Set thicker line width
+                  },
+                },
+              ],
+            };
+          },
+          encode: {
+            x: 0, // Map x-axis values
+            y: 1, // Map y-axis values
+          },
+          data: growthList?.map((value, index) => [index, value]), // Prepare data for error bars
+          z: 10, // Bring the error bars to the front
         },
       ],
-
       tooltip: {
         trigger: "axis",
+        formatter: (params) => {
+          const dataIndex = params[0].dataIndex;
+          const mainValue = params[0].value;
+          const high = mainValue + mainValue / 2;
+          const low = mainValue - mainValue / 2;
+
+          return `
+        <b>${dates[dataIndex]}</b><br>
+        High: ${high?.toFixed(2) + "%"}<br>
+        Avg: ${mainValue?.toFixed(2) + "%"}<br>
+        Low: ${low?.toFixed(2) + "%"}
+      `;
+        },
       },
     };
 
@@ -372,7 +466,6 @@
         val: item?.estimatedEpsAvg,
       });
     });
-
     //Values coincide with table values for crosscheck
     revenueGrowthList = computeGrowthList(
       tableActualRevenue,
@@ -453,29 +546,29 @@
                   >
                     Revenue Growth
                   </th>
-                  {#each computeGrowthList(tableActualRevenue, tableForecastRevenue) as growth, index}
+                  {#each computeGrowthList(tableActualRevenue, tableForecastRevenue) as item, index}
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
-                      {#if index === 0 || growth === null}
+                      {#if index === 0 || item?.growth === null}
                         n/a
                       {:else if tableActualRevenue[index]?.val === null}
                         <span
-                          class="text-orange-400 {growth > 0
+                          class="text-orange-400 {item?.growth > 0
                             ? "before:content-['+']"
                             : ''}"
                         >
-                          {growth}%&#42;
+                          {item?.growth}%&#42;
                         </span>
                       {:else}
                         <span
-                          class={growth > 0
+                          class={item?.growth > 0
                             ? "text-[#00FC50] before:content-['+']"
-                            : growth < 0
+                            : item?.growth < 0
                               ? "text-[#FF2F1F]"
                               : ""}
                         >
-                          {growth}%
+                          {item?.growth}%
                         </span>
                       {/if}
                     </td>
@@ -507,29 +600,29 @@
                   >
                     EPS Growth
                   </th>
-                  {#each computeGrowthList(tableActualEPS, tableForecastEPS) as growth, index}
+                  {#each computeGrowthList(tableActualEPS, tableForecastEPS) as item, index}
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
-                      {#if index === 0 || growth === null}
+                      {#if index === 0 || item?.growth === null}
                         n/a
                       {:else if tableActualRevenue[index]?.val === null}
                         <span
-                          class="text-orange-400 {growth > 0
+                          class="text-orange-400 {item?.growth > 0
                             ? "before:content-['+']"
                             : ''}"
                         >
-                          {growth}%&#42;
+                          {item?.growth}%&#42;
                         </span>
                       {:else}
                         <span
-                          class={growth > 0
+                          class={item?.growth > 0
                             ? "text-[#00FC50] before:content-['+']"
-                            : growth < 0
+                            : item?.growth < 0
                               ? "text-[#FF2F1F]"
                               : ""}
                         >
-                          {growth}%
+                          {item?.growth}%
                         </span>
                       {/if}
                     </td>
