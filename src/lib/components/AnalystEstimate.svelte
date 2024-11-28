@@ -67,38 +67,40 @@
       return data;
     });
   }
-
   function computeGrowthSingleList(data, actualList) {
-    // Find the last non-null entry in actualList
-    let lastNonNull = actualList
-      ?.filter((entry) => entry?.val !== null)
-      ?.slice(-1)[0];
-
-    // Add the last non-null entry from actualList to the beginning of data
-    const newList = [lastNonNull, ...data];
-
-    // Calculate growth and include it in the objects
+    // Initialize the result list
     let resultList = [];
 
-    for (let i = 1; i < newList?.length; i++) {
-      let previous = newList[i - 1];
-      let current = newList[i];
+    for (let i = 0; i < data?.length; i++) {
+      const currentData = data[i];
 
-      // Calculate growth only if both values are non-null
+      // Find the corresponding actual data from one FY back
+      const correspondingActual = actualList?.find(
+        (entry) => Number(entry.FY) === Number(currentData.FY) - 1,
+      );
+
+      // Calculate growth if a matching entry exists in actualList
       let growth = null;
-      if (previous.val !== null && current.val !== null) {
-        growth = (((current.val - previous.val) / previous.val) * 100)?.toFixed(
-          2,
-        );
+      if (
+        correspondingActual &&
+        correspondingActual?.val !== null &&
+        currentData.val !== null
+      ) {
+        growth = (
+          ((currentData?.val - correspondingActual?.val) /
+            Math.abs(correspondingActual?.val)) *
+          100
+        )?.toFixed(2);
       }
 
-      // Add FY, val, and growth to the result list
+      // Push the result for this FY
       resultList.push({
-        FY: current.FY,
-        val: current.val,
+        FY: currentData.FY,
+        val: currentData.val,
         growth: growth !== null ? Number(growth) : null, // Convert growth to number or leave as null
       });
     }
+
     return resultList;
   }
 
@@ -127,7 +129,7 @@
         return {
           FY: currentFY,
           growth:
-            forecastGrowth !== 0 ? Number(forecastGrowth.toFixed(2)) : null,
+            forecastGrowth !== 0 ? Number(forecastGrowth?.toFixed(2)) : null,
         };
       }
 
@@ -262,7 +264,7 @@
       const fy = parseInt(date.replace("FY", ""), 10); // Extract numeric FY value
       const listToUse =
         dataType === "Revenue" ? revenueAvgGrowthList : epsAvgGrowthList; // Select the correct growth list
-      const growth = listToUse.find((r) => r.FY === fy); // Find matching FY
+      const growth = listToUse?.find((r) => r.FY === fy); // Find matching FY
       return growth ? growth?.growth : null; // Return growth or null if not found
     });
 
@@ -355,19 +357,12 @@
     let highGrowthList = [];
     let lowGrowthList = [];
     if (dataType === "Revenue") {
-      highGrowthList = computeGrowthSingleList(
-        highRevenueList,
-        tableActualRevenue,
-      );
-      lowGrowthList = computeGrowthSingleList(
-        lowRevenueList,
-        tableActualRevenue,
-      );
+      highGrowthList = computeGrowthSingleList(highRevenueList, avgRevenueList);
+      lowGrowthList = computeGrowthSingleList(lowRevenueList, avgRevenueList);
     } else {
-      highGrowthList = computeGrowthSingleList(highEPSList, tableActualEPS);
-      lowGrowthList = computeGrowthSingleList(lowEPSList, tableActualEPS);
+      highGrowthList = computeGrowthSingleList(highEPSList, avgEPSList);
+      lowGrowthList = computeGrowthSingleList(lowEPSList, avgEPSList);
     }
-
     highGrowthList = fillMissingDates(dates, highGrowthList)?.map(
       (item) => item?.growth,
     );
@@ -820,9 +815,9 @@
                       class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
                       >Revenue</th
                     >
-                    {#each revenueDateList as date}
-                      <th class="p-1 font-semibold text-sm sm:text-[1rem]"
-                        >{date}</th
+                    {#each revenueDateList as date, index}
+                      <th class="p-1 font-semibold text-sm sm:text-[1rem]">
+                        {#if index !== 0}{date}{/if}</th
                       >
                     {/each}
                   </tr></thead
@@ -834,22 +829,24 @@
                     >
                     {#each highRevenueList as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if data?.user?.tier !== "Pro" && index >= highRevenueList?.length - 2}
-                          <a
-                            class="inline-block ml-0.5 text-white"
-                            href="/pricing"
-                            >Pro<svg
-                              class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              ><path
-                                fill="currentColor"
-                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                              /></svg
-                            ></a
-                          >
-                        {:else}
-                          {abbreviateNumber(item?.val)}
+                        {#if index !== 0}
+                          {#if data?.user?.tier !== "Pro" && index >= highRevenueList?.length - 2}
+                            <a
+                              class="inline-block ml-0.5 text-white"
+                              href="/pricing"
+                              >Pro<svg
+                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                ><path
+                                  fill="currentColor"
+                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                /></svg
+                              ></a
+                            >
+                          {:else}
+                            {abbreviateNumber(item?.val)}
+                          {/if}
                         {/if}
                       </td>
                     {/each}
@@ -859,22 +856,24 @@
                     >
                     {#each avgRevenueList as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if data?.user?.tier !== "Pro" && index >= avgRevenueList?.length - 2}
-                          <a
-                            class="inline-block ml-0.5 text-white"
-                            href="/pricing"
-                            >Pro<svg
-                              class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              ><path
-                                fill="currentColor"
-                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                              /></svg
-                            ></a
-                          >
-                        {:else}
-                          {abbreviateNumber(item?.val)}
+                        {#if index !== 0}
+                          {#if data?.user?.tier !== "Pro" && index >= avgRevenueList?.length - 2}
+                            <a
+                              class="inline-block ml-0.5 text-white"
+                              href="/pricing"
+                              >Pro<svg
+                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                ><path
+                                  fill="currentColor"
+                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                /></svg
+                              ></a
+                            >
+                          {:else}
+                            {abbreviateNumber(item?.val)}
+                          {/if}
                         {/if}
                       </td>
                     {/each}
@@ -884,22 +883,24 @@
                     >
                     {#each lowRevenueList as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if data?.user?.tier !== "Pro" && index >= lowRevenueList?.length - 2}
-                          <a
-                            class="inline-block ml-0.5 text-white"
-                            href="/pricing"
-                            >Pro<svg
-                              class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              ><path
-                                fill="currentColor"
-                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                              /></svg
-                            ></a
-                          >
-                        {:else}
-                          {abbreviateNumber(item?.val)}
+                        {#if index !== 0}
+                          {#if data?.user?.tier !== "Pro" && index >= lowRevenueList?.length - 2}
+                            <a
+                              class="inline-block ml-0.5 text-white"
+                              href="/pricing"
+                              >Pro<svg
+                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                ><path
+                                  fill="currentColor"
+                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                /></svg
+                              ></a
+                            >
+                          {:else}
+                            {abbreviateNumber(item?.val)}
+                          {/if}
                         {/if}
                       </td>
                     {/each}
@@ -941,7 +942,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >High</td
                     >
-                    {#each computeGrowthSingleList(highRevenueList, tableActualRevenue) as item, index}
+                    {#each computeGrowthSingleList(highRevenueList, avgRevenueList) as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if index !== 0}
                           {#if data?.user?.tier !== "Pro" && index >= highRevenueList?.length - 2}
@@ -979,7 +980,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Avg</td
                     >
-                    {#each computeGrowthSingleList(avgRevenueList, tableActualRevenue) as item, index}
+                    {#each revenueAvgGrowthList?.filter((item) => item.FY >= 24) as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if index !== 0}
                           {#if data?.user?.tier !== "Pro" && index >= avgRevenueList?.length - 2}
@@ -1017,7 +1018,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Low</td
                     >
-                    {#each computeGrowthSingleList(lowRevenueList, tableActualRevenue) as item, index}
+                    {#each computeGrowthSingleList(lowRevenueList, avgRevenueList) as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if index !== 0}
                           {#if data?.user?.tier !== "Pro" && index >= lowRevenueList?.length - 2}
@@ -1077,9 +1078,9 @@
                       class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
                       >EPS</th
                     >
-                    {#each epsDateList as date}
-                      <th class="p-1 font-semibold text-sm sm:text-[1rem]"
-                        >{date}</th
+                    {#each epsDateList as date, index}
+                      <th class="p-1 font-semibold text-sm sm:text-[1rem]">
+                        {#if index !== 0}{date}{/if}</th
                       >
                     {/each}
                   </tr></thead
@@ -1091,22 +1092,24 @@
                     >
                     {#each highEPSList as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if data?.user?.tier !== "Pro" && index >= highEPSList?.length - 2}
-                          <a
-                            class="inline-block ml-0.5 text-white"
-                            href="/pricing"
-                            >Pro<svg
-                              class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              ><path
-                                fill="currentColor"
-                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                              /></svg
-                            ></a
-                          >
-                        {:else}
-                          {abbreviateNumber(item?.val)}
+                        {#if index !== 0}
+                          {#if data?.user?.tier !== "Pro" && index >= highEPSList?.length - 2}
+                            <a
+                              class="inline-block ml-0.5 text-white"
+                              href="/pricing"
+                              >Pro<svg
+                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                ><path
+                                  fill="currentColor"
+                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                /></svg
+                              ></a
+                            >
+                          {:else}
+                            {abbreviateNumber(item?.val)}
+                          {/if}
                         {/if}
                       </td>
                     {/each}
@@ -1116,22 +1119,24 @@
                     >
                     {#each avgEPSList as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if data?.user?.tier !== "Pro" && index >= avgEPSList?.length - 2}
-                          <a
-                            class="inline-block ml-0.5 text-white"
-                            href="/pricing"
-                            >Pro<svg
-                              class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              ><path
-                                fill="currentColor"
-                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                              /></svg
-                            ></a
-                          >
-                        {:else}
-                          {abbreviateNumber(item?.val)}
+                        {#if index !== 0}
+                          {#if data?.user?.tier !== "Pro" && index >= avgEPSList?.length - 2}
+                            <a
+                              class="inline-block ml-0.5 text-white"
+                              href="/pricing"
+                              >Pro<svg
+                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                ><path
+                                  fill="currentColor"
+                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                /></svg
+                              ></a
+                            >
+                          {:else}
+                            {abbreviateNumber(item?.val)}
+                          {/if}
                         {/if}
                       </td>
                     {/each}
@@ -1141,22 +1146,24 @@
                     >
                     {#each lowEPSList as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if data?.user?.tier !== "Pro" && index >= lowEPSList?.length - 2}
-                          <a
-                            class="inline-block ml-0.5 text-white"
-                            href="/pricing"
-                            >Pro<svg
-                              class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              ><path
-                                fill="currentColor"
-                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                              /></svg
-                            ></a
-                          >
-                        {:else}
-                          {abbreviateNumber(item?.val)}
+                        {#if index !== 0}
+                          {#if data?.user?.tier !== "Pro" && index >= lowEPSList?.length - 2}
+                            <a
+                              class="inline-block ml-0.5 text-white"
+                              href="/pricing"
+                              >Pro<svg
+                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                ><path
+                                  fill="currentColor"
+                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                /></svg
+                              ></a
+                            >
+                          {:else}
+                            {abbreviateNumber(item?.val)}
+                          {/if}
                         {/if}
                       </td>
                     {/each}
@@ -1197,7 +1204,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >High</td
                     >
-                    {#each computeGrowthSingleList(highEPSList, tableActualEPS) as item, index}
+                    {#each computeGrowthSingleList(highEPSList, avgEPSList) as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if index !== 0}
                           {#if data?.user?.tier !== "Pro" && index >= highEPSList?.length - 2}
@@ -1235,7 +1242,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Avg</td
                     >
-                    {#each computeGrowthSingleList(avgEPSList, tableActualEPS) as item, index}
+                    {#each epsAvgGrowthList?.filter((item) => item.FY >= 24) as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if index !== 0}
                           {#if data?.user?.tier !== "Pro" && index >= avgEPSList?.length - 2}
@@ -1273,7 +1280,7 @@
                     ><td class="whitespace-nowrap px-1 py-[3px] text-left"
                       >Low</td
                     >
-                    {#each computeGrowthSingleList(lowEPSList, tableActualEPS) as item, index}
+                    {#each computeGrowthSingleList(lowEPSList, avgEPSList) as item, index}
                       <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                         {#if index !== 0}
                           {#if data?.user?.tier !== "Pro" && index >= lowEPSList?.length - 2}
