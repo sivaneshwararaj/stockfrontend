@@ -5,20 +5,36 @@
   import badEmoji from "$lib/assets/badEmoji.svg";
   import veryBadEmoji from "$lib/assets/veryBadEmoji.svg";
   export let data;
-  import * as Tabs from "$lib/components/shadcn/tabs/index.js";
 
   import feedback_icon from "$lib/images/feedback_icon.png";
 
   let rating = "";
   let inputValue = "";
   let category = "general";
-  /*
-  async function handleReturn() {
-    rating = '';
-    inputValue = '';
-  
+  let activeIdx = 0;
+
+  const tabs = [
+    {
+      title: "General",
+    },
+    {
+      title: "Feature",
+    },
+    {
+      title: "Bug",
+    },
+  ];
+
+  function handleMode(index) {
+    activeIdx = index;
+    if (activeIdx === 0) {
+      category = "general";
+    } else if (activeIdx === 1) {
+      category = "feature-request";
+    } else if (activeIdx === 2) {
+      category = "bug-report";
+    }
   }
-  */
 
   async function sendFeedback() {
     if (inputValue?.length === 0) {
@@ -117,25 +133,32 @@
       </h1>
     </div>
 
-    <Tabs.Root value="general" class="w-full mt-5 m-auto">
-      <Tabs.List class="grid w-full grid-cols-3 bg-[#09090B]">
-        <Tabs.Trigger
-          on:click={() => (category = "general")}
-          value="general"
-          class="text-sm">General</Tabs.Trigger
-        >
-        <Tabs.Trigger
-          on:click={() => (category = "feature-request")}
-          value="feature-request"
-          class="text-sm">Feature Request</Tabs.Trigger
-        >
-        <Tabs.Trigger
-          on:click={() => (category = "bug-report")}
-          value="bug-report"
-          class="text-sm">Bug Report</Tabs.Trigger
-        >
-      </Tabs.List>
-    </Tabs.Root>
+    <div class="p-2">
+      <div
+        class="bg-[#313131] w-full min-w-24 sm:w-full relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+      >
+        {#each tabs as item, i}
+          <button
+            on:click={() => handleMode(i)}
+            class="group relative z-[1] rounded-full w-1/3 min-w-24 px-5 py-1 {activeIdx ===
+            i
+              ? 'z-0'
+              : ''} "
+          >
+            {#if activeIdx === i}
+              <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
+            {/if}
+            <span
+              class="relative text-sm block font-semibold {activeIdx === i
+                ? 'text-black'
+                : 'text-white'}"
+            >
+              {item.title}
+            </span>
+          </button>
+        {/each}
+      </div>
+    </div>
 
     <div class="p-2 mt-5 w-full h-[200px] max-h-[1000px]">
       <textarea
