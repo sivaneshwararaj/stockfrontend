@@ -19,6 +19,64 @@ type FlyAndScaleParams = {
 };
 
 
+
+
+  export const compareTimes = (time1, time2) => {
+    const [hours1, minutes1] = time1.split(":").map(Number);
+    const [hours2, minutes2] = time2.split(":").map(Number);
+
+    if (hours1 > hours2) return 1;
+    if (hours1 < hours2) return -1;
+    if (minutes1 > minutes2) return 1;
+    if (minutes1 < minutes2) return -1;
+    return 0;
+  }
+
+ export const formatTime = (timeString) => {
+    // Split the time string into components
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+
+    // Determine AM or PM
+    const period = hours >= 12 ? "PM" : "AM";
+
+    // Convert hours from 24-hour to 12-hour format
+    const formattedHours = hours % 12 || 12; // Converts 0 to 12 for midnight
+
+    // Format the time string
+    const formattedTimeString = `${formattedHours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")} ${period}`;
+
+    return formattedTimeString;
+  }
+
+export const groupEarnings = (earnings) => {
+  return Object.entries(
+    earnings
+      ?.reduce((acc, item) => {
+        const dateKey = new Intl.DateTimeFormat('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        }).format(new Date(item?.date));
+
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey].push(item);
+        return acc;
+      }, {})
+  )
+    // Sort the grouped dates in descending order
+    ?.sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
+    ?.map(([date, earnings]) => [
+      date,
+      // Sort earnings within the date by time
+      earnings.sort((a, b) => {
+        const timeA = new Date(`1970-01-01T${a.time}`);
+        const timeB = new Date(`1970-01-01T${b.time}`);
+        return timeB - timeA;
+      })
+    ]);
+};
+
+
 export const groupNews = (news, watchList) => {
   return Object.entries(
     news

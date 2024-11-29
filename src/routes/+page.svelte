@@ -9,37 +9,11 @@
   import { abbreviateNumber } from "$lib/utils";
   import * as Tabs from "$lib/components/shadcn/tabs/index.js";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
-
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { compareTimes, formatTime } from "$lib/utils";
 
   export let data;
   let optionsMode = "premium";
-  function compareTimes(time1, time2) {
-    const [hours1, minutes1] = time1.split(":").map(Number);
-    const [hours2, minutes2] = time2.split(":").map(Number);
-
-    if (hours1 > hours2) return 1;
-    if (hours1 < hours2) return -1;
-    if (minutes1 > minutes2) return 1;
-    if (minutes1 < minutes2) return -1;
-    return 0;
-  }
-
-  function formatTime(timeString) {
-    // Split the time string into components
-    const [hours, minutes, seconds] = timeString.split(":").map(Number);
-
-    // Determine AM or PM
-    const period = hours >= 12 ? "PM" : "AM";
-
-    // Convert hours from 24-hour to 12-hour format
-    const formattedHours = hours % 12 || 12; // Converts 0 to 12 for midnight
-
-    // Format the time string
-    const formattedTimeString = `${formattedHours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")} ${period}`;
-
-    return formattedTimeString;
-  }
 
   function reformatDate(dateString) {
     return (

@@ -1,6 +1,13 @@
 <script lang="ts">
   import { screenWidth, numberOfUnreadNotification, isOpen } from "$lib/store";
-  import { groupNews, abbreviateNumber, calculateChange } from "$lib/utils";
+  import {
+    groupNews,
+    groupEarnings,
+    compareTimes,
+    formatTime,
+    abbreviateNumber,
+    calculateChange,
+  } from "$lib/utils";
   import toast from "svelte-french-toast";
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
@@ -8,6 +15,7 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { Combobox } from "bits-ui";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import { goto } from "$app/navigation";
 
   export let data;
   let timeoutId;
@@ -23,7 +31,9 @@
   let watchList: any[] = [];
 
   let news = [];
+  let earnings = [];
   let groupedNews = [];
+  let groupedEarnings = [];
   let checkedItems;
   let socket;
 
@@ -225,12 +235,20 @@
 
     watchList = output?.data;
     news = output?.news;
+    earnings = output?.earnings;
+
     news = news?.map((item) => {
       const match = watchList?.find((w) => w?.symbol === item?.symbol);
       return match ? { ...item, type: match?.type } : { ...item };
     });
+
+    earnings = earnings?.map((item) => {
+      const match = watchList?.find((w) => w?.symbol === item?.symbol);
+      return match ? { ...item, name: match?.name } : { ...item };
+    });
+
+    groupedEarnings = groupEarnings(earnings);
     groupedNews = groupNews(news, watchList);
-    console.log(groupedNews);
   }
 
   async function createWatchList(event) {
@@ -377,6 +395,9 @@
       );
 
       news = news?.filter((item) => !deleteTickerList?.includes(item?.symbol));
+      earnings = earnings?.filter(
+        (item) => !deleteTickerList?.includes(item?.symbol),
+      );
 
       deleteTickerList = [...deleteTickerList];
       editMode = false;
@@ -405,6 +426,7 @@
       allList = [...allList];
 
       groupedNews = groupNews(news, watchList);
+      groupedEarnings = groupEarnings(earnings);
     }
   }
 
@@ -1352,88 +1374,189 @@
                         class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                       >
                         {#each tabs as item, i}
-                          <button
-                            on:click={() => (activeIdx = i)}
-                            class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
-                            i
-                              ? 'z-0'
-                              : ''} "
-                          >
-                            {#if activeIdx === i}
-                              <div
-                                class="absolute inset-0 rounded-md bg-[#fff]"
-                              ></div>
-                            {/if}
-                            <span
-                              class="relative text-sm block text-lg font-semibold {activeIdx ===
-                              i
-                                ? 'text-black'
-                                : 'text-white'}"
+                          {#if data?.user?.tier !== "Pro" && i > 0}
+                            <button
+                              on:click={() => goto("/pricing")}
+                              class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1"
                             >
-                              {item.title}
-                            </span>
-                          </button>
+                              <span
+                                class="relative text-sm block font-semibold"
+                              >
+                                {item.title}
+                                <svg
+                                  class="inline-block ml-0.5 -mt-1 w-3.5 h-3.5"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  ><path
+                                    fill="#A3A3A3"
+                                    d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                  /></svg
+                                >
+                              </span>
+                            </button>
+                          {:else}
+                            <button
+                              on:click={() => (activeIdx = i)}
+                              class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                              i
+                                ? 'z-0'
+                                : ''} "
+                            >
+                              {#if activeIdx === i}
+                                <div
+                                  class="absolute inset-0 rounded-md bg-[#fff]"
+                                ></div>
+                              {/if}
+                              <span
+                                class="relative text-sm block font-semibold {activeIdx ===
+                                i
+                                  ? 'text-black'
+                                  : 'text-white'}"
+                              >
+                                {item.title}
+                              </span>
+                            </button>
+                          {/if}
                         {/each}
                       </div>
                     </div>
-
-                    {#if groupedNews?.length > 0}
-                      {#each groupedNews as [date, titleGroups]}
+                    {#if activeIdx === 0}
+                      {#if groupedNews?.length > 0}
+                        {#each groupedNews as [date, titleGroups]}
+                          <h3 class="mb-1.5 mt-3 font-semibold text-faded">
+                            {date}
+                          </h3>
+                          <div class="border border-gray-700">
+                            {#each titleGroups as { title, items, symbols }}
+                              <div class="flex border-gray-600 text-small">
+                                <div
+                                  class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                                >
+                                  {new Date(
+                                    items[0].publishedDate,
+                                  ).toLocaleTimeString("en-US", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })}
+                                </div>
+                                <div
+                                  class="flex-grow px-3 py-2 lg:py-1 border-t border-gray-700"
+                                >
+                                  <a
+                                    href={items[0].url}
+                                    target="_blank"
+                                    rel="nofollow noopener noreferrer"
+                                    class="text-white sm:hover:text-blue-400"
+                                  >
+                                    <h4
+                                      class="text-sm font-semibold lg:text-[1rem]"
+                                    >
+                                      {title}
+                                    </h4>
+                                  </a>
+                                  <div
+                                    class="flex flex-wrap gap-x-2 pt-2 text-sm lg:pt-0.5"
+                                  >
+                                    <div class="text-white lg:hidden">
+                                      {new Date(
+                                        items[0].publishedDate,
+                                      ).toLocaleTimeString("en-US", {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        hour12: true,
+                                      })}
+                                    </div>
+                                    <div class="text-white">
+                                      {items[0].site}
+                                    </div>
+                                    &#183;
+                                    <div class="flex flex-wrap gap-x-2">
+                                      {#each symbols as symbol}
+                                        <a
+                                          href={`/${items[0].type}/${symbol}`}
+                                          class="sm:hover:text-white text-blue-400"
+                                        >
+                                          {symbol}
+                                        </a>
+                                      {/each}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {/each}
+                          </div>
+                        {/each}
+                      {:else}
+                        <span class="text-sm sm:text-[1rem]">
+                          No news yet. Add some stocks to the watchlist to see
+                          the latest news.
+                        </span>
+                      {/if}
+                    {:else if earnings?.length > 0}
+                      {#each groupedEarnings as [date, titleGroups]}
                         <h3 class="mb-1.5 mt-3 font-semibold text-faded">
                           {date}
                         </h3>
                         <div class="border border-gray-700">
-                          {#each titleGroups as { title, items, symbols }}
+                          {#each titleGroups as item}
                             <div class="flex border-gray-600 text-small">
                               <div
                                 class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
                               >
-                                {new Date(
-                                  items[0].publishedDate,
-                                ).toLocaleTimeString("en-US", {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  hour12: true,
-                                })}
+                                {formatTime(item?.time)}
                               </div>
                               <div
                                 class="flex-grow px-3 py-2 lg:py-1 border-t border-gray-700"
                               >
-                                <a
-                                  href={items[0].url}
-                                  target="_blank"
-                                  rel="nofollow noopener noreferrer"
-                                  class="text-white sm:hover:text-blue-400"
-                                >
-                                  <h4
-                                    class="text-sm font-semibold lg:text-[1rem]"
-                                  >
-                                    {title}
-                                  </h4>
-                                </a>
+                                <div>
+                                  <strong>{item?.name}</strong>
+                                  (<HoverStockChart symbol={item?.symbol} />)
+                                  {item?.isToday
+                                    ? "will report today"
+                                    : [
+                                          "Monday",
+                                          "Tuesday",
+                                          "Wednesday",
+                                          "Thursday",
+                                        ].includes(
+                                          new Date().toLocaleDateString(
+                                            "en-US",
+                                            {
+                                              weekday: "long",
+                                            },
+                                          ),
+                                        )
+                                      ? "will report tomorrow"
+                                      : "will report Monday"}
+                                  {#if item?.time}
+                                    {#if compareTimes(item?.time, "16:00") >= 0}
+                                      after market closes.
+                                    {:else if compareTimes(item?.time, "09:30") <= 0}
+                                      before market opens.
+                                    {:else}
+                                      during market.
+                                    {/if}
+                                  {/if}
+                                  Analysts estimate {abbreviateNumber(
+                                    item?.revenueEst,
+                                    true,
+                                  )} in revenue ({(
+                                    (item?.revenueEst / item?.revenuePrior -
+                                      1) *
+                                    100
+                                  )?.toFixed(2)}% YoY) and ${item?.epsEst} in earnings
+                                  per share ({(
+                                    (item?.epsEst / item?.epsPrior - 1) *
+                                    100
+                                  )?.toFixed(2)}% YoY).
+                                </div>
+
                                 <div
                                   class="flex flex-wrap gap-x-2 pt-2 text-sm lg:pt-0.5"
                                 >
                                   <div class="text-white lg:hidden">
-                                    {new Date(
-                                      items[0].publishedDate,
-                                    ).toLocaleTimeString("en-US", {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      hour12: true,
-                                    })}
-                                  </div>
-                                  <div class="text-white">{items[0].site}</div>
-                                  &#183;
-                                  <div class="flex flex-wrap gap-x-2">
-                                    {#each symbols as symbol}
-                                      <a
-                                        href={`/${items[0].type}/${symbol}`}
-                                        class="sm:hover:text-white text-blue-400"
-                                      >
-                                        {symbol}
-                                      </a>
-                                    {/each}
+                                    {formatTime(item?.time)}
                                   </div>
                                 </div>
                               </div>
@@ -1443,8 +1566,8 @@
                       {/each}
                     {:else}
                       <span class="text-sm sm:text-[1rem]">
-                        No news yet. Add some stocks to the watchlist to see the
-                        latest news.
+                        No earnings yet. Add some stocks to the watchlist to see
+                        the latest earnings data.
                       </span>
                     {/if}
                   </div>
