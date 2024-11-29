@@ -224,12 +224,19 @@
           day: "2-digit",
           month: "short",
           year: "numeric",
-        }).format(new Date(item?.publishedDate));
+        }).format(new Date(item.publishedDate));
         if (!acc[dateKey]) acc[dateKey] = [];
-        acc[dateKey]?.push(item);
+        acc[dateKey].push(item);
         return acc;
       }, {}),
-    );
+    )?.map(([date, items]) => [
+      date,
+      items.sort(
+        (a, b) =>
+          new Date(b?.publishedDate)?.getTime() -
+          new Date(a?.publishedDate)?.getTime(),
+      ),
+    ]);
   }
 
   async function createWatchList(event) {
@@ -375,6 +382,8 @@
         (item) => !deleteTickerList?.includes(item?.symbol),
       );
 
+      news = news?.filter((item) => !deleteTickerList?.includes(item?.symbol));
+
       deleteTickerList = [...deleteTickerList];
       editMode = false;
       const postData = {
@@ -400,6 +409,26 @@
       });
 
       allList = [...allList];
+
+      groupedNews = Object?.entries(
+        news?.reduce((acc, item) => {
+          const dateKey = new Intl.DateTimeFormat("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }).format(new Date(item.publishedDate));
+          if (!acc[dateKey]) acc[dateKey] = [];
+          acc[dateKey].push(item);
+          return acc;
+        }, {}),
+      )?.map(([date, items]) => [
+        date,
+        items.sort(
+          (a, b) =>
+            new Date(b?.publishedDate)?.getTime() -
+            new Date(a?.publishedDate)?.getTime(),
+        ),
+      ]);
     }
   }
 
