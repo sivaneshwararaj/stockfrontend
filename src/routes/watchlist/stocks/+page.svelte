@@ -21,6 +21,7 @@
   let watchList: any[] = [];
 
   let news = [];
+  let groupedNews = {};
   let checkedItems;
   let socket;
 
@@ -213,6 +214,22 @@
 
     watchList = output?.data;
     news = output?.news;
+    news = news?.map((item) => {
+      const match = watchList?.find((w) => w?.symbol === item?.symbol);
+      return match ? { ...item, type: match?.type } : { ...item };
+    });
+    groupedNews = Object?.entries(
+      news?.reduce((acc, item) => {
+        const dateKey = new Intl.DateTimeFormat("en-US", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(item?.publishedDate));
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey]?.push(item);
+        return acc;
+      }, {}),
+    );
   }
 
   async function createWatchList(event) {
@@ -1319,70 +1336,96 @@
                   </div>
 
                   <div
-                    class="w-full m-auto border-b border-gray-600 mt-16 mb-16"
+                    class="w-full m-auto border-b border-gray-600 mt-16 mb-10"
                   ></div>
 
-                  <h2
-                    class="text-start text-white text-xl sm:text-2xl font-bold mb-3"
-                  >
-                    News
-                  </h2>
-
-                  <div class="relative text-gray-800 m-auto">
-                    <div class="flex flex-wrap md:flex-row">
-                      {#each news as item}
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          class="cursor-pointer mb-10 w-full"
-                        >
-                          <div class="flex-shrink-0 float-left">
-                            <img
-                              src={item?.image}
-                              class="float-left w-36 sm:w-40 rounded-xl ml-2 mr-4 mb-2"
-                              alt="news image"
-                              loading="lazy"
-                            />
-                            <div
-                              class="absolute w-36 sm:w-40 ml-2 mr-4 mb-2 h-6 bg-[#0C0F17] bg-opacity-80 flex justify-center items-center"
-                            >
-                              <p class="text-white italic text-xs">
-                                {new URL(item?.url).hostname.replace(
-                                  "www.",
-                                  "",
-                                )}
-                              </p>
-                            </div>
-                          </div>
-                          <div class="flex-grow">
-                            <div class="text-sm text-white flex flex-row">
-                              <div
-                                class="rounded-full w-6 h-6 relative bg-gray-800 mr-1.5 mb-0.5"
-                              >
-                                <img
-                                  class="rounded-full w-4 h-4 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                  src={`https://financialmodelingprep.com/image-stock/${item.symbol}.png`}
-                                  loading="lazy"
-                                />
-                              </div>
-                              {item?.symbol} &centerdot; {formatDate(
-                                item?.publishedDate,
-                              )} ago
-                            </div>
-                            <h2
-                              class="text-start text-sm sm:text-md font-medium mb-2 flex-shrink text-white"
-                            >
-                              {item.title}
-                            </h2>
-                            <p class="text-white text-sm sm:text-md p-2">
-                              {item?.text?.length > 250
-                                ? item?.text?.slice(0, 250) + "..."
-                                : item?.text}
-                            </p>
-                          </div>
-                        </a>
-                      {/each}
+                  <div class=" text-white">
+                    <div class="mb-3 flex items-center space-x-2">
+                      <h2
+                        class="text-start text-white text-xl sm:text-2xl font-bold"
+                      >
+                        News
+                      </h2>
+                      <!--
+                      <button title="Refresh news"
+                        ><svg
+                          class="w-5 h-5 mt-1.5 text-icon"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          style="max-width:40px"
+                          ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                            stroke-width="2"
+                          ></path></svg
+                        ></button
+                      >
+                        -->
                     </div>
+
+                    {#each groupedNews as [date, items]}
+                      <h3 class="mb-1.5 mt-3 font-semibold text-faded">
+                        {date}
+                      </h3>
+                      <div class="border border-gray-700">
+                        {#each items as item}
+                          <div class="flex border-gray-600 text-small">
+                            <div
+                              class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                            >
+                              {new Date(item.publishedDate).toLocaleTimeString(
+                                "en-US",
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                },
+                              )}
+                            </div>
+                            <div
+                              class="flex-grow px-3 py-2 lg:py-1 border-gray-700 border-t"
+                            >
+                              <a
+                                href={item?.url}
+                                target="_blank"
+                                rel="nofollow noopener noreferrer"
+                                class="text-white sm:hover:text-blue-400"
+                              >
+                                <h4
+                                  class="text-sm font-semibold lg:text-[1rem]"
+                                >
+                                  {item?.title}
+                                </h4>
+                              </a>
+                              <div
+                                class="flex flex-wrap gap-x-2 pt-2 text-sm lg:pt-0.5"
+                              >
+                                <div class="text-white lg:hidden">
+                                  {new Date(
+                                    item.publishedDate,
+                                  ).toLocaleTimeString("en-US", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })}
+                                </div>
+                                <div class="text-white">{item?.site}</div>
+                                &#183;
+                                <div class="flex flex-wrap gap-x-2">
+                                  <a
+                                    href={`/${item?.type}/${item?.symbol}`}
+                                    class="sm:hover:text-white text-blue-400"
+                                    >{item?.symbol}</a
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {/each}
+                      </div>
+                    {/each}
                   </div>
                 </div>
               {:else}
