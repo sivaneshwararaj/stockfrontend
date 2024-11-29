@@ -16,14 +16,25 @@
   let switchWatchlist = false;
   let editMode = false;
   let numberOfChecked = 0;
+  let activeIdx = 0;
+
   let deleteTickerList = [];
 
   let watchList: any[] = [];
 
   let news = [];
-  let groupedNews = {};
+  let groupedNews = [];
   let checkedItems;
   let socket;
+
+  const tabs = [
+    {
+      title: "News",
+    },
+    {
+      title: "Earnings",
+    },
+  ];
 
   let allRows = [
     { name: "Volume", rule: "volume", type: "int" },
@@ -219,6 +230,7 @@
       return match ? { ...item, type: match?.type } : { ...item };
     });
     groupedNews = groupNews(news, watchList);
+    console.log(groupedNews);
   }
 
   async function createWatchList(event) {
@@ -1333,92 +1345,108 @@
                   ></div>
 
                   <div class=" text-white">
-                    <div class="mb-3 flex items-center space-x-2">
-                      <h2
-                        class="text-start text-white text-xl sm:text-2xl font-bold"
+                    <div
+                      class="inline-flex justify-center w-full rounded-md sm:w-auto mb-3"
+                    >
+                      <div
+                        class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                       >
-                        News
-                      </h2>
-                      <!--
-                      <button title="Refresh news"
-                        ><svg
-                          class="w-5 h-5 mt-1.5 text-icon"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          style="max-width:40px"
-                          ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                            stroke-width="2"
-                          ></path></svg
-                        ></button
-                      >
-                        -->
+                        {#each tabs as item, i}
+                          <button
+                            on:click={() => (activeIdx = i)}
+                            class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                            i
+                              ? 'z-0'
+                              : ''} "
+                          >
+                            {#if activeIdx === i}
+                              <div
+                                class="absolute inset-0 rounded-md bg-[#fff]"
+                              ></div>
+                            {/if}
+                            <span
+                              class="relative text-sm block text-lg font-semibold {activeIdx ===
+                              i
+                                ? 'text-black'
+                                : 'text-white'}"
+                            >
+                              {item.title}
+                            </span>
+                          </button>
+                        {/each}
+                      </div>
                     </div>
 
-                    {#each groupedNews as [date, titleGroups]}
-                      <h3 class="mb-1.5 mt-3 font-semibold text-faded">
-                        {date}
-                      </h3>
-                      <div class="border border-gray-700">
-                        {#each titleGroups as { title, items, symbols }}
-                          <div class="flex border-gray-600 text-small">
-                            <div
-                              class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
-                            >
-                              {new Date(
-                                items[0].publishedDate,
-                              ).toLocaleTimeString("en-US", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                hour12: true,
-                              })}
-                            </div>
-                            <div class="flex-grow px-3 py-2 lg:py-1">
-                              <a
-                                href={items[0].url}
-                                target="_blank"
-                                rel="nofollow noopener noreferrer"
-                                class="text-white sm:hover:text-blue-400"
-                              >
-                                <h4
-                                  class="text-sm font-semibold lg:text-[1rem]"
-                                >
-                                  {title}
-                                </h4>
-                              </a>
+                    {#if groupedNews?.length > 0}
+                      {#each groupedNews as [date, titleGroups]}
+                        <h3 class="mb-1.5 mt-3 font-semibold text-faded">
+                          {date}
+                        </h3>
+                        <div class="border border-gray-700">
+                          {#each titleGroups as { title, items, symbols }}
+                            <div class="flex border-gray-600 text-small">
                               <div
-                                class="flex flex-wrap gap-x-2 pt-2 text-sm lg:pt-0.5"
+                                class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
                               >
-                                <div class="text-white lg:hidden">
-                                  {new Date(
-                                    items[0].publishedDate,
-                                  ).toLocaleTimeString("en-US", {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    hour12: true,
-                                  })}
-                                </div>
-                                <div class="text-white">{items[0].site}</div>
-                                &#183;
-                                <div class="flex flex-wrap gap-x-2">
-                                  {#each symbols as symbol}
-                                    <a
-                                      href={`/${items[0].type}/${symbol}`}
-                                      class="sm:hover:text-white text-blue-400"
-                                    >
-                                      {symbol}
-                                    </a>
-                                  {/each}
+                                {new Date(
+                                  items[0].publishedDate,
+                                ).toLocaleTimeString("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                })}
+                              </div>
+                              <div
+                                class="flex-grow px-3 py-2 lg:py-1 border-t border-gray-700"
+                              >
+                                <a
+                                  href={items[0].url}
+                                  target="_blank"
+                                  rel="nofollow noopener noreferrer"
+                                  class="text-white sm:hover:text-blue-400"
+                                >
+                                  <h4
+                                    class="text-sm font-semibold lg:text-[1rem]"
+                                  >
+                                    {title}
+                                  </h4>
+                                </a>
+                                <div
+                                  class="flex flex-wrap gap-x-2 pt-2 text-sm lg:pt-0.5"
+                                >
+                                  <div class="text-white lg:hidden">
+                                    {new Date(
+                                      items[0].publishedDate,
+                                    ).toLocaleTimeString("en-US", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: true,
+                                    })}
+                                  </div>
+                                  <div class="text-white">{items[0].site}</div>
+                                  &#183;
+                                  <div class="flex flex-wrap gap-x-2">
+                                    {#each symbols as symbol}
+                                      <a
+                                        href={`/${items[0].type}/${symbol}`}
+                                        class="sm:hover:text-white text-blue-400"
+                                      >
+                                        {symbol}
+                                      </a>
+                                    {/each}
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        {/each}
-                      </div>
-                    {/each}
+                          {/each}
+                        </div>
+                      {/each}
+                    {:else}
+                      <span class="text-sm sm:text-[1rem]">
+                        No news yet. Add some stocks to the watchlist to see the
+                        latest news.
+                      </span>
+                    {/if}
                   </div>
                 </div>
               {:else}

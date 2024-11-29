@@ -19,44 +19,50 @@ type FlyAndScaleParams = {
 };
 
 
-export const  groupNews = (news, watchList) => {
-    return Object.entries(
-      news
-        ?.map(item => {
-          // Add 'type' based on watchList
-          const match = watchList?.find(w => w?.symbol === item?.symbol);
-          return match ? { ...item, type: match.type } : { ...item };
-        })
-        ?.reduce((acc, item) => {
-          const dateKey = new Intl.DateTimeFormat('en-US', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          }).format(new Date(item?.publishedDate));
-
-          const titleKey = item.title;
-
-          if (!acc[dateKey]) acc[dateKey] = {};
-          if (!acc[dateKey][titleKey]) acc[dateKey][titleKey] = [];
-
-          acc[dateKey][titleKey]?.push(item);
-
-          return acc;
-        }, {})
-    )?.map(([date, titleGroup]) => [
+export const groupNews = (news, watchList) => {
+  return Object.entries(
+    news
+      ?.map(item => {
+        // Add 'type' based on watchList
+        const match = watchList?.find(w => w?.symbol === item?.symbol);
+        return match ? { ...item, type: match.type } : { ...item };
+      })
+      ?.reduce((acc, item) => {
+        const dateKey = new Intl.DateTimeFormat('en-US', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        }).format(new Date(item?.publishedDate));
+        const titleKey = item.title;
+        if (!acc[dateKey]) acc[dateKey] = {};
+        if (!acc[dateKey][titleKey]) acc[dateKey][titleKey] = [];
+        acc[dateKey][titleKey]?.push(item);
+        return acc;
+      }, {})
+  )
+    // Sort the grouped dates in descending order to have the latest date first
+    ?.sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
+    ?.map(([date, titleGroup]) => [
       date,
-      Object?.entries(titleGroup)?.map(([title, items]) => {
-        // Sort by time for each group
-        items?.sort((a, b) => new Date(b?.publishedDate) - new Date(a?.publishedDate));
-
-        // Get the unique symbols
-        const symbols = [...new Set(items?.map(item => item.symbol))];
-
-        // Return the group with symbols and items
-        return { title, items, symbols };
-      }),
+      Object.entries(titleGroup)
+        // Sort titles by the latest time of their items
+        .sort(([, itemsA], [, itemsB]) => {
+          const latestTimeA = new Date(Math.max(...itemsA.map(item => new Date(item.publishedDate))));
+          const latestTimeB = new Date(Math.max(...itemsB.map(item => new Date(item.publishedDate))));
+          return latestTimeB - latestTimeA;
+        })
+        .map(([title, items]) => {
+          // Sort items within each title group by latest time
+          items.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+          
+          // Get the unique symbols
+          const symbols = [...new Set(items.map(item => item.symbol))];
+          
+          // Return the group with symbols and items
+          return { title, items, symbols };
+        }),
     ]);
-  }
+};
 
 
 export const calculateChange = (oldList?: any[], newList?: any[]) => {
