@@ -12,6 +12,7 @@
     currentPrice,
     priceIncrease,
     stockTicker,
+    assetType,
     displayCompanyName,
     isOpen,
     shouldUpdatePriceChart,
@@ -31,6 +32,10 @@
   let previousRealtimePrice = null;
   let previousTicker;
   let socket;
+
+  $stockTicker = data?.getParams;
+  $assetType = "stock";
+  $displayCompanyName = data?.companyName;
 
   let isScrolled = false;
   let y;
@@ -259,7 +264,9 @@
       typeof window !== "undefined"
     ) {
       // add a check to see if running on client-side
-
+      $stockTicker = data?.getParams;
+      $assetType = "stock";
+      $displayCompanyName = data?.companyName;
       $currentPortfolioPrice = data?.getStockQuote?.price;
       prePostData = data?.getPrePostQuote || {};
       const output = [...data?.getOneDayPrice] ?? [];
