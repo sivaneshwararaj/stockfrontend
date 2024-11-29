@@ -173,6 +173,8 @@
 
   let tableForecastRevenue = [];
   let tableForecastEPS = [];
+  let tableCombinedRevenue = [];
+  let tableCombinedEPS = [];
 
   function getPlotOptions(dataType: string) {
     let dates = [];
@@ -534,6 +536,8 @@
   function prepareData() {
     tableActualRevenue = [];
     tableForecastRevenue = [];
+    tableCombinedRevenue = [];
+    tableCombinedEPS = [];
 
     tableActualEPS = [];
     tableForecastEPS = [];
@@ -558,6 +562,20 @@
       });
     });
 
+    tableCombinedRevenue = tableActualRevenue?.map((item1) => {
+      // Find the corresponding item in data2 based on "FY"
+      const item2 = tableForecastRevenue?.find(
+        (item2) => item2?.FY === item1?.FY,
+      );
+
+      // If the value in data1 is null, replace it with the value from data2
+      return {
+        FY: item1.FY,
+        val: item1.val === null ? item2.val : item1.val,
+        numOfAnalysts: item2.numOfAnalysts,
+      };
+    });
+
     //EPS Data
     filteredData?.forEach((item) => {
       tableActualEPS?.push({
@@ -572,10 +590,21 @@
     //Values coincide with table values for crosscheck
     revenueAvgGrowthList = computeGrowthList(
       tableActualRevenue,
-      tableForecastRevenue,
+      tableCombinedRevenue,
     );
 
-    epsAvgGrowthList = computeGrowthList(tableActualEPS, tableForecastEPS);
+    tableCombinedEPS = tableActualEPS?.map((item1) => {
+      // Find the corresponding item in data2 based on "FY"
+      const item2 = tableForecastEPS?.find((item2) => item2?.FY === item1?.FY);
+
+      // If the value in data1 is null, replace it with the value from data2
+      return {
+        FY: item1.FY,
+        val: item1.val === null ? item2.val : item1.val,
+      };
+    });
+
+    epsAvgGrowthList = computeGrowthList(tableActualEPS, tableCombinedEPS);
   }
 
   $: {
@@ -630,7 +659,7 @@
                   >
                     Revenue
                   </th>
-                  {#each tableForecastRevenue as item}
+                  {#each tableCombinedRevenue as item}
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
@@ -649,7 +678,7 @@
                   >
                     Revenue Growth
                   </th>
-                  {#each computeGrowthList(tableActualRevenue, tableForecastRevenue) as item, index}
+                  {#each computeGrowthList(tableActualRevenue, tableCombinedRevenue) as item, index}
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
@@ -684,7 +713,7 @@
                   >
                     EPS
                   </th>
-                  {#each tableForecastEPS as item}
+                  {#each tableCombinedEPS as item}
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
@@ -703,7 +732,7 @@
                   >
                     EPS Growth
                   </th>
-                  {#each computeGrowthList(tableActualEPS, tableForecastEPS) as item, index}
+                  {#each computeGrowthList(tableActualEPS, tableCombinedEPS) as item, index}
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
                     >
@@ -756,13 +785,17 @@
                     class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
                     >No. Analysts</th
                   >
-                  {#each tableForecastRevenue as item}
+                  {#each tableCombinedRevenue as item}
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
-                      {item?.numOfAnalysts === (null || 0)
-                        ? "n/a"
-                        : item?.numOfAnalysts}
+                      {#if item?.FY > 24}
+                        {item?.numOfAnalysts === (null || 0)
+                          ? "n/a"
+                          : item?.numOfAnalysts}
+                      {:else}
+                        -
+                      {/if}
                     </td>
                   {/each}
                 </tr>
