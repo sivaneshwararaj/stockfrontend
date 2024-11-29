@@ -1,6 +1,6 @@
 <script lang="ts">
   import { screenWidth, numberOfUnreadNotification, isOpen } from "$lib/store";
-  import { formatDate, abbreviateNumber, calculateChange } from "$lib/utils";
+  import { groupNews, abbreviateNumber, calculateChange } from "$lib/utils";
   import toast from "svelte-french-toast";
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import Input from "$lib/components/Input.svelte";
@@ -218,25 +218,7 @@
       const match = watchList?.find((w) => w?.symbol === item?.symbol);
       return match ? { ...item, type: match?.type } : { ...item };
     });
-    groupedNews = Object?.entries(
-      news?.reduce((acc, item) => {
-        const dateKey = new Intl.DateTimeFormat("en-US", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }).format(new Date(item.publishedDate));
-        if (!acc[dateKey]) acc[dateKey] = [];
-        acc[dateKey].push(item);
-        return acc;
-      }, {}),
-    )?.map(([date, items]) => [
-      date,
-      items.sort(
-        (a, b) =>
-          new Date(b?.publishedDate)?.getTime() -
-          new Date(a?.publishedDate)?.getTime(),
-      ),
-    ]);
+    groupedNews = groupNews(news, watchList);
   }
 
   async function createWatchList(event) {
@@ -410,25 +392,7 @@
 
       allList = [...allList];
 
-      groupedNews = Object?.entries(
-        news?.reduce((acc, item) => {
-          const dateKey = new Intl.DateTimeFormat("en-US", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-          }).format(new Date(item.publishedDate));
-          if (!acc[dateKey]) acc[dateKey] = [];
-          acc[dateKey].push(item);
-          return acc;
-        }, {}),
-      )?.map(([date, items]) => [
-        date,
-        items.sort(
-          (a, b) =>
-            new Date(b?.publishedDate)?.getTime() -
-            new Date(a?.publishedDate)?.getTime(),
-        ),
-      ]);
+      groupedNews = groupNews(news, watchList);
     }
   }
 
@@ -1394,30 +1358,27 @@
                         -->
                     </div>
 
-                    {#each groupedNews as [date, items]}
+                    {#each groupedNews as [date, titleGroups]}
                       <h3 class="mb-1.5 mt-3 font-semibold text-faded">
                         {date}
                       </h3>
                       <div class="border border-gray-700">
-                        {#each items as item}
+                        {#each titleGroups as { title, items, symbols }}
                           <div class="flex border-gray-600 text-small">
                             <div
                               class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
                             >
-                              {new Date(item.publishedDate).toLocaleTimeString(
-                                "en-US",
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  hour12: true,
-                                },
-                              )}
+                              {new Date(
+                                items[0].publishedDate,
+                              ).toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })}
                             </div>
-                            <div
-                              class="flex-grow px-3 py-2 lg:py-1 border-gray-700 border-t"
-                            >
+                            <div class="flex-grow px-3 py-2 lg:py-1">
                               <a
-                                href={item?.url}
+                                href={items[0].url}
                                 target="_blank"
                                 rel="nofollow noopener noreferrer"
                                 class="text-white sm:hover:text-blue-400"
@@ -1425,7 +1386,7 @@
                                 <h4
                                   class="text-sm font-semibold lg:text-[1rem]"
                                 >
-                                  {item?.title}
+                                  {title}
                                 </h4>
                               </a>
                               <div
@@ -1433,21 +1394,24 @@
                               >
                                 <div class="text-white lg:hidden">
                                   {new Date(
-                                    item.publishedDate,
+                                    items[0].publishedDate,
                                   ).toLocaleTimeString("en-US", {
                                     hour: "2-digit",
                                     minute: "2-digit",
                                     hour12: true,
                                   })}
                                 </div>
-                                <div class="text-white">{item?.site}</div>
+                                <div class="text-white">{items[0].site}</div>
                                 &#183;
                                 <div class="flex flex-wrap gap-x-2">
-                                  <a
-                                    href={`/${item?.type}/${item?.symbol}`}
-                                    class="sm:hover:text-white text-blue-400"
-                                    >{item?.symbol}</a
-                                  >
+                                  {#each symbols as symbol}
+                                    <a
+                                      href={`/${items[0].type}/${symbol}`}
+                                      class="sm:hover:text-white text-blue-400"
+                                    >
+                                      {symbol}
+                                    </a>
+                                  {/each}
                                 </div>
                               </div>
                             </div>
