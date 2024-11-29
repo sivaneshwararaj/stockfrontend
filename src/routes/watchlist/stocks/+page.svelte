@@ -1363,7 +1363,7 @@
                   </div>
 
                   <div
-                    class="w-full m-auto border-b border-gray-600 mt-16 mb-10"
+                    class="w-full m-auto border-b border-gray-600 mt-10 mb-5"
                   ></div>
 
                   <div class=" text-white">
@@ -1380,7 +1380,7 @@
                               class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1"
                             >
                               <span
-                                class="relative text-sm block font-semibold"
+                                class="relative text-sm sm:text-[1rem] block font-semibold"
                               >
                                 {item.title}
                                 <svg
@@ -1408,7 +1408,7 @@
                                 ></div>
                               {/if}
                               <span
-                                class="relative text-sm block font-semibold {activeIdx ===
+                                class="relative text-sm sm:text-[1rem] block font-semibold {activeIdx ===
                                 i
                                   ? 'text-black'
                                   : 'text-white'}"
