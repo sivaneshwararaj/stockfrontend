@@ -51,354 +51,321 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<body>
-  <div class="w-full max-w-4xl overflow-hidden m-auto min-h-screen pt-10 mb-40">
-    <!--Start Mission-->
-    <div
-      class="bg-[#09090B] w-full hover:border-slate-500 border-slate-600 h-auto sm:p-10 mt-3"
-    >
-      <div class="text-white text-3xl sm:text-5xl text-center p-3 sm:mt-5">
-        <span class="font-bold">
-          A stock analysis platform by the users, for the users.
-        </span>
-      </div>
-
-      <div class="text-white text-[1rem] sm:text-lg mt-3 text-center px-5">
-        Our mission is to create the first large-scale stock analysis platform
-        in which the platform's interests are aligned with those of the user—a
-        platform founded on ethical design principles. At the heart of these
-        principles is the concept of complete transparency.
-
-        <!-- Start Image -->
-        <div class="m-auto flex justify-center mt-6">
-          <div class="relative">
-            <div
-              class="z-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-              <img
-                class="w-24 sm:w-28 mr-4"
-                src={cloudFrontUrl + "/assets/globe.png"}
-                alt="logo"
-                loading="lazy"
-              />
-            </div>
-            <svg
-              id="visual"
-              viewBox="0 0 960 540"
-              width="380"
-              height="200"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-            >
-              <defs>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="12" result="glow" />
-                  <feMerge>
-                    <feMergeNode in="glow" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <g transform="translate(506.6556351091302 253.49315711627338)">
-                <path
-                  d="M141.5 -60.2C185.5 -5.4 224.8 73.5 200.5 122.1C176.1 170.7 88 188.8 -4.7 191.5C-97.4 194.3 -194.9 181.5 -236.6 122.9C-278.3 64.3 -264.3 -40.1 -215.6 -97.5C-166.9 -155 -83.4 -165.5 -17.4 -155.5C48.7 -145.5 97.4 -114.9 141.5 -60.2"
-                  fill="#1E40AF"
-                  stroke-width="10"
-                  filter="url(#glow)"
-                ></path>
-              </g>
-            </svg>
-          </div>
-        </div>
-        <!-- End Image -->
-      </div>
-    </div>
-    <!--End Mission-->
-
-    <div
-      class="bg-[#09090B] w-full hover:border-slate-500 border-slate-600 h-auto pl-1 pr-1 sm:pl-0 sm:pr-0 pb-10 mb-8"
-    >
-      <div class="text-3xl sm:text-5xl text-white text-center p-3">
-        <span class="font-bold"> Proudly Open Source </span>
-      </div>
-
-      <div
-        class="text-[1rem] sm:text-lg text-white text-center w-11/12 sm:w-1/2 m-auto mb-8"
-      >
-        Stocknear is committed to open source & transparency. You can also run
-        it locally or self-hosted.
-      </div>
-
-      <div class="w-11/12 sm:w-1/2 m-auto text-center">
-        <a
-          href="https://github.com/stocknear"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="w-fit sm:w-54 inline-flex animate-shine items-center justify-center rounded-xl text-sm border border-neutral-900 bg-[linear-gradient(110deg,#252626,55%,#fff,45%,#252626)] bg-[length:200%_100%] px-4 py-2 font-medium transition-colors"
+<body class="text-white w-full">
+  <section class="border-b border-gray-600 sm:rounded-md w-full">
+    <div class="mx-auto max-w-7xl px-6 py-16 sm:py-28 md:px-8">
+      <div class="text-center">
+        <h1 class="mt-1 text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
+          About Us
+        </h1>
+        <p
+          class="mx-auto mt-5 max-w-3xl text-xl leading-normal text-white md:mt-7 md:text-2xl"
         >
-          <div class="m-auto flex-shrink-0 flex justify-center items-center">
-            <svg
-              class="w-8 h-8 sm:w-10 sm:h-10"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              ><path
-                fill="#fff"
-                d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"
-              /></svg
-            >
-
-            <span class="text-white text-[1rem] ml-2 font-semibold">
-              stocknear
-              {data?.getFrontendStars + data?.getBackendStars}
-            </span>
-            <svg
-              class="ml-1 w-4 h-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 32 32"
-              ><path
-                fill="#fff"
-                d="m18.7 4.627l2.247 4.31a2.27 2.27 0 0 0 1.686 1.189l4.746.65c2.538.35 3.522 3.479 1.645 5.219l-3.25 2.999a2.225 2.225 0 0 0-.683 2.04l.793 4.398c.441 2.45-2.108 4.36-4.345 3.24l-4.536-2.25a2.282 2.282 0 0 0-2.006 0l-4.536 2.25c-2.238 1.11-4.786-.79-4.345-3.24l.793-4.399c.14-.75-.12-1.52-.682-2.04l-3.251-2.998c-1.877-1.73-.893-4.87 1.645-5.22l4.746-.65a2.23 2.23 0 0 0 1.686-1.189l2.248-4.309c1.144-2.17 4.264-2.17 5.398 0"
-              /></svg
-            >
-          </div>
-        </a>
-
-        <div class="text-white text-sm font-semibold font-mono mt-5">
-          Leave a star to support us
-        </div>
+          Welcome to Stocknear — a stock analysis platform built by users, for
+          users. Our goal is to be the internet's top source of free stock data
+          and information for retail investors.
+        </p>
       </div>
     </div>
+  </section>
 
-    <!-- Start Section-->
-    <div
-      class="bg-[#09090B] w-full hover:border-slate-500 border-slate-600 h-auto pl-1 pr-1 sm:pl-0 sm:pr-0 pb-10 mb-8"
-    >
-      <div
-        class="text-3xl sm:text-5xl text-white text-center p-3 mt-10 sm:mt-5"
-      >
-        <span class="font-bold"> No ads. No tracking. </span>
+  <section class="border-t border-gray-600 text-white">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <div class="lg:text-center">
+        <h2 class="mt-2 text-3xl font-bold leading-8 text-white sm:text-4xl">
+          What sets us apart
+        </h2>
+        <p class="mt-4 max-w-lg text-xl text-white lg:mx-auto">
+          We're here to make investing simple and efficient with data that’s
+          always up-to-date and highly accurate.
+        </p>
       </div>
-
-      <div class="text-white text-[1rem] sm:text-lg mt-3 text-center px-5">
-        Stocknear has no ads or affiliate marketing, or tracking. Your attention
-        and data are never monetized. If you're skeptical, just look at our code <a
-          href="https://github.com/stocknear"
-          rel="noopener noreferrer"
-          target="_blank"
-          class="text-blue-400 sm:hover:text-white sm:hover:underline">here</a
-        >.
-      </div>
-    </div>
-    <!--End Section-->
-
-    <!-- Start Section-->
-    <div
-      class="bg-[#09090B] w-full hover:border-slate-500 border-slate-600 h-auto pb-10 mb-8"
-    >
-      <div
-        class="text-3xl sm:text-5xl text-white text-center p-3 mt-10 sm:mt-5"
-      >
-        <span class="font-bold"> No Dark Patterns </span>
-      </div>
-
-      <div class="text-white text-[1rem] sm:text-lg mt-3 text-center px-5">
-        On Stocknear, you won't encounter intrusive pop-ups prompting you to
-        sign up unless it's essential for accessing all platform features. We
-        don't manipulate you into using our platform more than you want to. If
-        you wish to cancel your subscription, there's no survey to fill out; you
-        can cancel it in just 2 seconds.
-      </div>
-    </div>
-    <!--End Section-->
-
-    <!--Start Why we need this -->
-    <div
-      class="bg-[#09090B] w-full hover:border-slate-500 border-slate-600 h-auto pb-10 mb-8"
-    >
-      <div
-        class="text-3xl sm:text-5xl text-white text-center p-3 mt-10 sm:mt-5"
-      >
-        <span class="font-bold"> What we offer </span>
-      </div>
-
-      <div
-        class="text-white text-[1rem] sm:text-lg mt-3 text-center pl-3 pr-3 sm:pl-10 sm:pr-10"
-      >
-        We provide retail traders with high-quality, accurate data that is only
-        available to hedge funds and institutional investors. By bridging the
-        gap between <span class="text-[#fff] font-semibold italic"
-          >Wall Street</span
+      <div class="mt-10">
+        <dl
+          class="space-y-10 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-12 md:space-y-0"
         >
-        and
-        <span class="text-[#fff] font-semibold italic">Retail Traders</span>, we
-        enhance your stock analysis with a wide range of data sources. Take
-        control of your investments, make informed decisions, and execute
-        profitable trades using our comprehensive data presented in an intuitive
-        UI.
-        <!-- Start Image -->
-        <div class="m-auto flex justify-center mt-5">
           <div class="relative">
-            <div
-              class="z-1 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-              <img
-                class="w-20 mr-8"
-                src={cloudFrontUrl + "/assets/no_money_logo.png"}
-                alt="logo"
-                loading="lazy"
-              />
-            </div>
-            <svg
-              id="visual"
-              viewBox="0 0 960 540"
-              width="380"
-              height="200"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-            >
-              <defs>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="12" result="glow" />
-                  <feMerge>
-                    <feMergeNode in="glow" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <g transform="translate(506.6556351091302 253.49315711627338)">
-                <path
-                  d="M141.5 -60.2C185.5 -5.4 224.8 73.5 200.5 122.1C176.1 170.7 88 188.8 -4.7 191.5C-97.4 194.3 -194.9 181.5 -236.6 122.9C-278.3 64.3 -264.3 -40.1 -215.6 -97.5C-166.9 -155 -83.4 -165.5 -17.4 -155.5C48.7 -145.5 97.4 -114.9 141.5 -60.2"
-                  fill="#1E40AF"
-                  stroke-width="10"
-                  filter="url(#glow)"
-                ></path>
-              </g>
-            </svg>
+            <dt>
+              <div
+                class="absolute flex h-12 w-12 items-center justify-center rounded-md bg-white text-black"
+              >
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width:40px"
+                  aria-hidden="true"
+                  ><path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.3"
+                    d="M8.75 6.5L3.25 12l5.5 5.5m6.5-11l5.5 5.5l-5.5 5.5"
+                  /></svg
+                >
+              </div>
+              <p class="ml-16 text-lg font-semibold leading-6">Open Source</p>
+            </dt>
+            <dd class="ml-16 mt-2">
+              Stocknear's codebase is 100% open-source, ensuring complete
+              transparency.
+            </dd>
           </div>
-        </div>
-        <!-- End Image -->
-      </div>
-    </div>
-    <!--End Why we need this -->
-
-    <!--Start Why we need this -->
-    <div
-      class="bg-[#09090B] w-full bg-[#09090B] sm:border-t hover:border-slate-500 border-slate-600 h-auto sm:p-10 mt-3 mb-20 sm:mb-8"
-    >
-      <div
-        class="text-3xl sm:text-5xl font-bold text-white text-center p-3 mt-10 sm:mt-5"
-      >
-        <span class="font-bold"> Why choose us </span>
-      </div>
-
-      <div
-        class="-mt-10 sm:mt-0 text-white text-[1rem] sm:text-lg text-center pl-3 pr-3 sm:pl-10 sm:pr-10"
-      >
-        <br class="mb-8 sm:mb-5" />
-        We love data and want to understand what drives the stock market. We collaborate
-        with top data vendors to provide clear and actionable insights, giving you
-        a competitive advantage over other traders.
-        <br />
-        <br />
-
-        As a physicist, I prioritize transparency and rigorous analysis. During
-        my PhD in theoretical particle physics, I developed models to describe
-        New Physics effects beyond our current knowledge of the universe, as
-        shown by my publication record
-        <a
-          href="https://inspirehep.net/authors/1838037"
-          target="_blank"
-          class="hover:text-white text-blue-400 underline">here</a
-        >.
-        <br class="mb-5" />
-        Unlike most financial websites run by programmers, I combine my programming
-        skills with a scientific approach.
-        <br />
-        <br />
-        If you find value in stocknear's approach to tackling stock analysis tasks,
-        that's great. If not, I wish you all the best on your trading journey and
-        maybe we will see us again in the future.
-        <!-- Start Image -->
-        <div class="m-auto flex justify-center mt-5">
           <div class="relative">
-            <div class="z-2 absolute mt-3">
-              <img
-                class="w-56 sm:w-64 ml-16 sm:ml-10 mt-12 sm:mt-8"
-                src={cloudFrontUrl + "/assets/community_logo.png"}
-                alt="logo"
-                loading="lazy"
-              />
-            </div>
-            <svg
-              id="visual"
-              viewBox="0 0 960 540"
-              width="380"
-              height="200"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              version="1.1"
-            >
-              <defs>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="12" result="glow" />
-                  <feMerge>
-                    <feMergeNode in="glow" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <g transform="translate(506.6556351091302 253.49315711627338)">
-                <path
-                  d="M141.5 -60.2C185.5 -5.4 224.8 73.5 200.5 122.1C176.1 170.7 88 188.8 -4.7 191.5C-97.4 194.3 -194.9 181.5 -236.6 122.9C-278.3 64.3 -264.3 -40.1 -215.6 -97.5C-166.9 -155 -83.4 -165.5 -17.4 -155.5C48.7 -145.5 97.4 -114.9 141.5 -60.2"
-                  fill="#1E40AF"
-                  stroke-width="10"
-                  filter="url(#glow)"
-                ></path>
-              </g>
-            </svg>
+            <dt>
+              <div
+                class="absolute flex h-12 w-12 items-center justify-center rounded-md bg-white text-black"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  ><g fill="none" fill-rule="evenodd"
+                    ><path
+                      d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"
+                    /><path
+                      fill="currentColor"
+                      d="M19 4.741V8a3 3 0 1 1 0 6v3c0 1.648-1.881 2.589-3.2 1.6l-2.06-1.546A8.66 8.66 0 0 0 10 15.446v2.844a2.71 2.71 0 0 1-5.316.744l-1.57-5.496a4.7 4.7 0 0 1 3.326-7.73l3.018-.168a9.34 9.34 0 0 0 4.19-1.259l2.344-1.368C17.326 2.236 19 3.197 19 4.741M5.634 15.078l.973 3.407A.71.71 0 0 0 8 18.29v-3.01l-1.56-.087a5 5 0 0 1-.806-.115M17 4.741L14.655 6.11A11.3 11.3 0 0 1 10 7.604v5.819c1.787.246 3.488.943 4.94 2.031L17 17zM8 7.724l-1.45.08a2.7 2.7 0 0 0-.17 5.377l.17.015l1.45.08zM19 10v2a1 1 0 0 0 .117-1.993z"
+                    /></g
+                  ></svg
+                >
+              </div>
+              <p class="ml-16 text-lg font-semibold leading-6">No ads</p>
+            </dt>
+            <dd class="ml-16 mt-2">
+              Without interruptions or distractions, ensuring your experience is
+              smooth and fast.
+            </dd>
           </div>
-        </div>
-        <!-- End Image -->
+          <div class="relative">
+            <dt>
+              <div
+                class="absolute flex h-12 w-12 items-center justify-center rounded-md bg-white text-black"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width:40px"
+                  aria-hidden="true"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+                  ></path></svg
+                >
+              </div>
+              <p class="ml-16 text-lg font-semibold leading-6">Data accuracy</p>
+            </dt>
+            <dd class="ml-16 mt-2">
+              We partner with top-tier data vendors to bring you premium Wall
+              Street data, backed by the highest standards of accuracy.
+            </dd>
+          </div>
+          <div class="relative">
+            <dt>
+              <div
+                class="absolute flex h-12 w-12 items-center justify-center rounded-md bg-white text-black"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width:40px"
+                  aria-hidden="true"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path></svg
+                >
+              </div>
+              <p class="ml-16 text-lg font-semibold leading-6">Ease of use</p>
+            </dt>
+            <dd class="ml-16 mt-2">
+              Our goal is to deliver the latest market insights—simple, clear,
+              efficient and fast.
+            </dd>
+          </div>
+          <div class="relative">
+            <dt>
+              <div
+                class="absolute flex h-12 w-12 items-center justify-center rounded-md bg-white text-black"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width:40px"
+                  aria-hidden="true"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  ></path></svg
+                >
+              </div>
+              <p class="ml-16 text-lg font-semibold leading-6">Speed</p>
+            </dt>
+            <dd class="ml-16 mt-2">
+              The market moves fast and so does Stocknear. We’ve designed the
+              website to load instantly, ensuring you never miss a beat.
+            </dd>
+          </div>
+          <div class="relative">
+            <dt>
+              <div
+                class="absolute flex h-12 w-12 items-center justify-center rounded-md bg-white text-black"
+              >
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width:40px"
+                  aria-hidden="true"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                  ></path></svg
+                >
+              </div>
+              <p class="ml-16 text-lg font-semibold leading-6">Integrity</p>
+            </dt>
+            <dd class="ml-16 mt-2">
+              We provide unbiased data for every stock, letting you form your
+              own opinions.
+            </dd>
+          </div>
+        </dl>
       </div>
     </div>
-    <!--End Why we need this -->
+  </section>
 
-    <!--Start Team -->
-    <div
-      class="bg-[#09090B] w-full bg-[#09090B] sm:border-t hover:border-slate-500 border-slate-600 h-auto sm:p-10 mt-3"
-    >
-      <div
-        class="text-3xl sm:text-5xl font-bold text-white text-center p-3 mt-10 sm:mt-5"
-      >
-        Team
-      </div>
+  <section class="border-t border-gray-600 text-white">
+    <div class="mx-auto max-w-7xl px-6 py-12 lg:px-8 lg:py-28">
+      <div class="space-y-12 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
+        <div class="space-y-5 sm:space-y-4">
+          <h2 class="text-3xl font-bold sm:text-4xl">Our Team</h2>
+          <p class="text-lg text-white sm:text-xl">
+            Stocknear is an open-source project solely maintained by Muslem
+            Rahimi.
+          </p>
+        </div>
+        <div class="lg:col-span-2">
+          <ul
+            class="space-y-12 sm:-mt-8 sm:space-y-0 sm:divide-y sm:divide-gray-200 lg:gap-x-8 lg:space-y-0"
+          >
+            <li class="sm:py-8">
+              <div
+                class="space-y-4 sm:grid sm:grid-cols-3 sm:items-start sm:gap-6 sm:space-y-0"
+              >
+                <div>
+                  <img
+                    class="rounded-lg object-cover shadow-lg w-24 h-24 sm:w-28 sm:h-28 m-auto mb-10 sm:mb-0"
+                    src={cloudFrontUrl + "/assets/mrahimi.webp"}
+                    alt="Muslem Rahimi profile picture"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="sm:col-span-2">
+                  <div class="space-y-4">
+                    <div class="space-y-1 text-lg font-semibold leading-6">
+                      <h3>Muslem Rahimi, PhD</h3>
+                      <p class="text-blue-400">Founder / Chief of Nothing</p>
+                    </div>
+                    <div class="text-lg">
+                      <p class="text-white">
+                        Muslem founded Stocknear in 2022 after leaving his role
+                        as an insurance mathematician at Deloitte. He holds a
+                        Bachelor's degree in Physics from the University of
+                        Göttingen, a Master's in Particle Physics from the
+                        Technical University of Munich (TUM), and a PhD in
+                        Theoretical Particle Physics from the University of
+                        Siegen.
+                      </p>
+                    </div>
+                    <ul class="flex space-x-5">
+                      <li>
+                        <a
+                          href="https://github.com/stocknear"
+                          class="text-gray-400 hover:text-gray-500"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><span class="sr-only">Github</span>
+                          <svg
+                            class="h-6 w-6"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            style="max-width:40px"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            ><path
+                              d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"
+                            /></svg
+                          ></a
+                        >
+                      </li>
 
-      <div class="text-white text-[1rem] sm:text-lg mt-3 text-center">
-        <!-- Team members -->
-        <div class="sm:flex sm:flex-wrap sm:justify-center mb-4">
-          <!-- 1st member -->
-          <div class="m-auto flex justify-center items-center mt-6">
-            <div class="flex flex-col justify-center items-center w-full">
-              <img
-                class="rounded-full mb-4 w-20 sm:w-28"
-                src={cloudFrontUrl + "/assets/mrahimi.webp"}
-                alt="Founder"
-                loading="lazy"
-              />
-              <h4 class="text-lg mb-1">Dr. Muslem Rahimi</h4>
-              <div class="text-white mb-6">Chief of Nothing</div>
-              <span class="text-[1.1rem] p-3 text-gray-300">
-                During my PhD in physics, I was developing models to describe
-                New Physics. Now I'm developing a stock analysis platform to
-                help small investors.
-              </span>
-            </div>
-          </div>
+                      <li>
+                        <a
+                          href="https://x.com/intent/follow?screen_name=stocknear"
+                          class="text-gray-400 hover:text-gray-500"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><span class="sr-only">Twitter</span>
+                          <svg
+                            class="h-5 w-5"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            style="max-width:40px"
+                            ><path
+                              d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"
+                            ></path></svg
+                          ></a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          href="https://www.linkedin.com/in/dr-muslem-rahimi-013956172/"
+                          class="text-gray-400 hover:text-gray-500"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><span class="sr-only">LinkedIn</span>
+                          <svg
+                            class="h-5 w-5"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            style="max-width:40px"
+                            ><path
+                              fill-rule="evenodd"
+                              d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"
+                              clip-rule="evenodd"
+                            ></path></svg
+                          ></a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-    <!--End Team -->
-  </div>
+  </section>
 </body>

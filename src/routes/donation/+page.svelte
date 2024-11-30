@@ -87,11 +87,7 @@
                   >
                     100% open-source culture
                   </li>
-                  <li
-                    style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;"
-                  >
-                    No user tracking
-                  </li>
+
                   <li
                     style="margin-left: 15px; line-height: 22px; margin-bottom: 10px; list-style-type: disc;"
                   >
