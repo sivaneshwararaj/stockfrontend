@@ -68,9 +68,9 @@
                 platform affordable and accessible to all investors.
                 <br />
                 <br />
-                Our Pro Membership is priced to be less than a cup of coffee, ensuring
-                that high-quality stock data is within reach for retail investors
-                of all backgrounds.
+                Our Stock Analysis Pro Membership is priced to be less than a hamburger
+                or döner, ensuring that high-quality stock data is within reach for
+                retail investors of all backgrounds.
               </p>
               <div class="text-white mb-5 text-[1rem]">
                 While the Pro Membership is designed to sustain our basic

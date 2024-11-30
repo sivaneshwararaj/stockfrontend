@@ -54,8 +54,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Free
-    Stocknear - Free Online Stock Analysis for Investors
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stocknear - Free Online Stock Analysis for Investors
   </title>
 
   <meta

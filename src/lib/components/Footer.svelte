@@ -82,7 +82,7 @@
             <a
               href="/pricing"
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
-              >Pricing</a
+              >Stock Analysis Pro</a
             >
           </li>
 
@@ -140,6 +140,14 @@
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
             >
               Contact Us
+            </a>
+          </li>
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/sitemap"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+            >
+              Sitemap
             </a>
           </li>
           <!--
