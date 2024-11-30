@@ -55,7 +55,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Free
-    Stock Analysis Information for Small Investors · stocknear
+    Stocknear - Free Online Stock Analysis for Investors
   </title>
 
   <meta
@@ -65,7 +65,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content="Free Stock Analysis Information for Small Investors · stocknear"
+    content="Stocknear - Free Online Stock Analysis for Investors"
   />
   <meta
     property="og:description"
@@ -78,7 +78,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content="Free Stock Analysis Information for Small Investors · stocknear"
+    content="Stocknear - Free Online Stock Analysis for Investors"
   />
   <meta
     name="twitter:description"
@@ -169,11 +169,11 @@
         Clear & <span class="italic text-[#fff]">Simple</span> Market Insight.
       </h1>
 
-      <h1
+      <h2
         class="text-white text-2xl font-semibold text-start w-full pb-4 sm:pl-4 sm:pb-2"
       >
         Dashboard
-      </h1>
+      </h2>
 
       <main class="flex flex-1 flex-col gap-4 sm:p-4 md:gap-8">
         <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">

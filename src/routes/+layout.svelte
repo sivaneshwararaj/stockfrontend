@@ -78,8 +78,6 @@
     }
   }
 
-  $: hideFooter = $page.url.pathname.startsWith("/options-flow");
-
   let hasUnreadElement = false;
   let notificationList = [];
 
@@ -264,6 +262,7 @@
                     <img
                       class="avatar w-9 sm:w-10 rounded-full"
                       src={stocknear_logo}
+                      alt="Stocknear Logo"
                     />
                     Stocknear
                   </a>
@@ -791,7 +790,11 @@
         </Sheet.Root>
 
         <a href="/" class="-ml-2 flex flex-shrink-0">
-          <img class="avatar w-9 3xl:w-10 rounded-full" src={stocknear_logo} />
+          <img
+            class="avatar w-9 3xl:w-10 rounded-full"
+            src={stocknear_logo}
+            alt="Stocknear Logo"
+          />
           <span class="text-white font-semibold ml-2 text-lg">Stocknear</span>
         </a>
 
@@ -885,6 +888,7 @@
                   <img
                     class="avatar w-9 3xl:w-12 rounded-full"
                     src={stocknear_logo}
+                    alt="Stocknear Logo"
                   />
                   <span class="text-white text-xl">Stocknear</span>
                 </a>
@@ -1196,9 +1200,7 @@
         </div>
       </div>
       <div>
-        {#if !hideFooter}
-          <Footer />
-        {/if}
+        <Footer />
       </div>
     </div>
   </div>

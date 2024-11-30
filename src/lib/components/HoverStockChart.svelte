@@ -193,15 +193,6 @@
           >
             <div class="flex flex-col items-start w-full">
               <div class=" flex flex-col items-start pb-1">
-                <!--
-                <Avatar.Root>
-                  <Avatar.Image
-                    class="w-5 h-5 rounded-full avatar text-center m-auto flex-shrink-0"
-                    src={`https://financialmodelingprep.com/image-stock/${symbol}.png`}
-                  />
-                  <Avatar.Fallback>SK</Avatar.Fallback>
-                </Avatar.Root>
-                -->
                 <h4 class="text-sm text-blue-400 inline-block">
                   {symbol}
                 </h4>
