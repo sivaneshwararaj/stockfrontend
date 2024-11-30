@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { numberOfUnreadNotification, globalForm } from "$lib/store";
+  import { numberOfUnreadNotification } from "$lib/store";
   import { openLemonSqueezyUrl } from "$lib/lemonsqueezy";
   //import Discount from '$lib/components/Discount.svelte';
   import { onMount } from "svelte";
@@ -52,12 +52,15 @@
         subId = import.meta.env.VITE_LEMON_SQUEEZY_MONTHLY_ID;
         value = 9.99;
       }
-
-      twq("event", "tw-onuuu-ospg6", {
-        value: value,
-        currency: "USD",
-        conversion_id: data?.user?.id,
-      });
+      try {
+        twq("event", "tw-onuuu-ospg6", {
+          value: value,
+          currency: "USD",
+          conversion_id: data?.user?.id,
+        });
+      } catch (e) {
+        console.log(e);
+      }
 
       const isDarkMode =
         window.matchMedia &&

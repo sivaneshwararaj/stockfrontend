@@ -48,8 +48,8 @@ type FlyAndScaleParams = {
     return formattedTimeString;
   }
 
-export const groupEarnings = (earnings) => {
-  return Object.entries(
+export const  groupEarnings = (earnings) => {
+  return Object?.entries(
     earnings
       ?.reduce((acc, item) => {
         const dateKey = new Intl.DateTimeFormat('en-US', {
@@ -59,7 +59,7 @@ export const groupEarnings = (earnings) => {
         }).format(new Date(item?.date));
 
         if (!acc[dateKey]) acc[dateKey] = [];
-        acc[dateKey].push(item);
+        acc[dateKey]?.push(item);
         return acc;
       }, {})
   )
@@ -68,9 +68,9 @@ export const groupEarnings = (earnings) => {
     ?.map(([date, earnings]) => [
       date,
       // Sort earnings within the date by time
-      earnings.sort((a, b) => {
-        const timeA = new Date(`1970-01-01T${a.time}`);
-        const timeB = new Date(`1970-01-01T${b.time}`);
+      earnings?.sort((a, b) => {
+        const timeA = new Date(`1970-01-01T${a?.time}`);
+        const timeB = new Date(`1970-01-01T${b?.time}`);
         return timeB - timeA;
       })
     ]);

@@ -246,9 +246,13 @@
       const match = watchList?.find((w) => w?.symbol === item?.symbol);
       return match ? { ...item, name: match?.name } : { ...item };
     });
-
-    groupedEarnings = groupEarnings(earnings);
-    groupedNews = groupNews(news, watchList);
+    if (watchList?.length > 0) {
+      groupedEarnings = groupEarnings(earnings);
+      groupedNews = groupNews(news, watchList);
+    } else {
+      groupedEarnings = [];
+      groupedNews = [];
+    }
   }
 
   async function createWatchList(event) {
@@ -424,9 +428,13 @@
       });
 
       allList = [...allList];
-
-      groupedNews = groupNews(news, watchList);
-      groupedEarnings = groupEarnings(earnings);
+      if (watchList?.length > 0) {
+        groupedNews = groupNews(news, watchList);
+        groupedEarnings = groupEarnings(earnings);
+      } else {
+        groupedEarnings = [];
+        groupedEarnings = [];
+      }
     }
   }
 
@@ -1493,7 +1501,7 @@
                           the latest news.
                         </span>
                       {/if}
-                    {:else if earnings?.length > 0}
+                    {:else if groupedEarnings?.length > 0}
                       {#each groupedEarnings as [date, titleGroups]}
                         <h3 class="mb-1.5 mt-3 font-semibold text-faded">
                           {date}
