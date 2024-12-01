@@ -48,6 +48,8 @@ export const clearCache = () => {
 export const showCookieConsent = writable(<boolean>false);
 export const shouldUpdatePriceChart = writable(<boolean>false);
 export const coolMode = writable(<boolean>false);
+export const timeFrame =writable(<string>"Max");
+
 
 export const executiveClicked = writable(<boolean>false);
 export const secFilingsClicked = writable(<boolean>false);

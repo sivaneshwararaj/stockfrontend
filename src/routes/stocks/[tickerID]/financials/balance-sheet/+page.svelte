@@ -3,6 +3,7 @@
   import {
     numberOfUnreadNotification,
     coolMode,
+    timeFrame,
     displayCompanyName,
     stockTicker,
   } from "$lib/store";
@@ -28,8 +29,6 @@
   let optionsData;
 
   let displayStatement = "cashAndCashEquivalents";
-
-  let timeFrame = "10Y";
 
   let activeIdx = 0;
 
@@ -328,7 +327,6 @@
   }
 
   fullStatement = data?.getBalanceSheetStatement;
-  timeFrame = "10Y";
   displayStatement = "cashAndCashEquivalents";
 
   const getCurrentYear = () => new Date()?.getFullYear();
@@ -415,7 +413,7 @@
   };
 
   $: {
-    if (timeFrame || displayStatement || activeIdx) {
+    if ($timeFrame || displayStatement || activeIdx) {
       if (activeIdx === 0) {
         filterRule = "annual";
         fullStatement = data?.getBalanceSheetStatement?.annual;
@@ -423,7 +421,7 @@
         filterRule = "quarterly";
         fullStatement = data?.getBalanceSheetStatement?.quarter;
       }
-      balanceSheet = filterStatement(fullStatement, timeFrame);
+      balanceSheet = filterStatement(fullStatement, $timeFrame);
 
       if ($coolMode === true) {
         optionsData = plotData();
@@ -587,7 +585,7 @@
                           builders={[builder]}
                           class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                         >
-                          <span class="truncate text-white">{timeFrame}</span>
+                          <span class="truncate text-white">{$timeFrame}</span>
                           <svg
                             class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
                             viewBox="0 0 20 20"
@@ -612,19 +610,19 @@
                         <DropdownMenu.Separator />
                         <DropdownMenu.Group>
                           <DropdownMenu.Item
-                            on:click={() => (timeFrame = "5Y")}
+                            on:click={() => ($timeFrame = "5Y")}
                             class="cursor-pointer hover:bg-[#27272A]"
                           >
                             5 years
                           </DropdownMenu.Item>
                           <DropdownMenu.Item
-                            on:click={() => (timeFrame = "10Y")}
+                            on:click={() => ($timeFrame = "10Y")}
                             class="cursor-pointer hover:bg-[#27272A]"
                           >
                             10 years
                           </DropdownMenu.Item>
                           <DropdownMenu.Item
-                            on:click={() => (timeFrame = "MAX")}
+                            on:click={() => ($timeFrame = "MAX")}
                             class="cursor-pointer hover:bg-[#27272A]"
                           >
                             Max

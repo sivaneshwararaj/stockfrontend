@@ -3,6 +3,7 @@
     numberOfUnreadNotification,
     displayCompanyName,
     coolMode,
+    timeFrame,
     stockTicker,
   } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
@@ -30,7 +31,6 @@
 
   let tableList = [];
 
-  let timeFrame = "10Y";
   let activeIdx = 0;
 
   const tabs = [
@@ -274,7 +274,6 @@
 
   fullStatement = data?.getCashFlowStatement;
 
-  timeFrame = "10Y";
   displayStatement = "netIncome";
 
   const getCurrentYear = () => new Date()?.getFullYear();
@@ -361,7 +360,7 @@
   };
 
   $: {
-    if (timeFrame || displayStatement || activeIdx) {
+    if ($timeFrame || displayStatement || activeIdx) {
       if (activeIdx === 0) {
         filterRule = "annual";
         fullStatement = data?.getCashFlowStatement?.annual;
@@ -369,7 +368,7 @@
         filterRule = "quarterly";
         fullStatement = data?.getCashFlowStatement?.quarter;
       }
-      cashFlow = filterStatement(fullStatement, timeFrame);
+      cashFlow = filterStatement(fullStatement, $timeFrame);
 
       if ($coolMode === true) {
         optionsData = plotData();
@@ -531,7 +530,7 @@
                           builders={[builder]}
                           class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                         >
-                          <span class="truncate text-white">{timeFrame}</span>
+                          <span class="truncate text-white">{$timeFrame}</span>
                           <svg
                             class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
                             viewBox="0 0 20 20"
@@ -556,19 +555,19 @@
                         <DropdownMenu.Separator />
                         <DropdownMenu.Group>
                           <DropdownMenu.Item
-                            on:click={() => (timeFrame = "5Y")}
+                            on:click={() => ($timeFrame = "5Y")}
                             class="cursor-pointer hover:bg-[#27272A]"
                           >
                             5 years
                           </DropdownMenu.Item>
                           <DropdownMenu.Item
-                            on:click={() => (timeFrame = "10Y")}
+                            on:click={() => ($timeFrame = "10Y")}
                             class="cursor-pointer hover:bg-[#27272A]"
                           >
                             10 years
                           </DropdownMenu.Item>
                           <DropdownMenu.Item
-                            on:click={() => (timeFrame = "MAX")}
+                            on:click={() => ($timeFrame = "MAX")}
                             class="cursor-pointer hover:bg-[#27272A]"
                           >
                             Max
@@ -802,267 +801,6 @@
     </div>
   </div>
 </section>
-
-<!--Start TimeFrame-->
-<input type="checkbox" id="timeFrameModal" class="modal-toggle" />
-
-<dialog id="timeFrameModal" class="modal modal-bottom sm:modal-middle">
-  <label
-    id="timeFrameModal"
-    for="timeFrameModal"
-    class="cursor-pointer modal-backdrop bg-[#09090B] bg-opacity-[0.5]"
-  ></label>
-
-  <div class="modal-box w-full bg-[#09090B] sm:border sm:border-gray-600">
-    <label
-      for="timeFrameModal"
-      class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-[1.8rem] text-white"
-    >
-      ✕
-    </label>
-
-    <div class="text-white">
-      <h3 class="font-medium text-lg sm:text-xl mb-10">Time Frame</h3>
-
-      <div class="flex flex-col items-center w-full Max-w-3xl bg-[#09090B]">
-        <label
-          for="timeFrameModal"
-          on:click={() => (timeFrame = "5Y")}
-          class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
-        >
-          <div
-            class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-md {timeFrame ===
-            '5Y'
-              ? 'ring-2 ring-[#04E000]'
-              : ''}"
-          >
-            <span class="ml-1 text-white font-medium mr-auto"> 5 years </span>
-
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if timeFrame === "5Y"}
-                <svg
-                  class="w-full h-full rounded-full"
-                  viewBox="0 0 48 48"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  fill="#09090B000"
-                  ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g><g id="SVGRepo_iconCarrier">
-                    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                    <title>ic_fluent_checkmark_circle_48_filled</title>
-                    <desc>Created with Sketch.</desc>
-                    <g
-                      id="🔍-Product-Icons"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                    >
-                      <g
-                        id="ic_fluent_checkmark_circle_48_filled"
-                        fill="#04E000"
-                        fill-rule="nonzero"
-                      >
-                        <path
-                          d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z"
-                          id="🎨-Color"
-                        >
-                        </path>
-                      </g>
-                    </g>
-                  </g></svg
-                >
-              {/if}
-            </div>
-          </div>
-        </label>
-
-        <label
-          for="timeFrameModal"
-          on:click={() => (timeFrame = "10Y")}
-          class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
-        >
-          <div
-            class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-md {timeFrame ===
-            '10Y'
-              ? 'ring-2 ring-[#04E000]'
-              : ''}"
-          >
-            <span class="ml-1 text-white font-medium mr-auto"> 10 years </span>
-
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if timeFrame === "10Y"}
-                <svg
-                  class="w-full h-full rounded-full"
-                  viewBox="0 0 48 48"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  fill="#09090B000"
-                  ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g><g id="SVGRepo_iconCarrier">
-                    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                    <title>ic_fluent_checkmark_circle_48_filled</title>
-                    <desc>Created with Sketch.</desc>
-                    <g
-                      id="🔍-Product-Icons"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                    >
-                      <g
-                        id="ic_fluent_checkmark_circle_48_filled"
-                        fill="#04E000"
-                        fill-rule="nonzero"
-                      >
-                        <path
-                          d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z"
-                          id="🎨-Color"
-                        >
-                        </path>
-                      </g>
-                    </g>
-                  </g></svg
-                >
-              {/if}
-            </div>
-          </div>
-        </label>
-
-        <label
-          for="timeFrameModal"
-          on:click={() => (timeFrame = "Max")}
-          class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
-        >
-          <div
-            class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-md {timeFrame ===
-            'Max'
-              ? 'ring-2 ring-[#04E000]'
-              : ''}"
-          >
-            <span class="ml-1 text-white font-medium mr-auto"> Max </span>
-
-            <div class="rounded-full w-8 h-8 relative border border-[#737373]">
-              {#if timeFrame === "Max"}
-                <svg
-                  class="w-full h-full rounded-full"
-                  viewBox="0 0 48 48"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  fill="#09090B000"
-                  ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g><g id="SVGRepo_iconCarrier">
-                    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                    <title>ic_fluent_checkmark_circle_48_filled</title>
-                    <desc>Created with Sketch.</desc>
-                    <g
-                      id="🔍-Product-Icons"
-                      stroke="none"
-                      stroke-width="1"
-                      fill="none"
-                      fill-rule="evenodd"
-                    >
-                      <g
-                        id="ic_fluent_checkmark_circle_48_filled"
-                        fill="#04E000"
-                        fill-rule="nonzero"
-                      >
-                        <path
-                          d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z"
-                          id="🎨-Color"
-                        >
-                        </path>
-                      </g>
-                    </g>
-                  </g></svg
-                >
-              {/if}
-            </div>
-          </div>
-        </label>
-      </div>
-    </div>
-  </div>
-</dialog>
-
-<!--End TimeFrame-->
-
-<!--Start Export -->
-<!--
-  <input type="checkbox" id="exportDataModal" class="modal-toggle" />
-      
-  <dialog id="exportDataModal" class="modal modal-bottom sm:modal-middle ">
-  
-  
-    <label id="exportDataModal" for="exportDataModal"  class="cursor-pointer modal-backdrop bg-[#09090B] bg-opacity-[0.5]"></label>
-    
-    
-    <div class="modal-box w-full bg-[#09090B] sm:border sm:border-gray-600">
-  
-  
-  
-    <label for="exportDataModal" class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-[1.8rem] text-white">
-      ✕
-    </label>
-  
-      <div class="text-white">
-        
-        <h3 class="font-medium text-lg sm:text-xl mb-10">
-          Export
-        </h3>
-          
-  
-        <div class="flex flex-col items-center w-full Max-w-3xl bg-[#09090B]">
-  
-  
-          <label for="exportDataModal" on:click={() => exportData('excel')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-  
-              <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-md">
-                
-                <span class="ml-1 text-white font-medium mr-auto">
-                  Export to Excel
-                </span>
-  
-              </div>
-             
-          </label>
-  
-  
-          <label for="exportDataModal" on:click={() => exportData('csv')} class="cursor-pointer w-full flex flex-row justify-start items-center mb-5">
-  
-            <div class="flex flex-row items-center w-full bg-[#303030] p-3 rounded-md">
-              
-              <span class="ml-1 text-white font-medium mr-auto">
-                Export to CSV
-              </span>
-
-            </div>
-           
-        </label>
-
-  
-        </div>
-         
-      </div>
-  
-  
-          
-        </div>
-    </dialog>
-    -->
-<!--End Export-->
 
 <style>
   .app {
