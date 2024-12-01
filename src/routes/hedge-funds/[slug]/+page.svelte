@@ -18,6 +18,8 @@
   ]);
 
   const defaultList = [
+    { name: "Price", rule: "price" },
+    { name: "% Change", rule: "changesPercentage" },
     { name: "Shares", rule: "sharesNumber" },
     { name: "% Change Shares", rule: "changeInSharesNumberPercentage" },
     { name: "Market Value", rule: "marketValue" },
@@ -33,7 +35,7 @@
       type: "percentSign",
     },
     { name: "% Weight", rule: "weight", type: "percent" },
-    { name: "Avg Price", rule: "avgPricePaid", type: "float" },
+    { name: "Avg. Price Paid", rule: "avgPricePaid", type: "float" },
     { name: "Market Value", rule: "marketValue", type: "int" },
   ];
 </script>
