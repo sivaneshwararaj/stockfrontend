@@ -423,329 +423,334 @@
                     (item) => item?.propertyName === displayStatement,
                   )?.text}
                   <!--<Katex formula={true} math={"\\textrm{Revenue}=\\textrm{Revenue} - \\textrm{All Expenses}"}/>-->
-                {:else}
+                {:else if income?.length > 0}
                   Get detailed income statement breakdowns, uncovering revenue,
                   expenses, and much more.
+                {:else}
+                  No financial data available for {$displayCompanyName}
                 {/if}
               </div>
-
-              <div
-                class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
-              >
+              {#if income?.length > 0}
                 <div
-                  class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                  class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
                 >
-                  {#each tabs as item, i}
-                    <button
-                      on:click={() => (activeIdx = i)}
-                      class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
-                      i
-                        ? 'z-0'
-                        : ''} "
-                    >
-                      {#if activeIdx === i}
-                        <div
-                          class="absolute inset-0 rounded-md bg-[#fff]"
-                        ></div>
-                      {/if}
-                      <span
-                        class="relative text-sm block font-semibold {activeIdx ===
-                        i
-                          ? 'text-black'
-                          : 'text-white'}"
-                      >
-                        {item.title}
-                      </span>
-                    </button>
-                  {/each}
-                </div>
-              </div>
-
-              <div
-                class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center"
-              >
-                <label
-                  class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto"
-                >
-                  <input
-                    on:click={toggleMode}
-                    type="checkbox"
-                    checked={$coolMode}
-                    value={$coolMode}
-                    class="sr-only peer"
-                  />
                   <div
-                    class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"
-                  ></div>
-                  {#if $coolMode}
-                    <span class="ml-2 text-sm font-medium text-white">
-                      Cool Mode
-                    </span>
-                  {:else}
-                    <span class="ml-2 text-sm font-medium text-white">
-                      Boring Mode
-                    </span>
-                  {/if}
-                </label>
+                    class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                  >
+                    {#each tabs as item, i}
+                      <button
+                        on:click={() => (activeIdx = i)}
+                        class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                        i
+                          ? 'z-0'
+                          : ''} "
+                      >
+                        {#if activeIdx === i}
+                          <div
+                            class="absolute inset-0 rounded-md bg-[#fff]"
+                          ></div>
+                        {/if}
+                        <span
+                          class="relative text-sm block font-semibold {activeIdx ===
+                          i
+                            ? 'text-black'
+                            : 'text-white'}"
+                        >
+                          {item.title}
+                        </span>
+                      </button>
+                    {/each}
+                  </div>
+                </div>
 
                 <div
-                  class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto sm:ml-auto"
+                  class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center"
                 >
-                  <div class="relative inline-block text-left grow">
-                    <DropdownMenu.Root>
-                      <DropdownMenu.Trigger asChild let:builder>
-                        <Button
-                          builders={[builder]}
-                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                        >
-                          <span class="truncate text-white">{timeFrame}</span>
-                          <svg
-                            class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            style="max-width:40px"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
-                            ></path>
-                          </svg>
-                        </Button>
-                      </DropdownMenu.Trigger>
-                      <DropdownMenu.Content
-                        class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                      >
-                        <DropdownMenu.Label class="text-gray-400">
-                          Select time frame
-                        </DropdownMenu.Label>
-                        <DropdownMenu.Separator />
-                        <DropdownMenu.Group>
-                          <DropdownMenu.Item
-                            on:click={() => (timeFrame = "5Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            5 years
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => (timeFrame = "10Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            10 years
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            on:click={() => (timeFrame = "MAX")}
-                            class="cursor-pointer hover:bg-[#27272A]"
-                          >
-                            Max
-                          </DropdownMenu.Item>
-                        </DropdownMenu.Group>
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Root>
-                  </div>
-                  <Button
-                    on:click={() => exportFundamentalData("csv")}
-                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                  <label
+                    class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto"
                   >
-                    <span class="truncate text-white">Download</span>
-                    <svg
-                      class="{data?.user?.tier === 'Pro'
-                        ? 'hidden'
-                        : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      ><path
-                        fill="#A3A3A3"
-                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                      /></svg
-                    >
-                  </Button>
-                </div>
-              </div>
+                    <input
+                      on:click={toggleMode}
+                      type="checkbox"
+                      checked={$coolMode}
+                      value={$coolMode}
+                      class="sr-only peer"
+                    />
+                    <div
+                      class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"
+                    ></div>
+                    {#if $coolMode}
+                      <span class="ml-2 text-sm font-medium text-white">
+                        Cool Mode
+                      </span>
+                    {:else}
+                      <span class="ml-2 text-sm font-medium text-white">
+                        Boring Mode
+                      </span>
+                    {/if}
+                  </label>
 
-              {#if $coolMode}
-                <div class="sm:w-full">
-                  <div class="relative">
-                    <select
-                      class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
-                      on:change={changeStatement}
+                  <div
+                    class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto sm:ml-auto"
+                  >
+                    <div class="relative inline-block text-left grow">
+                      <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild let:builder>
+                          <Button
+                            builders={[builder]}
+                            class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                          >
+                            <span class="truncate text-white">{timeFrame}</span>
+                            <svg
+                              class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              style="max-width:40px"
+                              aria-hidden="true"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          </Button>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content
+                          class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                        >
+                          <DropdownMenu.Label class="text-gray-400">
+                            Select time frame
+                          </DropdownMenu.Label>
+                          <DropdownMenu.Separator />
+                          <DropdownMenu.Group>
+                            <DropdownMenu.Item
+                              on:click={() => (timeFrame = "5Y")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              5 years
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => (timeFrame = "10Y")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              10 years
+                            </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              on:click={() => (timeFrame = "MAX")}
+                              class="cursor-pointer hover:bg-[#27272A]"
+                            >
+                              Max
+                            </DropdownMenu.Item>
+                          </DropdownMenu.Group>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Root>
+                    </div>
+                    <Button
+                      on:click={() => exportFundamentalData("csv")}
+                      class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                     >
-                      <option disabled>Choose an Cash Flow Variable</option>
-                      <option value="revenue" selected>Revenue</option>
-                      <option value="costOfRevenue">Cost of Revenue</option>
-                      <option value="grossProfit">Gross Profit</option>
-                      <option value="sellingGeneralAndAdministrativeExpenses"
-                        >Selling, General & Admin</option
+                      <span class="truncate text-white">Download</span>
+                      <svg
+                        class="{data?.user?.tier === 'Pro'
+                          ? 'hidden'
+                          : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="#A3A3A3"
+                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                        /></svg
                       >
-                      <option value="researchAndDevelopmentExpenses"
-                        >Research & Development</option
-                      >
-                      <option value="otherExpenses">Other Expenses</option>
-                      <option value="operatingExpenses"
-                        >Operating Expenses</option
-                      >
-                      <option value="interestExpense">Interest Expense</option>
-                      <option value="incomeBeforeTax">Pretax Income</option>
-                      <option value="incomeTaxExpense">Income Tax</option>
-                      <option value="netIncome">Net Income</option>
-                      <option value="weightedAverageShsOut"
-                        >Shares Outstanding (Basic)</option
-                      >
-                      <option value="weightedAverageShsOutDil"
-                        >Shares Outstanding (Diluted)</option
-                      >
-                      <option value="eps">EPS (Basic)</option>
-                      <option value="epsdiluted">EPS (Diluted)</option>
-                      <option value="ebitda">EBITDA</option>
-                      <option value="depreciationAndAmortization"
-                        >Depreciation & Amortization</option
-                      >
-                    </select>
+                    </Button>
                   </div>
                 </div>
 
-                <div class="app w-full">
-                  <Chart {init} options={optionsData} class="chart" />
-                </div>
+                {#if $coolMode}
+                  <div class="sm:w-full">
+                    <div class="relative">
+                      <select
+                        class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
+                        on:change={changeStatement}
+                      >
+                        <option disabled>Choose an Cash Flow Variable</option>
+                        <option value="revenue" selected>Revenue</option>
+                        <option value="costOfRevenue">Cost of Revenue</option>
+                        <option value="grossProfit">Gross Profit</option>
+                        <option value="sellingGeneralAndAdministrativeExpenses"
+                          >Selling, General & Admin</option
+                        >
+                        <option value="researchAndDevelopmentExpenses"
+                          >Research & Development</option
+                        >
+                        <option value="otherExpenses">Other Expenses</option>
+                        <option value="operatingExpenses"
+                          >Operating Expenses</option
+                        >
+                        <option value="interestExpense">Interest Expense</option
+                        >
+                        <option value="incomeBeforeTax">Pretax Income</option>
+                        <option value="incomeTaxExpense">Income Tax</option>
+                        <option value="netIncome">Net Income</option>
+                        <option value="weightedAverageShsOut"
+                          >Shares Outstanding (Basic)</option
+                        >
+                        <option value="weightedAverageShsOutDil"
+                          >Shares Outstanding (Diluted)</option
+                        >
+                        <option value="eps">EPS (Basic)</option>
+                        <option value="epsdiluted">EPS (Diluted)</option>
+                        <option value="ebitda">EBITDA</option>
+                        <option value="depreciationAndAmortization"
+                          >Depreciation & Amortization</option
+                        >
+                      </select>
+                    </div>
+                  </div>
 
-                <h2 class="mt-5 text-2xl text-gray-200 font-semibold">
-                  {statementConfig?.find(
-                    (item) => item?.propertyName === displayStatement,
-                  )?.label} History
-                </h2>
+                  <div class="app w-full">
+                    <Chart {init} options={optionsData} class="chart" />
+                  </div>
 
-                <div class="w-full overflow-x-scroll">
-                  <table
-                    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
-                  >
-                    <thead>
-                      <tr class="border border-gray-600">
-                        <th
-                          class="text-white font-semibold text-start text-sm sm:text-[1rem]"
-                          >{filterRule === "annual"
-                            ? "Fiscal Year End"
-                            : "Quarter Ends"}</th
-                        >
-                        <th
-                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                          >{statementConfig?.find(
-                            (item) => item?.propertyName === displayStatement,
-                          )?.label}</th
-                        >
-                        <th
-                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                          >Change</th
-                        >
-                        <th
-                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                          >Growth</th
-                        >
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {#each tableList as item, index}
-                        <!-- row -->
-                        <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
-                        >
-                          <td
-                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                  <h2 class="mt-5 text-2xl text-gray-200 font-semibold">
+                    {statementConfig?.find(
+                      (item) => item?.propertyName === displayStatement,
+                    )?.label} History
+                  </h2>
+
+                  <div class="w-full overflow-x-scroll">
+                    <table
+                      class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                    >
+                      <thead>
+                        <tr class="border border-gray-600">
+                          <th
+                            class="text-white font-semibold text-start text-sm sm:text-[1rem]"
+                            >{filterRule === "annual"
+                              ? "Fiscal Year End"
+                              : "Quarter Ends"}</th
                           >
-                            {item?.date}
-                          </td>
-
-                          <td
-                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                          <th
+                            class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                            >{statementConfig?.find(
+                              (item) => item?.propertyName === displayStatement,
+                            )?.label}</th
                           >
-                            {abbreviateNumber(item?.value)}
-                          </td>
-
-                          <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                          <th
+                            class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                            >Change</th
                           >
-                            {item?.value - tableList[index + 1]?.value !== 0
-                              ? abbreviateNumber(
-                                  (
-                                    item?.value - tableList[index + 1]?.value
-                                  )?.toFixed(2),
-                                )
-                              : "-"}
-                          </td>
-
-                          <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                          <th
+                            class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                            >Growth</th
                           >
-                            {#if index + 1 - tableList?.length === 0}
-                              -
-                            {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
-                              <span class="text-[#FF2F1F]">-100.00%</span>
-                            {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
-                              <span class="text-[#00FC50]">100.00%</span>
-                            {:else if item?.value - tableList[index + 1]?.value > 0}
-                              <span class="text-[#00FC50]">
-                                {(
-                                  ((item?.value - tableList[index + 1]?.value) /
-                                    Math.abs(item?.value)) *
-                                  100
-                                )?.toFixed(2)}%
-                              </span>
-                            {:else if item?.value - tableList[index + 1]?.value < 0}
-                              <span class="text-[#FF2F1F]">
-                                -{(
-                                  Math?.abs(
-                                    (tableList[index + 1]?.value -
-                                      item?.value) /
-                                      Math.abs(item?.value),
-                                  ) * 100
-                                )?.toFixed(2)}%
-                              </span>
-                            {:else}
-                              -
-                            {/if}
-                          </td>
                         </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
-              {:else}
-                <div
-                  class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
-                >
-                  <table class="table table-sm table-compact w-full">
-                    <thead>
-                      <tr class="text-white">
-                        <td
-                          class="text-start bg-[#09090B] text-white text-sm font-semibold pr-10"
-                          >Year</td
-                        >
-                        {#each income as cash}
-                          {#if filterRule === "annual"}
+                      </thead>
+                      <tbody>
+                        {#each tableList as item, index}
+                          <!-- row -->
+                          <tr
+                            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                          >
                             <td
-                              class="bg-[#09090B] font-semibold text-sm text-end"
+                              class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                             >
-                              {"FY" + cash?.calendarYear?.slice(-2)}
+                              {item?.date}
                             </td>
-                          {:else}
+
                             <td
-                              class="bg-[#09090B] font-semibold text-sm text-end"
+                              class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                             >
-                              {"FY" +
-                                cash?.calendarYear?.slice(-2) +
-                                " " +
-                                cash?.period}
+                              {abbreviateNumber(item?.value)}
                             </td>
-                          {/if}
+
+                            <td
+                              class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                            >
+                              {item?.value - tableList[index + 1]?.value !== 0
+                                ? abbreviateNumber(
+                                    (
+                                      item?.value - tableList[index + 1]?.value
+                                    )?.toFixed(2),
+                                  )
+                                : "-"}
+                            </td>
+
+                            <td
+                              class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                            >
+                              {#if index + 1 - tableList?.length === 0}
+                                -
+                              {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
+                                <span class="text-[#FF2F1F]">-100.00%</span>
+                              {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
+                                <span class="text-[#00FC50]">100.00%</span>
+                              {:else if item?.value - tableList[index + 1]?.value > 0}
+                                <span class="text-[#00FC50]">
+                                  {(
+                                    ((item?.value -
+                                      tableList[index + 1]?.value) /
+                                      Math.abs(item?.value)) *
+                                    100
+                                  )?.toFixed(2)}%
+                                </span>
+                              {:else if item?.value - tableList[index + 1]?.value < 0}
+                                <span class="text-[#FF2F1F]">
+                                  -{(
+                                    Math?.abs(
+                                      (tableList[index + 1]?.value -
+                                        item?.value) /
+                                        Math.abs(item?.value),
+                                    ) * 100
+                                  )?.toFixed(2)}%
+                                </span>
+                              {:else}
+                                -
+                              {/if}
+                            </td>
+                          </tr>
                         {/each}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!-- row -->
-                      <FinancialTable data={income} />
-                    </tbody>
-                  </table>
-                </div>
+                      </tbody>
+                    </table>
+                  </div>
+                {:else}
+                  <div
+                    class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
+                  >
+                    <table class="table table-sm table-compact w-full">
+                      <thead>
+                        <tr class="text-white">
+                          <td
+                            class="text-start bg-[#09090B] text-white text-sm font-semibold pr-10"
+                            >Year</td
+                          >
+                          {#each income as cash}
+                            {#if filterRule === "annual"}
+                              <td
+                                class="bg-[#09090B] font-semibold text-sm text-end"
+                              >
+                                {"FY" + cash?.calendarYear?.slice(-2)}
+                              </td>
+                            {:else}
+                              <td
+                                class="bg-[#09090B] font-semibold text-sm text-end"
+                              >
+                                {"FY" +
+                                  cash?.calendarYear?.slice(-2) +
+                                  " " +
+                                  cash?.period}
+                              </td>
+                            {/if}
+                          {/each}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- row -->
+                        <FinancialTable data={income} />
+                      </tbody>
+                    </table>
+                  </div>
+                {/if}
               {/if}
             </div>
           </div>
