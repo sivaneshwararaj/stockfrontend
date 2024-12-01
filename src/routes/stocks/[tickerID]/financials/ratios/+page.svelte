@@ -426,27 +426,47 @@
                   class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                 >
                   {#each tabs as item, i}
-                    <button
-                      on:click={() => (activeIdx = i)}
-                      class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
-                      i
-                        ? 'z-0'
-                        : ''} "
-                    >
-                      {#if activeIdx === i}
-                        <div
-                          class="absolute inset-0 rounded-md bg-[#fff]"
-                        ></div>
-                      {/if}
-                      <span
-                        class="relative text-sm block font-semibold {activeIdx ===
-                        i
-                          ? 'text-black'
-                          : 'text-white'}"
+                    {#if data?.user?.tier !== "Pro" && i > 0}
+                      <button
+                        on:click={() => goto("/pricing")}
+                        class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1"
                       >
-                        {item.title}
-                      </span>
-                    </button>
+                        <span class="relative text-sm block font-semibold">
+                          {item.title}
+                          <svg
+                            class="inline-block ml-0.5 -mt-1 w-3.5 h-3.5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            ><path
+                              fill="#A3A3A3"
+                              d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                            /></svg
+                          >
+                        </span>
+                      </button>
+                    {:else}
+                      <button
+                        on:click={() => (activeIdx = i)}
+                        class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                        i
+                          ? 'z-0'
+                          : ''} "
+                      >
+                        {#if activeIdx === i}
+                          <div
+                            class="absolute inset-0 rounded-md bg-[#fff]"
+                          ></div>
+                        {/if}
+                        <span
+                          class="relative text-sm block font-semibold {activeIdx ===
+                          i
+                            ? 'text-black'
+                            : 'text-white'}"
+                        >
+                          {item.title}
+                        </span>
+                      </button>
+                    {/if}
                   {/each}
                 </div>
               </div>
