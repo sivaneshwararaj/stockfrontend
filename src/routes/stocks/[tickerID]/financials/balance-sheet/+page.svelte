@@ -11,6 +11,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import { goto } from "$app/navigation";
   //import * as XLSX from 'xlsx';
+  import FinancialTable from "$lib/components/FinancialTable.svelte";
 
   import { init, use } from "echarts/core";
   import { LineChart, BarChart } from "echarts/charts";
@@ -206,7 +207,10 @@
     },
   ];
 
-  let namingList = statementConfig?.map((config) => config?.propertyName) || [];
+  const fields = statementConfig.map((item) => ({
+    label: item.label,
+    key: item.propertyName,
+  }));
 
   function toggleMode() {
     $coolMode = !$coolMode;
@@ -506,669 +510,359 @@
                 {statementConfig?.find(
                   (item) => item?.propertyName === displayStatement,
                 )?.text}
-                <!--<Katex formula={true} math={"\\textrm{Revenue}=\\textrm{Revenue} - \\textrm{All Expenses}"}/>-->
-              {:else}
+              {:else if balanceSheet?.length > 0}
                 Get detailed breakdowns of the balance-sheet with total debts,
                 total investments, and much more.
+              {:else}
+                No financial data available for {$displayCompanyName}
               {/if}
             </div>
-
-            <div
-              class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
-            >
+            {#if balanceSheet?.length > 0}
               <div
-                class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
               >
-                {#each tabs as item, i}
-                  <button
-                    on:click={() => (activeIdx = i)}
-                    class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
-                    i
-                      ? 'z-0'
-                      : ''} "
-                  >
-                    {#if activeIdx === i}
-                      <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
-                    {/if}
-                    <span
-                      class="relative text-sm block font-semibold {activeIdx ===
-                      i
-                        ? 'text-black'
-                        : 'text-white'}"
-                    >
-                      {item.title}
-                    </span>
-                  </button>
-                {/each}
-              </div>
-            </div>
-
-            <div
-              class="mb-6 sm:mb-3 flex flex-row items-center w-full justify-end sm:justify-center mt-3 sm:mt-0"
-            >
-              <label
-                class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto"
-              >
-                <input
-                  on:click={toggleMode}
-                  type="checkbox"
-                  checked={$coolMode}
-                  value={$coolMode}
-                  class="sr-only peer"
-                />
                 <div
-                  class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"
-                ></div>
-                {#if $coolMode}
-                  <span class="ml-2 text-sm font-medium text-white">
-                    Cool Mode
-                  </span>
-                {:else}
-                  <span class="ml-2 text-sm font-medium text-white">
-                    Boring Mode
-                  </span>
-                {/if}
-              </label>
+                  class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                >
+                  {#each tabs as item, i}
+                    <button
+                      on:click={() => (activeIdx = i)}
+                      class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                      i
+                        ? 'z-0'
+                        : ''} "
+                    >
+                      {#if activeIdx === i}
+                        <div
+                          class="absolute inset-0 rounded-md bg-[#fff]"
+                        ></div>
+                      {/if}
+                      <span
+                        class="relative text-sm block font-semibold {activeIdx ===
+                        i
+                          ? 'text-black'
+                          : 'text-white'}"
+                      >
+                        {item.title}
+                      </span>
+                    </button>
+                  {/each}
+                </div>
+              </div>
 
               <div
-                class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto sm:ml-auto"
+                class="mb-6 sm:mb-3 flex flex-row items-center w-full justify-end sm:justify-center mt-3 sm:mt-0"
               >
-                <div class="relative inline-block text-left grow">
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild let:builder>
-                      <Button
-                        builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                      >
-                        <span class="truncate text-white">{timeFrame}</span>
-                        <svg
-                          class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          style="max-width:40px"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </Button>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content
-                      class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                    >
-                      <DropdownMenu.Label class="text-gray-400">
-                        Select time frame
-                      </DropdownMenu.Label>
-                      <DropdownMenu.Separator />
-                      <DropdownMenu.Group>
-                        <DropdownMenu.Item
-                          on:click={() => (timeFrame = "5Y")}
-                          class="cursor-pointer hover:bg-[#27272A]"
-                        >
-                          5 years
-                        </DropdownMenu.Item>
-                        <DropdownMenu.Item
-                          on:click={() => (timeFrame = "10Y")}
-                          class="cursor-pointer hover:bg-[#27272A]"
-                        >
-                          10 years
-                        </DropdownMenu.Item>
-                        <DropdownMenu.Item
-                          on:click={() => (timeFrame = "MAX")}
-                          class="cursor-pointer hover:bg-[#27272A]"
-                        >
-                          Max
-                        </DropdownMenu.Item>
-                      </DropdownMenu.Group>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Root>
-                </div>
-                <Button
-                  on:click={() => exportFundamentalData("csv")}
-                  class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                <label
+                  class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto"
                 >
-                  <span class="truncate text-white">Download</span>
-                  <svg
-                    class="{data?.user?.tier === 'Pro'
-                      ? 'hidden'
-                      : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><path
-                      fill="#A3A3A3"
-                      d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                    /></svg
-                  >
-                </Button>
-              </div>
-            </div>
+                  <input
+                    on:click={toggleMode}
+                    type="checkbox"
+                    checked={$coolMode}
+                    value={$coolMode}
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"
+                  ></div>
+                  {#if $coolMode}
+                    <span class="ml-2 text-sm font-medium text-white">
+                      Cool Mode
+                    </span>
+                  {:else}
+                    <span class="ml-2 text-sm font-medium text-white">
+                      Boring Mode
+                    </span>
+                  {/if}
+                </label>
 
-            {#if $coolMode}
-              <div class="sm:w-full">
-                <div class="relative">
-                  <select
-                    class="w-40 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
-                    on:change={changeStatement}
+                <div
+                  class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto sm:ml-auto"
+                >
+                  <div class="relative inline-block text-left grow">
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild let:builder>
+                        <Button
+                          builders={[builder]}
+                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        >
+                          <span class="truncate text-white">{timeFrame}</span>
+                          <svg
+                            class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            style="max-width:40px"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content
+                        class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                      >
+                        <DropdownMenu.Label class="text-gray-400">
+                          Select time frame
+                        </DropdownMenu.Label>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Group>
+                          <DropdownMenu.Item
+                            on:click={() => (timeFrame = "5Y")}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            5 years
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => (timeFrame = "10Y")}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            10 years
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => (timeFrame = "MAX")}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            Max
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Group>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  </div>
+                  <Button
+                    on:click={() => exportFundamentalData("csv")}
+                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
-                    <option disabled>Choose an Income Variable</option>
-                    <option value="cashAndCashEquivalents" selected
-                      >Cash & Equivalents</option
+                    <span class="truncate text-white">Download</span>
+                    <svg
+                      class="{data?.user?.tier === 'Pro'
+                        ? 'hidden'
+                        : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="#A3A3A3"
+                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                      /></svg
                     >
-                    <option value="shortTermInvestments"
-                      >Short-Term Investments</option
-                    >
-                    <option value="longTermInvestments"
-                      >Long-Term Investments</option
-                    >
-                    <option value="otherNonCurrentAssets"
-                      >Other Long-Term Assets</option
-                    >
-                    <option value="netReceivables">Receivables</option>
-                    <option value="inventory">Inventory</option>
-                    <option value="otherCurrentAssets"
-                      >Other Current Assets</option
-                    >
-                    <option value="totalCurrentAssets"
-                      >Total Current Assets</option
-                    >
-                    <option value="propertyPlantEquipmentNet"
-                      >Property, Plant & Equipment</option
-                    >
-                    <option value="goodwillAndIntangibleAssets"
-                      >Goodwill & Intangibles</option
-                    >
-                    <option value="totalNonCurrentAssets"
-                      >Total Long-Term Assets</option
-                    >
-                    <option value="totalAssets">Total Assets</option>
-                    <option value="accountPayables">Account Payables</option>
-                    <option value="deferredRevenue">Deferred Revenue</option>
-                    <option value="shortTermDebt">Short-Term Debt</option>
-                    <option value="otherCurrentLiabilities"
-                      >Other Current Liabilities</option
-                    >
-                    <option value="totalCurrentLiabilities"
-                      >Total Current Liabilities</option
-                    >
-                    <option value="longTermDebt">Long-Term Debt</option>
-                    <option value="otherNonCurrentLiabilities"
-                      >Other Long-Term Liabilities</option
-                    >
-                    <option value="totalNonCurrentLiabilities"
-                      >Total Long-Term Liabilities</option
-                    >
-                    <option value="totalLiabilities">Total Liabilities</option>
-                    <option value="totalDebt">Total Debt</option>
-                    <option value="commonStock">Common Stock</option>
-                    <option value="retainedEarnings">Retained Earnigns</option>
-                    <option value="accumulatedOtherComprehensiveIncomeLoss"
-                      >Comprehensive Income</option
-                    >
-                    <option value="totalStockholdersEquity"
-                      >Shareholders' Equity</option
-                    >
-                    <option value="totalInvestments">Total Investments</option>
-                  </select>
+                  </Button>
                 </div>
               </div>
 
-              <div class="app w-full">
-                <Chart {init} options={optionsData} class="chart" />
-              </div>
+              {#if $coolMode}
+                <div class="sm:w-full">
+                  <div class="relative">
+                    <select
+                      class="w-40 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
+                      on:change={changeStatement}
+                    >
+                      <option disabled>Choose an Income Variable</option>
+                      <option value="cashAndCashEquivalents" selected
+                        >Cash & Equivalents</option
+                      >
+                      <option value="shortTermInvestments"
+                        >Short-Term Investments</option
+                      >
+                      <option value="longTermInvestments"
+                        >Long-Term Investments</option
+                      >
+                      <option value="otherNonCurrentAssets"
+                        >Other Long-Term Assets</option
+                      >
+                      <option value="netReceivables">Receivables</option>
+                      <option value="inventory">Inventory</option>
+                      <option value="otherCurrentAssets"
+                        >Other Current Assets</option
+                      >
+                      <option value="totalCurrentAssets"
+                        >Total Current Assets</option
+                      >
+                      <option value="propertyPlantEquipmentNet"
+                        >Property, Plant & Equipment</option
+                      >
+                      <option value="goodwillAndIntangibleAssets"
+                        >Goodwill & Intangibles</option
+                      >
+                      <option value="totalNonCurrentAssets"
+                        >Total Long-Term Assets</option
+                      >
+                      <option value="totalAssets">Total Assets</option>
+                      <option value="accountPayables">Account Payables</option>
+                      <option value="deferredRevenue">Deferred Revenue</option>
+                      <option value="shortTermDebt">Short-Term Debt</option>
+                      <option value="otherCurrentLiabilities"
+                        >Other Current Liabilities</option
+                      >
+                      <option value="totalCurrentLiabilities"
+                        >Total Current Liabilities</option
+                      >
+                      <option value="longTermDebt">Long-Term Debt</option>
+                      <option value="otherNonCurrentLiabilities"
+                        >Other Long-Term Liabilities</option
+                      >
+                      <option value="totalNonCurrentLiabilities"
+                        >Total Long-Term Liabilities</option
+                      >
+                      <option value="totalLiabilities">Total Liabilities</option
+                      >
+                      <option value="totalDebt">Total Debt</option>
+                      <option value="commonStock">Common Stock</option>
+                      <option value="retainedEarnings">Retained Earnigns</option
+                      >
+                      <option value="accumulatedOtherComprehensiveIncomeLoss"
+                        >Comprehensive Income</option
+                      >
+                      <option value="totalStockholdersEquity"
+                        >Shareholders' Equity</option
+                      >
+                      <option value="totalInvestments">Total Investments</option
+                      >
+                    </select>
+                  </div>
+                </div>
 
-              <h2 class="mt-5 text-2xl text-gray-200 font-semibold">
-                {statementConfig?.find(
-                  (item) => item?.propertyName === displayStatement,
-                )?.label} History
-              </h2>
+                <div class="app w-full">
+                  <Chart {init} options={optionsData} class="chart" />
+                </div>
 
-              <div class="w-full overflow-x-scroll">
-                <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
-                >
-                  <thead>
-                    <tr class="border border-gray-600">
-                      <th class="text-white font-semibold text-start text-sm"
-                        >{filterRule === "annual"
-                          ? "Fiscal Year End"
-                          : "Quarter Ends"}</th
-                      >
-                      <th class="text-white font-semibold text-end text-sm"
-                        >{statementConfig?.find(
-                          (item) => item?.propertyName === displayStatement,
-                        )?.label}</th
-                      >
-                      <th class="text-white font-semibold text-end text-sm"
-                        >Change</th
-                      >
-                      <th class="text-white font-semibold text-end text-sm"
-                        >Growth</th
-                      >
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {#each tableList as item, index}
-                      <!-- row -->
-                      <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
-                      >
-                        <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                <h2 class="mt-5 text-2xl text-gray-200 font-semibold">
+                  {statementConfig?.find(
+                    (item) => item?.propertyName === displayStatement,
+                  )?.label} History
+                </h2>
+
+                <div class="w-full overflow-x-scroll">
+                  <table
+                    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                  >
+                    <thead>
+                      <tr class="border border-gray-600">
+                        <th class="text-white font-semibold text-start text-sm"
+                          >{filterRule === "annual"
+                            ? "Fiscal Year End"
+                            : "Quarter Ends"}</th
                         >
-                          {item?.date}
-                        </td>
-
-                        <td
-                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                        <th class="text-white font-semibold text-end text-sm"
+                          >{statementConfig?.find(
+                            (item) => item?.propertyName === displayStatement,
+                          )?.label}</th
                         >
-                          {abbreviateNumber(item?.value)}
-                        </td>
-
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                        <th class="text-white font-semibold text-end text-sm"
+                          >Change</th
                         >
-                          {item?.value - tableList[index + 1]?.value !== 0
-                            ? abbreviateNumber(
-                                (
-                                  item?.value - tableList[index + 1]?.value
-                                )?.toFixed(2),
-                              )
-                            : "-"}
-                        </td>
-
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                        <th class="text-white font-semibold text-end text-sm"
+                          >Growth</th
                         >
-                          {#if index + 1 - tableList?.length === 0}
-                            -
-                          {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
-                            <span class="text-[#FF2F1F]">-100.00%</span>
-                          {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
-                            <span class="text-[#00FC50]">100.00%</span>
-                          {:else if item?.value - tableList[index + 1]?.value > 0}
-                            <span class="text-[#00FC50]">
-                              {(
-                                ((item?.value - tableList[index + 1]?.value) /
-                                  Math.abs(item?.value)) *
-                                100
-                              )?.toFixed(2)}%
-                            </span>
-                          {:else if item?.value - tableList[index + 1]?.value < 0}
-                            <span class="text-[#FF2F1F]">
-                              -{(
-                                Math?.abs(
-                                  (tableList[index + 1]?.value - item?.value) /
-                                    Math.abs(item?.value),
-                                ) * 100
-                              )?.toFixed(2)}%
-                            </span>
-                          {:else}
-                            -
-                          {/if}
-                        </td>
                       </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-            {:else}
-              <div
-                class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
-              >
-                <table class="table table-sm table-compact w-full">
-                  <thead>
-                    <tr class="text-white">
-                      <td
-                        class="text-start bg-[#09090B] text-white text-sm font-semibold pr-10"
-                        >Year</td
-                      >
-                      {#each balanceSheet as balance}
-                        {#if filterRule === "annual"}
+                    </thead>
+                    <tbody>
+                      {#each tableList as item, index}
+                        <!-- row -->
+                        <tr
+                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                        >
                           <td
-                            class="bg-[#09090B] font-semibold text-sm text-end"
+                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                           >
-                            {"FY" + balance?.calendarYear?.slice(-2)}
+                            {item?.date}
                           </td>
-                        {:else}
+
                           <td
-                            class="bg-[#09090B] font-semibold text-sm text-end"
+                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                           >
-                            {"FY" +
-                              balance?.calendarYear?.slice(-2) +
-                              " " +
-                              balance?.period}
+                            {abbreviateNumber(item?.value)}
                           </td>
-                        {/if}
+
+                          <td
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                          >
+                            {item?.value - tableList[index + 1]?.value !== 0
+                              ? abbreviateNumber(
+                                  (
+                                    item?.value - tableList[index + 1]?.value
+                                  )?.toFixed(2),
+                                )
+                              : "-"}
+                          </td>
+
+                          <td
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                          >
+                            {#if index + 1 - tableList?.length === 0}
+                              -
+                            {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
+                              <span class="text-[#FF2F1F]">-100.00%</span>
+                            {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
+                              <span class="text-[#00FC50]">100.00%</span>
+                            {:else if item?.value - tableList[index + 1]?.value > 0}
+                              <span class="text-[#00FC50]">
+                                {(
+                                  ((item?.value - tableList[index + 1]?.value) /
+                                    Math.abs(item?.value)) *
+                                  100
+                                )?.toFixed(2)}%
+                              </span>
+                            {:else if item?.value - tableList[index + 1]?.value < 0}
+                              <span class="text-[#FF2F1F]">
+                                -{(
+                                  Math?.abs(
+                                    (tableList[index + 1]?.value -
+                                      item?.value) /
+                                      Math.abs(item?.value),
+                                  ) * 100
+                                )?.toFixed(2)}%
+                              </span>
+                            {:else}
+                              -
+                            {/if}
+                          </td>
+                        </tr>
                       {/each}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Cash & Equivalents</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.cashAndCashEquivalents,
-                          )}</td
+                    </tbody>
+                  </table>
+                </div>
+              {:else}
+                <div
+                  class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
+                >
+                  <table class="table table-sm table-compact w-full">
+                    <thead>
+                      <tr class="text-white">
+                        <td
+                          class="text-start bg-[#09090B] text-white text-sm font-semibold pr-10"
+                          >Year</td
                         >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Short-Term Investments</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.shortTermInvestments)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Long-Term Investments</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.longTermInvestments)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Other Long-Term Assets</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.otherNonCurrentAssets)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Receivables</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.netReceivables)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Inventory</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.inventory)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Other Current Assets</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.otherCurrentAssets)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Current Assets</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.totalCurrentAssets)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Property, Plant & Equipment</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.propertyPlantEquipmentNet,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Goodwill & Intangibles</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.goodwillAndIntangibleAssets,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Long-Term Assets</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.totalNonCurrentAssets)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Assets</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.totalAssets)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Account Payables</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.accountPayables)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Deferred Revenue</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.deferredRevenue)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Short-Term Debt</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.shortTermDebt)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Other Current Liabilities</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.otherCurrentLiabilities,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Current Liabilities</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.totalCurrentLiabilities,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Long-Term Debt</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.longTermDebt)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Other Long-Term Liabilities</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.otherNonCurrentLiabilities,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Long-Term Liabilities</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.totalNonCurrentLiabilities,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Liabilities</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.totalLiabilities)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Debt</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.totalDebt)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Common Stock</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.commonStock)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Retained Earnings</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.retainedEarnings)}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Comprehensive Income</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.accumulatedOtherComprehensiveIncomeLoss,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Shareholders' Equity</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(
-                            balance?.totalStockholdersEquity,
-                          )}</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Total Investments</td
-                      >
-                      {#each balanceSheet as balance}
-                        <td class=" text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(balance?.totalInvestments)}</td
-                        >
-                      {/each}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                        {#each balanceSheet as cash}
+                          {#if filterRule === "annual"}
+                            <td
+                              class="bg-[#09090B] font-semibold text-sm text-end"
+                            >
+                              {"FY" + cash?.calendarYear?.slice(-2)}
+                            </td>
+                          {:else}
+                            <td
+                              class="bg-[#09090B] font-semibold text-sm text-end"
+                            >
+                              {"FY" +
+                                cash?.calendarYear?.slice(-2) +
+                                " " +
+                                cash?.period}
+                            </td>
+                          {/if}
+                        {/each}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- row -->
+                      <FinancialTable data={balanceSheet} {fields} />
+                    </tbody>
+                  </table>
+                </div>
+              {/if}
             {/if}
           </div>
         </div>

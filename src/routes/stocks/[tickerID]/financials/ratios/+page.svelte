@@ -15,6 +15,8 @@
   import { LineChart, BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
+  import FinancialTable from "$lib/components/FinancialTable.svelte";
+
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
@@ -131,6 +133,11 @@
       text: "Net Profit Margin is the percentage of revenue left as net income, or profits, after subtracting all costs and expenses from the revenue.",
     },
   ];
+
+  const fields = statementConfig.map((item) => ({
+    label: item.label,
+    key: item.propertyName,
+  }));
 
   function toggleMode() {
     $coolMode = !$coolMode;
@@ -411,555 +418,331 @@
                 {statementConfig?.find(
                   (item) => item?.propertyName === displayStatement,
                 )?.text}
-                <!--<Katex formula={true} math={"\\textrm{Revenue}=\\textrm{Revenue} - \\textrm{All Expenses}"}/>-->
-              {:else}
+              {:else if ratios?.length > 0}
                 Get detailed income statement breakdowns, uncovering revenue,
                 expenses, and much more.
+              {:else}
+                No financial data available for {$displayCompanyName}
               {/if}
             </div>
-
-            <div
-              class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
-            >
+            {#if ratios?.length > 0}
               <div
-                class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
               >
-                {#each tabs as item, i}
-                  <button
-                    on:click={() => (activeIdx = i)}
-                    class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
-                    i
-                      ? 'z-0'
-                      : ''} "
-                  >
-                    {#if activeIdx === i}
-                      <div class="absolute inset-0 rounded-md bg-[#fff]"></div>
-                    {/if}
-                    <span
-                      class="relative text-sm block font-semibold {activeIdx ===
-                      i
-                        ? 'text-black'
-                        : 'text-white'}"
-                    >
-                      {item.title}
-                    </span>
-                  </button>
-                {/each}
-              </div>
-            </div>
-
-            <div
-              class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center"
-            >
-              <label
-                class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto"
-              >
-                <input
-                  on:click={toggleMode}
-                  type="checkbox"
-                  checked={$coolMode}
-                  value={$coolMode}
-                  class="sr-only peer"
-                />
                 <div
-                  class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"
-                ></div>
-                {#if $coolMode}
-                  <span class="ml-2 text-sm font-medium text-white">
-                    Cool Mode
-                  </span>
-                {:else}
-                  <span class="ml-2 text-sm font-medium text-white">
-                    Boring Mode
-                  </span>
-                {/if}
-              </label>
+                  class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                >
+                  {#each tabs as item, i}
+                    <button
+                      on:click={() => (activeIdx = i)}
+                      class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                      i
+                        ? 'z-0'
+                        : ''} "
+                    >
+                      {#if activeIdx === i}
+                        <div
+                          class="absolute inset-0 rounded-md bg-[#fff]"
+                        ></div>
+                      {/if}
+                      <span
+                        class="relative text-sm block font-semibold {activeIdx ===
+                        i
+                          ? 'text-black'
+                          : 'text-white'}"
+                      >
+                        {item.title}
+                      </span>
+                    </button>
+                  {/each}
+                </div>
+              </div>
 
               <div
-                class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto sm:ml-auto"
+                class="mb-2 flex flex-row items-center w-full justify-end sm:justify-center"
               >
-                <div class="relative inline-block text-left grow">
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild let:builder>
-                      <Button
-                        builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                      >
-                        <span class="truncate text-white">{timeFrame}</span>
-                        <svg
-                          class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          style="max-width:40px"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </Button>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content
-                      class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                    >
-                      <DropdownMenu.Label class="text-gray-400">
-                        Select time frame
-                      </DropdownMenu.Label>
-                      <DropdownMenu.Separator />
-                      <DropdownMenu.Group>
-                        <DropdownMenu.Item
-                          on:click={() => (timeFrame = "5Y")}
-                          class="cursor-pointer hover:bg-[#27272A]"
-                        >
-                          5 years
-                        </DropdownMenu.Item>
-                        <DropdownMenu.Item
-                          on:click={() => (timeFrame = "10Y")}
-                          class="cursor-pointer hover:bg-[#27272A]"
-                        >
-                          10 years
-                        </DropdownMenu.Item>
-                        <DropdownMenu.Item
-                          on:click={() => (timeFrame = "MAX")}
-                          class="cursor-pointer hover:bg-[#27272A]"
-                        >
-                          Max
-                        </DropdownMenu.Item>
-                      </DropdownMenu.Group>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Root>
-                </div>
-                <Button
-                  on:click={() => exportFundamentalData("csv")}
-                  class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                <label
+                  class="inline-flex mt-2 sm:mt-0 cursor-pointer relative mr-auto"
                 >
-                  <span class="truncate text-white">Download</span>
-                  <svg
-                    class="{data?.user?.tier === 'Pro'
-                      ? 'hidden'
-                      : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><path
-                      fill="#A3A3A3"
-                      d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                    /></svg
-                  >
-                </Button>
-              </div>
-            </div>
+                  <input
+                    on:click={toggleMode}
+                    type="checkbox"
+                    checked={$coolMode}
+                    value={$coolMode}
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="w-11 h-6 bg-gray-400 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1563F9]"
+                  ></div>
+                  {#if $coolMode}
+                    <span class="ml-2 text-sm font-medium text-white">
+                      Cool Mode
+                    </span>
+                  {:else}
+                    <span class="ml-2 text-sm font-medium text-white">
+                      Boring Mode
+                    </span>
+                  {/if}
+                </label>
 
-            {#if $coolMode}
-              <div class="sm:w-full">
-                <div class="relative">
-                  <select
-                    class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
-                    on:change={changeStatement}
+                <div
+                  class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto sm:ml-auto"
+                >
+                  <div class="relative inline-block text-left grow">
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild let:builder>
+                        <Button
+                          builders={[builder]}
+                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        >
+                          <span class="truncate text-white">{timeFrame}</span>
+                          <svg
+                            class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            style="max-width:40px"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content
+                        class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                      >
+                        <DropdownMenu.Label class="text-gray-400">
+                          Select time frame
+                        </DropdownMenu.Label>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Group>
+                          <DropdownMenu.Item
+                            on:click={() => (timeFrame = "5Y")}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            5 years
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => (timeFrame = "10Y")}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            10 years
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => (timeFrame = "MAX")}
+                            class="cursor-pointer hover:bg-[#27272A]"
+                          >
+                            Max
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Group>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  </div>
+                  <Button
+                    on:click={() => exportFundamentalData("csv")}
+                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
-                    <option disabled>Choose an Income Variable</option>
-                    <option value="priceEarningsRatio" selected>PE Ratio</option
+                    <span class="truncate text-white">Download</span>
+                    <svg
+                      class="{data?.user?.tier === 'Pro'
+                        ? 'hidden'
+                        : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="#A3A3A3"
+                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                      /></svg
                     >
-                    <option value="priceToSalesRatio">PS Ratio</option>
-                    <option value="priceToBookRatio">PB Ratio</option>
-                    <option value="priceToFreeCashFlowsRatio"
-                      >P/FCF Ratio</option
-                    >
-                    <option value="priceToOperatingCashFlowsRatio"
-                      >P/OCF Ratio</option
-                    >
-                    <option value="operatingCashFlowSalesRatio"
-                      >OCF/S Ratio</option
-                    >
-                    <option value="debtEquityRatio">Debt / Equity Ratio</option>
-                    <option value="quickRatio">Quick Ratio</option>
-                    <option value="currentRatio">Current Ratio</option>
-                    <option value="assetTurnover">Asset Turnover</option>
-                    <option value="interestCoverage">Interest Coverage</option>
-                    <option value="returnOnEquity"
-                      >Return on Equity (ROE)</option
-                    >
-                    <option value="returnOnAssets"
-                      >Return on Assets (ROA)</option
-                    >
-                    <option value="returnOnCapitalEmployed"
-                      >Return on Capital (ROIC)</option
-                    >
-                    <option value="dividendYield">Dividend Yield</option>
-                    <option value="payoutRatio">Payout Ratio</option>
-                    <option value="grossProfitMargin"
-                      >Gross Profit Margin</option
-                    >
-                    <option value="netProfitMargin">Net Profit Margin</option>
-                  </select>
+                  </Button>
                 </div>
               </div>
 
-              <div class="app w-full">
-                <Chart {init} options={optionsData} class="chart" />
-              </div>
+              {#if $coolMode}
+                <div class="sm:w-full">
+                  <div class="relative">
+                    <select
+                      class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
+                      on:change={changeStatement}
+                    >
+                      <option disabled>Choose an Income Variable</option>
+                      <option value="priceEarningsRatio" selected
+                        >PE Ratio</option
+                      >
+                      <option value="priceToSalesRatio">PS Ratio</option>
+                      <option value="priceToBookRatio">PB Ratio</option>
+                      <option value="priceToFreeCashFlowsRatio"
+                        >P/FCF Ratio</option
+                      >
+                      <option value="priceToOperatingCashFlowsRatio"
+                        >P/OCF Ratio</option
+                      >
+                      <option value="operatingCashFlowSalesRatio"
+                        >OCF/S Ratio</option
+                      >
+                      <option value="debtEquityRatio"
+                        >Debt / Equity Ratio</option
+                      >
+                      <option value="quickRatio">Quick Ratio</option>
+                      <option value="currentRatio">Current Ratio</option>
+                      <option value="assetTurnover">Asset Turnover</option>
+                      <option value="interestCoverage">Interest Coverage</option
+                      >
+                      <option value="returnOnEquity"
+                        >Return on Equity (ROE)</option
+                      >
+                      <option value="returnOnAssets"
+                        >Return on Assets (ROA)</option
+                      >
+                      <option value="returnOnCapitalEmployed"
+                        >Return on Capital (ROIC)</option
+                      >
+                      <option value="dividendYield">Dividend Yield</option>
+                      <option value="payoutRatio">Payout Ratio</option>
+                      <option value="grossProfitMargin"
+                        >Gross Profit Margin</option
+                      >
+                      <option value="netProfitMargin">Net Profit Margin</option>
+                    </select>
+                  </div>
+                </div>
 
-              <div class="w-full overflow-x-scroll">
-                <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
-                >
-                  <thead>
-                    <tr class="border border-gray-600">
-                      <th
-                        class="text-white font-semibold text-start text-sm sm:text-[1rem]"
-                        >{filterRule === "annual"
-                          ? "Fiscal Year End"
-                          : "Quarter Ends"}</th
-                      >
-                      <th
-                        class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                        >{statementConfig?.find(
-                          (item) => item?.propertyName === displayStatement,
-                        )?.label}</th
-                      >
-                      <th
-                        class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                        >Change</th
-                      >
-                      <th
-                        class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                        >Growth</th
-                      >
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {#each tableList as item, index}
-                      <!-- row -->
-                      <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
-                      >
-                        <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
-                        >
-                          {item?.date}
-                        </td>
+                <div class="app w-full">
+                  <Chart {init} options={optionsData} class="chart" />
+                </div>
 
-                        <td
-                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                <div class="w-full overflow-x-scroll">
+                  <table
+                    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                  >
+                    <thead>
+                      <tr class="border border-gray-600">
+                        <th
+                          class="text-white font-semibold text-start text-sm sm:text-[1rem]"
+                          >{filterRule === "annual"
+                            ? "Fiscal Year End"
+                            : "Quarter Ends"}</th
                         >
-                          {abbreviateNumber(item?.value)}
-                        </td>
-
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                        <th
+                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                          >{statementConfig?.find(
+                            (item) => item?.propertyName === displayStatement,
+                          )?.label}</th
                         >
-                          {item?.value - tableList[index + 1]?.value !== 0
-                            ? abbreviateNumber(
-                                (
-                                  item?.value - tableList[index + 1]?.value
-                                )?.toFixed(2),
-                              )
-                            : "-"}
-                        </td>
-
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                        <th
+                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                          >Change</th
                         >
-                          {#if index + 1 - tableList?.length === 0}
-                            -
-                          {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
-                            <span class="text-[#FF2F1F]">-100.00%</span>
-                          {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
-                            <span class="text-[#00FC50]">100.00%</span>
-                          {:else if item?.value - tableList[index + 1]?.value > 0}
-                            <span class="text-[#00FC50]">
-                              {(
-                                ((item?.value - tableList[index + 1]?.value) /
-                                  Math.abs(item?.value)) *
-                                100
-                              )?.toFixed(2)}%
-                            </span>
-                          {:else if item?.value - tableList[index + 1]?.value < 0}
-                            <span class="text-[#FF2F1F]">
-                              -{(
-                                Math?.abs(
-                                  (tableList[index + 1]?.value - item?.value) /
-                                    Math.abs(item?.value),
-                                ) * 100
-                              )?.toFixed(2)}%
-                            </span>
-                          {:else}
-                            -
-                          {/if}
-                        </td>
+                        <th
+                          class="text-white font-semibold text-end text-sm sm:text-[1rem]"
+                          >Growth</th
+                        >
                       </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-            {:else}
-              <div
-                class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
-              >
-                <table class="table table-sm table-compact w-full">
-                  <thead>
-                    <tr class="text-white">
-                      <td class="text-start text-sm font-semibold">Year</td>
-                      {#each ratios as item}
-                        {#if filterRule === "annual"}
+                    </thead>
+                    <tbody>
+                      {#each tableList as item, index}
+                        <!-- row -->
+                        <tr
+                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                        >
                           <td
-                            class="bg-[#09090B] font-semibold text-end text-sm"
+                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                           >
-                            {"FY" + item?.calendarYear?.slice(-2)}
+                            {item?.date}
                           </td>
-                        {:else}
+
                           <td
-                            class="bg-[#09090B] font-semibold text-end text-sm"
+                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                           >
-                            {"FY" +
-                              item?.calendarYear?.slice(-2) +
-                              " " +
-                              item?.period}
+                            {abbreviateNumber(item?.value)}
                           </td>
-                        {/if}
+
+                          <td
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                          >
+                            {item?.value - tableList[index + 1]?.value !== 0
+                              ? abbreviateNumber(
+                                  (
+                                    item?.value - tableList[index + 1]?.value
+                                  )?.toFixed(2),
+                                )
+                              : "-"}
+                          </td>
+
+                          <td
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                          >
+                            {#if index + 1 - tableList?.length === 0}
+                              -
+                            {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
+                              <span class="text-[#FF2F1F]">-100.00%</span>
+                            {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
+                              <span class="text-[#00FC50]">100.00%</span>
+                            {:else if item?.value - tableList[index + 1]?.value > 0}
+                              <span class="text-[#00FC50]">
+                                {(
+                                  ((item?.value - tableList[index + 1]?.value) /
+                                    Math.abs(item?.value)) *
+                                  100
+                                )?.toFixed(2)}%
+                              </span>
+                            {:else if item?.value - tableList[index + 1]?.value < 0}
+                              <span class="text-[#FF2F1F]">
+                                -{(
+                                  Math?.abs(
+                                    (tableList[index + 1]?.value -
+                                      item?.value) /
+                                      Math.abs(item?.value),
+                                  ) * 100
+                                )?.toFixed(2)}%
+                              </span>
+                            {:else}
+                              -
+                            {/if}
+                          </td>
+                        </tr>
                       {/each}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A] whitespace-nowrap">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >PE Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.priceEarningsRatio / 4)?.toFixed(2)
-                            : item?.priceEarningsRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >PS Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.priceToSalesRatio / 4)?.toFixed(2)
-                            : item?.priceToSalesRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >PB Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.priceToBookRatio / 4)?.toFixed(2)
-                            : item?.priceToBookRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A] whitespace-nowrap">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >P/FCF Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.priceToFreeCashFlowsRatio / 4)?.toFixed(2)
-                            : item?.priceToFreeCashFlowsRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >P/OCF Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (
-                                item?.priceToOperatingCashFlowsRatio / 4
-                              )?.toFixed(2)
-                            : item?.priceToOperatingCashFlowsRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >OCF/S Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.operatingCashFlowSalesRatio / 4)?.toFixed(
-                                2,
-                              )
-                            : item?.operatingCashFlowSalesRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Debt / Equity Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.debtEquityRatio / 4)?.toFixed(2)
-                            : item?.debtEquityRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Quick Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.quickRatio / 4)?.toFixed(2)
-                            : item?.quickRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Current Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.currentRatio / 4)?.toFixed(2)
-                            : item?.currentRatio?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem] whitespace-nowrap"
-                        >Asset Turnover</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {item?.assetTurnover?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Interest Coverage</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? (item?.interestCoverage / 4)?.toFixed(2)
-                            : item?.interestCoverage?.toFixed(2)}
-                        </td>
-                      {/each}
-                    </tr>
-                    <!-- row -->
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Return on Equity (ROE)</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {(item?.returnOnEquity * 100)?.toFixed(2)}%
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Return on Assets (ROA)</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end"
-                          >{(item?.returnOnAssets * 100)?.toFixed(2)}%</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Return on Capital (ROIC)</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {(item?.returnOnCapitalEmployed * 100)?.toFixed(
-                            2,
-                          )}%</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Dividend Yield</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {(item?.dividendYield * 100)?.toFixed(2)}%</td
-                        >
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Payout Ratio</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? ((item?.payoutRatio / 4) * 100)?.toFixed(2)
-                            : (item?.payoutRatio * 100)?.toFixed(2)}%
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Gross Profit Margin</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? ((item?.grossProfitMargin / 4) * 100)?.toFixed(2)
-                            : (item?.grossProfitMargin * 100)?.toFixed(2)}%
-                        </td>
-                      {/each}
-                    </tr>
-                    <tr class="text-white odd:bg-[#27272A]">
-                      <td
-                        class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                        >Net Profit Margin</td
-                      >
-                      {#each ratios as item}
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {filterRule === "annual"
-                            ? ((item?.netProfitMargin / 4) * 100)?.toFixed(2)
-                            : (item?.netProfitMargin * 100)?.toFixed(2)}%
-                        </td>
-                      {/each}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                    </tbody>
+                  </table>
+                </div>
+              {:else}
+                <div
+                  class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
+                >
+                  <table class="table table-sm table-compact w-full">
+                    <thead>
+                      <tr class="text-white">
+                        <td class="text-start text-sm font-semibold">Year</td>
+                        {#each ratios as item}
+                          {#if filterRule === "annual"}
+                            <td
+                              class="bg-[#09090B] font-semibold text-end text-sm"
+                            >
+                              {"FY" + item?.calendarYear?.slice(-2)}
+                            </td>
+                          {:else}
+                            <td
+                              class="bg-[#09090B] font-semibold text-end text-sm"
+                            >
+                              {"FY" +
+                                item?.calendarYear?.slice(-2) +
+                                " " +
+                                item?.period}
+                            </td>
+                          {/if}
+                        {/each}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- row -->
+                      <FinancialTable data={ratios} {fields} {filterRule} />
+                    </tbody>
+                  </table>
+                </div>
+              {/if}
             {/if}
           </div>
         </div>

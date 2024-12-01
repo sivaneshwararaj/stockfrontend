@@ -61,6 +61,30 @@
       text: "Gross profit is a company’s profit after subtracting the costs directly linked to making and delivering its products and services.",
     },
     {
+      propertyName: "operatingIncome",
+      growthPropertyName: "growthOperatingIncome",
+      label: "Operating Income",
+      text: "Gross profit is a company’s profit after subtracting the costs directly linked to making and delivering its products and services.",
+    },
+    {
+      propertyName: "interestIncome",
+      growthPropertyName: "growthInterestIncome",
+      label: "Interest Income",
+      text: "Gross profit is a company’s profit after subtracting the costs directly linked to making and delivering its products and services.",
+    },
+    {
+      propertyName: "incomeBeforeTax",
+      growthPropertyName: "growthIncomeBeforeTax",
+      label: "Pretax Income",
+      text: "Pretax income is a company's profits before accounting for income taxes.",
+    },
+    {
+      propertyName: "netIncome",
+      growthPropertyName: "growthNetIncome",
+      label: "Net Income",
+      text: `Net income is a company's accounting profits after subtracting all costs and expenses from the revenue. It is also called earnings, profits or "the bottom line."`,
+    },
+    {
       propertyName: "sellingGeneralAndAdministrativeExpenses",
       growthPropertyName: "growthSellingGeneralAndAdministrativeExpenses",
       label: "Selling & General & Admin",
@@ -91,22 +115,22 @@
       text: "Interest expense is the amount that the company paid or received in interest. A positive number indicates a net expense, while a negative number implies that the company had more interest income from its cash reserves than it paid for interest on debt.",
     },
     {
-      propertyName: "incomeBeforeTax",
-      growthPropertyName: "growthIncomeBeforeTax",
-      label: "Pretax Income",
-      text: "Pretax income is a company's profits before accounting for income taxes.",
+      propertyName: "sellingAndMarketingExpenses",
+      growthPropertyName: "growthSellingAndMarketingExpenses",
+      label: "Selling & Marketing Expenses",
+      text: "Revenue, also called sales, is the amount of money a company receives from its business activities, such as sales of products or services. Revenue does not take any expenses into account and is therefore different from profits.",
+    },
+    {
+      propertyName: "costAndExpenses",
+      growthPropertyName: "growthCostAndExpensess",
+      label: "Cost & Expenses",
+      text: "Revenue, also called sales, is the amount of money a company receives from its business activities, such as sales of products or services. Revenue does not take any expenses into account and is therefore different from profits.",
     },
     {
       propertyName: "incomeTaxExpense",
       growthPropertyName: "growthIncomeTaxExpense",
       label: "Income Tax",
       text: "Income tax is the amount of corporate income tax that the company has incurred during the fiscal period.",
-    },
-    {
-      propertyName: "netIncome",
-      growthPropertyName: "growthNetIncome",
-      label: "Net Income",
-      text: `Net income is a company's accounting profits after subtracting all costs and expenses from the revenue. It is also called earnings, profits or "the bottom line."`,
     },
     {
       propertyName: "weightedAverageShsOut",
@@ -146,6 +170,10 @@
     },
   ];
 
+  const fields = statementConfig.map((item) => ({
+    label: item.label,
+    key: item.propertyName,
+  }));
   function toggleMode() {
     $coolMode = !$coolMode;
   }
@@ -746,7 +774,7 @@
                       </thead>
                       <tbody>
                         <!-- row -->
-                        <FinancialTable data={income} />
+                        <FinancialTable data={income} {fields} />
                       </tbody>
                     </table>
                   </div>
