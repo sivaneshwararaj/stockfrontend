@@ -119,6 +119,7 @@
     { name: "Debt / Equity", rule: "debtEquityRatio", type: "int" },
     { name: "Profit Margin", rule: "netProfitMargin", type: "percent" },
     { name: "FTD Shares", rule: "failToDeliver", type: "int" },
+    { name: "Relative FTD", rule: "relativeFTD", type: "percent" },
     { name: "Interest Income", rule: "interestIncome", type: "int" },
     { name: "Operating Income", rule: "operatingIncome", type: "int" },
     {

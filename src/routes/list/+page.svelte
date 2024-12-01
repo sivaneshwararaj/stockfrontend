@@ -28,6 +28,11 @@
         >U.S. Companies With The Most Employees</a
       >
     </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/most-ftd-shares"
+        >U.S. Companies With The Most Fail-to-Deliver Shares</a
+      >
+    </li>
   </ul>
 </div>
 
