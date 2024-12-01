@@ -486,12 +486,19 @@
                         1-Year Change
                       </div>
                       <div
-                        class="mt-1 break-words font-semibold leading-8 tiny:text-lg xs:text-xl sm:text-2xl {changePercentageYearAgo >
-                        0
+                        class="mt-1 break-words font-semibold leading-8 tiny:text-lg xs:text-xl sm:text-2xl {changePercentageYearAgo >=
+                          0 && changePercentageYearAgo !== null
                           ? "before:content-['+'] text-[#00FC50]"
-                          : 'text-[#FF2F1F]'}"
+                          : changePercentageYearAgo < 0 &&
+                              changePercentageYearAgo !== null
+                            ? 'text-[#FF2F1F]'
+                            : 'text-white'}"
                       >
-                        {abbreviateNumber(changePercentageYearAgo?.toFixed(2))}%
+                        {changePercentageYearAgo !== null
+                          ? abbreviateNumber(
+                              changePercentageYearAgo?.toFixed(2),
+                            ) + "%"
+                          : "n/a"}
                       </div>
                     </div>
                   </div>

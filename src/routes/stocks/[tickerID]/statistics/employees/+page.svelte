@@ -21,9 +21,9 @@
   let employeeHistory = data?.getHistoryEmployee ?? [];
   let historyList = sortByDate(employeeHistory);
 
-  let employees = "n/a";
-  let changeRate = "n/a";
-  let growthRate = "n/a";
+  let employees = null;
+  let changeRate = null;
+  let growthRate = null;
 
   let optionsTotal;
   let optionsChange;
@@ -407,12 +407,15 @@
                   day: "numeric",
                   year: "numeric",
                   daySuffix: "2-digit",
-                })}. The number of employees {changeRate >= 0
+                })}. The number of employees {changeRate >= 0 &&
+                changeRate !== null
                   ? "increased"
                   : "decreased"}
                 by {new Intl.NumberFormat("en")?.format(changeRate)} or
                 <span
-                  class={changeRate >= 0 ? "text-[#00FC50]" : "text-[#FF2F1F]"}
+                  class={changeRate >= 0 && changeRate !== null
+                    ? "text-[#00FC50]"
+                    : "text-[#FF2F1F]"}
                 >
                   {growthRate}%
                 </span>
@@ -442,7 +445,7 @@
         </div>
 
         <div
-          class="my-5 grid grid-cols-2 gap-3 px-1 text-base xs:mt-6 bp:mt-7 bp:text-lg sm:grid-cols-3 sm:gap-6 sm:px-4 sm:text-xl"
+          class="my-5 grid grid-cols-2 gap-3 px-1 xs:mt-6 bp:mt-7 sm:grid-cols-3 sm:gap-6 sm:px-4"
         >
           <div>
             Employees
@@ -463,7 +466,9 @@
               {#if dateDistance}
                 n/a
               {:else}
-                {new Intl.NumberFormat("en")?.format(changeRate)}
+                {changeRate !== null
+                  ? new Intl.NumberFormat("en")?.format(changeRate)
+                  : "n/a"}
               {/if}
             </div>
           </div>
@@ -473,7 +478,7 @@
                 ? "before:content-['+'] "
                 : ''} font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
             >
-              {growthRate}%
+              {growthRate !== null ? growthRate + "%" : "n/a"}
             </div>
           </div>
           <div>
@@ -518,81 +523,82 @@
           >
             Employees Chart
           </h1>
-
-          <div
-            class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
-          >
-            <div class="relative inline-block text-left grow">
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild let:builder>
-                  <Button
-                    builders={[builder]}
-                    class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                  >
-                    <span class="truncate text-white">{sortBy}</span>
-                    <svg
-                      class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      style="max-width:40px"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                  </Button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content
-                  class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                >
-                  <DropdownMenu.Label class="text-gray-400">
-                    Select Type
-                  </DropdownMenu.Label>
-                  <DropdownMenu.Separator />
-                  <DropdownMenu.Group>
-                    <DropdownMenu.Item
-                      on:click={() => (sortBy = "Total")}
-                      class="cursor-pointer hover:bg-[#27272A]"
-                    >
-                      Total
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => (sortBy = "Change")}
-                      class="cursor-pointer hover:bg-[#27272A]"
-                    >
-                      Change
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => (sortBy = "Growth")}
-                      class="cursor-pointer hover:bg-[#27272A]"
-                    >
-                      Growth
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Group>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-            </div>
-            <Button
-              on:click={() => exportData("csv")}
-              class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+          {#if historyList?.length > 0}
+            <div
+              class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
             >
-              <span class="truncate text-white">Download</span>
-              <svg
-                class="{data?.user?.tier === 'Pro'
-                  ? 'hidden'
-                  : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                ><path
-                  fill="#A3A3A3"
-                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                /></svg
+              <div class="relative inline-block text-left grow">
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger asChild let:builder>
+                    <Button
+                      builders={[builder]}
+                      class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    >
+                      <span class="truncate text-white">{sortBy}</span>
+                      <svg
+                        class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        style="max-width:40px"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </Button>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content
+                    class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                  >
+                    <DropdownMenu.Label class="text-gray-400">
+                      Select Type
+                    </DropdownMenu.Label>
+                    <DropdownMenu.Separator />
+                    <DropdownMenu.Group>
+                      <DropdownMenu.Item
+                        on:click={() => (sortBy = "Total")}
+                        class="cursor-pointer hover:bg-[#27272A]"
+                      >
+                        Total
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        on:click={() => (sortBy = "Change")}
+                        class="cursor-pointer hover:bg-[#27272A]"
+                      >
+                        Change
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        on:click={() => (sortBy = "Growth")}
+                        class="cursor-pointer hover:bg-[#27272A]"
+                      >
+                        Growth
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Group>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
+              </div>
+              <Button
+                on:click={() => exportData("csv")}
+                class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
               >
-            </Button>
-          </div>
+                <span class="truncate text-white">Download</span>
+                <svg
+                  class="{data?.user?.tier === 'Pro'
+                    ? 'hidden'
+                    : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  ><path
+                    fill="#A3A3A3"
+                    d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                  /></svg
+                >
+              </Button>
+            </div>
+          {/if}
         </div>
 
         {#if historyList?.length !== 0}
@@ -702,7 +708,7 @@
           </div>
         {:else}
           <h1
-            class="text-xl m-auto flex justify-center text-gray-200 font-medium mb-4 mt-10"
+            class="text-xl m-auto flex justify-center text-gray-200 font-semibold mb-4 mt-10"
           >
             No history found
           </h1>
