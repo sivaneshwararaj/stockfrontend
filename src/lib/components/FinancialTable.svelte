@@ -2,7 +2,6 @@
   import { abbreviateNumber } from "$lib/utils";
   export let data;
   export let fields;
-  export let filterRule = null;
 </script>
 
 {#each fields as { label, key }}
@@ -14,15 +13,9 @@
     </td>
     {#each data as item}
       <td class="text-sm sm:text-[1rem] text-end">
-        {#if filterRule === "annual"}
-          {item[key] !== null && item[key] !== 0
-            ? abbreviateNumber((item[key] / 4).toFixed(2))
-            : "-"}
-        {:else}
-          {item[key] !== null && item[key] !== 0
-            ? abbreviateNumber(item[key]?.toFixed(2))
-            : "-"}
-        {/if}
+        {item[key] !== null && item[key] !== 0
+          ? abbreviateNumber(item[key]?.toFixed(2))
+          : "-"}
       </td>
     {/each}
   </tr>
