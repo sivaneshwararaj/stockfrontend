@@ -15,6 +15,8 @@
     "marketValue",
     "avgPricePaid",
     "weight",
+    "price",
+    "changesPercentage",
   ]);
 
   const defaultList = [
@@ -23,7 +25,7 @@
     { name: "Shares", rule: "sharesNumber" },
     { name: "% Change Shares", rule: "changeInSharesNumberPercentage" },
     { name: "Market Value", rule: "marketValue" },
-    { name: "Avg Price", rule: "avgPricePaid" },
+    { name: "Avg. Price Paid", rule: "avgPricePaid" },
     { name: "% Weight", rule: "weight" },
   ];
 
