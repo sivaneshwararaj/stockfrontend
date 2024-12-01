@@ -23,15 +23,24 @@
     const minutes = Math.abs(Math.round(difference / (1000 * 60)));
 
     if (minutes < 60) {
-      return `${minutes} minutes`;
+      return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
     } else if (minutes < 1440) {
       const hours = Math.round(minutes / 60);
       return `${hours} hour${hours !== 1 ? "s" : ""}`;
-    } else {
+    } else if (minutes < 10080) {
       const days = Math.round(minutes / 1440);
+      if (days > 6) {
+        return "1 week";
+      }
       return `${days} day${days !== 1 ? "s" : ""}`;
+    } else if (minutes < 20160) {
+      return "2 weeks";
+    } else {
+      const weeks = Math.round(minutes / 10080);
+      return `${weeks} week${weeks !== 1 ? "s" : ""}`;
     }
   };
+
   /*
   let videoId = null;
 
