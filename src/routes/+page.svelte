@@ -54,7 +54,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stocknear - Free Online Stock Analysis for Investors
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stocknear
+    - Free Online Stock Analysis for Investors
   </title>
 
   <meta
@@ -545,10 +546,10 @@
                     symbol={analystReport?.symbol}
                   />
                   stock is "{analystReport?.consensusRating}" The 12-month stock
-                  price forecast is ${analystReport?.medianPriceTarget}, which
-                  is an {analystReport?.medianPriceChange > 0
+                  price forecast is ${analystReport?.highPriceTarget}, which is
+                  an {analystReport?.highPriceChange > 0
                     ? "increase"
-                    : "decreas"} of {analystReport?.medianPriceChange}% from the
+                    : "decreas"} of {analystReport?.highPriceChange}% from the
                   latest price.
                 </div>
                 <table
