@@ -132,9 +132,9 @@ export const calculateChange = (oldList?: any[], newList?: any[]) => {
     const item = oldList[i];
     const newItem = newListMap.get(item.symbol);
     
-    if (newItem?.ap) {
+    if (newItem?.avgPrice) {
       const { price, changesPercentage } = item;
-      const newPrice = newItem.ap;
+      const newPrice = newItem.avgPrice;
 
       if (price != null && changesPercentage != null) {
         const baseLine = price / (1 + Number(changesPercentage) / 100);

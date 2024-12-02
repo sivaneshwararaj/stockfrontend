@@ -349,7 +349,7 @@
         try {
           const newList = JSON?.parse(data);
           if (newList?.length > 0) {
-            //console.log("Received message:", newList);
+            console.log("Received message:", newList);
             if (originalData.some((item) => "changesPercentage" in item)) {
               originalData = calculateChange(originalData, newList);
               stockList = updateStockList(stockList, originalData);

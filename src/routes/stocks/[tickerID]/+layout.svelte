@@ -167,7 +167,7 @@
         //console.log('Received message:', data);
         try {
           const parsedData = JSON.parse(data);
-          const { type, lp, time, bp, ap } = parsedData || {};
+          const { type, lp, time, bp, ap, avgPrice } = parsedData || {};
 
           if (type === "T") {
             $realtimePrice = typeof lp !== "undefined" ? lp : null;
@@ -179,7 +179,7 @@
           } else if (type === "Q") {
             $wsBidPrice = typeof bp !== "undefined" ? bp : null;
             $wsAskPrice = typeof ap !== "undefined" ? ap : null;
-            $realtimePrice = $wsAskPrice?.toFixed(2);
+            $realtimePrice = typeof avgPrice !== "undefined" ? avgPrice : null;
           }
 
           // Update price increase state
