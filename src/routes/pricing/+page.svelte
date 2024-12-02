@@ -2,6 +2,7 @@
   import { numberOfUnreadNotification } from "$lib/store";
   import { openLemonSqueezyUrl } from "$lib/lemonsqueezy";
   //import Discount from '$lib/components/Discount.svelte';
+  import { FacebookPixel, fb } from "@beyonk/svelte-facebook-pixel";
   import { onMount } from "svelte";
 
   //import proTierLogo from "$lib/images/pro_tier_logo.png";
@@ -57,6 +58,11 @@
           value: value,
           currency: "USD",
           conversion_id: data?.user?.id,
+        });
+
+        fb.track("Purchase", {
+          value: value, // Replace with actual purchase value
+          currency: "USD", // Replace with your currency code
         });
       } catch (e) {
         console.log(e);
@@ -135,6 +141,8 @@
     twq("config", "onuuu");
   </script>
 </svelte:head>
+
+<FacebookPixel pixels={["1170112523654647"]} />
 
 <section
   class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-xl pt-10 m-auto"
