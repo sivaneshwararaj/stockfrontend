@@ -25,6 +25,7 @@
   let editMode = false;
   let numberOfChecked = 0;
   let activeIdx = 0;
+  let rawTabData = [];
 
   let deleteTickerList = [];
 
@@ -34,6 +35,7 @@
   let earnings = [];
   let groupedNews = [];
   let groupedEarnings = [];
+  let displayList = [];
   let checkedItems;
   let socket;
 
@@ -253,6 +255,7 @@
       groupedEarnings = [];
       groupedNews = [];
     }
+    changeTab(0);
   }
 
   async function createWatchList(event) {
@@ -291,6 +294,17 @@
         body: JSON.stringify(postData),
       }); // make a POST request to the server with the FormData object
       if (response?.ok) {
+        const output = await response.json();
+        try {
+          // Save the version along with the rules
+          localStorage?.setItem(
+            "last-watchlist-id",
+            JSON?.stringify(output?.id),
+          );
+        } catch (e) {
+          console.log("Failed saving indicator rules: ", e);
+        }
+
         toast.success("Watchlist created successfully!", {
           style: "border-radius: 200px; background: #333; color: #fff;",
         });
@@ -438,6 +452,15 @@
     }
   }
 
+  function changeTab(i) {
+    activeIdx = i;
+    if (activeIdx === 0) {
+      rawTabData = groupedNews;
+    } else {
+      rawTabData = groupedEarnings;
+    }
+    displayList = rawTabData?.slice(0, 8);
+  }
   async function handleAddTicker(event, ticker) {
     // Ensure inputValue is reset
 
@@ -524,6 +547,15 @@
   function changeWatchList(newWatchList) {
     displayWatchList = newWatchList;
     switchWatchlist = true;
+    try {
+      // Save the version along with the rules
+      localStorage?.setItem(
+        "last-watchlist-id",
+        JSON?.stringify(displayWatchList?.id),
+      );
+    } catch (e) {
+      console.log("Failed saving indicator rules: ", e);
+    }
   }
 
   function saveRules() {
@@ -538,9 +570,20 @@
     }
   }
 
+  async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && displayList?.length !== rawTabData?.length) {
+      const nextIndex = displayList?.length;
+      const filteredItem = rawTabData?.slice(nextIndex, nextIndex + 8);
+      displayList = [...displayList, ...filteredItem];
+    }
+  }
+
   onMount(async () => {
     try {
       const savedRules = localStorage?.getItem("watchlist-ruleOfList");
+      const savedLastWatchlistId = localStorage?.getItem("last-watchlist-id");
 
       if (savedRules) {
         const parsedRules = JSON.parse(savedRules);
@@ -578,11 +621,17 @@
       checkedItems = new Set(ruleOfList.map((item) => item.name));
       allRows = sortIndicatorCheckMarks(allRows);
 
-      // Display the first watchlist if available
-      if (allList?.length !== 0) {
-        displayWatchList = allList?.at(0);
+      if (savedLastWatchlistId) {
+        displayWatchList = allList
+          ?.filter((item) => item?.id === JSON.parse(savedLastWatchlistId))
+          ?.at(0);
       } else {
-        displayWatchList = "";
+        // Display the first watchlist if available
+        if (allList?.length !== 0) {
+          displayWatchList = allList?.at(0);
+        } else {
+          displayWatchList = "";
+        }
       }
 
       await getWatchlistData();
@@ -602,10 +651,16 @@
     if ($isOpen) {
       await websocketRealtimeData();
     }
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   });
 
   let previousList = [];
   let reconnectionTimeout;
+
   afterUpdate(async () => {
     // Compare only the symbols to detect changes
     const currentSymbols = watchList?.map((item) => item?.symbol).sort();
@@ -1404,7 +1459,7 @@
                             </button>
                           {:else}
                             <button
-                              on:click={() => (activeIdx = i)}
+                              on:click={() => changeTab(i)}
                               class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
                               i
                                 ? 'z-0'
@@ -1430,7 +1485,7 @@
                     </div>
                     {#if activeIdx === 0}
                       {#if groupedNews?.length > 0}
-                        {#each groupedNews as [date, titleGroups]}
+                        {#each displayList as [date, titleGroups]}
                           <h3 class="mb-1.5 mt-3 font-semibold text-faded">
                             {date}
                           </h3>
@@ -1502,7 +1557,7 @@
                         </span>
                       {/if}
                     {:else if groupedEarnings?.length > 0}
-                      {#each groupedEarnings as [date, titleGroups]}
+                      {#each displayList as [date, titleGroups]}
                         <h3 class="mb-1.5 mt-3 font-semibold text-faded">
                           {date}
                         </h3>
