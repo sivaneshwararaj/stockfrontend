@@ -466,9 +466,11 @@
                         </td>
 
                         <td
-                          class="{item?.upside >= 0
+                          class="{item?.upside >= 0 && item?.upside !== null
                             ? "before:content-['+'] text-[#00FC50]"
-                            : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                            : item?.upside < 0 && item?.upside !== null
+                              ? 'text-[#FF2F1F]'
+                              : 'text-white'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
                           {item?.upside !== null ? item?.upside + "%" : "n/a"}
                         </td>
