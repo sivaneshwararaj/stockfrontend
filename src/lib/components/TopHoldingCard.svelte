@@ -14,11 +14,11 @@
   let totalAssetPercentage = 0;
 
   async function stockSelector(ticker: string) {
-    if (ticker?.length !== 0 && !["BTC", "USD"]?.includes(ticker)) {
+    if (ticker?.length !== 0 && !["BTCUSD", "BTC" "USD"]?.includes(ticker)) {
       window?.scroll({ top: 0, left: 0, behavior: "smooth" });
       stockTicker.update((value) => ticker);
       goto("/stocks/" + ticker + "/");
-    } else if (ticker === "BTC") {
+    } else if (ticker === "BTCUSD") {
       window?.scroll({ top: 0, left: 0, behavior: "smooth" });
       cryptoTicker.update((value) => "BTCUSD");
       goto("/crypto/BTCUSD");

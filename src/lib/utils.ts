@@ -572,13 +572,20 @@ export function abbreviateNumber(number, addDollarSign = false) {
 }
 
 
-
 export const formatDate = (dateString) => {
   const date = new Date(dateString);
+  const now = new Date();
+  const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays >= 7) {
+    const weeks = Math.floor(diffInDays / 7);
+    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+  }
+  
   return formatDistanceToNow(date, {
-    addSuffix: false,
+    addSuffix: true,
     includeSeconds: false,
-  })?.replace(/about /i, "");
+  }).replace(/about /i, "");
 };
 
 export const formatRuleValue = (rule) => {

@@ -1,45 +1,11 @@
 <script lang="ts">
   import { stockTicker, etfTicker } from "$lib/store";
+  import { formatDate } from "$lib/utils";
 
   export let data;
 
   let rawData = [];
   let newsList = [];
-
-  const formatDate = (dateString) => {
-    // Create a date object for the input dateString
-    const inputDate = new Date(dateString);
-
-    // Create a date object for the current time in New York City
-    const nycTime = new Date().toLocaleString("en-US", {
-      timeZone: "America/New_York",
-    });
-    const currentNYCDate = new Date(nycTime);
-
-    // Calculate the difference in milliseconds
-    const difference = inputDate.getTime() - currentNYCDate.getTime();
-
-    // Convert the difference to minutes
-    const minutes = Math.abs(Math.round(difference / (1000 * 60)));
-
-    if (minutes < 60) {
-      return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
-    } else if (minutes < 1440) {
-      const hours = Math.round(minutes / 60);
-      return `${hours} hour${hours !== 1 ? "s" : ""}`;
-    } else if (minutes < 10080) {
-      const days = Math.round(minutes / 1440);
-      if (days > 6) {
-        return "1 week";
-      }
-      return `${days} day${days !== 1 ? "s" : ""}`;
-    } else if (minutes < 20160) {
-      return "2 weeks";
-    } else {
-      const weeks = Math.round(minutes / 10080);
-      return `${weeks} week${weeks !== 1 ? "s" : ""}`;
-    }
-  };
 
   /*
   let videoId = null;
@@ -138,7 +104,7 @@
               </a>
               <div class="-mt-3 w-full">
                 <h3 class="text-sm text-white/80 truncate mb-2 mt-3">
-                  {formatDate(item?.publishedDate)} ago · {item?.site}
+                  {formatDate(item?.publishedDate)} &#183; {item?.site}
                 </h3>
                 <a
                   href={item?.url}
