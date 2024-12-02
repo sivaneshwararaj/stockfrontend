@@ -25,7 +25,7 @@ Built with:
 
 # Contributing
 
-Stocknear is an open-source project, proudly maintained by Muslem Rahimi.
+Stocknear is an open-source project, soley maintained by Muslem Rahimi.
 
 We are not accepting pull requests. However, you are more than welcome to fork the project and customize it to suit your needs.
 
