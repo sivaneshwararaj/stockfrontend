@@ -11,7 +11,7 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { Calendar } from "$lib/components/shadcn/calendar/index.js";
   import CalendarIcon from "lucide-svelte/icons/calendar";
-
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import VirtualList from "svelte-tiny-virtual-list";
   import { writable } from "svelte/store";
 
@@ -423,7 +423,7 @@
     const formattedHours = hours % 12 || 12; // Converts 0 to 12 for midnight
 
     // Format the time string
-    const formattedTimeString = `${formattedHours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")} ${period}`;
+    const formattedTimeString = `${formattedHours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")} ${period}`;
 
     return formattedTimeString;
   }
@@ -1009,7 +1009,7 @@ function sendMessage(message) {
   <section
     class="w-full max-w-screen sm:max-w-7xl xl:max-w-7xl flex justify-center items-center bg-[#09090B] pb-20"
   >
-    <div class="w-full m-auto px-3">
+    <div class="w-full m-auto px-3 min-h-screen">
       <!--
         <div class="text-sm sm:text-[1rem] breadcrumbs mb-5">
           <ul>
@@ -1971,20 +1971,20 @@ function sendMessage(message) {
 
                       <div
                         style="justify-content: center;"
-                        class="td text-white text-xs sm:text-sm text-start"
+                        class="td text-white text-xs sm:text-sm text-start m-auto whitespace-nowrap"
                       >
                         {formatTime(displayedData[index]?.time)}
                       </div>
-                      <a
-                        href={displayedData[index]?.underlying_type === "stock"
-                          ? `/stocks/${displayedData[index]?.ticker}`
-                          : `/etf/${displayedData[index]?.ticker}`}
+                      <div
                         on:click|stopPropagation
                         style="justify-content: center;"
                         class="td text-sm sm:hover:text-white sm:text-[1rem] text-blue-400 font-normal"
                       >
-                        {displayedData[index]?.ticker}
-                      </a>
+                        <HoverStockChart
+                          symbol={displayedData[index]?.ticker}
+                          assetType={displayedData[index]?.underlying_type}
+                        />
+                      </div>
 
                       <div
                         id={displayedData[index]?.id}

@@ -71,7 +71,7 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full mt-5 sm:mt-0"
+  class="bg-[#09090B] overflow-hidden text-white h-full min-h-screen mb-20 sm:mb-0 w-full mt-5 sm:mt-0"
 >
   <div class="flex justify-center m-auto h-full overflow-hidden w-full">
     <div
@@ -111,7 +111,7 @@
                 {$etfTicker} Holdings List
               </h1>
               <div
-                class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] font-semibold md:ml-0"
+                class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] md:ml-0"
               >
                 <span class="inline">As of </span>{formattedDate}
               </div>
