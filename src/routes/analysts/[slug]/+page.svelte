@@ -9,8 +9,10 @@
   let analystStats = data?.getAnalystStats;
 
   let rawData = data?.getAnalystStats?.ratingsList;
-  let stockList = rawData?.slice(0, 20) ?? [];
+  let originalData = [...rawData]; // Unaltered copy of raw data
 
+  let stockList = rawData?.slice(0, 50) ?? [];
+  console.log(rawData);
   let analystScore = analystStats?.analystScore;
   let rank = analystStats?.rank;
   let analystName = analystStats?.analystName;
@@ -27,9 +29,10 @@
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
-    if (isBottom && stockList?.length !== rawData?.length) {
+
+    if (isBottom && stockList?.length !== originalData?.length) {
       const nextIndex = stockList?.length;
-      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+      const filteredNewResults = originalData?.slice(nextIndex, nextIndex + 50);
       stockList = [...stockList, ...filteredNewResults];
     }
   }
@@ -73,8 +76,6 @@
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
 
-    let originalData = rawData;
-
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
       orderCycle[(currentOrderIndex + 1) % orderCycle.length];
@@ -82,7 +83,8 @@
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      stockList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      originalData = [...rawData]; // Reset originalData to rawData
+      stockList = originalData?.slice(0, 50); // Reset displayed data
       return;
     }
 
