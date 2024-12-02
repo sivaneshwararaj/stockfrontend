@@ -4,6 +4,7 @@
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import { onMount } from "svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import RatingsChart from "$lib/components/RatingsChart.svelte";
   export let data;
 
   let analystStats = data?.getAnalystStats;
@@ -72,6 +73,15 @@
     };
   });
 
+  $: checkedSymbol = "";
+  function openGraph(symbol) {
+    // Clear all existing symbols
+    if (checkedSymbol === symbol) {
+      checkedSymbol = "";
+    } else {
+      checkedSymbol = symbol;
+    }
+  }
   $: charNumber = $screenWidth < 640 ? 20 : 40;
 
   let columns = [
@@ -379,11 +389,16 @@
                         class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]"
                       >
                         <td
-                          ><button class="h-full pl-2 pr-2 align-middle lg:pl-3"
+                          ><button
+                            on:click={() => openGraph(item?.ticker)}
+                            class="h-full pl-2 pr-2 align-middle lg:pl-3"
                             ><svg
-                              class="w-5 h-5 text-icon"
+                              class="w-5 h-5 text-icon {checkedSymbol ===
+                              item?.ticker
+                                ? 'rotate-180'
+                                : ''}"
                               viewBox="0 0 20 20"
-                              fill="currentColor"
+                              fill="white"
                               style="max-width:40px"
                               ><path
                                 fill-rule="evenodd"
@@ -542,6 +557,32 @@
                           })}
                         </td>
                       </tr>
+                      {#if checkedSymbol === item?.ticker}
+                        <tr
+                          ><td colspan="8" class="px-0" style=""
+                            ><div class="-mt-0.5 px-0 pb-2">
+                              <div class="relative h-[400px]">
+                                <div class="absolute top-0 w-full">
+                                  <div
+                                    class="h-[250px] w-full border-gray-600 xs:h-[300px] sm:h-[400px] md:border"
+                                    style="overflow: hidden;"
+                                  >
+                                    <div
+                                      style="position: relative; height: 0px; z-index: 1;"
+                                    >
+                                      <RatingsChart
+                                        ratingsList={rawData}
+                                        symbol={item?.ticker}
+                                        numOfRatings={item?.ratings}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div></td
+                          >
+                        </tr>
+                      {/if}
                     {/each}
                   </tbody>
                 </table>
