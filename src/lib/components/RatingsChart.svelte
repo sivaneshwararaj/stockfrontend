@@ -7,7 +7,6 @@
     GridComponent,
     TooltipComponent,
     MarkPointComponent,
-    MarkLineComponent,
   } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
   use([
@@ -16,7 +15,6 @@
     GridComponent,
     TooltipComponent,
     MarkPointComponent,
-    MarkLineComponent,
     CanvasRenderer,
   ]);
 
@@ -118,13 +116,13 @@
 
     // Prepare markPoints for ratings
     const markPoints = ratingsList
-      .filter((rating) => {
+      ?.filter((rating) => {
         // Ensure date format is correct and matches
-        return dates.includes(rating.date);
+        return dates.includes(rating?.date) && rating?.ticker === symbol;
       })
       .map((rating) => ({
         // Marker at the rating's date
-        type: "1Y", // Marking the rating date
+        type: "max", // Marking the rating date
         name: rating.rating_current,
         coord: [
           rating.date,
@@ -133,10 +131,10 @@
         label: {
           formatter: rating.rating_current, // Display the rating_current text
           position: "top", // Position the label above the point
-          color: "yellow", // Set label color (can be customized)
+          color: "white", // Set label color (can be customized)
           fontSize: 14, // Set font size (increase for better visibility)
         },
-        symbol: "circle", // Symbol type (can be customized)
+        symbol: "rectangle", // Symbol type (can be customized)
         symbolSize: 12, // Increase symbol size for better visibility
         itemStyle: {
           color: "red", // Set symbol color to red for better visibility
@@ -145,16 +143,44 @@
 
     const series = [
       {
-        name: "Price", // Name of the series
-        data: closeValues, // Use close values
-        type: "line", // Line chart
-        smooth: true, // Smooth lines
-        showSymbol: false, // Hide symbols on data points
+        name: "Price",
+        data: closeValues,
+        type: "line",
+        smooth: true,
+        showSymbol: false,
         areaStyle: {
-          color: "rgba(255, 255, 255, 0.08)", // Set the area color to a white color with opacity
+          color: "rgba(255, 255, 255, 0.08)",
         },
         lineStyle: {
-          color: "#fff", // Set the line color to white
+          color: "#fff",
+          width: 1,
+        },
+        markPoint: {
+          data: markPoints.map((point) => {
+            let pinColor = "#FF0000"; // Default to red (Sell, Strong Sell)
+            // Set the color based on the label
+            if (["Buy", "Strong Buy"]?.includes(point?.label?.formatter)) {
+              pinColor = "#00FF00"; // Green for Buy, Strong Buy
+            } else if (["Hold", "Neutral"]?.includes(point?.label?.formatter)) {
+              pinColor = "#FFA500"; // Orange for Hold
+            }
+
+            return {
+              name: point.name,
+              coord: point.coord,
+              label: {
+                ...point.label,
+                fontSize: 16, // Increase font size
+                fontWeight: "bold", // Make label bold
+                color: "#fff", // Change label color to white
+              },
+              symbol: "pin", // Use pin symbol
+              symbolSize: 20, // Increase symbol size
+              itemStyle: {
+                color: pinColor, // Apply the dynamically set color
+              },
+            };
+          }),
         },
       },
     ];
@@ -216,7 +242,7 @@
   }
 
   $: {
-    if (symbol && typeof window !== "undefined") {
+    if (symbol && typeof window !== "undefined" && timePeriod) {
       isLoaded = false;
       optionsData = null;
       historicalData = [];
@@ -230,6 +256,18 @@
 <div class="w-full overflow-hidden m-auto mt-5">
   {#if isLoaded && optionsData !== null}
     <div class="app w-full relative">
+      <div class="flex justify-start space-x-4 absolute left-20 top-0 z-10">
+        {#each ["1Y", "3Y", "5Y", "Max"] as item}
+          <label
+            on:click={() => (timePeriod = item)}
+            class="px-4 py-2 {timePeriod === item
+              ? 'bg-[#27272A]'
+              : ''} sm:hover:bg-[#27272A] border border-gray-600 text-white rounded-md cursor-pointer"
+          >
+            {item}
+          </label>
+        {/each}
+      </div>
       <h2
         class="text-white text-xl font-semibold text-center absolute left-1/2 transform -translate-x-1/2 top-5 -translate-y-1/2"
       >

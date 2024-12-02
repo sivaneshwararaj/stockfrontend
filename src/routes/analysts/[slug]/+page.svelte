@@ -84,8 +84,10 @@
   }
   $: charNumber = $screenWidth < 640 ? 20 : 40;
 
-  let columns = [
-    { key: "chart", label: "", align: "right" },
+  $: columns = [
+    ...($screenWidth > 1024
+      ? [{ key: "chart", label: "", align: "right" }]
+      : []),
     { key: "ticker", label: "Name", align: "left" },
     { key: "rating_current", label: "Action", align: "left" },
     { key: "adjusted_pt_current", label: "Price Target", align: "right" },
@@ -95,7 +97,7 @@
     { key: "date", label: "Updated", align: "right" },
   ];
 
-  let sortOrders = {
+  $: sortOrders = {
     chart: { order: "none", type: "string" },
     ticker: { order: "none", type: "string" },
     rating_current: { order: "none", type: "string" },
@@ -388,7 +390,7 @@
                       <tr
                         class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]"
                       >
-                        <td
+                        <td class="hidden lg:table-cell"
                           ><button
                             on:click={() => openGraph(item?.ticker)}
                             class="h-full pl-2 pr-2 align-middle lg:pl-3"
@@ -564,14 +566,15 @@
                               <div class="relative h-[400px]">
                                 <div class="absolute top-0 w-full">
                                   <div
-                                    class="h-[250px] w-full border-gray-600 xs:h-[300px] sm:h-[400px] md:border"
+                                    class="h-[250px] w-full xs:h-[300px] sm:h-[400px]"
                                     style="overflow: hidden;"
                                   >
                                     <div
                                       style="position: relative; height: 0px; z-index: 1;"
                                     >
                                       <RatingsChart
-                                        ratingsList={rawData}
+                                        ratingsList={data?.getAnalystStats
+                                          ?.ratingsList}
                                         symbol={item?.ticker}
                                         numOfRatings={item?.ratings}
                                       />
