@@ -8,11 +8,11 @@
 
   let analystStats = data?.getAnalystStats;
 
-  let rawData = data?.getAnalystStats?.ratingsList;
+  let rawData = processTickerData(data?.getAnalystStats?.ratingsList);
   let originalData = [...rawData]; // Unaltered copy of raw data
 
   let stockList = rawData?.slice(0, 50) ?? [];
-  console.log(rawData);
+
   let analystScore = analystStats?.analystScore;
   let rank = analystStats?.rank;
   let analystName = analystStats?.analystName;
@@ -25,6 +25,34 @@
     maximumFractionDigits: 0,
   }).format(analystStats?.numOfAnalysts);
   let numOfStocks = analystStats?.numOfStocks;
+
+  function processTickerData(data) {
+    const tickerMap = new Map();
+
+    data.forEach((item) => {
+      const { ticker, date } = item;
+
+      if (!ticker) return; // Skip if ticker is not defined
+
+      if (!tickerMap.has(ticker)) {
+        // Add the item and initialize count
+        tickerMap.set(ticker, { ...item, ratings: 1 });
+      } else {
+        const existing = tickerMap.get(ticker);
+
+        // Increment the ratings count
+        existing.ratings += 1;
+
+        // Keep the item with the latest date
+        if (new Date(item.date) > new Date(existing.date)) {
+          tickerMap.set(ticker, { ...item, ratings: existing.ratings });
+        }
+      }
+    });
+
+    // Convert the Map back to an array
+    return Array.from(tickerMap.values());
+  }
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
@@ -47,21 +75,25 @@
   $: charNumber = $screenWidth < 640 ? 20 : 40;
 
   let columns = [
+    { key: "chart", label: "", align: "right" },
     { key: "ticker", label: "Name", align: "left" },
     { key: "rating_current", label: "Action", align: "left" },
     { key: "adjusted_pt_current", label: "Price Target", align: "right" },
     { key: "price", label: "Current", align: "right" },
     { key: "upside", label: "% Upside", align: "right" },
+    { key: "ratings", label: "Ratings", align: "right" },
     { key: "date", label: "Updated", align: "right" },
   ];
 
   let sortOrders = {
+    chart: { order: "none", type: "string" },
     ticker: { order: "none", type: "string" },
     rating_current: { order: "none", type: "string" },
     adjusted_pt_current: { order: "none", type: "number" },
     marketCap: { order: "none", type: "number" },
     price: { order: "none", type: "number" },
     upside: { order: "none", type: "number" },
+    ratings: { order: "none", type: "number" },
     date: { order: "none", type: "date" },
   };
 
@@ -347,6 +379,22 @@
                         class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]"
                       >
                         <td
+                          ><button class="h-full pl-2 pr-2 align-middle lg:pl-3"
+                            ><svg
+                              class="w-5 h-5 text-icon"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              style="max-width:40px"
+                              ><path
+                                fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"
+                              ></path></svg
+                            ></button
+                          ></td
+                        >
+
+                        <td
                           class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
                         >
                           {#if index >= 5 && data?.user?.tier !== "Pro"}
@@ -475,6 +523,12 @@
                               : 'text-white'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
                           {item?.upside !== null ? item?.upside + "%" : "n/a"}
+                        </td>
+
+                        <td
+                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
+                          {item?.ratings !== null ? item?.ratings : "n/a"}
                         </td>
 
                         <td
