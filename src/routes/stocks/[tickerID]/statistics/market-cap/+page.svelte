@@ -316,40 +316,18 @@
 
     return options;
   }
-
   const exportData = (format = "csv") => {
     if (data?.user?.tier === "Pro") {
       // Add headers row
       const csvRows = [];
-
-      csvRows.push("Date,Market Cap,Growth");
+      csvRows.push("date,market-cap");
 
       // Add data rows
-      tableList?.forEach((item, index) => {
-        const date = item.date;
-        const marketCap = item.marketCap;
+      const filteredData = filterDataByTimePeriod(rawData, "Max");
+      const { dates, marketCapList } = filteredData;
 
-        // Calculate growth percentage
-        let growth = "-";
-        if (index + 1 < tableList.length) {
-          if (item.marketCap - tableList[index + 1].marketCap > 0) {
-            growth = `+${(
-              ((item.marketCap - tableList[index + 1].marketCap) /
-                item.marketCap) *
-              100
-            ).toFixed(2)}%`;
-          } else if (item.marketCap - tableList[index + 1].marketCap < 0) {
-            growth = `-${(
-              Math.abs(
-                (tableList[index + 1].marketCap - item.marketCap) /
-                  item.marketCap,
-              ) * 100
-            ).toFixed(2)}%`;
-          }
-        }
-
-        const csvRow = `${date},${marketCap},${growth}`;
-        csvRows.push(csvRow);
+      dates.forEach((date, index) => {
+        csvRows.push(`${date},${marketCapList[index]}`);
       });
 
       // Create CSV blob and trigger download
@@ -359,7 +337,10 @@
       const a = document.createElement("a");
       a.setAttribute("hidden", "");
       a.setAttribute("href", url);
-      a.setAttribute("download", `${$stockTicker}_market_cap.csv`);
+      a.setAttribute(
+        "download",
+        `${$stockTicker?.toLowerCase()}_market_cap.csv`,
+      );
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
