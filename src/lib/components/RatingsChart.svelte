@@ -211,6 +211,7 @@
         },
       },
       yAxis: {
+        show: false, // Completely hides the y-axis
         type: "value",
         splitLine: {
           show: false, // Disable grid lines
@@ -219,6 +220,7 @@
           color: "#fff",
         },
       },
+
       series: series, // Use the dynamically created series array
 
       tooltip: {
