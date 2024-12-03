@@ -192,7 +192,7 @@
                           {formatString(item?.name)}
                         </span>
                         <span class="text-white text-md mb-8">
-                          AUM: {abbreviateNumber(item?.marketValue, true)}
+                          AUM: {abbreviateNumber(item?.marketValue)}
                         </span>
                       </div>
 

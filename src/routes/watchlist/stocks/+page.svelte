@@ -1361,7 +1361,7 @@
                                       <div
                                         class="relative flex items-center justify-end"
                                       >
-                                        {#if item?.previous !== null && item?.previous !== undefined && item?.previous !== item[row?.rule] && row?.rule === "price"}
+                                        {#if item?.previous !== null && item?.previous !== undefined && Math.abs(item?.previous - item[row?.rule]) >= 0.01 && row?.rule === "price"}
                                           <span
                                             class="absolute h-1 w-1 {item[
                                               row?.rule

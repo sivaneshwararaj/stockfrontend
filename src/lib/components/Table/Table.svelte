@@ -836,7 +836,7 @@
                 {item[column.key]?.toLocaleString("en-US")}
               {:else if column.key === "price"}
                 <div class="relative flex items-center justify-end">
-                  {#if item?.previous !== null && item?.previous !== undefined && item?.previous !== item[column?.key]}
+                  {#if item?.previous !== null && item?.previous !== undefined && Math.abs(item?.previous - item[column?.key]) >= 0.01}
                     <span
                       class="absolute h-1 w-1 {item[column?.key] < 10
                         ? 'right-[35px] sm:right-[40px]'
