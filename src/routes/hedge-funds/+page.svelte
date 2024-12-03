@@ -113,14 +113,14 @@
   class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40"
 >
   <body class="w-full max-w-6xl overflow-hidden m-auto">
-    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4">
+    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4 sm:ml-0">
       <ul>
         <li><a href="/" class="text-gray-300">Home</a></li>
         <li class="text-gray-300">Hedge Funds</li>
       </ul>
     </div>
 
-    <section class="w-full overflow-hidden m-auto sm:mt-10 px-0 sm:px-3 mt-10">
+    <section class="w-full overflow-hidden m-auto sm:mt-10 px-0 mt-10">
       <div class="p-3 sm:p-0 flex justify-center w-full m-auto overflow-hidden">
         <div
           class="relative flex justify-center items-center overflow-hidden w-full"
@@ -209,7 +209,7 @@
                                 maximumFractionDigits: 0,
                               }).format(item?.numberOfStocks)}
                             </span>
-                            <span class="text-slate-300 font-medium text-sm"
+                            <span class="text-white font-medium text-sm"
                               ># of Holdings</span
                             >
                           </label>
@@ -218,7 +218,7 @@
                             <span class="text-white text-[1rem] font-semibold">
                               {item?.turnover?.toFixed(2)}
                             </span>
-                            <span class="text-slate-300 font-medium text-sm"
+                            <span class="text-white font-medium text-sm"
                               >Turnover</span
                             >
                           </div>
@@ -251,7 +251,7 @@
                                 </span>
                               {/if}
                             </div>
-                            <span class="text-slate-300 font-medium text-sm"
+                            <span class="text-white font-medium text-sm"
                               >3-Year Performance</span
                             >
                           </label>
@@ -274,7 +274,7 @@
                                 </span>
                               {/if}
                             </div>
-                            <span class="text-slate-300 font-medium text-sm"
+                            <span class="text-white font-medium text-sm"
                               >Win Rate</span
                             >
                           </div>
