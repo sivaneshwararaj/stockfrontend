@@ -39,7 +39,7 @@
     if ($stockTicker && typeof window !== "undefined") {
       info = data?.getStockDeck;
       ipoDate =
-        info?.ipoDate !== null
+        info?.ipoDate !== null && info?.ipoDate?.length > 0
           ? new Date(info?.ipoDate)?.toLocaleString("en-US", {
               month: "short",
               day: "numeric",
