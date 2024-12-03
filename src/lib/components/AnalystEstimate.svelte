@@ -1,21 +1,10 @@
 <script lang="ts">
   import { analystEstimateComponent, stockTicker } from "$lib/store";
-
-  import { Chart } from "svelte-echarts";
-  import { init, use } from "echarts/core";
-  import { LineChart, CustomChart } from "echarts/charts";
-  import { GridComponent, TooltipComponent } from "echarts/components";
-  import { CanvasRenderer } from "echarts/renderers";
   import { abbreviateNumber } from "$lib/utils";
+  import EstimationGraph from "$lib/components/EstimationGraph.svelte";
+  import Lazy from "svelte-lazy";
 
   export let data;
-  use([
-    LineChart,
-    CustomChart,
-    GridComponent,
-    TooltipComponent,
-    CanvasRenderer,
-  ]);
 
   let analystEstimateList = [];
   let isLoaded = false;
@@ -829,530 +818,53 @@
       {/if}
 
       <div class="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 mt-10">
-        <div>
-          <h2 class="mb-2 text-xl font-bold">Revenue Forecast</h2>
-          <div class="rounded-sm border p-2 border-gray-600">
-            <div class="app h-[275px] w-full">
-              {#if optionsRevenue !== null}
-                <Chart {init} options={optionsRevenue} class="chart" />
-              {/if}
-            </div>
-            <div
-              class="mt-3 overflow-x-auto p-0 text-center sm:p-0.5 lg:mt-3.5"
-            >
-              <table class="w-full text-right">
-                <thead
-                  ><tr
-                    class="border-b border-gray-600 align-bottom text-white font-normal"
-                    ><th
-                      class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
-                      >Revenue</th
-                    >
-                    {#each revenueDateList as date, index}
-                      <th class="p-1 font-semibold text-sm sm:text-[1rem]">
-                        {#if index !== 0}{date}{/if}</th
-                      >
-                    {/each}
-                  </tr></thead
-                >
-                <tbody
-                  ><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >High</td
-                    >
-                    {#each highRevenueList as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= highRevenueList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            {abbreviateNumber(item?.val)}
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Avg</td
-                    >
-                    {#each avgRevenueList as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= avgRevenueList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            {abbreviateNumber(item?.val)}
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Low</td
-                    >
-                    {#each lowRevenueList as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= lowRevenueList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            {abbreviateNumber(item?.val)}
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr></tbody
-                >
-              </table>
-            </div>
-          </div>
-        </div>
+        <Lazy>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="Revenue"
+            options={optionsRevenue}
+            tableDataList={revenueDateList}
+            highDataList={highRevenueList}
+            avgDataList={avgRevenueList}
+            lowDataList={lowRevenueList}
+          />
+        </Lazy>
 
-        <div>
-          <h2 class="mb-2 text-xl font-bold">Revenue Growth</h2>
-          <div class="rounded-sm border p-2 border-gray-600">
-            <div class="app h-[275px] w-full">
-              {#if optionsRevenueGrowth !== null}
-                <Chart {init} options={optionsRevenueGrowth} class="chart" />
-              {/if}
-            </div>
-            <div
-              class="mt-3 overflow-x-auto p-0 text-center sm:p-0.5 lg:mt-3.5"
-            >
-              <table class="w-full text-right">
-                <thead
-                  ><tr
-                    class="border-b border-gray-600 align-bottom text-white font-normal whitespace-nowrap"
-                    ><th
-                      class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
-                      >Revenue Growth</th
-                    >
-                    {#each revenueDateList as date, index}
-                      <th class="p-1 font-semibold text-sm sm:text-[1rem]"
-                        >{#if index !== 0}{date}{/if}</th
-                      >
-                    {/each}
-                  </tr></thead
-                >
-                <tbody
-                  ><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >High</td
-                    >
-                    {#each computeGrowthSingleList(highRevenueList, avgRevenueList) as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= highRevenueList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            <span
-                              class={item?.growth !== null && item?.growth > 0
-                                ? "text-[#00FC50] before:content-['+']"
-                                : item?.growth < 0
-                                  ? "text-[#FF2F1F]"
-                                  : "text-white"}
-                            >
-                              {item?.growth !== null &&
-                              Math.abs(item?.growth - 0) > 0
-                                ? abbreviateNumber(item?.growth) + "%"
-                                : "-"}
-                            </span>
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Avg</td
-                    >
-                    {#each revenueAvgGrowthList?.filter((item) => item.FY >= 24) as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= avgRevenueList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            <span
-                              class={item?.growth !== null && item?.growth > 0
-                                ? "text-[#00FC50] before:content-['+']"
-                                : item?.growth < 0
-                                  ? "text-[#FF2F1F]"
-                                  : "text-white"}
-                            >
-                              {item?.growth !== null &&
-                              Math.abs(item?.growth - 0) > 0
-                                ? abbreviateNumber(item?.growth) + "%"
-                                : "-"}
-                            </span>
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Low</td
-                    >
-                    {#each computeGrowthSingleList(lowRevenueList, avgRevenueList) as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= lowRevenueList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            <span
-                              class={item?.growth !== null && item?.growth > 0
-                                ? "text-[#00FC50] before:content-['+']"
-                                : item?.growth < 0
-                                  ? "text-[#FF2F1F]"
-                                  : "text-white"}
-                            >
-                              {item?.growth !== null &&
-                              Math.abs(item?.growth - 0) > 0
-                                ? abbreviateNumber(item?.growth) + "%"
-                                : "-"}
-                            </span>
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr></tbody
-                >
-              </table>
-            </div>
-          </div>
-        </div>
+        <Lazy>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="Revenue Growth"
+            options={optionsRevenueGrowth}
+            tableDataList={revenueDateList}
+            highDataList={highRevenueList}
+            avgDataList={avgRevenueList}
+            lowDataList={lowRevenueList}
+          />
+        </Lazy>
 
-        <div>
-          <h2 class="mb-2 text-xl font-bold">EPS Forecast</h2>
-          <div class="rounded-sm border p-2 border-gray-600">
-            <div class="app h-[275px] w-full">
-              {#if optionsEPS !== null}
-                <Chart {init} options={optionsEPS} class="chart" />
-              {/if}
-            </div>
-            <div
-              class="mt-3 overflow-x-auto p-0 text-center sm:p-0.5 lg:mt-3.5"
-              data-test="forecast-estimate-table"
-            >
-              <table class="w-full text-right">
-                <thead
-                  ><tr class="border-b border-gray-600 align-bottom font-normal"
-                    ><th
-                      class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
-                      >EPS</th
-                    >
-                    {#each epsDateList as date, index}
-                      <th class="p-1 font-semibold text-sm sm:text-[1rem]">
-                        {#if index !== 0}{date}{/if}</th
-                      >
-                    {/each}
-                  </tr></thead
-                >
-                <tbody
-                  ><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >High</td
-                    >
-                    {#each highEPSList as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= highEPSList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            {abbreviateNumber(item?.val)}
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Avg</td
-                    >
-                    {#each avgEPSList as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= avgEPSList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            {abbreviateNumber(item?.val)}
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Low</td
-                    >
-                    {#each lowEPSList as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= lowEPSList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            {abbreviateNumber(item?.val)}
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr></tbody
-                >
-              </table>
-            </div>
-          </div>
-        </div>
-        <div>
-          <h2 class="mb-2 text-xl font-bold">EPS Growth</h2>
-          <div class="rounded-sm border p-2 border-gray-600">
-            <div class="app h-[275px] w-full">
-              {#if optionsEPSGrowth !== null}
-                <Chart {init} options={optionsEPSGrowth} class="chart" />
-              {/if}
-            </div>
-            <div
-              class="mt-3 overflow-x-auto p-0 text-center sm:p-0.5 lg:mt-3.5"
-            >
-              <table class="w-full text-right">
-                <thead
-                  ><tr class="border-b border-gray-600 align-bottom font-normal"
-                    ><th
-                      class="p-1 text-left font-semibold text-sm sm:text-[1rem]"
-                      >EPS Growth</th
-                    >
-                    {#each epsDateList as date, index}
-                      <th class="p-1 font-semibold text-sm sm:text-[1rem]"
-                        >{#if index !== 0}{date}{/if}</th
-                      >
-                    {/each}
-                  </tr></thead
-                >
-                <tbody
-                  ><tr
-                    class="border-b border-gray-600 last:border-0 whitespace-nowrap"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >High</td
-                    >
-                    {#each computeGrowthSingleList(highEPSList, avgEPSList) as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= highEPSList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            <span
-                              class={item?.growth !== null && item?.growth > 0
-                                ? "text-[#00FC50] before:content-['+']"
-                                : item?.growth < 0
-                                  ? "text-[#FF2F1F]"
-                                  : "text-white"}
-                            >
-                              {item?.growth !== null &&
-                              Math.abs(item?.growth - 0) > 0
-                                ? abbreviateNumber(item?.growth) + "%"
-                                : "-"}
-                            </span>
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Avg</td
-                    >
-                    {#each epsAvgGrowthList?.filter((item) => item.FY >= 24) as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= avgEPSList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            <span
-                              class={item?.growth !== null && item?.growth > 0
-                                ? "text-[#00FC50] before:content-['+']"
-                                : item?.growth < 0
-                                  ? "text-[#FF2F1F]"
-                                  : "text-white"}
-                            >
-                              {item?.growth !== null &&
-                              Math.abs(item?.growth - 0) > 0
-                                ? abbreviateNumber(item?.growth) + "%"
-                                : "-"}
-                            </span>
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr><tr class="border-b border-gray-600 last:border-0"
-                    ><td class="whitespace-nowrap px-1 py-[3px] text-left"
-                      >Low</td
-                    >
-                    {#each computeGrowthSingleList(lowEPSList, avgEPSList) as item, index}
-                      <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
-                        {#if index !== 0}
-                          {#if data?.user?.tier !== "Pro" && index >= lowEPSList?.length - 2}
-                            <a
-                              class="inline-block ml-0.5 text-white"
-                              href="/pricing"
-                              >Pro<svg
-                                class="w-4 h-4 ml-0.5 mb-1 inline-block text-[#A3A3A3]"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="currentColor"
-                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                                /></svg
-                              ></a
-                            >
-                          {:else}
-                            <span
-                              class={item?.growth !== null && item?.growth > 0
-                                ? "text-[#00FC50] before:content-['+']"
-                                : item?.growth < 0
-                                  ? "text-[#FF2F1F]"
-                                  : "text-white"}
-                            >
-                              {item?.growth !== null &&
-                              Math.abs(item?.growth - 0) > 0
-                                ? abbreviateNumber(item?.growth) + "%"
-                                : "-"}
-                            </span>
-                          {/if}
-                        {/if}
-                      </td>
-                    {/each}
-                  </tr></tbody
-                >
-              </table>
-            </div>
-          </div>
-        </div>
+        <Lazy>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="EPS"
+            options={optionsEPS}
+            tableDataList={epsDateList}
+            highDataList={highEPSList}
+            avgDataList={avgEPSList}
+            lowDataList={lowEPSList}
+          />
+        </Lazy>
+
+        <Lazy>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="EPS Growth"
+            options={optionsEPSGrowth}
+            tableDataList={epsDateList}
+            highDataList={highEPSList}
+            avgDataList={avgEPSList}
+            lowDataList={lowEPSList}
+          />
+        </Lazy>
       </div>
     </div>
   </main>

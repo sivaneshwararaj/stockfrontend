@@ -183,7 +183,7 @@
 
   async function websocketRealtimeData() {
     try {
-      socket = new WebSocket(data?.wsURL + "/multiple-realtime-data");
+      socket = new WebSocket(data?.wsURL + "/price-data");
 
       socket.addEventListener("open", () => {
         console.log("WebSocket connection opened");

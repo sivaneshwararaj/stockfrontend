@@ -144,30 +144,29 @@
 
   function sendMessage(message) {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(message);
+      socket.send(JSON?.stringify(message));
     } else {
       console.error("WebSocket is not open. Unable to send message.");
     }
   }
 
   async function websocketRealtimeData() {
-    previousTicker = $stockTicker;
     try {
-      socket = new WebSocket(data?.wsURL + "/realtime-data");
+      socket = new WebSocket(data?.wsURL + "/price-data");
 
       socket.addEventListener("open", () => {
-        //console.log('WebSocket connection opened');
-
-        // Send the initial value of stockTicker
-        sendMessage($stockTicker?.toLowerCase());
+        console.log("WebSocket connection opened");
+        // Send only current watchlist symbols
+        const tickerList = [$stockTicker] || [];
+        sendMessage(tickerList);
       });
 
       socket.addEventListener("message", (event) => {
         const data = event.data;
-        //console.log('Received message:', data);
+        console.log("Received message:", data);
         try {
           const parsedData = JSON.parse(data);
-          const { type, lp, time, bp, ap, avgPrice } = parsedData || {};
+          const { type, lp, time, bp, ap, avgPrice } = parsedData?.at(0) || {};
 
           if (type === "T") {
             $realtimePrice = typeof lp !== "undefined" ? lp : null;
@@ -179,7 +178,8 @@
           } else if (type === "Q") {
             $wsBidPrice = typeof bp !== "undefined" ? bp : null;
             $wsAskPrice = typeof ap !== "undefined" ? ap : null;
-            $realtimePrice = typeof avgPrice !== "undefined" ? avgPrice : null;
+            $realtimePrice =
+              typeof avgPrice !== "undefined" ? avgPrice?.toFixed(2) : null;
           }
 
           // Update price increase state
@@ -196,11 +196,9 @@
 
       socket.addEventListener("close", (event) => {
         console.log("WebSocket connection closed:", event.reason);
-        // Handle disconnection, you might want to attempt to reconnect here
       });
     } catch (error) {
       console.error("WebSocket connection error:", error);
-      // Handle connection errors here
     }
   }
 
