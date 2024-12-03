@@ -123,13 +123,20 @@
       .map((rating) => ({
         // Marker at the rating's date
         type: "max", // Marking the rating date
-        name: rating.rating_current,
+        name: rating?.rating_current,
         coord: [
           rating.date,
           closeValues[dates.indexOf(rating.date)], // Find the close value corresponding to the rating date
         ],
         label: {
-          formatter: rating.rating_current, // Display the rating_current text
+          formatter: rating.rating_current
+            ?.replace("Sector Perform", "Hold")
+            ?.replace("Equal-Weight", "Hold")
+            ?.replace("Market Perform", "Hold")
+            ?.replace("Overweight", "Buy")
+            ?.replace("Outperform", "Buy")
+            ?.replace("Underperform", "Sell")
+            ?.replace("Underweight", "Sell"), // Display the rating_current text
           position: "top", // Position the label above the point
           color: "white", // Set label color (can be customized)
           fontSize: 14, // Set font size (increase for better visibility)
@@ -257,26 +264,38 @@
 
 <div class="w-full overflow-hidden m-auto mt-5">
   {#if isLoaded && optionsData !== null}
-    <div class="app w-full relative">
-      <div class="flex justify-start space-x-4 absolute left-20 top-0 z-10">
-        {#each ["1Y", "3Y", "5Y", "Max"] as item}
-          <label
-            on:click={() => (timePeriod = item)}
-            class="px-4 py-2 {timePeriod === item
-              ? 'bg-[#27272A]'
-              : ''} sm:hover:bg-[#27272A] border border-gray-600 text-white rounded-md cursor-pointer"
-          >
-            {item}
-          </label>
-        {/each}
+    {#if historicalData?.length > 0}
+      <div class="app w-full relative">
+        <div class="flex justify-start space-x-2 absolute left-16 top-0 z-10">
+          {#each ["1Y", "3Y", "5Y", "Max"] as item}
+            <label
+              on:click={() => (timePeriod = item)}
+              class="px-4 py-2 {timePeriod === item
+                ? 'bg-[#27272A]'
+                : ''} sm:hover:bg-[#27272A] border border-gray-600 text-white rounded-md cursor-pointer"
+            >
+              {item}
+            </label>
+          {/each}
+        </div>
+        <h2
+          class="text-white text-xl font-semibold text-center absolute left-1/2 transform -translate-x-1/2 top-5 -translate-y-1/2"
+        >
+          {symbol} - {numOfRatings} Ratings
+        </h2>
+        <Chart {init} options={optionsData} class="chart" />
       </div>
-      <h2
-        class="text-white text-xl font-semibold text-center absolute left-1/2 transform -translate-x-1/2 top-5 -translate-y-1/2"
-      >
-        {symbol} - {numOfRatings} Ratings
-      </h2>
-      <Chart {init} options={optionsData} class="chart" />
-    </div>
+    {:else}
+      <div class="h-[250px] sm:h-[350px]">
+        <div
+          class="flex h-full w-full flex-col items-center justify-center rounded-sm border border-gray-800 p-6 text-center md:p-12"
+        >
+          <div class="mb-4 text-white text-[1rem] sm:text-xl font-semibold">
+            No chart data available for {symbol}
+          </div>
+        </div>
+      </div>
+    {/if}
   {:else}
     <div class="flex justify-center items-center h-80">
       <div class="relative">

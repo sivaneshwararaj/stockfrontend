@@ -157,7 +157,7 @@
       socket.addEventListener("open", () => {
         console.log("WebSocket connection opened");
         // Send only current watchlist symbols
-        const tickerList = [$stockTicker] || [];
+        const tickerList = [$stockTicker?.toUpperCase()] || [];
         sendMessage(tickerList);
       });
 
