@@ -154,7 +154,7 @@
 
       socket.addEventListener("message", (event) => {
         const data = event.data;
-        console.log("Received message:", data);
+        //console.log("Received message:", data);
         try {
           const parsedData = JSON.parse(data);
           const { type, lp, time, bp, ap, avgPrice } = parsedData?.at(0) || {};
