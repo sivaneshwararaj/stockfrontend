@@ -305,7 +305,7 @@
                 <thead>
                   <tr class="bg-[#09090B]">
                     <th
-                      class="text-start bg-[#09090B] text-white text-sm font-semibold"
+                      class="hidden lg:table-cell text-start bg-[#09090B] text-white text-sm font-semibold"
                     >
                     </th>
                     <th
