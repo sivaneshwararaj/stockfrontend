@@ -20,6 +20,43 @@ type FlyAndScaleParams = {
 
 
 
+export const computeGrowthSingleList = (data, actualList) => {
+    // Initialize the result list
+    let resultList = [];
+
+    for (let i = 0; i < data?.length; i++) {
+      const currentData = data[i];
+
+      // Find the corresponding actual data from one FY back
+      const correspondingActual = actualList?.find(
+        (entry) => Number(entry.FY) === Number(currentData.FY) - 1,
+      );
+
+      // Calculate growth if a matching entry exists in actualList
+      let growth = null;
+      if (
+        correspondingActual &&
+        correspondingActual?.val !== null &&
+        currentData.val !== null
+      ) {
+        growth = (
+          ((currentData?.val - correspondingActual?.val) /
+            Math.abs(correspondingActual?.val)) *
+          100
+        )?.toFixed(2);
+      }
+
+      // Push the result for this FY
+      resultList.push({
+        FY: currentData.FY,
+        val: currentData.val,
+        growth: growth !== null ? Number(growth) : null, // Convert growth to number or leave as null
+      });
+    }
+
+    return resultList;
+  }
+
 
   export const compareTimes = (time1, time2) => {
     const [hours1, minutes1] = time1.split(":").map(Number);

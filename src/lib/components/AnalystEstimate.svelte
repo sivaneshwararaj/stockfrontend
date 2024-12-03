@@ -1,6 +1,6 @@
 <script lang="ts">
   import { analystEstimateComponent, stockTicker } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { abbreviateNumber, computeGrowthSingleList } from "$lib/utils";
   import EstimationGraph from "$lib/components/EstimationGraph.svelte";
   import Lazy from "svelte-lazy";
 
@@ -12,19 +12,29 @@
   let xData = [];
   let optionsRevenue = null;
   let optionsEPS = null;
+  let optionsNetIncome = null;
   let optionsRevenueGrowth = null;
   let optionsEPSGrowth = null;
+  let optionsNetIncomeGrowth = null;
+
   let revenueDateList = [];
   let avgRevenueList = [];
   let lowRevenueList = [];
   let highRevenueList = [];
+
   let epsDateList = [];
   let avgEPSList = [];
   let lowEPSList = [];
   let highEPSList = [];
 
+  let netIncomeDateList = [];
+  let avgNetIncomeList = [];
+  let lowNetIncomeList = [];
+  let highNetIncomeList = [];
+
   let revenueAvgGrowthList = [];
   let epsAvgGrowthList = [];
+  let netIncomeAvgGrowthList = [];
 
   let displayData = "Revenue";
 
@@ -55,42 +65,6 @@
 
       return data;
     });
-  }
-  function computeGrowthSingleList(data, actualList) {
-    // Initialize the result list
-    let resultList = [];
-
-    for (let i = 0; i < data?.length; i++) {
-      const currentData = data[i];
-
-      // Find the corresponding actual data from one FY back
-      const correspondingActual = actualList?.find(
-        (entry) => Number(entry.FY) === Number(currentData.FY) - 1,
-      );
-
-      // Calculate growth if a matching entry exists in actualList
-      let growth = null;
-      if (
-        correspondingActual &&
-        correspondingActual?.val !== null &&
-        currentData.val !== null
-      ) {
-        growth = (
-          ((currentData?.val - correspondingActual?.val) /
-            Math.abs(correspondingActual?.val)) *
-          100
-        )?.toFixed(2);
-      }
-
-      // Push the result for this FY
-      resultList.push({
-        FY: currentData.FY,
-        val: currentData.val,
-        growth: growth !== null ? Number(growth) : null, // Convert growth to number or leave as null
-      });
-    }
-
-    return resultList;
   }
 
   function computeGrowthList(tableActualRevenue, tableForecastRevenue) {
@@ -162,8 +136,13 @@
 
   let tableForecastRevenue = [];
   let tableForecastEPS = [];
+  let tableForecastNetIncome = [];
+
   let tableCombinedRevenue = [];
   let tableCombinedEPS = [];
+
+  let tableActualNetIncome = [];
+  let tableCombinedNetIncome = [];
 
   function getPlotOptions(dataType: string) {
     let dates = [];
@@ -182,16 +161,24 @@
         dates.push(`FY${date}`);
         switch (dataType) {
           case "Revenue":
-            valueList.push(item.revenue);
+            valueList.push(item?.revenue);
             avgList.push(isAfterStartIndex ? item.estimatedRevenueAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedRevenueLow : null);
             highList.push(isAfterStartIndex ? item.estimatedRevenueHigh : null);
             break;
           case "EPS":
-            valueList.push(item.eps);
+            valueList.push(item?.eps);
             avgList.push(isAfterStartIndex ? item.estimatedEpsAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedEpsLow : null);
             highList.push(isAfterStartIndex ? item.estimatedEpsHigh : null);
+            break;
+          case "NetIncome":
+            valueList.push(item?.netIncome);
+            avgList.push(isAfterStartIndex ? item.estimatedNetIncomeAvg : null);
+            lowList.push(isAfterStartIndex ? item.estimatedNetIncomeLow : null);
+            highList.push(
+              isAfterStartIndex ? item.estimatedNetIncomeHigh : null,
+            );
             break;
           default:
             break;
@@ -249,12 +236,33 @@
           FY: epsDateList[index]?.slice(2),
           val: val,
         })) || [];
+    } else if (dataType === "NetIncome") {
+      netIncomeDateList = dates?.slice(currentYearIndex) || [];
+      avgNetIncomeList =
+        avgList?.slice(currentYearIndex)?.map((val, index) => ({
+          FY: netIncomeDateList[index]?.slice(2),
+          val: val,
+        })) || [];
+      lowNetIncomeList =
+        lowList?.slice(currentYearIndex)?.map((val, index) => ({
+          FY: netIncomeDateList[index]?.slice(2),
+          val: val,
+        })) || [];
+      highNetIncomeList =
+        highList?.slice(currentYearIndex)?.map((val, index) => ({
+          FY: netIncomeDateList[index]?.slice(2),
+          val: val,
+        })) || [];
     }
 
     const growthList = dates?.map((date) => {
       const fy = parseInt(date.replace("FY", ""), 10); // Extract numeric FY value
       const listToUse =
-        dataType === "Revenue" ? revenueAvgGrowthList : epsAvgGrowthList; // Select the correct growth list
+        dataType === "Revenue"
+          ? revenueAvgGrowthList
+          : dataType === "EPS"
+            ? epsAvgGrowthList
+            : netIncomeAvgGrowthList; // Select the correct growth list
       const growth = listToUse?.find((r) => r.FY === fy); // Find matching FY
       return growth ? growth?.growth : null; // Return growth or null if not found
     });
@@ -350,10 +358,20 @@
     if (dataType === "Revenue") {
       highGrowthList = computeGrowthSingleList(highRevenueList, avgRevenueList);
       lowGrowthList = computeGrowthSingleList(lowRevenueList, avgRevenueList);
-    } else {
+    } else if (dataType === "EPS") {
       highGrowthList = computeGrowthSingleList(highEPSList, avgEPSList);
       lowGrowthList = computeGrowthSingleList(lowEPSList, avgEPSList);
+    } else if (dataType === "NetIncome") {
+      highGrowthList = computeGrowthSingleList(
+        highNetIncomeList,
+        avgNetIncomeList,
+      );
+      lowGrowthList = computeGrowthSingleList(
+        lowNetIncomeList,
+        avgNetIncomeList,
+      );
     }
+
     highGrowthList = fillMissingDates(dates, highGrowthList)?.map(
       (item) => item?.growth,
     );
@@ -392,7 +410,12 @@
       ],
       series: [
         {
-          name: dataType === "Revenue" ? "Revenue Growth" : "EPS Growth",
+          name:
+            dataType === "Revenue"
+              ? "Revenue Growth"
+              : dataType === "EPS"
+                ? "EPS Growth"
+                : "Net Income Growth",
           data: growthList?.map((value) => ({
             value,
             itemStyle: {
@@ -518,6 +541,9 @@
     } else if (dataType === "EPS") {
       optionsEPS = option;
       optionsEPSGrowth = optionsGrowth;
+    } else if (dataType === "NetIncome") {
+      optionsNetIncome = option;
+      optionsNetIncomeGrowth = optionsGrowth;
     }
   }
 
@@ -526,18 +552,24 @@
     tableActualRevenue = [];
     tableForecastRevenue = [];
     tableCombinedRevenue = [];
-    tableCombinedEPS = [];
 
     tableActualEPS = [];
+    tableCombinedEPS = [];
     tableForecastEPS = [];
+
+    tableActualNetIncome = [];
+    tableCombinedNetIncome = [];
+    tableForecastNetIncome = [];
 
     revenueAvgGrowthList = [];
     epsAvgGrowthList = [];
+    netIncomeAvgGrowthList = [];
 
     let filteredData =
       analystEstimateList?.filter((item) => item.date >= 2015) ?? [];
 
     xData = filteredData?.map(({ date }) => Number(String(date)?.slice(-2)));
+    //============================//
     //Revenue Data
     filteredData?.forEach((item) => {
       tableActualRevenue?.push({
@@ -565,6 +597,33 @@
       };
     });
 
+    //============================//
+    //NetIncome Data
+    filteredData?.forEach((item) => {
+      tableActualNetIncome?.push({
+        FY: Number(String(item?.date)?.slice(-2)),
+        val: item?.netIncome,
+      });
+      tableForecastNetIncome?.push({
+        FY: Number(String(item?.date)?.slice(-2)),
+        val: item?.estimatedNetIncomeAvg,
+      });
+    });
+
+    tableCombinedNetIncome = tableActualNetIncome?.map((item1) => {
+      // Find the corresponding item in data2 based on "FY"
+      const item2 = tableForecastNetIncome?.find(
+        (item2) => item2?.FY === item1?.FY,
+      );
+
+      // If the value in data1 is null, replace it with the value from data2
+      return {
+        FY: item1.FY,
+        val: item1.val === null ? item2.val : item1.val,
+      };
+    });
+
+    //============================//
     //EPS Data
     filteredData?.forEach((item) => {
       tableActualEPS?.push({
@@ -576,11 +635,6 @@
         val: item?.estimatedEpsAvg,
       });
     });
-    //Values coincide with table values for crosscheck
-    revenueAvgGrowthList = computeGrowthList(
-      tableActualRevenue,
-      tableCombinedRevenue,
-    );
 
     tableCombinedEPS = tableActualEPS?.map((item1) => {
       // Find the corresponding item in data2 based on "FY"
@@ -593,6 +647,15 @@
       };
     });
 
+    //Values coincide with table values for crosscheck
+    revenueAvgGrowthList = computeGrowthList(
+      tableActualRevenue,
+      tableCombinedRevenue,
+    );
+    netIncomeAvgGrowthList = computeGrowthList(
+      tableActualNetIncome,
+      tableCombinedNetIncome,
+    );
     epsAvgGrowthList = computeGrowthList(tableActualEPS, tableCombinedEPS);
   }
 
@@ -606,6 +669,7 @@
         $analystEstimateComponent = true;
         getPlotOptions("Revenue");
         getPlotOptions("EPS");
+        getPlotOptions("NetIncome");
       } else {
         $analystEstimateComponent = false;
       }
@@ -749,25 +813,59 @@
                     </td>
                   {/each}
                 </tr>
-                <!--
-                <tr class="bg-[#09090B] border-b-[#09090B]">
+                <tr class="bg-[#27272A] border-b-[#27272A]">
                   <th
-                    class="bg-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white text-start font-medium border-b border-[#09090B]"
-                    >Forward PE</th
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
                   >
-                  {#each tableForecastEPS as item}
+                    Net Income
+                  </th>
+                  {#each tableCombinedNetIncome as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
                     >
-                      {item?.forwardPe === "0.00" ||
-                      item?.forwardPe === null ||
-                      item?.forwardPe === 0
-                        ? "-"
-                        : abbreviateNumber(item.forwardPe)}
+                      {item?.val === "0.00" ||
+                      item?.val === null ||
+                      item?.val === 0
+                        ? "n/a"
+                        : abbreviateNumber(item?.val.toFixed(2))}
                     </td>
                   {/each}
                 </tr>
-                -->
+
+                <tr class="bg-[#27272A] border-b-[#27272A]">
+                  <th
+                    class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
+                  >
+                    Net Income Growth
+                  </th>
+                  {#each computeGrowthList(tableActualNetIncome, tableCombinedNetIncome) as item, index}
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                    >
+                      {#if index === 0 || item?.growth === null}
+                        n/a
+                      {:else if tableActualNetIncome[index]?.val === null}
+                        <span
+                          class="text-orange-400 {item?.growth > 0
+                            ? "before:content-['+']"
+                            : ''}"
+                        >
+                          {item?.growth}%&#42;
+                        </span>
+                      {:else}
+                        <span
+                          class={item?.growth > 0
+                            ? "text-[#00FC50] before:content-['+']"
+                            : item?.growth < 0
+                              ? "text-[#FF2F1F]"
+                              : ""}
+                        >
+                          {item?.growth}%
+                        </span>
+                      {/if}
+                    </td>
+                  {/each}
+                </tr>
 
                 <tr class="bg-[#27272A] border-b-[#27272A]">
                   <th
@@ -818,7 +916,7 @@
       {/if}
 
       <div class="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 mt-10">
-        <Lazy>
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
           <EstimationGraph
             userTier={data?.user?.tier}
             title="Revenue"
@@ -830,7 +928,7 @@
           />
         </Lazy>
 
-        <Lazy>
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
           <EstimationGraph
             userTier={data?.user?.tier}
             title="Revenue Growth"
@@ -839,10 +937,12 @@
             highDataList={highRevenueList}
             avgDataList={avgRevenueList}
             lowDataList={lowRevenueList}
+            avgGrowthList={revenueAvgGrowthList}
+            graphType="growth"
           />
         </Lazy>
 
-        <Lazy>
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
           <EstimationGraph
             userTier={data?.user?.tier}
             title="EPS"
@@ -854,7 +954,7 @@
           />
         </Lazy>
 
-        <Lazy>
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
           <EstimationGraph
             userTier={data?.user?.tier}
             title="EPS Growth"
@@ -863,6 +963,34 @@
             highDataList={highEPSList}
             avgDataList={avgEPSList}
             lowDataList={lowEPSList}
+            avgGrowthList={epsAvgGrowthList}
+            graphType="growth"
+          />
+        </Lazy>
+
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="Net Income"
+            options={optionsNetIncome}
+            tableDataList={netIncomeDateList}
+            highDataList={highNetIncomeList}
+            avgDataList={avgNetIncomeList}
+            lowDataList={lowNetIncomeList}
+          />
+        </Lazy>
+
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="Net Income Growth"
+            options={optionsNetIncomeGrowth}
+            tableDataList={netIncomeDateList}
+            highDataList={highNetIncomeList}
+            avgDataList={avgNetIncomeList}
+            lowDataList={lowNetIncomeList}
+            avgGrowthList={netIncomeAvgGrowthList}
+            graphType="growth"
           />
         </Lazy>
       </div>
