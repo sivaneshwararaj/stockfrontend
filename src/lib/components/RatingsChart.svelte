@@ -21,6 +21,7 @@
   export let symbol;
   export let ratingsList;
   export let numOfRatings = 0;
+  export let title = "Ratings";
 
   let isLoaded = false;
   let optionsData = null;
@@ -113,28 +114,31 @@
       historicalData,
       timePeriod,
     );
-
     // Prepare markPoints for ratings
     const markPoints = ratingsList
       ?.filter((rating) => {
         // Ensure date format is correct and matches
         return dates.includes(rating?.date) && rating?.ticker === symbol;
       })
-      .map((rating) => ({
+      ?.map((rating) => ({
         // Marker at the rating's date
         type: "max", // Marking the rating date
-        name: rating?.rating_current,
+        name: rating?.type,
         coord: [
-          rating.date,
-          closeValues[dates.indexOf(rating.date)], // Find the close value corresponding to the rating date
+          rating?.date,
+          closeValues[dates?.indexOf(rating?.date)], // Find the close value corresponding to the rating date
         ],
         label: {
-          formatter: rating.rating_current
+          formatter: rating?.type //rating.rating_current
+            ?.replace("Bought", "Buy")
+            ?.replace("Sold", "Sell")
             ?.replace("Sector Perform", "Hold")
             ?.replace("Equal-Weight", "Hold")
             ?.replace("Market Perform", "Hold")
             ?.replace("Overweight", "Buy")
+            ?.replace("Market Outperform", "Buy")
             ?.replace("Outperform", "Buy")
+            ?.replace("Market Underperform", "Sell")
             ?.replace("Underperform", "Sell")
             ?.replace("Underweight", "Sell"), // Display the rating_current text
           position: "top", // Position the label above the point
@@ -281,7 +285,8 @@
         <h2
           class="text-white text-xl font-semibold text-center absolute left-1/2 transform -translate-x-1/2 top-5 -translate-y-1/2"
         >
-          {symbol} - {numOfRatings} Ratings
+          {symbol} - {numOfRatings}
+          {title}
         </h2>
         <Chart {init} options={optionsData} class="chart" />
       </div>

@@ -31,7 +31,7 @@
     const tickerMap = new Map();
 
     data.forEach((item) => {
-      const { ticker, date } = item;
+      const { ticker } = item;
 
       if (!ticker) return; // Skip if ticker is not defined
 
@@ -573,8 +573,12 @@
                                       style="position: relative; height: 0px; z-index: 1;"
                                     >
                                       <RatingsChart
-                                        ratingsList={data?.getAnalystStats
-                                          ?.ratingsList}
+                                        ratingsList={data?.getAnalystStats?.ratingsList?.map(
+                                          (item) => ({
+                                            ...item,
+                                            type: item?.rating_current,
+                                          }),
+                                        )}
                                         symbol={item?.ticker}
                                         numOfRatings={item?.ratings}
                                       />

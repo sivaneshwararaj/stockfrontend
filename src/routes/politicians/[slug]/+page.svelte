@@ -2,13 +2,18 @@
   import { numberOfUnreadNotification } from "$lib/store";
   import { formatString, sectorNavigation } from "$lib/utils";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import RatingsChart from "$lib/components/RatingsChart.svelte";
 
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 
   let rawData = data?.getPolitician?.output;
-  let name = rawData?.history?.at(0)?.representative ?? "n/a";
   let numOfTrades = rawData?.history?.length;
+
+  let tableData =
+    rawData?.history?.length > 0 ? processTickerData(rawData?.history) : [];
+
+  let name = rawData?.history?.at(0)?.representative ?? "n/a";
   let mainSectors = rawData?.mainSectors || [];
   let mainIndustries = rawData?.mainIndustries || [];
 
@@ -52,6 +57,49 @@
       return isNaN(parsedNumber) ? 0 : parsedNumber;
     }
     return 0;
+  }
+
+  function processTickerData(data) {
+    const tickerMap = new Map();
+
+    data.forEach((item) => {
+      const { ticker } = item;
+
+      if (!ticker) return; // Skip if ticker is not defined
+
+      if (!tickerMap.has(ticker)) {
+        // Add the item and initialize count
+        tickerMap.set(ticker, { ...item, transaction: 1 });
+      } else {
+        const existing = tickerMap.get(ticker);
+
+        // Increment the ratings count
+        existing.transaction += 1;
+
+        // Keep the item with the latest date
+        if (
+          new Date(item?.transactionDate) > new Date(existing?.transactionDate)
+        ) {
+          tickerMap.set(ticker, {
+            ...item,
+            transaction: existing?.transaction,
+          });
+        }
+      }
+    });
+
+    // Convert the Map back to an array
+    return Array?.from(tickerMap?.values());
+  }
+
+  $: checkedSymbol = "";
+  function openGraph(symbol) {
+    // Clear all existing symbols
+    if (checkedSymbol === symbol) {
+      checkedSymbol = "";
+    } else {
+      checkedSymbol = symbol;
+    }
   }
 </script>
 
@@ -159,7 +207,7 @@
                     }).format(totalAmountTraded)}
                   </div>
                   <div class="text-sm font-semibold leading-6 text-gray-300">
-                    Total Amount Traded
+                    Total Amount
                   </div>
                 </div>
 
@@ -172,7 +220,7 @@
                     {numOfTrades?.toLocaleString("en-US")}
                   </div>
                   <div class="text-sm font-semibold leading-6 text-gray-300">
-                    Total Trades
+                    Transaction
                   </div>
                 </div>
 
@@ -192,7 +240,7 @@
                       : "n/a"}
                   </div>
                   <div class="text-sm font-semibold leading-6 text-gray-300">
-                    Last Traded
+                    Last Transaction
                   </div>
                 </div>
                 <div
@@ -259,6 +307,10 @@
                     <th
                       class="text-start bg-[#09090B] text-white text-sm font-semibold"
                     >
+                    </th>
+                    <th
+                      class="text-start bg-[#09090B] text-white text-sm font-semibold"
+                    >
                       Symbol
                     </th>
                     <th
@@ -279,7 +331,12 @@
                     <th
                       class="text-end bg-[#09090B] text-white text-sm font-semibold"
                     >
-                      Traded
+                      Transaction
+                    </th>
+                    <th
+                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                    >
+                      Last Trade
                     </th>
                     <th
                       class="text-end bg-[#09090B] text-white text-sm font-semibold"
@@ -289,10 +346,31 @@
                   </tr>
                 </thead>
                 <tbody class="p-0">
-                  {#each rawData?.history as item}
+                  {#each tableData as item}
                     <tr
                       class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A] text-white"
                     >
+                      <td class="hidden lg:table-cell"
+                        ><button
+                          on:click={() => openGraph(item?.ticker)}
+                          class="h-full pl-2 pr-2 align-middle lg:pl-3"
+                          ><svg
+                            class="w-5 h-5 text-icon {(checkedSymbol ===
+                              item?.ticker ?? item?.symbol)
+                              ? 'rotate-180'
+                              : ''}"
+                            viewBox="0 0 20 20"
+                            fill="white"
+                            style="max-width:40px"
+                            ><path
+                              fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                            ></path></svg
+                          ></button
+                        ></td
+                      >
+
                       <td
                         class="text-start text-sm sm:text-[1rem] border-b border-b-[#27272A] whitespace-nowrap"
                       >
@@ -331,6 +409,12 @@
                       >
 
                       <td
+                        class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
+                      >
+                        {item?.transaction}</td
+                      >
+
+                      <td
                         class="text-end text-sm sm:text-[1rem] text-white border-b border-b-[#27272A] whitespace-nowrap"
                       >
                         {new Date(item?.transactionDate)?.toLocaleString(
@@ -358,6 +442,38 @@
                         )}
                       </td>
                     </tr>
+                    {#if checkedSymbol === (item?.ticker ?? item?.symbol)}
+                      <tr
+                        ><td colspan="8" class="px-0" style=""
+                          ><div class="-mt-0.5 px-0 pb-2">
+                            <div class="relative h-[400px]">
+                              <div class="absolute top-0 w-full">
+                                <div
+                                  class="h-[250px] w-full xs:h-[300px] sm:h-[400px]"
+                                  style="overflow: hidden;"
+                                >
+                                  <div
+                                    style="position: relative; height: 0px; z-index: 1;"
+                                  >
+                                    <RatingsChart
+                                      title="Transactions"
+                                      ratingsList={rawData?.history?.map(
+                                        (item) => ({
+                                          ...item,
+                                          date: item.transactionDate,
+                                        }),
+                                      )}
+                                      symbol={item?.ticker ?? item?.symbol}
+                                      numOfRatings={item?.transaction}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div></td
+                        >
+                      </tr>
+                    {/if}
                   {/each}
                 </tbody>
               </table>
