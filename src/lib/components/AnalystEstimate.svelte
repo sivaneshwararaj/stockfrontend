@@ -13,9 +13,12 @@
   let optionsRevenue = null;
   let optionsEPS = null;
   let optionsNetIncome = null;
+  let optionsEbitda = null;
+
   let optionsRevenueGrowth = null;
   let optionsEPSGrowth = null;
   let optionsNetIncomeGrowth = null;
+  let optionsEbitdaGrowth = null;
 
   let revenueDateList = [];
   let avgRevenueList = [];
@@ -32,11 +35,15 @@
   let lowNetIncomeList = [];
   let highNetIncomeList = [];
 
+  let ebitdaDateList = [];
+  let avgEbitdaList = [];
+  let lowEbitdaList = [];
+  let highEbitdaList = [];
+
   let revenueAvgGrowthList = [];
   let epsAvgGrowthList = [];
   let netIncomeAvgGrowthList = [];
-
-  let displayData = "Revenue";
+  let ebitdaAvgGrowthList = [];
 
   function fillMissingDates(dates, highGrowthList) {
     // Get the current year
@@ -132,17 +139,20 @@
   }
 
   let tableActualRevenue = [];
-  let tableActualEPS = [];
-
   let tableForecastRevenue = [];
-  let tableForecastEPS = [];
-  let tableForecastNetIncome = [];
-
   let tableCombinedRevenue = [];
+
+  let tableActualEPS = [];
+  let tableForecastEPS = [];
   let tableCombinedEPS = [];
 
   let tableActualNetIncome = [];
   let tableCombinedNetIncome = [];
+  let tableForecastNetIncome = [];
+
+  let tableActualEbitda = [];
+  let tableCombinedEbitda = [];
+  let tableForecastEbitda = [];
 
   function getPlotOptions(dataType: string) {
     let dates = [];
@@ -179,6 +189,12 @@
             highList.push(
               isAfterStartIndex ? item.estimatedNetIncomeHigh : null,
             );
+            break;
+          case "Ebitda":
+            valueList.push(item?.ebitda);
+            avgList.push(isAfterStartIndex ? item.estimatedEbitdaAvg : null);
+            lowList.push(isAfterStartIndex ? item.estimatedEbitdaLow : null);
+            highList.push(isAfterStartIndex ? item.estimatedEbitdaHigh : null);
             break;
           default:
             break;
@@ -253,6 +269,23 @@
           FY: netIncomeDateList[index]?.slice(2),
           val: val,
         })) || [];
+    } else if (dataType === "Ebitda") {
+      ebitdaDateList = dates?.slice(currentYearIndex) || [];
+      avgEbitdaList =
+        avgList?.slice(currentYearIndex)?.map((val, index) => ({
+          FY: ebitdaDateList[index]?.slice(2),
+          val: val,
+        })) || [];
+      lowEbitdaList =
+        lowList?.slice(currentYearIndex)?.map((val, index) => ({
+          FY: ebitdaDateList[index]?.slice(2),
+          val: val,
+        })) || [];
+      highEbitdaList =
+        highList?.slice(currentYearIndex)?.map((val, index) => ({
+          FY: ebitdaDateList[index]?.slice(2),
+          val: val,
+        })) || [];
     }
 
     const growthList = dates?.map((date) => {
@@ -262,7 +295,9 @@
           ? revenueAvgGrowthList
           : dataType === "EPS"
             ? epsAvgGrowthList
-            : netIncomeAvgGrowthList; // Select the correct growth list
+            : dataType === "NetIncome"
+              ? netIncomeAvgGrowthList
+              : ebitdaAvgGrowthList; // Select the correct growth list
       const growth = listToUse?.find((r) => r.FY === fy); // Find matching FY
       return growth ? growth?.growth : null; // Return growth or null if not found
     });
@@ -370,6 +405,9 @@
         lowNetIncomeList,
         avgNetIncomeList,
       );
+    } else if (dataType === "Ebitda") {
+      highGrowthList = computeGrowthSingleList(highEbitdaList, avgEbitdaList);
+      lowGrowthList = computeGrowthSingleList(lowEbitdaList, avgEbitdaList);
     }
 
     highGrowthList = fillMissingDates(dates, highGrowthList)?.map(
@@ -415,7 +453,9 @@
               ? "Revenue Growth"
               : dataType === "EPS"
                 ? "EPS Growth"
-                : "Net Income Growth",
+                : dataType === "NetIncome"
+                  ? "Net Income Growth"
+                  : "EBITDA Growth",
           data: growthList?.map((value) => ({
             value,
             itemStyle: {
@@ -544,6 +584,9 @@
     } else if (dataType === "NetIncome") {
       optionsNetIncome = option;
       optionsNetIncomeGrowth = optionsGrowth;
+    } else if (dataType === "Ebitda") {
+      optionsEbitda = option;
+      optionsEbitdaGrowth = optionsGrowth;
     }
   }
 
@@ -561,9 +604,14 @@
     tableCombinedNetIncome = [];
     tableForecastNetIncome = [];
 
+    tableActualEbitda = [];
+    tableCombinedEbitda = [];
+    tableForecastEbitda = [];
+
     revenueAvgGrowthList = [];
     epsAvgGrowthList = [];
     netIncomeAvgGrowthList = [];
+    ebitdaAvgGrowthList = [];
 
     let filteredData =
       analystEstimateList?.filter((item) => item.date >= 2015) ?? [];
@@ -624,6 +672,32 @@
     });
 
     //============================//
+    //Ebitda Data
+    filteredData?.forEach((item) => {
+      tableActualEbitda?.push({
+        FY: Number(String(item?.date)?.slice(-2)),
+        val: item?.ebitda,
+      });
+      tableForecastEbitda?.push({
+        FY: Number(String(item?.date)?.slice(-2)),
+        val: item?.estimatedEbitdaAvg,
+      });
+    });
+
+    tableCombinedEbitda = tableActualEbitda?.map((item1) => {
+      // Find the corresponding item in data2 based on "FY"
+      const item2 = tableForecastEbitda?.find(
+        (item2) => item2?.FY === item1?.FY,
+      );
+
+      // If the value in data1 is null, replace it with the value from data2
+      return {
+        FY: item1.FY,
+        val: item1.val === null ? item2.val : item1.val,
+      };
+    });
+
+    //============================//
     //EPS Data
     filteredData?.forEach((item) => {
       tableActualEPS?.push({
@@ -656,11 +730,16 @@
       tableActualNetIncome,
       tableCombinedNetIncome,
     );
+
+    ebitdaAvgGrowthList = computeGrowthList(
+      tableActualEbitda,
+      tableCombinedEbitda,
+    );
     epsAvgGrowthList = computeGrowthList(tableActualEPS, tableCombinedEPS);
   }
 
   $: {
-    if ($stockTicker && displayData && typeof window !== "undefined") {
+    if ($stockTicker && typeof window !== "undefined") {
       isLoaded = false;
       analystEstimateList = [];
       analystEstimateList = data?.getAnalystEstimate || [];
@@ -670,6 +749,7 @@
         getPlotOptions("Revenue");
         getPlotOptions("EPS");
         getPlotOptions("NetIncome");
+        getPlotOptions("Ebitda");
       } else {
         $analystEstimateComponent = false;
       }
@@ -870,6 +950,60 @@
                 <tr class="bg-[#27272A] border-b-[#27272A]">
                   <th
                     class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                  >
+                    EBITDA
+                  </th>
+                  {#each tableCombinedEbitda as item}
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
+                    >
+                      {item?.val === "0.00" ||
+                      item?.val === null ||
+                      item?.val === 0
+                        ? "n/a"
+                        : abbreviateNumber(item?.val.toFixed(2))}
+                    </td>
+                  {/each}
+                </tr>
+
+                <tr class="bg-[#27272A] border-b-[#27272A]">
+                  <th
+                    class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
+                  >
+                    EBITDA Growth
+                  </th>
+                  {#each computeGrowthList(tableActualEbitda, tableCombinedEbitda) as item, index}
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                    >
+                      {#if index === 0 || item?.growth === null}
+                        n/a
+                      {:else if tableActualEbitda[index]?.val === null}
+                        <span
+                          class="text-orange-400 {item?.growth > 0
+                            ? "before:content-['+']"
+                            : ''}"
+                        >
+                          {item?.growth}%&#42;
+                        </span>
+                      {:else}
+                        <span
+                          class={item?.growth > 0
+                            ? "text-[#00FC50] before:content-['+']"
+                            : item?.growth < 0
+                              ? "text-[#FF2F1F]"
+                              : ""}
+                        >
+                          {item?.growth}%
+                        </span>
+                      {/if}
+                    </td>
+                  {/each}
+                </tr>
+
+                <tr class="bg-[#27272A] border-b-[#27272A]">
+                  <th
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
                     >No. Analysts</th
                   >
                   {#each tableCombinedRevenue as item}
@@ -990,6 +1124,32 @@
             avgDataList={avgNetIncomeList}
             lowDataList={lowNetIncomeList}
             avgGrowthList={netIncomeAvgGrowthList}
+            graphType="growth"
+          />
+        </Lazy>
+
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="EBITDA"
+            options={optionsEbitda}
+            tableDataList={ebitdaDateList}
+            highDataList={highEbitdaList}
+            avgDataList={avgEbitdaList}
+            lowDataList={lowEbitdaList}
+          />
+        </Lazy>
+
+        <Lazy fadeOption={{ delay: 100, duration: 100 }} keep={true}>
+          <EstimationGraph
+            userTier={data?.user?.tier}
+            title="EBITDA Growth"
+            options={optionsEbitdaGrowth}
+            tableDataList={ebitdaDateList}
+            highDataList={highEbitdaList}
+            avgDataList={avgEbitdaList}
+            lowDataList={lowEbitdaList}
+            avgGrowthList={ebitdaAvgGrowthList}
             graphType="growth"
           />
         </Lazy>
