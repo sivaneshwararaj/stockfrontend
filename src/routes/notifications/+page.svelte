@@ -2,7 +2,7 @@
   import { formatDate } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import avatar from "$lib/images/visual_mod.webp";
-
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { onMount } from "svelte";
   import { numberOfUnreadNotification } from "$lib/store";
 
@@ -125,8 +125,8 @@
                         <img
                           style="clip-path: circle(50%);"
                           class="flex-shrink-0 w-11 h-11 rounded-full inline-block"
-                          src={avatar}
-                          alt="User avatar"
+                          src={`https://financialmodelingprep.com/image-stock/${item?.liveResults?.symbol}.png`}
+                          alt="Company Logo"
                         />
                       </a>
 
@@ -135,30 +135,27 @@
                         <!-- svelte-ignore a11y-label-has-associated-control -->
                         <div class="flex flex-col items-start">
                           <div>
-                            <a
-                              href={`/${item?.liveResults?.assetType === "stock" ? "stocks" : "etf"}/${item?.liveResults?.symbol}`}
-                              class="flex flex-col items-start cursor-pointer"
-                            >
+                            <div class="flex flex-col items-start">
                               <div class="text-md mt-0.5">
-                                Price Alert triggered for <span
-                                  class="sm:hover:text-white text-blue-400"
-                                  >${item?.liveResults?.symbol}</span
-                                >
+                                Price Alert triggered for <HoverStockChart
+                                  symbol={item?.liveResults?.symbol}
+                                  assetType={item?.liveResults?.assetType}
+                                />
                               </div>
                               <div class="text-md mt-0.5">
-                                The price of <span class="font-bold"
-                                  >${item?.liveResults?.currentPrice}</span
+                                The price of <span class="font-semibold"
+                                  >{item?.liveResults?.currentPrice}</span
                                 >
                                 is {item?.liveResults?.condition} your target of
-                                <span class="font-bold"
-                                  >${item?.liveResults?.targetPrice}</span
+                                <span class="font-semibold"
+                                  >{item?.liveResults?.targetPrice}</span
                                 >
                               </div>
-                            </a>
+                            </div>
                           </div>
-                          <span class="text-sm sm:text-[1rem] text-[#A6ADBB0"
-                            >{formatDate(item?.created)} ago</span
-                          >
+                          <span class="text-sm mt-1 text-[#A6ADBB0"
+                            >{formatDate(item?.created)}
+                          </span>
                         </div>
                       </div>
                     </div>

@@ -613,17 +613,23 @@ export const formatDate = (dateString) => {
   const date = new Date(dateString);
   const now = new Date();
   const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-  
+
+  if (diffInDays >= 30) {
+    const months = Math.floor(diffInDays / 30);
+    return `${months} month${months > 1 ? "s" : ""} ago`;
+  }
+
   if (diffInDays >= 7) {
     const weeks = Math.floor(diffInDays / 7);
     return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
   }
-  
+
   return formatDistanceToNow(date, {
     addSuffix: true,
     includeSeconds: false,
   }).replace(/about /i, "");
 };
+
 
 export const formatRuleValue = (rule) => {
   if (["interestIncome", "interestExpenses"].includes(rule.name)) {
