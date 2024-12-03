@@ -8,6 +8,7 @@
   import { screenWidth } from "$lib/store";
   import MiniPlot from "$lib/components/MiniPlot.svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
 
   export let data;
 
@@ -133,15 +134,6 @@
   );
 
   let priceAlertList = data?.getPriceAlert;
-
-  function stockSelector(symbol, assetType) {
-    if (editMode) {
-    } else {
-      goto(
-        `/${assetType === "stock" ? "stocks" : assetType === "etf" ? "etf" : "crypto"}/${symbol}`,
-      );
-    }
-  }
 
   async function handleFilter(priceAlertId) {
     const filterSet = new Set(deletePriceAlertList);
@@ -397,12 +389,10 @@
                   </tr>
                 </thead>
                 <tbody class="p-3">
-                  {#each priceAlertList as item, index}
+                  {#each priceAlertList as item}
                     <!-- row -->
                     <tr
-                      on:click={() =>
-                        stockSelector(item?.symbol, item?.assetType)}
-                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] cursor-pointer"
+                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
                     >
                       <td
                         on:click={() => handleFilter(item?.id)}
@@ -414,13 +404,19 @@
                             false}
                           class="{!editMode
                             ? 'hidden'
-                            : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3"
+                            : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3 cursor-pointer"
                         />
-                        {item?.symbol}
+                        {#if !editMode}
+                          <HoverStockChart
+                            symbol={item?.symbol}
+                            assetType={item?.assetType}
+                          />
+                        {:else}
+                          {item?.symbol}
+                        {/if}
                       </td>
 
                       <td
-                        on:click={() => handleFilter(item?.id)}
                         class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                       >
                         {item?.name?.length > charNumber
