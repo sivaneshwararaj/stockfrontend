@@ -192,9 +192,7 @@
                 dividends for over 12 months.
               {/if}
             {:else}
-              <div class="w-full">
-                No dividend history available for {$displayCompanyName}.
-              </div>
+              No dividend history available for {$displayCompanyName}.
             {/if}
           </div>
         </div>
@@ -228,7 +226,9 @@
                 {annualDividend !== "0.00" ? annualDividend : "0"}
               </div>
             </div>
-            <div class="p-4 bp:p-5 sm:p-6 border-r border-contrast">
+            <div
+              class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast border-contrast"
+            >
               <label
                 class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
               >
