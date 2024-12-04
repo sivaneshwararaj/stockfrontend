@@ -484,11 +484,21 @@ function sendMessage(message) {
         if (mode === true) {
           try {
             newData = JSON.parse(event.data) ?? [];
-            if (newData?.length !== 0) {
-              newData.forEach((item) => {
+            if (newData?.length > 0) {
+              newData?.forEach((item) => {
                 item.dte = daysLeft(item?.date_expiration);
               });
-              if (newData?.length > rawData?.length) {
+
+              calculateStats(newData);
+              console.log(previousVolume);
+              if (
+                newData?.length > rawData?.length &&
+                previousVolume !== displayCallVolume + displayPutVolume
+              ) {
+                console.log(
+                  previousVolume,
+                  displayCallVolume + displayPutVolume,
+                );
                 rawData = newData;
                 displayedData = rawData;
 
@@ -953,23 +963,6 @@ function sendMessage(message) {
 
     // Sort using the appropriate comparison function
     displayedData = originalData.sort(compareFunctions[key]);
-  }
-
-  $: {
-    if (
-      previousVolume !== displayCallVolume + displayPutVolume &&
-      typeof window !== "undefined" &&
-      newData?.length !== 0
-    ) {
-      if (
-        !muted &&
-        mode &&
-        (ruleOfList?.length !== 0 || filterQuery?.length !== 0)
-      ) {
-        audio?.play();
-        console.log("sound for filtered list");
-      }
-    }
   }
 </script>
 
