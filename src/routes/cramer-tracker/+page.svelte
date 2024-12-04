@@ -29,31 +29,40 @@
     const tickerMap = new Map();
 
     data.forEach((item) => {
-      const { ticker } = item;
+      const { ticker, returnSince } = item;
 
       if (!ticker) return; // Skip if ticker is not defined
 
       if (!tickerMap.has(ticker)) {
-        // Add the item and initialize count
-        tickerMap.set(ticker, { ...item, ratings: 1 });
+        // Add the item, initialize count, and initialize sum of returnSince
+        tickerMap.set(ticker, {
+          ...item,
+          ratings: 1,
+          totalReturn: returnSince || 0,
+        });
       } else {
         const existing = tickerMap.get(ticker);
 
-        // Increment the ratings count
+        // Increment the ratings count and add to totalReturn
         existing.ratings += 1;
+        existing.totalReturn += returnSince || 0;
 
         // Keep the item with the latest date
         if (new Date(item?.date) > new Date(existing?.date)) {
           tickerMap.set(ticker, {
             ...item,
             ratings: existing?.ratings,
+            totalReturn: existing?.totalReturn, // Keep the accumulated return
           });
         }
       }
     });
 
-    // Convert the Map back to an array
-    return Array?.from(tickerMap?.values());
+    // Convert the Map back to an array with avgReturn computed
+    return Array.from(tickerMap.values()).map((item) => ({
+      ...item,
+      avgReturn: (item.totalReturn / item.ratings)?.toFixed(2), // Compute average return
+    }));
   }
 
   onMount(() => {
@@ -71,8 +80,10 @@
       : []),
     { key: "ticker", label: "Symbol", align: "left" },
     { key: "name", label: "Name", align: "left" },
+    { key: "price", label: "Price", align: "right" },
+    { key: "changesPercentage", label: "% Change", align: "right" },
     { key: "sentiment", label: "Sentiment", align: "right" },
-    { key: "returnSince", label: "Return Since", align: "right" },
+    { key: "avgReturn", label: "Avg Return", align: "right" },
     { key: "ratings", label: "Ratings", align: "right" },
     { key: "date", label: "Date", align: "right" },
   ];
@@ -82,8 +93,10 @@
     date: { order: "none", type: "date" },
     ticker: { order: "none", type: "string" },
     name: { order: "none", type: "string" },
+    price: { order: "none", type: "number" },
+    changesPercentage: { order: "none", type: "number" },
     sentiment: { order: "none", type: "string" },
-    returnSince: { order: "none", type: "number" },
+    avgReturn: { order: "none", type: "number" },
     ratings: { order: "none", type: "number" },
   };
 
@@ -200,7 +213,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-5">
+        <main class="w-full">
           <div class="mb-6 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
               Jim Cramer Tracker
@@ -278,6 +291,21 @@
                       </td>
 
                       <td
+                        class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      >
+                        {item?.price}
+                      </td>
+
+                      <td
+                        class="text-sm sm:text-[1rem] {item?.changesPercentage >=
+                        0
+                          ? "text-[#00FC50] before:content-['+'] "
+                          : 'text-[#FF2F1F]'} text-end"
+                      >
+                        {item?.changesPercentage}%
+                      </td>
+
+                      <td
                         class="text-sm sm:text-[1rem] whitespace-nowrap {[
                           'Bullish',
                           'Buy',
@@ -295,11 +323,11 @@
                       </td>
 
                       <td
-                        class="text-sm sm:text-[1rem] {item?.returnSince >= 0
-                          ? 'text-[#00FC50]'
+                        class="text-sm sm:text-[1rem] {item?.avgReturn >= 0
+                          ? "text-[#00FC50] before:content-['+'] "
                           : 'text-[#FF2F1F]'} text-end"
                       >
-                        {item?.returnSince > 0 ? "+" : ""}{item?.returnSince}%
+                        {item?.avgReturn}%
                       </td>
 
                       <td
@@ -321,7 +349,7 @@
                     </tr>
                     {#if checkedSymbol === item?.ticker}
                       <tr
-                        ><td colspan="8" class="px-0" style=""
+                        ><td colspan="9" class="px-0" style=""
                           ><div class="-mt-0.5 px-0 pb-2">
                             <div class="relative h-[400px]">
                               <div class="absolute top-0 w-full">
@@ -356,67 +384,6 @@
             </div>
           </div>
         </main>
-
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
-            <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-            >
-              <a
-                href={"/pricing"}
-                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-              >
-                <div class="w-full flex justify-between items-center p-3 mt-3">
-                  <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription
-                  </h2>
-                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-                </div>
-                <span class="text-white p-3 ml-3 mr-3">
-                  Upgrade now for unlimited access to all data and tools.
-                </span>
-              </a>
-            </div>
-          {/if}
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/reddit-tracker"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Reddit Tracker
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Get the latest trends of r/Wallstreetbets
-              </span>
-            </a>
-          </div>
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/sentiment-tracker"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Sentiment Tracker
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Follow the daily trends of retail investors
-              </span>
-            </a>
-          </div>
-        </aside>
       </div>
     </div>
   </div>
