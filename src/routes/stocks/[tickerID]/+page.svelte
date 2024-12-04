@@ -12,7 +12,6 @@
     wsAskPrice,
     currentPortfolioPrice,
     stockTicker,
-    displayCompanyName,
     shouldUpdatePriceChart,
     priceChartData,
   } from "$lib/store";
@@ -23,7 +22,6 @@
   import News from "$lib/components/News.svelte";
   import NextEarnings from "$lib/components/NextEarnings.svelte";
   import EarningsSurprise from "$lib/components/EarningsSurprise.svelte";
-  import DividendAnnouncement from "$lib/components/DividendAnnouncement.svelte";
   import Sidecard from "$lib/components/Sidecard.svelte";
 
   import { convertTimestamp, abbreviateNumber } from "$lib/utils";
@@ -1389,16 +1387,6 @@
                   : 'hidden'}"
               >
                 <NextEarnings {data} />
-              </div>
-
-              <div
-                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
-                  data?.getDividendAnnouncement || {},
-                )?.length !== 0
-                  ? ''
-                  : 'hidden'}"
-              >
-                <DividendAnnouncement {data} />
               </div>
 
               <div

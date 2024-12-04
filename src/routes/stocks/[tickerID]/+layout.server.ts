@@ -56,7 +56,6 @@ export const load = async ({ params, locals }) => {
     "/one-day-price",
     "/next-earnings",
     "/earnings-surprise",
-    "/dividend-announcement",
     "/stock-news",
   ];
 
@@ -77,7 +76,6 @@ export const load = async ({ params, locals }) => {
     getOneDayPrice,
     getNextEarnings,
     getEarningsSurprise,
-    getDividendAnnouncement,
     getNews,
     getUserWatchlist,
   ] = await Promise.all(promises);
@@ -94,7 +92,6 @@ export const load = async ({ params, locals }) => {
     getOneDayPrice,
     getNextEarnings,
     getEarningsSurprise,
-    getDividendAnnouncement,
     getNews,
     getUserWatchlist,
     companyName: cleanString(getStockDeck?.companyName),
