@@ -25,42 +25,6 @@
     }
   }
 
-  function computeWinRate(data) {
-    // Filter sentiments that should be considered bullish/buy or bearish/sell
-    const bullishSentiments = ["bullish", "buy"];
-    const bearishSentiments = ["bearish", "sell"];
-
-    // Reduce through the array to calculate the total trades and wins
-    const { wins, totalTrades } = data.reduce(
-      (acc, item) => {
-        const sentiment = item.sentiment.toLowerCase(); // Normalize to lower case for easier comparison
-        const isBullish = bullishSentiments.some((keyword) =>
-          sentiment.includes(keyword),
-        );
-        const isBearish = bearishSentiments.some((keyword) =>
-          sentiment.includes(keyword),
-        );
-
-        // Count the total trades
-        acc.totalTrades++;
-
-        // Evaluate the wins based on sentiment and returnSince
-        if (
-          (isBullish && item.returnSince > 0) ||
-          (isBearish && item.returnSince < 0)
-        ) {
-          acc.wins++;
-        }
-
-        return acc;
-      },
-      { wins: 0, totalTrades: 0 },
-    );
-
-    // Calculate and return the win rate percentage
-    return wins / totalTrades;
-  }
-
   function processTickerData(data) {
     const tickerMap = new Map();
 
@@ -93,8 +57,6 @@
   }
 
   onMount(() => {
-    winRate = computeWinRate(data?.getCramerTracker);
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -262,13 +224,8 @@
                 d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
               />
             </svg>
-            <span>
-              Jim Cramer was accurate in <strong
-                >{(winRate * 100)?.toFixed(0)}%</strong
-              >
-              of his last {rawData?.length} forecasts. Is it time to consider the
-              "Inverse Cramer" strategy?
-            </span>
+            We update our data in realtime to provide you with the latest stock picks
+            of Jim Cramer.
           </div>
 
           <div class="w-full m-auto mt-20 sm:mt-10">
