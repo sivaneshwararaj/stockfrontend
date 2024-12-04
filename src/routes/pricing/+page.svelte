@@ -113,8 +113,6 @@
   <script src="https://lmsqueezy.com/affiliate.js" defer></script>
 </svelte:head>
 
-<FacebookPixel pixels={["1170112523654647"]} />
-
 <section
   class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-xl pt-10 m-auto"
 >
