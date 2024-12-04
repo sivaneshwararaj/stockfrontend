@@ -11,15 +11,18 @@
   let isLoaded = true;
 
   let rawData = data?.getTopAnalyst;
-  let analytRatingList = rawData?.slice(0, 40) ?? [];
+  let originalData = [...rawData]; // Unaltered copy of raw data
+
+  let analystList = rawData?.slice(0, 50) ?? [];
 
   async function handleScroll() {
     const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
-    if (isBottom && analytRatingList?.length !== rawData?.length) {
-      const nextIndex = analytRatingList?.length;
-      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
-      analytRatingList = [...analytRatingList, ...filteredNewResults];
+
+    if (isBottom && analystList?.length !== originalData?.length) {
+      const nextIndex = analystList?.length;
+      const filteredNewResults = originalData?.slice(nextIndex, nextIndex + 50);
+      analystList = [...analystList, ...filteredNewResults];
     }
   }
 
@@ -50,7 +53,6 @@
 
   const sortData = (key) => {
     // Reset all other keys to 'none' except the current key
-    let finalList = [];
     for (const k in sortOrders) {
       if (k !== key) {
         sortOrders[k].order = "none";
@@ -59,19 +61,23 @@
 
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
-    const originalData = rawData?.slice(0, 40);
-    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
-    sortOrders[key].order =
-      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
-    const sortOrder = sortOrders[key].order;
+    const currentOrderIndex = orderCycle.indexOf(
+      sortOrders[key]?.order || "none",
+    );
+    sortOrders[key] = {
+      ...(sortOrders[key] || {}),
+      order: orderCycle[(currentOrderIndex + 1) % orderCycle.length],
+    };
+    const sortOrder = sortOrders[key]?.order;
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      analytRatingList = [...originalData]; // Reset to original data (spread to avoid mutation)
+      originalData = [...rawData]; // Reset originalData to rawData
+      analystList = originalData?.slice(0, 50); // Reset displayed data
       return;
     }
 
-    // Define a generic comparison function
+    // Generic comparison function
     const compareValues = (a, b) => {
       const { type } = sortOrders[key];
       let valueA, valueB;
@@ -81,12 +87,29 @@
           valueA = new Date(a[key]);
           valueB = new Date(b[key]);
           break;
+        case "rating":
         case "string":
-          valueA = a[key].toUpperCase();
-          valueB = b[key].toUpperCase();
+          // Retrieve values
+          valueA = a[key];
+          valueB = b[key];
+
+          // Handle null or undefined values, always placing them at the bottom
+          if (valueA == null && valueB == null) {
+            return 0; // Both are null/undefined, no need to change the order
+          } else if (valueA == null) {
+            return 1; // null goes to the bottom
+          } else if (valueB == null) {
+            return -1; // null goes to the bottom
+          }
+
+          // Convert the values to uppercase for case-insensitive comparison
+          valueA = valueA?.toUpperCase();
+          valueB = valueB?.toUpperCase();
+
+          // Perform the sorting based on ascending or descending order
           return sortOrder === "asc"
-            ? valueA.localeCompare(valueB)
-            : valueB.localeCompare(valueA);
+            ? valueA?.localeCompare(valueB)
+            : valueB?.localeCompare(valueA);
         case "number":
         default:
           valueA = parseFloat(a[key]);
@@ -101,8 +124,9 @@
       }
     };
 
-    // Sort using the generic comparison function
-    analytRatingList = [...originalData].sort(compareValues);
+    // Sort and update the originalData and analystList
+    originalData = [...rawData].sort(compareValues);
+    analystList = originalData?.slice(0, 50); // Update the displayed data
   };
 </script>
 
@@ -180,7 +204,7 @@
                     <TableHeader {columns} {sortOrders} {sortData} />
                   </thead>
                   <tbody>
-                    {#each analytRatingList as item, index}
+                    {#each analystList as item, index}
                       <tr
                         class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] {index +
                           1 ===
