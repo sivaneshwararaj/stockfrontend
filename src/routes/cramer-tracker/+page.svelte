@@ -212,7 +212,7 @@
           </div>
 
           <div
-            class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-md h-auto p-5"
+            class=" w-full text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-md h-auto p-5"
           >
             <svg
               class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -228,7 +228,7 @@
             of Jim Cramer.
           </div>
 
-          <div class="w-full m-auto mt-20 sm:mt-10">
+          <div class="w-full m-auto mt-10">
             <div
               class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
             >
