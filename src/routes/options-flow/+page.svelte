@@ -490,15 +490,12 @@ function sendMessage(message) {
               });
 
               calculateStats(newData);
-              console.log(previousVolume);
+              //console.log(previousVolume);
               if (
                 newData?.length > rawData?.length &&
                 previousVolume !== displayCallVolume + displayPutVolume
               ) {
-                console.log(
-                  previousVolume,
-                  displayCallVolume + displayPutVolume,
-                );
+                //console.log(previousVolume,displayCallVolume + displayPutVolume,);
                 rawData = newData;
                 displayedData = rawData;
 

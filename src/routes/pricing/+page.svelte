@@ -2,7 +2,6 @@
   import { numberOfUnreadNotification } from "$lib/store";
   import { openLemonSqueezyUrl } from "$lib/lemonsqueezy";
   //import Discount from '$lib/components/Discount.svelte';
-  import { FacebookPixel, fb } from "@beyonk/svelte-facebook-pixel";
   import { onMount } from "svelte";
 
   //import proTierLogo from "$lib/images/pro_tier_logo.png";
@@ -54,16 +53,6 @@
         value = 9.99;
       }
       try {
-        twq("event", "tw-onuuu-ospg6", {
-          value: value,
-          currency: "USD",
-          conversion_id: data?.user?.id,
-        });
-
-        fb.track("Purchase", {
-          value: value, // Replace with actual purchase value
-          currency: "USD", // Replace with your currency code
-        });
       } catch (e) {
         console.log(e);
       }
@@ -122,24 +111,6 @@
     window.lemonSqueezyAffiliateConfig = { store: "stocknear" };
   </script>
   <script src="https://lmsqueezy.com/affiliate.js" defer></script>
-
-  <script>
-    !(function (e, t, n, s, u, a) {
-      e.twq ||
-        ((s = e.twq =
-          function () {
-            s.exe ? s.exe.apply(s, arguments) : s.queue.push(arguments);
-          }),
-        (s.version = "1.1"),
-        (s.queue = []),
-        (u = t.createElement(n)),
-        (u.async = !0),
-        (u.src = "https://static.ads-twitter.com/uwt.js"),
-        (a = t.getElementsByTagName(n)[0]),
-        a.parentNode.insertBefore(u, a));
-    })(window, document, "script");
-    twq("config", "onuuu");
-  </script>
 </svelte:head>
 
 <FacebookPixel pixels={["1170112523654647"]} />

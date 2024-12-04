@@ -22,8 +22,7 @@ export const load = async ({ params, locals, setHeaders }) => {
 
     //output = user?.tier !== "Pro" ? output?.slice(0, 5) : output;
 
-    //output = data?.user?.tier !== 'Pro' ? output?.slice(0,6) : output;
-    console.log(output)
+
     return output;
   };
 
