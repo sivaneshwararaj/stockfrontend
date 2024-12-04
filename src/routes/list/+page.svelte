@@ -167,6 +167,12 @@
       >
     </li>
     <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/most-shorted-stocks">Most Shorted Stocks</a
+      >
+    </li>
+    <li>
       <a class="text-blue-400 sm:hover:text-white" href="/list/oversold-stocks/"
         >Oversold Stocks</a
       >

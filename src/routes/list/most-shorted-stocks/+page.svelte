@@ -4,7 +4,7 @@
   export let data;
 
   const defaultList = [
-    { name: "RSI", rule: "rsi" },
+    { name: "Short % Float", rule: "shortFloatPercent" },
     { name: "Price", rule: "price" },
     { name: "% Change", rule: "changesPercentage" },
     { name: "Market Cap", rule: "marketCap" },
@@ -17,7 +17,7 @@
     "revenue",
     "eps",
     "marketCap",
-    "rsi",
+    "shortFloatPercent",
   ]);
 </script>
 
@@ -35,17 +35,11 @@
       /></svg
     >
 
-    A list of stocks that are "overbought" according to the Relative Strength
-    Index (RSI), which is an indicator often used in technical analysis. An RSI
-    of over 70 on a daily chart is generally used to determine that an asset is
-    overbought and indicates that the stock may soon reverse to the downside.
+    A list of the stocks with the highest number of shares shorted relative to
+    the stock's float. Float is the amount of shares that are considered
+    available for trading.
   </div>
 
   <!-- Page wrapper -->
-  <Table
-    {data}
-    rawData={data?.getOverBoughtStocks}
-    {excludedRules}
-    {defaultList}
-  />
+  <Table {data} rawData={data?.getStocks} {excludedRules} {defaultList} />
 </section>

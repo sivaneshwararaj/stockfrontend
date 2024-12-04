@@ -35,7 +35,7 @@
 
   export let hideLastRow = false;
   let originalData = [...rawData]; // Unaltered copy of raw data
-  let ruleOfList = defaultList;
+  let ruleOfList = [...defaultList];
   let socket;
 
   const defaultRules = defaultList?.map((item) => item?.rule);
@@ -105,6 +105,7 @@
     { name: "Altman-Z-Score", rule: "altmanZScore", type: "float" },
     { name: "Piotroski F-Score", rule: "piotroskiScore", type: "float" },
     { name: "Total Liabilities", rule: "totalLiabilities", type: "int" },
+    { name: "RSI", rule: "rsi", type: "float" },
     { name: "Short Ratio", rule: "shortRatio", type: "int" },
     { name: "Short Interest", rule: "sharesShort", type: "int" },
     { name: "Short % Float", rule: "shortFloatPercent", type: "percent" },
@@ -150,7 +151,8 @@
       ?.map((item) => item?.name), // Map the remaining items to their names
   );
 
-  checkedItems = new Set(ruleOfList.map((item) => item.name));
+  checkedItems = new Set(ruleOfList?.map((item) => item.name));
+
   allRows = sortIndicatorCheckMarks(allRows);
   const handleDownloadMessage = (event) => {
     let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
@@ -168,7 +170,7 @@
         Object.assign(newData, updateData[i]);
 
         // Merge fields from defaultRules that are missing in updateData
-        defaultRules.forEach((rule) => {
+        defaultRules?.forEach((rule) => {
           if (!(rule in updateData[i]) && rule in rawData[i]) {
             newData[rule] = rawData[i][rule];
           }
@@ -494,7 +496,6 @@
       score: "AI Score",
       researchAndDevelopmentExpenses: "R&D",
       counter: "Ratings Count",
-      rsi: "RSI",
       // Add more key-label mappings here as needed
     };
 

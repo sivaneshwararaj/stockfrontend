@@ -9,6 +9,16 @@
     { name: "% Change", rule: "changesPercentage" },
     { name: "Market Cap", rule: "marketCap" },
   ];
+
+  const excludedRules = new Set([
+    "volume",
+    "price",
+    "changesPercentage",
+    "revenue",
+    "eps",
+    "marketCap",
+    "rsi",
+  ]);
 </script>
 
 <section class="w-full overflow-hidden m-auto">
@@ -33,5 +43,10 @@
   </div>
 
   <!-- Page wrapper -->
-  <Table {data} rawData={data?.getOverSoldStocks} {defaultList} />
+  <Table
+    {data}
+    rawData={data?.getOverSoldStocks}
+    {excludedRules}
+    {defaultList}
+  />
 </section>

@@ -202,6 +202,10 @@
       title: "Biggest Companies with Failed-to-Deliver Shares",
       link: "/list/most-ftd-shares",
     },
+    {
+      title: "Most Shorted Stocks",
+      link: "/list/most-shorted-stocks",
+    },
   ];
 
   navigation = [...navigationIndustry, ...navigation];
