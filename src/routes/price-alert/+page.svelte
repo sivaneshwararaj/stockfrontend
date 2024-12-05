@@ -371,20 +371,18 @@
                   <tr class="">
                     <th class="text-white font-semibold text-sm">Symbol</th>
                     <th class="text-white font-semibold text-sm">Company</th>
-                    <th class="text-white font-semibold text-end text-sm"
-                      >Volume</th
-                    >
-                    <th class="text-white font-semibold text-end text-sm"
-                      >Price when Created</th
-                    >
+
                     <th class="text-white font-semibold text-end text-sm"
                       >Price Target</th
                     >
-                    <th class="text-white font-semibold text-end text-sm"
-                      >Current Price</th
+                    <th class="text-white font-semibold text-end text-sm">
+                      Price</th
                     >
                     <th class="text-white font-semibold text-end text-sm"
-                      >Change</th
+                      >% Change</th
+                    >
+                    <th class="text-white font-semibold text-end text-sm"
+                      >Volume</th
                     >
                   </tr>
                 </thead>
@@ -427,17 +425,6 @@
                       <td
                         class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
                       >
-                        {abbreviateNumber(item?.volume)}
-                      </td>
-                      <td
-                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                      >
-                        {item?.priceWhenCreated}
-                      </td>
-
-                      <td
-                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                      >
                         {item?.targetPrice}
                       </td>
 
@@ -459,6 +446,11 @@
                             >{item?.changesPercentage?.toFixed(2)}%
                           </span>
                         {/if}
+                      </td>
+                      <td
+                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      >
+                        {abbreviateNumber(item?.volume)}
                       </td>
                     </tr>
                   {/each}
