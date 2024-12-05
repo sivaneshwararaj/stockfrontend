@@ -1161,7 +1161,7 @@ function sendMessage(message) {
         >
           <button
             on:click={() => (showFilters = !showFilters)}
-            class="flex cursor-pointer items-center text-lg sm:text-xl font-semibold text-gray-200"
+            class="flex cursor-pointer items-center text-lg sm:text-xl font-semibold text-white"
             title="Hide Filter Area"
           >
             <svg
@@ -2166,7 +2166,7 @@ function sendMessage(message) {
   ></label>
 
   <div
-    class="modal-box w-full bg-[#141417] border border-gray-800 h-[800px] overflow-hidden"
+    class="modal-box rounded-md border border-gray-600 w-full bg-[#1E222D] h-[800px] overflow-hidden"
   >
     <div class="flex flex-col w-full mt-10 sm:mt-0">
       <div class="text-white text-xl sm:text-3xl font-semibold mb-5">
@@ -2175,7 +2175,7 @@ function sendMessage(message) {
 
       <label
         for="ruleModal"
-        class="cursor-pointer absolute right-5 top-5 bg-[#141417] text-[1.8rem] text-white"
+        class="cursor-pointer absolute right-5 top-5 bg-[#1E222D] text-[1.8rem] text-white"
       >
         <svg
           class="w-8 h-8"
@@ -2221,7 +2221,7 @@ function sendMessage(message) {
             autocomplete="off"
             type="search"
             id="search"
-            class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-300 rounded-md bg-[#404040] border border-blue-500"
+            class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-white rounded-md bg-[#2A2E39] border border-gray-600"
             placeholder="Search {allRows?.length} filters..."
             bind:value={searchTerm}
           />
@@ -2230,7 +2230,7 @@ function sendMessage(message) {
       <!-- End Search bar-->
 
       <div
-        class="text-white text-sm bg-[#141417] overflow-y-scroll pt-3 rounded-md max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]"
+        class="text-white text-sm bg-[#1E222D] overflow-y-scroll pt-3 rounded-md max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]"
       >
         <div class="text-white relative">
           {#if searchTerm?.length !== 0 && filteredRows?.length === 0}
@@ -2246,10 +2246,10 @@ function sendMessage(message) {
                 {#each searchTerm?.length !== 0 ? filteredRows : allRows as row, index}
                   <tr
                     on:click={() => changeRule(row?.rule)}
-                    class="sm:hover:bg-[#333333] cursor-pointer"
+                    class="sm:hover:bg-[#2A2E39] cursor-pointer border-b border-gray-600"
                   >
-                    <td class="border-b border-[#1E222D]">{index + 1}</td>
-                    <td class="text-start border-b border-[#1E222D]">
+                    <td class="">{index + 1}</td>
+                    <td class="text-start">
                       {#if ruleOfList?.find((rule) => rule?.name === row?.rule)}
                         <svg
                           class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block"
@@ -2264,9 +2264,7 @@ function sendMessage(message) {
                         >
                       {/if}
                     </td>
-                    <td class="text-start border-b border-[#1E222D]"
-                      >{row?.label}</td
-                    >
+                    <td class="text-start">{row?.label}</td>
                   </tr>
                 {/each}
               </tbody>
