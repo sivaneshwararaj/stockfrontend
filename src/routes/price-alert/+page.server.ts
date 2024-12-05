@@ -17,24 +17,9 @@ export const load = async ({ locals }) => {
     return output;
   };
 
-  const getMiniPlotsIndex = async () => {
-    // make the POST request to the endpoint
-    const response = await fetch(apiURL + "/mini-plots-index", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": apiKey,
-      },
-    });
-
-    const output = await response.json();
-
-    return output;
-  };
-
+  
   // Make sure to return a promise
   return {
-    getMiniPlotsIndex: await getMiniPlotsIndex(),
     getPriceAlert: await getPriceAlert(),
   };
 };

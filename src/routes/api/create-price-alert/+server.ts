@@ -20,11 +20,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     
     try {
 
-        await pb.collection("priceAlert")?.create(newAlert)
-        output = 'success';
+        output = await pb.collection("priceAlert")?.create(newAlert)
 
       } catch (err) {
-          output = 'failure'
+          output = {}
       }
 
   return new Response(JSON.stringify(output));

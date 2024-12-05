@@ -11,6 +11,7 @@
     currentPrice,
     priceIncrease,
     etfTicker,
+    assetType,
     displayCompanyName,
     isOpen,
     shouldUpdatePriceChart,
@@ -742,7 +743,7 @@
 <!--End Login Modal-->
 
 <!--Start SellTrade Modal-->
-<PriceAlert {data} ticker={$etfTicker} />
+<PriceAlert {data} ticker={$etfTicker} assetType={$assetType} />
 <!--Start Add Watchlist Modal-->
 <input type="checkbox" id="addWatchListModal" class="modal-toggle" />
 

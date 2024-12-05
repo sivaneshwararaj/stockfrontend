@@ -929,7 +929,7 @@
 {/if}
 -->
 
-<PriceAlert {data} ticker={$cryptoTicker} />
+<PriceAlert {data} ticker={$cryptoTicker} assetType={$assetType} />
 
 <!--Start Type of Trade-->
 

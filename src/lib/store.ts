@@ -122,6 +122,8 @@ export const oauthVerifier = writable(<string>"");
 export const oauthProvider = writable(<string>"");
 
 
+export const newPriceAlertData = writable(<Array<any>>{});
+
 export const cachedPosts = writable(<Array<any>>{});
 export const currentPagePosition = writable(<Number>0);
 export const postVote = writable(<Array<any>>{});

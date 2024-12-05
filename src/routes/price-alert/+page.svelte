@@ -1,137 +1,26 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
+  import { numberOfUnreadNotification, openPriceAlert } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
 
   //import { enhance } from '$app/forms';
   import toast from "svelte-french-toast";
   import { goto } from "$app/navigation";
-  import { screenWidth } from "$lib/store";
-  import MiniPlot from "$lib/components/MiniPlot.svelte";
+  import { screenWidth, newPriceAlertData } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import { Combobox } from "bits-ui";
+  import PriceAlert from "$lib/components/PriceAlert.svelte";
 
   export let data;
+  let timeoutId;
+  let searchBarData = [];
 
-  const rawData = data?.getMiniPlotsIndex;
-
-  function getCurrentDateFormatted() {
-    // Get current date
-    let date = new Date();
-
-    // If today is Saturday or Sunday, move to the previous Friday
-    if (date.getDay() === 6) {
-      // Saturday
-      date.setDate(date.getDate() - 1);
-    } else if (date.getDay() === 0) {
-      // Sunday
-      date.setDate(date.getDate() - 2);
-    }
-
-    // Define months array for formatting
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    // Get formatted date components
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-
-    // Return formatted date
-    return `${month} ${day}, ${year}`;
-  }
+  let addTicker = "";
+  let addAssetType = "";
 
   let editMode = false;
   let numberOfChecked = 0;
   let deletePriceAlertList = [];
-
-  let priceDataSP500;
-  let priceDataNasdaq;
-  let priceDataDowJones;
-  let priceDataRussel2000;
-
-  let changeSP500, changeNasdaq, changeDowJones, changeRussel2000;
-  let previousCloseSP500,
-    previousCloseNasdaq,
-    previousCloseDowJones,
-    previousCloseRussel2000;
-  // Assign values based on the symbol
-  rawData?.forEach(
-    ({ symbol, priceData, changesPercentage, previousClose }) => {
-      switch (symbol) {
-        case "SPY":
-          priceDataSP500 = priceData?.map(({ time, value }) => ({
-            time: Date?.parse(time),
-            value,
-          }));
-          priceDataSP500 = priceDataSP500?.filter(
-            (item) =>
-              item.value !== 0 &&
-              item.value !== null &&
-              item.value !== undefined,
-          );
-          changeSP500 = changesPercentage;
-          previousCloseSP500 = previousClose;
-          break;
-        case "QQQ":
-          priceDataNasdaq = priceData?.map(({ time, value }) => ({
-            time: Date?.parse(time),
-            value,
-          }));
-          priceDataNasdaq = priceDataNasdaq?.filter(
-            (item) =>
-              item.value !== 0 &&
-              item.value !== null &&
-              item.value !== undefined,
-          );
-          changeNasdaq = changesPercentage;
-          previousCloseNasdaq = previousClose;
-          break;
-        case "DIA":
-          priceDataDowJones = priceData?.map(({ time, value }) => ({
-            time: Date?.parse(time),
-            value,
-          }));
-          priceDataDowJones = priceDataDowJones?.filter(
-            (item) =>
-              item.value !== 0 &&
-              item.value !== null &&
-              item.value !== undefined,
-          );
-          changeDowJones = changesPercentage;
-          previousCloseDowJones = previousClose;
-          break;
-        case "IWM":
-          priceDataRussel2000 = priceData?.map(({ time, value }) => ({
-            time: Date?.parse(time),
-            value,
-          }));
-          priceDataRussel2000 = priceDataRussel2000?.filter(
-            (item) =>
-              item.value !== 0 &&
-              item.value !== null &&
-              item.value !== undefined,
-          );
-          changeRussel2000 = changesPercentage;
-          previousCloseRussel2000 = previousClose;
-          break;
-        default:
-          // Handle unknown symbol
-          break;
-      }
-    },
-  );
 
   let priceAlertList = data?.getPriceAlert;
 
@@ -150,7 +39,7 @@
     numberOfChecked = deletePriceAlertList?.length;
   }
 
-  async function handleDelete() {
+  async function handleDeleteTickers() {
     if (numberOfChecked === 0) {
       toast.error(`You need to select symbols before you can delete them`, {
         style:
@@ -180,7 +69,82 @@
     }
   }
 
+  async function handleAddAlert(event, ticker, assetType) {
+    addTicker = ticker;
+    addAssetType = assetType?.toLowerCase();
+    const postData = {
+      path: "get-quote",
+      ticker: ticker,
+    };
+
+    const response = await fetch("/api/ticker-data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+    const output = await response?.json();
+
+    data.getStockQuote = output;
+
+    const clicked = document.getElementById("priceAlertModal");
+    clicked?.dispatchEvent(new MouseEvent("click"));
+
+    editMode = false;
+    $openPriceAlert = true;
+
+    inputValue = "";
+    event?.preventDefault();
+  }
+
+  async function getPriceAlertList() {
+    const response = await fetch("/api/get-price-alert", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    let output = await response.json();
+    output = output?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
+    priceAlertList = [...output];
+  }
+
   $: charNumber = $screenWidth < 640 ? 15 : 40;
+
+  $: {
+    if (Object?.keys($newPriceAlertData)?.length > 0) {
+      getPriceAlertList();
+    }
+  }
+
+  function handleEditMode() {
+    if (editMode === true) {
+      deletePriceAlertList = [];
+      numberOfChecked = 0;
+    }
+    editMode = !editMode;
+  }
+
+  let inputValue = "";
+  let touchedInput = false;
+
+  async function search() {
+    clearTimeout(timeoutId); // Clear any existing timeout
+
+    if (!inputValue.trim()) {
+      // Skip if query is empty or just whitespace
+      searchBarData = []; // Clear previous results
+      return;
+    }
+
+    timeoutId = setTimeout(async () => {
+      const response = await fetch(
+        `/api/searchbar?query=${encodeURIComponent(inputValue)}&limit=10`,
+      );
+      searchBarData = await response?.json();
+    }, 50); // delay
+  }
 </script>
 
 <svelte:head>
@@ -236,45 +200,6 @@
             </h1>
           </div>
 
-          <div class="sm:hidden">
-            <div class="text-white text-xs sm:text-sm pb-5 sm:pb-2">
-              Stock Indexes - {getCurrentDateFormatted()}
-            </div>
-
-            <div
-              class="w-full -mt-4 sm:mt-0 mb-8 m-auto flex justify-start sm:justify-center items-center"
-            >
-              <div
-                class="w-full grid grid-cols-2 md:grid-cols-4 gap-y-3 lg:gap-y-0 gap-x-3"
-              >
-                <MiniPlot
-                  title="S&P500"
-                  priceData={priceDataSP500}
-                  changesPercentage={changeSP500}
-                  previousClose={previousCloseSP500}
-                />
-                <MiniPlot
-                  title="Nasdaq"
-                  priceData={priceDataNasdaq}
-                  changesPercentage={changeNasdaq}
-                  previousClose={previousCloseNasdaq}
-                />
-                <MiniPlot
-                  title="Dow"
-                  priceData={priceDataDowJones}
-                  changesPercentage={changeDowJones}
-                  previousClose={previousCloseDowJones}
-                />
-                <MiniPlot
-                  title="Russel"
-                  priceData={priceDataRussel2000}
-                  changesPercentage={changeRussel2000}
-                  previousClose={previousCloseRussel2000}
-                />
-              </div>
-            </div>
-          </div>
-
           {#if priceAlertList?.length === 0}
             <div class="flex flex-col justify-center items-center m-auto pt-8">
               <span class="text-white font-bold text-white text-xl sm:text-3xl">
@@ -316,48 +241,124 @@
               {/if}
             </div>
           {:else}
-            <div class="flex flex-row justify-end items-center pb-2">
-              {#if editMode}
-                <label
-                  on:click={handleDelete}
-                  class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
-                >
-                  <svg
-                    class="inline-block w-5 h-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><path
-                      fill="white"
-                      d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"
-                    /></svg
+            <div
+              class="w-full {$screenWidth < 640
+                ? 'grid grid-cols-2'
+                : ''} gap-x-3 gap-y-3 sm:gap-x-0 sm:gap-y-0 relative inline-block text-left w-full flex flex-col sm:flex-row items-center"
+            >
+              <div class="order-4 w-fit flex justify-end sm:ml-3">
+                <div class="flex flex-row items-center justify-end">
+                  {#if editMode}
+                    <label
+                      on:click={handleDeleteTickers}
+                      class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500"
+                    >
+                      <svg
+                        class="inline-block w-5 h-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="white"
+                          d="M10 5h4a2 2 0 1 0-4 0M8.5 5a3.5 3.5 0 1 1 7 0h5.75a.75.75 0 0 1 0 1.5h-1.32l-1.17 12.111A3.75 3.75 0 0 1 15.026 22H8.974a3.75 3.75 0 0 1-3.733-3.389L4.07 6.5H2.75a.75.75 0 0 1 0-1.5zm2 4.75a.75.75 0 0 0-1.5 0v7.5a.75.75 0 0 0 1.5 0zM14.25 9a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-1.5 0v-7.5a.75.75 0 0 1 .75-.75m-7.516 9.467a2.25 2.25 0 0 0 2.24 2.033h6.052a2.25 2.25 0 0 0 2.24-2.033L18.424 6.5H5.576z"
+                        /></svg
+                      >
+                      <span class="ml-1 text-white text-sm">
+                        {numberOfChecked}
+                      </span>
+                    </label>
+                  {/if}
+                  <label
+                    on:click={handleEditMode}
+                    class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-[#27272A] ease-out sm:hover:text-red-500"
                   >
-                  <span class="ml-1 text-white text-sm">
-                    {numberOfChecked}
-                  </span>
-                </label>
-              {/if}
-              <label
-                on:click={() => (editMode = !editMode)}
-                class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
-              >
-                <svg
-                  class="inline-block w-5 h-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 1024 1024"
-                  ><path
-                    fill="white"
-                    d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"
-                  /><path
-                    fill="white"
-                    d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"
-                  /></svg
+                    <svg
+                      class="inline-block w-5 h-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 1024 1024"
+                      ><path
+                        fill="white"
+                        d="M832 512a32 32 0 1 1 64 0v352a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h352a32 32 0 0 1 0 64H192v640h640z"
+                      /><path
+                        fill="white"
+                        d="m469.952 554.24l52.8-7.552L847.104 222.4a32 32 0 1 0-45.248-45.248L477.44 501.44l-7.552 52.8zm422.4-422.4a96 96 0 0 1 0 135.808l-331.84 331.84a32 32 0 0 1-18.112 9.088L436.8 623.68a32 32 0 0 1-36.224-36.224l15.104-105.6a32 32 0 0 1 9.024-18.112l331.904-331.84a96 96 0 0 1 135.744 0z"
+                      /></svg
+                    >
+                    {#if !editMode}
+                      <span class="ml-1 text-white text-sm sm:text-[1rem]">
+                        Edit Watchlist
+                      </span>
+                    {:else}
+                      <span class="ml-1 text-white text-sm sm:text-[1rem]">
+                        Cancel
+                      </span>
+                    {/if}
+                  </label>
+                </div>
+              </div>
+
+              <div class="order-2 sm:order-1 w-full sm:w-fit">
+                <Combobox.Root
+                  items={searchBarData}
+                  bind:inputValue
+                  bind:touchedInput
                 >
-                {#if !editMode}
-                  <span class="ml-1 text-white text-sm"> Edit </span>
-                {:else}
-                  <span class="ml-1 text-white text-sm"> Cancel </span>
-                {/if}
-              </label>
+                  <div class="relative sm:ml-3 w-full">
+                    <div
+                      class="absolute inset-y-0 left-0 flex items-center pl-2.5"
+                    >
+                      <svg
+                        class="h-4 w-4 text-icon xs:h-5 xs:w-5"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="3"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        style="max-width: 40px"
+                        aria-hidden="true"
+                      >
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <Combobox.Input
+                      on:input={search}
+                      class="text-sm sm:text-[1rem] controls-input text-white bg-[#09090B] focus:outline-none border border-gray-600 rounded-md placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs"
+                      placeholder="Add new stock"
+                      aria-label="Add new stock"
+                    />
+                  </div>
+                  {#if inputValue?.length !== 0}
+                    <Combobox.Content
+                      class="w-auto z-10 rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
+                      sideOffset={8}
+                    >
+                      {#each searchBarData as item}
+                        <Combobox.Item
+                          class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-[#27272A]"
+                          value={item.symbol}
+                          label={item.name}
+                          on:click={(e) =>
+                            handleAddAlert(e, item?.symbol, item?.type)}
+                        >
+                          <div class="flex flex-col items-start">
+                            <span class="text-sm text-blue-400"
+                              >{item?.symbol}</span
+                            >
+                            <span class="text-xs sm:text-sm text-white"
+                              >{item?.name}</span
+                            >
+                          </div>
+                        </Combobox.Item>
+                      {:else}
+                        <span class="block px-5 py-2 text-sm text-white">
+                          No results found
+                        </span>
+                      {/each}
+                    </Combobox.Content>
+                  {/if}
+                </Combobox.Root>
+              </div>
             </div>
             <!--Start Table-->
             <div
@@ -525,3 +526,5 @@
     </div>
   </div>
 </section>
+
+<PriceAlert {data} ticker={addTicker} assetType={addAssetType} />

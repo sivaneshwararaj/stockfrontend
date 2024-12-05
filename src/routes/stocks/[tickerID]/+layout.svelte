@@ -973,7 +973,7 @@
 <!--End Login Modal-->
 
 <!--Start SellTrade Modal-->
-<PriceAlert {data} ticker={$stockTicker} />
+<PriceAlert {data} ticker={$stockTicker} assetType={$assetType} />
 
 <!--Start Add Watchlist Modal-->
 <input type="checkbox" id="addWatchListModal" class="modal-toggle" />

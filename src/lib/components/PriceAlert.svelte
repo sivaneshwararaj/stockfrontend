@@ -1,16 +1,10 @@
 <script lang="ts">
   import toast from "svelte-french-toast";
-  import {
-    openPriceAlert,
-    displayCompanyName,
-    stockTicker,
-    etfTicker,
-    cryptoTicker,
-    assetType,
-  } from "$lib/store";
+  import { openPriceAlert, newPriceAlertData } from "$lib/store";
 
   export let data;
   export let ticker;
+  export let assetType;
 
   let currentPrice = Number(data?.getStockQuote?.price?.toFixed(2));
   let targetPrice = currentPrice; //(currentPrice * (1 + targetPrice / 100))?.toFixed(2);
@@ -32,14 +26,9 @@
 
       const postData = {
         userId: data?.user?.id,
-        symbol:
-          $assetType === "stock"
-            ? $stockTicker
-            : $assetType === "etf"
-              ? $etfTicker
-              : $cryptoTicker,
-        name: $displayCompanyName,
-        assetType: $assetType,
+        symbol: ticker,
+        name: data?.getStockQuote?.name,
+        assetType: assetType,
         priceWhenCreated: currentPrice,
         condition: condition,
         targetPrice: targetPrice,
@@ -53,6 +42,8 @@
         },
         body: JSON.stringify(postData),
       });
+
+      $newPriceAlertData = await response?.json();
 
       //const output = await response.json();
 
