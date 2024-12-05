@@ -85,7 +85,7 @@ export const computeGrowthSingleList = (data, actualList) => {
     return formattedTimeString;
   }
 
-export const  groupEarnings = (earnings) => {
+export const groupEarnings = (earnings) => {
   return Object?.entries(
     earnings
       ?.reduce((acc, item) => {

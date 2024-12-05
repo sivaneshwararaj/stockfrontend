@@ -485,7 +485,7 @@
                           {#if !editMode}
                             <HoverStockChart
                               symbol={item?.symbol}
-                              assetType={item?.assetType}
+                              assetType={item?.type}
                             />
                           {:else}
                             {item?.symbol}
