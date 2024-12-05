@@ -136,12 +136,18 @@ function isDateWithinRange(dateString: string, range: string): boolean {
 }
 
 async function filterRawData(rawData, ruleOfList, filterQuery) {
+  // Split filterQuery into an array of tickers if it's a comma-separated string
+  const filterTickers = filterQuery
+    ? filterQuery.split(",").map((ticker) => ticker.trim().toUpperCase())
+    : [];
+
   return rawData?.filter((item) => {
+    // Check if the item's ticker matches any of the tickers in filterTickers
     if (
-      filterQuery?.length !== 0 &&
-      item.ticker !== filterQuery.toUpperCase()
+      filterTickers.length > 0 &&
+      !filterTickers.includes(item.ticker.toUpperCase())
     ) {
-      return false; // Exclude if the ticker doesn't match the filterQuery
+      return false; // Exclude if the ticker doesn't match any in filterTickers
     }
 
     return ruleOfList.every((rule) => {
