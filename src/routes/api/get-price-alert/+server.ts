@@ -15,7 +15,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 
   let output = await response.json();
 
-      output = output?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
+      output.data = output?.data?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
 
 
   return new Response(JSON.stringify(output));

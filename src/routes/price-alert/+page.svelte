@@ -1,7 +1,13 @@
 <script lang="ts">
   import { numberOfUnreadNotification, openPriceAlert } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
-
+  import {
+    groupNews,
+    groupEarnings,
+    compareTimes,
+    formatTime,
+    abbreviateNumber,
+    calculateChange,
+  } from "$lib/utils";
   //import { enhance } from '$app/forms';
   import toast from "svelte-french-toast";
   import { goto } from "$app/navigation";
@@ -10,19 +16,54 @@
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { Combobox } from "bits-ui";
   import PriceAlert from "$lib/components/PriceAlert.svelte";
+  import { onMount } from "svelte";
 
   export let data;
+
   let timeoutId;
   let searchBarData = [];
 
   let addTicker = "";
   let addAssetType = "";
-
+  let activeIdx = 0;
+  let rawTabData = [];
+  let displayList = [];
   let editMode = false;
   let numberOfChecked = 0;
-  let deletePriceAlertList = [];
+  let priceAlertList = data?.getPriceAlert?.data;
 
-  let priceAlertList = data?.getPriceAlert;
+  let deletePriceAlertList = [];
+  let news = data?.getPriceAlert?.news || [];
+  let earnings = data?.getPriceAlert?.earnings || [];
+
+  news = news?.map((item) => {
+    const match = priceAlertList?.find((w) => w?.symbol === item?.symbol);
+    return match ? { ...item, type: match?.type } : { ...item };
+  });
+  earnings = earnings?.map((item) => {
+    const match = priceAlertList?.find((w) => w?.symbol === item?.symbol);
+    return match ? { ...item, name: match?.name } : { ...item };
+  });
+  let groupedNews = [];
+  let groupedEarnings = [];
+
+  if (priceAlertList?.length > 0) {
+    groupedEarnings = groupEarnings(earnings);
+    groupedNews = groupNews(news, priceAlertList);
+  } else {
+    groupedEarnings = [];
+    groupedNews = [];
+  }
+  changeTab(0);
+
+  const tabs = [
+    {
+      title: "News",
+    },
+    {
+      title: "Earnings",
+    },
+  ];
 
   async function handleFilter(priceAlertId) {
     const filterSet = new Set(deletePriceAlertList);
@@ -46,12 +87,6 @@
           "border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
       });
     } else {
-      priceAlertList = priceAlertList?.filter(
-        (item) => !deletePriceAlertList?.includes(item?.id),
-      );
-
-      priceAlertList = [...priceAlertList];
-
       const postData = {
         priceAlertIdList: deletePriceAlertList,
       };
@@ -63,6 +98,34 @@
         },
         body: JSON.stringify(postData),
       });
+
+      const symbolsToDelete = priceAlertList
+        ?.filter((item) => deletePriceAlertList.includes(item.id))
+        .map((item) => item.symbol);
+
+      // Filter out the price alerts
+      priceAlertList = priceAlertList?.filter(
+        (item) => !deletePriceAlertList?.includes(item.id),
+      );
+
+      // Filter news and earnings using the symbolsToDelete
+      news = news?.filter(
+        (newsItem) => !symbolsToDelete.includes(newsItem?.symbol),
+      );
+
+      earnings = earnings?.filter(
+        (earningsItem) => !symbolsToDelete.includes(earningsItem?.symbol),
+      );
+      priceAlertList = [...priceAlertList];
+
+      if (priceAlertList?.length > 0) {
+        groupedNews = [...groupNews(news, priceAlertList)];
+        groupedEarnings = [...groupEarnings(earnings)];
+      } else {
+        groupedEarnings = [];
+        groupedEarnings = [];
+      }
+
       deletePriceAlertList = [];
       numberOfChecked = 0;
       editMode = !editMode;
@@ -98,6 +161,16 @@
     event?.preventDefault();
   }
 
+  function changeTab(i) {
+    activeIdx = i;
+    if (activeIdx === 0) {
+      rawTabData = groupedNews;
+    } else {
+      rawTabData = groupedEarnings;
+    }
+    displayList = rawTabData?.slice(0, 8);
+  }
+
   async function getPriceAlertList() {
     const response = await fetch("/api/get-price-alert", {
       method: "GET",
@@ -106,8 +179,31 @@
       },
     });
     let output = await response.json();
-    output = output?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
-    priceAlertList = [...output];
+    output.data = output?.data?.sort((a, b) =>
+      a?.symbol?.localeCompare(b?.symbol),
+    );
+    priceAlertList = [...output?.data];
+
+    news = output?.news;
+    earnings = output?.earnings;
+
+    news = news?.map((item) => {
+      const match = priceAlertList?.find((w) => w?.symbol === item?.symbol);
+      return match ? { ...item, type: match?.type } : { ...item };
+    });
+
+    earnings = earnings?.map((item) => {
+      const match = priceAlertList?.find((w) => w?.symbol === item?.symbol);
+      return match ? { ...item, name: match?.name } : { ...item };
+    });
+    if (priceAlertList?.length > 0) {
+      groupedEarnings = groupEarnings(earnings);
+      groupedNews = groupNews(news, priceAlertList);
+    } else {
+      groupedEarnings = [];
+      groupedNews = [];
+    }
+    changeTab(0);
   }
 
   $: charNumber = $screenWidth < 640 ? 15 : 40;
@@ -125,6 +221,23 @@
     }
     editMode = !editMode;
   }
+
+  async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && displayList?.length !== rawTabData?.length) {
+      const nextIndex = displayList?.length;
+      const filteredItem = rawTabData?.slice(nextIndex, nextIndex + 8);
+      displayList = [...displayList, ...filteredItem];
+    }
+  }
+
+  onMount(async () => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   let inputValue = "";
   let touchedInput = false;
@@ -179,7 +292,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
@@ -200,47 +313,7 @@
             </h1>
           </div>
 
-          {#if priceAlertList?.length === 0}
-            <div class="flex flex-col justify-center items-center m-auto pt-8">
-              <span class="text-white font-bold text-white text-xl sm:text-3xl">
-                No Alerts set
-              </span>
-
-              <span
-                class="text-white text-sm sm:text-[1rem] m-auto p-4 text-center"
-              >
-                Create price alerts for your stocks that have the most potential
-                in your opinion.
-              </span>
-              {#if !data?.user}
-                <a
-                  class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
-                  href="/register"
-                >
-                  Get Started
-                  <span
-                    class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
-                  >
-                    <svg
-                      class="w-4 h-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      ><g transform="rotate(90 12 12)"
-                        ><g fill="none"
-                          ><path
-                            d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
-                          /><path
-                            fill="white"
-                            d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
-                          /></g
-                        ></g
-                      ></svg
-                    >
-                  </span>
-                </a>
-              {/if}
-            </div>
-          {:else}
+          {#if data?.user}
             <div
               class="w-full {$screenWidth < 640
                 ? 'grid grid-cols-2'
@@ -285,7 +358,7 @@
                     >
                     {#if !editMode}
                       <span class="ml-1 text-white text-sm sm:text-[1rem]">
-                        Edit Watchlist
+                        Edit Alert
                       </span>
                     {:else}
                       <span class="ml-1 text-white text-sm sm:text-[1rem]">
@@ -302,7 +375,7 @@
                   bind:inputValue
                   bind:touchedInput
                 >
-                  <div class="relative sm:ml-3 w-full">
+                  <div class="relative w-full">
                     <div
                       class="absolute inset-y-0 left-0 flex items-center pl-2.5"
                     >
@@ -361,104 +434,366 @@
               </div>
             </div>
             <!--Start Table-->
-            <div
-              class="w-full rounded-md overflow-hidden overflow-x-scroll no-scrollbar"
-            >
-              <table
-                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
+            {#if priceAlertList?.length > 0}
+              <div
+                class="w-full rounded-md overflow-hidden overflow-x-scroll no-scrollbar"
               >
-                <!-- head -->
-                <thead>
-                  <tr class="">
-                    <th class="text-white font-semibold text-sm">Symbol</th>
-                    <th class="text-white font-semibold text-sm">Company</th>
+                <table
+                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
+                >
+                  <!-- head -->
+                  <thead>
+                    <tr class="">
+                      <th class="text-white font-semibold text-sm">Symbol</th>
+                      <th class="text-white font-semibold text-sm">Company</th>
 
-                    <th class="text-white font-semibold text-end text-sm"
-                      >Price Target</th
-                    >
-                    <th class="text-white font-semibold text-end text-sm">
-                      Price</th
-                    >
-                    <th class="text-white font-semibold text-end text-sm"
-                      >% Change</th
-                    >
-                    <th class="text-white font-semibold text-end text-sm"
-                      >Volume</th
-                    >
-                  </tr>
-                </thead>
-                <tbody class="p-3">
-                  {#each priceAlertList as item}
-                    <!-- row -->
-                    <tr
-                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
-                    >
-                      <td
-                        on:click={() => handleFilter(item?.id)}
-                        class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] flex flex-row items-center"
+                      <th class="text-white font-semibold text-end text-sm"
+                        >Price Target</th
                       >
-                        <input
-                          type="checkbox"
-                          checked={deletePriceAlertList?.includes(item?.id) ??
-                            false}
-                          class="{!editMode
-                            ? 'hidden'
-                            : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3 cursor-pointer"
-                        />
-                        {#if !editMode}
-                          <HoverStockChart
-                            symbol={item?.symbol}
-                            assetType={item?.assetType}
-                          />
-                        {:else}
-                          {item?.symbol}
-                        {/if}
-                      </td>
-
-                      <td
-                        class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                      <th class="text-white font-semibold text-end text-sm"
+                        >Condition</th
                       >
-                        {item?.name?.length > charNumber
-                          ? item?.name?.slice(0, charNumber) + "..."
-                          : item?.name}
-                      </td>
-
-                      <td
-                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      <th class="text-white font-semibold text-end text-sm">
+                        Price</th
                       >
-                        {item?.targetPrice}
-                      </td>
-
-                      <td
-                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      <th class="text-white font-semibold text-end text-sm"
+                        >% Change</th
                       >
-                        {item.price?.toFixed(2)}
-                      </td>
-
-                      <td
-                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                      <th class="text-white font-semibold text-end text-sm"
+                        >Volume</th
                       >
-                        {#if item?.changesPercentage >= 0}
-                          <span class="text-[#00FC50]"
-                            >+{item?.changesPercentage?.toFixed(2)}%</span
-                          >
-                        {:else}
-                          <span class="text-[#FF2F1F]"
-                            >{item?.changesPercentage?.toFixed(2)}%
-                          </span>
-                        {/if}
-                      </td>
-                      <td
-                        class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-                      >
-                        {abbreviateNumber(item?.volume)}
-                      </td>
                     </tr>
+                  </thead>
+                  <tbody class="p-3">
+                    {#each priceAlertList as item}
+                      <!-- row -->
+                      <tr
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
+                      >
+                        <td
+                          on:click={() => handleFilter(item?.id)}
+                          class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] flex flex-row items-center"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={deletePriceAlertList?.includes(item?.id) ??
+                              false}
+                            class="{!editMode
+                              ? 'hidden'
+                              : ''} bg-[#2E3238] h-[18px] w-[18px] rounded-sm ring-offset-0 mr-3 cursor-pointer"
+                          />
+                          {#if !editMode}
+                            <HoverStockChart
+                              symbol={item?.symbol}
+                              assetType={item?.assetType}
+                            />
+                          {:else}
+                            {item?.symbol}
+                          {/if}
+                        </td>
+
+                        <td
+                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                        >
+                          {item?.name?.length > charNumber
+                            ? item?.name?.slice(0, charNumber) + "..."
+                            : item?.name}
+                        </td>
+
+                        <td
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                        >
+                          {item?.targetPrice}
+                        </td>
+
+                        <td
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                        >
+                          {item?.condition}
+                        </td>
+
+                        <td
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                        >
+                          {item.price?.toFixed(2)}
+                        </td>
+
+                        <td
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                        >
+                          {#if item?.changesPercentage >= 0}
+                            <span class="text-[#00FC50]"
+                              >+{item?.changesPercentage?.toFixed(2)}%</span
+                            >
+                          {:else}
+                            <span class="text-[#FF2F1F]"
+                              >{item?.changesPercentage?.toFixed(2)}%
+                            </span>
+                          {/if}
+                        </td>
+                        <td
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                        >
+                          {abbreviateNumber(item?.volume)}
+                        </td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+
+              <div
+                class="w-full m-auto border-b border-gray-600 mt-10 mb-5"
+              ></div>
+
+              <div class=" text-white">
+                <div
+                  class="inline-flex justify-center w-full rounded-md sm:w-auto mb-3"
+                >
+                  <div
+                    class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                  >
+                    {#each tabs as item, i}
+                      {#if data?.user?.tier !== "Pro" && i > 0}
+                        <button
+                          on:click={() => goto("/pricing")}
+                          class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1"
+                        >
+                          <span
+                            class="relative text-sm sm:text-[1rem] block font-semibold"
+                          >
+                            {item.title}
+                            <svg
+                              class="inline-block ml-0.5 -mt-1 w-3.5 h-3.5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              ><path
+                                fill="#A3A3A3"
+                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                              /></svg
+                            >
+                          </span>
+                        </button>
+                      {:else}
+                        <button
+                          on:click={() => changeTab(i)}
+                          class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                          i
+                            ? 'z-0'
+                            : ''} "
+                        >
+                          {#if activeIdx === i}
+                            <div
+                              class="absolute inset-0 rounded-md bg-[#fff]"
+                            ></div>
+                          {/if}
+                          <span
+                            class="relative text-sm sm:text-[1rem] block font-semibold {activeIdx ===
+                            i
+                              ? 'text-black'
+                              : 'text-white'}"
+                          >
+                            {item.title}
+                          </span>
+                        </button>
+                      {/if}
+                    {/each}
+                  </div>
+                </div>
+                {#if activeIdx === 0}
+                  {#if groupedNews?.length > 0}
+                    {#each displayList as [date, titleGroups]}
+                      <h3 class="mb-1.5 mt-3 font-semibold text-faded">
+                        {date}
+                      </h3>
+                      <div class="border border-gray-700">
+                        {#each titleGroups as { title, items, symbols }}
+                          <div class="flex border-gray-600 text-small">
+                            <div
+                              class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                            >
+                              {new Date(
+                                items[0].publishedDate,
+                              ).toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })}
+                            </div>
+                            <div
+                              class="flex-grow px-3 py-2 lg:py-1 border-t border-gray-700"
+                            >
+                              <a
+                                href={items[0].url}
+                                target="_blank"
+                                rel="nofollow noopener noreferrer"
+                                class="text-white sm:hover:text-blue-400"
+                              >
+                                <h4
+                                  class="text-sm font-semibold lg:text-[1rem]"
+                                >
+                                  {title}
+                                </h4>
+                              </a>
+                              <div
+                                class="flex flex-wrap gap-x-2 pt-2 text-sm lg:pt-0.5"
+                              >
+                                <div class="text-white lg:hidden">
+                                  {new Date(
+                                    items[0].publishedDate,
+                                  ).toLocaleTimeString("en-US", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                  })}
+                                </div>
+                                <div class="text-white">
+                                  {items[0].site}
+                                </div>
+                                &#183;
+                                <div class="flex flex-wrap gap-x-2">
+                                  {#each symbols as symbol}
+                                    <a
+                                      href={`/${items[0].type}/${symbol}`}
+                                      class="sm:hover:text-white text-blue-400"
+                                    >
+                                      {symbol}
+                                    </a>
+                                  {/each}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {/each}
+                      </div>
+                    {/each}
+                  {:else}
+                    <div class="text-sm sm:text-[1rem] mt-5">
+                      No news yet. Add some stocks to the price alert list to
+                      see the latest news.
+                    </div>
+                  {/if}
+                {:else if groupedEarnings?.length > 0}
+                  {#each displayList as [date, titleGroups]}
+                    <h3 class="mb-1.5 mt-3 font-semibold text-faded">
+                      {date}
+                    </h3>
+                    <div class="border border-gray-700">
+                      {#each titleGroups as item}
+                        <div class="flex border-gray-600 text-small">
+                          <div
+                            class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                          >
+                            {formatTime(item?.time)}
+                          </div>
+                          <div
+                            class="flex-grow px-3 py-2 lg:py-1 border-t border-gray-700"
+                          >
+                            <div>
+                              <strong>{item?.name}</strong>
+                              (<HoverStockChart symbol={item?.symbol} />)
+                              {item?.isToday
+                                ? "will report today"
+                                : [
+                                      "Monday",
+                                      "Tuesday",
+                                      "Wednesday",
+                                      "Thursday",
+                                    ].includes(
+                                      new Date().toLocaleDateString("en-US", {
+                                        weekday: "long",
+                                      }),
+                                    )
+                                  ? "will report tomorrow"
+                                  : "will report Monday"}
+                              {#if item?.time}
+                                {#if compareTimes(item?.time, "16:00") >= 0}
+                                  after market closes.
+                                {:else if compareTimes(item?.time, "09:30") <= 0}
+                                  before market opens.
+                                {:else}
+                                  during market.
+                                {/if}
+                              {/if}
+                              Analysts estimate {abbreviateNumber(
+                                item?.revenueEst,
+                                true,
+                              )} in revenue ({(
+                                (item?.revenueEst / item?.revenuePrior - 1) *
+                                100
+                              )?.toFixed(2)}% YoY) and ${item?.epsEst} in earnings
+                              per share ({(
+                                (item?.epsEst / item?.epsPrior - 1) *
+                                100
+                              )?.toFixed(2)}% YoY).
+                            </div>
+
+                            <div
+                              class="flex flex-wrap gap-x-2 pt-2 text-sm lg:pt-0.5"
+                            >
+                              <div class="text-white lg:hidden">
+                                {formatTime(item?.time)}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {/each}
+                    </div>
                   {/each}
-                </tbody>
-              </table>
-            </div>
-            <!--End Table-->
+                {:else}
+                  <div class="text-sm sm:text-[1rem] mt-5">
+                    No earnings yet. Add some stocks to the alert list to see
+                    the latest earnings data.
+                  </div>
+                {/if}
+              </div>
+            {/if}
+
+            {#if priceAlertList?.length === 0}
+              <div
+                class="flex flex-col justify-center items-center m-auto mt-14"
+              >
+                <span
+                  class="text-white font-bold text-white text-xl sm:text-3xl"
+                >
+                  No Alerts set
+                </span>
+
+                <span
+                  class="text-white text-sm sm:text-[1rem] m-auto p-4 text-center"
+                >
+                  Create price alerts for your stocks that have the most
+                  potential in your opinion.
+                </span>
+                {#if !data?.user}
+                  <a
+                    class="w-64 flex mt-10 justify-center items-center m-auto btn text-white bg-[#fff] sm:hover:bg-gray-300 transition duration-150 ease-in-out group"
+                    href="/register"
+                  >
+                    Get Started
+                    <span
+                      class="tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><g transform="rotate(90 12 12)"
+                          ><g fill="none"
+                            ><path
+                              d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z"
+                            /><path
+                              fill="white"
+                              d="M13.06 3.283a1.5 1.5 0 0 0-2.12 0L5.281 8.939a1.5 1.5 0 0 0 2.122 2.122L10.5 7.965V19.5a1.5 1.5 0 0 0 3 0V7.965l3.096 3.096a1.5 1.5 0 1 0 2.122-2.122L13.06 3.283Z"
+                            /></g
+                          ></g
+                        ></svg
+                      >
+                    </span>
+                  </a>
+                {/if}
+              </div>
+            {/if}
           {/if}
         </main>
 

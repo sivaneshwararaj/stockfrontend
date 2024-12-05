@@ -13,7 +13,7 @@ export const load = async ({ locals }) => {
     });
 
     let output = await response.json();
-    output = output?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
+    output.data = output?.data?.sort((a, b) => a?.symbol?.localeCompare(b?.symbol));
     return output;
   };
 

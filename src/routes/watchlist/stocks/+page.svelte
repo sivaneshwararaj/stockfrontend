@@ -237,6 +237,7 @@
 
     watchList = output?.data;
     news = output?.news;
+    console.log(news);
     earnings = output?.earnings;
 
     news = news?.map((item) => {
