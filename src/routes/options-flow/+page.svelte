@@ -1019,7 +1019,7 @@ function sendMessage(message) {
         </div>
       {/if}
 
-      <div class="rounded-md border border-gray-700 bg-[#262626] p-2">
+      <div class="rounded-md border border-gray-700 bg-[#1E222D] p-2">
         <div
           class="flex flex-col sm:flex-row items-center pt-3 sm:pt-1 pb-3 sm:border-b sm:border-gray-600"
         >
@@ -1097,14 +1097,14 @@ function sendMessage(message) {
           <div class="sm:ml-auto w-full sm:w-fit pt-5">
             <div class="relative flex flex-col sm:flex-row items-center">
               <div
-                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#313131] rounded-md border border-gray-600"
+                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#2A2E39] rounded-md border border-gray-600"
               >
                 <label class="flex flex-row items-center">
                   <input
                     id="modal-search"
                     type="search"
                     class="text-white sm:ml-2 text-[1rem] placeholder-gray-300 border-transparent focus:border-transparent focus:ring-0 flex items-center justify-center w-full px-0 py-1.5 bg-inherit"
-                    placeholder="Find by Symbol"
+                    placeholder="Search AAPL, SPY,..."
                     bind:value={filterQuery}
                     on:input={debouncedHandleInput}
                     autocomplete="off"
@@ -1354,13 +1354,13 @@ function sendMessage(message) {
                             {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
                               {#each row?.step as newValue}
                                 <DropdownMenu.Item
-                                  class="sm:hover:bg-[#27272A]"
+                                  class="sm:hover:bg-[#2A2E39]"
                                 >
                                   <button
                                     on:click={() => {
                                       handleChangeValue(newValue);
                                     }}
-                                    class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-[#27272A] focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
+                                    class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-[#2A2E39] focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
                                   >
                                     {ruleCondition[row?.rule] !== undefined
                                       ? ruleCondition[row?.rule]
@@ -1372,7 +1372,7 @@ function sendMessage(message) {
                             {:else if ["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
                               {#each row?.step as item}
                                 <DropdownMenu.Item
-                                  class="sm:hover:bg-[#27272A]"
+                                  class="sm:hover:bg-[#2A2E39]"
                                 >
                                   <div
                                     class="flex items-center"
@@ -1415,7 +1415,7 @@ function sendMessage(message) {
           <div class="w-full grid grid-cols-1 lg:grid-cols-4 gap-y-3 gap-x-3">
             <!--Start Flow Sentiment-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1436,7 +1436,7 @@ function sendMessage(message) {
             <!--End Flow Sentiment-->
             <!--Start Put/Call-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1492,7 +1492,7 @@ function sendMessage(message) {
             <!--End Put/Call-->
             <!--Start Call Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1549,7 +1549,7 @@ function sendMessage(message) {
             <!--End Call Flow-->
             <!--Start Put Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#262626] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1622,7 +1622,7 @@ function sendMessage(message) {
                       <!-- Table headers -->
                       <div
                         on:click={() => sortData("time")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Time
                         <svg
@@ -1643,7 +1643,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("ticker")}
-                        class="td cursor-pointer select-none bg-[#161618] font-bold text-slate-300 text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] font-bold text-slate-300 text-xs text-start uppercase"
                       >
                         Symbol
                         <svg
@@ -1665,13 +1665,13 @@ function sendMessage(message) {
                         >
                       </div>
                       <div
-                        class="td select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Save
                       </div>
                       <div
                         on:click={() => sortData("expiry")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Expiry
                         <svg
@@ -1694,7 +1694,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("dte")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         DTE
                         <svg
@@ -1717,7 +1717,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("strike")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Strike
                         <svg
@@ -1740,7 +1740,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("callPut")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         C/P
                         <svg
@@ -1763,7 +1763,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("sentiment")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Sent.
                         <svg
@@ -1786,7 +1786,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("spot")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Spot
                         <svg
@@ -1809,7 +1809,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("price")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Price
                         <svg
@@ -1832,7 +1832,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("premium")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Prem
                         <svg
@@ -1855,7 +1855,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("type")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Type
                         <svg
@@ -1878,7 +1878,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("exec")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Exec
                         <svg
@@ -1901,7 +1901,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("vol")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         Vol
                         <svg
@@ -1924,7 +1924,7 @@ function sendMessage(message) {
                       </div>
                       <div
                         on:click={() => sortData("oi")}
-                        class="td cursor-pointer select-none bg-[#161618] text-slate-300 font-bold text-xs text-start uppercase"
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
                         OI
                         <svg
@@ -1954,7 +1954,7 @@ function sendMessage(message) {
                       let:style
                       {style}
                       class="tr cursor-pointer {index % 2 === 0
-                        ? 'bg-[#27272A]'
+                        ? 'bg-[#2A2E39]'
                         : 'bg-[#09090B]'}"
                     >
                       <!-- Row data -->
@@ -2248,8 +2248,8 @@ function sendMessage(message) {
                     on:click={() => changeRule(row?.rule)}
                     class="sm:hover:bg-[#333333] cursor-pointer"
                   >
-                    <td class="border-b border-[#262626]">{index + 1}</td>
-                    <td class="text-start border-b border-[#262626]">
+                    <td class="border-b border-[#1E222D]">{index + 1}</td>
+                    <td class="text-start border-b border-[#1E222D]">
                       {#if ruleOfList?.find((rule) => rule?.name === row?.rule)}
                         <svg
                           class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block"
@@ -2264,7 +2264,7 @@ function sendMessage(message) {
                         >
                       {/if}
                     </td>
-                    <td class="text-start border-b border-[#262626]"
+                    <td class="text-start border-b border-[#1E222D]"
                       >{row?.label}</td
                     >
                   </tr>
@@ -2318,37 +2318,37 @@ function sendMessage(message) {
     >
       <tbody>
         <!-- row 1 -->
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Premium</td>
           <td class="">{optionPremium}</td>
           <td class="font-semibold">C/P</td>
           <td class="">{optionContract}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Expiry</td>
           <td class="">{optionExpiry}</td>
           <td class="font-semibold">Type</td>
           <td class="">{optionType}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Strike</td>
           <td class="">${optionStrike}</td>
           <td class="font-semibold">Volume</td>
           <td class="">{optionVolume}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Spot</td>
           <td class="">${optionSpot}</td>
           <td class="font-semibold">Open Interest</td>
           <td class="">{optionOpenInterest}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Price</td>
           <td class="">${optionPrice}</td>
           <td class="font-semibold">Sentiment</td>
           <td class="">{optionSentiment}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Execution Estimate</td>
           <td class="">{optionexecution_estimate}</td>
           <td class="font-semibold"></td>
@@ -2389,43 +2389,43 @@ function sendMessage(message) {
 
     <table class="table table-sm table-compact w-full mt-5 mb-10 text-white">
       <tbody>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Premium</td>
           <td class="">{optionPremium}</td>
           <td class="font-semibold">C/P</td>
           <td class="">{optionContract}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Expiry</td>
           <td class="">{optionExpiry}</td>
           <td class="font-semibold">Type</td>
           <td class="">{optionType}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Strike</td>
           <td class="">${optionStrike}</td>
           <td class="font-semibold">Volume</td>
           <td class="">{optionVolume}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Spot</td>
           <td class="">${optionSpot}</td>
           <td class="font-semibold">Open Interest</td>
           <td class="">{optionOpenInterest}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Price</td>
           <td class="">${optionPrice}</td>
           <td class="font-semibold">Sentiment</td>
           <td class="">{optionSentiment}</td>
         </tr>
-        <tr class="odd:bg-[#27272A]">
+        <tr class="odd:bg-[#2A2E39]">
           <td class="font-semibold">Trade Count</td>
           <td class="">{optionTradeCount}</td>
           <td class="font-semibold">Exchange</td>
           <td class="">{optionExchange}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
           <td class="font-semibold">Execution Est.</td>
           <td class="">{optionexecution_estimate}</td>
           <td class="font-semibold"></td>
@@ -2486,7 +2486,7 @@ function sendMessage(message) {
   }
 
   .tr.even {
-    background-color: #27272a;
+    background-color: #2a2e39;
   }
 
   .tr.odd {
