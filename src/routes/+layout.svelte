@@ -620,7 +620,7 @@
                               >Reddit Tracker</a
                             >
                           </Button>
-
+                          <!--
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -632,6 +632,7 @@
                               >Lobbying Tracker</a
                             >
                           </Button>
+                          -->
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -1084,12 +1085,13 @@
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Reddit Tracker</a
                           >
-
+                          <!--
                           <a
                             href="/corporate-lobbying-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Lobbying Tracker</a
                           >
+                            -->
                           <a
                             href="/sentiment-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"

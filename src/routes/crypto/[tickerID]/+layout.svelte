@@ -19,6 +19,8 @@
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
   import CryptoProfileCard from "$lib/components/CryptoProfileCard.svelte";
+  import PriceAlert from "$lib/components/PriceAlert.svelte";
+
   export let data;
 
   //$assetType = 'stock';
@@ -209,18 +211,10 @@
   }
 
   let LoginPopup;
-  let PriceAlert;
 
   onMount(async () => {
     if (!data?.user) {
       LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
-    } else {
-      /*
-      AddPortfolio = (await import('$lib/components/AddPortfolio.svelte')).default;
-      BuyTrade = (await import('$lib/components/BuyTrade.svelte')).default;
-      SellTrade = (await import('$lib/components/SellTrade.svelte')).default;
-      */
-      PriceAlert = (await import("$lib/components/PriceAlert.svelte")).default;
     }
 
     //const startTime = currentDateTime.set({ hour: 15, minute: 30 });
@@ -935,107 +929,102 @@
 {/if}
 -->
 
-{#if PriceAlert}
-  <PriceAlert {data} />
-{/if}
+<PriceAlert {data} ticker={$cryptoTicker} />
 
 <!--Start Type of Trade-->
 
 <input type="checkbox" id="typeOfTrade" class="modal-toggle" />
 
 <dialog
-  id="typeOfTrade"
-  class="modal modal-bottom sm:modal-middle overflow-hidden"
+  id="addWatchListModal"
+  class="modal modal-bottom sm:modal-middle bg-[#000] bg-opacity-[0.5]"
 >
   <label
-    for="typeOfTrade"
-    class="cursor-pointer modal-backdrop bg-[#fff] bg-opacity-[0.08]"
+    id="addWatchListModal"
+    for="addWatchListModal"
+    class="cursor-pointer modal-backdrop"
   ></label>
 
-  <div class="modal-box w-full bg-[#000] border border-slate-600 pb-10">
-    <div class="flex flex-col">
-      <div class="text-white text-md flex flex-col flex-shrink-0">
-        <div class="rounded-full w-10 h-10 relative bg-gray-900 mb-2">
-          <img
-            class="rounded-full w-6 h-6 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            src={`https://financialmodelingprep.com/image-stock/${$cryptoTicker}.png`}
-          />
-        </div>
-        <span class="mb-1">
-          {$displayCompanyName?.length > 30
-            ? $displayCompanyName?.slice(0, 30) + "..."
-            : $displayCompanyName}
-        </span>
-        <div class="flex flex-row items-center mb-10">
-          <span class="mb-1 text-sm font-medium">
-            Current Price: ${$currentPortfolioPrice}
-          </span>
-          <span class="text-blue-400 text-sm font-medium ml-auto">
-            Holding Shares: {holdingShares}
-          </span>
-        </div>
-      </div>
-    </div>
+  <div
+    class="modal-box rounded-md w-full bg-[#1E222D] sm:border sm:border-gray-600"
+  >
+    <label
+      for="addWatchListModal"
+      class="cursor-pointer bg-[#1E222D] absolute right-5 top-2 text-[1.8rem] text-white"
+    >
+      ✕
+    </label>
 
     <div class="text-white">
-      <h3 class="font-bold text-2xl mb-5">Type of Trade</h3>
+      <h3 class="font-semibold text-lg sm:text-xl mb-10">Add to Watchlist</h3>
 
-      <ul class="menu dropdown-content text-white bg-[#000] rounded -ml-6">
-        <li class="mb-3">
+      <div class="flex flex-col items-center w-full max-w-3xl bg-[#1E222D]">
+        {#each userWatchList as item}
           <label
-            for="typeOfTrade"
-            on:click={() => handleTypeOfTrade("buy")}
-            class="cursor-pointer flex flex-row justify-start items-center"
+            on:click|stopPropagation={() => toggleUserWatchlist(item?.id)}
+            class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
           >
-            <div class="rounded-full w-10 h-10 relative bg-gray-800">
-              <svg
-                class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                viewBox="0 0 16 16"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                fill="green"
-                ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g><g id="SVGRepo_iconCarrier">
-                  <rect width="16" height="16" id="icon-bound" fill="none"
-                  ></rect>
-                  <path
-                    d="M0,11h11.2l-2.6,2.6L10,15l6-6H0V11z M4.8,5l2.6-2.6L6,1L0,7h16V5H4.8z"
-                  ></path>
-                </g></svg
-              >
-            </div>
-            <span class="ml-1 text-white text-lg font-medium"
-              >Buy {$cryptoTicker} Shares</span
+            <div
+              class="flex flex-row items-center w-full bg-[#2A2E39] p-3 rounded-md {item?.ticker?.includes(
+                $cryptoTicker,
+              )
+                ? 'border border-gray-400'
+                : ''}"
             >
-          </label>
-        </li>
-        <li class="mb-3">
-          <label
-            for="typeOfTrade"
-            on:click={() => handleTypeOfTrade("sell")}
-            class="cursor-pointer flex flex-row justify-start items-center"
-          >
-            <div class="rounded-full w-10 h-10 relative bg-gray-800">
-              <svg
-                class="h-5 w-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                ><path
-                  fill="red"
-                  d="M14.25 21.4q-.575.575-1.425.575T11.4 21.4l-8.8-8.8q-.275-.275-.438-.65T2 11.15V4q0-.825.588-1.413T4 2h7.15q.425 0 .8.163t.65.437l8.8 8.825q.575.575.575 1.413T21.4 14.25l-7.15 7.15ZM6.5 8q.625 0 1.063-.438T8 6.5q0-.625-.438-1.063T6.5 5q-.625 0-1.063.438T5 6.5q0 .625.438 1.063T6.5 8Z"
-                /></svg
+              <div class="flex flex-col items-center w-full">
+                <span class="ml-1 text-white font-medium mr-auto">
+                  {item?.title}
+                </span>
+                <span class="ml-1 text-white text-sm font-medium mr-auto">
+                  {item?.ticker?.length}
+                  {item?.ticker?.length !== 1 ? "Companies" : "Company"}
+                </span>
+              </div>
+
+              <div
+                class="rounded-full w-8 h-8 relative border border-[#737373]"
               >
+                {#if item?.ticker?.includes($cryptoTicker)}
+                  <svg
+                    class="w-full h-full rounded-full"
+                    viewBox="0 0 48 48"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    fill="#09090B000"
+                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g><g id="SVGRepo_iconCarrier">
+                      <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                      <title>ic_fluent_checkmark_circle_48_filled</title>
+                      <desc>Created with Sketch.</desc>
+                      <g
+                        stroke="none"
+                        stroke-width="1"
+                        fill="none"
+                        fill-rule="evenodd"
+                      >
+                        <g
+                          id="ic_fluent_checkmark_circle_48_filled"
+                          fill="#fff"
+                          fill-rule="nonzero"
+                        >
+                          <path
+                            d="M24,4 C35.045695,4 44,12.954305 44,24 C44,35.045695 35.045695,44 24,44 C12.954305,44 4,35.045695 4,24 C4,12.954305 12.954305,4 24,4 Z M32.6338835,17.6161165 C32.1782718,17.1605048 31.4584514,17.1301307 30.9676119,17.5249942 L30.8661165,17.6161165 L20.75,27.732233 L17.1338835,24.1161165 C16.6457281,23.6279612 15.8542719,23.6279612 15.3661165,24.1161165 C14.9105048,24.5717282 14.8801307,25.2915486 15.2749942,25.7823881 L15.3661165,25.8838835 L19.8661165,30.3838835 C20.3217282,30.8394952 21.0415486,30.8698693 21.5323881,30.4750058 L21.6338835,30.3838835 L32.6338835,19.3838835 C33.1220388,18.8957281 33.1220388,18.1042719 32.6338835,17.6161165 Z"
+                          >
+                          </path>
+                        </g>
+                      </g>
+                    </g></svg
+                  >
+                {/if}
+              </div>
             </div>
-            <span class="ml-1 text-white text-lg font-medium">
-              Sell {$cryptoTicker} Shares
-            </span>
           </label>
-        </li>
-      </ul>
+        {/each}
+      </div>
     </div>
   </div>
 </dialog>

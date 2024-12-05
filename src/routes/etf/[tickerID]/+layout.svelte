@@ -21,6 +21,7 @@
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
   import Markethour from "$lib/components/Markethour.svelte";
+  import PriceAlert from "$lib/components/PriceAlert.svelte";
 
   export let data;
   $: $realtimePrice = data?.getStockQuote?.price?.toFixed(2);
@@ -194,16 +195,10 @@
   }
 
   let LoginPopup;
-  let PriceAlert;
 
   onMount(async () => {
     if (!data?.user) {
       LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
-    } else {
-      //AddPortfolio = (await import('$lib/components/AddPortfolio.svelte')).default;
-      //BuyTrade = (await import('$lib/components/BuyTrade.svelte')).default;
-      //SellTrade = (await import('$lib/components/SellTrade.svelte')).default;
-      PriceAlert = (await import("$lib/components/PriceAlert.svelte")).default;
     }
 
     if ($isOpen) {
@@ -747,10 +742,7 @@
 <!--End Login Modal-->
 
 <!--Start SellTrade Modal-->
-{#if PriceAlert}
-  <PriceAlert {data} />
-{/if}
-
+<PriceAlert {data} ticker={$etfTicker} />
 <!--Start Add Watchlist Modal-->
 <input type="checkbox" id="addWatchListModal" class="modal-toggle" />
 
@@ -764,10 +756,12 @@
     class="cursor-pointer modal-backdrop"
   ></label>
 
-  <div class="modal-box w-full bg-[#191919] sm:border sm:border-gray-800">
+  <div
+    class="modal-box rounded-md w-full bg-[#1E222D] sm:border sm:border-gray-600"
+  >
     <label
       for="addWatchListModal"
-      class="cursor-pointer bg-[#191919] absolute right-5 top-2 text-[1.8rem] text-white"
+      class="cursor-pointer bg-[#1E222D] absolute right-5 top-2 text-[1.8rem] text-white"
     >
       ✕
     </label>
@@ -775,26 +769,24 @@
     <div class="text-white">
       <h3 class="font-semibold text-lg sm:text-xl mb-10">Add to Watchlist</h3>
 
-      <div class="flex flex-col items-center w-full max-w-3xl bg-[#191919]">
+      <div class="flex flex-col items-center w-full max-w-3xl bg-[#1E222D]">
         {#each userWatchList as item}
           <label
             on:click|stopPropagation={() => toggleUserWatchlist(item?.id)}
             class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
           >
             <div
-              class="flex flex-row items-center w-full bg-[#313131] p-3 rounded-md {item?.ticker?.includes(
+              class="flex flex-row items-center w-full bg-[#2A2E39] p-3 rounded-md {item?.ticker?.includes(
                 $etfTicker,
               )
-                ? 'ring-2 ring-[#04E000]'
+                ? 'border border-gray-400'
                 : ''}"
             >
               <div class="flex flex-col items-center w-full">
                 <span class="ml-1 text-white font-medium mr-auto">
                   {item?.title}
                 </span>
-                <span
-                  class="ml-1 text-white text-opacity-40 text-sm font-medium mr-auto"
-                >
+                <span class="ml-1 text-white text-sm font-medium mr-auto">
                   {item?.ticker?.length}
                   {item?.ticker?.length !== 1 ? "Companies" : "Company"}
                 </span>
@@ -827,7 +819,7 @@
                       >
                         <g
                           id="ic_fluent_checkmark_circle_48_filled"
-                          fill="#04E000"
+                          fill="#fff"
                           fill-rule="nonzero"
                         >
                           <path
