@@ -55,7 +55,7 @@
 
     {#if isLoaded}
       {#if wiim?.length !== 0}
-        <div class="mt-2">
+        <div class="mt-5">
           {#each showFullHistory ? wiim : wiim?.slice(0, 2) as item, index}
             <div
               class="w-full {index === 1 && !showFullHistory && wiim?.length > 2
@@ -66,7 +66,7 @@
                 <div class="">
                   <div class="flex justify-center">
                     <!--Start Item-->
-                    <div class="flex flex-row items-center w-full mb-6">
+                    <div class="flex flex-row items-center w-full mb-8">
                       <!-- Vertical Line -->
                       <div
                         class="w-1 h-full mr-4 rounded-lg {item?.changesPercentage ===
@@ -78,11 +78,9 @@
                       ></div>
                       <!-- Item Content -->
 
-                      <div
-                        class="w-full border-b border-gray-600 h-full pt-2 pb-4"
-                      >
+                      <div class="w-full h-full">
                         <div class="flex flex-col items-start">
-                          <div class="flex flex-row items-start w-full pt-2">
+                          <div class="flex flex-row items-start w-full">
                             <span class="text-white text-sm"
                               >{formatDate(item?.date)} &#183;
                               <a
