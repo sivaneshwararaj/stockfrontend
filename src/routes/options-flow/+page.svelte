@@ -2502,7 +2502,6 @@ function sendMessage(message) {
     text-overflow: ellipsis;
     min-width: 0px;
     white-space: nowrap;
-    border-bottom: 1px solid #09090b;
   }
 
   .heartbeat {
