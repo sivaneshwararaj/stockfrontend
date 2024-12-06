@@ -2,6 +2,7 @@
   import { stockTicker, etfTicker } from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
   import { get } from "svelte/store";
+  import { formatDate } from "$lib/utils";
 
   export let data;
 
@@ -11,7 +12,7 @@
 
   function latestInfoDate(inputDate) {
     // Convert the input date string to milliseconds since epoch
-    const inputDateMs = Date.parse(inputDate);
+    const inputDateMs = new Date(inputDate);
 
     // Get today's date in milliseconds since epoch
     const todayMs = Date.now();
@@ -54,7 +55,7 @@
 
     {#if isLoaded}
       {#if wiim?.length !== 0}
-        <div class="mt-7">
+        <div class="mt-2">
           {#each showFullHistory ? wiim : wiim?.slice(0, 2) as item, index}
             <div
               class="w-full {index === 1 && !showFullHistory && wiim?.length > 2
@@ -64,17 +65,30 @@
               <div class="relative">
                 <div class="">
                   <div class="flex justify-center">
-                    <!--<div class="{item?.changesPercentage >= 0 ? 'bg-[#00FC50]' : 'bg-[#FF2F1F]'} w-1.5 mb-5 rounded-l-xl" />-->
-
                     <!--Start Item-->
                     <div class="flex flex-row items-center w-full mb-6">
+                      <!-- Vertical Line -->
+                      <div
+                        class="w-1 h-full mr-4 rounded-lg"
+                        class:!bg-[#00FC50]={item?.changesPercentage > 0}
+                        class:!bg-[#FF2F1F]={item?.changesPercentage < 0}
+                        class:!bg-white={!item?.changesPercentage &&
+                          item?.changesPercentage !== 0}
+                      ></div>
+                      <!-- Item Content -->
                       <div
                         class="w-full border-b border-gray-600 h-full pt-2 pb-4"
                       >
                         <div class="flex flex-col items-start">
                           <div class="flex flex-row items-start w-full pt-2">
-                            <span class="text-white text-sm italic"
-                              >Updated {item?.date}</span
+                            <span class="text-white text-sm"
+                              >{formatDate(item?.date)} &#183;
+                              <a
+                                href={item?.url}
+                                class="inline-block text-sm text-white sm:hover:underline sm:hover:underline-offset-4"
+                              >
+                                Source
+                              </a></span
                             >
                             {#if latestInfoDate(item?.date)}
                               <label
