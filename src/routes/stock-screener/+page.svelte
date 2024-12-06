@@ -222,6 +222,7 @@
       step: ["20%", "10%", "5%", "1%", "-1%", "-5%", "-10%", "-20%"],
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Performance",
     },
     change1M: {
       label: "Price Change 1M",
@@ -240,6 +241,7 @@
       ],
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Performance",
     },
     change3M: {
       label: "Price Change 3M",
@@ -258,6 +260,7 @@
       ],
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Performance",
     },
     change6M: {
       label: "Price Change 6M",
@@ -276,6 +279,7 @@
       ],
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Performance",
     },
     change1Y: {
       label: "Price Change 1Y",
@@ -294,6 +298,7 @@
       ],
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Performance",
     },
     change3Y: {
       label: "Price Change 3Y",
@@ -312,6 +317,7 @@
       ],
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Performance",
     },
     marketCap: {
       label: "Market Cap",
@@ -744,6 +750,7 @@
 
       defaultCondition: "over",
       defaultValue: "-5%",
+      category: "Performance",
     },
     //trendAnalysis: { label: 'AI Trend Analysis', step: ['80%','70%','60%','50%'], category: 'ai', defaultCondition: 'over', defaultValue: '50%' },
     //fundamentalAnalysis: { label: 'AI Fundamental Analysis', step: ['80%','70%','60%','50%'], category: 'ai', defaultCondition: 'over', defaultValue: '50%' },
@@ -948,6 +955,7 @@
 
       defaultCondition: "over",
       defaultValue: "1",
+      category: "Valuation & Ratios",
     },
     netIncomePerShare: {
       label: "Net Income / Share",
@@ -3186,7 +3194,6 @@ const handleKeyDown = (event) => {
 
 <!--Start Choose Rule Modal-->
 <input type="checkbox" id="ruleModal" class="modal-toggle" />
-
 <dialog id="ruleModal" class="modal p-2 sm:p-0">
   <label
     id="ruleModal"
@@ -3196,96 +3203,103 @@ const handleKeyDown = (event) => {
   ></label>
 
   <div
-    class="modal-box relative z-50 mx-2 min-h-[80vh] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-6xl"
+    class="modal-box relative z-20 mx-2 min-h-[30vh] h-[800px] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-6xl overflow-y-auto"
   >
-    <div class="flex flex-col w-full">
-      <div class="flex flex-row items-center justify-between mb-2">
-        <h2 class="text-white text-[1rem] sm:text-xl font-semibold">
-          Select screener filters ({allRows?.length} total)
-        </h2>
-        <label
-          for="ruleModal"
-          class="cursor-pointer absolute right-3 top-3 text-[1rem] sm:text-[1.8rem] text-white"
-        >
-          <svg
-            class="w-6 h-6 sm:w-8 sm:h-8"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            ><path
-              fill="white"
-              d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
-            /></svg
-          >
-        </label>
-      </div>
+    <div class="relative flex flex-col w-full">
+      <!-- Sticky Header -->
 
-      <!--Start Search bar-->
-      <form
-        class="w-full h-8"
-        on:keydown={(e) => (e?.key === "Enter" ? e.preventDefault() : "")}
+      <div
+        class="fixed w-full h-fit sticky -top-6 z-40 bg-[#1D232A] shadow-sm opacity-100 pb-6 pt-5 border-gray-600 border-b"
       >
-        <label for="search" class="text-sm font-medium text-gray-200 sr-only"
-          >Search</label
-        >
-        <div class="relative w-full max-w-sm">
-          <div
-            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+        <div class="flex flex-row items-center justify-between mb-2">
+          <h2 class="text-white text-[1rem] sm:text-xl font-semibold">
+            Select screener filters ({allRows?.length} total)
+          </h2>
+          <label
+            for="ruleModal"
+            class="inline-block cursor-pointer absolute right-0 top-3 text-[1.3rem] sm:text-[1.8rem] text-white"
           >
             <svg
-              class="w-4 h-4 text-gray-200"
-              aria-hidden="true"
+              class="w-6 h-6 sm:w-8 sm:h-8"
               xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
+              viewBox="0 0 24 24"
+              ><path
+                fill="white"
+                d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+              /></svg
             >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
+          </label>
+        </div>
 
-          <div
-            class="absolute inset-y-0 right-0 flex items-center pr-2 {searchTerm?.length >
-            0
-              ? ''
-              : 'hidden'}"
+        <!-- Start Search bar -->
+        <form
+          class="w-full h-8"
+          on:keydown={(e) => (e?.key === "Enter" ? e.preventDefault() : "")}
+        >
+          <label for="search" class="text-sm font-medium text-gray-200 sr-only"
+            >Search</label
           >
-            <button
-              on:click={() => (searchTerm = "")}
-              class="cursor-pointer text-gray-200 sm:hover:text-white"
-              tabindex="0"
-              ><svg
-                class="w-5 h-5"
+          <div class="relative w-full max-w-sm">
+            <div
+              class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-gray-200"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                style="max-width:40px"
-                ><path
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path></svg
-              ></button
-            >
-          </div>
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            </div>
 
-          <input
-            autocomplete="off"
-            type="search"
-            id="search"
-            class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-600 rounded-md bg-secondary border border-blue-500"
-            placeholder="Search"
-            bind:value={searchTerm}
-          />
-        </div>
-      </form>
-      <!-- End Search bar-->
-      <div class="border-t border-gray-600 mt-6 mb-3" />
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-2 {searchTerm?.length >
+              0
+                ? ''
+                : 'hidden'}"
+            >
+              <button
+                on:click={() => (searchTerm = "")}
+                class="cursor-pointer text-gray-200 sm:hover:text-white"
+                tabindex="0"
+                ><svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width:40px"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path></svg
+                ></button
+              >
+            </div>
+
+            <input
+              autocomplete="off"
+              type="search"
+              id="search"
+              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-600 rounded-md bg-secondary border border-blue-500"
+              placeholder="Search"
+              bind:value={searchTerm}
+            />
+          </div>
+        </form>
+        <!-- End Search bar -->
+      </div>
+
+      <!-- Content -->
       <div class="text-white">
         {#each searchTerm?.length !== 0 ? Object?.entries(filteredGroupedRules) : Object?.entries(groupedRules) as [category, rules]}
           <h4 class="mb-1 font-semibold text-lg mt-5">{category}</h4>
@@ -3310,10 +3324,16 @@ const handleKeyDown = (event) => {
             {/each}
           </div>
         {/each}
+        {#if searchTerm?.length > 0 && Object?.entries(filteredGroupedRules)?.length === 0}
+          <div class="text-white mt-5 font-semibold text-[1rem] sm:text-lg">
+            Nothing found
+          </div>
+        {/if}
       </div>
     </div>
   </div>
 </dialog>
+
 <!--End Choose Rule Modal-->
 
 <!--Start Add Strategy Modal-->
