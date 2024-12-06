@@ -43,7 +43,7 @@
   let strategyList = data?.getAllStrategies;
   let selectedStrategy = strategyList?.at(0)?.id ?? "";
   let ruleOfList = strategyList?.at(0)?.rules ?? [];
-
+  let groupedRules = {};
   let displayRules = [];
   let selectedPopularStrategy = "";
   let displayTableTab = "general";
@@ -69,6 +69,7 @@
 
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Price & Volume",
     },
     volume: {
       label: "Volume",
@@ -76,6 +77,7 @@
 
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Price & Volume",
     },
     rsi: {
       label: "Relative Strength Index",
@@ -1259,13 +1261,6 @@
 
   let filteredRows;
   let searchTerm = "";
-  /*
-      let taRows = allRows?.filter(row => row.category === 'ta');
-      let fundRows = allRows?.filter(row => row.category === 'fund');
-    
-      taRows?.sort((a, b) => a.label.localeCompare(b.label));
-      fundRows?.sort((a, b) => a.label.localeCompare(b.label));
-      */
 
   let ruleName = "";
 
@@ -1687,6 +1682,15 @@ const handleKeyDown = (event) => {
         isLoaded = true;
       }
     });
+
+    groupedRules = allRows.reduce((acc, row) => {
+      const category = row.category || "Others"; // Fallback to "Others" if no category is defined
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(row);
+      return acc;
+    }, {});
   });
 
   onDestroy(() => {
@@ -3130,52 +3134,52 @@ const handleKeyDown = (event) => {
 <!--Start Choose Rule Modal-->
 <input type="checkbox" id="ruleModal" class="modal-toggle" />
 
-<dialog id="ruleModal" class="modal modal-bottom sm:modal-middle">
+<dialog id="ruleModal" class="modal p-2 sm:p-0">
   <label
     id="ruleModal"
     for="ruleModal"
     on:click={() => (searchTerm = "")}
-    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"
+    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.8]"
   ></label>
 
   <div
-    class="modal-box w-full bg-[#141417] border border-gray-800 h-[800px] overflow-hidden"
+    class="modal-box relative z-50 mx-2 max-h-[80vh] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-3xl"
   >
-    <div class="flex flex-col w-full mt-10 sm:mt-0">
-      <div class="text-white text-xl sm:text-3xl font-semibold mb-5">
-        Add Filters
-      </div>
-
-      <label
-        for="ruleModal"
-        class="cursor-pointer absolute right-5 top-5 bg-[#141417] text-[1.8rem] text-white"
-      >
-        <svg
-          class="w-8 h-8"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          ><path
-            fill="white"
-            d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
-          /></svg
+    <div class="flex flex-col w-full">
+      <div class="flex flex-row items-center justify-between mb-2">
+        <h2 class="text-white text-[1rem] sm:text-xl font-semibold">
+          Select screener filters ({allRows?.length} total)
+        </h2>
+        <label
+          for="ruleModal"
+          class="cursor-pointer absolute right-3 top-3 text-[1rem] sm:text-[1.8rem] text-white"
         >
-      </label>
+          <svg
+            class="w-6 h-6 sm:w-8 sm:h-8"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            ><path
+              fill="white"
+              d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+            /></svg
+          >
+        </label>
+      </div>
 
       <!--Start Search bar-->
       <form
-        class="w-11/12 h-8 mb-8"
+        class="w-full h-8"
         on:keydown={(e) => (e?.key === "Enter" ? e.preventDefault() : "")}
       >
-        <label
-          for="search"
-          class="mb-2 text-sm font-medium text-gray-200 sr-only">Search</label
+        <label for="search" class="text-sm font-medium text-gray-200 sr-only"
+          >Search</label
         >
-        <div class="relative">
+        <div class="relative w-full max-w-sm">
           <div
             class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
           >
             <svg
-              class="w-4 h-4 text-gray-200 dark:text-gray-400"
+              class="w-4 h-4 text-gray-200"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -3194,72 +3198,38 @@ const handleKeyDown = (event) => {
             autocomplete="off"
             type="search"
             id="search"
-            class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-300 rounded-md bg-[#404040] border border-blue-500"
-            placeholder="Search {allRows?.length} filters..."
+            class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-600 rounded-md bg-secondary border border-blue-500"
+            placeholder="Search"
             bind:value={searchTerm}
           />
         </div>
       </form>
       <!-- End Search bar-->
-
-      <div
-        class="text-white text-sm bg-[#141417] overflow-y-scroll scroller pt-3 rounded-md max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]"
-      >
-        <div class="text-white relative">
-          {#if searchTerm?.length !== 0 && filteredRows?.length === 0}
-            <span
-              class="text-lg text-white font-medium flex justify-center items-center m-auto"
-            >
-              Nothing Found
-            </span>
-          {:else}
-            <table class="table table-sm table-compact">
-              <!-- head -->
-              <tbody>
-                {#each searchTerm?.length !== 0 ? filteredRows : allRows as row, index}
-                  <tr
-                    on:click={() => changeRule(row?.rule)}
-                    class="sm:hover:bg-[#333333] cursor-pointer"
+      <div class="border-t border-gray-600 mt-6 mb-3" />
+      <div class="text-white">
+        {#each Object.entries(groupedRules) as [category, rules]}
+          <h4 class="mb-0.5 font-semibold text-lg">{category}</h4>
+          <div class="flex flex-wrap">
+            {#each rules as row}
+              <div
+                class="flex w-full items-center space-x-1.5 py-1.5 md:w-1/2 lg:w-1/3 lg:py-1"
+              >
+                <input
+                  on:click={() => changeRule(row?.rule)}
+                  id={row?.rule}
+                  type="checkbox"
+                  checked={ruleOfList?.find((rule) => rule?.name === row?.rule)}
+                  class="h-[18px] w-[18px] rounded-sm ring-offset-0 lg:h-4 lg:w-4"
+                />
+                <div class="-mt-0.5">
+                  <label for={row?.rule} class="cursor-pointer text-[1rem]"
+                    >{row?.label}</label
                   >
-                    <td class="border-b border-[#262626]">{index + 1}</td>
-                    <td class="text-start border-b border-[#262626]">
-                      {#if ruleOfList.find((rule) => rule?.name === row?.rule)}
-                        <svg
-                          class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                          ><path
-                            fill-rule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"
-                          ></path></svg
-                        >
-                      {/if}
-                    </td>
-                    <td class="text-start border-b border-[#262626]">
-                      {row?.label}
-                      {#if row?.rule === "score"}
-                        <svg
-                          class="{data?.user?.tier === 'Pro'
-                            ? 'hidden'
-                            : ''} ml-1 -mt-0.5 w-3.5 h-3.5 inline-block"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            fill="#A3A3A3"
-                            d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                          />
-                        </svg>
-                      {/if}
-                    </td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          {/if}
-        </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+        {/each}
       </div>
     </div>
   </div>
