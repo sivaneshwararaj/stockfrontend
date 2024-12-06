@@ -88,8 +88,8 @@ export const computeGrowthSingleList = (data, actualList) => {
 
 export const groupScreenerRules = (allRows) => {
   const categoryOrder = [
-    "Most Popular", "Price & Volume", "Valuation & Ratios", "Valuation & Price Targets", 
-    "Technical Analysis", "Forecasts, Analysts & Price Targets", "Dividends", "Revenue / Sales", "Others"
+    "Most Popular", "Company Info","Price & Volume", "Valuation & Ratios", "Valuation & Price Targets", "Margins", 
+    "Technical Analysis","Forecasts, Analysts & Price Targets", "Dividends", "Revenue / Sales", "Net Income", "Other Profits","Cash Flow", "Others"
   ];
 
   // Group rows by category

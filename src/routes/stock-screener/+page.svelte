@@ -371,6 +371,7 @@
 
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Net Income",
     },
     grossProfitGrowthYears: {
       label: "Gross Profit Growth Years",
@@ -378,6 +379,7 @@
 
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Other Profits",
     },
     growthRevenue: {
       label: "Revenue Growth",
@@ -421,6 +423,7 @@
 
       defaultCondition: "over",
       defaultValue: "10M",
+      category: "Net Income",
     },
     growthNetIncome: {
       label: "Net Income Growth",
@@ -428,6 +431,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Net Income",
     },
     grossProfit: {
       label: "Gross Profit",
@@ -435,6 +439,7 @@
 
       defaultCondition: "over",
       defaultValue: "10M",
+      category: "Other Profits",
     },
     growthGrossProfit: {
       label: "Gross Profit Growth",
@@ -442,6 +447,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Other Profits",
     },
     researchAndDevelopmentExpenses: {
       label: "Research & Development",
@@ -463,6 +469,7 @@
 
       defaultCondition: "over",
       defaultValue: "0%",
+      category: "Dividends",
     },
     dividendYield: {
       label: "Dividend Yield",
@@ -478,6 +485,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Dividends",
     },
     dividendGrowth: {
       label: "Dividend Growth",
@@ -485,6 +493,7 @@
 
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Dividends",
     },
     eps: {
       label: "EPS",
@@ -548,6 +557,7 @@
 
       defaultCondition: "over",
       defaultValue: "10M",
+      category: "Other Profits",
     },
     growthOperatingIncome: {
       label: "Operating Income Growth",
@@ -555,6 +565,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Other Profits",
     },
     growthFreeCashFlow: {
       label: "Free Cash Flow Growth",
@@ -562,6 +573,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Cash Flow",
     },
     growthOperatingCashFlow: {
       label: "Operating Cash Flow Growth",
@@ -569,6 +581,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Cash Flow",
     },
     growthStockBasedCompensation: {
       label: "Stock-Based Compensation Growth",
@@ -676,6 +689,7 @@
 
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     forwardPS: {
       label: "Forward PS",
@@ -683,6 +697,7 @@
 
       defaultCondition: "over",
       defaultValue: 5,
+      category: "Valuation & Ratios",
     },
 
     priceToBookRatio: {
@@ -691,6 +706,7 @@
 
       defaultCondition: "over",
       defaultValue: 1,
+      category: "Valuation & Ratios",
     },
     priceToSalesRatio: {
       label: "PS Ratio",
@@ -698,6 +714,7 @@
 
       defaultCondition: "over",
       defaultValue: 1,
+      category: "Valuation & Ratios",
     },
     beta: {
       label: "Beta",
@@ -792,36 +809,42 @@
 
       defaultCondition: "over",
       defaultValue: "10M",
+      category: "Valuation & Ratios",
     },
     evSales: {
       label: "EV / Sales",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     evEarnings: {
       label: "EV / Earnings",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     evEBITDA: {
       label: "EV / EBITDA",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     evEBIT: {
       label: "EV / EBIT",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     evFCF: {
       label: "EV / FCF",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     freeCashFlowPerShare: {
       label: "FCF / Share",
@@ -829,6 +852,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Cash Flow",
     },
     cashPerShare: {
       label: "Cash / Share",
@@ -843,6 +867,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Cash Flow",
     },
     interestCoverage: {
       label: "Interest Coverage",
@@ -900,6 +925,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Cash Flow",
     },
     operatingCashFlow: {
       label: "Operating Cash Flow",
@@ -914,6 +940,7 @@
 
       defaultCondition: "over",
       defaultValue: "1",
+      category: "Cash Flow",
     },
     revenuePerShare: {
       label: "Revenue / Share",
@@ -928,6 +955,7 @@
 
       defaultCondition: "over",
       defaultValue: "1",
+      category: "Valuation & Ratios",
     },
     shareholdersEquityPerShare: {
       label: "Shareholders Equity / Share",
@@ -968,6 +996,7 @@
 
       defaultCondition: "over",
       defaultValue: "0%",
+      category: "Margins",
     },
     totalDebt: {
       label: "Total Debt",
@@ -1046,6 +1075,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Margins",
     },
     netProfitMargin: {
       label: "Profit Margin",
@@ -1053,6 +1083,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Margins",
     },
     pretaxProfitMargin: {
       label: "Pretax Margin",
@@ -1060,6 +1091,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Margins",
     },
     ebitdaMargin: {
       label: "EBITDA Margin",
@@ -1067,6 +1099,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Margins",
     },
     ebitMargin: {
       label: "EBIT Margin",
@@ -1074,6 +1107,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Margins",
     },
     operatingMargin: {
       label: "Operating Margin",
@@ -1081,6 +1115,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Margins",
     },
     longTermDebtToCapitalization: {
       label: "Long Term Debt / Market Cap",
@@ -1123,6 +1158,7 @@
 
       defaultCondition: "over",
       defaultValue: "0%",
+      category: "Valuation & Ratios",
     },
     effectiveTaxRate: {
       label: "Effective Tax Rate",
@@ -1151,6 +1187,7 @@
 
       defaultCondition: "over",
       defaultValue: "100K",
+      category: "Company Info",
     },
     revenuePerEmployee: {
       label: "Revenue Per Employee",
@@ -1158,13 +1195,16 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Company Info",
     },
+
     profitPerEmployee: {
       label: "Profit Per Employee",
       step: ["5M", "3M", "2M", "1M", "500K", "100K", 0],
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Company Info",
     },
     totalLiabilities: {
       label: "Total Liabilities",
@@ -1241,6 +1281,7 @@
 
       defaultCondition: "",
       defaultValue: "any",
+      category: "Company Info",
     },
     industry: {
       label: "Industry",
@@ -1248,6 +1289,7 @@
 
       defaultCondition: "",
       defaultValue: "any",
+      category: "Company Info",
     },
     country: {
       label: "Country",
@@ -1255,6 +1297,7 @@
 
       defaultCondition: "",
       defaultValue: "any",
+      category: "Company Info",
     },
   };
 
