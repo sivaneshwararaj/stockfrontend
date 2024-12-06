@@ -115,11 +115,11 @@
           <img
             style="clip-path: circle(50%);"
             class="w-4 h-4 inline-block -mt-1 mr-1"
-            src={`https://financialmodelingprep.com/image-stock/${ticker}.png`}
+            src={`https://financialmodelingprep.com/image-stock/${ticker?.toUpperCase()}.png`}
             loading="lazy"
           />
 
-          {ticker}, Regular trading hours
+          {ticker?.toUpperCase()}, Regular trading hours
         </label>
       </div>
 
