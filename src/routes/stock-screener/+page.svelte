@@ -370,6 +370,7 @@
 
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Valuation & Ratios",
     },
     netIncomeGrowthYears: {
       label: "Net Income Growth Years",
@@ -507,6 +508,7 @@
 
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     growthEPS: {
       label: "EPS Growth",
@@ -514,6 +516,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Valuation & Ratios",
     },
     interestIncome: {
       label: "Interest Income",
@@ -602,6 +605,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Debt",
     },
     growthTotalDebt: {
       label: "Total Debt Growth",
@@ -609,6 +613,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Debt",
     },
     growthTotalStockholdersEquity: {
       label: "Shareholders Equity Growth",
@@ -616,6 +621,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Shares Statistics",
     },
     researchDevelopmentRevenueRatio: {
       label: "R&D / Revenue",
@@ -623,6 +629,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Revenue / Sales",
     },
 
     cagr3YearRevenue: {
@@ -647,6 +654,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Valuation & Ratios",
     },
     cagr5YearEPS: {
       label: "EPS CAGR 5Y",
@@ -654,6 +662,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Valuation & Ratios",
     },
     returnOnInvestedCapital: {
       label: "Return On Capital",
@@ -676,18 +685,21 @@
 
       defaultCondition: "over",
       defaultValue: "10%",
+      category: "Shares Statistics",
     },
     pe: {
       label: "Price / Earnings (ttm)",
       step: [50, 40, 30, 20, 10, 5, 1],
       defaultCondition: "over",
       defaultValue: 1,
+      category: "Valuation & Ratios",
     },
     peg: {
       label: "PEG Ratio",
       step: [100, 10, 5, 3, 1, 0.5, 0],
       defaultCondition: "over",
       defaultValue: 0,
+      category: "Valuation & Ratios",
     },
     forwardPE: {
       label: "Forward PE",
@@ -760,6 +772,7 @@
 
       defaultCondition: "over",
       defaultValue: 1,
+      category: "Valuation & Ratios",
     },
     quickRatio: {
       label: "Quick Ratio",
@@ -774,6 +787,7 @@
 
       defaultCondition: "over",
       defaultValue: 1,
+      category: "Debt",
     },
     debtRatio: {
       label: "Debt Ratio",
@@ -781,6 +795,7 @@
 
       defaultCondition: "over",
       defaultValue: -0.5,
+      category: "Debt",
     },
     inventoryTurnover: {
       label: "Inventory Turnover",
@@ -867,6 +882,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Valuation & Ratios",
     },
     priceToFreeCashFlowsRatio: {
       label: "Price / FCF",
@@ -889,6 +905,7 @@
 
       defaultCondition: "over",
       defaultValue: "500K",
+      category: "Short Selling Statistics",
     },
     shortRatio: {
       label: "Short Ratio",
@@ -896,6 +913,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Short Selling Statistics",
     },
     shortFloatPercent: {
       label: "Short % Float",
@@ -903,6 +921,7 @@
 
       defaultCondition: "over",
       defaultValue: "0%",
+      category: "Short Selling Statistics",
     },
     shortOutStandingPercent: {
       label: "Short % Shares",
@@ -910,6 +929,7 @@
 
       defaultCondition: "over",
       defaultValue: "0%",
+      category: "Short Selling Statistics",
     },
     failToDeliver: {
       label: "Fail to Deliver (FTD)",
@@ -917,6 +937,7 @@
 
       defaultCondition: "over",
       defaultValue: "1K",
+      category: "Short Selling Statistics",
     },
     relativeFTD: {
       label: "FTD / Avg. Volume",
@@ -924,6 +945,7 @@
 
       defaultCondition: "over",
       defaultValue: "50%",
+      category: "Short Selling Statistics",
     },
 
     freeCashFlow: {
@@ -940,6 +962,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Cash Flow",
     },
     operatingCashFlowPerShare: {
       label: "Operating Cash Flow / Share",
@@ -971,6 +994,7 @@
 
       defaultCondition: "over",
       defaultValue: "1",
+      category: "Valuation & Ratios",
     },
     interestDebtPerShare: {
       label: "Interest Debt / Share",
@@ -978,6 +1002,7 @@
 
       defaultCondition: "over",
       defaultValue: "1",
+      category: "Debt",
     },
     capexPerShare: {
       label: "CapEx / Share",
@@ -985,6 +1010,7 @@
 
       defaultCondition: "over",
       defaultValue: "1",
+      category: "Valuation & Ratios",
     },
 
     freeCashFlowMargin: {
@@ -1012,13 +1038,14 @@
 
       defaultCondition: "over",
       defaultValue: "1M",
+      category: "Debt",
     },
     cashFlowToDebtRatio: {
       label: "Cash Flow / Debt",
       step: [50, 40, 30, 20, 10, 5, 1],
-
       defaultCondition: "over",
       defaultValue: "1",
+      category: "Debt",
     },
     operatingCashFlowSalesRatio: {
       label: "Operating Cash Flow / Sales",
@@ -1026,13 +1053,14 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Valuation & Ratios",
     },
     priceCashFlowRatio: {
       label: "Price / Cash Flow",
       step: [20, 15, 10, 5, 3, 1, 0],
-
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Valuation & Ratios",
     },
     priceEarningsRatio: {
       label: "Price / Earnings",
@@ -1048,6 +1076,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Valuation & Ratios",
     },
     stockBasedCompensation: {
       label: "Stock-Based Compensation",
@@ -1062,6 +1091,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: "Shares Statistics",
     },
     sharesQoQ: {
       label: "Shares Change (QoQ)",
@@ -1069,6 +1099,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Shares Statistics",
     },
     sharesYoY: {
       label: "Shares Change (YoY)",
@@ -1076,6 +1107,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Shares Statistics",
     },
     grossProfitMargin: {
       label: "Gross Margin",
@@ -1131,6 +1163,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Debt",
     },
     shortTermDebtToCapitalization: {
       label: "Short Term Debt / Market Cap",
@@ -1138,6 +1171,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Debt",
     },
     interestIncomeToCapitalization: {
       label: "Interest Income / Market Cap",
@@ -1145,6 +1179,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Valuation & Ratios",
     },
     assetTurnover: {
       label: "Asset Turnover",
@@ -1159,6 +1194,7 @@
 
       defaultCondition: "over",
       defaultValue: "0%",
+      category: "Valuation & Ratios",
     },
     freeCashFlowYield: {
       label: "FCF Yield",
@@ -1188,6 +1224,7 @@
 
       defaultCondition: "over",
       defaultValue: "1M",
+      category: "Shares Statistics",
     },
     employees: {
       label: "Employees",
@@ -1220,6 +1257,7 @@
 
       defaultCondition: "over",
       defaultValue: "1M",
+      category: "Debt",
     },
     altmanZScore: {
       label: "Altman-Z-Score",
