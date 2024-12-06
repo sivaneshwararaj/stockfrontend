@@ -1313,7 +1313,7 @@
       ...ruleProps,
     }));
 
-  let filteredRows;
+  let filteredGroupedRules;
   let searchTerm = "";
 
   let ruleName = "";
@@ -1519,7 +1519,6 @@
     if (data?.user?.tier !== "Pro" && state === "score") {
       goto("/pricing");
     } else {
-      searchTerm = "";
       selectedPopularStrategy = "";
       ruleName = state;
       handleAddRule();
@@ -1789,10 +1788,17 @@ const handleKeyDown = (event) => {
   }
 
   $: {
-    if (searchTerm) {
-      filteredRows = allRows?.filter((row) =>
+    if (searchTerm?.length > 0) {
+      // Filter rows by search term
+      const filteredRows = allRows?.filter((row) =>
         row?.label?.toLowerCase()?.includes(searchTerm?.toLowerCase()),
       );
+
+      // Group the filtered rows by category
+      filteredGroupedRules = groupScreenerRules(filteredRows);
+    } else {
+      // If no search term, return all rows grouped by category
+      filteredGroupedRules = groupScreenerRules(allRows);
     }
   }
 
@@ -3190,7 +3196,7 @@ const handleKeyDown = (event) => {
   ></label>
 
   <div
-    class="modal-box relative z-50 mx-2 max-h-[80vh] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-6xl"
+    class="modal-box relative z-50 mx-2 min-h-[80vh] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-6xl"
   >
     <div class="flex flex-col w-full">
       <div class="flex flex-row items-center justify-between mb-2">
@@ -3241,6 +3247,33 @@ const handleKeyDown = (event) => {
               />
             </svg>
           </div>
+
+          <div
+            class="absolute inset-y-0 right-0 flex items-center pr-2 {searchTerm?.length >
+            0
+              ? ''
+              : 'hidden'}"
+          >
+            <button
+              on:click={() => (searchTerm = "")}
+              class="cursor-pointer text-gray-200 sm:hover:text-white"
+              tabindex="0"
+              ><svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                style="max-width:40px"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path></svg
+              ></button
+            >
+          </div>
+
           <input
             autocomplete="off"
             type="search"
@@ -3254,7 +3287,7 @@ const handleKeyDown = (event) => {
       <!-- End Search bar-->
       <div class="border-t border-gray-600 mt-6 mb-3" />
       <div class="text-white">
-        {#each Object?.entries(groupedRules) as [category, rules]}
+        {#each searchTerm?.length !== 0 ? Object?.entries(filteredGroupedRules) : Object?.entries(groupedRules) as [category, rules]}
           <h4 class="mb-1 font-semibold text-lg mt-5">{category}</h4>
           <div class="flex flex-wrap">
             {#each rules as row}
