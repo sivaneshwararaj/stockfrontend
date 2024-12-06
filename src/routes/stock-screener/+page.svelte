@@ -14,6 +14,7 @@
     sectorList,
     industryList,
     listOfRelevantCountries,
+    groupScreenerRules,
   } from "$lib/utils";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
@@ -69,7 +70,7 @@
 
       defaultCondition: "over",
       defaultValue: 0,
-      category: "Price & Volume",
+      category: ["Most Popular", "Price & Volume"],
     },
     volume: {
       label: "Volume",
@@ -82,35 +83,35 @@
     rsi: {
       label: "Relative Strength Index",
       step: [90, 80, 70, 60, 50, 40, 30, 20],
-      category: "ta",
+      category: "Technical Analysis",
       defaultCondition: "over",
       defaultValue: 40,
     },
     stochRSI: {
       label: "Stochastic RSI Fast",
       step: [90, 80, 70, 60, 50, 40, 30, 20],
-      category: "ta",
+      category: "Technical Analysis",
       defaultCondition: "over",
       defaultValue: 40,
     },
     mfi: {
       label: "Money Flow Index",
       step: [90, 80, 70, 60, 50, 40, 30, 20],
-      category: "ta",
+      category: "Technical Analysis",
       defaultCondition: "over",
       defaultValue: 40,
     },
     cci: {
       label: "Commodity Channel Index",
       step: [250, 200, 100, 50, 20, 0, -20, -50, -100, -200, -250],
-      category: "ta",
+      category: "Technical Analysis",
       defaultCondition: "over",
       defaultValue: 0,
     },
     atr: {
       label: "Average True Range",
       step: [20, 15, 10, 5, 3, 1],
-      category: "ta",
+      category: "Technical Analysis",
       defaultCondition: "over",
       defaultValue: 10,
     },
@@ -122,7 +123,7 @@
         "SMA20 > SMA100",
         "SMA20 > SMA200",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     sma50: {
@@ -133,7 +134,7 @@
         "SMA50 > SMA100",
         "SMA50 > SMA200",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     sma100: {
@@ -144,7 +145,7 @@
         "SMA100 > SMA50",
         "SMA100 > SMA200",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     sma200: {
@@ -155,7 +156,7 @@
         "SMA200 > SMA50",
         "SMA200 > SMA100",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     ema20: {
@@ -166,7 +167,7 @@
         "EMA20 > EMA100",
         "EMA20 > EMA200",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     ema50: {
@@ -177,7 +178,7 @@
         "EMA50 > EMA100",
         "EMA50 > EMA200",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     ema100: {
@@ -188,7 +189,7 @@
         "EMA100 > EMA50",
         "EMA100 > EMA200",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     ema200: {
@@ -199,7 +200,7 @@
         "EMA200 > EMA50",
         "EMA200 > EMA100",
       ],
-      category: "ta",
+      category: "Technical Analysis",
       defaultValue: "any",
     },
     grahamNumber: {
@@ -213,12 +214,12 @@
 
       defaultCondition: "over",
       defaultValue: 10,
+      category: "Price & Volume",
     },
 
     change1W: {
       label: "Price Change 1W",
       step: ["20%", "10%", "5%", "1%", "-1%", "-5%", "-10%", "-20%"],
-      category: "ta",
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -237,7 +238,6 @@
         "-20%",
         "-50%",
       ],
-      category: "ta",
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -256,7 +256,6 @@
         "-20%",
         "-50%",
       ],
-      category: "ta",
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -275,7 +274,6 @@
         "-20%",
         "-50%",
       ],
-      category: "ta",
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -294,7 +292,6 @@
         "-20%",
         "-50%",
       ],
-      category: "ta",
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -313,7 +310,6 @@
         "-20%",
         "-50%",
       ],
-      category: "ta",
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -323,6 +319,7 @@
 
       defaultCondition: "over",
       defaultValue: "10M",
+      category: ["Most Popular", "Valuation & Ratios"],
     },
     workingCapital: {
       label: "Working Capital",
@@ -351,6 +348,7 @@
 
       defaultCondition: "over",
       defaultValue: "10M",
+      category: "Revenue / Sales",
     },
     revenueGrowthYears: {
       label: "Revenue Growth Years",
@@ -358,6 +356,7 @@
 
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Revenue / Sales",
     },
     epsGrowthYears: {
       label: "EPS Growth Years",
@@ -386,6 +385,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: ["Most Popular", "Revenue / Sales"],
     },
     costOfRevenue: {
       label: "Cost of Revenue",
@@ -470,6 +470,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: ["Most Popular", "Dividends"],
     },
     annualDividend: {
       label: "Annual Dividend",
@@ -611,6 +612,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Revenue / Sales",
     },
     cagr5YearRevenue: {
       label: "Revenue CAGR 5Y",
@@ -618,6 +620,7 @@
 
       defaultCondition: "over",
       defaultValue: "1%",
+      category: "Revenue / Sales",
     },
     cagr3YearEPS: {
       label: "EPS CAGR 3Y",
@@ -646,6 +649,7 @@
 
       defaultCondition: "over",
       defaultValue: "50%",
+      category: "Price & Volume",
     },
     institutionalOwnership: {
       label: "Institutional Ownership",
@@ -701,6 +705,7 @@
 
       defaultCondition: "over",
       defaultValue: 1,
+      category: "Price & Volume",
     },
     ebitda: {
       label: "EBITDA",
@@ -998,6 +1003,7 @@
 
       defaultCondition: "over",
       defaultValue: "0",
+      category: ["Most Popular", "Valuation & Ratios"],
     },
     priceEarningsToGrowthRatio: {
       label: "Price / Earnings Growth",
@@ -1188,6 +1194,7 @@
 
       defaultCondition: "",
       defaultValue: "any",
+      category: ["Most Popular", "Forecasts, Analysts & Price Targets"],
     },
     analystCounter: {
       label: "Analyst Count",
@@ -1195,6 +1202,7 @@
 
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Forecasts, Analysts & Price Targets",
     },
     priceTarget: {
       label: "Price Target",
@@ -1202,6 +1210,7 @@
 
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Forecasts, Analysts & Price Targets",
     },
     upside: {
       label: "Price Target Upside [%]",
@@ -1209,6 +1218,7 @@
 
       defaultCondition: "over",
       defaultValue: "any",
+      category: "Forecasts, Analysts & Price Targets",
     },
 
     halalStocks: {
@@ -1223,6 +1233,7 @@
 
       defaultCondition: "",
       defaultValue: "any",
+      category: ["Most Popular", "Forecasts, Analysts & Price Targets"],
     },
     sector: {
       label: "Sector",
@@ -1683,14 +1694,7 @@ const handleKeyDown = (event) => {
       }
     });
 
-    groupedRules = allRows.reduce((acc, row) => {
-      const category = row.category || "Others"; // Fallback to "Others" if no category is defined
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(row);
-      return acc;
-    }, {});
+    groupedRules = groupScreenerRules(allRows);
   });
 
   onDestroy(() => {
@@ -3143,7 +3147,7 @@ const handleKeyDown = (event) => {
   ></label>
 
   <div
-    class="modal-box relative z-50 mx-2 max-h-[80vh] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-3xl"
+    class="modal-box relative z-50 mx-2 max-h-[80vh] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-6xl"
   >
     <div class="flex flex-col w-full">
       <div class="flex flex-row items-center justify-between mb-2">
@@ -3207,8 +3211,8 @@ const handleKeyDown = (event) => {
       <!-- End Search bar-->
       <div class="border-t border-gray-600 mt-6 mb-3" />
       <div class="text-white">
-        {#each Object.entries(groupedRules) as [category, rules]}
-          <h4 class="mb-0.5 font-semibold text-lg">{category}</h4>
+        {#each Object?.entries(groupedRules) as [category, rules]}
+          <h4 class="mb-1 font-semibold text-lg mt-5">{category}</h4>
           <div class="flex flex-wrap">
             {#each rules as row}
               <div

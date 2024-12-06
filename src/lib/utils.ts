@@ -85,6 +85,40 @@ export const computeGrowthSingleList = (data, actualList) => {
     return formattedTimeString;
   }
 
+
+export const groupScreenerRules = (allRows) => {
+  const categoryOrder = [
+    "Most Popular", "Price & Volume", "Valuation & Ratios", "Valuation & Price Targets", 
+    "Technical Analysis", "Forecasts, Analysts & Price Targets", "Dividends", "Revenue / Sales", "Others"
+  ];
+
+  // Group rows by category
+  const grouped = allRows.reduce((acc, row) => {
+    // Ensure category is an array if it's a single string
+    const categories = Array.isArray(row.category) ? row.category : [row.category || "Others"]; // Default to "Others" if no category is provided
+
+    categories.forEach((category) => {
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(row);
+    });
+
+    return acc;
+  }, {});
+
+  // Sort categories based on the defined order
+  const orderedGroupedRules = Object.fromEntries(
+    Object.entries(grouped).sort(
+      ([keyA], [keyB]) => categoryOrder.indexOf(keyA) - categoryOrder.indexOf(keyB)
+    )
+  );
+
+  return orderedGroupedRules;
+}
+
+
+
 export const groupEarnings = (earnings) => {
   return Object?.entries(
     earnings
