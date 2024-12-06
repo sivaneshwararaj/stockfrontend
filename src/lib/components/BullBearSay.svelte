@@ -1,14 +1,14 @@
 <script lang="ts">
   import { stockTicker, displayCompanyName } from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
-
+  import { formatDate } from "$lib/utils";
   export let data;
 
   let rawData = {};
 
   function latestInfoDate(inputDate) {
     // Convert the input date string to milliseconds since epoch
-    const inputDateMs = Date?.parse(inputDate);
+    const inputDateMs = new Date(inputDate);
 
     // Get today's date in milliseconds since epoch
     const todayMs = Date?.now();
@@ -109,7 +109,7 @@
             : 'hidden'} text-black bg-[#fff] mr-2 font-semibold not-italic text-xs rounded px-2 py-0.5"
           >New</label
         >
-        Updated {rawData?.date}
+        Updated {formatDate(rawData?.date)}
       </span>
       <div class="flex mt-5 h-auto">
         <div
