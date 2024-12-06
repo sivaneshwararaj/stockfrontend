@@ -69,13 +69,15 @@
                     <div class="flex flex-row items-center w-full mb-6">
                       <!-- Vertical Line -->
                       <div
-                        class="w-1 h-full mr-4 rounded-lg"
-                        class:!bg-[#00FC50]={item?.changesPercentage > 0}
-                        class:!bg-[#FF2F1F]={item?.changesPercentage < 0}
-                        class:!bg-white={!item?.changesPercentage &&
-                          item?.changesPercentage !== 0}
+                        class="w-1 h-full mr-4 rounded-lg {item?.changesPercentage ===
+                        '-'
+                          ? 'bg-white'
+                          : item?.changesPercentage >= 0
+                            ? 'bg-[#00FC50]'
+                            : 'bg-[#FF2F1F]'}"
                       ></div>
                       <!-- Item Content -->
+
                       <div
                         class="w-full border-b border-gray-600 h-full pt-2 pb-4"
                       >
@@ -110,9 +112,29 @@
                           </div>
 
                           <div class="flex flex-col w-full max-w-3xl pt-2">
-                            <span class="text-white text-[1rem]">
-                              {item?.text}
-                            </span>
+                            {#if index === 0 && data?.user?.tier !== "Pro"}
+                              <span class="mt-3">
+                                {item?.text?.slice(0, 50) + "..."}
+                                Unlock content with
+                                <a
+                                  class="inline-block ml-0.5 text-blue-400 sm:hover:text-white"
+                                  href="/pricing"
+                                  >Pro Subscription <svg
+                                    class="w-4 h-4 mb-1 inline-block text[#A3A3A3] sm:hover:text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    ><path
+                                      fill="currentColor"
+                                      d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                    /></svg
+                                  ></a
+                                >
+                              </span>
+                            {:else}
+                              <span class="text-white text-[1rem]">
+                                {item?.text}
+                              </span>
+                            {/if}
                           </div>
                         </div>
                       </div>
