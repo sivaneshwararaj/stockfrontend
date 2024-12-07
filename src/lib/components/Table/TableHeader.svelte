@@ -19,7 +19,7 @@
       class="cursor-pointer select-none text-white font-semibold text-sm whitespace-nowrap {column.align ===
       'right'
         ? 'text-end'
-        : ''}"
+        : 'text-start'}"
     >
       {column.label}
       {@html SortIcon({ sortOrder: sortOrders[column.key].order })}

@@ -5,12 +5,15 @@
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+
   import { onMount } from "svelte";
   import { page } from "$app/stores";
 
   export let data;
 
   let rawData;
+
   let filterList = [];
   let weekdayFiltered = [];
   let weekday; // Added declaration
@@ -23,14 +26,18 @@
   let previousMax = false;
   let nextMax = false;
   let searchQuery = "";
+  let sortMode = false;
   $: testList = [];
 
   $: economicCalendar = data?.getEconomicCalendar;
   $: daysOfWeek = getDaysOfWeek(currentWeek);
   $: formattedWeekday = daysOfWeek.map((day) => format(day.date, "EEE, MMM d"));
   $: {
-    weekday = getWeekdayData(economicCalendar, daysOfWeek);
-    rawData = weekday;
+    if (!sortMode) {
+      weekday = getWeekdayData(economicCalendar, daysOfWeek);
+      rawData = weekday;
+    }
+
     // Reapply filters whenever weekday data changes
     if (filterList.length > 0 && syncWorker) {
       loadWorker();
@@ -75,6 +82,7 @@
 
   const handleMessage = (event) => {
     weekdayFiltered = event.data?.finalData?.output ?? [];
+    originalData = weekdayFiltered;
   };
 
   const loadWorker = async () => {
@@ -196,6 +204,104 @@
 
     saveRules();
   }
+
+  let columns = [
+    { key: "time", label: "Time", align: "left" },
+    { key: "country", label: "Country", align: "left" },
+    { key: "event", label: "Event", align: "left" },
+    { key: "actual", label: "Actual", align: "right" },
+    { key: "consensus", label: "Forecast", align: "right" },
+    { key: "prior", label: "Previous", align: "right" },
+    { key: "importance", label: "Importance", align: "right" },
+  ];
+
+  let sortOrders = {
+    time: { order: "none", type: "string" },
+    country: { order: "none", type: "string" },
+    event: { order: "none", type: "string" },
+    actual: { order: "none", type: "number" },
+    consensus: { order: "none", type: "number" },
+    prior: { order: "none", type: "number" },
+    importance: { order: "none", type: "number" },
+  };
+
+  const sortData = (key) => {
+    sortMode = true;
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+    const currentOrderIndex = orderCycle.indexOf(
+      sortOrders[key]?.order || "none",
+    );
+    sortOrders[key] = {
+      ...(sortOrders[key] || {}),
+      order: orderCycle[(currentOrderIndex + 1) % orderCycle.length],
+    };
+    const sortOrder = sortOrders[key]?.order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      sortMode = false;
+      return;
+    }
+
+    // Generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "rating":
+        case "string":
+          // Retrieve values
+          valueA = a[key];
+          valueB = b[key];
+
+          // Handle null or undefined values, always placing them at the bottom
+          if (valueA == null && valueB == null) {
+            return 0; // Both are null/undefined, no need to change the order
+          } else if (valueA == null) {
+            return 1; // null goes to the bottom
+          } else if (valueB == null) {
+            return -1; // null goes to the bottom
+          }
+
+          // Convert the values to uppercase for case-insensitive comparison
+          valueA = valueA?.toUpperCase();
+          valueB = valueB?.toUpperCase();
+
+          // Perform the sorting based on ascending or descending order
+          return sortOrder === "asc"
+            ? valueA?.localeCompare(valueB)
+            : valueB?.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort and update the originalData and stockList
+    weekday[selectedWeekday] = [...rawData[selectedWeekday]].sort(
+      compareValues,
+    );
+  };
 </script>
 
 <svelte:head>
@@ -270,7 +376,7 @@
                   on:click={() => changeWeek("previous")}
                   class="{previousMax
                     ? 'opacity-80'
-                    : ''} hidden sm:flex h-16 w-48 cursor-pointer border m-auto flex bg-[#27272A] border border-gray-600 mb-3"
+                    : ''} hidden sm:flex h-16 w-48 cursor-pointer border m-auto flex bg-primary border border-gray-600 mb-3"
                 >
                   <svg
                     class="w-6 h-6 m-auto rotate-180"
@@ -342,7 +448,7 @@
                   on:click={() => changeWeek("next")}
                   class="{nextMax
                     ? 'opacity-80'
-                    : ''} hidden sm:flex h-16 w-48 cursor-pointer border m-auto flex bg-[#27272A] border border-gray-600 mb-3"
+                    : ''} hidden sm:flex h-16 w-48 cursor-pointer border m-auto flex bg-primary border border-gray-600 mb-3"
                 >
                   <svg
                     class="w-6 h-6 m-auto"
@@ -366,7 +472,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white">Filter Country</span>
                         <svg
@@ -405,7 +511,7 @@
                       </div>
                       <DropdownMenu.Group>
                         {#each testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : listOfRelevantCountries as item}
-                          <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                          <DropdownMenu.Item class="sm:hover:bg-primary">
                             <div class="flex items-center">
                               <label
                                 on:click={() => {
@@ -431,7 +537,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white"
                           >Filter Importance</span
@@ -462,7 +568,7 @@
                       ></div>
                       <DropdownMenu.Group>
                         {#each [1, 2, 3] as i}
-                          <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                          <DropdownMenu.Item class="sm:hover:bg-primary">
                             <div class="flex items-center">
                               <label
                                 on:click={() => {
@@ -516,7 +622,7 @@
                   {#if filterList?.length !== 0}
                     <Button
                       on:click={() => handleReset()}
-                      class="w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-start items-center px-3 py-2 text-white rounded-md truncate"
+                      class="w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-start items-center px-3 py-2 text-white rounded-md truncate"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -571,43 +677,13 @@
                           class="table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
                         >
                           <thead>
-                            <tr class="whitespace-nowrap">
-                              <th
-                                class="text-start text-white font-semibold text-sm"
-                                >Time</th
-                              >
-
-                              <th
-                                class="text-start text-white font-semibold text-sm sm:text-[1rem]"
-                                >Country</th
-                              >
-                              <th
-                                class="text-start text-white font-semibold text-sm sm:text-[1rem]"
-                                >Event</th
-                              >
-                              <th
-                                class="text-end text-white font-semibold text-sm sm:text-[1rem]"
-                                >Actual</th
-                              >
-                              <th
-                                class="text-end text-white font-semibold text-sm sm:text-[1rem]"
-                                >Forecast</th
-                              >
-                              <th
-                                class="text-end text-white font-semibold text-sm sm:text-[1rem]"
-                                >Previous</th
-                              >
-                              <th
-                                class="text-white font-semibold text-sm sm:text-[1rem] text-end"
-                                >Importance</th
-                              >
-                            </tr>
+                            <TableHeader {columns} {sortOrders} {sortData} />
                           </thead>
                           <tbody>
                             {#each day as item}
                               <!-- row -->
                               <tr
-                                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]"
+                                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-primary"
                               >
                                 <td
                                   class="text-white text-sm sm:text-[1rem] border-b-[#09090B]"
@@ -771,6 +847,25 @@
                     {/if}
                   {/if}
                 {/each}
+
+                <div
+                  class="w-full text-white text-start p-3 sm:p-5 mt-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
+                >
+                  <svg
+                    class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256"
+                    ><path
+                      fill="#fff"
+                      d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
+                    /></svg
+                  >
+
+                  Stocknear's Economic Calendar displays the latest and upcoming
+                  economic events that may impact various assets, regions, and
+                  global markets — including stocks, Forex, and bonds. Times are
+                  shown in ET (Eastern Time).
+                </div>
               </div>
             </div>
           </div>
