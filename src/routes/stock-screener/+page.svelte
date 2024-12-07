@@ -3346,13 +3346,29 @@ const handleKeyDown = (event) => {
               <div
                 class="flex w-full items-center space-x-1.5 py-1.5 md:w-1/2 lg:w-1/3 lg:py-1"
               >
-                <input
-                  on:click={() => changeRule(row?.rule)}
-                  id={row?.rule}
-                  type="checkbox"
-                  checked={ruleOfList?.find((rule) => rule?.name === row?.rule)}
-                  class="h-[18px] w-[18px] rounded-sm ring-offset-0 lg:h-4 lg:w-4"
-                />
+                {#if row?.rule === "score" && data?.user?.tier !== "Pro"}
+                  <label id={row?.rule} on:click={() => changeRule(row?.rule)}>
+                    <svg
+                      class="w-4 h-4 mb-1 inline-block text-[#A3A3A3] sm:hover:text-white cursor-pointer"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="currentColor"
+                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                      /></svg
+                    >
+                  </label>
+                {:else}
+                  <input
+                    on:click={() => changeRule(row?.rule)}
+                    id={row?.rule}
+                    type="checkbox"
+                    checked={ruleOfList?.find(
+                      (rule) => rule?.name === row?.rule,
+                    )}
+                    class="h-[18px] w-[18px] rounded-sm ring-offset-0 lg:h-4 lg:w-4"
+                  />
+                {/if}
                 <div class="-mt-0.5">
                   <label for={row?.rule} class="cursor-pointer text-[1rem]"
                     >{row?.label}</label
