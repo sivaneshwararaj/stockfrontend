@@ -393,9 +393,9 @@
                       >
                         <span class="font-semibold">
                           {#if item?.type === "Bought"}
-                            <span class="text-[#57D7BA]">Purchase</span>
+                            <span class="text-[#00FC50]">{item?.type}</span>
                           {:else if item?.type === "Sold"}
-                            <span class="text-[#fe5555]">Sale</span>
+                            <span class="text-[#FF2F1F]">{item?.type}</span>
                           {:else if item?.type === "Exchange"}
                             <span class="text-[#C6A755]">Exchange</span>
                           {/if}

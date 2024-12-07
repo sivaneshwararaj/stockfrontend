@@ -3,6 +3,7 @@
   import { setCache, getCache } from "$lib/store";
   import { init, use } from "echarts/core";
   import { LineChart, BarChart } from "echarts/charts";
+  import { monthNames } from "$lib/utils";
   import {
     GridComponent,
     TooltipComponent,
@@ -91,21 +92,6 @@
     }
     optionsData = plotData();
   }
-
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
 
   // Function to plot data based on a specified time period
   function plotData() {
@@ -237,6 +223,12 @@
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
         formatter: function (params) {
           const date = params[0].name; // Get the date from the x-axis value
           const dateParts = date.split("-");

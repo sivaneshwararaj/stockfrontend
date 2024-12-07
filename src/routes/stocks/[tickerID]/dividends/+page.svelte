@@ -5,7 +5,7 @@
     stockTicker,
   } from "$lib/store";
   import { onMount } from "svelte";
-
+  import { monthNames } from "$lib/utils";
   import { Chart } from "svelte-echarts";
   import { init, use } from "echarts/core";
   import { LineChart, BarChart } from "echarts/charts";
@@ -30,7 +30,7 @@
     // Combine the data into an array of objects to keep them linked
     const combinedData = rawData?.history?.map((item) => ({
       date: item?.paymentDate,
-      dividend: item?.adjDividend?.toFixed(2),
+      dividend: item?.adjDividend?.toFixed(3),
     }));
 
     // Sort the combined data array based on the date
@@ -38,13 +38,9 @@
 
     // Separate the sorted data back into individual arrays
     const dates = combinedData.map((item) => item.date);
-    const dividendList = combinedData.map((item) => item.dividend);
+    const dividendList = combinedData?.map((item) => item.dividend);
 
     const options = {
-      tooltip: {
-        trigger: "axis",
-        hideDelay: 100, // Set the delay in milliseconds
-      },
       animation: false,
       grid: {
         left: "3%",
@@ -86,6 +82,27 @@
           },
         },
       ],
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          const date = params[0].name; // Get the date from the x-axis value
+          const dateParts = date.split("-");
+          const year = dateParts[0];
+          const monthIndex = parseInt(dateParts[1]) - 1;
+          const day = dateParts[2];
+          const formattedDate = `${monthNames[monthIndex]} ${day}, ${year}`;
+
+          // Return the tooltip content
+          return `${formattedDate}<br/> Dividend Per Share: ${params[0].value}`;
+        },
+      },
     };
 
     return options;

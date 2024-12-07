@@ -266,6 +266,21 @@
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          const date = params[0].name; // Get the date from the x-axis value
+          // Return the tooltip content
+          return `${date}<br/> ${
+            statementConfig?.find(
+              (item) => item?.propertyName === displayStatement,
+            )?.label
+          }: ${abbreviateNumber(params[0].value)}`;
+        },
       },
     };
 

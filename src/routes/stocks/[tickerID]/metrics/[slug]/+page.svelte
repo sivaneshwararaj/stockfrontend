@@ -4,10 +4,9 @@
     displayCompanyName,
     stockTicker,
   } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { abbreviateNumber, monthNames } from "$lib/utils";
 
   import { Chart } from "svelte-echarts";
-
   import { init, use } from "echarts/core";
   import { LineChart, BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
@@ -102,6 +101,23 @@
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          const date = params[0].name; // Get the date from the x-axis value
+          const dateParts = date.split("-");
+          const year = dateParts[0];
+          const monthIndex = parseInt(dateParts[1]) - 1;
+          const day = dateParts[2];
+          const formattedDate = `${monthNames[monthIndex]} ${day}, ${year}`;
+
+          // Return the tooltip content
+          return `${formattedDate}<br/> Revenue: ${abbreviateNumber(params[0].value)}`;
+        },
       },
     };
 

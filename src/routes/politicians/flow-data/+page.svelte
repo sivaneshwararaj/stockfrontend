@@ -1,6 +1,5 @@
 <script lang="ts">
   import { formatString } from "$lib/utils";
-  import { getPartyForPoliticians } from "$lib/utils";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { onMount } from "svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
@@ -175,7 +174,7 @@
                                 <th
                                   class="{index % 2
                                     ? 'bg-[#09090B]'
-                                    : 'bg-primary'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
+                                    : 'bg-secondary'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   <div class="flex flex-row items-center">
                                     <div
