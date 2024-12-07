@@ -16,7 +16,7 @@
     priceChartData,
   } from "$lib/store";
   import { onDestroy, onMount } from "svelte";
-  import BullBearSay from "$lib/components/BullBearSay.svelte";
+  //import BullBearSay from "$lib/components/BullBearSay.svelte";
   import WIIM from "$lib/components/WIIM.svelte";
 
   import News from "$lib/components/News.svelte";
@@ -1388,7 +1388,7 @@
               >
                 <NextEarnings {data} />
               </div>
-
+              <!--
               <div
                 class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getBullBearSay || {},
@@ -1398,6 +1398,7 @@
               >
                 <BullBearSay {data} />
               </div>
+              -->
 
               <div
                 class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {data
