@@ -787,7 +787,7 @@
               <div class="w-full text-white">
                 <div class="relative flex justify-end">
                   <select
-                    class="w-24 select select-bordered select-sm p-0 pl-5 bg-[#313131]"
+                    class="w-24 select select-bordered select-sm p-0 pl-5 bg-secondary"
                     on:change={changeStatement}
                   >
                     <option disabled>Choose a Time Period</option>
@@ -807,7 +807,7 @@
               </Lazy>
 
               <div
-                class="mt-10 mb-4 bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 flex justify-center sm:justify-end items-center ml-auto"
+                class="mt-10 mb-4 bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 flex justify-center sm:justify-end items-center ml-auto"
               >
                 {#each tabs as item, i}
                   <button
@@ -907,7 +907,7 @@
                     {#each tableList as item}
                       <!-- row -->
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] shake-ticker cursor-pointer"
                       >
                         <td
                           class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"

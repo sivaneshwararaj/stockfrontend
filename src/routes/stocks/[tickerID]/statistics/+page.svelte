@@ -97,7 +97,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Shares Outstanding</span>
                     </td>
@@ -106,7 +106,7 @@
                       title="3,194,640,415"
                       >{abbreviateNumber(rawData?.sharesOutStanding)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Shares Change (YoY)</span>
                     </td>
@@ -117,7 +117,7 @@
                         "percent",
                       )}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Shares Change (QoQ)</span>
                     </td>
@@ -125,7 +125,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{checkValue(rawData?.sharesQoQ, "percent")}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Owned by Institutions (%)</span>
                     </td>
@@ -136,7 +136,7 @@
                         "percent",
                       )}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Shares Floating</span>
                     </td>
@@ -146,7 +146,7 @@
                       >{abbreviateNumber(rawData?.floatShares)}</td
                     >
                   </tr>
-                  <tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  <tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Failed to Deliver (FTD) Shares</span>
                     </td>
@@ -155,7 +155,7 @@
                       title="2,777,647,654"
                       >{abbreviateNumber(rawData?.failToDeliver)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>FTD / Avg. Volume</span>
                     </td>
@@ -184,7 +184,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Short Interest</span>
                     </td>
@@ -193,7 +193,7 @@
                       title="74,332,630"
                       >{abbreviateNumber(rawData?.sharesShort)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Short % of Shares Out</span>
                     </td>
@@ -201,7 +201,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.shortOutStandingPercent}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Short % of Float</span>
                     </td>
@@ -209,7 +209,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.shortFloatPercent}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Short Ratio (days to cover)</span>
                     </td>
@@ -238,7 +238,7 @@
 
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>PE Ratio</span>
                     </td>
@@ -246,7 +246,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.priceEarningsRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Forward PE</span>
                     </td>
@@ -254,7 +254,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.forwardPE}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>PS Ratio</span>
                     </td>
@@ -262,7 +262,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.priceToSalesRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Forward PS</span>
                     </td>
@@ -270,7 +270,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.forwardPS}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>PB Ratio</span>
                     </td>
@@ -278,7 +278,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.priceToBookRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>P/FCF Ratio</span>
                     </td>
@@ -286,7 +286,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.priceToFreeCashFlowsRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>PEG Ratio</span>
                     </td>
@@ -317,7 +317,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EV / Earnings</span>
                     </td>
@@ -325,7 +325,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.evEarnings}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EV / Sales</span>
                     </td>
@@ -333,7 +333,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.evSales}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EV / EBITDA</span>
                     </td>
@@ -341,7 +341,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.evEBITDA}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EV / EBIT</span>
                     </td>
@@ -349,7 +349,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.evEBIT}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EV / FCF</span>
                     </td>
@@ -373,7 +373,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Current Ratio</span>
                     </td>
@@ -381,7 +381,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.currentRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Quick Ratio</span>
                     </td>
@@ -389,7 +389,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.quickRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Debt / Equity</span>
                     </td>
@@ -397,7 +397,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.debtEquityRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Total Debt / Capitalization</span>
                     </td>
@@ -407,7 +407,7 @@
                         rawData?.totalDebtToCapitalization,
                       )}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Cash Flow / Debt</span>
                     </td>
@@ -415,7 +415,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.cashFlowToDebtRatio}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Interest Coverage</span>
                     </td>
@@ -439,7 +439,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Return on Equity (ROE)</span>
                     </td>
@@ -447,7 +447,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.returnOnEquity}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Return on Assets (ROA)</span>
                     </td>
@@ -455,7 +455,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.returnOnAssets}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Return on Capital (ROIC)</span>
                     </td>
@@ -463,7 +463,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.returnOnInvestedCapital}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Revenue Per Employee</span>
                     </td>
@@ -471,7 +471,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.revenuePerEmployee)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Profits Per Employee</span>
                     </td>
@@ -479,7 +479,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.profitPerEmployee)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Employee Count</span></td
                     >
@@ -487,7 +487,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="140,473">{abbreviateNumber(rawData?.employees)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Asset Turnover</span>
                     </td>
@@ -495,7 +495,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.assetTurnover}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Inventory Turnover</span>
                     </td>
@@ -511,7 +511,7 @@
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">Taxes</h2>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Income Tax</span>
                     </td>
@@ -519,7 +519,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.incomeTaxExpense)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Effective Tax Rate</span>
                     </td>
@@ -548,7 +548,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Beta</span>
                     </td>
@@ -556,7 +556,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.beta}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>52-Week Price Change</span>
                     </td>
@@ -564,7 +564,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.change1Y}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>50-Day Moving Average</span>
                     </td>
@@ -572,7 +572,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.sma50}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>200-Day Moving Average</span>
                     </td>
@@ -580,7 +580,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.sma200}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Relative Strength Index (RSI)</span>
                     </td>
@@ -588,7 +588,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.rsi}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Average Volume (20 Days)</span>
                     </td>
@@ -617,7 +617,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Revenue</span></td
                     >
@@ -625,7 +625,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.revenue)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Gross Profit</span>
                     </td>
@@ -633,7 +633,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.grossProfit)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Operating Income</span>
                     </td>
@@ -641,7 +641,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.operatingIncome)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Net Income</span>
                     </td>
@@ -649,7 +649,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.netIncome)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EBITDA</span>
                     </td>
@@ -657,7 +657,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.ebitda)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EBIT</span>
                     </td>
@@ -665,7 +665,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.ebit)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Earnings Per Share (EPS)</span>
                     </td>
@@ -701,7 +701,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Cash &amp; Cash Equivalents</span>
                     </td>
@@ -709,7 +709,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.cashAndCashEquivalents)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Total Debt</span>
                     </td>
@@ -717,7 +717,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.totalDebt)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Net Cash</span>
                     </td>
@@ -728,7 +728,7 @@
                         rawData?.cashAndCashEquivalents - rawData?.totalDebt,
                       )}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Retained Earnings</span>
                     </td>
@@ -736,7 +736,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.retainedEarnings)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Total Assets</span>
                     </td>
@@ -744,7 +744,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.totalAssets)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Working Capital</span>
                     </td>
@@ -783,7 +783,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Operating Cash Flow</span>
                     </td>
@@ -791,7 +791,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.operatingCashFlow)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Capital Expenditures</span>
                     </td>
@@ -799,7 +799,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.capitalExpenditure)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Free Cash Flow</span>
                     </td>
@@ -807,7 +807,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{abbreviateNumber(rawData?.freeCashFlow)}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>FCF Per Share</span>
                     </td>
@@ -840,7 +840,7 @@
               </p>
               <table class="w-full">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Gross Margin</span>
                     </td>
@@ -848,7 +848,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{checkValue(rawData?.grossProfitMargin, "int")}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Operating Margin</span>
                     </td>
@@ -856,7 +856,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{checkValue(rawData?.operatingProfitMargin, "int")}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Pretax Margin</span>
                     </td>
@@ -864,7 +864,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{checkValue(rawData?.pretaxProfitMargin, "int")}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Profit Margin</span>
                     </td>
@@ -872,7 +872,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{checkValue(rawData?.netProfitMargin, "int")}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EBITDA Margin</span>
                     </td>
@@ -880,7 +880,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{checkValue(rawData?.ebitdaMargin, "int")}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>EBIT Margin</span>
                     </td>
@@ -888,7 +888,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{checkValue(rawData?.ebitMargin, "int")}%</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>FCF Margin</span>
                     </td>
@@ -914,7 +914,7 @@
               </p>
               <table class="w-full" data-test="statistics-table">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Dividend Per Share</span>
                     </td>
@@ -924,7 +924,7 @@
                         ? "$" + rawData?.annualDividend?.toFixed(2)
                         : "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Dividend Yield</span>
                     </td>
@@ -934,7 +934,7 @@
                         ? rawData?.dividendYield
                         : "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Dividend Growth (YoY)</span>
                     </td>
@@ -944,7 +944,7 @@
                         ? rawData?.dividendGrowth + "%"
                         : "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Payout Ratio</span>
                     </td>
@@ -955,7 +955,7 @@
                         ? rawData?.payoutRatio + "%"
                         : "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Earnings Yield</span>
                     </td>
@@ -965,7 +965,7 @@
                         ? rawData?.earningsYield + "%"
                         : "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>FCF Yield</span>
                     </td>
@@ -1005,7 +1005,7 @@
               </p>
               <table class="w-full" data-test="statistics-table">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Price Target</span>
                     </td>
@@ -1016,7 +1016,7 @@
                         ? "$" + rawData?.priceTarget
                         : "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Price Target Difference</span>
                     </td>
@@ -1027,7 +1027,7 @@
                         ? rawData?.upside + "%"
                         : "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Analyst Consensus</span>
                     </td>
@@ -1035,7 +1035,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="Strong Buy">{rawData?.analystRating ?? "n/a"}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Analyst Count</span>
                     </td>
@@ -1075,7 +1075,7 @@
                 </p>
                 <table class="w-full" data-test="statistics-table">
                   <tbody
-                    ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    ><tr class="border-y border-gray-600 odd:bg-secondary"
                       ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                         ><span>Last Split Date</span>
                       </td>
@@ -1092,7 +1092,7 @@
                           },
                         )}</td
                       >
-                    </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                       ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                         ><span>Split Type</span>
                       </td>
@@ -1100,7 +1100,7 @@
                         class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                         title="Forward">{rawData?.splitType}</td
                       >
-                    </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                    </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                       ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                         ><span>Split Ratio</span>
                       </td>
@@ -1117,7 +1117,7 @@
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">Scores</h2>
               <table class="w-full" data-test="statistics-table">
                 <tbody
-                  ><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  ><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Altman Z-Score</span>
                     </td>
@@ -1125,7 +1125,7 @@
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       title="n/a">{rawData?.altmanZScore}</td
                     >
-                  </tr><tr class="border-y border-gray-600 odd:bg-[#27272A]"
+                  </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
                       ><span>Piotroski F-Score</span>
                     </td>

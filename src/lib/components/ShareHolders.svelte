@@ -528,7 +528,7 @@
             {#each displayList as item, index}
               {#if item?.investorName?.length > 0}
                 <tr
-                  class="border-y border-gray-800 odd:bg-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] {index +
+                  class="border-y border-gray-800 odd:bg-secondary sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] {index +
                     1 ===
                     shareholderList?.length && data?.user?.tier !== 'Pro'
                     ? 'opacity-[0.1]'

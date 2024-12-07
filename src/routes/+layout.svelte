@@ -239,7 +239,7 @@
             <Button
               builders={[builder]}
               size="icon"
-              class="bg-[#09090B] text-white sm:hover:bg-[#27272A] border-none"
+              class="bg-[#09090B] text-white sm:hover:bg-primary border-none"
             >
               <Menu class="h-5.5 w-5.5 sm:w-7 sm:h-7" />
               <span class="sr-only">Toggle Menu</span>
@@ -810,7 +810,7 @@
             <DropdownMenu.Trigger asChild let:builder>
               <Button
                 size="icon"
-                class="overflow-hidden rounded-md bg-[#09090B] sm:hover:bg-[#27272A] border border-gray-600 w-10 h-10"
+                class="overflow-hidden rounded-md bg-[#09090B] sm:hover:bg-primary border border-gray-600 w-10 h-10"
                 builders={[builder]}
               >
                 <svg
@@ -826,19 +826,19 @@
             </DropdownMenu.Trigger>
             <DropdownMenu.Content align="end">
               <a href="/profile" class="cursor-pointer">
-                <DropdownMenu.Item class="sm:hover:bg-[#27272A] cursor-pointer">
+                <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
                   My Account
                 </DropdownMenu.Item>
               </a>
               <DropdownMenu.Separator />
 
               <a href="/watchlist/stocks" class="cursor-pointer">
-                <DropdownMenu.Item class="sm:hover:bg-[#27272A] cursor-pointer">
+                <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
                   Watchlist
                 </DropdownMenu.Item>
               </a>
               <a href="/price-alert" class="cursor-pointer">
-                <DropdownMenu.Item class="sm:hover:bg-[#27272A] cursor-pointer">
+                <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
                   Price Alert
                 </DropdownMenu.Item>
               </a>
@@ -846,9 +846,7 @@
               <DropdownMenu.Separator />
               <form class="cursor-pointer" action="/logout" method="POST">
                 <button type="submit" class="w-full text-start cursor-pointer">
-                  <DropdownMenu.Item
-                    class="sm:hover:bg-[#27272A] cursor-pointer"
-                  >
+                  <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
                     <span class="text-start">Logout</span>
                   </DropdownMenu.Item>
                 </button>

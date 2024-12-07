@@ -777,7 +777,7 @@
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
                     builders={[builder]}
-                    class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Export</span>
                     <svg
@@ -804,22 +804,22 @@
                   <DropdownMenu.Separator />
                   <DropdownMenu.Group>
                     <!--
-                      <DropdownMenu.Item on:click={exportData} class="cursor-pointer sm:hover:bg-[#27272A]">
+                      <DropdownMenu.Item on:click={exportData} class="cursor-pointer sm:hover:bg-primary">
                        <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
                         1 min 
                       </DropdownMenu.Item>
-                      <DropdownMenu.Item on:click={exportData} class="cursor-pointer sm:hover:bg-[#27272A]">
+                      <DropdownMenu.Item on:click={exportData} class="cursor-pointer sm:hover:bg-primary">
                         <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
                         5 min
                       </DropdownMenu.Item>
-                      <DropdownMenu.Item on:click={exportData} class="cursor-pointer sm:hover:bg-[#27272A]">
+                      <DropdownMenu.Item on:click={exportData} class="cursor-pointer sm:hover:bg-primary">
                         <svg class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro' ? 'hidden' : ''}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#A3A3A3" d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/></svg>
                         15 min
                       </DropdownMenu.Item>
                     -->
                     <DropdownMenu.Item
                       on:click={() => exportData("30min")}
-                      class="cursor-pointer sm:hover:bg-[#27272A]"
+                      class="cursor-pointer sm:hover:bg-primary"
                     >
                       <svg
                         class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
@@ -837,7 +837,7 @@
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
                       on:click={() => exportData("1hour")}
-                      class="cursor-pointer sm:hover:bg-[#27272A]"
+                      class="cursor-pointer sm:hover:bg-primary"
                     >
                       <svg
                         class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
@@ -854,7 +854,7 @@
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
                       on:click={() => exportData("max")}
-                      class="cursor-pointer sm:hover:bg-[#27272A]"
+                      class="cursor-pointer sm:hover:bg-primary"
                     >
                       <svg
                         class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'

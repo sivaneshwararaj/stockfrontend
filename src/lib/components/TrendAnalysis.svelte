@@ -32,7 +32,7 @@
           >
             <!--Start Flow Sentiment-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-primary shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm"
@@ -50,7 +50,7 @@
             <!--End Flow Sentiment-->
             <!--Start Put/Call-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-primary shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm">Accuracy</span>
@@ -112,7 +112,7 @@
 
             <!--Start Precision-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-primary shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm">Precision</span>
@@ -176,7 +176,7 @@
         </div>
 
         <select
-          class="mt-1 sm:mt-3 ml-1 w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
+          class="mt-1 sm:mt-3 ml-1 w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-secondary"
           on:change={changeStatement}
         >
           <option disabled>Choose Time Period</option>

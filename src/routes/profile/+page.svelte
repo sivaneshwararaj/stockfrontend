@@ -288,7 +288,7 @@
               >
                 <label
                   for="cancelSubscriptionModal"
-                  class="cursor-pointer text-white border border-gray-600 sm:hover:bg-[#27272A] bg-opacity-[0.5] text-sm sm:text-[1rem] px-4 py-2 rounded-md mt-5"
+                  class="cursor-pointer text-white border border-gray-600 sm:hover:bg-primary bg-opacity-[0.5] text-sm sm:text-[1rem] px-4 py-2 rounded-md mt-5"
                 >
                   Cancel Subscription
                 </label>

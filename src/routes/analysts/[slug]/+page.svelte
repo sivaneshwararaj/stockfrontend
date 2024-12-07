@@ -388,7 +388,7 @@
                   <tbody>
                     {#each stockList as item, index}
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A]"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary"
                       >
                         <td class="hidden lg:table-cell"
                           ><button

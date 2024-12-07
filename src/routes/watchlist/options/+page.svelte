@@ -290,7 +290,7 @@
                   <tbody>
                     {#each optionsWatchlist as item, index}
                       <!-- row -->
-                      <tr class="odd:bg-[#27272A] border-b-[#09090B]">
+                      <tr class="odd:bg-secondary border-b-[#09090B]">
                         <td
                           class="text-white text-sm text-start whitespace-nowrap"
                         >
@@ -301,7 +301,7 @@
                           on:click={() => handleFilter(item?.id)}
                           class="{index % 2
                             ? 'bg-[#09090B]'
-                            : 'bg-[#27272A]'} font-normal text-sm sm:text-[1rem] text-start"
+                            : 'bg-primary'} font-normal text-sm sm:text-[1rem] text-start"
                         >
                           <div class=" flex flex-row items-center">
                             <input
@@ -428,7 +428,7 @@
                 </span>
                 <a
                   href="/options-flow"
-                  class="py-3 sm:hover:bg-[#27272A] rounded-md w-64 flex mt-5 justify-center items-center m-auto text-white border border-gray-600 group"
+                  class="py-3 sm:hover:bg-primary rounded-md w-64 flex mt-5 justify-center items-center m-auto text-white border border-gray-600 group"
                 >
                   <span class="font-semibold text-[1rem]"
                     >Follow the Whales

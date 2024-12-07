@@ -51,8 +51,8 @@
               href={`/stocks/${$stockTicker}/statistics`}
               on:click={() => changeSubSection("overview")}
               class="p-2 px-5 cursor-pointer {displaySubSection === 'overview'
-                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
               Overview
             </a>
@@ -61,8 +61,8 @@
               href={`/stocks/${$stockTicker}/statistics/market-cap`}
               on:click={() => changeSubSection("market-cap")}
               class="p-2 px-5 cursor-pointer {displaySubSection === 'market-cap'
-                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
               Market Cap
             </a>
@@ -70,8 +70,8 @@
               href={`/stocks/${$stockTicker}/statistics/employees`}
               on:click={() => changeSubSection("employees")}
               class="p-2 px-5 cursor-pointer {displaySubSection === 'employees'
-                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
               Employees
             </a>

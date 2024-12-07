@@ -497,7 +497,7 @@
                         <DropdownMenu.Trigger asChild let:builder>
                           <Button
                             builders={[builder]}
-                            class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                            class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                           >
                             <span class="truncate text-white">{timePeriod}</span
                             >
@@ -526,43 +526,43 @@
                           <DropdownMenu.Group>
                             <DropdownMenu.Item
                               on:click={() => changeStatement("1M")}
-                              class="cursor-pointer hover:bg-[#27272A]"
+                              class="cursor-pointer hover:bg-primary"
                             >
                               1 Month
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
                               on:click={() => changeStatement("6M")}
-                              class="cursor-pointer hover:bg-[#27272A]"
+                              class="cursor-pointer hover:bg-primary"
                             >
                               6 Months
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
                               on:click={() => changeStatement("1Y")}
-                              class="cursor-pointer hover:bg-[#27272A]"
+                              class="cursor-pointer hover:bg-primary"
                             >
                               1 Year
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
                               on:click={() => changeStatement("3Y")}
-                              class="cursor-pointer hover:bg-[#27272A]"
+                              class="cursor-pointer hover:bg-primary"
                             >
                               3 Years
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
                               on:click={() => changeStatement("5Y")}
-                              class="cursor-pointer hover:bg-[#27272A]"
+                              class="cursor-pointer hover:bg-primary"
                             >
                               5 Years
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
                               on:click={() => changeStatement("10Y")}
-                              class="cursor-pointer hover:bg-[#27272A]"
+                              class="cursor-pointer hover:bg-primary"
                             >
                               10 Years
                             </DropdownMenu.Item>
                             <DropdownMenu.Item
                               on:click={() => changeStatement("Max")}
-                              class="cursor-pointer hover:bg-[#27272A]"
+                              class="cursor-pointer hover:bg-primary"
                             >
                               Max
                             </DropdownMenu.Item>
@@ -572,7 +572,7 @@
                     </div>
                     <Button
                       on:click={() => exportData("csv")}
-                      class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                      class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                     >
                       <span class="truncate text-white">Download</span>
                       <svg
@@ -602,7 +602,7 @@
                   class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mb-6"
                 >
                   <div
-                    class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                    class="bg-secondary w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                   >
                     {#each tabs as item, i}
                       {#if data?.user?.tier !== "Pro" && i > 0}
@@ -671,7 +671,7 @@
                       {#each tableList as item, index}
                         <!-- row -->
                         <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] shake-ticker cursor-pointer"
                         >
                           <td
                             class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"

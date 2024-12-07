@@ -154,7 +154,7 @@
     {#if isLoaded}
       <div class="flex flex-row items-end justify-between">
         <select
-          class="mt-5 sm:mb-0 ml-1 w-36 select select-bordered select-sm p-0 pl-5 bg-[#313131]"
+          class="mt-5 sm:mb-0 ml-1 w-36 select select-bordered select-sm p-0 pl-5 bg-secondary"
           on:change={changeStatement}
         >
           <option disabled>Choose a time period</option>

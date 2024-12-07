@@ -244,7 +244,7 @@
 
       <!-- Pricing Card -->
       <div
-        class="sm:order-2 rounded-md box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-[#27272A]"
+        class="sm:order-2 rounded-md box sm:-mt-10 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white bg-primary"
       >
         <div class="{!mode ? 'hidden' : ''} ribbon ribbon-top-right">
           <span class="text-white">Discount</span>

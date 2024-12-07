@@ -532,7 +532,7 @@
                   <DropdownMenu.Trigger asChild let:builder>
                     <Button
                       builders={[builder]}
-                      class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                      class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                     >
                       <span class="truncate text-white">{sortBy}</span>
                       <svg
@@ -560,19 +560,19 @@
                     <DropdownMenu.Group>
                       <DropdownMenu.Item
                         on:click={() => (sortBy = "Total")}
-                        class="cursor-pointer hover:bg-[#27272A]"
+                        class="cursor-pointer hover:bg-primary"
                       >
                         Total
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         on:click={() => (sortBy = "Change")}
-                        class="cursor-pointer hover:bg-[#27272A]"
+                        class="cursor-pointer hover:bg-primary"
                       >
                         Change
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         on:click={() => (sortBy = "Growth")}
-                        class="cursor-pointer hover:bg-[#27272A]"
+                        class="cursor-pointer hover:bg-primary"
                       >
                         Growth
                       </DropdownMenu.Item>
@@ -582,7 +582,7 @@
               </div>
               <Button
                 on:click={() => exportData("csv")}
-                class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
               >
                 <span class="truncate text-white">Download</span>
                 <svg
@@ -646,7 +646,7 @@
               </thead>
               <tbody class="">
                 {#each historyList as item, index}
-                  <tr class="text-gray-200 odd:bg-[#27272A]">
+                  <tr class="text-gray-200 odd:bg-secondary">
                     <td
                       class="text-start border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >

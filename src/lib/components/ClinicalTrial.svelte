@@ -53,7 +53,7 @@
             </thead>
             <tbody>
               {#each displayList as item,index}
-              <tr on:click={() => handleViewData(item)} class="border-y border-gray-800 odd:bg-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] cursor-pointer">
+              <tr on:click={() => handleViewData(item)} class="border-y border-gray-800 odd:bg-secondary sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] cursor-pointer">
                
                   <td class="text-white font-medium whitespace-nowrap">
                    {item["Interventions"]?.length === 0 ? '-' : item["Interventions"]?.length > charNumber ? formatString(item["Interventions"]?.slice(0,charNumber)) + "..." : formatString(item["Interventions"])}
@@ -130,11 +130,11 @@
 
   <!-- svelte-ignore a11y-label-has-associated-control -->
   <label
-    class="modal-box w-full relative bg-[#27272A] h-auto max-h-[900px] overflow-y-scroll"
+    class="modal-box w-full relative bg-primary h-auto max-h-[900px] overflow-y-scroll"
   >
     <label
       for="clinicalDesktopModal"
-      class="cursor-pointer absolute right-5 top-2 bg-[#27272A] text-2xl text-white"
+      class="cursor-pointer absolute right-5 top-2 bg-primary text-2xl text-white"
     >
       ✕
     </label>
@@ -142,70 +142,70 @@
     <h3 class="text-xl font-semibold text-white mt-10">
       Title: {trialTitle}
     </h3>
-    <p class="py-4 text-gray-200 bg-[#27272A] w-full">
+    <p class="py-4 text-gray-200 bg-primary w-full">
       <span class="font-semibold text-white">Brief Summary:</span>
       {trialSummary}
     </p>
 
     <table
-      class="table table-sm table-compact bg-[#27272A] w-full mt-5 mb-10 text-white"
+      class="table table-sm table-compact bg-primary w-full mt-5 mb-10 text-white"
     >
       <tbody>
         <!-- row 1 -->
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">NCT Number</td>
-          <td class="bg-[#27272A]">{trialId}</td>
+          <td class="bg-primary font-semibold">NCT Number</td>
+          <td class="bg-primary">{trialId}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Start Date</td>
-          <td class="bg-[#27272A]">{trialStart}</td>
+          <td class="bg-primary font-semibold">Start Date</td>
+          <td class="bg-primary">{trialStart}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">End Date</td>
-          <td class="bg-[#27272A]">{trialEnd}</td>
+          <td class="bg-primary font-semibold">End Date</td>
+          <td class="bg-primary">{trialEnd}</td>
         </tr>
         <!-- row 2 -->
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Study Status</td>
-          <td class="bg-[#27272A]">{trialStage}</td>
+          <td class="bg-primary font-semibold">Study Status</td>
+          <td class="bg-primary">{trialStage}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Phase Status</td>
-          <td class="bg-[#27272A]">{trialPhase}</td>
+          <td class="bg-primary font-semibold">Phase Status</td>
+          <td class="bg-primary">{trialPhase}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Study Results</td>
-          <td class="bg-[#27272A]">{trialResult}</td>
+          <td class="bg-primary font-semibold">Study Results</td>
+          <td class="bg-primary">{trialResult}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Sex</td>
-          <td class="bg-[#27272A]">{formatString(trialSex)}</td>
+          <td class="bg-primary font-semibold">Sex</td>
+          <td class="bg-primary">{formatString(trialSex)}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Age</td>
-          <td class="bg-[#27272A]"
+          <td class="bg-primary font-semibold">Age</td>
+          <td class="bg-primary"
             >{formatString(trialAge)?.replace("Older_adult", "Older Adult")}</td
           >
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Sponsor</td>
-          <td class="bg-[#27272A]">{trialSponsor}</td>
+          <td class="bg-primary font-semibold">Sponsor</td>
+          <td class="bg-primary">{trialSponsor}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Enrollment</td>
-          <td class="bg-[#27272A]">{trialEnrollment}</td>
+          <td class="bg-primary font-semibold">Enrollment</td>
+          <td class="bg-primary">{trialEnrollment}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Study Type</td>
-          <td class="bg-[#27272A]">{trialStudyType}</td>
+          <td class="bg-primary font-semibold">Study Type</td>
+          <td class="bg-primary">{trialStudyType}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Funder Type</td>
-          <td class="bg-[#27272A]">{trialFunderType}</td>
+          <td class="bg-primary font-semibold">Funder Type</td>
+          <td class="bg-primary">{trialFunderType}</td>
         </tr>
         <tr class="border-b border-slate-700">
-          <td class="bg-[#27272A] font-semibold">Website</td>
-          <td class="bg-[#27272A]"
+          <td class="bg-primary font-semibold">Website</td>
+          <td class="bg-primary"
             ><a
               class="text-blue-400 sm:hover:text-white"
               href={trialLink}
@@ -250,49 +250,49 @@
         >
           <tbody>
             <!-- row 1 -->
-            <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+            <tr class="border-b border-slate-700 odd:bg-secondary">
               <td class="font-semibold w-full">NCT Number</td>
               <td class="">{trialId}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Start Date</td>
               <td class="">{trialStart}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">End Date</td>
               <td class="">{trialEnd}</td>
             </tr>
             <!-- row 2 -->
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Study Status</td>
               <td class="">{trialStage}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Phase Status</td>
               <td class="">{trialPhase}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Study Results</td>
               <td class="">{trialResult}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Sex</td>
               <td class="">{formatString(trialSex)}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Age</td>
               <td class=""
@@ -303,31 +303,31 @@
               >
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Sponsor</td>
               <td class="">{trialSponsor}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Enrollment</td>
               <td class="">{trialEnrollment}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Study Type</td>
               <td class="">{trialStudyType}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Funder Type</td>
               <td class="">{trialFunderType}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-[#27272A] even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-secondary even:bg-[#09090B]"
             >
               <td class="font-semibold">Website</td>
               <td class=""

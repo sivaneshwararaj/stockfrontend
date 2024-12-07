@@ -241,7 +241,7 @@
               <!--Start Progress-->
               {#each showFullStats ? geographicList : geographicList?.slice(0, 3) as item, index}
                 <div
-                  class="shadow-lg bg-[#27272A] w-full rounded-md p-4 sm:p-3 mb-5 flex flex-row items-center {index ===
+                  class="shadow-lg bg-primary w-full rounded-md p-4 sm:p-3 mb-5 flex flex-row items-center {index ===
                   0
                     ? 'mt-4'
                     : ''} {index === 2 &&
@@ -251,7 +251,7 @@
                     : ''}"
                 >
                   <div
-                    class="mr-3 rounded-full w-8 h-8 sm:w-10 sm:h-10 relative bg-[#27272A]"
+                    class="mr-3 rounded-full w-8 h-8 sm:w-10 sm:h-10 relative bg-primary"
                   >
                     {#if item?.name?.toLowerCase() === "europe"}
                       <svg

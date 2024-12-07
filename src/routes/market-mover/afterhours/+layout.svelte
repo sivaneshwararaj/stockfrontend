@@ -69,16 +69,16 @@
             <a
               href="/market-mover/afterhours/gainers"
               class="p-2 px-5 cursor-pointer {categoryType === 'gainers'
-                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
               Gainers
             </a>
             <a
               href="/market-mover/afterhours/losers"
               class="p-2 px-5 cursor-pointer {categoryType === 'losers'
-                ? 'text-white bg-[#27272A] sm:hover:bg-opacity-[0.95]'
-                : 'text-gray-400 sm:hover:text-white sm:hover:bg-[#27272A] sm:hover:bg-opacity-[0.95]'}"
+                ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
               Losers
             </a>

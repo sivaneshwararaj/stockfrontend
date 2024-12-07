@@ -696,7 +696,7 @@
 
           <div class="flex flex-row items-center w-full mt-10">
             <select
-              class="ml-1 w-40 select select-bordered select-sm p-0 pl-5 bg-[#313131]"
+              class="ml-1 w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
               on:change={changeTimePeriod}
             >
               <option disabled>Choose a time period</option>
@@ -708,7 +708,7 @@
             </select>
 
             <select
-              class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-[#313131]"
+              class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
               on:change={changeVolumeOI}
             >
               <option disabled>Choose a category</option>
@@ -750,7 +750,7 @@
             </h3>
 
             <div
-              class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
+              class="bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
             >
               {#each tabEX as item, i}
                 <button
@@ -785,7 +785,7 @@
 
           {#if optionList?.length !== 0}
             <div
-              class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
+              class="bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
             >
               {#each tabs as item, i}
                 <button
@@ -812,7 +812,7 @@
             {#if activeIdx === 1}
               <div class="relative mb-6">
                 <select
-                  class="w-48 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
+                  class="w-48 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-secondary"
                   on:change={changeStatement}
                 >
                   <option disabled>Choose an Expiration Date</option>
@@ -878,7 +878,7 @@
                         on:click={() => handleViewData(item?.date)}
                         on:mouseover={() =>
                           getDailyTransactions($stockTicker + "+" + item?.date)}
-                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index +
+                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
                           1 ===
                           optionList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
@@ -1067,7 +1067,7 @@
                   <tbody>
                     {#each data?.user?.tier === "Pro" ? optionChainList : optionChainList?.slice(0, 3) as item, index}
                       <tr
-                        class="odd:bg-[#27272A] border-b-[#09090B] {index +
+                        class="odd:bg-secondary border-b-[#09090B] {index +
                           1 ===
                           optionChainList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
@@ -1254,7 +1254,7 @@
             <tbody>
               {#each optionHistoryList as item}
                 <!-- row -->
-                <tr class="odd:bg-[#27272A] border-b-[#09090B]">
+                <tr class="odd:bg-secondary border-b-[#09090B]">
                   <td class="text-white text-sm text-start whitespace-nowrap">
                     {formatTime(item?.time)}
                   </td>

@@ -5,7 +5,7 @@
 </script>
 
 {#each fields as { label, key }}
-  <tr class="text-white odd:bg-[#27272A] whitespace-nowrap">
+  <tr class="text-white odd:bg-secondary whitespace-nowrap">
     <td
       class="text-start border-r border-gray-700 text-white text-sm sm:text-[1rem]"
     >

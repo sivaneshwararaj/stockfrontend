@@ -181,7 +181,7 @@
         class="mt-5 flex flex-col m-auto items-center rounded-md w-full mb-16 p-3"
       >
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-primary w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">
@@ -205,7 +205,7 @@
         </div>
 
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-primary w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">
@@ -229,7 +229,7 @@
         </div>
 
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-primary w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">
@@ -253,7 +253,7 @@
         </div>
 
         <div
-          class="shadow-lg bg-[#27272A] w-full rounded-md p-4 mb-5 flex flex-row items-center"
+          class="shadow-lg bg-primary w-full rounded-md p-4 mb-5 flex flex-row items-center"
         >
           <div class="flex flex-col -mt-2 w-full">
             <div class="flex flex-row items-center w-full">

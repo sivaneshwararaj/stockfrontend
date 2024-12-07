@@ -220,7 +220,7 @@
 
         <div class="pb-2 rounded-md bg-[#09090B]">
           <div
-            class="bg-[#313131] w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+            class="bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
           >
             {#each tabs as item, i}
               <button

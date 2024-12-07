@@ -875,7 +875,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
+                        class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
                       >
                         <span
                           class="truncate font-semibold text-white text-sm sm:text-[1rem]"
@@ -932,8 +932,8 @@
                             on:click={() => changeWatchList(item)}
                             class="text-sm sm:text-[1rem] {item?.id ===
                             displayWatchList?.id
-                              ? 'bg-[#27272A]'
-                              : ''} cursor-pointer sm:hover:bg-[#27272A]"
+                              ? 'bg-primary'
+                              : ''} cursor-pointer sm:hover:bg-primary"
                           >
                             {item?.title} ({item?.ticker?.length})
                             <label
@@ -990,7 +990,7 @@
                     {/if}
                     <label
                       on:click={handleEditMode}
-                      class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-[#27272A] ease-out sm:hover:text-red-500"
+                      class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-primary ease-out sm:hover:text-red-500"
                     >
                       <svg
                         class="inline-block w-5 h-5"
@@ -1060,7 +1060,7 @@
                       >
                         {#each searchBarData as item}
                           <Combobox.Item
-                            class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-[#27272A]"
+                            class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
                             value={item.symbol}
                             label={item.name}
                             on:click={(e) => handleAddTicker(e, item?.symbol)}
@@ -1094,7 +1094,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
+                        class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white text-sm sm:text-[1rem]"
                           >Indicators</span
@@ -1164,7 +1164,7 @@
                       <DropdownMenu.Group class="pb-2">
                         <!-- Added padding to avoid overlapping with Reset button -->
                         {#each searchQuery?.length !== 0 ? testList : allRows as item}
-                          <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                          <DropdownMenu.Item class="sm:hover:bg-primary">
                             <div class="flex items-center">
                               {#if data?.user?.tier === "Pro" || excludedRules?.has(item?.rule)}
                                 <label
@@ -1308,7 +1308,7 @@
                       <tbody class="p-0">
                         {#each watchList as item}
                           <tr
-                            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
+                            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
                           >
                             <td
                               on:click={() => handleFilter(item?.symbol)}
@@ -1434,7 +1434,7 @@
                       class="inline-flex justify-center w-full rounded-md sm:w-auto mb-3"
                     >
                       <div
-                        class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                        class="bg-secondary w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                       >
                         {#each tabs as item, i}
                           {#if data?.user?.tier !== "Pro" && i > 0}
@@ -1493,7 +1493,7 @@
                             {#each titleGroups as { title, items, symbols }}
                               <div class="flex border-gray-600 text-small">
                                 <div
-                                  class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                                  class="hidden min-w-[100px] items-center justify-center bg-primary p-1 lg:flex"
                                 >
                                   {new Date(
                                     items[0].publishedDate,
@@ -1565,7 +1565,7 @@
                           {#each titleGroups as item}
                             <div class="flex border-gray-600 text-small">
                               <div
-                                class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                                class="hidden min-w-[100px] items-center justify-center bg-primary p-1 lg:flex"
                               >
                                 {formatTime(item?.time)}
                               </div>
@@ -1726,7 +1726,7 @@
   ></label>
 
   <div
-    class="modal-box w-full bg-[#27272A] border border-gray-600 overflow-hidden"
+    class="modal-box w-full bg-primary border border-gray-600 overflow-hidden"
   >
     <h3
       class="font-bold text-[1rem] text-center sm:text-lg flex justify-center items-center mt-10 text-white"

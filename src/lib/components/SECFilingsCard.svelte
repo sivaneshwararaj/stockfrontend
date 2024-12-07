@@ -120,9 +120,9 @@
       </h2>
 
       <div class="w-11/12 mt-5">
-        <div class="relative right-0 bg-[#27272A] rounded-md">
+        <div class="relative right-0 bg-primary rounded-md">
           <Tabs.Root value="eightK" class="w-full">
-            <Tabs.List class="grid w-full grid-cols-3 bg-[#27272A]">
+            <Tabs.List class="grid w-full grid-cols-3 bg-primary">
               <Tabs.Trigger on:click={() => changeSECType("8-K")} value="eightK"
                 >8-K</Tabs.Trigger
               >
@@ -143,7 +143,7 @@
         <div class="mt-5 w-full">
           {#each displayList as item}
             <div
-              class="flex flex-col justify-center m-auto items-start rounded-md bg-[#27272A] shadow-lg h-auto w-11/12 mb-3"
+              class="flex flex-col justify-center m-auto items-start rounded-md bg-primary shadow-lg h-auto w-11/12 mb-3"
               transition:fade={{ delay: 0, duration: 80 }}
               in={accordionOpen[item?.year]}
             >

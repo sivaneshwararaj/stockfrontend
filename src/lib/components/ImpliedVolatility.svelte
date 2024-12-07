@@ -31,7 +31,7 @@
           </div>
 
           <select
-            class="mt-5 mb-5 sm:mb-0 sm:mt-3 ml-1 w-44 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
+            class="mt-5 mb-5 sm:mb-0 sm:mt-3 ml-1 w-44 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-secondary"
             on:change={changeStatement}
           >
             <option disabled>Choose IV Period</option>
@@ -112,7 +112,7 @@
           <div class="flex justify-start items-center w-full m-auto">
             <table class="w-full" data-test="statistics-table">
               <tbody>
-                <tr class="border-y border-gray-800 odd:bg-[#27272A]">
+                <tr class="border-y border-gray-800 odd:bg-secondary">
                   <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                     <span>Date</span>
                   </td>
@@ -122,7 +122,7 @@
                     {formatDateRange(rawData?.slice(-1)?.at(0)?.date)}
                   </td>
                 </tr>
-                <tr class="border-y border-gray-800 odd:bg-[#27272A]">
+                <tr class="border-y border-gray-800 odd:bg-secondary">
                   <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                     <span>IV Range</span>
                   </td>
@@ -132,7 +132,7 @@
                     {lowestIV + "%" + "-" + highestIV + "%"}
                   </td>
                 </tr>
-                <tr class="border-y border-gray-800 odd:bg-[#27272A]">
+                <tr class="border-y border-gray-800 odd:bg-secondary">
                   <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                     <span>RV Range</span>
                   </td>

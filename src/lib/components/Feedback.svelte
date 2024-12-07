@@ -135,7 +135,7 @@
 
     <div class="p-2">
       <div
-        class="bg-[#313131] w-full min-w-24 sm:w-full relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+        class="bg-secondary w-full min-w-24 sm:w-full relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
       >
         {#each tabs as item, i}
           <button
@@ -162,7 +162,7 @@
 
     <div class="p-2 mt-5 w-full h-[200px] max-h-[1000px]">
       <textarea
-        class="max-h-[1000px] h-[200px] textarea textarea-bordered placeholder-gray-300 w-full bg-[#27272A] ring-1 text-white border border-gray-600"
+        class="max-h-[1000px] h-[200px] textarea textarea-bordered placeholder-gray-300 w-full bg-primary ring-1 text-white border border-gray-600"
         placeholder="Your feedback..."
         value={inputValue}
         on:input={handleInput}

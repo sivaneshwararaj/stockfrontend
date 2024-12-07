@@ -342,7 +342,7 @@
                   {/if}
                   <label
                     on:click={handleEditMode}
-                    class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-[#27272A] ease-out sm:hover:text-red-500"
+                    class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-primary ease-out sm:hover:text-red-500"
                   >
                     <svg
                       class="inline-block w-5 h-5"
@@ -408,7 +408,7 @@
                     >
                       {#each searchBarData as item}
                         <Combobox.Item
-                          class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-[#27272A]"
+                          class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
                           value={item.symbol}
                           label={item.name}
                           on:click={(e) =>
@@ -468,7 +468,7 @@
                     {#each priceAlertList as item}
                       <!-- row -->
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
                       >
                         <td
                           on:click={() => handleFilter(item?.id)}
@@ -551,7 +551,7 @@
                   class="inline-flex justify-center w-full rounded-md sm:w-auto mb-3"
                 >
                   <div
-                    class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                    class="bg-secondary w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                   >
                     {#each tabs as item, i}
                       {#if data?.user?.tier !== "Pro" && i > 0}
@@ -610,7 +610,7 @@
                         {#each titleGroups as { title, items, symbols }}
                           <div class="flex border-gray-600 text-small">
                             <div
-                              class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                              class="hidden min-w-[100px] items-center justify-center bg-primary p-1 lg:flex"
                             >
                               {new Date(
                                 items[0].publishedDate,
@@ -682,7 +682,7 @@
                       {#each titleGroups as item}
                         <div class="flex border-gray-600 text-small">
                           <div
-                            class="hidden min-w-[100px] items-center justify-center bg-[#27272A] p-1 lg:flex"
+                            class="hidden min-w-[100px] items-center justify-center bg-primary p-1 lg:flex"
                           >
                             {formatTime(item?.time)}
                           </div>

@@ -321,7 +321,7 @@
 
             <label
               on:click={changeStructure}
-              class="sm:hidden w-24 sm:ml-3 mr-2 sm:mr-0 cursor-pointer bg-[#27272A] px-4 py-2 rounded-md shadow-md"
+              class="sm:hidden w-24 sm:ml-3 mr-2 sm:mr-0 cursor-pointer bg-primary px-4 py-2 rounded-md shadow-md"
             >
               <span class="m-auto mr-0.5 text-white text-sm">
                 Switch To: {displayStructure}
@@ -361,7 +361,7 @@
                   <tbody>
                     {#each senateTradingList as item}
                       <tr
-                        class="odd:bg-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]"
+                        class="odd:bg-secondary sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]"
                       >
                         <td
                           class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3 border-b border-b-[#09090B]"

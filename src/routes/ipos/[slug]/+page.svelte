@@ -102,7 +102,7 @@
         </div>
         <div class="relative mt-4">
           <select
-            class="select text-white select-bordered select-sm w-36 p-0 pl-5 overflow-y-auto bg-[#313131]"
+            class="select text-white select-bordered select-sm w-36 p-0 pl-5 overflow-y-auto bg-secondary"
             on:change={changeTimePeriod}
           >
             <option disabled>Select time period</option>
@@ -156,7 +156,7 @@
             <tbody>
               {#each ipoList as item}
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
                 >
                   <td
                     class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] whitespace-nowrap"

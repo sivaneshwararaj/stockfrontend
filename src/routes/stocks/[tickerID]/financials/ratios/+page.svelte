@@ -423,7 +423,7 @@
                 class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
               >
                 <div
-                  class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                  class="bg-secondary w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                 >
                   {#each tabs as item, i}
                     {#if data?.user?.tier !== "Pro" && i > 0}
@@ -506,7 +506,7 @@
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button
                           builders={[builder]}
-                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                         >
                           <span class="truncate text-white">{$timeFrame}</span>
                           <svg
@@ -534,19 +534,19 @@
                         <DropdownMenu.Group>
                           <DropdownMenu.Item
                             on:click={() => ($timeFrame = "5Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
+                            class="cursor-pointer hover:bg-primary"
                           >
                             5 years
                           </DropdownMenu.Item>
                           <DropdownMenu.Item
                             on:click={() => ($timeFrame = "10Y")}
-                            class="cursor-pointer hover:bg-[#27272A]"
+                            class="cursor-pointer hover:bg-primary"
                           >
                             10 years
                           </DropdownMenu.Item>
                           <DropdownMenu.Item
                             on:click={() => ($timeFrame = "MAX")}
-                            class="cursor-pointer hover:bg-[#27272A]"
+                            class="cursor-pointer hover:bg-primary"
                           >
                             Max
                           </DropdownMenu.Item>
@@ -556,7 +556,7 @@
                   </div>
                   <Button
                     on:click={() => exportFundamentalData("csv")}
-                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Download</span>
                     <svg
@@ -578,7 +578,7 @@
                 <div class="sm:w-full">
                   <div class="relative">
                     <select
-                      class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-[#313131]"
+                      class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-secondary"
                       on:change={changeStatement}
                     >
                       <option disabled>Choose an Income Variable</option>
@@ -659,7 +659,7 @@
                       {#each tableList as item, index}
                         <!-- row -->
                         <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] shake-ticker cursor-pointer"
+                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] shake-ticker cursor-pointer"
                         >
                           <td
                             class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
@@ -751,7 +751,7 @@
                     </thead>
                     <tbody>
                       <!-- row -->
-                      <tr class="text-white odd:bg-[#27272A] whitespace-nowrap">
+                      <tr class="text-white odd:bg-secondary whitespace-nowrap">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >PE Ratio</td
@@ -764,7 +764,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >PS Ratio</td
@@ -778,7 +778,7 @@
                         {/each}
                       </tr>
                       <!-- row -->
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >PB Ratio</td
@@ -791,7 +791,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A] whitespace-nowrap">
+                      <tr class="text-white odd:bg-secondary whitespace-nowrap">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >P/FCF Ratio</td
@@ -806,7 +806,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >P/OCF Ratio</td
@@ -823,7 +823,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >OCF/S Ratio</td
@@ -838,7 +838,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Debt / Equity Ratio</td
@@ -852,7 +852,7 @@
                         {/each}
                       </tr>
                       <!-- row -->
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Quick Ratio</td
@@ -866,7 +866,7 @@
                         {/each}
                       </tr>
                       <!-- row -->
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Current Ratio</td
@@ -879,7 +879,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem] whitespace-nowrap"
                           >Asset Turnover</td
@@ -890,7 +890,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Interest Coverage</td
@@ -904,7 +904,7 @@
                         {/each}
                       </tr>
                       <!-- row -->
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Return on Equity (ROE)</td
@@ -915,7 +915,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Return on Assets (ROA)</td
@@ -926,7 +926,7 @@
                           >
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Return on Capital (ROIC)</td
@@ -939,7 +939,7 @@
                           >
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Dividend Yield</td
@@ -950,7 +950,7 @@
                           >
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Payout Ratio</td
@@ -963,7 +963,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Gross Profit Margin</td
@@ -978,7 +978,7 @@
                           </td>
                         {/each}
                       </tr>
-                      <tr class="text-white odd:bg-[#27272A]">
+                      <tr class="text-white odd:bg-secondary">
                         <td
                           class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
                           >Net Profit Margin</td

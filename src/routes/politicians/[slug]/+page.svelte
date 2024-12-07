@@ -348,7 +348,7 @@
                 <tbody class="p-0">
                   {#each tableData as item}
                     <tr
-                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#27272A] text-white"
+                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#27272A] text-white"
                     >
                       <td class="hidden lg:table-cell"
                         ><button

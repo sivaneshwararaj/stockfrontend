@@ -130,7 +130,7 @@
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
                     builders={[builder]}
-                    class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Year: {year}</span>
                     <svg
@@ -162,7 +162,7 @@
                           year = index;
                           getTranscripts();
                         }}
-                        class="cursor-pointer hover:bg-[#27272A]"
+                        class="cursor-pointer hover:bg-primary"
                       >
                         {index}
                       </DropdownMenu.Item>
@@ -176,7 +176,7 @@
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
                     builders={[builder]}
-                    class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Quarter: Q{quarter}</span>
                     <svg
@@ -208,7 +208,7 @@
                           quarter = index;
                           getTranscripts();
                         }}
-                        class="cursor-pointer hover:bg-[#27272A]"
+                        class="cursor-pointer hover:bg-primary"
                       >
                         Q{index}
                       </DropdownMenu.Item>

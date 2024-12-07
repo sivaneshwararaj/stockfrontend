@@ -76,7 +76,7 @@
                     data?.getAnalystInsight?.date,
                   )
                     ? 'bg-[#F9AB00] bg-opacity-[0.1]'
-                    : 'bg-[#27272A]'} shadow-lg h-full pl-3 pt-2 pb-4"
+                    : 'bg-primary'} shadow-lg h-full pl-3 pt-2 pb-4"
                 >
                   <div class="flex flex-col items-start">
                     <div class="flex flex-row items-start w-full pt-2">

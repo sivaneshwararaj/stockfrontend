@@ -830,7 +830,7 @@ afterUpdate(async () => {
 
             <Button
               on:click={changeChartType}
-              class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+              class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
             >
               {#if displayChartType === "line"}
                 <svg

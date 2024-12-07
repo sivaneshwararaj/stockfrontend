@@ -26,7 +26,7 @@
 
           <label
             for="scoreInfo"
-            class="absolute -top-3 -right-4 cursor-pointer border border-gray-900 rounded-full bg-[#242424] sm:hover:bg-[#313131] duration-100 p-1 text-gray-300 hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-300"
+            class="absolute -top-3 -right-4 cursor-pointer border border-gray-900 rounded-full bg-[#242424] sm:hover:bg-secondary duration-100 p-1 text-gray-300 hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-300"
           >
             <svg
               class="h-[8px] w-[8px]"
@@ -192,7 +192,7 @@
     >
       <!-- head -->
       <thead>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <th class="bg-[#09090B] text-white text-sm font-semibold">
             Bullish Probability
           </th>
@@ -206,53 +206,53 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+80% </td>
           <td class="text-sm sm:text-[1rem]">Strong Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">10</td>
         </tr>
         <!-- row 2 -->
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+75%</td>
           <td class="text-sm sm:text-[1rem]">Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">9</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+70%</td>
           <td class="text-sm sm:text-[1rem]">Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">8</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]"> +60% </td>
           <td class="text-sm sm:text-[1rem]">Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">7</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+50%</td>
           <td class="text-sm sm:text-[1rem]">Hold</td>
           <td class="text-sm sm:text-[1rem] text-end">6</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+45%</td>
           <td class="text-sm sm:text-[1rem]">Hold</td>
           <td class="text-sm sm:text-[1rem] text-end">5</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+40%</td>
           <td class="text-sm sm:text-[1rem]">Hold</td>
           <td class="text-sm sm:text-[1rem] text-end">4</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+35%</td>
           <td class="text-sm sm:text-[1rem]">Sell</td>
           <td class="text-sm sm:text-[1rem] text-end">3</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+30%</td>
           <td class="text-sm sm:text-[1rem]">Sell</td>
           <td class="text-sm sm:text-[1rem] text-end">2</td>
         </tr>
-        <tr class="odd:bg-[#27272A]">
+        <tr class="odd:bg-secondary">
           <td class="text-sm sm:text-[1rem]">+20%</td>
           <td class="text-sm sm:text-[1rem]">Strong Sell</td>
           <td class="text-sm sm:text-[1rem] text-end">1</td>

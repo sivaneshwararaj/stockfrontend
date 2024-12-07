@@ -254,7 +254,7 @@
       <!--Start Quill Editor-->
       <div class="{!loadingEditor ? 'hidden' : ''} mt-3 pl-7 pr-7">
         <div
-          class="quill-editor min-h-[96px] h-[120px] resize-none focus-none ring-none rounded-none bg-[#313131] text-white"
+          class="quill-editor min-h-[96px] h-[120px] resize-none focus-none ring-none rounded-none bg-secondary text-white"
         >
           <select class="ql-header" aria-label="Header" title="Header">
             <option selected></option>
@@ -266,7 +266,7 @@
         placeholder="Loading editor..."
         class="{loadingEditor
           ? 'hidden'
-          : ''} min-h-[96px] h-[120px] text-sm italic w-full resize-none focus-none ring-none rounded-none bg-[#313131] text-white"
+          : ''} min-h-[96px] h-[120px] text-sm italic w-full resize-none focus-none ring-none rounded-none bg-secondary text-white"
       ></textarea>
       <!--End Quill Editor-->
 

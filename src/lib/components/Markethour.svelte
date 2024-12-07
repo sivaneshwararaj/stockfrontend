@@ -51,17 +51,17 @@
 
   <!-- svelte-ignore a11y-label-has-associated-control -->
   <label
-    class="modal-box w-full relative bg-[#27272A] border border-gray-800 h-auto"
+    class="modal-box w-full relative bg-primary border border-gray-800 h-auto"
   >
     <label
       for="marketHour"
-      class="cursor-pointer absolute right-5 top-2 bg-[#27272A] text-2xl text-white"
+      class="cursor-pointer absolute right-5 top-2 bg-primary text-2xl text-white"
     >
       ✕
     </label>
 
     <h3 class="text-2xl font-bold text-white">Opening Hours</h3>
-    <p class="py-4 text-gray-200 bg-[#27272A] w-full">
+    <p class="py-4 text-gray-200 bg-primary w-full">
       The New York Stock Exchange, one of the largest stock exchanges in the
       world, operates on a regular trading schedule. Its trading hours are from <span
         class="text-white font-semibold underline">9:30</span
@@ -75,57 +75,57 @@
     </p>
 
     <table
-      class="table table-sm table-compact bg-[#27272A] w-full mt-5 mb-10 text-white"
+      class="table table-sm table-compact bg-primary w-full mt-5 mb-10 text-white"
     >
       <!-- head -->
       <thead>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
-          <th class="bg-[#27272A] text-white text-sm font-semibold">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
+          <th class="bg-primary text-white text-sm font-semibold">
             Exchange holidays
           </th>
-          <th class="bg-[#27272A] text-white text-sm font-semibold"> Date </th>
+          <th class="bg-primary text-white text-sm font-semibold"> Date </th>
         </tr>
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold"> New Years Day</td>
           <td class="">01.01.2024</td>
         </tr>
         <!-- row 2 -->
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Martin Luther King, Jr. Day</td>
           <td class="">15.01.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Washington's Birthday</td>
           <td class="">19.02.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold"> Good Friday </td>
-          <td class="bg-[#27272A]">29.03.2024</td>
+          <td class="bg-primary">29.03.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Memorial Day</td>
           <td class="">27.05.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Juneteenth National Independence Day</td>
           <td class="">19.06.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Independence Day</td>
           <td class="">04.07.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Labor Day</td>
           <td class="">02.09.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#27272A]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Thanksgiving Day</td>
           <td class="">28.11.2024</td>
         </tr>
-        <tr class="odd:bg-[#27272A]">
+        <tr class="odd:bg-secondary">
           <td class="font-semibold">Christmas</td>
           <td class="">25.12.2024</td>
         </tr>

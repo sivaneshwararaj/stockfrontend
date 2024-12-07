@@ -774,21 +774,21 @@
               <thead class="">
                 <tr class="">
                   <th
-                    class="bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-start"
+                    class="bg-primary border-b border-[#000] text-white font-semibold text-sm text-start"
                     >Fiscal Year</th
                   >
                   {#each xData as item}
                     <td
-                      class="z-20 bg-[#27272A] border-b border-[#000] text-white font-semibold text-sm text-end bg-[#09090B]"
+                      class="z-20 bg-primary border-b border-[#000] text-white font-semibold text-sm text-end bg-[#09090B]"
                       >{"FY" + item}</td
                     >
                   {/each}
                 </tr>
               </thead>
               <tbody class="shadow-md">
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-primary border-b border-[#27272A]"
                   >
                     Revenue
                   </th>
@@ -805,9 +805,9 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
+                    class="bg-primary whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
                   >
                     Revenue Growth
                   </th>
@@ -840,9 +840,9 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#27272A] border-b-[#09090B]">
+                <tr class="bg-primary border-b-[#09090B]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-primary border-b border-[#27272A]"
                   >
                     EPS
                   </th>
@@ -859,9 +859,9 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
+                    class="bg-primary whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
                   >
                     EPS Growth
                   </th>
@@ -893,9 +893,9 @@
                     </td>
                   {/each}
                 </tr>
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-primary border-b border-[#27272A]"
                   >
                     Net Income
                   </th>
@@ -912,9 +912,9 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
+                    class="bg-primary whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
                   >
                     Net Income Growth
                   </th>
@@ -947,9 +947,9 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-primary border-b border-[#27272A]"
                   >
                     EBITDA
                   </th>
@@ -966,9 +966,9 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="bg-[#27272A] whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
+                    class="bg-primary whitespace-nowrap text-sm sm:text-[1rem] text-white text-start font-medium border-b border-[#27272A]"
                   >
                     EBITDA Growth
                   </th>
@@ -1001,9 +1001,9 @@
                   {/each}
                 </tr>
 
-                <tr class="bg-[#27272A] border-b-[#27272A]">
+                <tr class="bg-primary border-b-[#27272A]">
                   <th
-                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#27272A] border-b border-[#27272A]"
+                    class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-primary border-b border-[#27272A]"
                     >No. Analysts</th
                   >
                   {#each tableCombinedRevenue as item}

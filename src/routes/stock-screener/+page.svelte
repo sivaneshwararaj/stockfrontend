@@ -2300,7 +2300,7 @@ const handleKeyDown = (event) => {
               <DropdownMenu.Trigger asChild let:builder>
                 <Button
                   builders={[builder]}
-                  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                 >
                   <span class="truncate text-white"
                     >{selectedPopularStrategy?.length !== 0
@@ -2332,38 +2332,38 @@ const handleKeyDown = (event) => {
                 <DropdownMenu.Group>
                   <DropdownMenu.Item
                     on:click={() => popularStrategy("dividendGrowth")}
-                    class="cursor-pointer hover:bg-[#27272A]"
+                    class="cursor-pointer hover:bg-primary"
                   >
                     Dividend Growth
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     on:click={() => popularStrategy("topGainers1Y")}
-                    class="cursor-pointer hover:bg-[#27272A]"
+                    class="cursor-pointer hover:bg-primary"
                   >
                     Top Gainers 1Y
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     on:click={() => popularStrategy("topShortedStocks")}
-                    class="cursor-pointer hover:bg-[#27272A]"
+                    class="cursor-pointer hover:bg-primary"
                   >
                     Top Shorted Stocks
                   </DropdownMenu.Item>
 
                   <DropdownMenu.Item
                     on:click={() => popularStrategy("momentumTAStocks")}
-                    class="cursor-pointer hover:bg-[#27272A]"
+                    class="cursor-pointer hover:bg-primary"
                   >
                     Momentum TA Stocks
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     on:click={() => popularStrategy("underValuedStocks")}
-                    class="cursor-pointer hover:bg-[#27272A]"
+                    class="cursor-pointer hover:bg-primary"
                   >
                     Undervalued Stocks
                   </DropdownMenu.Item>
                   <DropdownMenu.Item
                     on:click={() => popularStrategy("strongCashFlow")}
-                    class="cursor-pointer hover:bg-[#27272A]"
+                    class="cursor-pointer hover:bg-primary"
                   >
                     Strong Cash Flow
                   </DropdownMenu.Item>
@@ -2384,7 +2384,7 @@ const handleKeyDown = (event) => {
               <DropdownMenu.Trigger asChild let:builder>
                 <Button
                   builders={[builder]}
-                  class="min-w-[110px] w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                  class="min-w-[110px] w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                 >
                   <span class="truncate text-white"
                     >{selectedStrategy?.length !== 0
@@ -2441,8 +2441,8 @@ const handleKeyDown = (event) => {
                     <DropdownMenu.Item
                       on:click={() => switchStrategy(item)}
                       class="{item?.id === selectedStrategy
-                        ? 'bg-[#27272A]'
-                        : ''} cursor-pointer sm:hover:bg-[#27272A]"
+                        ? 'bg-primary'
+                        : ''} cursor-pointer sm:hover:bg-primary"
                     >
                       {item?.title} ({item?.rules?.length})
                     </DropdownMenu.Item>
@@ -2570,7 +2570,7 @@ const handleKeyDown = (event) => {
                             </svg>
                         </div>
                         
-                        <input type="text" placeholder="Search {allRows?.length} filters..." class="controls-input rounded-md w-full py-2 pl-10 placeholder:text-gray-300 bg-[#313131] sm:w-72"> 
+                        <input type="text" placeholder="Search {allRows?.length} filters..." class="controls-input rounded-md w-full py-2 pl-10 placeholder:text-gray-300 bg-secondary sm:w-72"> 
                         <div class="absolute inset-y-0 right-0 flex items-center pr-2"></div> 
                       
                     </div> 
@@ -2799,12 +2799,12 @@ const handleKeyDown = (event) => {
                         <DropdownMenu.Group class="min-h-10 mt-2">
                           {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                             {#each row?.step as newValue}
-                              <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                              <DropdownMenu.Item class="sm:hover:bg-primary">
                                 <button
                                   on:click={() => {
                                     handleChangeValue(newValue);
                                   }}
-                                  class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-[#27272A] focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
+                                  class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
                                 >
                                   {ruleCondition[row?.rule] !== undefined
                                     ? ruleCondition[row?.rule]
@@ -2815,7 +2815,7 @@ const handleKeyDown = (event) => {
                             {/each}
                           {:else if ["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber"]?.includes(row?.rule)}
                             {#each row?.step as item}
-                              <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                              <DropdownMenu.Item class="sm:hover:bg-primary">
                                 <div
                                   class="flex items-center"
                                   on:click|capture={(event) =>
@@ -2840,7 +2840,7 @@ const handleKeyDown = (event) => {
                             {/each}
                           {:else}
                             {#each testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : row?.rule === "country" ? listOfRelevantCountries : row?.rule === "sector" ? sectorList : row?.rule === "industry" ? industryList : ruleName === "analystRating" || ruleName === "score" ? ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"] : ["Compliant", "Non-Compliant"] as item}
-                              <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+                              <DropdownMenu.Item class="sm:hover:bg-primary">
                                 <div
                                   class="flex items-center"
                                   on:click|capture={(event) =>
@@ -2939,9 +2939,9 @@ const handleKeyDown = (event) => {
           <li>
             <button
               on:click={() => (displayTableTab = "general")}
-              class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-[#27272A] {displayTableTab ===
+              class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-primary {displayTableTab ===
               'general'
-                ? 'font-semibold bg-[#27272A]'
+                ? 'font-semibold bg-primary'
                 : ''}"
             >
               General
@@ -2950,9 +2950,9 @@ const handleKeyDown = (event) => {
           <li>
             <button
               on:click={() => (displayTableTab = "filters")}
-              class="text-[1rem] sm:text-lg flex flex-row items-center relative block rounded-md px-2 py-1 sm:hover:bg-[#27272A] {displayTableTab ===
+              class="text-[1rem] sm:text-lg flex flex-row items-center relative block rounded-md px-2 py-1 sm:hover:bg-primary {displayTableTab ===
               'filters'
-                ? 'font-semibold bg-[#27272A]'
+                ? 'font-semibold bg-primary'
                 : ''} focus:outline-none"
             >
               <span class="text-white">Filters</span>
@@ -2971,9 +2971,9 @@ const handleKeyDown = (event) => {
             <button
               on:mouseover={handleMouseOver}
               on:click={() => changeTab("performance")}
-              class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-[#27272A] {displayTableTab ===
+              class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-primary {displayTableTab ===
               'performance'
-                ? 'font-semibold bg-[#27272A]'
+                ? 'font-semibold bg-primary'
                 : ''}"
             >
               Performance
@@ -3005,7 +3005,7 @@ const handleKeyDown = (event) => {
             <tbody>
               {#each displayResults as item}
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
                 >
                   <td class="border-b-[#09090B] whitespace-nowrap">
                     <a
@@ -3086,7 +3086,7 @@ const handleKeyDown = (event) => {
                   on:click={() => {
                     handleSave(false);
                   }}
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
                 >
                   <td class="border-b-[#09090B] whitespace-nowrap">
                     <a
@@ -3139,7 +3139,7 @@ const handleKeyDown = (event) => {
                   on:click={() => {
                     handleSave(false);
                   }}
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
                 >
                   <td class="border-b-[#09090B] whitespace-nowrap">
                     <a
@@ -3383,7 +3383,7 @@ const handleKeyDown = (event) => {
     class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"
   ></label>
 
-  <div class="modal-box w-full bg-[#27272A] border border-gray-600">
+  <div class="modal-box w-full bg-primary border border-gray-600">
     <h1 class="text-white text-2xl font-bold">New Strategy</h1>
 
     <form
@@ -3421,7 +3421,7 @@ const handleKeyDown = (event) => {
   ></label>
 
   <div
-    class="modal-box w-full bg-[#27272A] border border-gray-600 overflow-hidden"
+    class="modal-box w-full bg-primary border border-gray-600 overflow-hidden"
   >
     <h3
       class="font-bold text-md sm:text-lg flex justify-center items-center mt-10 text-white"

@@ -76,7 +76,7 @@
         class="inline-flex justify-center sm:justify-start w-full rounded-md sm:w-auto"
       >
         <div
-          class="bg-[#313131] w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+          class="bg-secondary w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
         >
           {#each tabs as item, i}
             <button

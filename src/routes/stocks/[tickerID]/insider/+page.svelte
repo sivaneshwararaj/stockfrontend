@@ -299,7 +299,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white">Year: {year}</span>
                         <svg
@@ -328,7 +328,7 @@
                         {#each yearRange as index}
                           <DropdownMenu.Item
                             on:click={() => (year = index)}
-                            class="cursor-pointer hover:bg-[#27272A]"
+                            class="cursor-pointer hover:bg-primary"
                           >
                             {index}
                           </DropdownMenu.Item>
@@ -342,7 +342,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white"
                           >Quarter: Q{quarter}</span
@@ -373,7 +373,7 @@
                         {#each [1, 2, 3, 4] as index}
                           <DropdownMenu.Item
                             on:click={() => (quarter = index)}
-                            class="cursor-pointer hover:bg-[#27272A]"
+                            class="cursor-pointer hover:bg-primary"
                           >
                             Q{index}
                           </DropdownMenu.Item>
@@ -599,7 +599,7 @@
                   {#each insiderTradingList as item, index}
                     {#if item?.price > 0}
                       <tr
-                        class="text-white odd:bg-[#27272A] {index + 1 ===
+                        class="text-white odd:bg-secondary {index + 1 ===
                           insiderTradingList?.slice(0, 6)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'

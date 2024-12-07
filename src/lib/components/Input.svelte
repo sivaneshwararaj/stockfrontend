@@ -129,7 +129,7 @@
     {#if type === "file"}
       <label
         for={id}
-        class="flex flex-col items-center bg-[#313131] rounded-md cursor-pointer {inputValue.length ===
+        class="flex flex-col items-center bg-secondary rounded-md cursor-pointer {inputValue.length ===
         0
           ? 'p-10'
           : ''} {isHovering ? 'ring-2' : ''}"
@@ -229,7 +229,7 @@
       </label>
     {:else}
       <input
-        class="input input-bordered w-full bg-[#313131] placeholder-gray-300 text-white whitespace-normal ring-2"
+        class="input input-bordered w-full bg-secondary placeholder-gray-300 text-white whitespace-normal ring-2"
         {type}
         {placeholder}
         {required}

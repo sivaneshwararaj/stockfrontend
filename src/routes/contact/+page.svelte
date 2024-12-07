@@ -55,7 +55,7 @@
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
           <div
-            class="w-full m-auto sm:bg-[#27272A] sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
+            class="w-full m-auto sm:bg-primary sm:rounded-xl h-auto pl-10 pr-10 pt-5 sm:pb-10 sm:pt-10 mt-3 mb-8"
           >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
               <!-- Start Column -->

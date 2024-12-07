@@ -275,8 +275,8 @@
             <label
               on:click={() => (timePeriod = item)}
               class="px-4 py-2 {timePeriod === item
-                ? 'bg-[#27272A]'
-                : ''} sm:hover:bg-[#27272A] border border-gray-600 text-white rounded-md cursor-pointer"
+                ? 'bg-primary'
+                : ''} sm:hover:bg-primary border border-gray-600 text-white rounded-md cursor-pointer"
             >
               {item}
             </label>
@@ -305,7 +305,7 @@
     <div class="flex justify-center items-center h-80">
       <div class="relative">
         <label
-          class="bg-[#27272A] rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          class="bg-primary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         >
           <span
             class="loading loading-spinner loading-md sm:loading-[1rem] text-gray-400"

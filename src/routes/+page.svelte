@@ -147,7 +147,7 @@
       <div class="text-center mb-10 relative w-fit flex justify-center m-auto">
         <a
           href="/insider-tracker"
-          class="text-white antialiased bg-[#27272A] w-full px-4 py-2 rounded m-auto font-medium text-[1rem] flex items-center"
+          class="text-white antialiased bg-primary w-full px-4 py-2 rounded m-auto font-medium text-[1rem] flex items-center"
         >
           <span class="text-white sm:hover:text-blue-400"
             >Realtime Insider Tracker</span
@@ -406,7 +406,7 @@
                   >Recent unusual options with the highest ...</Card.Description
                 >
                 <Tabs.Root value="premium" class="w-full sm:w-fit mt-5 ">
-                  <Tabs.List class="grid w-full grid-cols-3 bg-[#313131]">
+                  <Tabs.List class="grid w-full grid-cols-3 bg-secondary">
                     <Tabs.Trigger
                       on:click={() => changeTable("premium")}
                       value="premium"

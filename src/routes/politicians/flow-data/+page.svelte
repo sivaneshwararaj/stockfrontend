@@ -166,7 +166,7 @@
                           <tbody>
                             {#each displayList as item, index}
                               <tr
-                                class="odd:bg-[#27272A] border-b-[#09090B] {index +
+                                class="odd:bg-secondary border-b-[#09090B] {index +
                                   1 ===
                                   rawData?.length && data?.user?.tier !== 'Pro'
                                   ? 'opacity-[0.1]'
@@ -175,7 +175,7 @@
                                 <th
                                   class="{index % 2
                                     ? 'bg-[#09090B]'
-                                    : 'bg-[#27272A]'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
+                                    : 'bg-primary'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   <div class="flex flex-row items-center">
                                     <div

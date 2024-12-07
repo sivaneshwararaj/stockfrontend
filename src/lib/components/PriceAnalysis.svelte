@@ -162,7 +162,7 @@
           >
             <!--Start Flow Sentiment-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-primary shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm"
@@ -180,7 +180,7 @@
             <!--End Flow Sentiment-->
             <!--Start Put/Call-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-primary shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm"
@@ -239,7 +239,7 @@
 
             <!--Start mape-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#27272A] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-primary shadow-lg rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm">MAPE</span>

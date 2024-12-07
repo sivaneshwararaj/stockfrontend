@@ -98,7 +98,7 @@
         </div>
 
         <div
-          class="text-white text-sm border bg-[#313131] border-gray-800 p-3 rounded-md overflow-y-scroll h-56"
+          class="text-white text-sm border bg-secondary border-gray-800 p-3 rounded-md overflow-y-scroll h-56"
         >
           <ol class="text-white list-decimal ml-3 p-2">
             <li class="p-1">

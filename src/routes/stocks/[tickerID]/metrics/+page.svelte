@@ -125,9 +125,9 @@
               </thead>
               <tbody class="shadow-md">
                 {#each revenueNames as name, index}
-                  <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]">
+                  <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-secondary">
                     <th
-                      class="whitespace-nowrap odd:bg-[#27272A] text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
+                      class="whitespace-nowrap odd:bg-secondary text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
                     >
                       {#if index < 3}
                         <a
@@ -205,10 +205,10 @@
                 <tbody class="shadow-md">
                   {#each geographicNames as name, index}
                     <tr
-                      class="bg-[#09090B] border-b-[#09090B] odd:bg-[#27272A]"
+                      class="bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
                     >
                       <th
-                        class="text-white whitespace-nowrap odd:bg-[#27272A] text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
+                        class="text-white whitespace-nowrap odd:bg-secondary text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
                         >{name} Revenue</th
                       >
                       {#each geographiCategoryValues[index] as value}

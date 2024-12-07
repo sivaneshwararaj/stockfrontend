@@ -4,7 +4,6 @@
   import { onMount } from "svelte";
   import { indicatorData } from "$lib/store";
 
-
   export let data;
   export let checkedItems;
   export let ruleOfList;
@@ -144,7 +143,7 @@
         );
         downloadWorker = new DownloadWorker.default();
         downloadWorker.onmessage = handleDownloadMessage;
-        console.log('initialize')
+        console.log("initialize");
       }
     } catch (e) {
       console.log(e);
@@ -156,7 +155,7 @@
   <DropdownMenu.Trigger asChild let:builder>
     <Button
       builders={[builder]}
-      class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
+      class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
     >
       <span class="truncate text-white text-sm sm:text-[1rem]">Indicators</span>
       <svg
@@ -224,7 +223,7 @@
     <DropdownMenu.Group class="pb-2">
       <!-- Added padding to avoid overlapping with Reset button -->
       {#each searchQuery?.length !== 0 ? testList : allRows as item}
-        <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+        <DropdownMenu.Item class="sm:hover:bg-primary">
           <div class="flex items-center">
             {#if data?.user?.tier === "Pro" || excludedRules?.has(item?.rule)}
               <label

@@ -240,7 +240,7 @@
               <tbody>
                 {#each showFullStats ? tableList?.slice(0, 10) : tableList?.slice(0, 3) as item, index}
                   <tr
-                    class="border-y border-gray-800 odd:bg-[#27272A] {index ===
+                    class="border-y border-gray-800 odd:bg-secondary {index ===
                       2 &&
                     !showFullStats &&
                     tableList?.length > 3

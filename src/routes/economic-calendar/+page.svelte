@@ -683,7 +683,7 @@
                             {#each day as item}
                               <!-- row -->
                               <tr
-                                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-primary"
+                                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary"
                               >
                                 <td
                                   class="text-white text-sm sm:text-[1rem] border-b-[#09090B]"

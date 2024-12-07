@@ -649,7 +649,7 @@
     <DropdownMenu.Trigger asChild let:builder>
       <Button
         builders={[builder]}
-        class=" min-w-[110px] w-fit ml-3 border-gray-600 border bg-[#09090B] sm:hover:bg-[#27272A] ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md"
+        class=" min-w-[110px] w-fit ml-3 border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md"
       >
         <span class="w-fit text-white text-sm sm:text-[1rem]">Indicators</span>
         <svg
@@ -717,7 +717,7 @@
       <DropdownMenu.Group class="pb-2">
         <!-- Added padding to avoid overlapping with Reset button -->
         {#each searchQuery?.length !== 0 ? testList : allRows as item}
-          <DropdownMenu.Item class="sm:hover:bg-[#27272A]">
+          <DropdownMenu.Item class="sm:hover:bg-primary">
             <div class="flex items-center">
               {#if defaultRules?.includes(item?.rule)}
                 <label
@@ -807,7 +807,7 @@
     <tbody>
       {#each stockList as item, index}
         <tr
-          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B] {index +
+          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
             1 ===
             rawData?.length &&
           data?.user?.tier !== 'Pro' &&

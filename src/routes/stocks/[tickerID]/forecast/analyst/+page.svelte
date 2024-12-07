@@ -256,7 +256,7 @@
                 class="inline-flex justify-center w-full rounded-md sm:w-auto"
               >
                 <div
-                  class="bg-[#313131] w-full sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                  class="bg-secondary w-full sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
                 >
                   {#each tabs as item, i}
                     {#if data?.user?.tier !== "Pro" && i > 0}
@@ -422,7 +422,7 @@
                   <tr
                     class="{latestInfoDate(item?.date)
                       ? 'bg-[#F9AB00] bg-opacity-[0.1]'
-                      : 'odd:bg-[#27272A]'} border-b-[#09090B] {index + 1 ===
+                      : 'odd:bg-secondary'} border-b-[#09090B] {index + 1 ===
                       historyList?.slice(0, 3)?.length &&
                     data?.user?.tier !== 'Pro'
                       ? 'opacity-[0.1]'

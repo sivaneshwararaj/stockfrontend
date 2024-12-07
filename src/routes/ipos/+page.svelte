@@ -87,7 +87,7 @@
           <tbody>
             {#each ipoList as item}
               <tr
-                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-[#27272A] border-b-[#09090B]"
+                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
               >
                 <td
                   class="text-white text-sm sm:text-[1rem] text-start border-b-[#09090B] whitespace-nowrap"
