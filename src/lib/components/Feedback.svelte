@@ -117,16 +117,13 @@
 <!--Start Create Watchlist Modal-->
 <input type="checkbox" id="feedbackInfo" class="modal-toggle" />
 
-<dialog
-  id="feedbackInfo"
-  class="modal modal-bottom sm:modal-middle overflow-hidden"
->
+<dialog id="feedbackInfo" class="modal overflow-hidden p-2 sm:p-0">
   <label
     for="feedbackInfo"
-    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.9]"
+    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.8]"
   ></label>
 
-  <div class="modal-box w-full bg-[#09090B] border border-gray-600">
+  <div class="modal-box rounded w-full bg-primary border border-gray-600">
     <div class="flex flex-row items-center pt-5">
       <h1 class="text-white text-xl sm:text-2xl font-bold">
         Your Feedback matters!
@@ -174,8 +171,8 @@
         <li on:click={() => (rating = "Very Good")} class="cursor-pointer">
           <div
             class="rounded-full w-16 h-16 relative {rating === 'Very Good'
-              ? 'bg-[#333333]'
-              : ''} hover:bg-[#333333] flex items-center justify-center"
+              ? 'bg-secondary'
+              : ''} hover:bg-secondary flex items-center justify-center"
           >
             <img
               class="w-8 h-8 sm:w-10 sm:h-10"
@@ -187,8 +184,8 @@
         <li on:click={() => (rating = "Good")} class="cursor-pointer">
           <div
             class="rounded-full w-16 h-16 relative {rating === 'Good'
-              ? 'bg-[#333333]'
-              : ''} hover:bg-[#333333] flex items-center justify-center"
+              ? 'bg-secondary'
+              : ''} hover:bg-secondary flex items-center justify-center"
           >
             <img
               class="w-8 h-8 sm:w-10 sm:h-10"
@@ -200,8 +197,8 @@
         <li on:click={() => (rating = "Bad")} class="cursor-pointer">
           <div
             class="rounded-full w-16 h-16 relative {rating === 'Bad'
-              ? 'bg-[#333333]'
-              : ''} hover:bg-[#333333] flex items-center justify-center"
+              ? 'bg-secondary'
+              : ''} hover:bg-secondary flex items-center justify-center"
           >
             <img
               class="w-8 h-8 sm:w-10 sm:h-10"
@@ -213,8 +210,8 @@
         <li on:click={() => (rating = "Very Bad")} class="cursor-pointer">
           <div
             class="rounded-full w-16 h-16 relative {rating === 'Very Bad'
-              ? 'bg-[#333333]'
-              : ''} hover:bg-[#333333] flex items-center justify-center"
+              ? 'bg-secondary'
+              : ''} hover:bg-secondary flex items-center justify-center"
           >
             <img
               class="w-8 h-8 sm:w-10 sm:h-10"

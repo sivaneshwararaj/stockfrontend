@@ -2455,7 +2455,7 @@ const handleKeyDown = (event) => {
       </div>
     </div>
 
-    <div class="rounded-md border border-gray-700 bg-[#262626] p-2">
+    <div class="rounded-md border border-gray-700 bg-primary p-2">
       <div class="items-end border-b border-gray-600">
         <div
           class="mr-1 flex items-center justify-between lg:mr-2 pb-1.5 border-b border-gray-600 mt-1.5"
@@ -3205,7 +3205,7 @@ const handleKeyDown = (event) => {
     <div class="flex justify-center items-center h-80">
       <div class="relative">
         <label
-          class="bg-[#262626] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          class="bg-primary rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         >
           <span class="loading loading-spinner loading-md text-gray-400"></span>
         </label>

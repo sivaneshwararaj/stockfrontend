@@ -2282,20 +2282,19 @@ function sendMessage(message) {
 <!-- Put this part before </body> tag -->
 <input type="checkbox" id="optionDetailsDesktopModal" class="modal-toggle" />
 
-<label
-  for="optionDetailsDesktopModal"
-  class="modal modal-bottom sm:modal-middle cursor-pointer"
->
-  <label for="optionDetailsDesktopModal" class="cursor-pointer modal-backdrop"
+<label for="optionDetailsDesktopModal" class="modal p-2 sm:p-0">
+  <label
+    for="optionDetailsDesktopModal"
+    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.8]"
   ></label>
 
   <!-- svelte-ignore a11y-label-has-associated-control -->
   <label
-    class="modal-box w-full relative bg-[#09090B] h-auto max-h-[900px] border border-gray-800 overflow-y-scroll"
+    class="modal-box rounded w-full relative bg-primary h-auto max-h-[900px] border border-gray-800 overflow-y-scroll"
   >
     <label
       for="optionDetailsDesktopModal"
-      class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-2xl text-white"
+      class="cursor-pointer absolute right-5 top-2 bg-primary text-2xl text-white"
     >
       ✕
     </label>
@@ -2305,48 +2304,48 @@ function sendMessage(message) {
       <br />
       {optionSymbol}
     </p>
-    <p class="py-4 text-gray-200 bg-[#09090B] w-full">
+    <p class="py-4 text-gray-200 bg-primary w-full">
       <span class="font-semibold text-white">Description:</span>
       <br />
       {optionDescription}
     </p>
 
     <table
-      class="table table-sm table-compact bg-[#09090B] w-full mt-5 mb-10 text-white"
+      class="table table-sm table-compact bg-primary w-full mt-5 mb-10 text-white"
     >
       <tbody>
         <!-- row 1 -->
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Premium</td>
           <td class="">{optionPremium}</td>
           <td class="font-semibold">C/P</td>
           <td class="">{optionContract}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Expiry</td>
           <td class="">{optionExpiry}</td>
           <td class="font-semibold">Type</td>
           <td class="">{optionType}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Strike</td>
           <td class="">${optionStrike}</td>
           <td class="font-semibold">Volume</td>
           <td class="">{optionVolume}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Spot</td>
           <td class="">${optionSpot}</td>
           <td class="font-semibold">Open Interest</td>
           <td class="">{optionOpenInterest}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Price</td>
           <td class="">${optionPrice}</td>
           <td class="font-semibold">Sentiment</td>
           <td class="">{optionSentiment}</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
+        <tr class="border-b border-slate-700 odd:bg-secondary">
           <td class="font-semibold">Execution Estimate</td>
           <td class="">{optionexecution_estimate}</td>
           <td class="font-semibold"></td>
@@ -2358,88 +2357,6 @@ function sendMessage(message) {
 </label>
 
 <!--End Options Detial Desktop Modal-->
-
-<!--Start Options Detail Modal-->
-<!--
-<div class="hidden drawer drawer-end z-[999] w-full overflow-hidden">
-  <input id="optionDetailsMobileModal" type="checkbox" class="drawer-toggle"/>
-  <div class="drawer-side overflow-hidden z-[999]">
-  
-      
-    <div class="bg-[#000] min-h-screen w-full border pb-20 overflow-hidden">
-
-        <label for="optionDetailsMobileModal" class="absolute left-6 top-6">
-          <svg class="w-6 h-6 inline-block mb-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#fff" d="M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z"/></svg>
-        </label>
-
-  
-  <div class="w-fit border overflow-hidden p-2">
-
-    <p class="text-xl font-semibold text-white mt-16 p-3">
-      <span class="text-xl font-semibold">Order Details:</span>
-      <br>
-      {optionSymbol}
-    </p>
-    <p class="py-4 text-gray-200 w-full p-3">
-      <span class="font-semibold text-white">Description:</span>
-      {optionDescription}
-    </p>
-
-    <table class="table table-sm table-compact w-full mt-5 mb-10 text-white">
-      <tbody>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
-          <td class="font-semibold">Premium</td>
-          <td class="">{optionPremium}</td>
-          <td class="font-semibold">C/P</td>
-          <td class="">{optionContract}</td>
-        </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
-          <td class="font-semibold">Expiry</td>
-          <td class="">{optionExpiry}</td>
-          <td class="font-semibold">Type</td>
-          <td class="">{optionType}</td>
-        </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
-          <td class="font-semibold">Strike</td>
-          <td class="">${optionStrike}</td>
-          <td class="font-semibold">Volume</td>
-          <td class="">{optionVolume}</td>
-        </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
-          <td class="font-semibold">Spot</td>
-          <td class="">${optionSpot}</td>
-          <td class="font-semibold">Open Interest</td>
-          <td class="">{optionOpenInterest}</td>
-        </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
-          <td class="font-semibold">Price</td>
-          <td class="">${optionPrice}</td>
-          <td class="font-semibold">Sentiment</td>
-          <td class="">{optionSentiment}</td>
-        </tr>
-        <tr class="odd:bg-[#2A2E39]">
-          <td class="font-semibold">Trade Count</td>
-          <td class="">{optionTradeCount}</td>
-          <td class="font-semibold">Exchange</td>
-          <td class="">{optionExchange}</td>
-        </tr>
-        <tr class="border-b border-slate-700 odd:bg-[#2A2E39]">
-          <td class="font-semibold">Execution Est.</td>
-          <td class="">{optionexecution_estimate}</td>
-          <td class="font-semibold"></td>
-          <td class=""></td>
-        </tr>
-      </tbody>
-    </table>
-
-        
-  </div>
-
-</div>
-</div>
-</div>
--->
-<!--End Options Detail Modal-->
 
 <style>
   .table-container {
