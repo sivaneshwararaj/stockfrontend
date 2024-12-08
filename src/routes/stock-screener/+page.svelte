@@ -1371,7 +1371,13 @@
 
   Object.keys(allRules).forEach((ruleName) => {
     ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
-    valueMappings[ruleName] = allRules[ruleName].defaultValue;
+
+    // Check if the default condition is "between"
+    if (allRules[ruleName].defaultCondition === "between") {
+      valueMappings[ruleName] = allRules[ruleName].defaultValue || ["", ""];
+    } else {
+      valueMappings[ruleName] = allRules[ruleName].defaultValue;
+    }
   });
 
   // Update ruleCondition and valueMappings based on existing rules
@@ -1881,14 +1887,28 @@ const handleKeyDown = (event) => {
     if (checkedItems.has(ruleName)) {
       const itemsSet = checkedItems.get(ruleName);
 
-      if (itemsSet?.has(value)) {
-        itemsSet?.delete(value); // Remove the value if it's already in the set
+      // For "between", value is expected to be an array [min, max]
+      const sortedValue = Array.isArray(value)
+        ? value.sort((a, b) => a - b)
+        : value;
+      const valueKey = Array.isArray(sortedValue)
+        ? sortedValue.join("-")
+        : sortedValue;
+
+      if (itemsSet?.has(valueKey)) {
+        itemsSet?.delete(valueKey); // Remove the value if it's already in the set
       } else {
-        itemsSet?.add(value); // Add the value if it's not in the set
+        itemsSet?.add(valueKey); // Add the value if it's not in the set
       }
     } else {
       // If the ruleName is not in checkedItems, create a new set for this rule
-      checkedItems?.set(ruleName, new Set([value]));
+      const sortedValue = Array.isArray(value)
+        ? value.sort((a, b) => a - b)
+        : value;
+      const valueKey = Array.isArray(sortedValue)
+        ? sortedValue.join("-")
+        : sortedValue;
+      checkedItems?.set(ruleName, new Set([valueKey]));
     }
 
     if (
@@ -1910,30 +1930,42 @@ const handleKeyDown = (event) => {
         "country",
       ]?.includes(ruleName)
     ) {
-      // Ensure valueMappings[ruleName] is initialized as an array
       searchQuery = "";
+
+      // Ensure valueMappings[ruleName] is initialized as an array
       if (!Array.isArray(valueMappings[ruleName])) {
-        valueMappings[ruleName] = []; // Initialize as an empty array if not already
+        valueMappings[ruleName] = [];
       }
 
-      const index = valueMappings[ruleName].indexOf(value);
+      const sortedValue = Array.isArray(value)
+        ? value.sort((a, b) => a - b)
+        : value;
+      const valueKey = Array.isArray(sortedValue)
+        ? sortedValue.join("-")
+        : sortedValue;
+      const index = valueMappings[ruleName].indexOf(valueKey);
+
       if (index === -1) {
-        // Add the country if it's not already selected
-        valueMappings[ruleName].push(value);
+        // Add the value if it's not already selected
+        valueMappings[ruleName].push(valueKey);
       } else {
-        // Remove the country if it's already selected (deselect)
+        // Remove the value if it's already selected
         valueMappings[ruleName].splice(index, 1);
       }
 
-      // If no countries are selected, set value to "any"
+      // If no values are selected, set the value to "any"
       if (valueMappings[ruleName].length === 0) {
         valueMappings[ruleName] = "any";
       }
 
       await updateStockScreenerData();
     } else if (ruleName in valueMappings) {
-      // Handle non-country rules as single values
-      valueMappings[ruleName] = value;
+      // Handle "over", "under", and "between" conditions
+      if (ruleCondition[ruleName] === "between" && Array.isArray(value)) {
+        valueMappings[ruleName] = value.sort((a, b) => a - b); // Ensure lower value is first
+      } else {
+        valueMappings[ruleName] = value; // Store single values for "over" and "under"
+      }
     } else {
       console.warn(`Unhandled rule: ${ruleName}`);
     }
@@ -1945,15 +1977,6 @@ const handleKeyDown = (event) => {
 
     let [_, number, suffix] = match;
     number = parseFloat(number);
-
-    // Step sizes for each suffix
-    const stepMap = {
-      B: 0.1, // Billion
-      M: 10, // Million (default step)
-      K: 100, // Thousand
-      "%": 1, // Percent
-      "": 1, // Plain numbers
-    };
 
     let step = 1;
 
@@ -2735,11 +2758,10 @@ const handleKeyDown = (event) => {
                             {#if valueMappings[row?.rule] === "any"}
                               Any
                             {:else}
-                              {ruleCondition[row?.rule] !== undefined
-                                ? ruleCondition[row?.rule]
-                                    ?.replace("under", "Under")
-                                    ?.replace("over", "Over")
-                                : ""}
+                              {ruleCondition[row?.rule]
+                                ?.replace("under", "Under")
+                                ?.replace("over", "Over")
+                                ?.replace("between", "Between")}
                               {valueMappings[row?.rule]}
                             {/if}
                           </span>
@@ -2783,7 +2805,8 @@ const handleKeyDown = (event) => {
                                       >
                                         {ruleCondition[ruleName]
                                           ?.replace("under", "Under")
-                                          ?.replace("over", "Over")}
+                                          ?.replace("over", "Over")
+                                          ?.replace("between", "Between")}
                                       </span>
                                       <svg
                                         class="mt-1 -mr-1 ml-1 h-5 w-5 xs:ml-2 !ml-0 sm:ml-0 inline-block"
@@ -2801,7 +2824,7 @@ const handleKeyDown = (event) => {
                                   </DropdownMenu.Trigger>
                                   <DropdownMenu.Content>
                                     <DropdownMenu.Group>
-                                      {#each ["Over", "Under"] as item}
+                                      {#each ["Over", "Under", "Between"] as item}
                                         <DropdownMenu.Item
                                           on:click={() =>
                                             changeRuleCondition(
@@ -2824,51 +2847,52 @@ const handleKeyDown = (event) => {
                                 on:input={(e) => handleValueInput(e)}
                                 class=" ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
                               />
-
-                              <div
-                                class="ml-2 flex touch-manipulation flex-row items-center gap-x-1.5"
-                              >
-                                <button
-                                  on:click={() =>
-                                    stepSizeValue(
-                                      valueMappings[row?.rule],
-                                      "add",
-                                    )}
-                                  ><svg
-                                    class="size-6 cursor-pointer text-white"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    style="max-width:40px"
-                                    ><path
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    ></path></svg
-                                  ></button
+                              {#if ["over", "under"]?.includes(ruleCondition[ruleName]?.toLowerCase())}
+                                <div
+                                  class="ml-2 flex touch-manipulation flex-row items-center gap-x-1.5"
                                 >
-                                <button
-                                  on:click={() =>
-                                    stepSizeValue(
-                                      valueMappings[row?.rule],
-                                      "minus",
-                                    )}
-                                  ><svg
-                                    class="size-6 cursor-pointer text-white"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    style="max-width:40px"
-                                    ><path
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    ></path></svg
-                                  ></button
-                                >
-                              </div>
+                                  <button
+                                    on:click={() =>
+                                      stepSizeValue(
+                                        valueMappings[row?.rule],
+                                        "add",
+                                      )}
+                                    ><svg
+                                      class="size-6 cursor-pointer text-white"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                      style="max-width:40px"
+                                      ><path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                      ></path></svg
+                                    ></button
+                                  >
+                                  <button
+                                    on:click={() =>
+                                      stepSizeValue(
+                                        valueMappings[row?.rule],
+                                        "minus",
+                                      )}
+                                    ><svg
+                                      class="size-6 cursor-pointer text-white"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                      style="max-width:40px"
+                                      ><path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                      ></path></svg
+                                    ></button
+                                  >
+                                </div>
+                              {/if}
                               <!--End Dropdown for Condition-->
                             </div>
                           </DropdownMenu.Label>
@@ -2901,7 +2925,27 @@ const handleKeyDown = (event) => {
                         {/if}
                         <DropdownMenu.Group class="min-h-10 mt-2">
                           {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
-                            {#each row?.step as newValue}
+                            {#each row?.step as newValue, index}
+                              {#if ruleCondition[row?.rule] === "between" && newValue && row?.step[index + 1]}
+                                <DropdownMenu.Item class="sm:hover:bg-primary">
+                                  <button
+                                    on:click={() => {
+                                      handleChangeValue([
+                                        row?.step[index],
+                                        row?.step[index + 1],
+                                      ]);
+                                    }}
+                                    class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
+                                  >
+                                    {ruleCondition[row?.rule]?.replace(
+                                      "between",
+                                      "Between",
+                                    )}
+                                    {row?.step[index + 1]} - {row?.step[index]}
+                                  </button>
+                                </DropdownMenu.Item>
+                              {/if}
+                            {:else}
                               <DropdownMenu.Item class="sm:hover:bg-primary">
                                 <button
                                   on:click={() => {
@@ -2909,11 +2953,9 @@ const handleKeyDown = (event) => {
                                   }}
                                   class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
                                 >
-                                  {ruleCondition[row?.rule] !== undefined
-                                    ? ruleCondition[row?.rule]
-                                        ?.replace("under", "Under")
-                                        ?.replace("over", "Over")
-                                    : ""}
+                                  {ruleCondition[row?.rule]
+                                    ?.replace("under", "Under")
+                                    ?.replace("over", "Over")}
                                   {newValue}
                                 </button>
                               </DropdownMenu.Item>
