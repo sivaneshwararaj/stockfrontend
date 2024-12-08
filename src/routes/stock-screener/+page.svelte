@@ -1939,6 +1939,40 @@ const handleKeyDown = (event) => {
     }
   }
 
+  async function stepSizeValue(value, condition) {
+    const match = value.toString().match(/^(-?[\d.]+)([KMB%]?)$/);
+    if (!match) return value;
+
+    let [_, number, suffix] = match;
+    number = parseFloat(number);
+
+    // Step sizes for each suffix
+    const stepMap = {
+      B: 0.1, // Billion
+      M: 10, // Million (default step)
+      K: 100, // Thousand
+      "%": 1, // Percent
+      "": 1, // Plain numbers
+    };
+
+    let step = 1;
+
+    number += condition === "add" ? step : -step;
+
+    // Round to 2 decimal places for consistency
+    number = parseFloat(number?.toFixed(2));
+    const newValue = suffix ? `${number}${suffix}` : Math?.round(number);
+    await handleChangeValue(newValue);
+  }
+
+  async function handleValueInput(event) {
+    const newValue = event.target.value;
+    if (newValue?.length > 0) {
+      console.log("yes");
+      await handleChangeValue(newValue);
+    }
+  }
+
   async function popularStrategy(state: string) {
     ruleOfList = [];
     const strategies = {
@@ -2725,7 +2759,7 @@ const handleKeyDown = (event) => {
                         </Button>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Content
-                        class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                        class="w-64 h-fit max-h-72 overflow-y-auto scroller"
                       >
                         {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           <DropdownMenu.Label
@@ -2735,7 +2769,9 @@ const handleKeyDown = (event) => {
                               class="flex items-center justify-start gap-x-1"
                             >
                               <!--Start Dropdown for Condition-->
-                              <div class="relative inline-block text-left">
+                              <div
+                                class="-ml-2 relative inline-block text-left"
+                              >
                                 <DropdownMenu.Root>
                                   <DropdownMenu.Trigger asChild let:builder
                                     ><Button
@@ -2750,7 +2786,7 @@ const handleKeyDown = (event) => {
                                           ?.replace("over", "Over")}
                                       </span>
                                       <svg
-                                        class="-mr-1 ml-1 h-5 w-5 xs:ml-2 !ml-0 sm:ml-0 inline-block"
+                                        class="mt-1 -mr-1 ml-1 h-5 w-5 xs:ml-2 !ml-0 sm:ml-0 inline-block"
                                         viewBox="0 0 20 20"
                                         fill="currentColor"
                                         style="max-width:40px"
@@ -2779,6 +2815,59 @@ const handleKeyDown = (event) => {
                                     </DropdownMenu.Group>
                                   </DropdownMenu.Content>
                                 </DropdownMenu.Root>
+                              </div>
+
+                              <input
+                                type="text"
+                                placeholder="Value"
+                                value={valueMappings[row?.rule]}
+                                on:input={(e) => handleValueInput(e)}
+                                class=" ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                              />
+
+                              <div
+                                class="ml-2 flex touch-manipulation flex-row items-center gap-x-1.5"
+                              >
+                                <button
+                                  on:click={() =>
+                                    stepSizeValue(
+                                      valueMappings[row?.rule],
+                                      "add",
+                                    )}
+                                  ><svg
+                                    class="size-6 cursor-pointer text-white"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    style="max-width:40px"
+                                    ><path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    ></path></svg
+                                  ></button
+                                >
+                                <button
+                                  on:click={() =>
+                                    stepSizeValue(
+                                      valueMappings[row?.rule],
+                                      "minus",
+                                    )}
+                                  ><svg
+                                    class="size-6 cursor-pointer text-white"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    style="max-width:40px"
+                                    ><path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    ></path></svg
+                                  ></button
+                                >
                               </div>
                               <!--End Dropdown for Condition-->
                             </div>
@@ -2894,46 +2983,6 @@ const handleKeyDown = (event) => {
     </div>
 
     <!--End Adding Rules-->
-
-    <!--Start Rules Preview -->
-
-    <!--
-                  <div id="step-3" class="m-auto w-5/6 bg-[#09090B] sm:ml-10 h-auto max-h-[400px] no-scrollbar overflow-hidden overflow-y-scroll p-5 sm:rounded-md border-b sm:border sm:hover:border-slate-700 border-gray-600 pb-10">
-                    <div class="flex flex-row items-center pb-5 sm:pb-0">
-                      <div class="text-white font-bold text-xl sm:text-2xl flex justify-start items-center">
-                        {ruleOfList.length} Rules Preview
-                      </div>
-                      <label on:click={handleResetAll} class="ml-auto cursor-pointer transition  bg-[#fff] sm:hover:bg-gray-300 border border-gray-600 py-2 px-3 rounded-md text-white text-sm">
-                        Reset All
-                      </label>
-                    </div>
-                    {#if ruleOfList.length === 0}
-                    <div class="text-slate-300 font-medium text-sm sm:text-md flex flex-row justify-start items-center mt-4">
-                      <svg class="w-3 h-3 sm:w-4 sm:h-4 inline-block mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#ffcc4d" d="M19.59 15.86L12.007 1.924C11.515 1.011 10.779.5 9.989.5c-.79 0-1.515.521-2.016 1.434L.409 15.861c-.49.901-.544 1.825-.138 2.53c.405.707 1.216 1.109 2.219 1.109h15.02c1.003 0 1.814-.402 2.22-1.108c.405-.706.351-1.619-.14-2.531ZM10 4.857c.395 0 .715.326.715.728v6.583c0 .402-.32.728-.715.728a.721.721 0 0 1-.715-.728V5.584c0-.391.32-.728.715-.728Zm0 11.624c-.619 0-1.11-.51-1.11-1.14c0-.63.502-1.141 1.11-1.141c.619 0 1.11.51 1.11 1.14c0 .63-.502 1.141-1.11 1.141Z"/></svg>
-                      At least 1 rule is required 
-                    </div>
-
-                  {:else}
-                  
-                  {#each ruleOfList as rule}
-                      <div class="flex flex-row mt-4">
-
-                      <label on:click={() => handleUpdateRule(rule)} class=" cursor-pointer text-slate-300 sm:font-medium text-sm sm:text-md">
-
-                        <svg class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-
-                        {ruleMappings[rule.name] || rule.name} · {formatRuleValue(rule)}
-                        </label>
-
-                        <label on:click={() => handleDeleteRule(rule.name)} class="text-sm text-[#FF3131] cursor-pointer ml-auto sm:ml-0">
-                          <svg class="h-6 w-6 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.413-.588T5 19V6q-.425 0-.713-.288T4 5q0-.425.288-.713T5 4h4q0-.425.288-.713T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5q0 .425-.288.713T19 6v13q0 .825-.588 1.413T17 21H7ZM7 6v13h10V6H7Zm2 10q0 .425.288.713T10 17q.425 0 .713-.288T11 16V9q0-.425-.288-.713T10 8q-.425 0-.713.288T9 9v7Zm4 0q0 .425.288.713T14 17q.425 0 .713-.288T15 16V9q0-.425-.288-.713T14 8q-.425 0-.713.288T13 9v7ZM7 6v13V6Z"/></svg>  
-                        </label>
-                      </div>
-                    {/each}
-                  {/if}
-                </div>
-                  -->
-    <!--End Rules Preview-->
   </div>
   <!--End Build Strategy-->
 
