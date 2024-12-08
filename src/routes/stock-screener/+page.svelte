@@ -1854,7 +1854,7 @@ const handleKeyDown = (event) => {
 
   function changeRuleCondition(name: string, state: string) {
     ruleName = name;
-    ruleCondition[ruleName] = state;
+    ruleCondition[ruleName] = state?.toLowerCase();
   }
 
   let checkedItems = new Map(
@@ -2703,6 +2703,8 @@ const handleKeyDown = (event) => {
                             {:else}
                               {ruleCondition[row?.rule] !== undefined
                                 ? ruleCondition[row?.rule]
+                                    ?.replace("under", "Under")
+                                    ?.replace("over", "Over")
                                 : ""}
                               {valueMappings[row?.rule]}
                             {/if}
@@ -2732,41 +2734,53 @@ const handleKeyDown = (event) => {
                             <div
                               class="flex items-center justify-start gap-x-1"
                             >
-                              <div
-                                class="relative inline-block flex flex-row items-center justify-center"
-                              >
-                                <label
-                                  on:click={() =>
-                                    changeRuleCondition(row?.rule, "under")}
-                                  class="cursor-pointer flex flex-row mr-2 justify-center items-center"
-                                >
-                                  <input
-                                    type="radio"
-                                    class="radio ring-0 checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
-                                    checked={ruleCondition[row?.rule] ===
-                                      "under"}
-                                    name={row?.rule}
-                                  />
-                                  <span class="label-text text-white"
-                                    >Under</span
-                                  >
-                                </label>
-                                <label
-                                  on:click={() =>
-                                    changeRuleCondition(row?.rule, "over")}
-                                  class="cursor-pointer flex flex-row ml-2 justify-center items-center"
-                                >
-                                  <input
-                                    type="radio"
-                                    class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
-                                    checked={ruleCondition[row?.rule] ===
-                                      "over"}
-                                    name={row?.rule}
-                                  />
-                                  <span class="label-text text-white">Over</span
-                                  >
-                                </label>
+                              <!--Start Dropdown for Condition-->
+                              <div class="relative inline-block text-left">
+                                <DropdownMenu.Root>
+                                  <DropdownMenu.Trigger asChild let:builder
+                                    ><Button
+                                      builders={[builder]}
+                                      class="w-fit -mt-1 -ml-2 bg-[#09090B] flex flex-row justify-between items-center text-white"
+                                    >
+                                      <span
+                                        class="truncate ml-2 text-sm sm:text-[1rem]"
+                                      >
+                                        {ruleCondition[ruleName]
+                                          ?.replace("under", "Under")
+                                          ?.replace("over", "Over")}
+                                      </span>
+                                      <svg
+                                        class="-mr-1 ml-1 h-5 w-5 xs:ml-2 !ml-0 sm:ml-0 inline-block"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        style="max-width:40px"
+                                        aria-hidden="true"
+                                        ><path
+                                          fill-rule="evenodd"
+                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                          clip-rule="evenodd"
+                                        ></path></svg
+                                      >
+                                    </Button>
+                                  </DropdownMenu.Trigger>
+                                  <DropdownMenu.Content>
+                                    <DropdownMenu.Group>
+                                      {#each ["Over", "Under"] as item}
+                                        <DropdownMenu.Item
+                                          on:click={() =>
+                                            changeRuleCondition(
+                                              row?.rule,
+                                              item,
+                                            )}
+                                          class="cursor-pointer text-[1rem] font-normal"
+                                          >{item}</DropdownMenu.Item
+                                        >
+                                      {/each}
+                                    </DropdownMenu.Group>
+                                  </DropdownMenu.Content>
+                                </DropdownMenu.Root>
                               </div>
+                              <!--End Dropdown for Condition-->
                             </div>
                           </DropdownMenu.Label>
                         {:else}
@@ -2808,6 +2822,8 @@ const handleKeyDown = (event) => {
                                 >
                                   {ruleCondition[row?.rule] !== undefined
                                     ? ruleCondition[row?.rule]
+                                        ?.replace("under", "Under")
+                                        ?.replace("over", "Over")
                                     : ""}
                                   {newValue}
                                 </button>
