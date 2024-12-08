@@ -167,15 +167,14 @@
 
 {#if Object?.keys(data?.getAnalystRating ?? {})?.length !== 0}
   <div
-    class="space-y-3 sm:pt-5 hidden sm:block sm:{Object?.keys(
-      data?.getAnalystRating ?? {},
-    )?.length !== 0
+    class="space-y-3 pt-5 {Object?.keys(data?.getAnalystRating ?? {})
+      ?.length !== 0
       ? ''
       : 'hidden'}"
   >
     <div class="h-auto w-full">
       <!--Start Content-->
-      <div class="w-auto lg:w-full flex flex-col m-auto pb-14 sm:pb-10">
+      <div class="w-auto lg:w-full flex flex-col m-auto pb-10">
         <h2 class="mb-2 text-2xl text-white font-semibold">Analyst Forecast</h2>
         <p class="text-gray-200">
           According to {numOfAnalyst} analyst ratings, the average rating for {$stockTicker}

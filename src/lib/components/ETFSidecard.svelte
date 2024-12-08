@@ -128,11 +128,7 @@
 </div>
 
 {#if topHoldingList?.length !== 0}
-  <div
-    class="space-y-3 sm:pt-5 hidden sm:block sm:{topHoldingList?.length !== 0
-      ? ''
-      : 'hidden'}"
-  >
+  <div class="space-y-3 pt-5 {topHoldingList?.length !== 0 ? '' : 'hidden'}">
     <div class="h-auto w-full">
       <!--Start Content-->
       <div class="w-auto lg:w-full flex flex-col m-auto">
@@ -150,12 +146,12 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-[#09090B]"
                   >Company</th
                 >
 
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#09090B]"
                   >Portfolio</th
                 >
               </tr>
@@ -165,7 +161,7 @@
                 {#if item?.symbol !== null}
                   <tr
                     on:click={() => stockSelector(item?.symbol)}
-                    class="lg:shake-ticker sm:hover:text-white text-blue-400 cursor-pointer lg:hover:bg-[#245073] lg:hover:bg-opacity-[0.2] bg-[#000] lg:bg-[#09090B] border-b border-[#000] lg:border-[#27272A]"
+                    class="lg:shake-ticker sm:hover:text-white text-blue-400 cursor-pointer lg:hover:bg-[#245073] lg:hover:bg-opacity-[0.2] [#09090B] border-b border-[#27272A]"
                   >
                     <td class="">
                       <div class="flex flex-row items-center">
@@ -224,9 +220,8 @@
 
 {#if dividendHistoryList?.length !== 0}
   <div
-    class="space-y-3 sm:pt-5 hidden sm:block sm:{(
-      dividendHistoryList?.length ?? []
-    )?.length !== 0
+    class="space-y-3 pt-8 sm:pt-5 {(dividendHistoryList?.length ?? [])
+      ?.length !== 0
       ? ''
       : 'hidden'}"
   >
@@ -247,15 +242,15 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-[#09090B]"
                   >Ex-Dividend</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#09090B]"
                   >Payment Date</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#09090B]"
                   >Amount</th
                 >
               </tr>
@@ -263,9 +258,7 @@
 
             <tbody>
               {#each dividendHistoryList?.slice(0, 5) as item}
-                <tr
-                  class="text-white bg-[#000] lg:bg-[#09090B] border-b border-[#000] lg:border-[#27272A]"
-                >
+                <tr class="text-white bg-[#09090B] border-b border-[#27272A]">
                   <td class="text-start text-sm text-white font-medium">
                     {new Date(item?.date)?.toLocaleString("en-US", {
                       month: "short",

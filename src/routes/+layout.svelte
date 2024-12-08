@@ -129,8 +129,7 @@
 
   onMount(async () => {
     //await fallbackWorker();
-    await checkMarketHour();
-    await loadWorker();
+    await Promise.all([checkMarketHour(), loadWorker()]);
     //await pushNotification()
 
     if ($showCookieConsent === true) {
