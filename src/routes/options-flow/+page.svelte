@@ -42,6 +42,12 @@
   let selectedDate: DateValue | undefined = undefined;
 
   const allRules = {
+    size: {
+      label: "Size",
+      step: ["100K", "50K", "20K", "10K", "5K", "2K", "1K", "100", "0"],
+      defaultCondition: "over",
+      defaultValue: "any",
+    },
     volume: {
       label: "Volume",
       step: ["100K", "50K", "20K", "10K", "5K", "2K", "1K", "100", "0"],
@@ -1003,6 +1009,11 @@ function sendMessage(message) {
         const premiumA = parseFloat(a.cost_basis);
         const premiumB = parseFloat(b.cost_basis);
         return sortOrder === "asc" ? premiumA - premiumB : premiumB - premiumA;
+      },
+      size: (a, b) => {
+        const volA = parseFloat(a?.size);
+        const volB = parseFloat(b?.size);
+        return sortOrder === "asc" ? volA - volB : volB - volA;
       },
       vol: (a, b) => {
         const volA = parseFloat(a.volume);
@@ -2122,6 +2133,29 @@ function sendMessage(message) {
                         >
                       </div>
                       <div
+                        on:click={() => sortData("size")}
+                        class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+                      >
+                        Size
+                        <svg
+                          class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
+                            'size'
+                          ] === 'asc'
+                            ? 'rotate-180'
+                            : sortOrders['size'] === 'desc'
+                              ? ''
+                              : 'hidden'} "
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          style="max-width:50px"
+                          ><path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path></svg
+                        >
+                      </div>
+                      <div
                         on:click={() => sortData("vol")}
                         class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
                       >
@@ -2311,6 +2345,16 @@ function sendMessage(message) {
                           "At Midpoint",
                           "Midpoint",
                         )}
+                      </div>
+
+                      <div
+                        style="justify-content: center;"
+                        class="td text-sm sm:text-[1rem] text-white text-end"
+                      >
+                        {new Intl.NumberFormat("en", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(displayedData[index]?.size)}
                       </div>
 
                       <div
