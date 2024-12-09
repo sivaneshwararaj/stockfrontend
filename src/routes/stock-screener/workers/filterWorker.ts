@@ -43,139 +43,215 @@ const movingAverageConditions = {
 };
 
 // Convert the input to a value or return it as-is if it's already an array
-function convertUnitToValue(
-  input: string | number | string[]
-): number | string[] | string {
-  if (Array.isArray(input)) return input;
-  if (typeof input === "number") return input;
-  if (typeof input !== "string") {
-    throw new TypeError(
-      `Expected a string or number, but received ${typeof input}`
-    );
-  }
-  const lowerInput = input.toLowerCase();
-  // Pre-compute the set for quick lookups
-  const nonNumericValues = new Set([
-    "any",
-    ...sectorList,
-    ...industryList,
-    ...listOfRelevantCountries,
-    "hold",
-    "sell",
-    "buy",
-    "strong buy",
-    "strong sell",
-    "compliant",
-    "non-compliant",
-    "stock price",
-  ]);
-  if (nonNumericValues.has(lowerInput)) return input;
-
-  if (input.endsWith("%")) {
-    const numericValue = parseFloat(input.slice(0, -1));
-    if (isNaN(numericValue)) {
-      throw new Error(`Unable to convert ${input} to a number`);
+function convertUnitToValue(input: string | number | string[]) {
+  try {
+    if (Array.isArray(input)) {
+      return input.map(convertUnitToValue); // Recursively convert array elements
     }
+    if (typeof input === "number") return input;
+    if (typeof input !== "string") {
+      return input; // Return as-is if not a string or number
+    }
+
+    const lowerInput = input.toLowerCase();
+
+    // Pre-compute the set for quick lookups
+    const nonNumericValues = new Set([
+      "any",
+      ...sectorList,
+      ...industryList,
+      ...listOfRelevantCountries,
+      "hold",
+      "sell",
+      "buy",
+      "strong buy",
+      "strong sell",
+      "compliant",
+      "non-compliant",
+      "stock price",
+    ]);
+    
+    if (nonNumericValues.has(lowerInput)) return input;
+
+    // Handle percentage values
+    if (input.endsWith("%")) {
+      const numericValue = parseFloat(input.slice(0, -1));  // Remove '%' and convert to number
+      if (isNaN(numericValue)) {
+        return input; // Return original input if conversion fails
+      }
+      return numericValue / 100; // Convert percentage to a decimal
+    }
+
+    // Handle units (B, M, K)
+    const units = { B: 1_000_000_000, M: 1_000_000, K: 1_000 };
+    const match = input.match(/^(\d+(\.\d+)?)([BMK])?$/);
+
+    if (match) {
+      const value = parseFloat(match[1]);
+      const unit = match[3] as keyof typeof units;
+      return unit ? value * units[unit] : value;
+    }
+
+    // Default numeric conversion (if no unit specified)
+    const numericValue = parseFloat(input);
+    if (isNaN(numericValue)) {
+      return input; // Return original input if conversion fails
+    }
+
     return numericValue;
+  } catch (error) {
+    console.warn(`Error converting value: ${input}`, error);
+    return input; // Return original input in case of any unexpected errors
   }
-
-  const units = { B: 1_000_000_000, M: 1_000_000, K: 1_000 };
-  const match = input.match(/^(\d+(\.\d+)?)([BMK])?$/);
-
-  if (match) {
-    const value = parseFloat(match[1]);
-    const unit = match[3] as keyof typeof units;
-    return unit ? value * units[unit] : value;
-  }
-
-  const numericValue = parseFloat(input);
-  if (isNaN(numericValue)) {
-    throw new Error(`Unable to convert ${input} to a number`);
-  }
-
-  return numericValue;
 }
-
-// Filter the stock screener data based on the provided rules
 async function filterStockScreenerData(stockScreenerData, ruleOfList) {
-  return stockScreenerData?.filter((item) => {
-    return ruleOfList.every((rule) => {
-      const itemValue = item[rule.name];
-      const ruleValue = convertUnitToValue(rule.value);
-      const ruleName = rule.name.toLowerCase();
+  try {
+    return stockScreenerData?.filter((item) => {
+      return ruleOfList.every((rule) => {
+        try {
+          const itemValue = item[rule.name];
+          const ruleValue = convertUnitToValue(rule.value);
+          const ruleName = rule.name.toLowerCase();
 
-      // Handle trend and fundamental analysis
-      if (["trendAnalysis", "fundamentalAnalysis"].includes(rule.name)) {
-        const accuracy = item[rule.name]?.accuracy;
-        if (rule.condition === "over" && accuracy <= ruleValue) return false;
-        if (rule.condition === "under" && accuracy > ruleValue) return false;
-      }
+          // If ruleValue is the original input (conversion failed), 
+          // we'll treat it as a special case
+          if (typeof ruleValue === "string") {
+            // For most string inputs, we'll consider it a match
+            if (rule.value === "any") return true;
 
-      // Handle categorical data like analyst ratings, sector, country
-      else if (
-        [
-          "analystRating",
-          "halalStocks",
-          "score",
-          "sector",
-          "industry",
-          "country",
-        ].includes(rule.name)
-      ) {
-        if (rule.value === "any") return true;
+            // For specific categorical checks
+            if (
+              [
+                "analystRating",
+                "halalStocks",
+                "score",
+                "sector",
+                "industry",
+                "country",
+              ].includes(rule.name)
+            ) {
+              if (Array.isArray(ruleValue) && !ruleValue.includes(itemValue))
+                return false;
+              if (!Array.isArray(ruleValue) && itemValue !== ruleValue) return false;
+            }
 
-        if (Array.isArray(ruleValue) && !ruleValue.includes(itemValue))
-          return false;
-        if (!Array.isArray(ruleValue) && itemValue !== ruleValue) return false;
-      }
-
-      // Handle moving averages
-      else if (
-        [
-          "ema20",
-          "ema50",
-          "ema100",
-          "ema200",
-          "sma20",
-          "sma50",
-          "sma100",
-          "sma200",
-          "grahamnumber", //grahamNumber into lowerCase form
-        ].includes(ruleName)
-      ) {
-        if (ruleValue === "any") return true;
-
-        for (const condition of ruleValue) {
-          if (movingAverageConditions[condition]) {
-            if (!movingAverageConditions[condition](item)) return false;
-          } else {
-            //console.warn(`Unknown condition: ${condition}`);
+            // For other cases, we'll skip filtering
+            return true;
           }
+
+          // Handle categorical data like analyst ratings, sector, country
+          if (
+            [
+              "analystRating",
+              "halalStocks",
+              "score",
+              "sector",
+              "industry",
+              "country",
+            ].includes(rule.name)
+          ) {
+            if (rule.value === "any") return true;
+
+            if (Array.isArray(ruleValue) && !ruleValue.includes(itemValue))
+              return false;
+            if (!Array.isArray(ruleValue) && itemValue !== ruleValue) return false;
+          }
+
+          // Handle moving averages
+          else if (
+            [
+              "ema20",
+              "ema50",
+              "ema100",
+              "ema200",
+              "sma20",
+              "sma50",
+              "sma100",
+              "sma200",
+              "grahamnumber", // grahamNumber into lowerCase form
+            ].includes(ruleName)
+          ) {
+            if (ruleValue === "any") return true;
+
+            for (const condition of ruleValue) {
+              if (movingAverageConditions[condition]) {
+                if (!movingAverageConditions[condition](item)) return false;
+              } else {
+                // console.warn(`Unknown condition: ${condition}`);
+              }
+            }
+
+            return true; // If all conditions are met
+          }
+
+          // Handle "between" condition
+          else if (rule.condition === "between" && Array?.isArray(ruleValue)) {
+            // Convert rule values, ensuring they are valid
+            const [min, max] = ruleValue?.map(convertUnitToValue);
+
+            // Handle the case where one or both values are missing (empty string or undefined)
+            if ((min === "" || min === undefined || min === null) && (max === "" || max === undefined || max === null)) {
+              return true; // If both values are empty or undefined, consider the condition as met (open-ended)
+            }
+
+            // If only one of min or max is missing, handle it as open-ended
+            if (min === "" || min === undefined || min === null) {
+              if (itemValue >= max) return false; // If min is missing, only check against max
+            } else if (max === "" || max === undefined || max === null) {
+              if (itemValue <= min) return false; // If max is missing, only check against min
+            } else {
+              // If both min and max are defined, proceed with the normal comparison
+              if (itemValue <= min || itemValue >= max) return false;
+            }
+          }
+
+          // Default numeric or string comparison
+          else if (typeof ruleValue === "string") {
+            return true; // Skip non-numeric comparisons
+          } else if (itemValue === null) {
+            return false; // Null values do not meet any condition
+          } else if (rule.condition === "over" && itemValue <= ruleValue) {
+            return false;
+          } else if (rule.condition === "under" && itemValue > ruleValue) {
+            return false;
+          }
+
+          return true;
+        } catch (ruleError) {
+          console.warn(`Error processing rule for item:`, rule, ruleError);
+          return true; // Default to including the item if rule processing fails
         }
-
-        return true; // If all conditions are met
-      }
-
-      // Default numeric or string comparison
-      if (typeof ruleValue === "string") return true; // Skip non-numeric comparisons
-      if (itemValue === null) return false; // Null values do not meet any condition
-      if (rule.condition === "over" && itemValue <= ruleValue) return false;
-      if (rule.condition === "under" && itemValue > ruleValue) return false;
-
-      return true;
-    });
-  });
+      });
+    }) || stockScreenerData; // Return original data if filtering completely fails
+  } catch (error) {
+    console.error('Error in filterStockScreenerData:', error);
+    return stockScreenerData; // Return original data if any catastrophic error occurs
+  }
 }
 
 onmessage = async (event: MessageEvent) => {
   const { stockScreenerData, ruleOfList } = event.data || {};
 
-  const filteredData = await filterStockScreenerData(
-    stockScreenerData,
-    ruleOfList
-  );
+  try {
+    const filteredData = await filterStockScreenerData(
+      stockScreenerData,
+      ruleOfList
+    );
 
-  postMessage({ message: "success", filteredData });
+    postMessage({ 
+      message: "success", 
+      filteredData,
+      originalDataLength: stockScreenerData?.length || 0,
+      filteredDataLength: filteredData?.length || 0
+    });
+  } catch (error) {
+    console.error('Error in onmessage handler:', error);
+    postMessage({ 
+      message: "error", 
+      originalData: stockScreenerData,
+      error: error.toString()
+    });
+  }
 };
 
 export {};

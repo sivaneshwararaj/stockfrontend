@@ -1374,7 +1374,7 @@
 
     // Check if the default condition is "between"
     if (allRules[ruleName].defaultCondition === "between") {
-      valueMappings[ruleName] = allRules[ruleName].defaultValue || ["", ""];
+      valueMappings[ruleName] = allRules[ruleName].defaultValue || [null, null];
     } else {
       valueMappings[ruleName] = allRules[ruleName].defaultValue;
     }
@@ -1883,28 +1883,54 @@ const handleKeyDown = (event) => {
     return checkedItems?.has(ruleName) && checkedItems?.get(ruleName).has(item);
   }
 
+  // Utility function to convert values to comparable numbers
+  function parseValue(val) {
+    if (typeof val === "string") {
+      // Handle percentage values
+      if (val.endsWith("%")) {
+        return parseFloat(val);
+      }
+
+      // Handle values with suffixes like K (thousand), M (million), B (billion)
+      const suffixMap = {
+        K: 1e3,
+        M: 1e6,
+        B: 1e9,
+      };
+
+      const suffix = val.slice(-1).toUpperCase();
+      const numberPart = parseFloat(val);
+
+      if (suffix in suffixMap) {
+        return numberPart * suffixMap[suffix];
+      }
+    }
+
+    return parseFloat(val);
+  }
+
+  // Custom sorting function
+  function customSort(a, b) {
+    return parseValue(a) - parseValue(b);
+  }
+
+  // Main function
   async function handleChangeValue(value) {
     if (checkedItems.has(ruleName)) {
       const itemsSet = checkedItems.get(ruleName);
 
-      // For "between", value is expected to be an array [min, max]
-      const sortedValue = Array.isArray(value)
-        ? value.sort((a, b) => a - b)
-        : value;
+      const sortedValue = Array.isArray(value) ? value.sort(customSort) : value;
       const valueKey = Array.isArray(sortedValue)
         ? sortedValue.join("-")
         : sortedValue;
 
       if (itemsSet?.has(valueKey)) {
-        itemsSet?.delete(valueKey); // Remove the value if it's already in the set
+        itemsSet?.delete(valueKey);
       } else {
-        itemsSet?.add(valueKey); // Add the value if it's not in the set
+        itemsSet?.add(valueKey);
       }
     } else {
-      // If the ruleName is not in checkedItems, create a new set for this rule
-      const sortedValue = Array.isArray(value)
-        ? value.sort((a, b) => a - b)
-        : value;
+      const sortedValue = Array.isArray(value) ? value.sort(customSort) : value;
       const valueKey = Array.isArray(sortedValue)
         ? sortedValue.join("-")
         : sortedValue;
@@ -1932,39 +1958,34 @@ const handleKeyDown = (event) => {
     ) {
       searchQuery = "";
 
-      // Ensure valueMappings[ruleName] is initialized as an array
       if (!Array.isArray(valueMappings[ruleName])) {
         valueMappings[ruleName] = [];
       }
 
-      const sortedValue = Array.isArray(value)
-        ? value.sort((a, b) => a - b)
+      const sortedValue = Array?.isArray(value)
+        ? value?.sort(customSort)
         : value;
-      const valueKey = Array.isArray(sortedValue)
+      const valueKey = Array?.isArray(sortedValue)
         ? sortedValue.join("-")
         : sortedValue;
       const index = valueMappings[ruleName].indexOf(valueKey);
 
       if (index === -1) {
-        // Add the value if it's not already selected
         valueMappings[ruleName].push(valueKey);
       } else {
-        // Remove the value if it's already selected
         valueMappings[ruleName].splice(index, 1);
       }
 
-      // If no values are selected, set the value to "any"
       if (valueMappings[ruleName].length === 0) {
         valueMappings[ruleName] = "any";
       }
 
       await updateStockScreenerData();
     } else if (ruleName in valueMappings) {
-      // Handle "over", "under", and "between" conditions
-      if (ruleCondition[ruleName] === "between" && Array.isArray(value)) {
-        valueMappings[ruleName] = value.sort((a, b) => a - b); // Ensure lower value is first
+      if (ruleCondition[ruleName] === "between" && Array?.isArray(value)) {
+        valueMappings[ruleName] = value?.sort(customSort);
       } else {
-        valueMappings[ruleName] = value; // Store single values for "over" and "under"
+        valueMappings[ruleName] = value;
       }
     } else {
       console.warn(`Unhandled rule: ${ruleName}`);
@@ -1988,14 +2009,17 @@ const handleKeyDown = (event) => {
     await handleChangeValue(newValue);
   }
 
-  async function handleValueInput(event) {
+  async function handleValueInput(event, ruleName, index = null) {
     const newValue = event.target.value;
-    if (newValue?.length > 0) {
-      console.log("yes");
+
+    if (ruleCondition[ruleName] === "between") {
+      const currentValues = valueMappings[ruleName] || ["", ""];
+      currentValues[index] = newValue;
+      await handleChangeValue(currentValues);
+    } else {
       await handleChangeValue(newValue);
     }
   }
-
   async function popularStrategy(state: string) {
     ruleOfList = [];
     const strategies = {
@@ -2757,12 +2781,15 @@ const handleKeyDown = (event) => {
                           <span class="truncate ml-2 text-sm sm:text-[1rem]">
                             {#if valueMappings[row?.rule] === "any"}
                               Any
-                            {:else}
+                            {:else if ["under", "over"]?.includes(ruleCondition[row?.rule])}
                               {ruleCondition[row?.rule]
                                 ?.replace("under", "Under")
-                                ?.replace("over", "Over")
-                                ?.replace("between", "Between")}
+                                ?.replace("over", "Over")}
                               {valueMappings[row?.rule]}
+                            {:else if ruleCondition[row?.rule] === "between"}
+                              {Array.isArray(valueMappings[row?.rule])
+                                ? `${valueMappings[row?.rule][0]}-${valueMappings[row?.rule][1] ?? "Any"}`
+                                : "Any"}
                             {/if}
                           </span>
                           <svg
@@ -2781,7 +2808,7 @@ const handleKeyDown = (event) => {
                         </Button>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Content
-                        class="w-64 h-fit max-h-72 overflow-y-auto scroller"
+                        class="w-64  min-h-64 max-h-72 overflow-y-auto scroller"
                       >
                         {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           <DropdownMenu.Label
@@ -2840,13 +2867,49 @@ const handleKeyDown = (event) => {
                                 </DropdownMenu.Root>
                               </div>
 
-                              <input
-                                type="text"
-                                placeholder="Value"
-                                value={valueMappings[row?.rule]}
-                                on:input={(e) => handleValueInput(e)}
-                                class=" ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
-                              />
+                              {#if ruleCondition[row?.rule] === "between"}
+                                <div class="flex gap-x-1 -ml-2 z-10 -mt-1">
+                                  <input
+                                    type="text"
+                                    placeholder="Min"
+                                    value={Array.isArray(
+                                      valueMappings[row?.rule],
+                                    )
+                                      ? (valueMappings[row?.rule][0] ?? "")
+                                      : ""}
+                                    on:input={(e) =>
+                                      handleValueInput(e, row?.rule, 0)}
+                                    class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                  />
+                                  <span
+                                    class="text-white text-[1rem] font-normal mt-1"
+                                  >
+                                    &
+                                  </span>
+                                  <input
+                                    type="text"
+                                    placeholder="Max"
+                                    value={Array.isArray(
+                                      valueMappings[row?.rule],
+                                    )
+                                      ? (valueMappings[row?.rule][1] ?? "")
+                                      : ""}
+                                    on:input={(e) =>
+                                      handleValueInput(e, row?.rule, 1)}
+                                    class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                  />
+                                </div>
+                              {:else}
+                                <input
+                                  type="text"
+                                  placeholder="Value"
+                                  value={valueMappings[row?.rule]}
+                                  on:input={(e) =>
+                                    handleValueInput(e, row?.rule)}
+                                  class="ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                />
+                              {/if}
+
                               {#if ["over", "under"]?.includes(ruleCondition[ruleName]?.toLowerCase())}
                                 <div
                                   class="ml-2 flex touch-manipulation flex-row items-center gap-x-1.5"
@@ -2926,39 +2989,45 @@ const handleKeyDown = (event) => {
                         <DropdownMenu.Group class="min-h-10 mt-2">
                           {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                             {#each row?.step as newValue, index}
-                              {#if ruleCondition[row?.rule] === "between" && newValue && row?.step[index + 1]}
+                              {#if ruleCondition[row?.rule] === "between"}
+                                {#if newValue && row?.step[index + 1]}
+                                  <DropdownMenu.Item
+                                    class="sm:hover:bg-primary"
+                                  >
+                                    <button
+                                      on:click={() => {
+                                        handleChangeValue([
+                                          row?.step[index],
+                                          row?.step[index + 1],
+                                        ]);
+                                      }}
+                                      class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
+                                    >
+                                      {ruleCondition[row?.rule]?.replace(
+                                        "between",
+                                        "Between",
+                                      )}
+                                      {row?.step[index + 1]} - {row?.step[
+                                        index
+                                      ]}
+                                    </button>
+                                  </DropdownMenu.Item>
+                                {/if}
+                              {:else}
                                 <DropdownMenu.Item class="sm:hover:bg-primary">
                                   <button
                                     on:click={() => {
-                                      handleChangeValue([
-                                        row?.step[index],
-                                        row?.step[index + 1],
-                                      ]);
+                                      handleChangeValue(newValue);
                                     }}
                                     class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
                                   >
-                                    {ruleCondition[row?.rule]?.replace(
-                                      "between",
-                                      "Between",
-                                    )}
-                                    {row?.step[index + 1]} - {row?.step[index]}
+                                    {ruleCondition[row?.rule]
+                                      ?.replace("under", "Under")
+                                      ?.replace("over", "Over")}
+                                    {newValue}
                                   </button>
                                 </DropdownMenu.Item>
                               {/if}
-                            {:else}
-                              <DropdownMenu.Item class="sm:hover:bg-primary">
-                                <button
-                                  on:click={() => {
-                                    handleChangeValue(newValue);
-                                  }}
-                                  class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
-                                >
-                                  {ruleCondition[row?.rule]
-                                    ?.replace("under", "Under")
-                                    ?.replace("over", "Over")}
-                                  {newValue}
-                                </button>
-                              </DropdownMenu.Item>
                             {/each}
                           {:else if ["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber"]?.includes(row?.rule)}
                             {#each row?.step as item}
