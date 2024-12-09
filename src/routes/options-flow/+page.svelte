@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { screenWidth, numberOfUnreadNotification, isOpen } from "$lib/store";
+  import { numberOfUnreadNotification, isOpen } from "$lib/store";
   import notifySound from "$lib/audio/options-flow-reader.mp3";
   //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
-  import { abbreviateNumber, cn } from "$lib/utils";
+  import { cn } from "$lib/utils";
   import { onMount, onDestroy } from "svelte";
   import toast from "svelte-french-toast";
   import { DateFormatter, type DateValue } from "@internationalized/date";
@@ -472,21 +472,6 @@
   let isLoaded = false;
   let mode = $isOpen === true ? true : false;
 
-  let optionSymbol;
-  let optionDescription;
-  let optionPremium;
-  let optionExpiry;
-  let optionContract;
-  let optionType;
-  let optionStrike;
-  let optionVolume;
-  let optionSpot;
-
-  let optionOpenInterest;
-  let optionSentiment;
-  let optionPrice;
-  let optionexecution_estimate;
-
   function toggleMode() {
     if ($isOpen) {
       mode = !mode;
@@ -661,16 +646,6 @@ function sendMessage(message) {
     }
   });
 
-  function reformatDate(dateString) {
-    return (
-      dateString.substring(5, 7) +
-      "/" +
-      dateString.substring(8) +
-      "/" +
-      dateString.substring(2, 4)
-    );
-  }
-
   function calculateStats(data) {
     const {
       callVolumeSum,
@@ -800,64 +775,6 @@ function sendMessage(message) {
   }
 
   const debouncedHandleInput = debounce(handleInput, 300);
-
-  async function addToWatchlist(itemId) {
-    if (data?.user?.tier === "Pro") {
-      try {
-        const postData = {
-          itemIdList: [itemId],
-          id: optionsWatchlist?.id,
-        };
-
-        if (optionsWatchlist?.optionsId?.includes(itemId)) {
-          // Remove ticker from the watchlist.
-          optionsWatchlist.optionsId = optionsWatchlist?.optionsId.filter(
-            (item) => item !== itemId,
-          );
-        } else {
-          // Add ticker to the watchlist.
-          animationId = itemId;
-          animationClass = "heartbeat";
-          const removeAnimation = () => {
-            animationId = "";
-            animationClass = "";
-          };
-          optionsWatchlist.optionsId = [...optionsWatchlist?.optionsId, itemId];
-          const heartbeatElement = document.getElementById(itemId);
-          if (heartbeatElement) {
-            // Only add listener if it's not already present
-            if (!heartbeatElement.classList.contains("animation-added")) {
-              heartbeatElement.addEventListener(
-                "animationend",
-                removeAnimation,
-              );
-              heartbeatElement.classList.add("animation-added"); // Prevent re-adding listener
-            }
-          }
-        }
-
-        const response = await fetch("/api/update-options-watchlist", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(postData),
-        });
-
-        optionsWatchlist.id = await response.json();
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-        // Handle the error appropriately (e.g., show an error message to the user)
-      }
-    } else {
-      toast.error("Only for Pro Members", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
-      });
-    }
-  }
 
   $: {
     if (searchTerm) {

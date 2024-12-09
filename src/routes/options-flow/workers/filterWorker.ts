@@ -137,7 +137,7 @@ function isDateWithinRange(dateString: string, range: string): boolean {
 
 async function filterRawData(rawData, ruleOfList, filterQuery) {
   // Early return for empty inputs
-  if (!rawData?.length || !ruleOfList?.length) {
+  if (!rawData?.length ) {
     return rawData || [];
   }
 
