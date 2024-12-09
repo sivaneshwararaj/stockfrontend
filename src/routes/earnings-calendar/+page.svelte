@@ -548,7 +548,7 @@
                                       ? item?.epsEst?.toFixed(2)
                                       : "-"}
                                   </span>
-                                  {#if item?.epsEst !== null && item?.epsPrior !== null}
+                                  {#if item?.epsEst !== null && item?.epsPrior !== null && item?.epsPrior !== 0}
                                     {#if item?.epsEst / item?.epsPrior - 1 >= 0}
                                       <span class="ml-1 text-[#22C55E]">
                                         +{(

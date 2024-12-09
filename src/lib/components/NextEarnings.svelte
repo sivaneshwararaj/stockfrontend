@@ -21,7 +21,11 @@
   $: {
     if ($stockTicker && typeof window !== "undefined") {
       rawData = data?.getNextEarnings;
-      epsRatio = ((rawData?.epsEst / rawData?.epsPrior - 1) * 100)?.toFixed(2);
+      epsRatio =
+        rawData?.epsPrior !== 0
+          ? ((rawData?.epsEst / rawData?.epsPrior - 1) * 100)?.toFixed(2)
+          : null;
+
       revenueRatio = (
         (rawData?.revenueEst / rawData?.revenuePrior - 1) *
         100
@@ -72,15 +76,20 @@
             ? "before:content-['+'] text-[#00FC50]"
             : 'text-[#FF2F1F]'} ">{abbreviateNumber(revenueRatio)}%</span
         >
-        YoY {revenueRatio > 0 ? "growth" : revenueRatio < 0 ? "shrinking" : ""} and
-        earnings per share of
-        <span class="font-semibold">{rawData?.epsEst}</span>, making a
-        <span
-          class="{epsRatio > 0
-            ? "before:content-['+'] text-[#00FC50]"
-            : 'text-[#FF2F1F]'} ">{epsRatio}%</span
-        >
-        {epsRatio > 0 ? "increase" : epsRatio < 0 ? "decrease" : ""} YoY.
+        YoY {revenueRatio > 0 ? "growth" : revenueRatio < 0 ? "shrinking" : ""}
+        {#if epsRatio !== null}
+          and earnings per share of
+          <span class="font-semibold">{rawData?.epsEst}</span>, making a
+          <span
+            class="{epsRatio > 0
+              ? "before:content-['+'] text-[#00FC50]"
+              : 'text-[#FF2F1F]'} ">{epsRatio}%</span
+          >
+          {epsRatio > 0 ? "increase" : epsRatio < 0 ? "decrease" : ""} YoY.
+        {:else}
+          and earnings per share of
+          <span class="font-semibold">{rawData?.epsEst}</span>.
+        {/if}
       </div>
     </div>
   </div>
