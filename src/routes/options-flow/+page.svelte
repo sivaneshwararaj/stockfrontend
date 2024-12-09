@@ -330,7 +330,7 @@
     return parseValue(a) - parseValue(b);
   }
 
-  async function handleChangeValue(value) {
+  async function handleChangeValue(value, { shouldSort = true } = {}) {
     // Toggle checkedItems logic
     if (checkedItems.has(value)) {
       checkedItems.delete(value);
@@ -358,8 +358,11 @@
       const index = valueMappings[ruleName].indexOf(value);
       if (index === -1) {
         valueMappings[ruleName].push(value);
-        // Sort the array when a new value is added
-        valueMappings[ruleName] = valueMappings[ruleName].sort(customSort);
+
+        // Sort the array when a new value is added, respecting shouldSort parameter
+        if (shouldSort) {
+          valueMappings[ruleName] = valueMappings[ruleName].sort(customSort);
+        }
       } else {
         valueMappings[ruleName].splice(index, 1);
       }
@@ -371,8 +374,8 @@
     } else if (ruleName in valueMappings) {
       // For rules that require sorting (like range or numeric values)
       if (ruleCondition[ruleName] === "between" && Array.isArray(value)) {
-        // Sort the array for between conditions
-        valueMappings[ruleName] = value.sort(customSort);
+        // Sort the array for between conditions, respecting shouldSort parameter
+        valueMappings[ruleName] = shouldSort ? value.sort(customSort) : value;
       } else {
         // Handle non-specific rules as single values
         valueMappings[ruleName] = value;
@@ -417,7 +420,7 @@
     if (ruleCondition[ruleName] === "between") {
       const currentValues = valueMappings[ruleName] || ["", ""];
       currentValues[index] = newValue;
-      await handleChangeValue(currentValues);
+      await handleChangeValue(currentValues, { shouldSort: false });
     } else {
       await handleChangeValue(newValue);
     }

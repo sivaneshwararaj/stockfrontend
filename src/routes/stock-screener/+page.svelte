@@ -1920,12 +1920,14 @@ const handleKeyDown = (event) => {
     return parseValue(a) - parseValue(b);
   }
 
-  // Main function
-  async function handleChangeValue(value) {
+  async function handleChangeValue(value, { shouldSort = true } = {}) {
     if (checkedItems.has(ruleName)) {
       const itemsSet = checkedItems.get(ruleName);
 
-      const sortedValue = Array.isArray(value) ? value.sort(customSort) : value;
+      // Apply sorting only if shouldSort is true
+      const sortedValue =
+        shouldSort && Array.isArray(value) ? value.sort(customSort) : value;
+
       const valueKey = Array.isArray(sortedValue)
         ? sortedValue.join("-")
         : sortedValue;
@@ -1936,10 +1938,14 @@ const handleKeyDown = (event) => {
         itemsSet?.add(valueKey);
       }
     } else {
-      const sortedValue = Array.isArray(value) ? value.sort(customSort) : value;
+      // Apply sorting only if shouldSort is true
+      const sortedValue =
+        shouldSort && Array.isArray(value) ? value.sort(customSort) : value;
+
       const valueKey = Array.isArray(sortedValue)
         ? sortedValue.join("-")
         : sortedValue;
+
       checkedItems?.set(ruleName, new Set([valueKey]));
     }
 
@@ -1963,19 +1969,19 @@ const handleKeyDown = (event) => {
       ]?.includes(ruleName)
     ) {
       searchQuery = "";
-
       if (!Array.isArray(valueMappings[ruleName])) {
         valueMappings[ruleName] = [];
       }
 
-      const sortedValue = Array?.isArray(value)
-        ? value?.sort(customSort)
-        : value;
+      // Apply sorting only if shouldSort is true
+      const sortedValue =
+        shouldSort && Array?.isArray(value) ? value?.sort(customSort) : value;
+
       const valueKey = Array?.isArray(sortedValue)
         ? sortedValue.join("-")
         : sortedValue;
-      const index = valueMappings[ruleName].indexOf(valueKey);
 
+      const index = valueMappings[ruleName].indexOf(valueKey);
       if (index === -1) {
         valueMappings[ruleName].push(valueKey);
       } else {
@@ -1989,7 +1995,8 @@ const handleKeyDown = (event) => {
       await updateStockScreenerData();
     } else if (ruleName in valueMappings) {
       if (ruleCondition[ruleName] === "between" && Array?.isArray(value)) {
-        valueMappings[ruleName] = value?.sort(customSort);
+        // Apply sorting only if shouldSort is true
+        valueMappings[ruleName] = shouldSort ? value?.sort(customSort) : value;
       } else {
         valueMappings[ruleName] = value;
       }
@@ -2021,7 +2028,7 @@ const handleKeyDown = (event) => {
     if (ruleCondition[ruleName] === "between") {
       const currentValues = valueMappings[ruleName] || ["", ""];
       currentValues[index] = newValue;
-      await handleChangeValue(currentValues);
+      await handleChangeValue(currentValues, { shouldSort: false });
     } else {
       await handleChangeValue(newValue);
     }
