@@ -37,17 +37,22 @@
   let originalData = [...rawData]; // Unaltered copy of raw data
   let ruleOfList = [...defaultList];
   let socket;
+  let sortMode = false;
 
   const defaultRules = defaultList?.map((item) => item?.rule);
 
   let pagePathName = $page?.url?.pathname;
   let testList = [];
   let searchQuery = "";
+  let activeSortKey = null;
 
   let downloadWorker: Worker | undefined;
   let checkedItems;
 
-  let stockList = rawData?.slice(0, 50);
+  let stockList = rawData?.slice(0, 150);
+  let scrollPosition = 0;
+  //$: stockList = originalData.slice(0, 150);
+
   let allRows = [
     { name: "Volume", rule: "volume", type: "int" },
     { name: "Avg. Volume", rule: "avgVolume", type: "int" },
@@ -197,7 +202,7 @@
 
     rawData = updateData;
     originalData = rawData;
-    stockList = originalData?.slice(0, 50); // Assign to stockList instead of rawData directly
+    stockList = originalData?.slice(0, 150); // Assign to stockList instead of rawData directly
     columns = generateColumns(rawData);
     sortOrders = generateSortOrders(rawData);
   };
@@ -317,14 +322,39 @@
   }
 
   async function handleScroll() {
-    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const scrollThreshold = document.body.offsetHeight * 0.8;
     const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
 
-    if (isBottom && stockList?.length !== originalData?.length) {
-      const nextIndex = stockList?.length;
-      const filteredNewResults = originalData?.slice(nextIndex, nextIndex + 50);
+    if (isBottom && stockList.length !== originalData.length) {
+      const nextIndex = stockList.length;
+      const filteredNewResults = originalData?.slice(
+        nextIndex,
+        nextIndex + 150,
+      );
       stockList = [...stockList, ...filteredNewResults];
     }
+  }
+
+  // Save scroll position before data changes
+  function saveScrollPosition() {
+    scrollPosition = window.scrollY;
+  }
+
+  // Restore scroll position after data changes
+  function restoreScrollPosition() {
+    window.scrollTo(0, scrollPosition);
+  }
+
+  // Watch for changes in originalData and restore scroll position
+  $: if (originalData && typeof window !== "undefined" && sortMode === true) {
+    restoreScrollPosition();
+    activeSortKey = Object?.keys(sortOrders)?.find(
+      (key) => sortOrders[key]?.order !== "none",
+    );
+    if (["changesPercentage", "price"]?.includes(activeSortKey)) {
+      sortData(activeSortKey, true);
+    }
+    sortMode = false;
   }
 
   function sendMessage(message) {
@@ -360,6 +390,8 @@
                   previous: null,
                 }));
               }, 500);
+              saveScrollPosition();
+              sortMode = true;
             }
           }
         } catch (e) {
@@ -374,6 +406,7 @@
       console.error("WebSocket connection error:", error);
     }
   }
+
   $: stockList = [...stockList];
 
   onMount(async () => {
@@ -559,7 +592,7 @@
   let columns = generateColumns(rawData);
   let sortOrders = generateSortOrders(rawData);
 
-  const sortData = (key) => {
+  const sortData = (key, input = false) => {
     // Reset all other keys to 'none' except the current key
     for (const k in sortOrders) {
       if (k !== key) {
@@ -567,21 +600,24 @@
       }
     }
 
-    // Cycle through 'none', 'asc', 'desc' for the clicked key
-    const orderCycle = ["none", "asc", "desc"];
-    const currentOrderIndex = orderCycle.indexOf(
-      sortOrders[key]?.order || "none",
-    );
-    sortOrders[key] = {
-      ...(sortOrders[key] || {}),
-      order: orderCycle[(currentOrderIndex + 1) % orderCycle.length],
-    };
+    // If input is false, cycle through 'none', 'asc', 'desc' for the clicked key
+    if (!input) {
+      const orderCycle = ["none", "asc", "desc"];
+      const currentOrderIndex = orderCycle.indexOf(
+        sortOrders[key]?.order || "none",
+      );
+      sortOrders[key] = {
+        ...(sortOrders[key] || {}),
+        order: orderCycle[(currentOrderIndex + 1) % orderCycle.length],
+      };
+    }
+
     const sortOrder = sortOrders[key]?.order;
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
       originalData = [...rawData]; // Reset originalData to rawData
-      stockList = originalData?.slice(0, 50); // Reset displayed data
+      stockList = originalData?.slice(0, 150); // Reset displayed data
       return;
     }
 
@@ -589,7 +625,6 @@
     const compareValues = (a, b) => {
       const { type } = sortOrders[key];
       let valueA, valueB;
-
       switch (type) {
         case "date":
           valueA = new Date(a[key]);
@@ -597,24 +632,13 @@
           break;
         case "rating":
         case "string":
-          // Retrieve values
           valueA = a[key];
           valueB = b[key];
-
-          // Handle null or undefined values, always placing them at the bottom
-          if (valueA == null && valueB == null) {
-            return 0; // Both are null/undefined, no need to change the order
-          } else if (valueA == null) {
-            return 1; // null goes to the bottom
-          } else if (valueB == null) {
-            return -1; // null goes to the bottom
-          }
-
-          // Convert the values to uppercase for case-insensitive comparison
+          if (valueA == null && valueB == null) return 0;
+          if (valueA == null) return 1;
+          if (valueB == null) return -1;
           valueA = valueA?.toUpperCase();
           valueB = valueB?.toUpperCase();
-
-          // Perform the sorting based on ascending or descending order
           return sortOrder === "asc"
             ? valueA?.localeCompare(valueB)
             : valueB?.localeCompare(valueA);
@@ -624,17 +648,31 @@
           valueB = parseFloat(b[key]);
           break;
       }
-
-      if (sortOrder === "asc") {
-        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-      } else {
-        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
-      }
+      return sortOrder === "asc"
+        ? valueA < valueB
+          ? -1
+          : valueA > valueB
+            ? 1
+            : 0
+        : valueA > valueB
+          ? -1
+          : valueA < valueB
+            ? 1
+            : 0;
     };
 
     // Sort and update the originalData and stockList
     originalData = [...rawData].sort(compareValues);
-    stockList = originalData?.slice(0, 50); // Update the displayed data
+    if (
+      ["changesPercentage", "price"]?.includes(activeSortKey) &&
+      input === true
+    ) {
+      //stockList = originalData?.slice(0, Math.min(stockList?.length, 50)); // Update the displayed data
+      originalData = [...rawData].sort(compareValues);
+      stockList = originalData;
+    } else {
+      stockList = originalData?.slice(0, 150); // Update the displayed data
+    }
   };
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
