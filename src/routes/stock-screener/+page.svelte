@@ -1860,6 +1860,12 @@ const handleKeyDown = (event) => {
 
   function changeRuleCondition(name: string, state: string) {
     ruleName = name;
+    if (
+      ruleCondition[ruleName] === "between" &&
+      ["over", "under"]?.includes(state?.toLowerCase())
+    ) {
+      valueMappings[ruleName] = "";
+    }
     ruleCondition[ruleName] = state?.toLowerCase();
   }
 
