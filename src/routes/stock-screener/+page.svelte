@@ -2781,15 +2781,15 @@ const handleKeyDown = (event) => {
                           <span class="truncate ml-2 text-sm sm:text-[1rem]">
                             {#if valueMappings[row?.rule] === "any"}
                               Any
-                            {:else if ["under", "over"]?.includes(ruleCondition[row?.rule])}
-                              {ruleCondition[row?.rule]
-                                ?.replace("under", "Under")
-                                ?.replace("over", "Over")}
-                              {valueMappings[row?.rule]}
                             {:else if ruleCondition[row?.rule] === "between"}
                               {Array.isArray(valueMappings[row?.rule])
                                 ? `${valueMappings[row?.rule][0]}-${valueMappings[row?.rule][1] ?? "Any"}`
                                 : "Any"}
+                            {:else}
+                              {ruleCondition[row?.rule]
+                                ?.replace("under", "Under")
+                                ?.replace("over", "Over") ?? ""}
+                              {valueMappings[row?.rule]}
                             {/if}
                           </span>
                           <svg
