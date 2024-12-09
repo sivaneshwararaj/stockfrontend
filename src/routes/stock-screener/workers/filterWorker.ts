@@ -104,130 +104,113 @@ function convertUnitToValue(input: string | number | string[]) {
     return input; // Return original input in case of any unexpected errors
   }
 }
-async function filterStockScreenerData(stockScreenerData, ruleOfList) {
-  try {
-    return stockScreenerData?.filter((item) => {
-      return ruleOfList.every((rule) => {
-        try {
-          const itemValue = item[rule.name];
-          const ruleValue = convertUnitToValue(rule.value);
-          const ruleName = rule.name.toLowerCase();
 
-          // If ruleValue is the original input (conversion failed), 
-          // we'll treat it as a special case
-          if (typeof ruleValue === "string") {
-            // For most string inputs, we'll consider it a match
-            if (rule.value === "any") return true;
+// Centralized rule checking logic
+function createRuleCheck(rule, ruleName, ruleValue) {
+  // Handle 'any' condition quickly
+  if (rule.value === 'any') return () => true;
 
-            // For specific categorical checks
-            if (
-              [
-                "analystRating",
-                "halalStocks",
-                "score",
-                "sector",
-                "industry",
-                "country",
-              ].includes(rule.name)
-            ) {
-              if (Array.isArray(ruleValue) && !ruleValue.includes(itemValue))
-                return false;
-              if (!Array.isArray(ruleValue) && itemValue !== ruleValue) return false;
-            }
+  // Categorical checks
+  const categoricalFields = [
+    'analystRating', 'halalStocks', 'score', 
+    'sector', 'industry', 'country'
+  ];
 
-            // For other cases, we'll skip filtering
-            return true;
-          }
-
-          // Handle categorical data like analyst ratings, sector, country
-          if (
-            [
-              "analystRating",
-              "halalStocks",
-              "score",
-              "sector",
-              "industry",
-              "country",
-            ].includes(rule.name)
-          ) {
-            if (rule.value === "any") return true;
-
-            if (Array.isArray(ruleValue) && !ruleValue.includes(itemValue))
-              return false;
-            if (!Array.isArray(ruleValue) && itemValue !== ruleValue) return false;
-          }
-
-          // Handle moving averages
-          else if (
-            [
-              "ema20",
-              "ema50",
-              "ema100",
-              "ema200",
-              "sma20",
-              "sma50",
-              "sma100",
-              "sma200",
-              "grahamnumber", // grahamNumber into lowerCase form
-            ].includes(ruleName)
-          ) {
-            if (ruleValue === "any") return true;
-
-            for (const condition of ruleValue) {
-              if (movingAverageConditions[condition]) {
-                if (!movingAverageConditions[condition](item)) return false;
-              } else {
-                // console.warn(`Unknown condition: ${condition}`);
-              }
-            }
-
-            return true; // If all conditions are met
-          }
-
-          // Handle "between" condition
-          else if (rule.condition === "between" && Array?.isArray(ruleValue)) {
-            // Convert rule values, ensuring they are valid
-            const [min, max] = ruleValue?.map(convertUnitToValue);
-
-            // Handle the case where one or both values are missing (empty string or undefined)
-            if ((min === "" || min === undefined || min === null) && (max === "" || max === undefined || max === null)) {
-              return true; // If both values are empty or undefined, consider the condition as met (open-ended)
-            }
-
-            // If only one of min or max is missing, handle it as open-ended
-            if (min === "" || min === undefined || min === null) {
-              if (itemValue >= max) return false; // If min is missing, only check against max
-            } else if (max === "" || max === undefined || max === null) {
-              if (itemValue <= min) return false; // If max is missing, only check against min
-            } else {
-              // If both min and max are defined, proceed with the normal comparison
-              if (itemValue <= min || itemValue >= max) return false;
-            }
-          }
-
-          // Default numeric or string comparison
-          else if (typeof ruleValue === "string") {
-            return true; // Skip non-numeric comparisons
-          } else if (itemValue === null) {
-            return false; // Null values do not meet any condition
-          } else if (rule.condition === "over" && itemValue <= ruleValue) {
-            return false;
-          } else if (rule.condition === "under" && itemValue > ruleValue) {
-            return false;
-          }
-
-          return true;
-        } catch (ruleError) {
-          console.warn(`Error processing rule for item:`, rule, ruleError);
-          return true; // Default to including the item if rule processing fails
-        }
-      });
-    }) || stockScreenerData; // Return original data if filtering completely fails
-  } catch (error) {
-    console.error('Error in filterStockScreenerData:', error);
-    return stockScreenerData; // Return original data if any catastrophic error occurs
+  if (categoricalFields.includes(rule.name)) {
+    return (item) => {
+      const itemValue = item[rule.name];
+      if (Array.isArray(ruleValue)) {
+        return ruleValue.includes(itemValue);
+      }
+      return itemValue === ruleValue;
+    };
   }
+
+  // Moving averages checks
+  const movingAverageFields = [
+    'ema20', 'ema50', 'ema100', 'ema200', 
+    'sma20', 'sma50', 'sma100', 'sma200', 
+    'grahamnumber'
+  ];
+
+  if (movingAverageFields.includes(ruleName)) {
+    return (item) => {
+      if (Array.isArray(ruleValue)) {
+        return ruleValue.every(condition => 
+          movingAverageConditions[condition]?.(item) ?? true
+        );
+      }
+      return true;
+    };
+  }
+
+  // Between condition
+  if (rule.condition === 'between' && Array.isArray(ruleValue)) {
+    return (item) => {
+      const itemValue = item[rule.name];
+      const [min, max] = ruleValue.map(convertUnitToValue);
+
+      // Handle empty/undefined min and max
+      if ((min === '' || min === undefined || min === null) && 
+          (max === '' || max === undefined || max === null)) {
+        return true;
+      }
+
+      if (min === '' || min === undefined || min === null) {
+        return itemValue < max;
+      }
+
+      if (max === '' || max === undefined || max === null) {
+        return itemValue > min;
+      }
+
+      return itemValue > min && itemValue < max;
+    };
+  }
+
+  // Default numeric comparisons
+  return (item) => {
+    const itemValue = item[rule.name];
+
+    if (itemValue === null) return false;
+
+    if (rule.condition === 'over') {
+      return itemValue > ruleValue;
+    }
+
+    if (rule.condition === 'under') {
+      return itemValue < ruleValue;
+    }
+
+    // Default comparison if no specific condition
+    return true;
+  };
 }
+
+
+async function filterStockScreenerData(stockScreenerData, ruleOfList) {
+  // Early return if no data or no rules
+  if (!stockScreenerData?.length || !ruleOfList?.length) {
+    return stockScreenerData || [];
+  }
+
+  // Precompile rule conditions to avoid repeated checks
+  const compiledRules = ruleOfList.map(rule => {
+    const ruleName = rule.name.toLowerCase();
+    const ruleValue = convertUnitToValue(rule.value);
+
+    return {
+      ...rule,
+      compiledCheck: createRuleCheck(rule, ruleName, ruleValue)
+    };
+  });
+
+  // Use a more performant filtering method
+  return stockScreenerData?.filter(item => 
+    compiledRules?.every(rule => rule.compiledCheck(item))
+  );
+}
+
 
 onmessage = async (event: MessageEvent) => {
   const { stockScreenerData, ruleOfList } = event.data || {};
