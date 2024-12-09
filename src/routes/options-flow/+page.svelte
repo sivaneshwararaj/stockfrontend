@@ -95,7 +95,7 @@
     },
     execution_estimate: {
       label: "Execution",
-      step: ["At Ask", "At Bid", "At Midpoint", "Above Ask", "Below Bid"],
+      step: ["Above Ask", "Below Bid", "At Ask", "At Bid", "At Midpoint"],
       defaultValue: "any",
     },
     option_activity_type: {
@@ -105,17 +105,8 @@
     },
     date_expiration: {
       label: "Date Expiration",
-      step: [
-        "Same Day",
-        "1 day",
-        "1 Week",
-        "2 Weeks",
-        "1 Month",
-        "3 Months",
-        "6 Months",
-        "1 Year",
-        "3 Years",
-      ],
+      step: ["250", "180", "100", "80", "60", "50", "30", "20", "10", "5", "0"],
+      defaultCondition: "over",
       defaultValue: "any",
     },
     underlying_type: {
@@ -218,7 +209,6 @@
       case "sentiment":
       case "execution_estimate":
       case "option_activity_type":
-      case "date_expiration":
       case "underlying_type":
         newRule = {
           name: ruleName,
@@ -350,7 +340,6 @@
         "sentiment",
         "execution_estimate",
         "option_activity_type",
-        "date_expiration",
         "underlying_type",
       ]?.includes(ruleName)
     ) {
@@ -1135,7 +1124,7 @@ function sendMessage(message) {
                         <DropdownMenu.Content
                           class="w-64 min-h-auto max-h-72 overflow-y-auto scroller"
                         >
-                          {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
+                          {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
                             <DropdownMenu.Label
                               class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]"
                             >
@@ -1295,7 +1284,7 @@ function sendMessage(message) {
                             ></div>
                           {/if}
                           <DropdownMenu.Group class="min-h-10 mt-2">
-                            {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
+                            {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
                               {#each row?.step as newValue, index}
                                 {#if ruleCondition[row?.rule] === "between"}
                                   {#if newValue && row?.step[index + 1]}
@@ -1339,7 +1328,7 @@ function sendMessage(message) {
                                   </DropdownMenu.Item>
                                 {/if}
                               {/each}
-                            {:else if ["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
+                            {:else if ["put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
                               {#each row?.step as item}
                                 <DropdownMenu.Item
                                   class="sm:hover:bg-[#2A2E39]"
