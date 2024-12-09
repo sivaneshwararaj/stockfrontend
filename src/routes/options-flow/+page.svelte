@@ -43,7 +43,7 @@
   const allRules = {
     size: {
       label: "Size",
-      step: ["100K", "50K", "20K", "10K", "5K", "2K", "1K", "100", "0"],
+      step: ["50K", "20K", "10K", "5K", "2K", "1K", "100", "0"],
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -61,6 +61,12 @@
     },
     volumeOIRatio: {
       label: "Volume / Open Interest",
+      step: ["100%", "80%", "60%", "50%", "30%", "15%", "10%", "5%"],
+      defaultCondition: "over",
+      defaultValue: "any",
+    },
+    sizeOIRatio: {
+      label: "Size / Open Interest",
       step: ["100%", "80%", "60%", "50%", "30%", "15%", "10%", "5%"],
       defaultCondition: "over",
       defaultValue: "any",

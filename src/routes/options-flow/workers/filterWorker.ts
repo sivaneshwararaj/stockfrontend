@@ -70,22 +70,66 @@ function createRuleCheck(rule, ruleName, ruleValue) {
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
 
 
-   if (ruleName === 'volumeoiratio') {
-    return (item) => {
-      const volume = parseFloat(item.volume);
-      const openInterest = parseFloat(item.open_interest);
+if (ruleName === 'volumeoiratio') {
+  return (item) => {
+    const volume = parseFloat(item.volume);
+    const openInterest = parseFloat(item.open_interest);
 
-      if (isNaN(volume) || isNaN(openInterest) || openInterest === 0) {
-        return false;
-      }
+    if (isNaN(volume) || isNaN(openInterest) || openInterest === 0) {
+      return false;
+    }
 
-      const ratio = (volume / openInterest) * 100;
+    const ratio = (volume / openInterest) * 100;
 
-      if (rule.condition === 'over' && ratio <= ruleValue) return false;
-      if (rule.condition === 'under' && ratio >= ruleValue) return false;
-      return true;
-    };
-  }
+    // Handle 'between' condition for volume to open interest ratio
+    if (rule.condition === 'between' && Array.isArray(ruleValue)) {
+      const [minRatio, maxRatio] = ruleValue.map(convertUnitToValue); // Convert ruleValue to numeric values
+
+      if (minRatio === null && maxRatio === null) return true;
+      if (minRatio === null) return ratio <= maxRatio;
+      if (maxRatio === null) return ratio >= minRatio;
+
+      return ratio >= minRatio && ratio <= maxRatio;
+    }
+
+    // Existing conditions for 'over' and 'under'
+    if (rule.condition === 'over' && ratio <= ruleValue) return false;
+    if (rule.condition === 'under' && ratio >= ruleValue) return false;
+
+    return true;
+  };
+}
+
+
+if (ruleName === 'sizeoiratio') {
+  return (item) => {
+    const size = parseFloat(item?.size);
+    const openInterest = parseFloat(item?.open_interest);
+    if (isNaN(size) || isNaN(openInterest) || openInterest === 0) {
+      return false;
+    }
+
+    const ratio = (size / openInterest) * 100;
+
+    // Handle 'between' condition for size to open interest ratio
+    if (rule.condition === 'between' && Array.isArray(ruleValue)) {
+      const [minRatio, maxRatio] = ruleValue?.map(convertUnitToValue); // Convert ruleValue to numeric values
+
+      if (minRatio === null && maxRatio === null) return true;
+      if (minRatio === null) return ratio <= maxRatio;
+      if (maxRatio === null) return ratio >= minRatio;
+
+      return ratio >= minRatio && ratio <= maxRatio;
+    }
+
+    // Existing conditions for 'over' and 'under'
+    if (rule.condition === 'over' && ratio <= ruleValue) return false;
+    if (rule.condition === 'under' && ratio >= ruleValue) return false;
+
+    return true;
+  };
+}
+
 
   if (ruleName === 'date_expiration') {
   // If ruleValue is empty, undefined, "any", or an array containing only "any", return a function that always returns true
@@ -93,6 +137,7 @@ function createRuleCheck(rule, ruleName, ruleValue) {
     return () => true;
   }
 
+  
   return (item) => {
     const expirationDate = new Date(item[rule.name]);
     if (isNaN(expirationDate)) return false; // Handle invalid dates
@@ -242,7 +287,8 @@ onmessage = async (event: MessageEvent) => {
   const { rawData, ruleOfList, filterQuery } = event.data || {};
   // Filter the data
   let filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
-  // Remove duplicates based on id
+  
+  console.log(ruleOfList)
   filteredData = Array.from(
     new Map(filteredData?.map((item) => [item?.id, item]))?.values()
   );
