@@ -170,21 +170,35 @@ function createRuleCheck(rule, ruleName, ruleValue) {
     };
   }
 
-  // Fallback to other numeric conditions
-  return (item) => {
-    const itemValue = item[rule.name];
-    if (typeof ruleValue === 'string') return true; // Handle cases where the rule value is a string but not 'sentiment' or 'option_type'
+// Fallback to other numeric conditions
+return (item) => {
+  const itemValue = item[rule.name];
+  if (typeof ruleValue === 'string') return true; // Handle cases where the rule value is a string but not 'sentiment' or 'option_type'
 
-    if (itemValue === null || itemValue === undefined) return false;
+  if (itemValue === null || itemValue === undefined) return false;
 
-    const numericItemValue = parseFloat(itemValue);
-    if (isNaN(numericItemValue)) return false;
+  const numericItemValue = parseFloat(itemValue);
+  if (isNaN(numericItemValue)) return false;
 
-    if (rule.condition === 'over' && numericItemValue <= ruleValue) return false;
-    if (rule.condition === 'under' && numericItemValue >= ruleValue) return false;
+  // Handle 'between' condition for numeric fields using convertUnitToValue
+  if (rule.condition === 'between' && Array.isArray(ruleValue)) {
+    const [minValue, maxValue] = ruleValue.map(convertUnitToValue);
 
-    return true;
-  };
+    if (minValue === null && maxValue === null) return true;
+    if (minValue === null) return numericItemValue <= maxValue;
+    if (maxValue === null) return numericItemValue >= minValue;
+
+    return numericItemValue >= minValue && numericItemValue <= maxValue;
+  }
+
+  // Existing conditions
+  if (rule.condition === 'over' && numericItemValue <= ruleValue) return false;
+  if (rule.condition === 'under' && numericItemValue >= ruleValue) return false;
+
+  return true;
+};
+
+
 }
 
 
