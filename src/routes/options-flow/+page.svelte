@@ -44,7 +44,7 @@
   const allRules = {
     volume: {
       label: "Volume",
-      step: ["100K", "10K", "1K"],
+      step: ["100K", "50K", "20K", "10K", "5K", "2K", "1K", "100", "0"],
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -133,7 +133,13 @@
 
   Object.keys(allRules).forEach((ruleName) => {
     ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
-    valueMappings[ruleName] = allRules[ruleName].defaultValue;
+
+    // Check if the default condition is "between"
+    if (allRules[ruleName].defaultCondition === "between") {
+      valueMappings[ruleName] = allRules[ruleName].defaultValue || [null, null];
+    } else {
+      valueMappings[ruleName] = allRules[ruleName].defaultValue;
+    }
   });
 
   // Update ruleCondition and valueMappings based on existing rules
@@ -277,9 +283,17 @@
     //console.log(displayedData)
   };
 
-  function changeRuleCondition(name: string, state: string) {
+  async function changeRuleCondition(name: string, state: string) {
     ruleName = name;
-    ruleCondition[ruleName] = state;
+    if (
+      ruleCondition[ruleName] === "between" &&
+      ["over", "under"]?.includes(state?.toLowerCase())
+    ) {
+      valueMappings[ruleName] = "";
+    }
+    ruleCondition[ruleName] = state?.toLowerCase();
+
+    await handleChangeValue(valueMappings[ruleName]);
   }
 
   let checkedItems = new Set(ruleOfList.flatMap((rule) => rule.value));
@@ -288,12 +302,43 @@
     return checkedItems.has(item);
   }
 
+  // Utility function to convert values to comparable numbers
+  // Utility function to convert values to comparable numbers
+  function parseValue(val) {
+    if (typeof val === "string") {
+      // Handle percentage values
+      if (val.endsWith("%")) {
+        return parseFloat(val);
+      }
+      // Handle values with suffixes like K (thousand), M (million), B (billion)
+      const suffixMap = {
+        K: 1e3,
+        M: 1e6,
+        B: 1e9,
+      };
+      const suffix = val.slice(-1).toUpperCase();
+      const numberPart = parseFloat(val);
+      if (suffix in suffixMap) {
+        return numberPart * suffixMap[suffix];
+      }
+    }
+    return parseFloat(val);
+  }
+
+  // Custom sorting function
+  function customSort(a, b) {
+    return parseValue(a) - parseValue(b);
+  }
+
   async function handleChangeValue(value) {
+    // Toggle checkedItems logic
     if (checkedItems.has(value)) {
       checkedItems.delete(value);
     } else {
       checkedItems.add(value);
     }
+
+    // Specific rule handling for options-related rules
     if (
       [
         "put_call",
@@ -306,29 +351,37 @@
     ) {
       // Ensure valueMappings[ruleName] is initialized as an array
       if (!Array.isArray(valueMappings[ruleName])) {
-        valueMappings[ruleName] = []; // Initialize as an empty array if not already
+        valueMappings[ruleName] = [];
       }
 
+      // Similar logic to the original function for adding/removing values
       const index = valueMappings[ruleName].indexOf(value);
       if (index === -1) {
-        // Add the country if it's not already selected
         valueMappings[ruleName].push(value);
+        // Sort the array when a new value is added
+        valueMappings[ruleName] = valueMappings[ruleName].sort(customSort);
       } else {
-        // Remove the country if it's already selected (deselect)
         valueMappings[ruleName].splice(index, 1);
       }
 
-      // If no countries are selected, set value to "any"
+      // Set to "any" if no values are selected
       if (valueMappings[ruleName].length === 0) {
         valueMappings[ruleName] = "any";
       }
     } else if (ruleName in valueMappings) {
-      // Handle non-country rules as single values
-      valueMappings[ruleName] = value;
+      // For rules that require sorting (like range or numeric values)
+      if (ruleCondition[ruleName] === "between" && Array.isArray(value)) {
+        // Sort the array for between conditions
+        valueMappings[ruleName] = value.sort(customSort);
+      } else {
+        // Handle non-specific rules as single values
+        valueMappings[ruleName] = value;
+      }
     } else {
       console.warn(`Unhandled rule: ${ruleName}`);
     }
 
+    // Update ruleOfList (if applicable)
     const ruleToUpdate = ruleOfList?.find((rule) => rule.name === ruleName);
     if (ruleToUpdate) {
       ruleToUpdate.value = valueMappings[ruleToUpdate.name];
@@ -336,8 +389,38 @@
       ruleOfList = [...ruleOfList];
     }
 
+    // Trigger worker load and save cookie
     shouldLoadWorker.set(true);
     await saveCookieRuleOfList();
+  }
+
+  async function stepSizeValue(value, condition) {
+    const match = value.toString().match(/^(-?[\d.]+)([KMB%]?)$/);
+    if (!match) return value;
+
+    let [_, number, suffix] = match;
+    number = parseFloat(number);
+
+    let step = 1;
+
+    number += condition === "add" ? step : -step;
+
+    // Round to 2 decimal places for consistency
+    number = parseFloat(number?.toFixed(2));
+    const newValue = suffix ? `${number}${suffix}` : Math?.round(number);
+    await handleChangeValue(newValue);
+  }
+
+  async function handleValueInput(event, ruleName, index = null) {
+    const newValue = event.target.value;
+
+    if (ruleCondition[ruleName] === "between") {
+      const currentValues = valueMappings[ruleName] || ["", ""];
+      currentValues[index] = newValue;
+      await handleChangeValue(currentValues);
+    } else {
+      await handleChangeValue(newValue);
+    }
   }
 
   const nyseDate = new Date(
@@ -1272,10 +1355,14 @@ function sendMessage(message) {
                             <span class="truncate ml-2 text-sm sm:text-[1rem]">
                               {#if valueMappings[row?.rule] === "any"}
                                 Any
+                              {:else if ruleCondition[row?.rule] === "between"}
+                                {Array.isArray(valueMappings[row?.rule])
+                                  ? `${valueMappings[row?.rule][0]}-${valueMappings[row?.rule][1] ?? "Any"}`
+                                  : "Any"}
                               {:else}
-                                {ruleCondition[row?.rule] !== undefined
-                                  ? ruleCondition[row?.rule]
-                                  : ""}
+                                {ruleCondition[row?.rule]
+                                  ?.replace("under", "Under")
+                                  ?.replace("over", "Over") ?? ""}
                                 {valueMappings[row?.rule]}
                               {/if}
                             </span>
@@ -1295,7 +1382,7 @@ function sendMessage(message) {
                           </Button>
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Content
-                          class="w-56 h-fit max-h-72 overflow-y-auto "
+                          class="w-64 min-h-auto max-h-72 overflow-y-auto scroller"
                         >
                           {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
                             <DropdownMenu.Label
@@ -1304,42 +1391,148 @@ function sendMessage(message) {
                               <div
                                 class="flex items-center justify-start gap-x-1"
                               >
+                                <!--Start Dropdown for Condition-->
                                 <div
-                                  class="relative inline-block flex flex-row items-center justify-center"
+                                  class="-ml-2 relative inline-block text-left"
                                 >
-                                  <label
-                                    on:click={() =>
-                                      changeRuleCondition(row?.rule, "under")}
-                                    class="cursor-pointer flex flex-row mr-2 justify-center items-center"
-                                  >
-                                    <input
-                                      type="radio"
-                                      class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
-                                      checked={ruleCondition[row?.rule] ===
-                                        "under"}
-                                      name={row?.rule}
-                                    />
-                                    <span class="label-text text-white"
-                                      >Under</span
-                                    >
-                                  </label>
-                                  <label
-                                    on:click={() =>
-                                      changeRuleCondition(row?.rule, "over")}
-                                    class="cursor-pointer flex flex-row ml-2 justify-center items-center"
-                                  >
-                                    <input
-                                      type="radio"
-                                      class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
-                                      checked={ruleCondition[row?.rule] ===
-                                        "over"}
-                                      name={row?.rule}
-                                    />
-                                    <span class="label-text text-white"
-                                      >Over</span
-                                    >
-                                  </label>
+                                  <DropdownMenu.Root>
+                                    <DropdownMenu.Trigger asChild let:builder
+                                      ><Button
+                                        builders={[builder]}
+                                        class="w-fit -mt-1 -ml-2 bg-[#09090B] flex flex-row justify-between items-center text-white"
+                                      >
+                                        <span
+                                          class="truncate ml-2 text-sm sm:text-[1rem]"
+                                        >
+                                          {ruleCondition[ruleName]
+                                            ?.replace("under", "Under")
+                                            ?.replace("over", "Over")
+                                            ?.replace("between", "Between")}
+                                        </span>
+                                        <svg
+                                          class="mt-1 -mr-1 ml-1 h-5 w-5 xs:ml-2 !ml-0 sm:ml-0 inline-block"
+                                          viewBox="0 0 20 20"
+                                          fill="currentColor"
+                                          style="max-width:40px"
+                                          aria-hidden="true"
+                                          ><path
+                                            fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd"
+                                          ></path></svg
+                                        >
+                                      </Button>
+                                    </DropdownMenu.Trigger>
+                                    <DropdownMenu.Content>
+                                      <DropdownMenu.Group>
+                                        {#each ["Over", "Under", "Between"] as item}
+                                          <DropdownMenu.Item
+                                            on:click={() =>
+                                              changeRuleCondition(
+                                                row?.rule,
+                                                item,
+                                              )}
+                                            class="cursor-pointer text-[1rem] font-normal"
+                                            >{item}</DropdownMenu.Item
+                                          >
+                                        {/each}
+                                      </DropdownMenu.Group>
+                                    </DropdownMenu.Content>
+                                  </DropdownMenu.Root>
                                 </div>
+
+                                {#if ruleCondition[row?.rule] === "between"}
+                                  <div class="flex gap-x-1 -ml-2 z-10 -mt-1">
+                                    <input
+                                      type="text"
+                                      placeholder="Min"
+                                      value={Array.isArray(
+                                        valueMappings[row?.rule],
+                                      )
+                                        ? (valueMappings[row?.rule][0] ?? "")
+                                        : ""}
+                                      on:input={(e) =>
+                                        handleValueInput(e, row?.rule, 0)}
+                                      class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                    />
+                                    <span
+                                      class="text-white text-[1rem] font-normal mt-1"
+                                    >
+                                      &
+                                    </span>
+                                    <input
+                                      type="text"
+                                      placeholder="Max"
+                                      value={Array.isArray(
+                                        valueMappings[row?.rule],
+                                      )
+                                        ? (valueMappings[row?.rule][1] ?? "")
+                                        : ""}
+                                      on:input={(e) =>
+                                        handleValueInput(e, row?.rule, 1)}
+                                      class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                    />
+                                  </div>
+                                {:else}
+                                  <input
+                                    type="text"
+                                    placeholder="Value"
+                                    value={valueMappings[row?.rule] === "any"
+                                      ? ""
+                                      : valueMappings[row?.rule]}
+                                    on:input={(e) =>
+                                      handleValueInput(e, row?.rule)}
+                                    class="ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                  />
+                                {/if}
+
+                                {#if ["over", "under"]?.includes(ruleCondition[ruleName]?.toLowerCase())}
+                                  <div
+                                    class="ml-2 flex touch-manipulation flex-row items-center gap-x-1.5"
+                                  >
+                                    <button
+                                      on:click={() =>
+                                        stepSizeValue(
+                                          valueMappings[row?.rule],
+                                          "add",
+                                        )}
+                                      ><svg
+                                        class="size-6 cursor-pointer text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        style="max-width:40px"
+                                        ><path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        ></path></svg
+                                      ></button
+                                    >
+                                    <button
+                                      on:click={() =>
+                                        stepSizeValue(
+                                          valueMappings[row?.rule],
+                                          "minus",
+                                        )}
+                                      ><svg
+                                        class="size-6 cursor-pointer text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        style="max-width:40px"
+                                        ><path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        ></path></svg
+                                      ></button
+                                    >
+                                  </div>
+                                {/if}
+                                <!--End Dropdown for Condition-->
                               </div>
                             </DropdownMenu.Label>
                           {:else}
@@ -1352,22 +1545,48 @@ function sendMessage(message) {
                           {/if}
                           <DropdownMenu.Group class="min-h-10 mt-2">
                             {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
-                              {#each row?.step as newValue}
-                                <DropdownMenu.Item
-                                  class="sm:hover:bg-[#2A2E39]"
-                                >
-                                  <button
-                                    on:click={() => {
-                                      handleChangeValue(newValue);
-                                    }}
-                                    class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-[#2A2E39] focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
+                              {#each row?.step as newValue, index}
+                                {#if ruleCondition[row?.rule] === "between"}
+                                  {#if newValue && row?.step[index + 1]}
+                                    <DropdownMenu.Item
+                                      class="sm:hover:bg-primary"
+                                    >
+                                      <button
+                                        on:click={() => {
+                                          handleChangeValue([
+                                            row?.step[index],
+                                            row?.step[index + 1],
+                                          ]);
+                                        }}
+                                        class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
+                                      >
+                                        {ruleCondition[row?.rule]?.replace(
+                                          "between",
+                                          "Between",
+                                        )}
+                                        {row?.step[index + 1]} - {row?.step[
+                                          index
+                                        ]}
+                                      </button>
+                                    </DropdownMenu.Item>
+                                  {/if}
+                                {:else}
+                                  <DropdownMenu.Item
+                                    class="sm:hover:bg-primary"
                                   >
-                                    {ruleCondition[row?.rule] !== undefined
-                                      ? ruleCondition[row?.rule]
-                                      : ""}
-                                    {newValue}
-                                  </button>
-                                </DropdownMenu.Item>
+                                    <button
+                                      on:click={() => {
+                                        handleChangeValue(newValue);
+                                      }}
+                                      class="block w-full border-b border-gray-600 px-4 py-1.5 text-left text-sm sm:text-[1rem] rounded text-white last:border-0 sm:hover:bg-primary focus:bg-blue-100 focus:text-gray-900 focus:outline-none"
+                                    >
+                                      {ruleCondition[row?.rule]
+                                        ?.replace("under", "Under")
+                                        ?.replace("over", "Over")}
+                                      {newValue}
+                                    </button>
+                                  </DropdownMenu.Item>
+                                {/if}
                               {/each}
                             {:else if ["put_call", "sentiment", "execution_estimate", "option_activity_type", "date_expiration", "underlying_type"]?.includes(row?.rule)}
                               {#each row?.step as item}

@@ -136,96 +136,172 @@ function isDateWithinRange(dateString: string, range: string): boolean {
 }
 
 async function filterRawData(rawData, ruleOfList, filterQuery) {
-  // Split filterQuery into an array of tickers if it's a comma-separated string
+  // Early return for empty inputs
+  if (!rawData?.length || !ruleOfList?.length) {
+    return rawData || [];
+  }
+
+  // Preprocess filter tickers
   const filterTickers = filterQuery
     ? filterQuery.split(",").map((ticker) => ticker.trim().toUpperCase())
     : [];
 
-  return rawData?.filter((item) => {
-    // Check if the item's ticker matches any of the tickers in filterTickers
-    if (
-      filterTickers.length > 0 &&
-      !filterTickers.includes(item.ticker.toUpperCase())
-    ) {
-      return false; // Exclude if the ticker doesn't match any in filterTickers
+  // Precompile rules for more efficient filtering
+  const compiledRules = ruleOfList.map(rule => {
+    const ruleName = rule.name.toLowerCase();
+    const ruleValue = convertUnitToValue(rule.value);
+
+    return {
+      ...rule,
+      compiledCheck: createRuleCheck(rule, ruleName, ruleValue)
+    };
+  });
+
+  // Optimized filtering with precompiled rules
+  return rawData.filter(item => {
+    // Early ticker filtering
+    if (filterTickers.length > 0 && 
+        !filterTickers.includes(item.ticker.toUpperCase())) {
+      return false;
     }
 
-    return ruleOfList.every((rule) => {
-      const ruleName = rule.name.toLowerCase();
-      const ruleValue = convertUnitToValue(rule.value);
-
-      // Handle volumeOIRatio
-      if (ruleName === "volumeoiratio") {
-        const volume = parseFloat(item.volume);
-        const openInterest = parseFloat(item.open_interest);
-
-        if (isNaN(volume) || isNaN(openInterest) || openInterest === 0) {
-          return false; // Invalid data, exclude this item
-        }
-
-        const ratio = (volume / openInterest) * 100;
-
-        if (rule.condition === "over" && ratio <= ruleValue) return false;
-        if (rule.condition === "under" && ratio >= ruleValue) return false;
-        return true;
-      }
-
-      const itemValue = item[rule.name];
-
-      // Handle date_expiration
-      if (ruleName === "date_expiration") {
-        if (isAny(ruleValue)) return true;
-        if (Array.isArray(ruleValue)) {
-          return ruleValue.some((range) => isDateWithinRange(itemValue, range));
-        }
-        return isDateWithinRange(itemValue, ruleValue as string);
-      }
-
-      // Handle categorical data
-      else if (
-        [
-          "put_call",
-          "sentiment",
-          "execution_estimate",
-          "option_activity_type",
-          "underlying_type",
-        ].includes(ruleName)
-      ) {
-        if (isAny(ruleValue)) return true;
-        if (itemValue === null || itemValue === undefined) return false;
-
-        const lowerItemValue = itemValue.toString().toLowerCase();
-
-        if (Array.isArray(ruleValue)) {
-          return ruleValue.some(
-            (value) => lowerItemValue === value.toString().toLowerCase(),
-          );
-        }
-
-        return lowerItemValue === ruleValue.toString().toLowerCase();
-      }
-
-      // Default numeric or string comparison
-      if (typeof ruleValue === "string") return true;
-      if (itemValue === null || itemValue === undefined) return false;
-      const numericItemValue = parseFloat(itemValue);
-      if (isNaN(numericItemValue)) return false;
-
-      if (rule.condition === "over" && numericItemValue <= ruleValue)
-        return false;
-      if (rule.condition === "under" && numericItemValue >= ruleValue)
-        return false;
-      return true;
-    });
+    // Apply all precompiled rules
+    return compiledRules.every(rule => rule.compiledCheck(item));
   });
 }
 
+// Centralized rule checking logic
+function createRuleCheck(rule, ruleName, ruleValue) {
+  // Handle volumeOIRatio
+  if (ruleName === 'volumeoiratio') {
+    return (item) => {
+      const volume = parseFloat(item.volume);
+      const openInterest = parseFloat(item.open_interest);
+
+      if (isNaN(volume) || isNaN(openInterest) || openInterest === 0) {
+        return false;
+      }
+
+      const ratio = (volume / openInterest) * 100;
+
+      if (rule.condition === 'over' && ratio <= ruleValue) return false;
+      if (rule.condition === 'under' && ratio >= ruleValue) return false;
+      return true;
+    };
+  }
+
+  // Handle "between" condition
+  if (rule.condition === 'between') {
+    return (item) => {
+      const itemValue = parseFloat(item[rule.name]);
+
+      // Handle array of ruleValue for between condition
+      if (!Array.isArray(ruleValue)) return true;
+
+      // Convert rule values, ensuring they are valid
+      const [min, max] = ruleValue.map(convertUnitToValue);
+
+      // Handle the case where one or both values are missing (empty string or undefined)
+      if ((min === '' || min === undefined || min === null) && 
+          (max === '' || max === undefined || max === null)) {
+        return true; // If both values are empty or undefined, consider the condition as met (open-ended)
+      }
+
+      // If only one of min or max is missing, handle it as open-ended
+      if (min === '' || min === undefined || min === null) {
+        return itemValue <= max; // If min is missing, only check against max
+      } 
+      
+      if (max === '' || max === undefined || max === null) {
+        return itemValue >= min; // If max is missing, only check against min
+      }
+
+      // If both min and max are defined, proceed with the normal comparison
+      return itemValue > min && itemValue < max;
+    };
+  }
+
+  // Handle date_expiration
+  if (ruleName === 'date_expiration') {
+    // If 'any' is specified or no specific range is set
+    if (isAny(ruleValue)) return () => true;
+
+    return (item) => {
+      if (Array.isArray(ruleValue)) {
+        return ruleValue.some(range => isDateWithinRange(item[rule.name], range));
+      }
+      return isDateWithinRange(item[rule.name], ruleValue);
+    };
+  }
+
+  // Categorical data handling
+  const categoricalFields = [
+    'put_call', 
+    'sentiment', 
+    'execution_estimate', 
+    'option_activity_type', 
+    'underlying_type'
+  ];
+
+  if (categoricalFields.includes(ruleName)) {
+    // If 'any' is specified
+    if (isAny(ruleValue)) return () => true;
+
+    return (item) => {
+      const itemValue = item[rule.name];
+      
+      // Handle null or undefined
+      if (itemValue === null || itemValue === undefined) return false;
+
+      const lowerItemValue = itemValue.toString().toLowerCase();
+
+      // Handle array of values
+      if (Array.isArray(ruleValue)) {
+        return ruleValue.some(
+          value => lowerItemValue === value.toString().toLowerCase()
+        );
+      }
+
+      // Single value comparison
+      return lowerItemValue === ruleValue.toString().toLowerCase();
+    };
+  }
+
+  // Default numeric comparison
+  return (item) => {
+    const itemValue = item[rule.name];
+
+    // Skip string rule values
+    if (typeof ruleValue === 'string') return true;
+
+    // Handle null or undefined
+    if (itemValue === null || itemValue === undefined) return false;
+
+    const numericItemValue = parseFloat(itemValue);
+    
+    // Invalid numeric conversion
+    if (isNaN(numericItemValue)) return false;
+
+    // Comparison conditions
+    if (rule.condition === 'over' && numericItemValue <= ruleValue) return false;
+    if (rule.condition === 'under' && numericItemValue >= ruleValue) return false;
+
+    return true;
+  };
+}
+
+// Web Worker message handler
 onmessage = async (event: MessageEvent) => {
   const { rawData, ruleOfList, filterQuery } = event.data || {};
+  
+  // Filter the data
   let filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
-  filteredData = Array?.from(
-    new Map(filteredData?.map((item) => [item?.id, item]))?.values(),
+  
+  // Remove duplicates based on id
+  filteredData = Array.from(
+    new Map(filteredData?.map((item) => [item?.id, item]))?.values()
   );
+
   postMessage({ message: "success", filteredData });
 };
 

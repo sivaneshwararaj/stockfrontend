@@ -2814,7 +2814,7 @@ const handleKeyDown = (event) => {
                         </Button>
                       </DropdownMenu.Trigger>
                       <DropdownMenu.Content
-                        class="w-64  min-h-64 max-h-72 overflow-y-auto scroller"
+                        class="w-64 min-h-auto max-h-72 overflow-y-auto scroller"
                       >
                         {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           <DropdownMenu.Label
