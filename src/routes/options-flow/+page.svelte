@@ -2157,120 +2157,153 @@ function sendMessage(message) {
 <!--Start Choose Rule Modal-->
 <input type="checkbox" id="ruleModal" class="modal-toggle" />
 
-<dialog id="ruleModal" class="modal modal-bottom sm:modal-middle">
+<dialog id="ruleModal" class="modal p-2 sm:p-0">
   <label
     id="ruleModal"
     for="ruleModal"
     on:click={() => (searchTerm = "")}
-    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"
+    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.8]"
   ></label>
 
   <div
-    class="modal-box rounded-md border border-gray-600 w-full bg-[#1E222D] h-[800px] overflow-hidden"
+    class="modal-box relative bg-primary z-20 mx-2 min-h-[30vh] h-[800px] rounded bg-default opacity-100 border border-gray-600 bp:mx-3 sm:mx-4 w-full max-w-6xl overflow-y-auto"
   >
-    <div class="flex flex-col w-full mt-10 sm:mt-0">
-      <div class="text-white text-xl sm:text-3xl font-semibold mb-5">
-        Add Filters
-      </div>
-
-      <label
-        for="ruleModal"
-        class="cursor-pointer absolute right-5 top-5 bg-[#1E222D] text-[1.8rem] text-white"
-      >
-        <svg
-          class="w-8 h-8"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          ><path
-            fill="white"
-            d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
-          /></svg
-        >
-      </label>
-
-      <!--Start Search bar-->
-      <form
-        class="w-11/12 h-8 mb-8"
-        on:keydown={(e) => (e?.key === "Enter" ? e.preventDefault() : "")}
-      >
-        <label
-          for="search"
-          class="mb-2 text-sm font-medium text-gray-200 sr-only">Search</label
-        >
-        <div class="relative">
-          <div
-            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
-          >
-            <svg
-              class="w-4 h-4 text-gray-200 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            autocomplete="off"
-            type="search"
-            id="search"
-            class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-white rounded-md bg-[#2A2E39] border border-gray-600"
-            placeholder="Search {allRows?.length} filters..."
-            bind:value={searchTerm}
-          />
-        </div>
-      </form>
-      <!-- End Search bar-->
+    <div class="relative flex flex-col w-full">
+      <!-- Sticky Header -->
 
       <div
-        class="text-white text-sm bg-[#1E222D] overflow-y-scroll pt-3 rounded-md max-h-[500px] sm:max-h-[420px] md:max-h-[540px] lg:max-h-[600px]"
+        class="fixed w-full h-fit sticky -top-6 z-40 bg-primary shadow-sm opacity-100 pb-6 pt-5 border-gray-600 border-b"
       >
-        <div class="text-white relative">
-          {#if searchTerm?.length !== 0 && filteredRows?.length === 0}
-            <span
-              class="text-lg text-white font-medium flex justify-center items-center m-auto"
+        <div class="flex flex-row items-center justify-between mb-2">
+          <h2 class="text-white text-[1rem] sm:text-xl font-semibold">
+            Select screener filters ({allRows?.length} total)
+          </h2>
+          <label
+            for="ruleModal"
+            class="inline-block cursor-pointer absolute right-0 top-3 text-[1.3rem] sm:text-[1.8rem] text-white"
+          >
+            <svg
+              class="w-6 h-6 sm:w-8 sm:h-8"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="white"
+                d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+              /></svg
             >
-              Nothing Found
-            </span>
-          {:else}
-            <table class="w-full table-sm table-compact">
-              <!-- head -->
-              <tbody>
-                {#each searchTerm?.length !== 0 ? filteredRows : allRows as row, index}
-                  <tr
-                    on:click={() => changeRule(row?.rule)}
-                    class="sm:hover:bg-[#2A2E39] cursor-pointer border-b border-gray-600"
-                  >
-                    <td class="">{index + 1}</td>
-                    <td class="text-start">
-                      {#if ruleOfList?.find((rule) => rule?.name === row?.rule)}
-                        <svg
-                          class="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 text-green-400 inline-block"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
-                          ><path
-                            fill-rule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clip-rule="evenodd"
-                          ></path></svg
-                        >
-                      {/if}
-                    </td>
-                    <td class="text-start">{row?.label}</td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          {/if}
+          </label>
         </div>
+
+        <!-- Start Search bar -->
+        <form
+          class="w-full h-8"
+          on:keydown={(e) => (e?.key === "Enter" ? e.preventDefault() : "")}
+        >
+          <label for="search" class="text-sm font-medium text-gray-200 sr-only"
+            >Search</label
+          >
+          <div class="relative w-full max-w-sm">
+            <div
+              class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-gray-200"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            </div>
+
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-2 {searchTerm?.length >
+              0
+                ? ''
+                : 'hidden'}"
+            >
+              <button
+                on:click={() => (searchTerm = "")}
+                class="cursor-pointer text-gray-200 sm:hover:text-white"
+                tabindex="0"
+                ><svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width:40px"
+                  ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path></svg
+                ></button
+              >
+            </div>
+
+            <input
+              autocomplete="off"
+              type="search"
+              id="search"
+              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-600 rounded-md bg-secondary border border-blue-500"
+              placeholder="Search"
+              bind:value={searchTerm}
+            />
+          </div>
+        </form>
+        <!-- End Search bar -->
+      </div>
+
+      <!-- Content -->
+      <div class="text-white mt-5">
+        <div class="flex flex-wrap">
+          {#each searchTerm?.length !== 0 ? filteredRows : allRows as row}
+            <div
+              class="flex w-full items-center space-x-1.5 py-1.5 md:w-1/2 lg:w-1/3 lg:py-1"
+            >
+              {#if row?.rule === "score" && data?.user?.tier !== "Pro"}
+                <label id={row?.rule} on:click={() => changeRule(row?.rule)}>
+                  <svg
+                    class="w-4 h-4 mb-1 inline-block text-[#A3A3A3] sm:hover:text-white cursor-pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    ><path
+                      fill="currentColor"
+                      d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                    /></svg
+                  >
+                </label>
+              {:else}
+                <input
+                  on:click={() => changeRule(row?.rule)}
+                  id={row?.rule}
+                  type="checkbox"
+                  checked={ruleOfList?.find((rule) => rule?.name === row?.rule)}
+                  class="h-[18px] w-[18px] rounded-sm ring-offset-0 lg:h-4 lg:w-4"
+                />
+              {/if}
+              <div class="-mt-0.5">
+                <label for={row?.rule} class="cursor-pointer text-[1rem]"
+                  >{row?.label}</label
+                >
+              </div>
+            </div>
+          {/each}
+        </div>
+
+        {#if searchTerm?.length > 0 && filteredRows?.length === 0}
+          <div class="text-white mt-5 font-semibold text-[1rem] sm:text-lg">
+            Nothing found
+          </div>
+        {/if}
       </div>
     </div>
   </div>
