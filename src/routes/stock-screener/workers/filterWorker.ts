@@ -74,12 +74,12 @@ function convertUnitToValue(input: string | number | string[]) {
     if (nonNumericValues.has(lowerInput)) return input;
 
     // Handle percentage values
-    if (input.endsWith("%")) {
-      const numericValue = parseFloat(input.slice(0, -1));  // Remove '%' and convert to number
+    if (input?.endsWith("%")) {
+      const numericValue = parseFloat(input?.slice(0, -1));  // Remove '%' and convert to number
       if (isNaN(numericValue)) {
         return input; // Return original input if conversion fails
       }
-      return numericValue / 100; // Convert percentage to a decimal
+      return numericValue //numericValue / 100; // Convert percentage to a decimal
     }
 
     // Handle units (B, M, K)
