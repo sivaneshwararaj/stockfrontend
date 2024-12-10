@@ -6,9 +6,9 @@ export const GET: RequestHandler = async ({ locals }) => {
   let output;
 
   try {
-    output = await pb.collection("notifications")?.getFullList({
+    output = await pb?.collection("notifications")?.getFullList({
       filter: `opUser="${user?.id}" `,
-      expand: "user,post,comment",
+      expand: "user",
       sort: "-created",
     });
   } catch (e) {
@@ -16,5 +16,5 @@ export const GET: RequestHandler = async ({ locals }) => {
     output = [];
   }
 
-  return new Response(JSON.stringify(output));
+  return new Response(JSON?.stringify(output));
 };

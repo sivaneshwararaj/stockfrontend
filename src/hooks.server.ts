@@ -39,9 +39,10 @@ export const handle = sequence(async ({ event, resolve }) => {
     try {
       await event.locals.pb.collection("users").authRefresh();
       event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
-    } catch (_) {
+    } catch (e) {
       event.locals.pb.authStore.clear();
       event.locals.user = undefined;
+      console.log(e)
     }
   }
 
