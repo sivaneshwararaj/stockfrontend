@@ -161,48 +161,53 @@
   allRows = sortIndicatorCheckMarks(allRows);
   const handleDownloadMessage = (event) => {
     let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
+
     // Check if both arrays exist and have data
     if (!updateData?.length || !rawData?.length) {
       return;
     }
 
-    for (let i = 0; i < updateData.length; i++) {
-      if (rawData[i]) {
-        // Create a new object to merge the data
-        let newData = {};
+    // Create a new array to store the final data
+    const updatedRawData = rawData.map((originalItem) => {
+      // Find the corresponding item in updateData by matching symbol
+      const updateItem = updateData.find(
+        (item) => item.symbol === originalItem.symbol,
+      );
 
-        // Merge fields from updateData
-        Object.assign(newData, updateData[i]);
-
-        // Merge fields from defaultRules that are missing in updateData
-        defaultRules?.forEach((rule) => {
-          if (!(rule in updateData[i]) && rule in rawData[i]) {
-            newData[rule] = rawData[i][rule];
-          }
-        });
-
-        // Preserve the original 'priceTarget' value from rawData
-        for (let rule of defaultRules) {
-          if (rule in rawData[i]) {
-            newData[rule] = rawData[i][rule];
-          }
-        }
-
-        // Ensure 'rank' and 'years' are added if they are missing in updateData
-        if (!("rank" in updateData[i]) && "rank" in rawData[i]) {
-          newData.rank = rawData[i]["rank"];
-        }
-        if (!("years" in updateData[i]) && "years" in rawData[i]) {
-          newData.years = rawData[i]["years"];
-        }
-
-        updateData[i] = newData;
+      // If no matching update found, return the original item
+      if (!updateItem) {
+        return originalItem;
       }
-    }
 
-    rawData = updateData;
+      // Create a new object to merge data
+      let newData = { ...originalItem };
+
+      // Merge fields from updateData
+      Object.assign(newData, updateItem);
+
+      // Apply defaultRules logic
+      defaultRules?.forEach((rule) => {
+        // If the rule is missing in updateData but exists in original data, preserve original
+        if (!(rule in updateItem) && rule in originalItem) {
+          newData[rule] = originalItem[rule];
+        }
+      });
+
+      // Explicitly ensure 'rank' and 'years' are preserved if missing in update
+      if (!("rank" in updateItem) && "rank" in originalItem) {
+        newData.rank = originalItem.rank;
+      }
+      if (!("years" in updateItem) && "years" in originalItem) {
+        newData.years = originalItem.years;
+      }
+
+      return newData;
+    });
+
+    rawData = updatedRawData;
     originalData = rawData;
-    stockList = originalData?.slice(0, 150); // Assign to stockList instead of rawData directly
+    stockList = originalData?.slice(0, 150);
+
     columns = generateColumns(rawData);
     sortOrders = generateSortOrders(rawData);
   };
