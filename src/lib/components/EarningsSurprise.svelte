@@ -28,10 +28,14 @@
   $: {
     if ($stockTicker && typeof window !== "undefined") {
       rawData = data?.getEarningsSurprise;
-      epsRatio = (
-        ((rawData?.eps - rawData?.epsPrior) / Math.abs(rawData?.epsPrior)) *
-        100
-      )?.toFixed(2);
+      epsRatio =
+        rawData?.epsPrior === 0
+          ? null
+          : (
+              ((rawData?.eps - rawData?.epsPrior) /
+                Math.abs(rawData?.epsPrior)) *
+              100
+            )?.toFixed(2);
       revenueRatio = (
         (rawData?.revenue / rawData?.revenuePrior - 1) *
         100
@@ -99,18 +103,22 @@
         </li>
         <li
           class="ml-[20px] sm:ml-[30px]"
-          style="color: #fff; line-height: 22px; margin-top:0px; margin-bottom: 15px; list-style-type: disc;"
+          style="color: #fff; line-height: 22px; margin-top: 0px; margin-bottom: 15px; list-style-type: disc;"
         >
           EPS of <span class="font-semibold">{rawData?.eps}</span>
           {rawData?.epsSurprise > 0 ? "exceeds" : "misses"} estimates by {rawData?.epsSurprise?.toFixed(
             2,
           )}, with
           <span
-            class="font-semibold {epsRatio > 0
-              ? "before:content-['+'] text-[#00FC50]"
-              : 'text-[#FF2F1F]'}">{epsRatio}%</span
+            class="font-semibold {epsRatio === null
+              ? 'text-white'
+              : epsRatio > 0
+                ? 'text-[#00FC50]'
+                : 'text-[#FF2F1F]'}"
           >
-          YoY {epsRatio < 0 ? "decline" : "growth"}.
+            {epsRatio === null ? "n/a" : `${epsRatio}%`}
+          </span>
+          YoY {epsRatio === null ? "" : epsRatio < 0 ? "decline" : "growth"}.
         </li>
       </div>
     </div>
