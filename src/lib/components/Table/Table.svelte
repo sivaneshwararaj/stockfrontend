@@ -389,7 +389,7 @@
                   ...item,
                   previous: null,
                 }));
-              }, 1000);
+              }, 800);
               saveScrollPosition();
               sortMode = true;
             }
