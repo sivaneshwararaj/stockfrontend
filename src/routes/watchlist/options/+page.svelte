@@ -301,7 +301,7 @@
                           on:click={() => handleFilter(item?.id)}
                           class="{index % 2
                             ? 'bg-[#09090B]'
-                            : 'bg-primary'} font-normal text-sm sm:text-[1rem] text-start"
+                            : 'bg-secondary'} font-normal text-sm sm:text-[1rem] text-start"
                         >
                           <div class=" flex flex-row items-center">
                             <input
