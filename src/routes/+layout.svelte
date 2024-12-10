@@ -91,6 +91,42 @@
     $numberOfUnreadNotification = output?.numberOfUnreadNotification?.length;
     //pushNotification()
   };
+  /*
+  async function pushNotification() {
+    Notification?.requestPermission()?.then((perm) => {
+      if (perm === "granted") {
+        new Notification("Stocknear", {
+          body: "this is more text",
+        });
+      }
+    });
+  }
+    */
+
+  //Check Service Worker (SW)
+  async function detectSWUpdate() {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+
+      registration.addEventListener("updatefound", () => {
+        const newSW = registration.installing;
+
+        newSW?.addEventListener("statechange", () => {
+          if (newSW.state === "installed") {
+            const message =
+              "🚀 A fresh update is ready! Reload now to enjoy the latest features?";
+
+            if (confirm(message)) {
+              newSW.postMessage({ type: "SKIP_WAITING" });
+              window.location.reload();
+            }
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Service Worker registration failed:", error);
+    }
+  }
 
   const loadWorker = async () => {
     if ("serviceWorker" in navigator) {
@@ -129,12 +165,18 @@
 
   onMount(async () => {
     //await fallbackWorker();
-    await Promise.all([checkMarketHour(), loadWorker()]);
+    await Promise.all([checkMarketHour(), loadWorker(), detectSWUpdate()]);
     //await pushNotification()
 
     if ($showCookieConsent === true) {
       Cookie = (await import("$lib/components/Cookie.svelte")).default;
     }
+
+    /*
+    if (window?.innerWidth <= 768) {
+      detectSWUpdate();
+    }
+      */
 
     //Clear all the cache every 20 min
     const interval = setInterval(
