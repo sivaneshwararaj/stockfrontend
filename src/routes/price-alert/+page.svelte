@@ -717,15 +717,16 @@
                               {/if}
                               Analysts estimate {abbreviateNumber(
                                 item?.revenueEst,
-                                true,
                               )} in revenue ({(
                                 (item?.revenueEst / item?.revenuePrior - 1) *
                                 100
-                              )?.toFixed(2)}% YoY) and ${item?.epsEst} in earnings
-                              per share ({(
-                                (item?.epsEst / item?.epsPrior - 1) *
-                                100
-                              )?.toFixed(2)}% YoY).
+                              )?.toFixed(2)}% YoY) and {item?.epsEst} in earnings
+                              per share {#if item?.epsPrior !== 0}
+                                ({(
+                                  (item?.epsEst / item?.epsPrior - 1) *
+                                  100
+                                )?.toFixed(2)}% YoY).
+                              {/if}
                             </div>
 
                             <div

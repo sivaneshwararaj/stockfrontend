@@ -677,14 +677,15 @@
                         {/if}
                       {/if}Analysts estimate {abbreviateNumber(
                         item?.revenueEst,
-                        true,
                       )} in revenue ({(
                         (item?.revenueEst / item?.revenuePrior - 1) *
                         100
-                      )?.toFixed(2)}% YoY) and ${item?.epsEst} in earnings per share
-                      ({((item?.epsEst / item?.epsPrior - 1) * 100)?.toFixed(
-                        2,
-                      )}% YoY).
+                      )?.toFixed(2)}% YoY) and {item?.epsEst} in earnings per share
+                      {#if item?.epsPrior !== 0}
+                        ({((item?.epsEst / item?.epsPrior - 1) * 100)?.toFixed(
+                          2,
+                        )}% YoY).
+                      {/if}
                     </li>
                   {/each}
                 </ul>
@@ -736,12 +737,10 @@
                     <li
                       style="color: #fff; line-height: 22px; margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
                     >
-                      Revenue of {abbreviateNumber(item?.revenue, true)}
+                      Revenue of {abbreviateNumber(item?.revenue)}
                       {item?.revenueSurprise > 0 ? "exceeds" : "misses"} estimates
-                      by {abbreviateNumber(
-                        Math.abs(item?.revenueSurprise),
-                        true,
-                      )}, with {(
+                      by {abbreviateNumber(Math.abs(item?.revenueSurprise))},
+                      with {(
                         (item?.revenue / item?.revenuePrior - 1) *
                         100
                       )?.toFixed(2)}% YoY {item?.revenue / item?.revenuePrior -
@@ -753,9 +752,9 @@
                     <li
                       style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 30px; list-style-type: disc;"
                     >
-                      EPS of ${item?.eps}
+                      EPS of {item?.eps}
                       {item?.epsSurprise > 0 ? "exceeds" : "misses"} estimates by
-                      ${item?.epsSurprise?.toFixed(2)}, with {(
+                      {item?.epsSurprise?.toFixed(2)}, with {(
                         ((item?.eps - item?.epsPrior) /
                           Math.abs(item?.epsPrior)) *
                         100
