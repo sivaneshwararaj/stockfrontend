@@ -580,6 +580,11 @@
     }
   }
 
+  $: if ($isOpen) {
+    websocketRealtimeData();
+    console.log("WebSocket restarted");
+  }
+
   onMount(async () => {
     try {
       const savedRules = localStorage?.getItem("watchlist-ruleOfList");
@@ -646,10 +651,6 @@
       isLoaded = true;
     } catch (e) {
       console.log(e);
-    }
-
-    if ($isOpen) {
-      await websocketRealtimeData();
     }
 
     window.addEventListener("scroll", handleScroll);

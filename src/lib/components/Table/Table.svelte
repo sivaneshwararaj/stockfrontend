@@ -409,12 +409,12 @@
 
   $: stockList = [...stockList];
 
+  $: if ($isOpen) {
+    websocketRealtimeData();
+    console.log("WebSocket restarted");
+  }
+
   onMount(async () => {
-    // Initialize the download worker if not already done
-    if ($isOpen) {
-      await websocketRealtimeData();
-      console.log("WebSocket restarted due to watchlist changes");
-    }
     try {
       const savedRules = localStorage?.getItem(pagePathName);
 
