@@ -465,7 +465,7 @@
   let previousVolume = 0; //This is needed to play the sound only if it changes.
   let notFound = false;
   let isLoaded = false;
-  let mode = $isOpen === true ? true : false;
+  $: mode = $isOpen === true ? true : false;
 
   function toggleMode() {
     if ($isOpen) {
@@ -592,6 +592,10 @@ function sendMessage(message) {
     }); // make a POST request to the server with the FormData object
   }
 
+  $: if ($isOpen) {
+    websocketRealtimeData();
+  }
+
   onMount(async () => {
     displayRules = allRows?.filter((row) =>
       ruleOfList?.some((rule) => rule?.name === row?.rule),
@@ -622,10 +626,6 @@ function sendMessage(message) {
     }
 
     isLoaded = true;
-
-    if ($isOpen) {
-      await websocketRealtimeData();
-    }
   });
 
   onDestroy(async () => {

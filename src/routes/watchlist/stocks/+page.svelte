@@ -205,7 +205,7 @@
                 ...item,
                 previous: null,
               }));
-            }, 500);
+            }, 1000);
           }
         } catch (e) {
           console.error("Error parsing WebSocket message:", e);
