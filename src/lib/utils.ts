@@ -198,8 +198,10 @@ export const calculateChange = (oldList?: any[], newList?: any[]) => {
   if (!oldList?.length || !newList?.length) return [...(oldList || [])];
 
   const newListMap = new Map(newList.map((item) => [item.symbol, item]));
+  const updatedList = [];
 
-  const updatedList = oldList.map((item) => {
+  for (let i = 0; i < oldList.length; i++) {
+    const item = oldList[i];
     const newItem = newListMap.get(item.symbol);
 
     if (newItem?.avgPrice) {
@@ -215,11 +217,12 @@ export const calculateChange = (oldList?: any[], newList?: any[]) => {
       item.price = newPrice;
     }
 
-    return item;
-  });
+    updatedList.push(item);
+  }
 
   return updatedList;
 };
+
 
 
 export function updateStockList(stockList, originalData) {
