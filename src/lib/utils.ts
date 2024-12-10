@@ -197,12 +197,11 @@ export const groupNews = (news, watchList) => {
 export const calculateChange = (oldList?: any[], newList?: any[]) => {
   if (!oldList?.length || !newList?.length) return [...(oldList || [])];
 
-  const newListMap = new Map(newList.map(item => [item.symbol, item]));
-  
-  for (let i = 0, len = oldList.length; i < len; i++) {
-    const item = oldList[i];
+  const newListMap = new Map(newList.map((item) => [item.symbol, item]));
+
+  const updatedList = oldList.map((item) => {
     const newItem = newListMap.get(item.symbol);
-    
+
     if (newItem?.avgPrice) {
       const { price, changesPercentage } = item;
       const newPrice = newItem.avgPrice;
@@ -215,10 +214,13 @@ export const calculateChange = (oldList?: any[], newList?: any[]) => {
       item.previous = price;
       item.price = newPrice;
     }
-  }
 
-  return oldList;
+    return item;
+  });
+
+  return updatedList;
 };
+
 
 export function updateStockList(stockList, originalData) {
     // Create a Map for O(1) lookup of original data by symbol
