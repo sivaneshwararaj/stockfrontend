@@ -1,5 +1,5 @@
 export const load = async ({ locals, params }) => {
-  const { apiKey, apiURL, user } = locals;
+  const { apiKey, apiURL } = locals;
   const getETFHoldings = async () => {
     const postData = {
       ticker: params.tickerID,
@@ -16,6 +16,7 @@ export const load = async ({ locals, params }) => {
     });
 
     const output = await response.json();
+
 
     return output;
   };

@@ -8,7 +8,8 @@
   import Table from "$lib/components/Table/Table.svelte";
 
   export let data;
-  let rawData = data?.getETFHoldings?.holdings || [];
+  let rawData = data?.getETFHoldings?.holdings;
+
   const lastUpdate = new Date(data?.getETFHoldings?.lastUpdate);
   const options = { month: "short", day: "numeric", year: "numeric" };
   const formattedDate = lastUpdate?.toLocaleDateString("en-US", options);

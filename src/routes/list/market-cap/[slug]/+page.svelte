@@ -1,7 +1,6 @@
 <script lang="ts">
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
-  import { screenWidth } from "$lib/store";
   import { page } from "$app/stores";
 
   export let data;

@@ -194,20 +194,21 @@ export const groupNews = (news, watchList) => {
 };
 
 
-export const calculateChange = (oldList?: any[], newList?: any[]) => {
-  if (!oldList?.length || !newList?.length) return [...(oldList || [])];
+export const calculateChange = (oldList = [], newList = []) => {
+  if (!oldList.length || !newList.length) return [...oldList];
 
+  // Create a Map for fast lookups of new list items by symbol
   const newListMap = new Map(newList.map((item) => [item.symbol, item]));
-  const updatedList = [];
 
-  for (let i = 0; i < oldList.length; i++) {
-    const item = oldList[i];
+  return oldList.map((item) => {
     const newItem = newListMap.get(item.symbol);
 
-    if (newItem?.avgPrice) {
+    // Check if the symbols match and the newItem has the necessary properties
+    if (newItem && newItem.symbol === item.symbol && newItem.avgPrice) {
       const { price, changesPercentage } = item;
       const newPrice = newItem.avgPrice;
 
+      // Only update the changesPercentage if both price and changesPercentage are defined
       if (price != null && changesPercentage != null) {
         const baseLine = price / (1 + Number(changesPercentage) / 100);
         item.changesPercentage = ((newPrice / baseLine - 1) * 100);
@@ -217,39 +218,41 @@ export const calculateChange = (oldList?: any[], newList?: any[]) => {
       item.price = newPrice;
     }
 
-    updatedList.push(item);
-  }
-
-  return updatedList;
+    return item;
+  });
 };
 
 
 
-export function updateStockList(stockList, originalData) {
-    // Create a Map for O(1) lookup of original data by symbol
-    const originalDataMap = new Map(
-        originalData?.map(item => [item.symbol, item])
-    );
+export function updateStockList(stockList = [], originalData = []) {
+  // Create a Map for fast O(1) lookups of original data by symbol
+  const originalDataMap = new Map(originalData.map(item => [item.symbol, item]));
 
-    // Use .map() to create a new array with updated stocks
-    return stockList?.map(stock => {
-        // Find matching stock in originalData
-        const matchingStock = originalDataMap?.get(stock?.symbol);
+  // Initialize an array to store the updated stock list
+  const updatedStockList = [];
 
-        // If a match is found, update price and changesPercentage
-        if (matchingStock) {
-            return {
-                ...stock,
-                price: matchingStock?.price,
-                changesPercentage: matchingStock?.changesPercentage,
-                previous: matchingStock?.previous ?? null,
-            };
-        }
+  // Iterate through each stock in the stockList
+  for (let i = 0; i < stockList.length; i++) {
+    const stock = stockList[i];
+    const matchingStock = originalDataMap?.get(stock?.symbol);
+    // If a matching stock is found, update it
+    if (matchingStock) {
+      updatedStockList.push({
+        ...stock,
+        price: matchingStock.price,
+        changesPercentage: matchingStock.changesPercentage,
+        previous: matchingStock.previous ?? null,
+      });
+    } else {
+      // If no match, add the stock unchanged
+      updatedStockList.push(stock);
+    }
+  }
 
-        // If no match, return the original stock object unchanged
-        return stock;
-    });
+  // Return the updated stock list
+  return updatedStockList;
 }
+
 
 export const flyAndScale = (
   node: Element,

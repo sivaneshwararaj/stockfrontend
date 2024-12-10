@@ -49,7 +49,7 @@
   let downloadWorker: Worker | undefined;
   let checkedItems;
 
-  let stockList = rawData?.slice(0, 150);
+  let stockList = originalData?.slice(0, 150);
   let scrollPosition = 0;
   //$: stockList = originalData.slice(0, 150);
 
