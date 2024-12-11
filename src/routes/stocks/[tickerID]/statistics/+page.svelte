@@ -910,7 +910,12 @@
               <p
                 class="mb-4 px-0.5 text-base leading-relaxed text-white xs:text-[1.05rem] lg:leading-normal"
               >
-                {$stockTicker} does not appear to pay any dividends at this time.
+                {#if rawData?.annualDividend !== null && rawData?.dividendYield !== null}
+                  {$stockTicker} pays an annual dividend of ${rawData?.annualDividend},
+                  which amounts to a dividend yield of {rawData?.dividendYield}%.
+                {:else}
+                  {$stockTicker} does not appear to pay any dividends at this time.
+                {/if}
               </p>
               <table class="w-full" data-test="statistics-table">
                 <tbody
@@ -931,7 +936,7 @@
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
                       >{rawData?.dividendYield !== null
-                        ? rawData?.dividendYield
+                        ? rawData?.dividendYield + "%"
                         : "n/a"}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
