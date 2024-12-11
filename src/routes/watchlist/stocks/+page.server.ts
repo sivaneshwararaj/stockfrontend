@@ -11,10 +11,14 @@ export const load = async ({ locals }) => {
       });
 
       return output;
+
+
     } catch (e) {
+      console.log(e)
       return [];
     }
   };
+
 
   // Make sure to return a promise
   return {

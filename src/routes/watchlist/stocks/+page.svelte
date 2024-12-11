@@ -221,6 +221,7 @@
   }
 
   async function getWatchlistData() {
+    console.log(displayWatchList);
     const postData = {
       watchListId: displayWatchList?.id,
       ruleOfList: ruleOfList?.map((item) => item?.rule),
@@ -500,7 +501,7 @@
     });
 
     // Refresh the displayWatchList with the updated watchlist
-    displayWatchList = allList.find(
+    displayWatchList = allList?.find(
       (item) => item?.id === displayWatchList?.id,
     );
 
@@ -589,7 +590,6 @@
     try {
       const savedRules = localStorage?.getItem("watchlist-ruleOfList");
       const savedLastWatchlistId = localStorage?.getItem("last-watchlist-id");
-
       if (savedRules) {
         const parsedRules = JSON.parse(savedRules);
 
@@ -626,17 +626,20 @@
       checkedItems = new Set(ruleOfList.map((item) => item.name));
       allRows = sortIndicatorCheckMarks(allRows);
 
-      if (savedLastWatchlistId) {
-        displayWatchList = allList
-          ?.filter((item) => item?.id === JSON.parse(savedLastWatchlistId))
-          ?.at(0);
-      } else {
-        // Display the first watchlist if available
-        if (allList?.length !== 0) {
-          displayWatchList = allList?.at(0);
-        } else {
-          displayWatchList = "";
-        }
+      if (
+        typeof savedLastWatchlistId !== "undefined" &&
+        savedLastWatchlistId?.length > 0
+      ) {
+        displayWatchList = allList?.find(
+          (item) => item?.id === JSON?.parse(savedLastWatchlistId),
+        );
+      }
+
+      // If no valid watchlist found, default to the first element of allList
+      if (!displayWatchList && allList?.length > 0) {
+        displayWatchList = allList?.at(0);
+      } else if (!displayWatchList) {
+        displayWatchList = {};
       }
 
       await getWatchlistData();

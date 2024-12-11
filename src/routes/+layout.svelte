@@ -54,6 +54,11 @@
   import Gem from "lucide-svelte/icons/gem";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
 
+  import {
+    requestNotificationPermission,
+    sendNotification,
+  } from "$lib/notifications";
+
   export let data;
 
   let hideHeader = false;
@@ -91,17 +96,18 @@
     $numberOfUnreadNotification = output?.numberOfUnreadNotification?.length;
     //pushNotification()
   };
-  /*
-  async function pushNotification() {
-    Notification?.requestPermission()?.then((perm) => {
-      if (perm === "granted") {
-        new Notification("Stocknear", {
-          body: "this is more text",
-        });
-      }
-    });
+
+  // Send notification and handle click redirection
+  async function handleNotificationClick() {
+    const permissionGranted = await requestNotificationPermission();
+
+    if (permissionGranted) {
+      sendNotification("Stocknear", {
+        body: "This is a detailed notification message",
+        iconSize: 12, // Smaller logo size
+      });
+    }
   }
-    */
 
   //Check Service Worker (SW)
   async function detectSWUpdate() {
@@ -114,7 +120,7 @@
         newSW?.addEventListener("statechange", () => {
           if (newSW.state === "installed") {
             const message =
-              "🚀 A fresh update is ready! Reload now to enjoy the latest features?";
+              "🚀 A fresh update is ready! Reload now to enjoy the latest features";
 
             if (confirm(message)) {
               newSW.postMessage({ type: "SKIP_WAITING" });
@@ -164,19 +170,15 @@
     typeof data?.cookieConsent !== "undefined" ? false : true;
 
   onMount(async () => {
-    //await fallbackWorker();
-    await Promise.all([checkMarketHour(), loadWorker(), detectSWUpdate()]);
-    //await pushNotification()
+    await Promise.all([checkMarketHour(), loadWorker()]);
 
     if ($showCookieConsent === true) {
       Cookie = (await import("$lib/components/Cookie.svelte")).default;
     }
 
-    /*
     if (window?.innerWidth <= 768) {
-      detectSWUpdate();
+      await detectSWUpdate();
     }
-      */
 
     //Clear all the cache every 20 min
     const interval = setInterval(
@@ -1218,6 +1220,11 @@
           </div>
           <div class="w-full 3xl:w-5/6">
             <main class="w-full overflow-y-auto bg-[#09090B] sm:p-4">
+              <!--
+              <button on:click={handleNotificationClick}>
+                Send Notification
+              </button>
+              -->
               <slot />
               <Toaster class="bg-[#1A1A27] text-white text-medium" />
               {#if Cookie && $showCookieConsent === true}

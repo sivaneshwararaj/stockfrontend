@@ -117,7 +117,7 @@
 <!--Start Create Watchlist Modal-->
 <input type="checkbox" id="feedbackInfo" class="modal-toggle" />
 
-<dialog id="feedbackInfo" class="modal overflow-hidden p-2 sm:p-0">
+<dialog id="feedbackInfo" class="modal overflow-hidden p-3 sm:p-0">
   <label
     for="feedbackInfo"
     class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.8]"
@@ -128,16 +128,30 @@
       <h1 class="text-white text-xl sm:text-2xl font-bold">
         Your Feedback matters!
       </h1>
+      <label
+        for="feedbackInfo"
+        class="inline-block cursor-pointer absolute right-3 top-3 text-[1.3rem] sm:text-[1.8rem] text-white"
+      >
+        <svg
+          class="w-6 h-6 sm:w-8 sm:h-8"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          ><path
+            fill="white"
+            d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+          /></svg
+        >
+      </label>
     </div>
 
     <div class="p-2">
       <div
-        class="bg-secondary w-full min-w-24 sm:w-full relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+        class="bg-secondary w-full min-w-20 sm:w-full relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
       >
         {#each tabs as item, i}
           <button
             on:click={() => handleMode(i)}
-            class="group relative z-[1] rounded-full w-1/3 min-w-24 px-5 py-1 {activeIdx ===
+            class="group relative z-[1] rounded-full w-1/3 min-w-20 py-1 {activeIdx ===
             i
               ? 'z-0'
               : ''} "
@@ -157,7 +171,7 @@
       </div>
     </div>
 
-    <div class="p-2 mt-5 w-full h-[200px] max-h-[1000px]">
+    <div class="p-2 w-full h-[200px] max-h-[1000px]">
       <textarea
         class="max-h-[1000px] h-[200px] textarea textarea-bordered placeholder-gray-300 w-full bg-primary ring-1 text-white border border-gray-600"
         placeholder="Your feedback..."
