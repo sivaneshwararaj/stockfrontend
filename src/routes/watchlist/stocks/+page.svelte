@@ -221,7 +221,6 @@
   }
 
   async function getWatchlistData() {
-    console.log(displayWatchList);
     const postData = {
       watchListId: displayWatchList?.id,
       ruleOfList: ruleOfList?.map((item) => item?.rule),
