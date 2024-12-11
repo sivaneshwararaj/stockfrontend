@@ -51,11 +51,12 @@
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
-
+  /*
   import {
     requestNotificationPermission,
     sendNotification,
   } from "$lib/notifications";
+*/
 
   export let data;
 
@@ -95,6 +96,7 @@
     //pushNotification()
   };
 
+  /*
   // Send notification and handle click redirection
   async function handleNotificationClick() {
     const permissionGranted = await requestNotificationPermission();
@@ -108,7 +110,7 @@
   }
 
   //Check Service Worker (SW)
-  /*
+  
   async function detectSWUpdate() {
     try {
       const registration = await navigator.serviceWorker.ready;
