@@ -57,9 +57,7 @@ export const actions = {
     const targetItem = authMethods?.providers?.findIndex(
       (item) => item?.name === providerSelected,
     );
-    //console.log("==================")
-    //console.log(authMethods.authProviders)
-    //console.log('target item is: ', targetItem)
+  
 
     const provider = authMethods.providers[targetItem];
     const authProviderRedirect = `${provider.authUrl}${redirectURL}`;
@@ -92,7 +90,7 @@ export const actions = {
       maxAge: 60 * 60,
     });
 
-    cookies.set("path", "/", {
+    cookies.set("path", "/profile", {
       httpOnly: true,
       sameSite: "lax",
       secure: true,
@@ -100,7 +98,7 @@ export const actions = {
       maxAge: 60,
     });
 
-    redirect(303, authProviderRedirect);
+    redirect(301, authProviderRedirect);
   },
 };
 

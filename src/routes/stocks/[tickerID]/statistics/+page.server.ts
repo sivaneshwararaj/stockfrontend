@@ -32,7 +32,10 @@ export const load = async ({ locals, params }) => {
 };
 
 export const actions = {
-  login: async ({ request, locals }) => {
+  login: async ({ url, request, locals }) => {
+
+        const path = url?.href?.replace("/oauth2","")
+
     const { formData, errors } = await validateData(
       await request.formData(),
       loginUserSchema,
@@ -63,10 +66,12 @@ export const actions = {
       error(err.status, err.message);
     }
 
-    redirect(302, "/");
+    redirect(301, path);
   },
 
-  register: async ({ locals, request }) => {
+  register: async ({ url, locals, request }) => {
+        const path = url?.href?.replace("/oauth2","")
+
     const { formData, errors } = await validateData(
       await request.formData(),
       registerUserSchema,
@@ -88,7 +93,7 @@ await locals.pb?.collection('users').update(
 					'tier': 'Pro', //Give new users a free trial for the Pro Subscription
 			});
 */
-      await locals.pb.collection("users").requestVerification(formData.email);
+      await locals.pb.collection("users")?.requestVerification(formData.email);
     } catch (err) {
       console.log("Error: ", err);
       error(err.status, err.message);
@@ -103,10 +108,12 @@ await locals.pb?.collection('users').update(
       error(err.status, err.message);
     }
 
-    redirect(303, "/");
+    redirect(301, path);
   },
 
-    oauth2: async ({ url, locals, request, cookies }) => {
+   oauth2: async ({ url, locals, request, cookies }) => {
+
+    const path = url?.href?.replace("/oauth2","")
     const authMethods = (await locals?.pb
       ?.collection("users")
       ?.listAuthMethods())?.oauth2;
@@ -161,7 +168,7 @@ await locals.pb?.collection('users').update(
       maxAge: 60 * 60,
     });
 
-    cookies.set("path", "/", {
+    cookies.set("path", path, {
       httpOnly: true,
       sameSite: "lax",
       secure: true,

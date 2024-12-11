@@ -79,6 +79,8 @@ await locals.pb?.collection('users').update(
   },
 
    oauth2: async ({ url, locals, request, cookies }) => {
+
+    const path = url?.href?.replace("/oauth2","")
     const authMethods = (await locals?.pb
       ?.collection("users")
       ?.listAuthMethods())?.oauth2;
@@ -133,7 +135,7 @@ await locals.pb?.collection('users').update(
       maxAge: 60 * 60,
     });
 
-    cookies.set("path", "/", {
+    cookies.set("path", path, {
       httpOnly: true,
       sameSite: "lax",
       secure: true,

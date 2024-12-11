@@ -4,7 +4,6 @@ import { serializeNonPOJOs } from "$lib/utils";
 
 export const handle = sequence(async ({ event, resolve }) => {
 
-
   // Use a ternary operator instead of the logical OR for better compatibility
   const pbURL = import.meta.env.VITE_USEAST_POCKETBASE_URL; //isUS ? import.meta.env.VITE_USEAST_POCKETBASE_URL : import.meta.env.VITE_EU_POCKETBASE_URL;
   const apiURL = import.meta.env.VITE_USEAST_API_URL; //isUS ? import.meta.env.VITE_USEAST_API_URL : import.meta.env.VITE_EU_API_URL;
@@ -20,12 +19,13 @@ export const handle = sequence(async ({ event, resolve }) => {
   };
 
   const authCookie = event?.request?.headers?.get("cookie") || "";
-  event.locals.pb.authStore.loadFromCookie(authCookie);
+
+  event.locals.pb.authStore?.loadFromCookie(authCookie);
 
   if (event?.locals?.pb?.authStore?.isValid) {
     try {
-      await event.locals.pb.collection("users").authRefresh();
-      event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
+      await event?.locals?.pb?.collection("users")?.authRefresh();
+      event.locals.user = serializeNonPOJOs(event?.locals?.pb?.authStore?.model);
     } catch (e) {
       event.locals.pb.authStore.clear();
       event.locals.user = undefined;
@@ -36,7 +36,7 @@ export const handle = sequence(async ({ event, resolve }) => {
   const response = await resolve(event);
 
   // Use a more compatible way to set the cookie
-  const cookieString = event.locals.pb.authStore.exportToCookie({
+  const cookieString = event?.locals?.pb?.authStore?.exportToCookie({
     httpOnly: true,
     path: "/",
     sameSite: "lax",

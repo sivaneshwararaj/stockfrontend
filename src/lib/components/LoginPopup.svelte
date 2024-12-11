@@ -41,10 +41,10 @@
       setTimeout(() => {
         if (
           ["redirect", "success"]?.includes(result.type) &&
-          $page?.url?.pathname === "/pricing"
+          $page?.url?.pathname
         ) {
           const anchor = document.createElement("a");
-          anchor.href = "/pricing";
+          anchor.href = $page?.url?.pathname;
           anchor.dataset.sveltekitReload = true;
           document.body.appendChild(anchor);
           anchor.dispatchEvent(new MouseEvent("click"));
