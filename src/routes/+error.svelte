@@ -26,9 +26,15 @@
         <div
           class="mt-4 text-white font-medium text-md w-11/12 sm:w-full m-auto text-center"
         >
-          The website is currently experiencing issues due to bot attacks. We
-          apologize for any disruptions and are actively working to resolve the
-          problem.
+          The page was not found. If this error occurs persistenly please report
+          it to us via
+          <a
+            href={`mailto:${emailAddress}`}
+            class="inline-block text-blue-400 sm:hover:text-white sm:hover:underline"
+            >{emailAddress}</a
+          >.
+          <br />
+          We will fix it asap!
         </div>
 
         <a
