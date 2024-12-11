@@ -110,6 +110,7 @@
   }
 
   //Check Service Worker (SW)
+  /*
   async function detectSWUpdate() {
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -133,6 +134,7 @@
       console.error("Service Worker registration failed:", error);
     }
   }
+  */
 
   const loadWorker = async () => {
     if ("serviceWorker" in navigator) {
@@ -177,10 +179,11 @@
     if ($showCookieConsent === true) {
       Cookie = (await import("$lib/components/Cookie.svelte")).default;
     }
-
+    /*
     if (window?.innerWidth <= 768) {
       await detectSWUpdate();
     }
+      */
 
     // Clear all the cache every 20 min
     const interval = setInterval(
