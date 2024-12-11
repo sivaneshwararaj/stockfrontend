@@ -1,22 +1,9 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import PocketBase from "pocketbase";
 import { serializeNonPOJOs } from "$lib/utils";
-//import geoip from "geoip-lite";
 
 export const handle = sequence(async ({ event, resolve }) => {
-  /*
-  const ip =
-    event.request.headers.get("x-forwarded-for")?.split(",")[0] ||
-    event.getClientAddress();
 
-  let isUS = false;
-  if (ip) {
-    const geoData = geoip?.lookup(ip);
-    if (geoData && geoData.country === "US") {
-      isUS = true;
-    }
-  }
-  */
 
   // Use a ternary operator instead of the logical OR for better compatibility
   const pbURL = import.meta.env.VITE_USEAST_POCKETBASE_URL; //isUS ? import.meta.env.VITE_USEAST_POCKETBASE_URL : import.meta.env.VITE_EU_POCKETBASE_URL;

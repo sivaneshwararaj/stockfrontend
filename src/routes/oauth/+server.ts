@@ -1,4 +1,5 @@
 import { redirect } from "@sveltejs/kit";
+import { serializeNonPOJOs } from "$lib/utils";
 
 
 
@@ -46,9 +47,10 @@ export const GET = async ({ locals, url, cookies }) => {
   try {
     //
 
-    newUser = await locals.pb
+    await locals.pb
       ?.collection("users")
       .authWithOAuth2Code(provider.name, code, expectedVerifier, redirectURL);
+
 
     //oauthUsername = generateUsername(newUser['meta']['name'].split(' ').join('')).toLowerCase();
 
@@ -70,11 +72,8 @@ export const GET = async ({ locals, url, cookies }) => {
   if (cookies?.get("path")) {
     redirect(301, cookies?.get("path"));
   } else {
-    redirect(301, "/");
+    redirect(303, "/");
   }
 
-  //Login user automatically
-
-  //const avatarUrl = newUser['meta']['avatarUrl'];
-  //console.log(avatarUrl);
+ 
 };

@@ -91,7 +91,6 @@ export const actions = {
     const targetItem = authMethods?.providers?.findIndex(
       (item) => item?.name === providerSelected,
     );
-
     //console.log("==================")
     //console.log(authMethods.authProviders)
     //console.log('target item is: ', targetItem)
@@ -135,6 +134,6 @@ export const actions = {
       maxAge: 60,
     });
 
-    redirect(302, authProviderRedirect);
+    redirect(303, authProviderRedirect);
   },
 };

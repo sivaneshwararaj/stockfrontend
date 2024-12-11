@@ -170,8 +170,10 @@
     typeof data?.cookieConsent !== "undefined" ? false : true;
 
   onMount(async () => {
-    await Promise.all([checkMarketHour(), loadWorker()]);
-
+    if (data?.user?.id) {
+      await loadWorker();
+    }
+    await checkMarketHour();
     if ($showCookieConsent === true) {
       Cookie = (await import("$lib/components/Cookie.svelte")).default;
     }
@@ -180,7 +182,7 @@
       await detectSWUpdate();
     }
 
-    //Clear all the cache every 20 min
+    // Clear all the cache every 20 min
     const interval = setInterval(
       () => {
         clearCache();

@@ -100,7 +100,7 @@ export const actions = {
       maxAge: 60,
     });
 
-    redirect(302, authProviderRedirect);
+    redirect(303, authProviderRedirect);
   },
 };
 
