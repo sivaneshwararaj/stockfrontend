@@ -4,6 +4,7 @@
 
   import VirtualList from "svelte-tiny-virtual-list";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import toast from "svelte-french-toast";
 
   export let data;
   export let optionsWatchlist;
