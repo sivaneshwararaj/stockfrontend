@@ -16,6 +16,7 @@
   import { Combobox } from "bits-ui";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { goto } from "$app/navigation";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
   let timeoutId;
@@ -30,6 +31,7 @@
   let deleteTickerList = [];
 
   let watchList: any[] = [];
+  let originalData = [];
 
   let news = [];
   let earnings = [];
@@ -163,6 +165,11 @@
   const handleDownloadMessage = (event) => {
     isLoaded = false;
     watchList = event?.data?.watchlistData ?? [];
+    originalData = event?.data?.watchlistData ?? [];
+    if (watchList?.length > 0) {
+      columns = generateColumns(watchList);
+      sortOrders = generateSortOrders(watchList);
+    }
     isLoaded = true;
   };
 
@@ -236,6 +243,8 @@
     const output = await response?.json();
 
     watchList = output?.data;
+    originalData = output?.data;
+
     news = output?.news;
     earnings = output?.earnings;
 
@@ -249,6 +258,9 @@
       return match ? { ...item, name: match?.name } : { ...item };
     });
     if (watchList?.length > 0) {
+      columns = generateColumns(watchList);
+      sortOrders = generateSortOrders(watchList);
+
       groupedEarnings = groupEarnings(earnings);
       groupedNews = groupNews(news, watchList);
     } else {
@@ -412,6 +424,8 @@
         (item) => !deleteTickerList?.includes(item?.symbol),
       );
 
+      originalData = watchList;
+
       news = news?.filter((item) => !deleteTickerList?.includes(item?.symbol));
       earnings = earnings?.filter(
         (item) => !deleteTickerList?.includes(item?.symbol),
@@ -443,6 +457,8 @@
 
       allList = [...allList];
       if (watchList?.length > 0) {
+        columns = generateColumns(watchList);
+        sortOrders = generateSortOrders(watchList);
         groupedNews = groupNews(news, watchList);
         groupedEarnings = groupEarnings(earnings);
       } else {
@@ -470,6 +486,9 @@
         style:
           "border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
       });
+
+      inputValue = "";
+      event.preventDefault();
       return;
     }
 
@@ -820,6 +839,150 @@
       searchBarData = await response?.json();
     }, 50); // delay
   }
+
+  // Function to generate columns based on keys in rawData
+  function generateColumns(data) {
+    const leftAlignKeys = new Set(["rank", "symbol", "name"]);
+
+    // Custom labels for specific keys
+    const customLabels = {
+      changesPercentage: "% Change",
+      score: "AI Score",
+      researchAndDevelopmentExpenses: "R&D",
+      counter: "Ratings Count",
+      // Add more key-label mappings here as needed
+    };
+
+    // Define preferred order for columns
+    const preferredOrder = ["rank", "symbol", "name"];
+
+    // Create a mapping of rule to name and type from allRows
+    const ruleToMetadataMap = Object.fromEntries(
+      allRows.map((row) => [row.rule, { name: row.name, type: row.type }]),
+    );
+
+    // Separate preferred keys and other keys, excluding "type"
+    const keys = Object?.keys(data?.at(0))?.filter((key) => key !== "type");
+
+    // Merge the preferred order with the default list order
+    const orderedKeys = [
+      ...preferredOrder?.filter((key) => keys?.includes(key)),
+      ...ruleOfList
+        ?.map((item) => item?.rule)
+        ?.filter((key) => keys?.includes(key)),
+      ...keys?.filter(
+        (key) =>
+          !preferredOrder?.includes(key) &&
+          !ruleOfList?.some((item) => item?.rule === key),
+      ),
+    ];
+
+    return orderedKeys?.map((key) => ({
+      key,
+      label:
+        customLabels[key] ||
+        ruleToMetadataMap[key]?.name || // Check allRows mapping first
+        key?.charAt(0)?.toUpperCase() +
+          key?.slice(1)?.replace(/([A-Z])/g, " $1"),
+      type: ruleToMetadataMap[key]?.type || "string", // Add type from allRows or default to 'string'
+      align: leftAlignKeys?.has(key) ? "left" : "right",
+    }));
+  }
+
+  // Function to generate sortOrders based on keys in rawData
+  function generateSortOrders(data) {
+    const stringKeys = new Set([
+      "symbol",
+      "name",
+      "industry",
+      "score",
+      "sector",
+      "analystRating",
+    ]);
+
+    return Object.keys(data[0])?.reduce((orders, key) => {
+      orders[key] = {
+        order: "none",
+        type: stringKeys.has(key) ? "string" : "number",
+      };
+      return orders;
+    }, {});
+  }
+
+  // Generate columns and sortOrders
+  let columns;
+  let sortOrders;
+
+  const sortData = (key, input = false) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // If input is false, cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    const currentOrderIndex = orderCycle.indexOf(
+      sortOrders[key]?.order || "none",
+    );
+    sortOrders[key] = {
+      ...(sortOrders[key] || {}),
+      order: orderCycle[(currentOrderIndex + 1) % orderCycle.length],
+    };
+
+    const sortOrder = sortOrders[key]?.order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      watchList = [...originalData]; // Reset originalData to rawData
+      return;
+    }
+
+    // Generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "rating":
+        case "string":
+          valueA = a[key];
+          valueB = b[key];
+          if (valueA == null && valueB == null) return 0;
+          if (valueA == null) return 1;
+          if (valueB == null) return -1;
+          valueA = valueA?.toUpperCase();
+          valueB = valueB?.toUpperCase();
+          return sortOrder === "asc"
+            ? valueA?.localeCompare(valueB)
+            : valueB?.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+      return sortOrder === "asc"
+        ? valueA < valueB
+          ? -1
+          : valueA > valueB
+            ? 1
+            : 0
+        : valueA > valueB
+          ? -1
+          : valueA < valueB
+            ? 1
+            : 0;
+    };
+
+    // Sort and update the originalData and stockList
+    watchList = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
 </script>
 
 <svelte:head>
@@ -1069,8 +1232,8 @@
                         {#each searchBarData as item}
                           <Combobox.Item
                             class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
-                            value={item.symbol}
-                            label={item.name}
+                            value={item?.symbol}
+                            label={item?.name}
                             on:click={(e) => handleAddTicker(e, item?.symbol)}
                           >
                             <div class="flex flex-col items-start">
@@ -1293,25 +1456,7 @@
                     >
                       <!-- head -->
                       <thead>
-                        <tr class="border-b-[#09090B]">
-                          <th
-                            class="text-white font-semibold text-sm sm:text-[1rem]"
-                            >Symbol</th
-                          >
-                          <th
-                            class="text-white font-semibold text-sm sm:text-[1rem]"
-                            >Company</th
-                          >
-
-                          {#each ruleOfList as item}
-                            {#if isChecked(item?.name)}
-                              <th
-                                class="text-white font-semibold text-end text-sm sm:text-[1rem]"
-                                >{item?.name}</th
-                              >
-                            {/if}
-                          {/each}
-                        </tr>
+                        <TableHeader {columns} {sortOrders} {sortData} />
                       </thead>
                       <tbody class="p-0">
                         {#each watchList as item}
