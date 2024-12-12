@@ -870,8 +870,10 @@
       allRows.map((row) => [row.rule, { name: row.name, type: row.type }]),
     );
 
-    // Separate preferred keys and other keys, excluding "type"
-    const keys = Object?.keys(data?.at(0))?.filter((key) => key !== "type");
+    // Separate preferred keys and other keys, excluding "type" and "previous"
+    const keys = Object?.keys(data?.at(0))?.filter(
+      (key) => key !== "type" && key !== "previous",
+    );
 
     // Merge the preferred order with the default list order
     const orderedKeys = [
