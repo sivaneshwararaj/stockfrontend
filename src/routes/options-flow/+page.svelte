@@ -591,11 +591,10 @@ function sendMessage(message) {
       body: JSON.stringify(postData),
     }); // make a POST request to the server with the FormData object
   }
-  /*
+
   $: if ($isOpen) {
     websocketRealtimeData();
   }
-    */
 
   onMount(async () => {
     displayRules = allRows?.filter((row) =>
@@ -627,11 +626,6 @@ function sendMessage(message) {
     }
 
     isLoaded = true;
-
-    if ($isOpen) {
-      await websocketRealtimeData();
-      console.log("WebSocket restarted");
-    }
   });
 
   onDestroy(async () => {

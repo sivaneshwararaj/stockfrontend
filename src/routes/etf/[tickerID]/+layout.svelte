@@ -197,20 +197,13 @@
 
   let LoginPopup;
 
-  /*
   $: if ($isOpen) {
     websocketRealtimeData();
   }
-    */
 
   onMount(async () => {
     if (!data?.user) {
       LoginPopup = (await import("$lib/components/LoginPopup.svelte")).default;
-    }
-
-    if ($isOpen) {
-      await websocketRealtimeData();
-      console.log("WebSocket restarted");
     }
   });
 
