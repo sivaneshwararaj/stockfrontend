@@ -145,6 +145,8 @@
     { name: "Change", rule: "changesPercentage", type: "percentSign" },
   ];
 
+  const defaultRules = ruleOfList?.map((item) => item?.rule);
+
   const excludedRules = new Set([
     "volume",
     "price",
@@ -776,6 +778,13 @@
       // Sort checked items first
       if (isAChecked !== isBChecked) return isAChecked ? -1 : 1;
 
+      // Prioritize items based on default rules
+      const isADefaultRule = defaultRules?.includes(a?.rule);
+      const isBDefaultRule = defaultRules?.includes(b?.rule);
+      if (isADefaultRule !== isBDefaultRule) {
+        return isADefaultRule ? -1 : 1;
+      }
+
       // Check if the user is not Pro
       if (data?.user?.tier !== "Pro") {
         const isAPriority = proOnlyItems.has(a?.name);
@@ -1337,7 +1346,28 @@
                         {#each searchQuery?.length !== 0 ? testList : allRows as item}
                           <DropdownMenu.Item class="sm:hover:bg-primary">
                             <div class="flex items-center">
-                              {#if data?.user?.tier === "Pro" || excludedRules?.has(item?.rule)}
+                              {#if defaultRules?.includes(item?.rule)}
+                                <label
+                                  on:click|capture={(event) => {
+                                    event.preventDefault();
+                                  }}
+                                  class="text-white"
+                                >
+                                  <input
+                                    disabled={defaultRules?.includes(item?.rule)
+                                      ? true
+                                      : false}
+                                    type="checkbox"
+                                    class="rounded {defaultRules?.includes(
+                                      item?.rule,
+                                    )
+                                      ? 'checked:bg-gray-700'
+                                      : 'checked:bg-blue-700'}"
+                                    checked={isChecked(item?.name)}
+                                  />
+                                  <span class="ml-2">{item?.name}</span>
+                                </label>
+                              {:else if data?.user?.tier === "Pro" || excludedRules?.has(item?.rule)}
                                 <label
                                   on:click|capture={(event) => {
                                     event.preventDefault();
@@ -1347,8 +1377,15 @@
                                   for={item?.name}
                                 >
                                   <input
+                                    disabled={defaultRules?.includes(item?.rule)
+                                      ? true
+                                      : false}
                                     type="checkbox"
-                                    class="rounded"
+                                    class="rounded {defaultRules?.includes(
+                                      item?.rule,
+                                    )
+                                      ? 'checked:bg-gray-800'
+                                      : 'checked:bg-blue-700'}"
                                     checked={isChecked(item?.name)}
                                   />
                                   <span class="ml-2">{item?.name}</span>
