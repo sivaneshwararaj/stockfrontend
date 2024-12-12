@@ -17,6 +17,7 @@
   import { writable } from "svelte/store";
 
   export let data;
+  let shouldLoadWorker = writable(false);
 
   let optionsWatchlist = data?.getOptionsWatchlist;
 
@@ -33,7 +34,6 @@
   let searchTerm = "";
   let showFilters = true;
   let filteredRows = [];
-  let shouldLoadWorker = writable(false);
   const df = new DateFormatter("en-US", {
     day: "2-digit",
     month: "short",
@@ -598,6 +598,10 @@ function sendMessage(message) {
   }
 
   onMount(async () => {
+    if (filterQuery?.length > 0) {
+      shouldLoadWorker.set(true);
+    }
+
     displayRules = allRows?.filter((row) =>
       ruleOfList?.some((rule) => rule?.name === row?.rule),
     );
