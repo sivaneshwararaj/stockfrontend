@@ -525,11 +525,7 @@ function sendMessage(message) {
                 rawData = newData;
                 displayedData = rawData;
 
-                if (
-                  !muted &&
-                  ruleOfList?.length === 0 &&
-                  filterQuery?.length === 0
-                ) {
+                if (!muted) {
                   audio?.play();
                 }
               }
@@ -551,7 +547,7 @@ function sendMessage(message) {
       socket.addEventListener("close", (event) => {
         console.log("WebSocket connection closed:", event.reason);
         // Handle disconnection, you might want to attempt to reconnect here
-        setTimeout(() => websocketRealtimeData(), 5000); // Attempt to reconnect after 5 seconds
+        setTimeout(() => websocketRealtimeData(), 1000); // Attempt to reconnect after 5 seconds
       });
 
       socket.addEventListener("error", (error) => {
@@ -561,7 +557,7 @@ function sendMessage(message) {
     } catch (error) {
       console.error("WebSocket connection error:", error);
       // Handle connection errors here
-      setTimeout(() => websocketRealtimeData(), 5000); // Attempt to reconnect after 5 seconds
+      setTimeout(() => websocketRealtimeData(), 1000); // Attempt to reconnect after 5 seconds
     }
   }
 
