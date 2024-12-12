@@ -9,6 +9,7 @@
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { compareTimes, formatTime, isPWAInstalled } from "$lib/utils";
+  import { closedPWA } from "$lib/store";
 
   export let data;
   let optionsMode = "premium";
@@ -41,10 +42,38 @@
   }
   let Feedback;
   let pwaInstalled = false;
+  let AppInstalled = null;
+
+  function getClosedPWA() {
+    const item = localStorage.getItem("closePWA");
+    if (!item) return null;
+
+    const { value, expires } = JSON.parse(item);
+    if (new Date() > new Date(expires)) {
+      localStorage.removeItem("closePWA"); // Remove expired item
+      return null;
+    }
+    return value;
+  }
+
   onMount(async () => {
     pwaInstalled = isPWAInstalled();
+
+    if (!pwaInstalled) {
+      try {
+        $closedPWA = getClosedPWA();
+
+        if (!$closedPWA) {
+          // Dynamically import the AppInstalled component
+          AppInstalled = (await import("$lib/components/AppInstalled.svelte"))
+            .default;
+        }
+      } catch (e) {
+        console.error("Error loading AppInstalled component:", e);
+      }
+    }
+
     Feedback = (await import("$lib/components/Feedback.svelte")).default;
-    console.log(pwaInstalled);
   });
 
   $: charNumber = $screenWidth < 640 ? 20 : 15;
@@ -90,59 +119,9 @@
 <div
   class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-[#09090B] mb-40"
 >
-  <!--
-  <div
-    class="mb-5 mt-5 relative isolate sm:rounded text-center flex sm:hidden justify-center items-center gap-x-6 overflow-hidden bg-[#FFC233] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
-  >
-    <div
-      class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true"
-    >
-      <div
-        class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
-      ></div>
-    </div>
-    <div
-      class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-      aria-hidden="true"
-    >
-      <div
-        class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
-      ></div>
-    </div>
-    <div
-      class="w-full flex flex-row justify-between items-center gap-x-4 gap-y-2"
-    >
-      <p class="text-lg text-black font-semibold text-start">
-        Get the app for a better experience.
-      </p>
-
-      <div class="flex flex-row items-center">
-        <div
-          class="flex-none rounded-full px-3.5 py-1 text-lg font-semibold text-black shadow-sm bg-[#fff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-        >
-          Install
-        </div>
-        <label
-          for="feedbackInfo"
-          class="inline-block cursor-pointer text-[1.3rem] sm:text-[1.8rem]"
-        >
-          <svg
-            class="ml-2 w-8 h-8"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            ><path
-              fill="black"
-              d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
-            /></svg
-          >
-        </label>
-      </div>
-    </div>
-  </div>
-  -->
+  {#if AppInstalled && !$closedPWA}
+    <svelte:component this={AppInstalled} />
+  {/if}
 
   <!--
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}

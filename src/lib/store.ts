@@ -50,6 +50,7 @@ export const shouldUpdatePriceChart = writable(<boolean>false);
 export const coolMode = writable(<boolean>false);
 export const timeFrame =writable(<string>"Max");
 
+export const closedPWA = writable(<boolean>false);
 
 export const executiveClicked = writable(<boolean>false);
 export const secFilingsClicked = writable(<boolean>false);
