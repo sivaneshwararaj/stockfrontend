@@ -151,6 +151,7 @@
     "volume",
     "price",
     "changesPercentage",
+    "marketCap",
     "eps",
   ]);
   const proOnlyItems = new Set(
