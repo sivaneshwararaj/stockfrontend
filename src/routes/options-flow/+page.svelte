@@ -506,7 +506,7 @@ function sendMessage(message) {
     */
 
       socket.addEventListener("message", (event) => {
-        previousVolume = displayCallVolume + displayPutVolume || 0;
+        const totalVolume = displayCallVolume + displayPutVolume;
         if (mode === true) {
           try {
             newData = JSON.parse(event.data) ?? [];
@@ -515,17 +515,16 @@ function sendMessage(message) {
                 item.dte = daysLeft(item?.date_expiration);
               });
 
-              calculateStats(newData);
+              //calculateStats(newData);
               //console.log(previousVolume);
               if (
                 newData?.length > rawData?.length &&
-                previousVolume !== displayCallVolume + displayPutVolume
+                previousVolume !== totalVolume
               ) {
-                //console.log(previousVolume,displayCallVolume + displayPutVolume,);
+                //console.log(previousVolume,totalVolume,);
                 rawData = newData;
                 displayedData = rawData;
 
-                newData = [];
                 if (
                   !muted &&
                   ruleOfList?.length === 0 &&
@@ -536,10 +535,6 @@ function sendMessage(message) {
               }
             }
 
-            if (ruleOfList?.length !== 0 || filterQuery?.length !== 0) {
-              shouldLoadWorker.set(true);
-            }
-
             /*
           if (previousCallVolume !== displayCallVolume && !muted && audio) {
             audio?.play();
@@ -548,6 +543,8 @@ function sendMessage(message) {
           } catch (e) {
             console.error("Error processing WebSocket message:", e);
           }
+          newData = [];
+          previousVolume = totalVolume;
         }
       });
 
@@ -601,6 +598,10 @@ function sendMessage(message) {
     if (filterQuery?.length > 0) {
       shouldLoadWorker.set(true);
     }
+    if (ruleOfList?.length !== 0) {
+      shouldLoadWorker.set(true);
+      console.log("initial filter");
+    }
 
     displayRules = allRows?.filter((row) =>
       ruleOfList?.some((rule) => rule?.name === row?.rule),
@@ -624,11 +625,6 @@ function sendMessage(message) {
         isLoaded = true;
       }
     });
-
-    if (ruleOfList?.length !== 0) {
-      shouldLoadWorker.set(true);
-      console.log("initial filter");
-    }
 
     isLoaded = true;
   });

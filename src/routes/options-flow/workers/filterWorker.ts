@@ -288,7 +288,6 @@ onmessage = async (event: MessageEvent) => {
   // Filter the data
   let filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
   
-  console.log(ruleOfList)
   filteredData = Array.from(
     new Map(filteredData?.map((item) => [item?.id, item]))?.values()
   );
