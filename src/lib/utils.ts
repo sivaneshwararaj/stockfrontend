@@ -19,6 +19,24 @@ type FlyAndScaleParams = {
 };
 
 
+export function isPWAInstalled() {
+  try {
+      // For iOS (Safari)
+
+    const isInStandaloneMode = window.navigator.standalone;
+
+  // For Android and other platforms
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+
+  return isInStandaloneMode || isStandalone;
+  }
+  catch(e) {
+    console.log(e)
+    return false;
+  }
+  
+}
+
 
 export const computeGrowthSingleList = (data, actualList) => {
     // Initialize the result list
