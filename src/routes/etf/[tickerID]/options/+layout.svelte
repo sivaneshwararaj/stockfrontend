@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { etfTicker } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   export let data;
@@ -40,7 +41,7 @@
             class="w-full border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
           >
             <a
-              href={"/options-flow"}
+              href={`/options-flow?query=${$etfTicker}`}
               class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">

@@ -11,6 +11,7 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { Calendar } from "$lib/components/shadcn/calendar/index.js";
   import CalendarIcon from "lucide-svelte/icons/calendar";
+  import { page } from "$app/stores";
 
   import OptionsFlowTable from "$lib/components/Table/OptionsFlowTable.svelte";
   import { writable } from "svelte/store";
@@ -23,7 +24,7 @@
 
   let displayRules = [];
   let filteredData = [];
-  let filterQuery = "";
+  let filterQuery = $page.url.searchParams.get("query") || "";
 
   let socket: WebSocket | null = null; // Initialize socket as null
 
