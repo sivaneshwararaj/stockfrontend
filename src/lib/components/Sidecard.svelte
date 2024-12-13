@@ -22,8 +22,6 @@
   let changesPercentage = 0;
   let ipoDate = "n/a";
 
-  let showFullText = false;
-
   function getIndustryHref(industryName) {
     // Replace spaces with hyphens
     let formattedName = industryName?.replace(/ /g, "-");
@@ -94,26 +92,16 @@
     About {$stockTicker}
   </h2>
   <p class="text-gray-200">
-    {#if showFullText}
-      {description}
-    {:else}
-      {snippet}
-    {/if}
+    {snippet}
   </p>
-  {#if description.length !== 0}
-    <div class="inline-block">
-      <label
-        on:click={() => (showFullText = !showFullText)}
-        class="w-full text-md mt-1 cursor-pointer font-medium sm:hover:text-white text-blue-400 sm:hover:underline"
-      >
-        {#if showFullText}
-          [Show less]
-        {:else}
-          [Show more]
-        {/if}
-      </label>
-    </div>
-  {/if}
+  <div class="inline-block">
+    <a
+      href={`/stocks/${$stockTicker}/profile`}
+      class="w-full text-md mt-1 cursor-pointer font-medium sm:hover:text-white text-blue-400 sm:hover:underline"
+    >
+      [Show more]
+    </a>
+  </div>
 
   <div
     class="mt-3 grid grid-cols-2 gap-3 w-full border-b border-gray-600 lg:border-none pb-8 lg:pb-0"

@@ -1,117 +1,15 @@
 <script lang="ts">
   import {
-    numberOfUnreadNotification,
-    displayCompanyName,
     stockTicker,
+    displayCompanyName,
+    numberOfUnreadNotification,
   } from "$lib/store";
-  import { onMount } from "svelte";
-  import { monthNames } from "$lib/utils";
-  import { Chart } from "svelte-echarts";
-  import { init, use } from "echarts/core";
-  import { LineChart, BarChart } from "echarts/charts";
-  import { GridComponent, TooltipComponent } from "echarts/components";
-  import { CanvasRenderer } from "echarts/renderers";
-  use([LineChart, BarChart, TooltipComponent, GridComponent, CanvasRenderer]);
 
   export let data;
-  let isLoaded = false;
-  let dateDistance;
-  let rawData = data?.getStockDividend;
-  let optionsDividend;
 
-  let exDividendDate = rawData?.history?.at(0)?.date;
-  let dividendYield = rawData?.dividendYield;
-  let annualDividend = rawData?.annualDividend;
-  let payoutFrequency = rawData?.payoutFrequency;
-  let payoutRatio = rawData?.payoutRatio;
-  let dividendGrowth = rawData?.dividendGrowth;
-
-  async function plotDividend() {
-    // Combine the data into an array of objects to keep them linked
-    const combinedData = rawData?.history?.map((item) => ({
-      date: item?.paymentDate,
-      dividend: item?.adjDividend?.toFixed(3),
-    }));
-
-    // Sort the combined data array based on the date
-    combinedData.sort((a, b) => new Date(a?.date) - new Date(b?.date));
-
-    // Separate the sorted data back into individual arrays
-    const dates = combinedData.map((item) => item.date);
-    const dividendList = combinedData?.map((item) => item.dividend);
-
-    const options = {
-      animation: false,
-      grid: {
-        left: "3%",
-        right: "3%",
-        bottom: "10%",
-        top: "10%",
-        containLabel: true,
-      },
-      xAxis: {
-        data: dates,
-        type: "category",
-        axisLabel: {
-          color: "#fff",
-        },
-        splitLine: {
-          show: false, // Disable x-axis grid lines
-        },
-      },
-      yAxis: [
-        {
-          type: "value",
-          splitLine: {
-            show: false, // Disable x-axis grid lines
-          },
-
-          axisLabel: {
-            show: false, // Hide y-axis labels
-          },
-        },
-      ],
-      series: [
-        {
-          name: "Dividend per Share",
-          data: dividendList,
-          type: "bar",
-          smooth: true,
-          itemStyle: {
-            color: "#fff",
-          },
-        },
-      ],
-      tooltip: {
-        trigger: "axis",
-        hideDelay: 100,
-        borderColor: "#969696", // Black border color
-        borderWidth: 1, // Border width of 1px
-        backgroundColor: "#313131", // Optional: Set background color for contrast
-        textStyle: {
-          color: "#fff", // Optional: Text color for better visibility
-        },
-        formatter: function (params) {
-          const date = params[0].name; // Get the date from the x-axis value
-          const dateParts = date.split("-");
-          const year = dateParts[0];
-          const monthIndex = parseInt(dateParts[1]) - 1;
-          const day = dateParts[2];
-          const formattedDate = `${monthNames[monthIndex]} ${day}, ${year}`;
-
-          // Return the tooltip content
-          return `${formattedDate}<br/> Dividend Per Share: ${params[0].value}`;
-        },
-      },
-    };
-
-    return options;
-  }
-
-  onMount(async () => {
-    optionsDividend = await plotDividend();
-    isLoaded = true;
-  });
+  const similarStocks = data?.getSimilarStocks?.sort(
+    (a, b) => b?.dividendYield - a?.dividendYield,
+  );
 </script>
 
 <svelte:head>
@@ -119,22 +17,22 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Company Profile & Overview -
-    Stocknear
+    {$displayCompanyName} ({$stockTicker?.toUpperCase()}) Company Profile &
+    Overview · Stocknear
   </title>
 
   <meta
     name="description"
-    content={`Company profile for ${$displayCompanyName} (${$stockTicker}) with a description, list of executives, contact details and other key facts.`}
+    content={`Company profile for ${$displayCompanyName} (${$stockTicker?.toUpperCase()}) with a description, list of executives, contact details and other key facts.`}
   />
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`{$displayCompanyName} ({$stockTicker}) Company Profile & Overview · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker?.toUpperCase()}) Company Profile & Overview · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Get the latest dividend data for ${$displayCompanyName} (${$stockTicker}), including dividend history, yield, key dates, growth and other metrics.`}
+    content={`Company profile for ${$displayCompanyName} (${$stockTicker?.toUpperCase()}) with a description, list of executives, contact details and other key facts.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -143,11 +41,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`{$displayCompanyName} ({$stockTicker}) Company Profile & Overview · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker?.toUpperCase()}) Company Profile & Overview · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Company profile for ${$displayCompanyName} (${$stockTicker}) with a description, list of executives, contact details and other key facts.`}
+    content={`Company profile for ${$displayCompanyName} (${$stockTicker?.toUpperCase()}) with a description, list of executives, contact details and other key facts.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -157,298 +55,531 @@
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-        <div class="w-full mb-6">
-          <h1 class="text-xl sm:text-2xl text-gray-200 font-bold mb-4 w-full">
-            Dividends
-          </h1>
-
-          <div
-            class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-          >
-            <svg
-              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#fff"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
-
-            {#if rawData?.history?.length !== 0}
-              {#if !dateDistance}
-                {$displayCompanyName} has an annual dividend of ${annualDividend}
-                per share, with a forward yield of
-                {dividendYield}%. The dividend is paid every
-                {payoutFrequency === 4
-                  ? "3 months"
-                  : payoutFrequency === 2
-                    ? "6 months"
-                    : payoutFrequency === 1
-                      ? "12 months"
-                      : "n/a"}
-                and the last ex-dividend date was
-                {new Date(exDividendDate)?.toLocaleString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  daySuffix: "2-digit",
-                })}
-              {:else}
-                {$displayCompanyName} issued its most recent dividend on
-                {new Date(rawData?.history?.at(0)?.date)?.toLocaleString(
-                  "en-US",
-                  {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    daySuffix: "2-digit",
-                  },
-                )}. Since then, the company has not distributed any further
-                dividends for over 12 months.
-              {/if}
-            {:else}
-              No dividend history available for {$displayCompanyName}.
-            {/if}
+      <div
+        class="relative flex flex-row justify-center items-start overflow-hidden w-full"
+      >
+        <div class="sm:p-7 w-full mt-2 sm:mt-0">
+          <div class="lg:float-left lg:w-[calc(100%-336px-40px)]">
+            <h1 class="text-xl sm:text-2xl font-bold mb-4 w-full">
+              Company Description
+            </h1>
+            <div class="mb-5 text-base md:text-lg [&amp;>p]:mb-5">
+              <p class="mb-5">
+                The Coca-Cola Company, a beverage company, manufactures,
+                markets, and sells various nonalcoholic beverages worldwide.
+              </p>
+              <p class="mb-5">
+                The company provides sparkling soft drinks, sparkling flavors;
+                water, sports, coffee, and tea; juice, value-added dairy, and
+                plant-based beverages; and other beverages.
+              </p>
+              <p class="mb-5">
+                It also offers beverage concentrates and syrups, as well as
+                fountain syrups to fountain retailers, such as restaurants and
+                convenience stores.
+              </p>
+              <p class="mb-5">
+                The company sells its products under the Coca-Cola, Diet
+                Coke/Coca-Cola Light, Coca-Cola Zero Sugar, caffeine free Diet
+                Coke, Cherry Coke, Fanta Orange, Fanta Zero Orange, Fanta Zero
+                Sugar, Fanta Apple, Sprite, Sprite Zero Sugar, Simply Orange,
+                Simply Apple, Simply Grapefruit, Fresca, Schweppes, Thums Up,
+                Aquarius, Ayataka, BODYARMOR, Ciel, Costa, Dasani, doğadan, FUZE
+                TEA, Georgia, glacéau smartwater, glacéau vitaminwater, Gold
+                Peak, Ice Dew, I LOHAS, Powerade, Topo Chico, AdeS, Del Valle,
+                fairlife, innocent, Minute Maid, and Minute Maid Pulpy brands.
+              </p>
+              <p class="mb-5">
+                It operates through a network of independent bottling partners,
+                distributors, wholesalers, and retailers, as well as through
+                bottling and distribution operators.
+              </p>
+              <p class="mb-5">
+                The company was founded in 1886 and is headquartered in Atlanta,
+                Georgia.
+              </p>
+            </div>
           </div>
-        </div>
-
-        {#if rawData?.history?.length !== 0}
-          <div
-            class="mb-4 grid grid-cols-2 grid-rows-1 divide-gray-600 rounded-md border border-gray-600 md:grid-cols-3 md:grid-rows-1 divide-x"
-          >
-            <div class="p-4 bp:p-5 sm:p-6">
-              <label
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
-              >
-                Dividend Yield
-              </label>
-              <div
-                class="mt-1 break-words font-semibold leading-8 text-light text-xl"
-              >
-                {dividendYield !== "0.00" ? dividendYield : "0"}%
-              </div>
-            </div>
-            <div class="p-4 bp:p-5 sm:p-6 border-l border-b border-contrast">
-              <label
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
-              >
-                Annual Dividend
-              </label>
-
-              <div
-                class="mt-1 break-words font-semibold leading-8 text-light text-xl"
-              >
-                {annualDividend !== "0.00" ? annualDividend : "0"}
-              </div>
-            </div>
+          <div class="-mr-5 flex-shrink-0 lg:float-right lg:w-[336px]">
             <div
-              class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast border-contrast"
+              class="mt-7 rounded border border-gray-600 bg-primary px-3 pb-2 pt-3 xs:px-4 xs:pt-4 lg:mt-1"
             >
-              <label
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
-              >
-                Ex-Dividend Date
-              </label>
-
-              <div
-                class="mt-1 break-words font-semibold leading-8 text-light text-xl"
-              >
-                {new Date(exDividendDate)?.toLocaleString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  daySuffix: "2-digit",
-                })}
+              <div class="text-center text-2xl font-semibold">
+                {$displayCompanyName}
               </div>
+              <div class="mb-0">
+                <img
+                  src={`https://financialmodelingprep.com/image-stock/${$stockTicker?.toUpperCase()}.png`}
+                  alt={`${$displayCompanyName} logo`}
+                  class="mx-auto py-0.5 w-28 h-28 mt-5 mb-5"
+                />
+              </div>
+              <table class="w-full">
+                <tbody
+                  ><tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-bpivlp">Country</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2">United States</td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-99zpt0">Founded</td
+                    > <td class="px-1 py-1.5 text-right lg:py-2">1886</td></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-pqn7mx">IPO Date</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2">Sep 5, 1919</td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td class="px-1 py-1.5 font-semibold lg:py-2">Industry</td>
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      ><a
+                        class="sm:hover:text-blue-400 text-white underline underline-offset-4"
+                        href="/stocks/industry/beverages-non-alcoholic/"
+                        >Beverages - Non-Alcoholic</a
+                      ></td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-5e1uzt">Sector</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      ><a
+                        class="sm:hover:text-blue-400 text-white underline underline-offset-4"
+                        href="/stocks/sector/consumer-staples/"
+                        >Consumer Staples</a
+                      ></td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-8d46v8">Employees</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      ><a
+                        class="sm:hover:text-blue-400 text-white underline underline-offset-4"
+                        href="/stocks/ko/employees/">79,100</a
+                      ></td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-1qhfmvo">CEO</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >James Robert Quincey</td
+                    ></tr
+                  ></tbody
+                >
+              </table>
             </div>
-
-            <div class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast">
-              <label
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
-              >
-                Payout Frequency
-              </label>
-
-              <div
-                class="mt-1 break-words font-semibold leading-8 text-light text-xl"
-              >
-                {payoutFrequency === 4
-                  ? "Quartely"
-                  : payoutFrequency === 2
-                    ? "Half-Yearly"
-                    : payoutFrequency === 1
-                      ? "Annually"
-                      : "n/a"}
-              </div>
+            <h2 class="mt-6 xs:mt-8 font-bold text-2xl mb-2">
+              Contact Details
+            </h2>
+            <div
+              class="rounded border border-gray-600 bg-primary px-4 pb-2 pt-4"
+            >
+              <table class="w-full">
+                <tbody
+                  ><tr class="border-b border-gray-600 last:border-0"
+                    ><td colspan="2" class="pb-3"
+                      ><div
+                        class="mb-2 text-lg font-bold"
+                        data-svelte-h="svelte-4u53xl"
+                      >
+                        Address:
+                      </div>
+                      <div>
+                        One Coca-Cola Plaza<br />Atlanta, Georgia 30313<br
+                        />United States
+                      </div></td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-0.5 py-2 font-semibold"
+                      data-svelte-h="svelte-13hrol0">Phone</td
+                    > <td class="px-0.5 py-2 text-right">404 676 2121</td></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td class="px-0.5 py-2 font-semibold">Website</td>
+                    <td class="px-0.5 py-2 text-right"
+                      ><a
+                        href="https://www.coca-colacompany.com"
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        >coca-colacompany.com</a
+                      ></td
+                    ></tr
+                  ></tbody
+                >
+              </table>
             </div>
-            <div class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast">
-              <label
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
-              >
-                Payout Ratio
-              </label>
-
-              <div
-                class="mt-1 break-words font-semibold leading-8 text-light text-xl"
-              >
-                {payoutRatio !== "0.00" ? payoutRatio : "0"}%
-              </div>
-            </div>
-            <div class="p-4 bp:p-5 sm:p-6 border-t border-r border-contrast">
-              <label
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
-              >
-                Dividend Growth
-              </label>
-
-              <div
-                class="mt-1 break-words font-semibold leading-8 text-light text-xl"
-              >
-                {dividendGrowth !== "NaN" ? dividendGrowth + "%" : "-"}
-              </div>
+            <h2 class="mt-6 xs:mt-8 font-bold text-2xl mb-2">Stock Details</h2>
+            <div
+              class="rounded border border-gray-600 bg-primary px-2 pb-2 pt-2 xs:px-4 xs:pt-2.5"
+            >
+              <table class="w-full">
+                <tbody
+                  ><tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-lmvnpx">Ticker Symbol</td
+                    > <td class="px-1 py-1.5 text-right lg:py-2">KO</td></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-h7dsem">Exchange</td
+                    > <td class="px-1 py-1.5 text-right lg:py-2">NYSE</td></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-q9yzrm">Fiscal Year</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >January - December</td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-1tbczfa">Reporting Currency</td
+                    > <td class="px-1 py-1.5 text-right lg:py-2">USD</td></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-ucpcs9">CIK Code</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2">0000021344</td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-1fdyovu">CUSIP Number</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2">191216100</td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-t5u2mr">ISIN Number</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2">US1912161007</td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-x8apyl">Employer ID</td
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2">58-0628465</td
+                    ></tr
+                  >
+                  <tr class="border-b border-gray-600 last:border-0"
+                    ><td
+                      class="px-1 py-1.5 font-semibold lg:py-2"
+                      data-svelte-h="svelte-1o4kelt">SIC Code</td
+                    > <td class="px-1 py-1.5 text-right lg:py-2">2080</td></tr
+                  ></tbody
+                >
+              </table>
             </div>
           </div>
 
-          <div
-            class="flex flex-col sm:flex-row items-start sm:items-center w-full mt-14 mb-8"
-          >
-            <h3 class="text-xl text-white font-semibold">Dividends History</h3>
-          </div>
-
-          {#if isLoaded}
-            {#if rawData?.history?.length !== 0 && optionsDividend}
-              <div class="app w-full">
-                <Chart {init} options={optionsDividend} class="chart" />
-              </div>
-
-              <div
-                class="overflow-x-scroll no-scrollbar flex justify-start items-center w-full m-auto shadow-md rounded-none sm:rounded-md mb-4"
+          <div class="mb-2 lg:float-left lg:w-[calc(100%-336px-40px)]">
+            <h2 class="mt-6 xs:mt-8 lg:mt-4 text-xl sm:text-2xl font-bold mb-5">
+              Key Executives
+            </h2>
+            <table class="mb-6 w-full text-base xs:mb-8">
+              <thead class="bg-primary"
+                ><tr class="border-y border-gray-600"
+                  ><th
+                    class="px-2 py-2.5 text-left font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Name</th
+                  >
+                  <th
+                    class="px-2 py-2.5 text-left font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Position</th
+                  ></tr
+                ></thead
               >
-                <table
-                  class="table table-sm table-compact flex justify-start items-center w-full m-auto"
-                >
-                  <thead>
-                    <tr class="bg-[#09090B] border-b-slate-600 shadow-md">
-                      <th
-                        class="text-start bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
-                        Ex-Divid. Date
-                      </th>
-                      <th
-                        class="text-end bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
-                        Cash Amount
-                      </th>
-                      <th
-                        class="text-end bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
-                        Record Date
-                      </th>
-                      <th
-                        class="text-end bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
-                        Pay Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="shadow-md">
-                    {#each rawData?.history as item}
-                      <tr class="text-gray-200 odd:bg-secondary">
-                        <td
-                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white font-medium border-b border-[#09090B]"
-                        >
-                          {new Date(item?.date)?.toLocaleString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                            daySuffix: "2-digit",
-                          })}
-                        </td>
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
-                        >
-                          {item?.adjDividend?.toFixed(3)}
-                        </td>
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
-                        >
-                          {item?.recordDate?.length !== 0
-                            ? new Date(item?.recordDate)?.toLocaleString(
-                                "en-US",
-                                {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                  daySuffix: "2-digit",
-                                },
-                              )
-                            : "n/a"}
-                        </td>
-                        <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
-                        >
-                          {item?.paymentDate?.length !== 0
-                            ? new Date(item?.paymentDate)?.toLocaleString(
-                                "en-US",
-                                {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                  daySuffix: "2-digit",
-                                },
-                              )
-                            : "n/a"}
-                        </td>
-                      </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
-              <span class="text-gray-200 text-sm italic">
-                * Dividend amounts are adjusted for stock splits when
-                applicable.
-              </span>
-            {:else}
-              <h1
-                class="text-xl m-auto flex justify-center text-gray-200 mb-4 mt-10"
+              <tbody
+                ><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >James Robert B. Quincey</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Chairman and Chief Executive Officer</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >John Murphy</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >President and Chief Financial Officer</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Manuel Arroyo Prieto</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Executive Vice President and Global chief Marketing Officer</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Henrique Braun</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Executive Vice President and President of International
+                    Development</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Jennifer Kay Mann</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Executive Vice President and President of North America
+                    Operating Unit</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Erin May</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Senior Vice President, Chief Accounting Officer and
+                    Controller</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Stacy Lynn Apter</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Senior Vice President, Treasurer and Head of Corporate
+                    Finance</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Nancy W. Quan</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Executive Vice President and Global Chief Technical and
+                    Innovation Officer</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Neeraj Tolmare</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Senior Vice President and Chief Information Officer</td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Robin Halpern</td
+                  >
+                  <td
+                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                    >Vice President and Head of Investor Relations</td
+                  >
+                </tr></tbody
               >
-                No history found
-              </h1>
-            {/if}
-          {:else}
-            <div class="flex justify-center items-center h-80">
-              <div class="relative">
-                <label
-                  class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                >
-                  <span class="loading loading-spinner loading-md text-gray-400"
-                  ></span>
-                </label>
-              </div>
+            </table>
+
+            <h2
+              class="mt-6 xs:mt-8 lg:mt-12 text-xl sm:text-2xl font-bold mb-5"
+            >
+              Latest SEC Filings
+            </h2>
+            <table class="w-full">
+              <thead
+                ><tr class="border-b border-t border-gray-600 bg-primary"
+                  ><th class="px-1 py-2 text-left text-white xs:px-2">Date</th>
+                  <th class="px-1 py-2 text-left text-white xs:px-2">Type</th>
+                  <th class="px-1 py-2 text-left text-white xs:px-2">Title</th
+                  ></tr
+                ></thead
+              >
+              <tbody
+                ><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Dec 11, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000155278124000626/e24365_ko-8k.htm"
+                      target="_blank"
+                      rel="noopener noreferrer">Current Report</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Nov 27, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000196535324000360/xsl144X01/primary_doc.xml"
+                      target="_blank"
+                      rel="noopener noreferrer">Filing</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Nov 7, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000194984624000652/xsl144X01/primary_doc.xml"
+                      target="_blank"
+                      rel="noopener noreferrer">Filing</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Oct 24, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">10-Q</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000060/ko-20240927.htm"
+                      target="_blank"
+                      rel="noopener noreferrer">Quarterly Report</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Oct 23, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000056/ko-20241023.htm"
+                      target="_blank"
+                      rel="noopener noreferrer">Current Report</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Oct 17, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000051/ko-20241017.htm"
+                      target="_blank"
+                      rel="noopener noreferrer">Current Report</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Aug 26, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000155278124000502/xsl144X01/primary_doc.xml"
+                      target="_blank"
+                      rel="noopener noreferrer">Filing</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Aug 21, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000047/ko-20240821.htm"
+                      target="_blank"
+                      rel="noopener noreferrer">Current Report</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Aug 21, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000195004724006367/xsl144X01/primary_doc.xml"
+                      target="_blank"
+                      rel="noopener noreferrer">Filing</a
+                    ></td
+                  >
+                </tr><tr class="border-b border-gray-600"
+                  ><td
+                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                    >Aug 21, 2024</td
+                  >
+                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
+                  <td class="py-3 pl-1 align-top xs:px-2"
+                    ><a
+                      href="https://www.sec.gov/Archives/edgar/data/21344/000195004724006356/xsl144X01/primary_doc.xml"
+                      target="_blank"
+                      rel="noopener noreferrer">Filing</a
+                    ></td
+                  >
+                </tr></tbody
+              >
+            </table>
+            <div class="border-b border-gray-600 py-3 text-xl font-semibold">
+              <a
+                class="text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
+                href="https://www.sec.gov/cgi-bin/browse-edgar?CIK=0000021344&amp;count=100"
+                target="_blank"
+                rel="noopener noreferrer">View All SEC Filings</a
+              >
             </div>
-          {/if}
-        {/if}
+          </div>
+          <div class="clear-both min-h-5"></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
-
-<style>
-  .app {
-    height: 400px;
-    width: 100%;
-  }
-
-  @media (max-width: 560px) {
-    .app {
-      width: 100%;
-      height: 300px;
-    }
-  }
-
-  .chart {
-    width: 100%;
-  }
-</style>
