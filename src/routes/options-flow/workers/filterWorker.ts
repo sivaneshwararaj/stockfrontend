@@ -17,7 +17,7 @@ function convertUnitToValue(
       `Expected a string or number, but received ${typeof input}`,
     );
   }
-  const lowerInput = input.toLowerCase();
+  const lowerInput = input?.toLowerCase();
   const nonNumericValues = new Set([
     "any",
     "puts",
@@ -34,6 +34,8 @@ function convertUnitToValue(
     "trade",
     "stock",
     "etf",
+    "itm",
+    "otm",
   ]);
   if (nonNumericValues.has(lowerInput)) return input;
   if (input.endsWith("%")) {
@@ -69,6 +71,29 @@ function isAny(value: string | string[]): boolean {
 function createRuleCheck(rule, ruleName, ruleValue) {
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
 
+
+ if (ruleName === 'moneyness') {
+    return (item) => {
+
+      if (ruleValue === 'any') return true;
+
+      const currentPrice = parseFloat(item?.underlying_price);
+      const strikePrice = parseFloat(item?.strike_price);
+      const optionType = item?.put_call;
+      if (isNaN(currentPrice) || isNaN(strikePrice)) return false;
+
+      // Determine moneyness
+      let moneyness = '';
+      if (optionType === 'Calls') {
+        moneyness = currentPrice > strikePrice ? 'ITM' : 'OTM';
+      } else if (optionType === 'Puts') {
+        moneyness = currentPrice < strikePrice ? 'ITM' : 'OTM';
+      }
+      // Check if the item matches the ruleValue ('itm' or 'otm')
+      if (!ruleValue?.includes(moneyness)) return false;
+      return true;
+    };
+  }
 
 if (ruleName === 'volumeoiratio') {
   return (item) => {

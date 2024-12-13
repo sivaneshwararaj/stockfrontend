@@ -90,6 +90,11 @@
       defaultCondition: "over",
       defaultValue: "any",
     },
+    moneyness: {
+      label: "Moneyness",
+      step: ["ITM", "OTM"],
+      defaultValue: "any",
+    },
     put_call: {
       label: "Contract Type",
       step: ["Calls", "Puts"],
@@ -212,6 +217,7 @@
     let newRule;
 
     switch (ruleName) {
+      case "moneyness":
       case "put_call":
       case "sentiment":
       case "execution_estimate":
@@ -343,6 +349,7 @@
     // Specific rule handling for options-related rules
     if (
       [
+        "moneyness",
         "put_call",
         "sentiment",
         "execution_estimate",
@@ -1123,7 +1130,7 @@
                         <DropdownMenu.Content
                           class="w-64 min-h-auto max-h-72 overflow-y-auto scroller"
                         >
-                          {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
+                          {#if !["moneyness", "put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
                             <DropdownMenu.Label
                               class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]"
                             >
@@ -1283,7 +1290,7 @@
                             ></div>
                           {/if}
                           <DropdownMenu.Group class="min-h-10 mt-2">
-                            {#if !["put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
+                            {#if !["moneyness", "put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
                               {#each row?.step as newValue, index}
                                 {#if ruleCondition[row?.rule] === "between"}
                                   {#if newValue && row?.step[index + 1]}
@@ -1327,7 +1334,7 @@
                                   </DropdownMenu.Item>
                                 {/if}
                               {/each}
-                            {:else if ["put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
+                            {:else if ["moneyness", "put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
                               {#each row?.step as item}
                                 <DropdownMenu.Item
                                   class="sm:hover:bg-[#2A2E39]"
