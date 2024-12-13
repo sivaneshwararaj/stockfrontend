@@ -1690,29 +1690,16 @@
     selectedPopularStrategy = "";
     displayTableTab = "general";
     ruleOfList = [];
-    ruleOfList = [...ruleOfList];
-    ruleName = "";
-    filteredData = [];
-    displayResults = [];
-    checkedItems = new Map(
-      ruleOfList
-        ?.filter((rule) =>
-          [
-            "analystRating",
-            "halalStocks",
-            "sector",
-            "country",
-            "score",
-            "industry",
-            "grahamNumber",
-          ]?.includes(rule.name),
-        ) // Only include specific rules
-        ?.map((rule) => [rule.name, new Set(rule.value)]), // Create Map from filtered rules
-    );
     Object?.keys(allRules)?.forEach((ruleName) => {
       ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
       valueMappings[ruleName] = allRules[ruleName].defaultValue;
     });
+    ruleName = "";
+    filteredData = [];
+    displayResults = [];
+    checkedItems = new Map();
+    ruleOfList = [...ruleOfList];
+    await updateStockScreenerData();
     await handleSave(false);
   }
 
