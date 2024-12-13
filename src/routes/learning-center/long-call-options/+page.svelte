@@ -1,11 +1,65 @@
-<script lang 'ts'></script>
+<script>
+  import { numberOfUnreadNotification } from "$lib/store";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+  import Katex from "$lib/components/Katex.svelte";
+  //import Chart from '$lib/components/Chart.svelte';
+  //import greeks from "greeks";
+
+  export let data;
+
+  // Sample option contract parameters
+  /*
+const strikePrice = 100; // Strike price of the option
+const timeToExpiration = 30 / 365; // Time to expiration in years (30 days)
+const volatility = 0.25; // Volatility of the underlying asset
+const riskFreeRate = 0.001; // Risk-free interest rate
+
+// Generate sample underlying stock prices
+const underlyingPrices = Array.from({ length: 50 }, (_, i) => 80 + i); // Sample prices from 80 to 129
+
+let testList = [];
+for(const price of underlyingPrices) {
+    testList.push(greeks.getTheta(price, strikePrice,  timeToExpiration, volatility, riskFreeRate, "call"))
+}
+
+
+const options = {
+silent: true,
+animation: false,
+grid: {
+    left:'2%',
+    right: '2%',
+    bottom:'5%',
+    containLabel: true
+  },
+  xAxis: {
+    show: false, // Hide the xAxis
+    type: 'category',
+    data: underlyingPrices
+  },
+  yAxis: {
+    type: 'value',
+    splitLine: {
+      show: false,
+    },
+  },
+  series: [
+    {
+      data: testList,
+      showSymbol: false,
+      type: 'line'
+    }
+  ]
+};
+*/
+</script>
 
 <svelte:head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Long
-    Call Options · Stocknear</title
+    Call Options · stocknear</title
   >
   <meta
     name="description"
