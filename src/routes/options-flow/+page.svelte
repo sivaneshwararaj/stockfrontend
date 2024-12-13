@@ -430,7 +430,6 @@
   }
 
   async function handleValueInput(event, ruleName, index = null) {
-    console.log(ruleName);
     const newValue = event.target.value;
 
     if (ruleCondition[ruleName] === "between") {

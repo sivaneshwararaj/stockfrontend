@@ -2672,7 +2672,7 @@ const handleKeyDown = (event) => {
         </div>
 
         <div
-          class="sm:grid sm:grid-cols-2 sm:gap-x-2.5 lg:grid-cols-3 w-full mt-3 border-t border-b border-gray-600"
+          class="sm:grid sm:gap-x-2.5 md:grid-cols-2 lg:grid-cols-3 w-full mt-3 border-t border-b border-gray-600"
         >
           {#each displayRules as row (row?.rule)}
             <!--Start Added Rules-->
@@ -3421,7 +3421,7 @@ const handleKeyDown = (event) => {
 
 <!--Start Choose Rule Modal-->
 <input type="checkbox" id="ruleModal" class="modal-toggle" />
-<dialog id="ruleModal" class="modal p-2 sm:p-0">
+<dialog id="ruleModal" class="modal p-2 lg:p-0">
   <label
     id="ruleModal"
     for="ruleModal"
@@ -3652,35 +3652,37 @@ const handleKeyDown = (event) => {
 
 <input type="checkbox" id="mobileTooltip" class="modal-toggle" />
 
-<dialog id="mobileTooltip" class="modal modal-bottom sm:modal-middle">
+<dialog id="mobileTooltip" class="modal p-3">
   <label
     for="mobileTooltip"
-    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.5]"
+    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.8]"
   ></label>
 
   <!-- Desktop modal content -->
-  <div class="modal-box w-full bg-[#191919] flex flex-col items-center">
-    <div
-      class="mx-auto mb-8 h-1.5 w-20 flex-shrink-0 rounded-full bg-[#404040]"
-    />
+  <div
+    class="modal-box rounded-md border border-gray-600 w-full bg-secondary flex flex-col items-center"
+  >
     <div class="text-white mb-5 text-center">
       <h3 class="font-bold text-2xl mb-5">{tooltipTitle}</h3>
       <span class="text-white text-[1rem] font-normal"
         >{infoText?.text ?? "n/a"}</span
       >
       {#if infoText?.equation !== undefined}
-        <div class="w-5/6 m-auto mt-5 border-t border-gray-400"></div>
+        <div class="w-5/6 m-auto mt-5"></div>
         <div class="text-[1rem] w-full pt-3 pb-3 m-auto text-white">
           {infoText?.equation}
         </div>
       {/if}
     </div>
 
-    <label
-      for="mobileTooltip"
-      class="sm:hidden cursor-pointer px-7 py-2 mb-5 rounded-full bg-[#0DDE00] text-center text-black text-[1rem] font-normal"
-      >OK</label
-    >
+    <div class="border-t border-gray-600 mt-2 w-full">
+      <label
+        for="mobileTooltip"
+        class="mt-4 font-semibold text-white text-xl m-auto flex justify-center"
+      >
+        Close
+      </label>
+    </div>
   </div>
 </dialog>
 
