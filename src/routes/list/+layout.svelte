@@ -222,7 +222,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
-    Lists · stocknear</title
+    Lists · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -232,7 +232,7 @@
     content="Lists of stocks that share common characteristics. See companies ranked by market cap, employee count, sales or others."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Stock Lists · stocknear" />
+  <meta property="og:title" content="Stock Lists · Stocknear" />
   <meta
     property="og:description"
     content="Lists of stocks that share common characteristics. See companies ranked by market cap, employee count, sales or others."
@@ -242,7 +242,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stock Lists · stocknear" />
+  <meta name="twitter:title" content="Stock Lists · Stocknear" />
   <meta
     name="twitter:description"
     content="Lists of stocks that share common characteristics. See companies ranked by market cap, employee count, sales or others."

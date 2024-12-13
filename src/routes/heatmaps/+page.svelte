@@ -275,7 +275,7 @@ async function exportTreemap() {
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Market
-    Heatmaps · stocknear</title
+    Heatmaps · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -285,7 +285,7 @@ async function exportTreemap() {
     content="Stock Heatmaps of S&P500, Nasdaq and Dow Jones to see percentage changes of the return for different time periods"
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Market Heatmaps · stocknear" />
+  <meta property="og:title" content="Market Heatmaps · Stocknear" />
   <meta
     property="og:description"
     content="Stock Heatmaps of S&P500, Nasdaq and Dow Jones to see percentage changes of the return for different time periods"
@@ -295,7 +295,7 @@ async function exportTreemap() {
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Market Heatmaps · stocknear" />
+  <meta name="twitter:title" content="Market Heatmaps · Stocknear" />
   <meta
     name="twitter:description"
     content="Stock Heatmaps of S&P500, Nasdaq and Dow Jones to see percentage changes of the return for different time periods"

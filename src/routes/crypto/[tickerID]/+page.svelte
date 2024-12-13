@@ -626,7 +626,7 @@ afterUpdate(async () => {
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$cryptoTicker}) Stock Price, Quote & News · stocknear`}
+    content={`${$displayCompanyName} (${$cryptoTicker}) Stock Price, Quote & News · Stocknear`}
   />
   <meta
     property="og:description"
@@ -639,7 +639,7 @@ afterUpdate(async () => {
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$cryptoTicker}) Stock Price, Quote & News · stocknear`}
+    content={`${$displayCompanyName} (${$cryptoTicker}) Stock Price, Quote & News · Stocknear`}
   />
   <meta
     name="twitter:description"

@@ -404,7 +404,7 @@
   />
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Financials - Income Statement · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Financials - Income Statement · Stocknear`}
   />
   <meta
     property="og:description"
@@ -414,7 +414,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Financials - Income Statement · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Financials - Income Statement · Stocknear`}
   />
   <meta
     name="twitter:description"

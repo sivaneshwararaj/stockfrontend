@@ -69,7 +69,7 @@
 <!-- HEADER FOR BETTER SEO -->
 <svelte:head>
   <meta charset="utf-8" />
-  <title>Sign Up · stocknear</title>
+  <title>Sign Up · Stocknear</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta
     name="description"

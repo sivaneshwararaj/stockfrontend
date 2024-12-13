@@ -29,7 +29,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} FDA
-    Calendar · stocknear
+    Calendar · Stocknear
   </title>
   <meta
     name="description"
@@ -37,7 +37,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`FDA Calendar · stocknear`} />
+  <meta property="og:title" content={`FDA Calendar · Stocknear`} />
   <meta
     property="og:description"
     content={`FDA Approval to track success rates of Biotech companies in the stock market.`}
@@ -47,7 +47,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`FDA Tracker · stocknear`} />
+  <meta name="twitter:title" content={`FDA Tracker · Stocknear`} />
   <meta
     name="twitter:description"
     content={`FDA Approval to track success rates of Biotech companies in the stock market.`}

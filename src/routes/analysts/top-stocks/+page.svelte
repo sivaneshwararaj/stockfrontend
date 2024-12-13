@@ -30,7 +30,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
-    100 Strong Buy Stocks · stocknear
+    100 Strong Buy Stocks · Stocknear
   </title>
   <meta
     name="description"
@@ -38,7 +38,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Top 100 Strong Buy Stocks · stocknear`} />
+  <meta property="og:title" content={`Top 100 Strong Buy Stocks · Stocknear`} />
   <meta
     property="og:description"
     content={`The top 100 "Strong Buy" stocks according to the best performing Wall Street analysts, with a rating of 5 stars.`}
@@ -50,7 +50,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Top 100 Strong Buy Stocks · stocknear`}
+    content={`Top 100 Strong Buy Stocks · Stocknear`}
   />
   <meta
     name="twitter:description"

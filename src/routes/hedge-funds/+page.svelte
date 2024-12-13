@@ -81,7 +81,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} All
-    listed Hedge Funds · stocknear</title
+    listed Hedge Funds · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
@@ -91,7 +91,7 @@
     content="Find all listed Hedge Funds based on the US Market."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="All listed Hedge Funds · stocknear" />
+  <meta property="og:title" content="All listed Hedge Funds · Stocknear" />
   <meta
     property="og:description"
     content="Find all listed Hedge Funds based on the US Market."
@@ -101,7 +101,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="All listed Hedge Funds · stocknear" />
+  <meta name="twitter:title" content="All listed Hedge Funds · Stocknear" />
   <meta
     name="twitter:description"
     content="Find all listed Hedge Funds based on the US Market."

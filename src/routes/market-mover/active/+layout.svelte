@@ -38,7 +38,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Today's
-    Top Stock {title} · stocknear
+    Top Stock {title} · Stocknear
   </title>
   <meta
     name="description"
@@ -48,7 +48,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Today's Top Stock ${title} · stocknear`}
+    content={`Today's Top Stock ${title} · Stocknear`}
   />
   <meta
     property="og:description"
@@ -61,7 +61,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Today's Top Stock ${title} · stocknear`}
+    content={`Today's Top Stock ${title} · Stocknear`}
   />
   <meta
     name="twitter:description"

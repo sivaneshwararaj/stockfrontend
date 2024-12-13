@@ -24,7 +24,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Largest
-    ETF Providers by Assets Under Management · stocknear</title
+    ETF Providers by Assets Under Management · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -36,7 +36,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content="Largest ETF Providers by Assets Under Management · stocknear"
+    content="Largest ETF Providers by Assets Under Management · Stocknear"
   />
   <meta
     property="og:description"
@@ -49,7 +49,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content="Largest ETF Providers by Assets Under Management · stocknear"
+    content="Largest ETF Providers by Assets Under Management · Stocknear"
   />
   <meta
     name="twitter:description"

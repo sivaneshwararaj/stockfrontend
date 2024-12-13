@@ -93,7 +93,7 @@ updateYearRange()
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Statistics & Valuation Metrics · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Statistics & Valuation Metrics · Stocknear`}
   />
   <meta
     property="og:description"
@@ -106,7 +106,7 @@ updateYearRange()
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Statistics & Valuation Metrics · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Statistics & Valuation Metrics · Stocknear`}
   />
   <meta
     name="twitter:description"

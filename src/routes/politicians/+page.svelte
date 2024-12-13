@@ -145,7 +145,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} US
-    Politician Stock Trade Tracker · stocknear</title
+    Politician Stock Trade Tracker · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -157,7 +157,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content="US Politician Stock Trade Tracker · stocknear"
+    content="US Politician Stock Trade Tracker · Stocknear"
   />
   <meta
     property="og:description"
@@ -170,7 +170,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content="US Politician Stock Trade Tracker · stocknear"
+    content="US Politician Stock Trade Tracker · Stocknear"
   />
   <meta
     name="twitter:description"

@@ -108,7 +108,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Which
-    stocks is {name} trading? · stocknear
+    stocks is {name} trading? · Stocknear
   </title>
   <meta
     name="description"
@@ -118,7 +118,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Which stocks is ${name} trading? · stocknear`}
+    content={`Which stocks is ${name} trading? · Stocknear`}
   />
   <meta
     property="og:description"
@@ -131,7 +131,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Which stocks is ${name} trading? · stocknear`}
+    content={`Which stocks is ${name} trading? · Stocknear`}
   />
   <meta
     name="twitter:description"

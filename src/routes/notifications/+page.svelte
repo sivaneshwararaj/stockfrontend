@@ -60,14 +60,14 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Notifications
-    · stocknear</title
+    · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
   <meta name="description" content="Free Stock Analysis" />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Notifications · stocknear" />
+  <meta property="og:title" content="Notifications · Stocknear" />
   <meta property="og:description" content="Free Stock Analysis" />
   <meta
     property="og:image"
@@ -78,7 +78,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Notifications · stocknear" />
+  <meta name="twitter:title" content="Notifications · Stocknear" />
   <meta name="twitter:description" content="Free Stock Analysis" />
   <meta
     name="twitter:image"

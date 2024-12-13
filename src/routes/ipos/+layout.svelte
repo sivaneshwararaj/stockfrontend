@@ -49,7 +49,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} IPOs
-    Calendar · stocknear</title
+    Calendar · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -59,7 +59,7 @@
     content="A list of upcoming ipos on the US stock market."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="IPOs Calendar · stocknear" />
+  <meta property="og:title" content="IPOs Calendar · Stocknear" />
   <meta
     property="og:description"
     content="A list of upcoming ipos on the US stock market."
@@ -73,7 +73,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="IPOs Calendar · stocknear" />
+  <meta name="twitter:title" content="IPOs Calendar · Stocknear" />
   <meta
     name="twitter:description"
     content="A list of upcoming ipos on the US stock market."

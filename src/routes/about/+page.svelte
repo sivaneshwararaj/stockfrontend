@@ -23,7 +23,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} About
-    · stocknear</title
+    · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -33,7 +33,7 @@
     content="Welcome to Stocknear — a site that aims to be the internet's best source of free stock data and information for small investors."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="About · stocknear" />
+  <meta property="og:title" content="About · Stocknear" />
   <meta
     property="og:description"
     content="Welcome to Stocknear — a site that aims to be the internet's best source of free stock data and information for small investors."
@@ -43,7 +43,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="About · stocknear" />
+  <meta name="twitter:title" content="About · Stocknear" />
   <meta
     name="twitter:description"
     content="Welcome to Stocknear — a site that aims to be the internet's best source of free stock data and information for small investors."

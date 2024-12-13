@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} List
-    of All Crypto Ticker Symbols · stocknear
+    of All Crypto Ticker Symbols · Stocknear
   </title>
   <meta
     name="description"
@@ -28,7 +28,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`List of All Crypto Ticker Symbols · stocknear`}
+    content={`List of All Crypto Ticker Symbols · Stocknear`}
   />
   <meta
     property="og:description"
@@ -41,7 +41,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`List of All Crypto Ticker Symbols · stocknear`}
+    content={`List of All Crypto Ticker Symbols · Stocknear`}
   />
   <meta
     name="twitter:description"

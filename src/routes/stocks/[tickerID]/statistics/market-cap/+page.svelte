@@ -374,12 +374,12 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Market Cap & Net Worth · stocknear
+    {$displayCompanyName} ({$stockTicker}) Market Cap & Net Worth · Stocknear
   </title>
   <meta name="description" content={`Historical Market Cap of the company.`} />
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Market Cap & Net Worth · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Market Cap & Net Worth · Stocknear`}
   />
   <meta
     property="og:description"
@@ -389,7 +389,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Market Cap & Net Worth · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Market Cap & Net Worth · Stocknear`}
   />
   <meta
     name="twitter:description"

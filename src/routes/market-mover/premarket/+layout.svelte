@@ -22,7 +22,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    Premarket Top Stocks · stocknear
+    Premarket Top Stocks · Stocknear
   </title>
   <meta
     name="description"
@@ -32,7 +32,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Today's Premarket Top Stocks · stocknear`}
+    content={`Today's Premarket Top Stocks · Stocknear`}
   />
   <meta
     property="og:description"
@@ -45,7 +45,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Today's Premarket Top Stocks · stocknear`}
+    content={`Today's Premarket Top Stocks · Stocknear`}
   />
   <meta
     name="twitter:description"

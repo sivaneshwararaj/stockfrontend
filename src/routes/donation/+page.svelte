@@ -18,7 +18,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`sponsor · stocknear`} />
+  <meta property="og:title" content={`sponsor · Stocknear`} />
   <meta
     property="og:description"
     content={`Your sponsor helps us to become the number 1 stock analysis platform in the world with the best price plans.`}
@@ -28,7 +28,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`sponsor · stocknear`} />
+  <meta name="twitter:title" content={`sponsor · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Your sponsor helps us to become the number 1 stock analysis platform in the world with the best price plans.`}

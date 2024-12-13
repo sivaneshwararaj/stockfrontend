@@ -81,7 +81,7 @@
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
     {$displayCompanyName} ({$stockTicker}) · Q{quarter}
-    {year} · Earnings Call Transcript · stocknear
+    {year} · Earnings Call Transcript · Stocknear
   </title>
   <meta
     name="description"
@@ -91,7 +91,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) · Q${quarter} ${year} · Earnings Call Transcript · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) · Q${quarter} ${year} · Earnings Call Transcript · Stocknear`}
   />
   <meta
     property="og:description"
@@ -104,7 +104,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) · Q${quarter} ${year} · Earnings Call Transcript · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) · Q${quarter} ${year} · Earnings Call Transcript · Stocknear`}
   />
   <meta
     name="twitter:description"

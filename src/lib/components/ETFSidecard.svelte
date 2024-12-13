@@ -11,12 +11,10 @@
   let topHoldingList = [];
   let description = "";
   let website = "-";
-  let snippet;
 
   let ipoDate = "n/a";
   let assetClass = "-";
   let provider = "-";
-  let showFullText = false;
   let totalAssetPercentage = 0;
 
   let dividendHistoryList = [];
@@ -56,7 +54,6 @@
         info?.description ??
         "A detailed description of the company is not yet available.";
       website = info?.website;
-      snippet = description?.slice(0, 450) + "...";
 
       totalAssetPercentage = topHoldingList
         ?.slice(0, 5)
@@ -71,26 +68,8 @@
     About {$etfTicker}
   </h2>
   <p class="text-gray-200">
-    {#if showFullText}
-      {description}
-    {:else}
-      {snippet}
-    {/if}
+    {description}
   </p>
-  {#if description.length !== 0}
-    <div class="inline-block">
-      <label
-        on:click={() => (showFullText = !showFullText)}
-        class="w-full text-md mt-1 cursor-pointer font-medium sm:hover:text-white text-blue-400 sm:hover:underline"
-      >
-        {#if showFullText}
-          [Show less]
-        {:else}
-          [Show more]
-        {/if}
-      </label>
-    </div>
-  {/if}
 
   <div
     class="mt-3 grid grid-cols-2 gap-3 w-full border-b border-gray-600 lg:border-none pb-8 lg:pb-0"

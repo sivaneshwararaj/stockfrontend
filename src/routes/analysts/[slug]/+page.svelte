@@ -172,7 +172,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
-    Wall Street Stock Analysts · stocknear
+    Wall Street Stock Analysts · Stocknear
   </title>
   <meta
     name="description"
@@ -182,7 +182,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Top Wall Street Stock Analysts · stocknear`}
+    content={`Top Wall Street Stock Analysts · Stocknear`}
   />
   <meta
     property="og:description"
@@ -195,7 +195,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Top Wall Street Stock Analysts · stocknear`}
+    content={`Top Wall Street Stock Analysts · Stocknear`}
   />
   <meta
     name="twitter:description"

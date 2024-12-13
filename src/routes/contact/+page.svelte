@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Contact
-    Us · stocknear
+    Us · Stocknear
   </title>
   <meta
     name="description"
@@ -20,7 +20,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Contact Us · stocknear`} />
+  <meta property="og:title" content={`Contact Us · Stocknear`} />
   <meta
     property="og:description"
     content={`Need help, found a bug or you have a feature request. Please contact us to resolve any issues.`}
@@ -30,7 +30,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Contact Us · stocknear`} />
+  <meta name="twitter:title" content={`Contact Us · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Need help, found a bug or you have a feature request. Please contact us to resolve any issues.`}

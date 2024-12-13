@@ -2332,7 +2332,7 @@ const handleKeyDown = (event) => {
   />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
-    Screener · stocknear
+    Screener · Stocknear
   </title>
 
   <meta
@@ -2340,7 +2340,7 @@ const handleKeyDown = (event) => {
     content={`Build your Stock Screener to find profitable stocks.`}
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Stock Screener · stocknear`} />
+  <meta property="og:title" content={`Stock Screener · Stocknear`} />
   <meta
     property="og:description"
     content={`Build your Stock Screener to find profitable stocks.`}
@@ -2350,7 +2350,7 @@ const handleKeyDown = (event) => {
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Stock Screener · stocknear`} />
+  <meta name="twitter:title" content={`Stock Screener · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Build your Stock Screener to find profitable stocks.`}

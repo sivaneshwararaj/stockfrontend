@@ -74,7 +74,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Sign
-    In · stocknear</title
+    In · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -84,7 +84,7 @@
     content="Sign In to to improve your stock analysis for free"
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Sign In · stocknear" />
+  <meta property="og:title" content="Sign In · Stocknear" />
   <meta
     property="og:description"
     content="Sign In to to improve your stock analysis for free"
@@ -94,7 +94,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Sign In · stocknear" />
+  <meta name="twitter:title" content="Sign In · Stocknear" />
   <meta
     name="twitter:description"
     content="Sign In to to improve your stock analysis for free"

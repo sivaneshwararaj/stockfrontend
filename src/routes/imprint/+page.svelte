@@ -8,7 +8,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Imprint
-    · stocknear</title
+    · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -18,7 +18,7 @@
     content="Imprint of Stocknear. Contact Information if you need help."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Imprint · stocknear" />
+  <meta property="og:title" content="Imprint · Stocknear" />
   <meta
     property="og:description"
     content="Imprint of Stocknear. Contact Information if you need help."
@@ -28,7 +28,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Imprint · stocknear" />
+  <meta name="twitter:title" content="Imprint · Stocknear" />
   <meta
     name="twitter:description"
     content="Imprint of Stocknear. Contact Information if you need help."

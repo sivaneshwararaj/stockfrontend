@@ -795,7 +795,7 @@ function sendMessage(message) {
 
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Options
-    Flow Feed · stocknear
+    Flow Feed · Stocknear
   </title>
   <meta
     name="description"
@@ -803,7 +803,7 @@ function sendMessage(message) {
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Options Flow Feed · stocknear`} />
+  <meta property="og:title" content={`Options Flow Feed · Stocknear`} />
   <meta
     property="og:description"
     content={`Explore unusual options from big institutional traders and hedge funds.`}
@@ -813,7 +813,7 @@ function sendMessage(message) {
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Options Flow Feed · stocknear`} />
+  <meta name="twitter:title" content={`Options Flow Feed · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Explore unusual options from big institutional traders and hedge funds.`}

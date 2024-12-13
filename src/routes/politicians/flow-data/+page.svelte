@@ -63,7 +63,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Latest
-    Congressional Trading · stocknear</title
+    Congressional Trading · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -75,7 +75,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content="Latest Congressional Trading · stocknear"
+    content="Latest Congressional Trading · Stocknear"
   />
   <meta
     property="og:description"
@@ -88,7 +88,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content="Latest Congressional Trading · stocknear"
+    content="Latest Congressional Trading · Stocknear"
   />
   <meta
     name="twitter:description"

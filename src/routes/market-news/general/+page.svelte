@@ -74,7 +74,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Today's
-    General News and Breaking Stories · stocknear
+    General News and Breaking Stories · Stocknear
   </title>
   <meta
     name="description"
@@ -84,7 +84,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Today's General News and Breaking Stories · stocknear`}
+    content={`Today's General News and Breaking Stories · Stocknear`}
   />
   <meta
     property="og:description"
@@ -97,7 +97,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Today's General News and Breaking Stories · stocknear`}
+    content={`Today's General News and Breaking Stories · Stocknear`}
   />
   <meta
     name="twitter:description"

@@ -1000,7 +1000,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
-    Watchlist · stocknear</title
+    Watchlist · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -1010,7 +1010,7 @@
     content="A stock watchlist tracker tool. Add stocks and ETFs to keep track of their performance."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Stock Watchlist · stocknear" />
+  <meta property="og:title" content="Stock Watchlist · Stocknear" />
   <meta
     property="og:description"
     content="A stock watchlist tracker tool. Add stocks and ETFs to keep track of their performance."
@@ -1020,7 +1020,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stock Watchlist · stocknear" />
+  <meta name="twitter:title" content="Stock Watchlist · Stocknear" />
   <meta
     name="twitter:description"
     content="A stock watchlist tracker tool. Add stocks and ETFs to keep track of their performance."

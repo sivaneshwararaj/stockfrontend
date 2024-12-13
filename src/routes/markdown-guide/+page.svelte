@@ -5,7 +5,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Markdown
-    Guide · stocknear</title
+    Guide · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -15,7 +15,7 @@
     content="Markdown Guide to Post on Stocknear Community Page"
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Markdown Guide · stocknear" />
+  <meta property="og:title" content="Markdown Guide · Stocknear" />
   <meta
     property="og:description"
     content="Markdown Guide to Post on Stocknear Community Page"
@@ -25,7 +25,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Markdown Guide · stocknear" />
+  <meta name="twitter:title" content="Markdown Guide · Stocknear" />
   <meta
     name="twitter:description"
     content="Markdown Guide to Post on Stocknear Community Page"

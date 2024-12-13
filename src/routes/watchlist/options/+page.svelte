@@ -138,7 +138,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Options
-    Watchlist · stocknear</title
+    Watchlist · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -148,7 +148,7 @@
     content="A option watchlist tracker tool. Add stocks and ETFs to keep track of their performance."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Options Watchlist · stocknear" />
+  <meta property="og:title" content="Options Watchlist · Stocknear" />
   <meta
     property="og:description"
     content="A option watchlist tracker tool. Add stocks and ETFs to keep track of their performance."
@@ -158,7 +158,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Options Watchlist · stocknear" />
+  <meta name="twitter:title" content="Options Watchlist · Stocknear" />
   <meta
     name="twitter:description"
     content="A option watchlist tracker tool. Add stocks and ETFs to keep track of their performance."

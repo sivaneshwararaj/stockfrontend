@@ -8,19 +8,19 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Changelog
-    · stocknear</title
+    · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content="Changelog · stocknear" />
+  <meta property="og:title" content="Changelog · Stocknear" />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Changelog · stocknear" />
+  <meta name="twitter:title" content="Changelog · Stocknear" />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 

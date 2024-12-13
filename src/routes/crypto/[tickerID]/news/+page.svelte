@@ -67,7 +67,7 @@
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
     {$displayCompanyName} ({$cryptoTicker}) latest Stock Market News and
-    Breaking Stories · stocknear
+    Breaking Stories · Stocknear
   </title>
   <meta
     name="description"
@@ -77,7 +77,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$cryptoTicker}) latest Stock Market News and Breaking Stories · stocknear`}
+    content={`${$displayCompanyName} (${$cryptoTicker}) latest Stock Market News and Breaking Stories · Stocknear`}
   />
   <meta
     property="og:description"
@@ -90,7 +90,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$cryptoTicker}) latest Stock Market News and Breaking Stories · stocknear`}
+    content={`${$displayCompanyName} (${$cryptoTicker}) latest Stock Market News and Breaking Stories · Stocknear`}
   />
   <meta
     name="twitter:description"

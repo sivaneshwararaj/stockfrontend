@@ -154,19 +154,19 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Revenue Breakdown · stocknear
+    {$displayCompanyName} ({$stockTicker}) Revenue Breakdown · Stocknear
   </title>
   <meta name="description" content={`Revenue & Geographic Breakdown`} />
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Revenue Breakdown · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Revenue Breakdown · Stocknear`}
   />
   <meta property="og:description" content={`Revenue & Geographic Breakdown`} />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Revenue Breakdown · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Revenue Breakdown · Stocknear`}
   />
   <meta name="twitter:description" content={`Revenue & Geographic Breakdown`} />
 </svelte:head>

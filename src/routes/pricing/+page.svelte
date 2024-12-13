@@ -79,7 +79,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Pricing
-    · stocknear
+    · Stocknear
   </title>
   <meta
     name="description"
@@ -87,7 +87,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Pricing · stocknear`} />
+  <meta property="og:title" content={`Pricing · Stocknear`} />
   <meta
     property="og:description"
     content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}
@@ -97,7 +97,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Pricing · stocknear`} />
+  <meta name="twitter:title" content={`Pricing · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}

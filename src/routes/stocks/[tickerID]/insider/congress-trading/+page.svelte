@@ -121,7 +121,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) US Congress & Senate Trading · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) US Congress & Senate Trading · Stocknear`}
   />
   <meta
     property="og:description"
@@ -134,7 +134,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) US Congress & Senate Trading · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) US Congress & Senate Trading · Stocknear`}
   />
   <meta
     name="twitter:description"

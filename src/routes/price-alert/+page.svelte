@@ -263,7 +263,7 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Price
-    Alert · stocknear</title
+    Alert · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
@@ -273,7 +273,7 @@
     content="Set a price alert and get instant notification."
   />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Price Alert · stocknear" />
+  <meta property="og:title" content="Price Alert · Stocknear" />
   <meta
     property="og:description"
     content="Set a price alert and get instant notification."
@@ -283,7 +283,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Price Alert · stocknear" />
+  <meta name="twitter:title" content="Price Alert · Stocknear" />
   <meta
     name="twitter:description"
     content="Set a price alert and get instant notification."

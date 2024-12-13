@@ -261,7 +261,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Wallstreetbets
-    Tracker · stocknear
+    Tracker · Stocknear
   </title>
   <meta
     name="description"
@@ -269,7 +269,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Wallstreetbets Tracker · stocknear`} />
+  <meta property="og:title" content={`Wallstreetbets Tracker · Stocknear`} />
   <meta
     property="og:description"
     content={`Track the stocks and discussion of Wallstreetbets in realtime.`}
@@ -279,7 +279,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Wallstreetbets Tracker · stocknear`} />
+  <meta name="twitter:title" content={`Wallstreetbets Tracker · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Track the stocks and discussion of Wallstreetbets in realtime.`}

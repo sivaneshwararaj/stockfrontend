@@ -349,7 +349,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Number of Employees · stocknear
+    {$displayCompanyName} ({$stockTicker}) Number of Employees · Stocknear
   </title>
   <meta
     name="description"
@@ -359,7 +359,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees · Stocknear`}
   />
   <meta
     property="og:description"
@@ -372,7 +372,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees · Stocknear`}
   />
   <meta
     name="twitter:description"

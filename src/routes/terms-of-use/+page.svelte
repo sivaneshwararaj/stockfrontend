@@ -7,19 +7,19 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Terms
-    of Use · stocknear</title
+    of Use · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content="Terms of Use · stocknear" />
+  <meta property="og:title" content="Terms of Use · Stocknear" />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Terms of Use · stocknear" />
+  <meta name="twitter:title" content="Terms of Use · Stocknear" />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 

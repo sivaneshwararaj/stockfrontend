@@ -62,7 +62,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Business Metric Overview · stocknear
+    {$displayCompanyName} ({$stockTicker}) Business Metric Overview · Stocknear
   </title>
   <meta
     name="description"
@@ -70,7 +70,7 @@
   />
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Business Metric Overview · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Business Metric Overview · Stocknear`}
   />
   <meta
     property="og:description"
@@ -80,7 +80,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Business Metric Overview · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Business Metric Overview · Stocknear`}
   />
   <meta
     name="twitter:description"

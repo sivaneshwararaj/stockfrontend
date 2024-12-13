@@ -130,7 +130,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Dividend History, Dates & Yield · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Dividend History, Dates & Yield · Stocknear`}
   />
   <meta
     property="og:description"
@@ -143,7 +143,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Dividend History, Dates & Yield · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Dividend History, Dates & Yield · Stocknear`}
   />
   <meta
     name="twitter:description"

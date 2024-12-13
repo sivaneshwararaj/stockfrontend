@@ -365,7 +365,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Financial Ratios and Metrics · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Financial Ratios and Metrics · Stocknear`}
   />
   <meta
     property="og:description"
@@ -378,7 +378,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Financial Ratios and Metrics · stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Financial Ratios and Metrics · Stocknear`}
   />
   <meta
     name="twitter:description"

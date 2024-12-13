@@ -623,7 +623,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} US
-    Economic Indicator · stocknear
+    Economic Indicator · Stocknear
   </title>
   <meta
     name="description"
@@ -631,7 +631,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`US Economic Indicator · stocknear`} />
+  <meta property="og:title" content={`US Economic Indicator · Stocknear`} />
   <meta
     property="og:description"
     content={`Economic indicators measure economic performance and identify growth trends.`}
@@ -641,7 +641,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`US Economic Indicator · stocknear`} />
+  <meta name="twitter:title" content={`US Economic Indicator · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Economic indicators measure economic performance and identify growth trends.`}

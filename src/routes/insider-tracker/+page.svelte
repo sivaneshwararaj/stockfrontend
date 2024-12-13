@@ -136,7 +136,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Insider
-    Tracker · stocknear
+    Tracker · Stocknear
   </title>
   <meta
     name="description"
@@ -144,7 +144,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Insider Tracker · stocknear`} />
+  <meta property="og:title" content={`Insider Tracker · Stocknear`} />
   <meta
     property="og:description"
     content={`Stay ahead of the market with our real-time insider tracking page.`}
@@ -154,7 +154,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Insider Tracker · stocknear`} />
+  <meta name="twitter:title" content={`Insider Tracker · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Stay ahead of the market with our real-time insider tracking page.`}

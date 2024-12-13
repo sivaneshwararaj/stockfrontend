@@ -141,20 +141,20 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    My Account · stocknear</title
+    My Account · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content="My Account · stocknear" />
+  <meta property="og:title" content="My Account · Stocknear" />
 
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="My Account · stocknear" />
+  <meta name="twitter:title" content="My Account · Stocknear" />
 
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>

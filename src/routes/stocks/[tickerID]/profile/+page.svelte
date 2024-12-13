@@ -119,18 +119,18 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Dividend History, Dates & Yield ·
-    stocknear
+    {$displayCompanyName} ({$stockTicker}) Company Profile & Overview -
+    Stocknear
   </title>
 
   <meta
     name="description"
-    content={`Get the latest dividend data for ${$displayCompanyName} (${$stockTicker}) stock price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Company profile for ${$displayCompanyName} (${$stockTicker}) with a description, list of executives, contact details and other key facts.`}
   />
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Dividend History, Dates & Yield · Stocknear`}
+    content={`{$displayCompanyName} ({$stockTicker}) Company Profile & Overview · Stocknear`}
   />
   <meta
     property="og:description"
@@ -143,11 +143,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Dividend History, Dates & Yield · Stocknear`}
+    content={`{$displayCompanyName} ({$stockTicker}) Company Profile & Overview · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Get the latest dividend data for ${$displayCompanyName} (${$stockTicker}) stock price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Company profile for ${$displayCompanyName} (${$stockTicker}) with a description, list of executives, contact details and other key facts.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>

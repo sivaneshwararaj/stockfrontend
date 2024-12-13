@@ -307,7 +307,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Dividends
-    Calendar · stocknear
+    Calendar · Stocknear
   </title>
   <meta
     name="description"
@@ -315,7 +315,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Dividends Calendar · stocknear`} />
+  <meta property="og:title" content={`Dividends Calendar · Stocknear`} />
   <meta
     property="og:description"
     content={`A list of upcoming dividends on the US stock market, with dates, times and estimated revenue and dividends growth.`}
@@ -325,7 +325,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Dividends Calendar · stocknear`} />
+  <meta name="twitter:title" content={`Dividends Calendar · Stocknear`} />
   <meta
     name="twitter:description"
     content={`A list of upcoming dividends on the US stock market, with dates, times and estimated revenue and dividends growth.`}

@@ -124,7 +124,7 @@
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
     {etfProviderData?.length}
-    {etfProviderName} ETFs - A Complete List · stocknear
+    {etfProviderName} ETFs - A Complete List · Stocknear
   </title>
   <meta name="description" content={``} />
 

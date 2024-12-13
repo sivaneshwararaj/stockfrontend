@@ -39,7 +39,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Holdings List · stocknear
+    {$displayCompanyName} ({$etfTicker}) Holdings List · Stocknear
   </title>
   <meta
     name="description"
@@ -49,7 +49,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Holdings List · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Holdings List · Stocknear`}
   />
   <meta
     property="og:description"
@@ -62,7 +62,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Holdings List · stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Holdings List · Stocknear`}
   />
   <meta
     name="twitter:description"

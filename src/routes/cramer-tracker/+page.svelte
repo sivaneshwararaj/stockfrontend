@@ -172,7 +172,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Jim
-    Carmer Tracker · stocknear
+    Carmer Tracker · Stocknear
   </title>
   <meta
     name="description"
@@ -180,7 +180,7 @@
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Jim Carmer Tracker · stocknear`} />
+  <meta property="og:title" content={`Jim Carmer Tracker · Stocknear`} />
   <meta
     property="og:description"
     content={`Track the stock recommendations and performance of CNBC's Jim Cramer`}
@@ -190,7 +190,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Jim Carmer Tracker · stocknear`} />
+  <meta name="twitter:title" content={`Jim Carmer Tracker · Stocknear`} />
   <meta
     name="twitter:description"
     content={`Track the stock recommendations and performance of CNBC's Jim Cramer`}

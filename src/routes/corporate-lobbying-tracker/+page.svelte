@@ -122,7 +122,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Latest
-    Lobbiyng Disclosure Tracker · stocknear
+    Lobbiyng Disclosure Tracker · Stocknear
   </title>
   <meta
     name="description"
@@ -132,7 +132,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Latest Lobbiyng Disclosure Tracker · stocknear`}
+    content={`Latest Lobbiyng Disclosure Tracker · Stocknear`}
   />
   <meta
     property="og:description"
@@ -145,7 +145,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Latest Lobbiyng Disclosure Tracker · stocknear`}
+    content={`Latest Lobbiyng Disclosure Tracker · Stocknear`}
   />
   <meta
     name="twitter:description"

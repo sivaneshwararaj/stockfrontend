@@ -35,14 +35,14 @@
 <svelte:head>
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Industry
-    · stocknear</title
+    · Stocknear</title
   >
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
   <meta name="description" content="Lists of stocks industry and sectors." />
   <!-- Other meta tags -->
-  <meta property="og:title" content="Industry · stocknear" />
+  <meta property="og:title" content="Industry · Stocknear" />
   <meta
     property="og:description"
     content="Lists of stocks industry and sectors."
@@ -52,7 +52,7 @@
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Industry · stocknear" />
+  <meta name="twitter:title" content="Industry · Stocknear" />
   <meta
     name="twitter:description"
     content="Lists of stocks industry and sectors."

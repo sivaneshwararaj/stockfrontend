@@ -370,16 +370,20 @@
                     >
                       <svg
                         class="w-6 h-6 inline-block"
+                        viewBox="0 0 24 24"
+                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                        ><path
-                          fill="none"
-                          stroke="white"
+                        stroke="#fff"
+                        ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                          id="SVGRepo_tracerCarrier"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          stroke-width="32"
-                          d="M336 192h40a40 40 0 0 1 40 40v192a40 40 0 0 1-40 40H136a40 40 0 0 1-40-40V232a40 40 0 0 1 40-40h40m160-64l-80-80l-80 80m80 193V48"
-                        /></svg
+                        ></g><g id="SVGRepo_iconCarrier">
+                          <path
+                            d="M20.3359 3.22136L3.87333 8.70889C3.56801 8.81066 3.55033 9.23586 3.84614 9.36263L9.89655 11.9557C9.96078 11.9832 10.0347 11.9752 10.0916 11.9346L16.0235 7.69749C16.2073 7.56618 16.4338 7.79266 16.3025 7.97648L12.0654 13.9084C12.0248 13.9653 12.0168 14.0392 12.0443 14.1034L14.6374 20.1539C14.7641 20.4497 15.1893 20.432 15.2911 20.1267L20.7786 3.66408C20.8698 3.39046 20.6095 3.13015 20.3359 3.22136Z"
+                            fill="#fff"
+                          ></path>
+                        </g></svg
                       >
                     </label>
                     <!--End Share Button-->
