@@ -484,16 +484,6 @@
     }
   }
 
-  /*
-function sendMessage(message) {
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.send(message);
-  } else {
-    console.error("WebSocket is not open. Unable to send message.");
-  }
-}
-*/
-
   async function websocketRealtimeData() {
     newData = [];
     try {
@@ -509,7 +499,8 @@ function sendMessage(message) {
         const totalVolume = displayCallVolume + displayPutVolume;
         if (mode === true) {
           try {
-            newData = JSON.parse(event.data) ?? [];
+            newData = JSON?.parse(event.data) ?? [];
+            console.log(newData?.length);
             if (newData?.length > 0) {
               newData?.forEach((item) => {
                 item.dte = daysLeft(item?.date_expiration);
@@ -546,8 +537,15 @@ function sendMessage(message) {
 
       socket.addEventListener("close", (event) => {
         console.log("WebSocket connection closed:", event.reason);
-        // Handle disconnection, you might want to attempt to reconnect here
-        setTimeout(() => websocketRealtimeData(), 1000); // Attempt to reconnect after 5 seconds
+
+        // Explicitly nullify the socket and remove all event listeners
+        if (socket) {
+          socket.onmessage = null;
+          socket.onopen = null;
+          socket.onclose = null;
+          socket.onerror = null;
+          socket = null;
+        }
       });
 
       socket.addEventListener("error", (error) => {
@@ -557,7 +555,7 @@ function sendMessage(message) {
     } catch (error) {
       console.error("WebSocket connection error:", error);
       // Handle connection errors here
-      setTimeout(() => websocketRealtimeData(), 1000); // Attempt to reconnect after 5 seconds
+      setTimeout(() => websocketRealtimeData(), 400);
     }
   }
 
@@ -626,11 +624,9 @@ function sendMessage(message) {
   });
 
   onDestroy(async () => {
-    try {
-      //socket?.send('close')
-      socket?.close();
-    } catch (e) {
-      console.log(e);
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.close();
+      console.log("WebSocket connection closed safely.");
     }
     if (audio) {
       audio?.pause();
