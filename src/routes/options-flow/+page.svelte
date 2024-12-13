@@ -1,7 +1,12 @@
 <script lang="ts">
-  import { numberOfUnreadNotification, isOpen } from "$lib/store";
   import notifySound from "$lib/audio/options-flow-reader.mp3";
-  //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
+  import {
+    numberOfUnreadNotification,
+    getCache,
+    setCache,
+    isOpen,
+  } from "$lib/store";
+
   import { cn } from "$lib/utils";
   import { onMount, onDestroy } from "svelte";
   import toast from "svelte-french-toast";
@@ -11,6 +16,8 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { Calendar } from "$lib/components/shadcn/calendar/index.js";
   import CalendarIcon from "lucide-svelte/icons/calendar";
+  import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+
   import { page } from "$app/stores";
 
   import OptionsFlowTable from "$lib/components/Table/OptionsFlowTable.svelte";
@@ -40,6 +47,8 @@
     year: "numeric",
   });
   let selectedDate: DateValue | undefined = undefined;
+  let infoText = {};
+  let tooltipTitle;
 
   const allRules = {
     size: {
@@ -326,8 +335,27 @@
     return checkedItems.has(item);
   }
 
-  // Utility function to convert values to comparable numbers
-  // Utility function to convert values to comparable numbers
+  async function getInfoText(parameter, title) {
+    tooltipTitle = title;
+    console.log(parameter);
+    const cachedData = getCache(parameter, "getInfoText");
+    if (cachedData) {
+      infoText = cachedData;
+    } else {
+      const postData = { parameter };
+      const response = await fetch("/api/info-text", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      infoText = await response.json();
+      setCache(parameter, infoText, "getInfoText");
+    }
+  }
+
   function parseValue(val) {
     if (typeof val === "string") {
       // Handle percentage values
@@ -1066,16 +1094,96 @@
           </div>
 
           <div
-            class="sm:grid sm:grid-cols-2 sm:gap-x-2.5 lg:grid-cols-3 w-full mt-2 border-t border-b border-gray-600"
+            class="sm:grid sm:gap-x-2.5 md:grid-cols-2 lg:grid-cols-3 w-full mt-3 border-t border-b border-gray-600"
           >
             {#each displayRules as row (row?.rule)}
               <!--Start Added Rules-->
               <div
                 class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default"
               >
-                <div class="text-white text-[1rem]">
-                  {row?.label?.replace("[%]", "")}
+                <div class="text-white text-[1rem] relative">
+                  <span class=""
+                    >{row?.label?.length > 20
+                      ? row?.label?.slice(0, 20)?.replace("[%]", "") + "..."
+                      : row?.label?.replace("[%]", "")}</span
+                  >
+                  <div class="sm:hidden relative inline-block">
+                    <label
+                      for="mobileTooltip"
+                      on:click={() =>
+                        getInfoText(row?.rule, row?.label?.replace("[%]", ""))}
+                      class="relative"
+                      role="tooltip"
+                    >
+                      <span
+                        class="absolute -right-[15px] -top-[3px] cursor-pointer p-1 text-gray-300 sm:hover:text-white"
+                      >
+                        <svg
+                          class="h-[10.5px] w-[10.5px]"
+                          viewBox="0 0 4 16"
+                          fill="currentColor"
+                          style="max-width:20px"
+                          ><path
+                            d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
+                          ></path></svg
+                        >
+                      </span>
+                    </label>
+                  </div>
+                  <div class="hidden sm:inline-block">
+                    <HoverCard.Root>
+                      <HoverCard.Trigger
+                        class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
+                      >
+                        <label
+                          on:mouseover={() =>
+                            getInfoText(
+                              row?.rule,
+                              row?.label?.replace("[%]", ""),
+                            )}
+                          class="relative"
+                          role="tooltip"
+                        >
+                          <span
+                            class="absolute -right-[15px] -top-[3px] cursor-pointer p-1 text-gray-300 sm:hover:text-white"
+                          >
+                            <svg
+                              class="h-[10.5px] w-[10.5px]"
+                              viewBox="0 0 4 16"
+                              fill="currentColor"
+                              style="max-width:20px"
+                              ><path
+                                d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
+                              ></path></svg
+                            >
+                          </span>
+                        </label>
+                      </HoverCard.Trigger>
+                      <HoverCard.Content class="w-96">
+                        <div class="flex justify-between space-x-4 w-full">
+                          <div class="space-y-1 w-full">
+                            <h4
+                              class="text-lg font-semibold pb-1 border-b border-gray-400"
+                            >
+                              {row?.label?.replace("[%]", "")}
+                            </h4>
+                            <div class="text-sm w-full pt-2 text-black">
+                              {infoText?.text ?? "n/a"}
+                            </div>
+                            {#if infoText?.equation !== undefined}
+                              <div
+                                class="text-sm w-full pt-2 text-black border-t border-gray-400"
+                              >
+                                {infoText?.equation}
+                              </div>
+                            {/if}
+                          </div>
+                        </div>
+                      </HoverCard.Content>
+                    </HoverCard.Root>
+                  </div>
                 </div>
+
                 <div class="flex items-center">
                   <button
                     on:click={() => handleDeleteRule(row?.rule)}
@@ -1786,3 +1894,39 @@
 <!--End Choose Rule Modal-->
 
 <!--Start Options Detail Desktop Modal-->
+
+<input type="checkbox" id="mobileTooltip" class="modal-toggle" />
+
+<dialog id="mobileTooltip" class="modal p-3">
+  <label
+    for="mobileTooltip"
+    class="cursor-pointer modal-backdrop bg-[#000] bg-opacity-[0.8]"
+  ></label>
+
+  <!-- Desktop modal content -->
+  <div
+    class="modal-box rounded-md border border-gray-600 w-full bg-secondary flex flex-col items-center"
+  >
+    <div class="text-white mb-5 text-center">
+      <h3 class="font-bold text-2xl mb-5">{tooltipTitle}</h3>
+      <span class="text-white text-[1rem] font-normal"
+        >{infoText?.text ?? "n/a"}</span
+      >
+      {#if infoText?.equation !== undefined}
+        <div class="w-5/6 m-auto mt-5"></div>
+        <div class="text-[1rem] w-full pt-3 pb-3 m-auto text-white">
+          {infoText?.equation}
+        </div>
+      {/if}
+    </div>
+
+    <div class="border-t border-gray-600 mt-2 w-full">
+      <label
+        for="mobileTooltip"
+        class="mt-4 font-semibold text-white text-xl m-auto flex justify-center"
+      >
+        Close
+      </label>
+    </div>
+  </div>
+</dialog>

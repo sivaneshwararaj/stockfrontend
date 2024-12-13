@@ -19,6 +19,8 @@ type FlyAndScaleParams = {
 };
 
 
+
+
 export function isPWAInstalled() {
   try {
       // For iOS (Safari)
