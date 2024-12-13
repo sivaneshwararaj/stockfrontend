@@ -4,11 +4,42 @@
     displayCompanyName,
     numberOfUnreadNotification,
   } from "$lib/store";
+  import { sectorNavigation } from "$lib/utils";
 
   export let data;
 
-  const similarStocks = data?.getSimilarStocks?.sort(
-    (a, b) => b?.dividendYield - a?.dividendYield,
+  const rawData = data?.getData;
+
+  function getIndustryHref(industryName) {
+    // Replace spaces with hyphens
+    let formattedName = industryName?.replace(/ /g, "-");
+    // Replace "&" with "and"
+    formattedName = formattedName?.replace(/&/g, "and");
+    // Remove any extra hyphens (e.g., from consecutive spaces)
+    formattedName = formattedName?.replace(/-{2,}/g, "-");
+    // Convert to lowercase for consistency
+    return "/list/industry/" + formattedName?.toLowerCase();
+  }
+
+  function textToParagraphs(text) {
+    // Split the text into sentences
+    const sentences = text.split(
+      /(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.)\s+(?=[A-Z])/,
+    );
+
+    // Wrap sentences in paragraphs
+    const paragraphs = sentences.map(
+      (sentence) => `<p class="mb-5">${sentence.trim()}</p>`,
+    );
+
+    // Wrap paragraphs in a div with additional classes
+    return `<div class="mb-5 md:text-lg [&>p]:mb-5">
+${paragraphs.join("\n")}
+</div>`;
+  }
+
+  const formattedText = textToParagraphs(
+    rawData?.description || "No Company description available at the moment.",
   );
 </script>
 
@@ -59,48 +90,13 @@
         class="relative flex flex-row justify-center items-start overflow-hidden w-full"
       >
         <div class="sm:p-7 w-full mt-2 sm:mt-0">
-          <div class="lg:float-left lg:w-[calc(100%-336px-40px)]">
+          <div class="lg:float-left lg:w-[calc(100%-336px-20px)]">
             <h1 class="text-xl sm:text-2xl font-bold mb-4 w-full">
               Company Description
             </h1>
-            <div class="mb-5 text-base md:text-lg [&amp;>p]:mb-5">
-              <p class="mb-5">
-                The Coca-Cola Company, a beverage company, manufactures,
-                markets, and sells various nonalcoholic beverages worldwide.
-              </p>
-              <p class="mb-5">
-                The company provides sparkling soft drinks, sparkling flavors;
-                water, sports, coffee, and tea; juice, value-added dairy, and
-                plant-based beverages; and other beverages.
-              </p>
-              <p class="mb-5">
-                It also offers beverage concentrates and syrups, as well as
-                fountain syrups to fountain retailers, such as restaurants and
-                convenience stores.
-              </p>
-              <p class="mb-5">
-                The company sells its products under the Coca-Cola, Diet
-                Coke/Coca-Cola Light, Coca-Cola Zero Sugar, caffeine free Diet
-                Coke, Cherry Coke, Fanta Orange, Fanta Zero Orange, Fanta Zero
-                Sugar, Fanta Apple, Sprite, Sprite Zero Sugar, Simply Orange,
-                Simply Apple, Simply Grapefruit, Fresca, Schweppes, Thums Up,
-                Aquarius, Ayataka, BODYARMOR, Ciel, Costa, Dasani, doğadan, FUZE
-                TEA, Georgia, glacéau smartwater, glacéau vitaminwater, Gold
-                Peak, Ice Dew, I LOHAS, Powerade, Topo Chico, AdeS, Del Valle,
-                fairlife, innocent, Minute Maid, and Minute Maid Pulpy brands.
-              </p>
-              <p class="mb-5">
-                It operates through a network of independent bottling partners,
-                distributors, wholesalers, and retailers, as well as through
-                bottling and distribution operators.
-              </p>
-              <p class="mb-5">
-                The company was founded in 1886 and is headquartered in Atlanta,
-                Georgia.
-              </p>
-            </div>
+            {@html formattedText}
           </div>
-          <div class="-mr-5 flex-shrink-0 lg:float-right lg:w-[336px]">
+          <div class="lg:-mr-6 flex-shrink-0 lg:float-right lg:w-[336px]">
             <div
               class="mt-7 rounded border border-gray-600 bg-primary px-3 pb-2 pt-3 xs:px-4 xs:pt-4 lg:mt-1"
             >
@@ -121,30 +117,39 @@
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-bpivlp">Country</td
                     >
-                    <td class="px-1 py-1.5 text-right lg:py-2">United States</td
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.country
+                        ? rawData?.country?.replace("US", "United States")
+                        : "n/a"}</td
                     ></tr
                   >
-                  <tr class="border-b border-gray-600 last:border-0"
-                    ><td
-                      class="px-1 py-1.5 font-semibold lg:py-2"
-                      data-svelte-h="svelte-99zpt0">Founded</td
-                    > <td class="px-1 py-1.5 text-right lg:py-2">1886</td></tr
-                  >
+
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-pqn7mx">IPO Date</td
                     >
-                    <td class="px-1 py-1.5 text-right lg:py-2">Sep 5, 1919</td
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.ipoDate !== null &&
+                      rawData?.ipoDate?.length > 0
+                        ? new Date(rawData?.ipoDate)?.toLocaleString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            daySuffix: "2-digit",
+                          })
+                        : "n/a"}</td
                     ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td class="px-1 py-1.5 font-semibold lg:py-2">Industry</td>
                     <td class="px-1 py-1.5 text-right lg:py-2"
                       ><a
+                        href={rawData?.industry
+                          ? getIndustryHref(rawData?.industry)
+                          : "#"}
                         class="sm:hover:text-blue-400 text-white underline underline-offset-4"
-                        href="/stocks/industry/beverages-non-alcoholic/"
-                        >Beverages - Non-Alcoholic</a
+                        >{rawData?.industry ?? "n/a"}</a
                       ></td
                     ></tr
                   >
@@ -153,23 +158,28 @@
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-5e1uzt">Sector</td
                     >
-                    <td class="px-1 py-1.5 text-right lg:py-2"
-                      ><a
+                    <td class="px-1 py-1.5 text-right lg:py-2">
+                      <a
+                        href={sectorNavigation?.find(
+                          (item) => item?.title === rawData?.sector,
+                        )?.link}
                         class="sm:hover:text-blue-400 text-white underline underline-offset-4"
-                        href="/stocks/sector/consumer-staples/"
-                        >Consumer Staples</a
+                        >{rawData?.sector ? rawData?.sector : "n/a"}</a
                       ></td
                     ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
-                    ><td
-                      class="px-1 py-1.5 font-semibold lg:py-2"
-                      data-svelte-h="svelte-8d46v8">Employees</td
+                    ><td class="px-1 py-1.5 font-semibold lg:py-2">Employees</td
                     >
                     <td class="px-1 py-1.5 text-right lg:py-2"
                       ><a
                         class="sm:hover:text-blue-400 text-white underline underline-offset-4"
-                        href="/stocks/ko/employees/">79,100</a
+                        href={`/stocks/${$stockTicker}/statistics/employees`}
+                        >{rawData?.fullTimeEmployees
+                          ? new Intl.NumberFormat("en")?.format(
+                              rawData?.fullTimeEmployees,
+                            )
+                          : "n/a"}</a
                       ></td
                     ></tr
                   >
@@ -179,7 +189,7 @@
                       data-svelte-h="svelte-1qhfmvo">CEO</td
                     >
                     <td class="px-1 py-1.5 text-right lg:py-2"
-                      >James Robert Quincey</td
+                      >{rawData?.ceo || "n/a"}</td
                     ></tr
                   ></tbody
                 >
@@ -202,25 +212,24 @@
                         Address:
                       </div>
                       <div>
-                        One Coca-Cola Plaza<br />Atlanta, Georgia 30313<br
-                        />United States
+                        {rawData?.address
+                          ? rawData?.address
+                          : "No Address available"}<br />{rawData?.city
+                          ? rawData?.city
+                          : "No city data available"}, {rawData?.state ?? ""}<br
+                        />{rawData?.country?.replace("US", "United States") ??
+                          ""}
                       </div></td
                     ></tr
                   >
-                  <tr class="border-b border-gray-600 last:border-0"
-                    ><td
-                      class="px-0.5 py-2 font-semibold"
-                      data-svelte-h="svelte-13hrol0">Phone</td
-                    > <td class="px-0.5 py-2 text-right">404 676 2121</td></tr
-                  >
+
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td class="px-0.5 py-2 font-semibold">Website</td>
-                    <td class="px-0.5 py-2 text-right"
-                      ><a
-                        href="https://www.coca-colacompany.com"
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        >coca-colacompany.com</a
+                    <td class="px-0.5 py-2 text-right">
+                      <a
+                        href={rawData?.website}
+                        class="hover:sm:text-white truncate text-blue-400"
+                        target="_blank">{rawData?.website ?? "n/a"}</a
                       ></td
                     ></tr
                   ></tbody
@@ -237,13 +246,19 @@
                     ><td
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-lmvnpx">Ticker Symbol</td
-                    > <td class="px-1 py-1.5 text-right lg:py-2">KO</td></tr
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.symbol ?? "n/a"}</td
+                    ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-h7dsem">Exchange</td
-                    > <td class="px-1 py-1.5 text-right lg:py-2">NYSE</td></tr
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.exchange ?? "n/a"}</td
+                    ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td
@@ -251,21 +266,25 @@
                       data-svelte-h="svelte-q9yzrm">Fiscal Year</td
                     >
                     <td class="px-1 py-1.5 text-right lg:py-2"
-                      >January - December</td
+                      >{rawData?.fiscalYearRange ?? "n/a"}</td
                     ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-1tbczfa">Reporting Currency</td
-                    > <td class="px-1 py-1.5 text-right lg:py-2">USD</td></tr
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.currency ?? "n/a"}</td
+                    ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-ucpcs9">CIK Code</td
                     >
-                    <td class="px-1 py-1.5 text-right lg:py-2">0000021344</td
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.cik ?? "n/a"}</td
                     ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
@@ -273,7 +292,8 @@
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-1fdyovu">CUSIP Number</td
                     >
-                    <td class="px-1 py-1.5 text-right lg:py-2">191216100</td
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.cusip ?? "n/a"}</td
                     ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
@@ -281,7 +301,8 @@
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-t5u2mr">ISIN Number</td
                     >
-                    <td class="px-1 py-1.5 text-right lg:py-2">US1912161007</td
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.isin ?? "n/a"}</td
                     ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
@@ -289,289 +310,106 @@
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-x8apyl">Employer ID</td
                     >
-                    <td class="px-1 py-1.5 text-right lg:py-2">58-0628465</td
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.taxIdentificationNumber ?? "n/a"}</td
                     ></tr
                   >
                   <tr class="border-b border-gray-600 last:border-0"
                     ><td
                       class="px-1 py-1.5 font-semibold lg:py-2"
                       data-svelte-h="svelte-1o4kelt">SIC Code</td
-                    > <td class="px-1 py-1.5 text-right lg:py-2">2080</td></tr
+                    >
+                    <td class="px-1 py-1.5 text-right lg:py-2"
+                      >{rawData?.sicCode ?? "n/a"}</td
+                    ></tr
                   ></tbody
                 >
               </table>
             </div>
           </div>
 
-          <div class="mb-2 lg:float-left lg:w-[calc(100%-336px-40px)]">
-            <h2 class="mt-6 xs:mt-8 lg:mt-4 text-xl sm:text-2xl font-bold mb-5">
+          <div class=" mb-2 lg:float-left lg:w-[calc(100%-336px-40px)]">
+            <h2 class="mt-6 lg:mt-4 text-xl sm:text-2xl font-bold mb-5">
               Key Executives
             </h2>
-            <table class="mb-6 w-full text-base xs:mb-8">
-              <thead class="bg-primary"
-                ><tr class="border-y border-gray-600"
-                  ><th
-                    class="px-2 py-2.5 text-left font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Name</th
-                  >
-                  <th
-                    class="px-2 py-2.5 text-left font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Position</th
-                  ></tr
-                ></thead
-              >
-              <tbody
-                ><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >James Robert B. Quincey</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Chairman and Chief Executive Officer</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >John Murphy</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >President and Chief Financial Officer</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Manuel Arroyo Prieto</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Executive Vice President and Global chief Marketing Officer</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Henrique Braun</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Executive Vice President and President of International
-                    Development</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Jennifer Kay Mann</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Executive Vice President and President of North America
-                    Operating Unit</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Erin May</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Senior Vice President, Chief Accounting Officer and
-                    Controller</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Stacy Lynn Apter</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Senior Vice President, Treasurer and Head of Corporate
-                    Finance</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Nancy W. Quan</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Executive Vice President and Global Chief Technical and
-                    Innovation Officer</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Neeraj Tolmare</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Senior Vice President and Chief Information Officer</td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Robin Halpern</td
-                  >
-                  <td
-                    class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
-                    >Vice President and Head of Investor Relations</td
-                  >
-                </tr></tbody
-              >
-            </table>
-
-            <h2
-              class="mt-6 xs:mt-8 lg:mt-12 text-xl sm:text-2xl font-bold mb-5"
-            >
+            {#if rawData?.executives?.length > 0}
+              <table class="mb-6 w-full text-base xs:mb-8">
+                <thead class="bg-primary"
+                  ><tr class="border-y border-gray-600"
+                    ><th
+                      class="px-2 py-2.5 text-left font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                      >Name</th
+                    >
+                    <th
+                      class="px-2 py-2.5 text-left font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                      >Position</th
+                    ></tr
+                  ></thead
+                >
+                <tbody>
+                  {#each rawData?.executives as item}
+                    <tr class="border-b border-gray-600 text-sm sm:text-[1rem]"
+                      ><td
+                        class="px-2 py-2.5 align-top font-semibold text-white xs:px-3 xs:py-3 sm:px-4"
+                        >{item?.name}</td
+                      >
+                      <td
+                        class="px-2 py-2.5 align-top text-white xs:px-3 xs:py-3 sm:px-4"
+                        >{item?.position}</td
+                      >
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            {:else}
+              No executives data available.
+            {/if}
+            <h2 class="mt-10 text-xl sm:text-2xl font-bold mb-5">
               Latest SEC Filings
             </h2>
-            <table class="w-full">
-              <thead
-                ><tr class="border-b border-t border-gray-600 bg-primary"
-                  ><th class="px-1 py-2 text-left text-white xs:px-2">Date</th>
-                  <th class="px-1 py-2 text-left text-white xs:px-2">Type</th>
-                  <th class="px-1 py-2 text-left text-white xs:px-2">Title</th
-                  ></tr
-                ></thead
-              >
-              <tbody
-                ><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Dec 11, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000155278124000626/e24365_ko-8k.htm"
-                      target="_blank"
-                      rel="noopener noreferrer">Current Report</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Nov 27, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000196535324000360/xsl144X01/primary_doc.xml"
-                      target="_blank"
-                      rel="noopener noreferrer">Filing</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Nov 7, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000194984624000652/xsl144X01/primary_doc.xml"
-                      target="_blank"
-                      rel="noopener noreferrer">Filing</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Oct 24, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">10-Q</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000060/ko-20240927.htm"
-                      target="_blank"
-                      rel="noopener noreferrer">Quarterly Report</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Oct 23, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000056/ko-20241023.htm"
-                      target="_blank"
-                      rel="noopener noreferrer">Current Report</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Oct 17, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000051/ko-20241017.htm"
-                      target="_blank"
-                      rel="noopener noreferrer">Current Report</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Aug 26, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000155278124000502/xsl144X01/primary_doc.xml"
-                      target="_blank"
-                      rel="noopener noreferrer">Filing</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Aug 21, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">8-K</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000002134424000047/ko-20240821.htm"
-                      target="_blank"
-                      rel="noopener noreferrer">Current Report</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Aug 21, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000195004724006367/xsl144X01/primary_doc.xml"
-                      target="_blank"
-                      rel="noopener noreferrer">Filing</a
-                    ></td
-                  >
-                </tr><tr class="border-b border-gray-600"
-                  ><td
-                    class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
-                    >Aug 21, 2024</td
-                  >
-                  <td class="px-1 py-3 align-top text-white xs:px-2">144</td>
-                  <td class="py-3 pl-1 align-top xs:px-2"
-                    ><a
-                      href="https://www.sec.gov/Archives/edgar/data/21344/000195004724006356/xsl144X01/primary_doc.xml"
-                      target="_blank"
-                      rel="noopener noreferrer">Filing</a
-                    ></td
-                  >
-                </tr></tbody
-              >
-            </table>
+            {#if rawData?.filings?.length > 0}
+              <table class="w-full">
+                <thead
+                  ><tr class="border-b border-t border-gray-600 bg-primary"
+                    ><th class="px-1 py-2 text-left text-white xs:px-2">Date</th
+                    >
+                    <th class="px-1 py-2 text-left text-white xs:px-2">Type</th>
+                    <th class="px-1 py-2 text-left text-white xs:px-2">Title</th
+                    ></tr
+                  ></thead
+                >
+                <tbody>
+                  {#each rawData?.filings as item}
+                    <tr class="border-b border-gray-600 text-sm sm:text-[1rem]"
+                      ><td
+                        class="whitespace-nowrap py-3 pr-1 align-top text-white xs:px-2"
+                        >{item?.date}</td
+                      >
+                      <td class="px-1 py-3 align-top text-white xs:px-2"
+                        >{item?.type}</td
+                      >
+                      <td class="py-3 pl-1 align-top xs:px-2"
+                        ><a
+                          class="text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
+                          href={item?.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          >{item?.title?.length > 50
+                            ? item?.title?.slice(0, 50) + "..."
+                            : item?.title}</a
+                        ></td
+                      >
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            {:else}
+              No SEC filings available.
+            {/if}
             <div class="border-b border-gray-600 py-3 text-xl font-semibold">
               <a
                 class="text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
-                href="https://www.sec.gov/cgi-bin/browse-edgar?CIK=0000021344&amp;count=100"
+                href={`https://www.sec.gov/cgi-bin/browse-edgar?CIK=${rawData?.cik}&amp;count=100`}
                 target="_blank"
                 rel="noopener noreferrer">View All SEC Filings</a
               >

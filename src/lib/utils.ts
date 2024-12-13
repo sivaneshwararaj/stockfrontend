@@ -671,7 +671,14 @@ export function abbreviateNumber(number, addDollarSign = false) {
 
 export const formatDate = (dateString) => {
   const date = new Date(dateString);
-  const now = new Date();
+
+  // Get the current time in New York timezone
+  const now = new Date(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+    }).format(new Date())
+  );
+
   const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
 
   if (diffInDays >= 30) {

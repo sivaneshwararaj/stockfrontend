@@ -11,11 +11,19 @@
   let showFullHistory = false;
 
   function latestInfoDate(inputDate) {
-    // Convert the input date string to milliseconds since epoch
-    const inputDateMs = new Date(inputDate);
+    // Create a Date object for the input date and convert it to New York time zone
+    const inputDateLocal = new Date(inputDate).toLocaleString("en-US", {
+      timeZone: "America/New_York",
+    });
 
-    // Get today's date in milliseconds since epoch
-    const todayMs = Date.now();
+    // Get the current date and time in New York timezone
+    const todayLocal = new Date().toLocaleString("en-US", {
+      timeZone: "America/New_York",
+    });
+
+    // Convert the localized strings back to Date objects
+    const inputDateMs = new Date(inputDateLocal).getTime();
+    const todayMs = new Date(todayLocal).getTime();
 
     // Calculate the difference in milliseconds
     const differenceInMs = todayMs - inputDateMs;
@@ -23,7 +31,7 @@
     // Convert milliseconds to days
     const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
 
-    // Return the difference in days
+    // Return whether the difference is less than or equal to 1 day
     return differenceInDays <= 1;
   }
 

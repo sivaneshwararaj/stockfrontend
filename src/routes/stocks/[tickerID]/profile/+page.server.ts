@@ -4,7 +4,7 @@ import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 
 
 export const load = async ({ params, locals }) => {
-  const getStockDividend = async () => {
+  const getData = async () => {
     let newsList;
 
     const { apiURL, apiKey } = locals;
@@ -14,7 +14,7 @@ export const load = async ({ params, locals }) => {
     };
 
     // make the POST request to the endpoint
-    const response = await fetch(apiURL + "/stock-dividend", {
+    const response = await fetch(apiURL + "/profile", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const load = async ({ params, locals }) => {
 
   // Make sure to return a promise
   return {
-    getStockDividend: await getStockDividend(),
+    getData: await getData(),
   };
 };
 
