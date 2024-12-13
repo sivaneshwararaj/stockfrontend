@@ -1,4 +1,8 @@
 
+interface FilterContext {
+  flowTypeCache?: Map<string, number>;
+}
+
  const categoricalFields = [
     'put_call', 
     'sentiment', 
@@ -36,6 +40,7 @@ function convertUnitToValue(
     "etf",
     "itm",
     "otm",
+    "repeated flow"
   ]);
   if (nonNumericValues.has(lowerInput)) return input;
   if (input.endsWith("%")) {
@@ -72,10 +77,38 @@ function createRuleCheck(rule, ruleName, ruleValue) {
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
 
 
+if (ruleName === 'flowtype') {
+  return (item: any, context: FilterContext = {}) => {
+    // Check for 'any' rule or other non-repeated flow conditions
+    if (ruleValue === 'any' || ruleValue?.includes("any")) {
+      return true;
+    }
+
+    // Handle Repeated Flow logic
+    if (ruleValue?.includes('Repeated Flow')) {
+      // Initialize flowTypeCache if it doesn't exist
+      context.flowTypeCache = context.flowTypeCache || new Map();
+
+      // Create a unique key for repeated flow based on item characteristics
+      const key = `${item.ticker}-${item.put_call}-${item.strike_price}-${item.date_expiration}`;
+      
+      // Increment the count for the key in the flowTypeCache
+      const currentCount = (context.flowTypeCache.get(key) || 0) + 1;
+      context.flowTypeCache.set(key, currentCount);
+
+      // Return true if this flow appears more than N times (3 in this case)
+      return currentCount > 3;
+    }
+
+    // Fallback for other flow type conditions (i.e., non-repeated flow)
+    return true;
+  };
+}
+
+
  if (ruleName === 'moneyness') {
     return (item) => {
-
-      if (ruleValue === 'any') return true;
+      if (ruleValue === 'any' || ruleValue?.includes("any")) return true;
 
       const currentPrice = parseFloat(item?.underlying_price);
       const strikePrice = parseFloat(item?.strike_price);
@@ -274,17 +307,22 @@ return (item) => {
 
 async function filterRawData(rawData, ruleOfList, filterQuery) {
   // Early return for empty inputs
-  if (!rawData?.length ) {
+  if (!rawData?.length) {
     return rawData || [];
   }
 
   // Preprocess filter tickers
   const filterTickers = filterQuery
-    ? filterQuery.split(",").map((ticker) => ticker.trim().toUpperCase())
+    ? filterQuery?.split(",").map((ticker) => ticker.trim().toUpperCase())
     : [];
 
+  // Initialize context with optional flowTypeCache
+  const context: FilterContext = { 
+    flowTypeCache: new Map() 
+  };
+
   // Precompile rules for more efficient filtering
-  const compiledRules = ruleOfList.map(rule => {
+  const compiledRules = ruleOfList?.map(rule => {
     const ruleName = rule?.name?.toLowerCase();
     const ruleValue = convertUnitToValue(rule.value);
 
@@ -302,12 +340,12 @@ async function filterRawData(rawData, ruleOfList, filterQuery) {
       return false;
     }
 
-    // Apply all precompiled rules
-    return compiledRules.every(rule => rule?.compiledCheck(item));
+    // Apply all precompiled rules, passing the context
+    return compiledRules?.every(rule => rule?.compiledCheck(item, context));
   });
 }
 
-// Web Worker message handler
+// Web Worker message handler remains the same
 onmessage = async (event: MessageEvent) => {
   const { rawData, ruleOfList, filterQuery } = event.data || {};
   // Filter the data

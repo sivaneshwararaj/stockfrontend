@@ -95,6 +95,11 @@
       step: ["ITM", "OTM"],
       defaultValue: "any",
     },
+    flowType: {
+      label: "Flow Type",
+      step: ["Repeated Flow"],
+      defaultValue: "any",
+    },
     put_call: {
       label: "Contract Type",
       step: ["Calls", "Puts"],
@@ -127,6 +132,16 @@
       defaultValue: "any",
     },
   };
+
+  const categoricalRules = [
+    "moneyness",
+    "flowType",
+    "put_call",
+    "sentiment",
+    "execution_estimate",
+    "option_activity_type",
+    "underlying_type",
+  ];
 
   // Generate allRows from allRules
   $: allRows = Object?.entries(allRules)
@@ -218,6 +233,7 @@
 
     switch (ruleName) {
       case "moneyness":
+      case "flowType":
       case "put_call":
       case "sentiment":
       case "execution_estimate":
@@ -347,16 +363,7 @@
     }
 
     // Specific rule handling for options-related rules
-    if (
-      [
-        "moneyness",
-        "put_call",
-        "sentiment",
-        "execution_estimate",
-        "option_activity_type",
-        "underlying_type",
-      ]?.includes(ruleName)
-    ) {
+    if (categoricalRules?.includes(ruleName)) {
       // Ensure valueMappings[ruleName] is initialized as an array
       if (!Array.isArray(valueMappings[ruleName])) {
         valueMappings[ruleName] = [];
@@ -1130,7 +1137,7 @@
                         <DropdownMenu.Content
                           class="w-64 min-h-auto max-h-72 overflow-y-auto scroller"
                         >
-                          {#if !["moneyness", "put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
+                          {#if !categoricalRules?.includes(row?.rule)}
                             <DropdownMenu.Label
                               class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]"
                             >
@@ -1290,7 +1297,7 @@
                             ></div>
                           {/if}
                           <DropdownMenu.Group class="min-h-10 mt-2">
-                            {#if !["moneyness", "put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
+                            {#if !categoricalRules?.includes(row?.rule)}
                               {#each row?.step as newValue, index}
                                 {#if ruleCondition[row?.rule] === "between"}
                                   {#if newValue && row?.step[index + 1]}
@@ -1334,7 +1341,7 @@
                                   </DropdownMenu.Item>
                                 {/if}
                               {/each}
-                            {:else if ["moneyness", "put_call", "sentiment", "execution_estimate", "option_activity_type", "underlying_type"]?.includes(row?.rule)}
+                            {:else if categoricalRules?.includes(row?.rule)}
                               {#each row?.step as item}
                                 <DropdownMenu.Item
                                   class="sm:hover:bg-[#2A2E39]"
