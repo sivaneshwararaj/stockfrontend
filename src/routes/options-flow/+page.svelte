@@ -430,10 +430,11 @@
   }
 
   async function handleValueInput(event, ruleName, index = null) {
+    console.log(ruleName);
     const newValue = event.target.value;
 
     if (ruleCondition[ruleName] === "between") {
-      const currentValues = valueMappings[ruleName] || ["", ""];
+      const currentValues = [...(valueMappings[ruleName] || ["", ""])];
       currentValues[index] = newValue;
       await handleChangeValue(currentValues, { shouldSort: false });
     } else {
