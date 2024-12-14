@@ -137,7 +137,7 @@ if (ruleName === 'volumeoiratio') {
       return false;
     }
 
-    const ratio = (volume / openInterest) * 100;
+    const ratio = Math.ceil((volume / openInterest) * 100);
 
     // Handle 'between' condition for volume to open interest ratio
     if (rule.condition === 'between' && Array.isArray(ruleValue)) {
@@ -153,6 +153,8 @@ if (ruleName === 'volumeoiratio') {
     // Existing conditions for 'over' and 'under'
     if (rule.condition === 'over' && ratio <= ruleValue) return false;
     if (rule.condition === 'under' && ratio >= ruleValue) return false;
+    if (rule.condition === 'exactly' && ratio !== ruleValue) return false;
+
 
     return true;
   };
@@ -167,7 +169,7 @@ if (ruleName === 'sizeoiratio') {
       return false;
     }
 
-    const ratio = (size / openInterest) * 100;
+    const ratio = Math?.ceil((size / openInterest) * 100);
 
     // Handle 'between' condition for size to open interest ratio
     if (rule.condition === 'between' && Array.isArray(ruleValue)) {
@@ -183,6 +185,8 @@ if (ruleName === 'sizeoiratio') {
     // Existing conditions for 'over' and 'under'
     if (rule.condition === 'over' && ratio <= ruleValue) return false;
     if (rule.condition === 'under' && ratio >= ruleValue) return false;
+    if (rule.condition === 'exactly' && ratio !== ruleValue) return false;
+
 
     return true;
   };
@@ -200,7 +204,8 @@ if (ruleName === 'sizeoiratio') {
     const expirationDate = new Date(item[rule.name]);
     if (isNaN(expirationDate)) return false; // Handle invalid dates
 
-    const daysDiff = (expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+    const daysDiff = Math?.ceil((expirationDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
 
     if (rule.condition === 'between' && Array.isArray(ruleValue)) {
       const [minDays, maxDays] = ruleValue.map(val =>
@@ -221,6 +226,11 @@ if (ruleName === 'sizeoiratio') {
     if (rule.condition === 'under' && typeof ruleValue === 'number') {
       return daysDiff <= ruleValue;
     }
+    
+    if (rule.condition === 'exactly' && typeof ruleValue === 'number') {
+      return daysDiff === ruleValue;
+    }
+
 
     return false;
   };
@@ -236,9 +246,9 @@ if (ruleName === 'sizeoiratio') {
       const itemValue = item[rule.name];
       
       // Handle array of values for categorical fields
-      if (Array.isArray(ruleValue)) {
+      if (Array?.isArray(ruleValue)) {
         // Remove any empty or undefined values from ruleValue
-        const validRuleValues = ruleValue.filter(val => val !== "" && val !== undefined);
+        const validRuleValues = ruleValue?.filter(val => val !== "" && val !== undefined);
         
         // If no valid values remain, return true for all items
         if (validRuleValues.length === 0) {
@@ -246,14 +256,14 @@ if (ruleName === 'sizeoiratio') {
         }
 
         // If itemValue is an array, check if any of the values match
-        if (Array.isArray(itemValue)) {
-          return validRuleValues.some(val => 
+        if (Array?.isArray(itemValue)) {
+          return validRuleValues?.some(val => 
             itemValue.some(iv => iv.toLowerCase() === val.toLowerCase())
           );
         }
         
         // If itemValue is a string, check if it's in the validRuleValues array
-        return validRuleValues.some(val => 
+        return validRuleValues?.some(val => 
           itemValue?.toLowerCase() === val.toLowerCase()
         );
       }
@@ -261,8 +271,8 @@ if (ruleName === 'sizeoiratio') {
       // Handle single string value
       if (typeof ruleValue === 'string') {
         // If itemValue is an array, check if any value matches
-        if (Array.isArray(itemValue)) {
-          return itemValue.some(iv => iv.toLowerCase() === ruleValue.toLowerCase());
+        if (Array?.isArray(itemValue)) {
+          return itemValue?.some(iv => iv.toLowerCase() === ruleValue.toLowerCase());
         }
         
         // If both are strings, do a direct comparison
@@ -281,6 +291,8 @@ return (item) => {
   if (itemValue === null || itemValue === undefined) return false;
 
   const numericItemValue = parseFloat(itemValue);
+
+
   if (isNaN(numericItemValue)) return false;
 
   // Handle 'between' condition for numeric fields using convertUnitToValue
@@ -295,8 +307,11 @@ return (item) => {
   }
 
   // Existing conditions
+  if (rule.condition === 'exactly' && numericItemValue !== ruleValue) return false;
   if (rule.condition === 'over' && numericItemValue <= ruleValue) return false;
   if (rule.condition === 'under' && numericItemValue >= ruleValue) return false;
+
+
 
   return true;
 };

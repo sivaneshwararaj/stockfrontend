@@ -467,6 +467,10 @@
     }
   }
 
+  const currentTime = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
+  )?.getTime();
+
   const nyseDate = new Date(
     data?.getOptionsFlowFeed?.at(0)?.date ?? null,
   )?.toLocaleString("en-US", {
@@ -601,7 +605,6 @@
 
   function daysLeft(targetDate) {
     const targetTime = new Date(targetDate).getTime();
-    const currentTime = new Date().getTime();
     const difference = targetTime - currentTime;
 
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
@@ -1167,7 +1170,8 @@
                               {:else}
                                 {ruleCondition[row?.rule]
                                   ?.replace("under", "Under")
-                                  ?.replace("over", "Over") ?? ""}
+                                  ?.replace("over", "Over")
+                                  ?.replace("exactly", "Exactly") ?? ""}
                                 {valueMappings[row?.rule]}
                               {/if}
                             </span>
@@ -1212,7 +1216,8 @@
                                           {ruleCondition[ruleName]
                                             ?.replace("under", "Under")
                                             ?.replace("over", "Over")
-                                            ?.replace("between", "Between")}
+                                            ?.replace("between", "Between")
+                                            ?.replace("exactly", "Exactly")}
                                         </span>
                                         <svg
                                           class="mt-1 -mr-1 ml-1 h-5 w-5 xs:ml-2 !ml-0 sm:ml-0 inline-block"
@@ -1230,7 +1235,7 @@
                                     </DropdownMenu.Trigger>
                                     <DropdownMenu.Content>
                                       <DropdownMenu.Group>
-                                        {#each ["Over", "Under", "Between"] as item}
+                                        {#each ["Over", "Under", "Between", "Exactly"] as item}
                                           <DropdownMenu.Item
                                             on:click={() =>
                                               changeRuleCondition(
@@ -1291,7 +1296,7 @@
                                   />
                                 {/if}
 
-                                {#if ["over", "under"]?.includes(ruleCondition[ruleName]?.toLowerCase())}
+                                {#if ["over", "under", "exactly"]?.includes(ruleCondition[ruleName]?.toLowerCase())}
                                   <div
                                     class="ml-2 flex touch-manipulation flex-row items-center gap-x-1.5"
                                   >
@@ -1387,7 +1392,8 @@
                                     >
                                       {ruleCondition[row?.rule]
                                         ?.replace("under", "Under")
-                                        ?.replace("over", "Over")}
+                                        ?.replace("over", "Over")
+                                        ?.replace("exactly", "Exactly")}
                                       {newValue}
                                     </button>
                                   </DropdownMenu.Item>
