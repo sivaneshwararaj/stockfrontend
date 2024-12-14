@@ -251,7 +251,7 @@
       saveRules();
     } else {
       toast.error("Only for Pro Members", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   }

@@ -18,7 +18,7 @@
     if (targetPrice < 0) {
       toast.error(`Target Price must be above zero`, {
         style:
-          "border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
       });
     } else {
       const closePopup = document.getElementById("priceAlertModal");
@@ -49,10 +49,28 @@
 
       toast.success(`Successfully created price alert`, {
         style:
-          "border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
       });
       targetPrice = currentPrice;
     }
+  }
+
+  async function stepSizeValue(condition) {
+    let step = 0.01;
+    if (targetPrice <= 2) {
+      step = 0.01;
+    } else if (targetPrice <= 5) {
+      step = 0.1;
+    } else if (targetPrice <= 100) {
+      step = 0.5;
+    } else if (targetPrice <= 200) {
+      step = 1;
+    }
+
+    targetPrice += condition === "add" ? step : -step;
+
+    // Round to 2 decimal places
+    targetPrice = parseFloat(targetPrice.toFixed(2));
   }
 
   $: {
@@ -151,44 +169,80 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center">
           <label class="text-sm w-[20%] mb-1 sm:mb-0">Value</label>
 
-          <input
-            type="number"
-            bind:value={targetPrice}
-            step="0.1"
-            class="w-full sm:w-[80%] bg-[#2A2E39] border border-gray-600 text-sm rounded-md py-2 px-3 text-white"
-          />
+          <div class="relative w-full sm:w-[80%]">
+            <input
+              bind:value={targetPrice}
+              class="w-full bg-[#2A2E39] border border-gray-600 text-sm rounded-md py-2 px-3 pr-16 text-white"
+            />
+            <div
+              class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-x-1.5"
+            >
+              <button on:click={() => stepSizeValue("add")}>
+                <svg
+                  class="size-6 cursor-pointer text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width: 40px"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+              </button>
+              <button on:click={() => stepSizeValue("minus")}>
+                <svg
+                  class="size-6 cursor-pointer text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style="max-width: 40px"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {#if !isNaN(targetPrice) && targetPrice !== undefined && targetPrice !== null}
-        <div class="flex flex-col gap-2 mt-5 text-white">
-          <label class="text-sm sm:text-[1rem] font-semibold"
-            >Quick Summary:</label
+        {#if !isNaN(targetPrice) && targetPrice !== undefined && targetPrice !== null}
+          <div class="flex flex-col gap-2 mt-5 text-white">
+            <label class="text-sm sm:text-[1rem] font-semibold"
+              >Quick Summary:</label
+            >
+            <p class="text-sm sm:text-[1rem]">
+              Your price alert will notify you when the stock price is {condition}
+              {targetPrice?.toFixed(2)}.
+            </p>
+          </div>
+        {/if}
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end gap-4 mt-6 absolute bottom-5 right-5">
+          <label
+            for="priceAlertModal"
+            class="cursor-pointer border border-gray-600 text-white py-2 px-4 rounded-md text-sm"
           >
-          <p class="text-sm sm:text-[1rem]">
-            Your price alert will notify you when the stock price is {condition}
-            {targetPrice?.toFixed(2)}.
-          </p>
+            Cancel
+          </label>
+          <button
+            on:click={handleCreateAlert}
+            class="bg-white text-black py-2 px-4 rounded-md text-sm"
+          >
+            Save
+          </button>
         </div>
-      {/if}
-
-      <!-- Action Buttons -->
-      <div class="flex justify-end gap-4 mt-6 absolute bottom-5 right-5">
-        <label
-          for="priceAlertModal"
-          class="cursor-pointer border border-gray-600 text-white py-2 px-4 rounded-md text-sm"
-        >
-          Cancel
-        </label>
-        <button
-          on:click={handleCreateAlert}
-          class="bg-white text-black py-2 px-4 rounded-md text-sm"
-        >
-          Save
-        </button>
       </div>
-    </div>
 
-    <!--End Trade Modal-->
+      <!--End Trade Modal-->
+    </div>
   </div>
 </dialog>

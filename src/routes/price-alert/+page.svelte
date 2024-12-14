@@ -84,7 +84,7 @@
     if (numberOfChecked === 0) {
       toast.error(`You need to select symbols before you can delete them`, {
         style:
-          "border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
       });
     } else {
       const postData = {

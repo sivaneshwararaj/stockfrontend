@@ -53,7 +53,7 @@
         .catch((error) => console.log("Error sharing content:", error));
     } else {
       toast.error("Sharing is not supported by your device", {
-        style: "background: #333; color: #fff;",
+        style: "background: #2A2E39; color: #fff;",
       });
     }
   }
@@ -752,7 +752,7 @@
 
 <dialog
   id="addWatchListModal"
-  class="modal modal-bottom sm:modal-middle bg-[#000] bg-opacity-[0.5]"
+  class="modal bg-[#000] bg-opacity-[0.8] p-3 sm:p-0"
 >
   <label
     id="addWatchListModal"
@@ -760,12 +760,10 @@
     class="cursor-pointer modal-backdrop"
   ></label>
 
-  <div
-    class="modal-box rounded-md w-full bg-[#1E222D] sm:border sm:border-gray-600"
-  >
+  <div class="modal-box rounded-md w-full bg-[#1E222D] border border-gray-600">
     <label
       for="addWatchListModal"
-      class="cursor-pointer bg-[#1E222D] absolute right-5 top-2 text-[1.8rem] text-white"
+      class="cursor-pointer bg-[#1E222D] absolute right-5 top-2 text-[1rem] sm:text-[1.8rem] text-white"
     >
       ✕
     </label>

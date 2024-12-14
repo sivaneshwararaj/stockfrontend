@@ -232,7 +232,7 @@
   function handleAddRule() {
     if (ruleName === "") {
       toast.error("Please select a rule", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
@@ -291,7 +291,7 @@
       ruleOfList = [...ruleOfList, newRule];
       /*
     toast.success('Rule added', {
-      style: 'border-radius: 200px; background: #333; color: #fff;'
+      style: 'border-radius: 200px; background: #2A2E39; color: #fff;'
     });
     */
 
@@ -523,7 +523,7 @@
       }
     } else {
       toast.error(`Market is closed`, {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   }
@@ -782,7 +782,7 @@
       }
     } else {
       toast.error("Only for Pro Members", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   };

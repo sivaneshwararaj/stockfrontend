@@ -16,25 +16,25 @@
       switch (result.type) {
         case "success":
           toast.success("Subscription Cancelled successfully!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "redirect":
           toast.success("Subscription Cancelled successfully!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "failure":
           toast.error("Something went wrong.", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "error":
           toast.error(result.error.message, {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           break;
         default:
@@ -58,25 +58,25 @@
       switch (result.type) {
         case "success":
           toast.success("Subscription Reactivate successfully!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "redirect":
           toast.success("Subscription Reactivate successfully!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "failure":
           toast.error("Something went wrong.", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "error":
           toast.error(result.error.message, {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           break;
         default:
@@ -100,25 +100,25 @@
       switch (result.type) {
         case "success":
           toast.success("Changing to Annual Plan successfully!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "redirect":
           toast.success("Changing to Annual Plan successfully!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "failure":
           toast.error("Something went wrong.", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "error":
           toast.error(result.error.message, {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           break;
         default:

@@ -12,14 +12,14 @@
     try {
       await pb.collection("users").requestPasswordReset(email);
       toast.success("Password resetted. Check your emails!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       goto("/login");
     } catch (err) {
       toast.error(
         { err },
         {
-          style: "border-radius: 200px; background: #333; color: #fff;",
+          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
         },
       );
     }

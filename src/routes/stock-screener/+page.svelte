@@ -1430,7 +1430,7 @@
 
     if (output === "success") {
       toast.success("Strategy deleted successfully!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
 
       strategyList =
@@ -1466,7 +1466,7 @@
       );
     } else if (output === "failure") {
       toast.error("Something went wrong. Please try again", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   }
@@ -1482,14 +1482,14 @@
 
     if (!title || title.length === 0) {
       toast.error("Title cannot be empty!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
 
     if (title?.length > 100) {
       toast.error("Title is too long. Keep it simple and concise bruv!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
@@ -1512,7 +1512,7 @@
     const output = await response?.json();
     if (output?.id && output?.id?.length !== 0) {
       toast.success("Strategy created successfully!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
 
       const closePopup = document.getElementById("addStrategy");
@@ -1525,7 +1525,7 @@
       selectedPopularStrategy = "";
     } else {
       toast.error("Something went wrong. Please try again later!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
 
@@ -1617,7 +1617,7 @@
   function handleAddRule() {
     if (ruleName === "") {
       toast.error("Please select a rule", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
@@ -1677,7 +1677,7 @@
       ruleOfList = [...ruleOfList, newRule];
       /*
     toast.success('Rule added', {
-      style: 'border-radius: 200px; background: #333; color: #fff;'
+      style: 'border-radius: 200px; background: #2A2E39; color: #fff;'
     });
     */
 
@@ -1804,7 +1804,7 @@ const handleKeyDown = (event) => {
 
         if (printToast === true) {
           toast.success("Strategy saved!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
         }
 

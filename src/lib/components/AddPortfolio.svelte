@@ -31,7 +31,7 @@
     if (output?.message === "success") {
       isClicked = true;
       toast.success("Portfolio created successfully!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
 
       setTimeout(() => {
@@ -58,7 +58,7 @@
       }, 500);
     } else {
       toast.error("Something went wrong. Please try again.", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   }

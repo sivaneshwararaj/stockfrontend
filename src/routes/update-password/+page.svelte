@@ -32,7 +32,7 @@
       const cleanedData = updatePasswordSchema.parse(postData);
       await pb.collection("users").update(data?.user?.id, cleanedData);
       toast.success("Password updated!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -49,14 +49,14 @@
             ?.message ?? "";
 
         toast.error("Invalid credentials", {
-          style: "border-radius: 200px; background: #333; color: #fff;",
+          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
         });
       } else {
         // Handle other errors
         console.error("Unexpected error during registration:", error);
 
         toast.error("An unexpected error occurred", {
-          style: "border-radius: 200px; background: #333; color: #fff;",
+          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
         });
       }
     }

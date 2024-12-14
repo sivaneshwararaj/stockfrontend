@@ -54,7 +54,7 @@
         .catch((error) => console.log("Error sharing content:", error));
     } else {
       toast.error("Sharing is not supported by your device", {
-        style: "background: #333; color: #fff;",
+        style: "background: #2A2E39; color: #fff;",
       });
     }
   }

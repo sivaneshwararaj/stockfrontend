@@ -39,14 +39,14 @@
   async function sendFeedback() {
     if (inputValue?.length === 0) {
       toast.error("Please enter your feedback", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
 
     if (rating?.length === 0 && category === "general") {
       toast.error("Please select an emoji", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
@@ -72,7 +72,7 @@
     });
 
     toast.success("Thank you for your feedback", {
-      style: "border-radius: 200px; background: #333; color: #fff;",
+      style: "border-radius: 200px; background: #2A2E39; color: #fff;",
     });
 
     rating = "";

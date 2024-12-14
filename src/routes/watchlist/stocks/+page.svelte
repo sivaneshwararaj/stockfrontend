@@ -282,14 +282,14 @@
 
     if (!title || title?.length === 0) {
       toast.error("Title cannot be empty!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
 
     if (title?.length > 100) {
       toast.error("Title is too long. Keep it simple and concise bruv!", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
       return;
     }
@@ -321,7 +321,7 @@
         }
 
         toast.success("Watchlist created successfully!", {
-          style: "border-radius: 200px; background: #333; color: #fff;",
+          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
         });
 
         const clicked = document.getElementById("addWatchlist");
@@ -331,13 +331,13 @@
         anchor.dispatchEvent(new MouseEvent("click"));
       } else {
         toast.error("Something went wrong. Please try again!", {
-          style: "border-radius: 200px; background: #333; color: #fff;",
+          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
         });
       }
     } catch (error) {
       console.error("Error:", error);
       toast.error("An error occurred. Please try again later.", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   }
@@ -369,7 +369,7 @@
 
       if (output === "success") {
         toast.success("Watchlist deleted successfully!", {
-          style: "border-radius: 200px; background: #333; color: #fff;",
+          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
         });
 
         allList = allList?.filter((item) => item?.id !== displayWatchList?.id);
@@ -382,13 +382,13 @@
         clicked.dispatchEvent(new MouseEvent("click"));
       } else {
         toast.error("Something went wrong. Please try again!", {
-          style: "border-radius: 200px; background: #333; color: #fff;",
+          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
         });
       }
     } catch (error) {
       console.error("Error:", error);
       toast.error("An error occurred. Please try again later.", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   }
@@ -420,7 +420,7 @@
     if (numberOfChecked === 0) {
       toast.error(`You need to select symbols before you can delete them`, {
         style:
-          "border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
       });
     } else {
       watchList = watchList?.filter(
@@ -487,7 +487,7 @@
     } else {
       toast.error(`This symbol is already in your watchlist`, {
         style:
-          "border-radius: 10px; background: #333; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
       });
 
       inputValue = "";
@@ -561,7 +561,7 @@
       saveRules();
     } else {
       toast.error("Only for Pro Members", {
-        style: "border-radius: 200px; background: #333; color: #fff;",
+        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
       });
     }
   }

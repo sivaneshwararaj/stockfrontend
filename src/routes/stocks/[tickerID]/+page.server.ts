@@ -34,7 +34,7 @@ export const actions = {
       error(err.status, err.message);
     }
 
-    redirect(302, "/");
+    //redirect(302, "/");
   },
 
   register: async ({ locals, request }) => {
@@ -75,7 +75,7 @@ await locals.pb?.collection('users').update(
       error(err.status, err.message);
     }
 
-    redirect(303, "/");
+    //redirect(303, "/");
   },
 
    oauth2: async ({ url, locals, request, cookies }) => {

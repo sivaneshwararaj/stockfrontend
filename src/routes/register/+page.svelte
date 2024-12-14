@@ -18,19 +18,19 @@
         case "redirect":
           isClicked = true;
           toast.success("Registration successfully!", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "failure":
           toast.error("Invalid credentials", {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           await update();
           break;
         case "error":
           toast.error(result.error.message, {
-            style: "border-radius: 200px; background: #333; color: #fff;",
+            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
           });
           break;
         default:
