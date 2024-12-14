@@ -174,13 +174,11 @@ function createRuleCheck(rule, ruleName, ruleValue) {
 
     if (itemValue === null) return false;
 
-    if (rule.condition === 'over') {
-      return itemValue > ruleValue;
-    }
+   if (rule.condition === 'exactly' && itemValue !== ruleValue) return false;
+  if (rule.condition === 'over' && itemValue <= ruleValue) return false;
+  if (rule.condition === 'under' && itemValue >= ruleValue) return false;
 
-    if (rule.condition === 'under') {
-      return itemValue < ruleValue;
-    }
+
 
     // Default comparison if no specific condition
     return true;

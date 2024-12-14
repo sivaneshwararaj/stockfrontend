@@ -1873,7 +1873,7 @@
     <div class="border-t border-gray-600 mt-2 w-full">
       <label
         for="mobileTooltip"
-        class="mt-4 font-semibold text-white text-xl m-auto flex justify-center"
+        class="mt-4 font-semibold text-white text-xl m-auto flex justify-center cursor-pointer"
       >
         Close
       </label>
