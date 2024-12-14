@@ -1123,10 +1123,7 @@
               {/if}
             </div>
 
-            <UpgradeToPro
-              {data}
-              title="Get the recent Options Flow Data from Hedge Funds and major institutional traders to never miss out"
-            />
+            <UpgradeToPro {data} />
           {:else}
             <div class="flex justify-center items-center m-auto mt-16 mb-6">
               <div

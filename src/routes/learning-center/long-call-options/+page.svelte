@@ -587,14 +587,7 @@ grid: {
 
             <!--End Paragraph-->
 
-            {#if data?.user?.tier !== "Pro"}
-              <div class="mt-20">
-                <UpgradeToPro
-                  {data}
-                  title="Start investing smarter than everyone else with our platform"
-                />
-              </div>
-            {/if}
+            <UpgradeToPro {data} />
           </div>
         </div>
       </div>

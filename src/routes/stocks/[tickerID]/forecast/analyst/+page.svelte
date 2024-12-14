@@ -596,10 +596,7 @@
         {/if}
 
         {#if rawData?.length !== 0}
-          <UpgradeToPro
-            {data}
-            title="Get stock forecasts from Wall Street's highest rated professionals"
-          />
+          <UpgradeToPro {data} />
         {/if}
         {#if data?.user?.tier !== "Pro"}
           <div class="mt-4 py-6 xl:mt-10 border-t border-gray-200">

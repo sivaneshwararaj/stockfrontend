@@ -686,10 +686,7 @@
               </label>
             {/if}
 
-            <UpgradeToPro
-              {data}
-              title="Access {$displayCompanyName}'s insider transactions to track executive selling and purchasing activity"
-            />
+            <UpgradeToPro {data} />
           {/if}
         {:else}
           <div class="flex justify-center items-center h-80">

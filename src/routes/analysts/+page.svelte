@@ -338,10 +338,7 @@
           </div>
 
           {#if isLoaded}
-            <UpgradeToPro
-              {data}
-              title="Get stock forecasts from Wall Street's highest rated professionals"
-            />
+            <UpgradeToPro {data} />
 
             <div class="mt-4 py-6 xl:mt-10 border-t border-gray-200">
               <div class="mx-auto max-w-7xl px-3 xs:px-6 lg:px-8">

@@ -292,10 +292,7 @@
                   </tbody>
                 </table>
               </div>
-              <UpgradeToPro
-                {data}
-                title="Get the latest insider trading to never miss out"
-              />
+              <UpgradeToPro {data} />
             </div>
           {:else}
             <div class="flex justify-center items-center h-80">

@@ -607,10 +607,7 @@
         </table>
       </div>
 
-      <UpgradeToPro
-        {data}
-        title="Access {$displayCompanyName}'s 13 Report to see all institutional holders and track their selling and purchasing activity"
-      />
+      <UpgradeToPro {data} />
     {/if}
   </main>
 </section>

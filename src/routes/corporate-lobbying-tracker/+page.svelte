@@ -257,10 +257,7 @@
             <InfiniteLoading on:infinite={infiniteHandler} />
           </div>
 
-          <UpgradeToPro
-            {data}
-            title="Get the latest lobbying spendings in realtime of US stock companies"
-          />
+          <UpgradeToPro {data} />
         </main>
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">

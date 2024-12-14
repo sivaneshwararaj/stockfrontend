@@ -1,5 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+
   export let data;
 
   let rawData = data?.getMarketMover;
@@ -18,10 +20,14 @@
     { name: "% Change", rule: "changesPercentage" },
     { name: "Volume", rule: "volume" },
   ];
+
+  const hideLastRow = true;
 </script>
 
 {#if rawData?.length > 0}
-  <Table {data} {rawData} {excludedRules} {defaultList} />
+  <Table {data} {rawData} {excludedRules} {defaultList} {hideLastRow} />
+
+  <UpgradeToPro {data} />
 {:else}
   <div
     class="w-full text-white text-start p-3 sm:p-5 mb-10 mt-3 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"

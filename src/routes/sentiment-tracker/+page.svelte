@@ -110,10 +110,7 @@
               {specificRows}
             />
 
-            <UpgradeToPro
-              {data}
-              title="Get the latest stock trends from social media to never miss out the next hype"
-            />
+            <UpgradeToPro {data} />
           </div>
         </main>
 

@@ -1,5 +1,5 @@
 export const load = async ({ locals, setHeaders }) => {
-  const { apiURL, apiKey } = locals;
+  const { apiURL, apiKey, user } = locals;
 
 
   const getMarketMover = async () => {
@@ -13,8 +13,9 @@ export const load = async ({ locals, setHeaders }) => {
       body: JSON.stringify(postData),
     });
 
-    const output = await response.json();
+    let  output = await response.json();
     setHeaders({ "cache-control": "public, max-age=60*5" });
+    output = user?.tier !== "Pro" ? output?.slice(0, 5) : output;
 
     return output;
   };
