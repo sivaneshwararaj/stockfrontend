@@ -18,7 +18,6 @@
   } from "$lib/utils";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
-  import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import DownloadData from "$lib/components/DownloadData.svelte";
 
@@ -2666,14 +2665,12 @@ const handleKeyDown = (event) => {
             <div
               class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default"
             >
-              <div class="text-white text-[1rem] relative">
-                <span class=""
-                  >{row?.label?.length > 20
-                    ? row?.label?.slice(0, 20)?.replace("[%]", "") + "..."
-                    : row?.label?.replace("[%]", "")}</span
-                >
-                <div class="sm:hidden relative inline-block">
-                  <label
+              <div class="hide-scroll text-white">
+                {row?.label?.length > 20
+                  ? row?.label?.slice(0, 20)?.replace("[%]", "") + "..."
+                  : row?.label?.replace("[%]", "")}
+                <span class="relative" role="tooltip"
+                  ><label
                     for="mobileTooltip"
                     on:click={() =>
                       getInfoText(row?.rule, row?.label?.replace("[%]", ""))}
@@ -2693,60 +2690,8 @@ const handleKeyDown = (event) => {
                         ></path></svg
                       >
                     </span>
-                  </label>
-                </div>
-                <div class="hidden sm:inline-block">
-                  <HoverCard.Root>
-                    <HoverCard.Trigger
-                      class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
-                    >
-                      <label
-                        on:mouseover={() =>
-                          getInfoText(
-                            row?.rule,
-                            row?.label?.replace("[%]", ""),
-                          )}
-                        class="relative"
-                        role="tooltip"
-                      >
-                        <span
-                          class="absolute -right-[15px] -top-[3px] cursor-pointer p-1 text-gray-300 sm:hover:text-white"
-                        >
-                          <svg
-                            class="h-[10.5px] w-[10.5px]"
-                            viewBox="0 0 4 16"
-                            fill="currentColor"
-                            style="max-width:20px"
-                            ><path
-                              d="M0 6h4v10h-4v-10zm2-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
-                            ></path></svg
-                          >
-                        </span>
-                      </label>
-                    </HoverCard.Trigger>
-                    <HoverCard.Content class="w-96">
-                      <div class="flex justify-between space-x-4 w-full">
-                        <div class="space-y-1 w-full">
-                          <h4
-                            class="text-lg font-semibold pb-1 border-b border-gray-400"
-                          >
-                            {row?.label?.replace("[%]", "")}
-                          </h4>
-                          <div class="text-sm w-full pt-2 text-black">
-                            {infoText?.text ?? "n/a"}
-                          </div>
-                          {#if infoText?.equation !== undefined}
-                            <div
-                              class="text-sm w-full pt-2 text-black border-t border-gray-400"
-                            >
-                              {infoText?.equation}
-                            </div>
-                          {/if}
-                        </div>
-                      </div>
-                    </HoverCard.Content>
-                  </HoverCard.Root>
-                </div>
+                  </label></span
+                >
               </div>
 
               <div class="flex items-center">
@@ -3665,7 +3610,7 @@ const handleKeyDown = (event) => {
     <div class="border-t border-gray-600 mt-2 w-full">
       <label
         for="mobileTooltip"
-        class="mt-4 font-semibold text-white text-xl m-auto flex justify-center"
+        class="cursor-pointer mt-4 font-semibold text-white text-xl m-auto flex justify-center"
       >
         Close
       </label>
