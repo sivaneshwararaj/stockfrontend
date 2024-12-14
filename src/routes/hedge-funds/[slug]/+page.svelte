@@ -2,11 +2,11 @@
   import { numberOfUnreadNotification } from "$lib/store";
   import { formatString, sectorNavigation, abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   export let data;
 
   let hedgeFundStats = data?.getHedgeFundsData;
-  let rawData = data?.getHedgeFundsData?.holdings;
   let companyName = data?.getHedgeFundsData?.name ?? "Company Data";
 
   const excludedRules = new Set([
@@ -80,7 +80,7 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 px-4 lg:px-3 pb-40"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
@@ -140,7 +140,9 @@
                   class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
                 >
                   <div class="text-2xl font-semibold tracking-tight text-white">
-                    {hedgeFundStats?.numberOfStocks?.toLocaleString("en-US")}
+                    {data?.getHedgeFundsData?.holdings?.length?.toLocaleString(
+                      "en-US",
+                    )}
                   </div>
                   <div class="text-sm font-semibold leading-6 text-gray-300">
                     # of Holdings
@@ -229,20 +231,18 @@
               </div>
             </div>
 
-            <span class="text-white font-semibold text-xl sm:text-2xl">
-              {data?.getHedgeFundsData?.holdings?.length?.toLocaleString(
-                "en-US",
-              )} Stocks
-            </span>
-
             <div class="w-full m-auto mt-10">
               <Table
                 {data}
-                {rawData}
+                rawData={data?.user?.tier === "Pro"
+                  ? data?.getHedgeFundsData?.holdings
+                  : data?.getHedgeFundsData?.holdings?.slice(0, 5)}
                 {excludedRules}
                 {defaultList}
                 {specificRows}
+                hideLastRow={true}
               />
+              <UpgradeToPro {data} />
             </div>
           </div>
         </main>

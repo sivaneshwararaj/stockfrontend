@@ -901,7 +901,9 @@
                     : "-"}
                 </div>
               {:else if column.type === "percent"}
-                {item[column.key]?.toFixed(2) + "%"}
+                {item[column.key] > 0.01
+                  ? item[column.key]?.toFixed(2) + "%"
+                  : "< 0.01%"}
               {:else if column.type === "percentSign"}
                 {#if item[column.key] > 0}
                   <span class="text-[#00FC50]"

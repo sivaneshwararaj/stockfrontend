@@ -1,10 +1,10 @@
 <script lang="ts">
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import { onMount } from "svelte";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import RatingsChart from "$lib/components/RatingsChart.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   export let data;
 
@@ -252,9 +252,13 @@
                   <TableHeader {columns} {sortOrders} {sortData} />
                 </thead>
                 <tbody>
-                  {#each stockList as item}
+                  {#each stockList as item, index}
                     <tr
-                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-secondary"
+                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-secondary {index +
+                        1 ===
+                        rawData?.length && data?.user?.tier !== 'Pro'
+                        ? 'opacity-[0.1]'
+                        : ''}"
                     >
                       <td class="hidden lg:table-cell"
                         ><button
@@ -381,6 +385,7 @@
                   {/each}
                 </tbody>
               </table>
+              <UpgradeToPro {data} />
             </div>
           </div>
         </main>

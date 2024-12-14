@@ -26,6 +26,7 @@ export const load = async ({ params, locals, setHeaders }) => {
         (item) => item?.sharesNumber && item?.symbol
       );
     }
+
     return output;
   };
 

@@ -18,7 +18,7 @@
         </p>
       </div>
 
-      <div class="mx-auto mt-8 max-w-2xl lg:max-w-5xl">
+      <div class="mx-auto mt-12 max-w-2xl lg:max-w-5xl">
         <dl
           class="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-2 lg:gap-y-12"
         >
