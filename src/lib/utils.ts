@@ -1128,7 +1128,7 @@ export function getPartyForPoliticians(name) {
     "Darin LaHood": "Republican",
     "Darrell Issa": "Republican",
      "Lance Gooden": "Republican",
-    "Byron Dondalds": "Republican",
+    "Byron Donalds": "Republican",
   };
 
   // Combine first and last name to form the key
