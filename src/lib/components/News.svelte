@@ -29,7 +29,7 @@
       });
 
       rawDataPressRelease = await response?.json();
-      setCache($stockTicker, rawData, "getPressRelease");
+      setCache($stockTicker, rawDataPressRelease, "getPressRelease");
     }
     isLoaded = true;
   }
@@ -261,7 +261,7 @@
             </div>
           </div>
         {/if}
-        {#if newsList?.length !== rawData?.length}
+        {#if newsList?.length !== rawData?.length && filteredNewsList?.length > 0}
           <label
             on:click={loadMoreData}
             class="shadow-lg rounded-md cursor-pointer w-5/6 sm:w-full sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff]"
