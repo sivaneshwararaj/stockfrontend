@@ -3,31 +3,43 @@
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import RatingsChart from "$lib/components/RatingsChart.svelte";
 
   export let data;
 
   let isLoaded = true;
-  let rawData = data?.getInsiderTracker ?? [];
+  let rawData = processTickerData(data?.getInsiderTracker) ?? [];
   let stockList = rawData?.slice(0, 50) ?? [];
-
   isLoaded = true;
 
-  function formatDateTime(dateTimeStr) {
-    const date = new Date(dateTimeStr);
+  function processTickerData(data) {
+    const symbolMap = new Map();
 
-    const options = { hour: "numeric", minute: "numeric", hour12: true };
+    data.forEach((item) => {
+      const { symbol } = item;
 
-    // Extract month and day
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
+      if (!symbol) return; // Skip if symbol is not defined
 
-    // Format the time as 12-hour format with AM/PM
-    const time = date.toLocaleTimeString("en-US", options);
+      if (!symbolMap.has(symbol)) {
+        // Add the item and initialize count
+        symbolMap.set(symbol, { ...item, ratings: 1 });
+      } else {
+        const existing = symbolMap.get(symbol);
 
-    return `${month}/${day} ${time}`;
+        // Increment the ratings count
+        existing.ratings += 1;
+
+        // Keep the item with the latest date
+        if (new Date(item.filingDate) > new Date(existing.filingDate)) {
+          symbolMap.set(symbol, { ...item, ratings: existing.ratings });
+        }
+      }
+    });
+
+    // Convert the Map back to an array
+    return Array.from(symbolMap.values());
   }
 
   async function handleScroll() {
@@ -49,7 +61,10 @@
     }
   });
 
-  let columns = [
+  $: columns = [
+    ...($screenWidth > 1024
+      ? [{ key: "chart", label: "", align: "right" }]
+      : []),
     { key: "symbol", label: "Symbol", align: "left" },
     { key: "name", label: "Name", align: "left" },
     { key: "reportingName", label: "Member", align: "left" },
@@ -61,6 +76,7 @@
   ];
 
   let sortOrders = {
+    chart: { order: "none", type: "string" },
     filingDate: { order: "none", type: "date" },
     symbol: { order: "none", type: "string" },
     name: { order: "none", type: "string" },
@@ -130,6 +146,16 @@
     stockList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
   $: charNumber = $screenWidth < 640 ? 20 : 25;
+
+  $: checkedSymbol = "";
+  function openGraph(symbol) {
+    // Clear all existing symbols
+    if (checkedSymbol === symbol) {
+      checkedSymbol = "";
+    } else {
+      checkedSymbol = symbol;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -186,21 +212,32 @@
           </div>
 
           {#if isLoaded}
-            <div
-              class="mb-8 w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 rounded-md h-auto p-5"
-            >
-              <svg
-                class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 256 256"
-                ><path
-                  fill="#fff"
-                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                /></svg
+            <div class="mt-8 sm:px-0">
+              <div
+                class="border-l-4 border-white p-0 sm:p-4 text-white flex flex-row items-center"
               >
-              We update our data in real time to bring you the latest insights on
-              unusual insider trading, sourced from SEC filings with a minimum transaction
-              value of $100,000.
+                <svg
+                  class="h-6 w-6 hidden sm:block"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  style="max-width:40px"
+                  aria-hidden="true"
+                  ><path
+                    fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"
+                  ></path></svg
+                >
+                <div class="ml-3 w-full">
+                  <div class="flex w-full flex-row justify-between">
+                    <div>
+                      We update our data in real time to bring you the latest
+                      insights on unusual insider trading, sourced from SEC
+                      filings with a minimum transaction value of $100,000.
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="w-full m-auto mt-20 sm:mt-10">
@@ -222,6 +259,27 @@
                           ? 'opacity-[0.1]'
                           : ''}"
                       >
+                        <td class="hidden lg:table-cell"
+                          ><button
+                            on:click={() => openGraph(item?.symbol)}
+                            class="h-full pl-2 pr-2 align-middle lg:pl-3"
+                            ><svg
+                              class="w-5 h-5 text-icon {checkedSymbol ===
+                              item?.symbol
+                                ? 'rotate-180'
+                                : ''}"
+                              viewBox="0 0 20 20"
+                              fill="white"
+                              style="max-width:40px"
+                              ><path
+                                fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"
+                              ></path></svg
+                            ></button
+                          ></td
+                        >
+
                         <td class="text-sm sm:text-[1rem] text-start">
                           <HoverStockChart symbol={item?.symbol} />
                         </td>
@@ -290,6 +348,41 @@
                           </div>
                         </td>
                       </tr>
+                      {#if checkedSymbol === item?.symbol}
+                        <tr
+                          ><td colspan="9" class="px-0" style=""
+                            ><div class="-mt-0.5 px-0 pb-2">
+                              <div class="relative h-[400px]">
+                                <div class="absolute top-0 w-full">
+                                  <div
+                                    class="h-[250px] w-full xs:h-[300px] sm:h-[400px]"
+                                    style="overflow: hidden;"
+                                  >
+                                    <div
+                                      style="position: relative; height: 0px; z-index: 1;"
+                                    >
+                                      <RatingsChart
+                                        ratingsList={data?.getInsiderTracker?.map(
+                                          (item) => ({
+                                            ...item,
+                                            type: item?.transactionType,
+                                            date: item?.filingDate,
+                                            ticker: item?.symbol,
+                                          }),
+                                        )}
+                                        symbol={item?.symbol}
+                                        numOfRatings={item?.ratings}
+                                        title={"Insider Trading"}
+                                        addToLast={true}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div></td
+                          >
+                        </tr>
+                      {/if}
                     {/each}
                   </tbody>
                 </table>

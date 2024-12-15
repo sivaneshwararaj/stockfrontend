@@ -23,6 +23,7 @@
   export let ratingsList;
   export let numOfRatings = 0;
   export let title = "Ratings";
+  export let addToLast = false; //if date value not found at mark point to the last value date.
 
   let isLoaded = false;
   let optionsData = null;
@@ -103,40 +104,53 @@
     // Prepare markPoints for ratings
     const markPoints = ratingsList
       ?.filter((rating) => {
-        // Ensure date format is correct and matches
-        return dates.includes(rating?.date) && rating?.ticker === symbol;
+        // Ensure date format is correct and matches the ticker symbol
+        return rating?.ticker === symbol;
       })
-      ?.map((rating) => ({
-        // Marker at the rating's date
-        type: "max", // Marking the rating date
-        name: rating?.type,
-        coord: [
-          rating?.date,
-          closeValues[dates?.indexOf(rating?.date)], // Find the close value corresponding to the rating date
-        ],
-        label: {
-          formatter: rating?.type //rating.rating_current
-            ?.replace("Bought", "Buy")
-            ?.replace("Sold", "Sell")
-            ?.replace("Sector Perform", "Hold")
-            ?.replace("Equal-Weight", "Hold")
-            ?.replace("Market Perform", "Hold")
-            ?.replace("Overweight", "Buy")
-            ?.replace("Market Outperform", "Buy")
-            ?.replace("Outperform", "Buy")
-            ?.replace("Market Underperform", "Sell")
-            ?.replace("Underperform", "Sell")
-            ?.replace("Underweight", "Sell"), // Display the rating_current text
-          position: "top", // Position the label above the point
-          color: "white", // Set label color (can be customized)
-          fontSize: 14, // Set font size (increase for better visibility)
-        },
-        symbol: "rectangle", // Symbol type (can be customized)
-        symbolSize: 12, // Increase symbol size for better visibility
-        itemStyle: {
-          color: "red", // Set symbol color to red for better visibility
-        },
-      }));
+      ?.map((rating) => {
+        let dateIndex;
+
+        if (addToLast) {
+          // If addToLast is true, use fallback logic for the last date
+          dateIndex = dates.includes(rating?.date)
+            ? dates.indexOf(rating?.date)
+            : dates.length - 1;
+        } else {
+          // If addToLast is false, use the original logic
+          dateIndex = dates.indexOf(rating?.date);
+        }
+
+        return {
+          type: "max", // Marking the rating date
+          name: rating?.type,
+          coord: [
+            dates[dateIndex], // Use the found date or the last date
+            closeValues[dateIndex], // Close value corresponding to the date
+          ],
+          label: {
+            formatter: rating?.type
+              ?.replace("Bought", "Buy")
+              ?.replace("Sold", "Sell")
+              ?.replace("Sector Perform", "Hold")
+              ?.replace("Equal-Weight", "Hold")
+              ?.replace("Market Perform", "Hold")
+              ?.replace("Overweight", "Buy")
+              ?.replace("Market Outperform", "Buy")
+              ?.replace("Outperform", "Buy")
+              ?.replace("Market Underperform", "Sell")
+              ?.replace("Underperform", "Sell")
+              ?.replace("Underweight", "Sell"),
+            position: "top", // Position the label above the point
+            color: "white", // Set label color (can be customized)
+            fontSize: 14, // Set font size (increase for better visibility)
+          },
+          symbol: "rectangle", // Symbol type (can be customized)
+          symbolSize: 12, // Increase symbol size for better visibility
+          itemStyle: {
+            color: "red", // Set symbol color to red for better visibility
+          },
+        };
+      });
 
     const series = [
       {
