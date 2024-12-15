@@ -26,7 +26,7 @@
 
           <label
             for="scoreInfo"
-            class="absolute -top-3 -right-4 cursor-pointer border border-gray-900 rounded-full bg-[#242424] sm:hover:bg-secondary duration-100 p-1 text-gray-300 hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-300"
+            class="absolute -top-3 -right-4 cursor-pointer border border-gray-900 rounded-full bg-primary sm:hover:bg-secondary duration-100 p-1 text-gray-300 hover:text-gray-600 dark:text-dark-400 dark:hover:text-dark-300"
           >
             <svg
               class="h-[8px] w-[8px]"
@@ -133,23 +133,21 @@
             </div>
           </div>
         </div>
-        <h4
-          class="text-center text-white text-sm mt-1 font-semibold {tier ===
-            'Pro' ||
-          ['AAPL', 'NVDA', 'GOOGL', 'META', 'AMD']?.includes($stockTicker)
-            ? ''
-            : 'invisible'}"
-        >
-          {#if score === 10}
-            Strong Buy
-          {:else if score >= 7}
-            Buy
-          {:else if score >= 4}
-            Hold
-          {:else if score >= 2}
-            Sell
+        <h4 class="text-center text-white text-sm mt-1 font-semibold">
+          {#if tier === "Pro" || ["AAPL", "NVDA", "GOOGL", "META", "AMD"]?.includes($stockTicker)}
+            {#if score === 10}
+              Strong Buy
+            {:else if score >= 7}
+              Buy
+            {:else if score >= 4}
+              Hold
+            {:else if score >= 2}
+              Sell
+            {:else}
+              Strong Sell
+            {/if}
           {:else}
-            Strong Sell
+            Unlock
           {/if}
         </h4>
       </div>
@@ -160,25 +158,24 @@
 <!-- Put this part before </body> tag -->
 <input type="checkbox" id="scoreInfo" class="modal-toggle" />
 
-<label
-  for="scoreInfo"
-  class="modal modal-bottom sm:modal-middle cursor-pointer"
->
+<label for="scoreInfo" class="modal p-3 sm:p-0 cursor-pointer">
   <label for="scoreInfo" class="cursor-pointer modal-backdrop"></label>
 
   <!-- svelte-ignore a11y-label-has-associated-control -->
   <label
-    class="modal-box w-full relative bg-[#09090B] border border-gray-800 h-auto"
+    class="modal-box rounded w-full relative bg-secondary border border-gray-600 max-h-[700px] max-w-3xl"
   >
     <label
       for="scoreInfo"
-      class="cursor-pointer absolute right-5 top-2 bg-[#09090B] text-2xl text-white"
+      class="cursor-pointer absolute right-5 top-2 text-xl text-white"
     >
       ✕
     </label>
 
-    <h3 class="text-2xl font-bold text-white">AI Score</h3>
-    <p class="py-4 text-gray-200 bg-[#09090B] w-full">
+    <h3 class="text-2xl font-bold text-white pb-3 border-gray-400 border-b">
+      AI Score
+    </h3>
+    <p class="py-4 text-gray-200 w-full">
       Our AI model analyzes fundamental, technical, and statistical indicators
       to predict the probability of a bullish trend over the next three months.
       <br />
@@ -187,21 +184,15 @@
       for you.
     </p>
 
-    <table
-      class="table table-sm table-compact bg-[#09090B] w-full mt-5 mb-10 text-white"
-    >
+    <table class="table table-sm table-compact w-full mt-5 mb-10 text-white">
       <!-- head -->
       <thead>
         <tr class="border-b border-slate-700 odd:bg-secondary">
-          <th class="bg-[#09090B] text-white text-sm font-semibold">
+          <th class=" text-white text-sm font-semibold">
             Bullish Probability
           </th>
-          <th class="bg-[#09090B] text-white text-sm font-semibold">
-            Sentiment
-          </th>
-          <th class="bg-[#09090B] text-white text-sm text-end font-semibold">
-            Score
-          </th>
+          <th class=" text-white text-sm font-semibold"> Sentiment </th>
+          <th class=" text-white text-sm text-end font-semibold"> Score </th>
         </tr>
       </thead>
       <tbody>
