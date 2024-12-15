@@ -50,8 +50,8 @@
   });
 
   let columns = [
-    { key: "filingDate", label: "Date", align: "left" },
     { key: "symbol", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
     { key: "reportingName", label: "Member", align: "left" },
     { key: "marketCap", label: "Market Cap", align: "right" },
     { key: "price", label: "Price", align: "right" },
@@ -63,6 +63,7 @@
   let sortOrders = {
     filingDate: { order: "none", type: "date" },
     symbol: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
     reportingName: { order: "none", type: "string" },
     marketCap: { order: "none", type: "number" },
     price: { order: "none", type: "number" },
@@ -177,7 +178,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-5">
+        <main class="w-full">
           <div class="mb-6 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
               Insider Tracker
@@ -221,14 +222,15 @@
                           ? 'opacity-[0.1]'
                           : ''}"
                       >
-                        <td
-                          class="text-white text-sm font-medium text-white whitespace-nowrap"
-                        >
-                          {formatDateTime(item?.filingDate)}
-                        </td>
-
                         <td class="text-sm sm:text-[1rem] text-start">
                           <HoverStockChart symbol={item?.symbol} />
+                        </td>
+                        <td
+                          class="whitespace-nowrap text-white text-sm sm:text-[1rem] text-white text-start"
+                        >
+                          {item?.name?.length > charNumber
+                            ? item?.name?.slice(0, charNumber) + "..."
+                            : item?.name}
                         </td>
 
                         <td
@@ -307,67 +309,6 @@
             </div>
           {/if}
         </main>
-
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
-            <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-            >
-              <a
-                href="/pricing"
-                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-              >
-                <div class="w-full flex justify-between items-center p-3 mt-3">
-                  <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription
-                  </h2>
-                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-                </div>
-                <span class="text-white p-3 ml-3 mr-3">
-                  Upgrade now for unlimited access to all data and tools.
-                </span>
-              </a>
-            </div>
-          {/if}
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href="/sentiment-tracker"
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Sentiment Tracker
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Follow the latest trends in realtime on social media
-              </span>
-            </a>
-          </div>
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href="/reddit-tracker"
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Reddit Tracker
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Get the latest trends of r/Wallstreetbets
-              </span>
-            </a>
-          </div>
-        </aside>
       </div>
     </div>
   </div>
