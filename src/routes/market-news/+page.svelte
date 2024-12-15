@@ -4,7 +4,7 @@
 
   export let data;
 
-  let rawData = data?.getMarketNews;
+  let rawData = data?.getData;
   let news = rawData.slice(0, 15) ?? [];
 
   const formatDate = (dateString) => {
@@ -73,35 +73,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Today's
-    Stock Market News and Breaking Stories · Stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} All
+    Stock News · Stocknear
   </title>
   <meta
     name="description"
-    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+    content={`The latest news on individual stocks on the US stock market, gathered from trusted finance and investing websites.`}
   />
 
   <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`Today's Stock Market News and Breaking Stories · Stocknear`}
-  />
+  <meta property="og:title" content={`All Stock News · Stocknear`} />
   <meta
     property="og:description"
-    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+    content={`The latest news on individual stocks on the US stock market, gathered from trusted finance and investing websites.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Today's Stock Market News and Breaking Stories · Stocknear`}
-  />
+  <meta name="twitter:title" content={`All Stock News · Stocknear`} />
   <meta
     name="twitter:description"
-    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+    content={`The latest news on individual stocks on the US stock market, gathered from trusted finance and investing websites.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -152,16 +146,18 @@
                         <div class="flex-shrink-0 m-auto">
                           <img
                             src={item?.image}
-                            class="h-auto w-full"
+                            class="h-full w-full object-cover rounded"
                             alt="news image"
                             loading="lazy"
                           />
                         </div>
                       </a>
+
                       <div class="w-full">
-                        <h3 class="text-sm text-white/80 truncate mb-2 mt-3">
+                        <h3 class="text-sm text-white/80 truncate mb-2">
                           {formatDate(item?.publishedDate)} ago · {item?.site}
                         </h3>
+
                         <a
                           href={item?.url}
                           rel="noopener noreferrer"
@@ -175,12 +171,22 @@
                               : item?.text}
                           </p>
                         </a>
+                        <div class=" mt-2 text-white">
+                          <span>Stocks:</span>
+
+                          <a
+                            href={"/stocks/" + item?.symbol}
+                            class="px-2.5 text-sm py-0.5 rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-1"
+                          >
+                            {item?.symbol}
+                          </a>
+                        </div>
                       </div>
                     </div>
                   {/if}
                 </div>
 
-                <hr class="border-gray-800 w-full m-auto mt-5 mb-5" />
+                <hr class="border-gray-600 w-full m-auto mt-3 mb-5" />
               {/each}
             {/if}
           </div>

@@ -7,12 +7,16 @@
 
   const tabs = [
     {
-      title: "Stock",
+      title: "All Stocks",
       path: "/market-news",
     },
     {
-      title: "General",
+      title: "Market",
       path: "/market-news/general",
+    },
+    {
+      title: "Press Releases",
+      path: "/market-news/press-releases",
     },
   ];
 
@@ -23,6 +27,8 @@
     activeIdx = 0;
   } else if ($page.url.pathname.startsWith("/market-news/general")) {
     activeIdx = 1;
+  } else if ($page.url.pathname.startsWith("/market-news/press-releases")) {
+    activeIdx = 2;
   }
 </script>
 
@@ -49,18 +55,20 @@
       >
         <main class="w-full lg:w-3/4 lg:pr-5">
           <h1 class="mb-6 text-white text-2xl sm:text-3xl font-bold">
-            Stock Market News
+            {activeIdx === 0
+              ? "All Stocks News"
+              : activeIdx === 1
+                ? "Market News"
+                : "Press Releases"}
           </h1>
 
           <nav class=" border-b-[2px] overflow-x-scroll whitespace-nowrap">
-            <ul
-              class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
-            >
+            <ul class="flex flex-row items-center w-full text-lg text-white">
               {#each tabs as item, i}
                 <a
                   href={item?.path}
                   class="p-2 px-5 cursor-pointer {activeIdx === i
-                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
                     : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
                 >
                   {item.title}

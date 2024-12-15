@@ -1,7 +1,7 @@
 export const load = async ({ locals }) => {
   const getData = async () => {
     const { apiURL, apiKey } = locals;
-    const postData = { newsType: "general-news" };
+    const postData = { newsType: "press-news" };
 
     // make the POST request to the endpoint
     const response = await fetch(apiURL + "/market-news", {

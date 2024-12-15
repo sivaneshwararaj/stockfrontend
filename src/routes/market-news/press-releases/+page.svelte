@@ -50,45 +50,28 @@
       window.removeEventListener("scroll", handleScroll);
     };
   });
-
-  let videoId = null;
-
-  function checkIfYoutubeVideo(link) {
-    const url = new URL(link);
-    if (url.hostname === "www.youtube.com") {
-      const searchParams = url.searchParams;
-      searchParams?.delete("t"); // Remove the "t" parameter
-      const videoIdMatch = url?.search?.match(/v=([^&]+)/);
-
-      if (videoIdMatch) {
-        return videoIdMatch[1];
-      }
-    } else {
-      return null;
-    }
-  }
 </script>
 
 <svelte:head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Today's
-    Stock Market News and Breaking Stories · Stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Press
+    Releases From Publicly Traded Companies · Stocknear
   </title>
   <meta
     name="description"
-    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+    content={`Press releases for publicly traded companies on the US stock market. Includes important company events, earnings releases and more.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`Today's Stock Market News and Breaking Stories · Stocknear`}
+    content={`TPress Releases From Publicly Traded Companies · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+    content={`Press releases for publicly traded companies on the US stock market. Includes important company events, earnings releases and more.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -97,11 +80,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`Today's Stock Market News and Breaking Stories · Stocknear`}
+    content={`TPress Releases From Publicly Traded Companies · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Get the latest stock market news and breaking stories from the world's best finance and investing websites.`}
+    content={`Press releases for publicly traded companies on the US stock market. Includes important company events, earnings releases and more.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -115,11 +98,28 @@
             {#if news.length !== 0}
               {#each news as item}
                 <div class="w-full flex flex-col bg-[#09090B] m-auto">
-                  {#if (videoId = checkIfYoutubeVideo(item?.url))}
-                    <div class="w-full mb-4">
-                      <h3 class="text-sm text-white/80 mb-2">
+                  <div class="w-full flex flex-col sm:flex-row">
+                    <a
+                      href={item?.url}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      class="w-full sm:max-w-56 h-fit max-h-96 sm:mr-3"
+                    >
+                      <div class="flex-shrink-0 m-auto">
+                        <img
+                          src={item?.image}
+                          class="h-full w-full object-cover rounded"
+                          alt="news image"
+                          loading="lazy"
+                        />
+                      </div>
+                    </a>
+
+                    <div class="w-full">
+                      <h3 class="text-sm text-white/80 truncate mb-2">
                         {formatDate(item?.publishedDate)} ago · {item?.site}
                       </h3>
+
                       <a
                         href={item?.url}
                         rel="noopener noreferrer"
@@ -127,60 +127,27 @@
                         class="text-lg sm:text-xl font-bold text-white"
                       >
                         {item?.title}
-                        <p class="text-white text-sm font-normal">
-                          {item?.text}
+                        <p class="text-white text-sm mt-2 font-normal">
+                          {item?.text?.length > 200
+                            ? item?.text?.slice(0, 200) + "..."
+                            : item?.text}
                         </p>
                       </a>
-                    </div>
-                    <div class="w-full aspect-video">
-                      <iframe
-                        class="w-full h-full"
-                        src={`https://www.youtube.com/embed/${videoId}`}
-                        frameborder="0"
-                        allow="clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                      ></iframe>
-                    </div>
-                  {:else}
-                    <div class="w-full flex flex-col sm:flex-row">
-                      <a
-                        href={item?.url}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        class="w-full sm:max-w-56 h-fit max-h-96 sm:mr-3"
-                      >
-                        <div class="flex-shrink-0 m-auto">
-                          <img
-                            src={item?.image}
-                            class="h-auto w-full"
-                            alt="news image"
-                            loading="lazy"
-                          />
-                        </div>
-                      </a>
-                      <div class="w-full">
-                        <h3 class="text-sm text-white/80 truncate mb-2 mt-3">
-                          {formatDate(item?.publishedDate)} ago · {item?.site}
-                        </h3>
+                      <div class=" mt-2 text-white">
+                        <span>Stocks:</span>
+
                         <a
-                          href={item?.url}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                          class="text-lg sm:text-xl font-bold text-white"
+                          href={"/stocks/" + item?.symbol}
+                          class="px-2.5 text-sm py-0.5 rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-1"
                         >
-                          {item?.title}
-                          <p class="text-white text-sm mt-2 font-normal">
-                            {item?.text?.length > 200
-                              ? item?.text?.slice(0, 200) + "..."
-                              : item?.text}
-                          </p>
+                          {item?.symbol}
                         </a>
                       </div>
                     </div>
-                  {/if}
+                  </div>
                 </div>
 
-                <hr class="border-gray-800 w-full m-auto mt-5 mb-5" />
+                <hr class="border-gray-600 w-full m-auto mt-3 mb-5" />
               {/each}
             {/if}
           </div>
