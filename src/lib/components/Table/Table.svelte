@@ -168,9 +168,9 @@
     }
 
     // Create a new array to store the final data
-    const updatedRawData = rawData.map((originalItem) => {
+    const updatedRawData = rawData?.map((originalItem) => {
       // Find the corresponding item in updateData by matching symbol
-      const updateItem = updateData.find(
+      const updateItem = updateData?.find(
         (item) => item.symbol === originalItem.symbol,
       );
 
@@ -185,12 +185,12 @@
       // Merge fields from updateData
       Object.assign(newData, updateItem);
 
-      // Apply defaultRules logic
       defaultRules?.forEach((rule) => {
         // If the rule is missing in updateData but exists in original data, preserve original
-        if (!(rule in updateItem) && rule in originalItem) {
+        if (rule in originalItem) {
           newData[rule] = originalItem[rule];
         }
+        //!(rule in updateItem) &&
       });
 
       // Explicitly ensure 'rank' and 'years' are preserved if missing in update
