@@ -180,7 +180,7 @@
                   {/if}
                 </div>
 
-                <hr class="border-gray-800 w-full m-auto mt-5 mb-5" />
+                <hr class="border-gray-600 w-full m-auto mt-5 mb-5" />
               {/each}
             {/if}
           </div>

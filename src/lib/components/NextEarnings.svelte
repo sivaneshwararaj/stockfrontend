@@ -43,7 +43,7 @@
           <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
           <div class="flex flex-row items-center">
             <h3
-              class="mr-1 flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+              class="mr-1 flex flex-row items-center text-white text-2xl font-bold"
             >
               Next Earnings Release
             </h3>

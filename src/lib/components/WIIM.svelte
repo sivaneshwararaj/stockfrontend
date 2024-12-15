@@ -50,7 +50,7 @@
     <div class="flex flex-row items-center">
       <label
         for="whyPriceMovedInfo"
-        class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+        class="mr-1 cursor-pointer flex flex-row items-center text-white text-2xl font-bold"
       >
         Why Price Moved
       </label>

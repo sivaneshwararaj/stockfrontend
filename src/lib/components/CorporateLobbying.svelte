@@ -61,7 +61,7 @@
       <div class="flex justify-center items-center h-80">
         <div class="relative">
           <label
-            class="bg-[#09090B] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           >
             <span class="loading loading-spinner loading-md text-gray-400"
             ></span>
