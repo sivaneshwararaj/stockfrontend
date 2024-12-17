@@ -795,43 +795,13 @@
               {/if}
             </nav>
 
-            {#if !data?.user || data?.user?.tier === "Free" || data?.user?.freeTrial === true}
-              <div class="pt-10 w-full mb-5 m-auto sticky">
-                <Card.Root>
-                  <Card.Header class="p-4">
-                    <Card.Title>Upgrade to Pro</Card.Title>
-                    <Card.Description>
-                      {#if !data?.user || data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
-                        Get unlimited access to all features
-                      {/if}
-                    </Card.Description>
-                  </Card.Header>
-                  <Card.Content class="p-4 pt-0">
-                    <Sheet.Close asChild let:builder>
-                      <Button
-                        on:click={() => goto("/pricing")}
-                        builders={[builder]}
-                        type="submit"
-                        size="sm"
-                        class="w-full bg-white hover:bg-white/80"
-                      >
-                        <span
-                          class="flex flex-row items-center text-black font-semibold text-center"
-                        >
-                          Become Pro
-                        </span>
-                      </Button>
-                    </Sheet.Close>
-                  </Card.Content>
-                </Card.Root>
-              </div>
-            {/if}
+        
           </Sheet.Content>
         </Sheet.Root>
 
         <a href="/" class="-ml-2 flex flex-shrink-0">
           <img
-            class="avatar w-9 3xl:w-10 rounded-full"
+            class="avatar w-9 xl:w-10 rounded-full"
             src={stocknear_logo}
             alt="Stocknear Logo"
           />
@@ -844,7 +814,7 @@
             <Input
               type="search"
               placeholder="Search..."
-              class="w-full rounded-md bg-[#202327] placeholder-gray-400 border-none pl-8 md:w-[300px] lg:w-[700px] border-transparent focus:border-transparent focus:ring-0 "
+              class="w-full rounded-md bg-[#202327] placeholder-gray-400 border-none pl-8 md:w-[300px] xl:w-[700px] border-transparent focus:border-transparent focus:ring-0 "
               autocomplete="off"
               />
             -->
@@ -912,19 +882,19 @@
       </div>
       <div>
         <div class="flex w-full">
-          <div class="hidden 3xl:block 3xl:w-1/6">
+          <div class="hidden xl:block xl:w-1/6">
             <aside
-              class="fixed overflow-y-scroll scroller overflow-hidden inset-y-0 left-0 z-50 3xl:flex w-72 flex-col 3xl:border-r 3xl:border-gray-800 bg-[#141417]"
+              class="fixed overflow-y-scroll scroller overflow-hidden inset-y-0 left-0 z-50 xl:flex w-64 flex-col xl:border-r xl:border-gray-800 bg-[#141417]"
             >
               <nav
-                class="flex flex-col items-center mr-auto gap-y-4 3xl:py-5 w-full"
+                class="flex flex-col items-center mr-auto gap-y-4 xl:py-5 w-full"
               >
                 <a
                   href="/"
-                  class="-ml-3 mb-5 flex justify-end items-center h-9 w-9 shrink-0 gap-2 rounded-full text-lg font-semibold text-primary-foreground md:h-10 md:w-10 md:text-base"
+                  class="ml-3 mb-5 flex justify-end items-center h-9 w-9 shrink-0 gap-2 rounded-full text-lg font-semibold text-primary-foreground md:h-10 md:w-10 md:text-base"
                 >
                   <img
-                    class="avatar w-9 3xl:w-12 rounded-full"
+                    class="avatar w-9 xl:w-12 rounded-full"
                     src={stocknear_logo}
                     alt="Stocknear Logo"
                   />
@@ -1198,32 +1168,10 @@
                   </a>
                 {/if}
               </nav>
-              {#if !data?.user || data?.user?.tier === "Free" || data?.user?.freeTrial === true}
-                <div class="mt-auto p-4">
-                  <Card.Root
-                    data-x-chunk-name="dashboard-02-chunk-0"
-                    data-x-chunk-description="A card with a call to action"
-                  >
-                    <Card.Header class="p-2 pt-0 md:p-4">
-                      <Card.Title>Upgrade to Pro</Card.Title>
-                      <Card.Description>
-                        Get unlimited access to all features
-                      </Card.Description>
-                    </Card.Header>
-                    <Card.Content class="p-2 pt-0 md:p-4 md:pt-0">
-                      <a
-                        href="/pricing"
-                        class="flex justify-center items-center text-center rounded-md text-sm py-2 m-auto text-center w-full bg-white text-black font-semibold hover:bg-white/80"
-                      >
-                        Become Pro
-                      </a>
-                    </Card.Content>
-                  </Card.Root>
-                </div>
-              {/if}
+            
             </aside>
           </div>
-          <div class="w-full 3xl:w-5/6">
+          <div class="w-full xl:w-5/6">
             <main class="w-full overflow-y-auto bg-[#09090B] sm:p-4">
               <!--
               <button on:click={handleNotificationClick}>
