@@ -1768,23 +1768,8 @@
                                 <div>
                                   <strong>{item?.name}</strong>
                                   (<HoverStockChart symbol={item?.symbol} />)
-                                  {item?.isToday
-                                    ? "will report today"
-                                    : [
-                                          "Monday",
-                                          "Tuesday",
-                                          "Wednesday",
-                                          "Thursday",
-                                        ].includes(
-                                          new Date().toLocaleDateString(
-                                            "en-US",
-                                            {
-                                              weekday: "long",
-                                            },
-                                          ),
-                                        )
-                                      ? "will report tomorrow"
-                                      : "will report Monday"}
+                                  will report
+                                  
                                   {#if item?.time}
                                     {#if compareTimes(item?.time, "16:00") >= 0}
                                       after market closes.
