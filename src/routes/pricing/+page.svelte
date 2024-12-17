@@ -113,7 +113,7 @@
 <section
   class="bg-[#09090B] min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 m-auto"
 >
-  <!--
+  
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
     <div
       class="mb-5 -mt-10 sm:-mt-5 relative sm:rounded isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#FFC233] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
@@ -141,20 +141,16 @@
       >
         <p class="text-[1rem] text-black">
           <strong class="font-semibold text-[1rem] sm:text-lg text-black"
-            >Black Friday Deal</strong
-          ><svg
-            viewBox="0 0 2 2"
-            class="mx-2 inline h-0.5 w-0.5 fill-current"
-            aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg
+            >🎄Limited-Time Christmas Gift!🎅</strong
           >
-          Save <strong class="text-black">40%</strong> on your Monthly/Annual
+          Save <strong class="text-black">20%</strong> on your Monthly/Annual
           Plan with Promo Code:
-          <strong class="text-black">BLACK</strong>
+          <strong class="text-black">XMAS</strong>
         </p>
       </div>
     </div>
   {/if}
-  -->
+  
 
   <div class="px-3">
     <div class="mx-auto text-center mb-8">
