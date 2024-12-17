@@ -214,10 +214,12 @@ onmessage = async (event: MessageEvent) => {
   const { stockScreenerData, ruleOfList } = event.data || {};
 
   try {
-    const filteredData = await filterStockScreenerData(
+    let filteredData = await filterStockScreenerData(
       stockScreenerData,
       ruleOfList
     );
+
+    filteredData = filteredData?.sort((a,b) => b?.marketCap - a?.marketCap);
 
     postMessage({ 
       message: "success", 

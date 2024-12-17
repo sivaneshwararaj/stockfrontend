@@ -884,7 +884,7 @@
         <div class="flex w-full">
           <div class="hidden xl:block xl:w-1/6">
             <aside
-              class="fixed overflow-y-scroll scroller overflow-hidden inset-y-0 left-0 z-50 xl:flex w-64 flex-col xl:border-r xl:border-gray-800 bg-[#141417]"
+              class="fixed overflow-y-auto scroller overflow-hidden inset-y-0 left-0 z-50 xl:flex w-64 flex-col xl:border-r xl:border-gray-800 bg-[#141417]"
             >
               <nav
                 class="flex flex-col items-center mr-auto gap-y-4 xl:py-5 w-full"

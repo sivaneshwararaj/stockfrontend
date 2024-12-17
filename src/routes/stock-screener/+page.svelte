@@ -1380,7 +1380,7 @@
   });
 
   // Update ruleCondition and valueMappings based on existing rules
-  ruleOfList.forEach((rule) => {
+  ruleOfList?.forEach((rule) => {
     ruleCondition[rule.name] =
       rule.condition || allRules[rule.name].defaultCondition;
     valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
