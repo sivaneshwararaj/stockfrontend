@@ -196,7 +196,7 @@
     }
 
     displayRules = allRows?.filter((row) =>
-      ruleOfList.some((rule) => rule.name === row.rule),
+      ruleOfList?.some((rule) => rule.name === row.rule),
     );
     shouldLoadWorker.set(true);
     await saveCookieRuleOfList();
@@ -209,7 +209,7 @@
     ruleName = "";
     filterQuery = "";
     checkedItems = new Set();
-    Object.keys(allRules).forEach((ruleName) => {
+    Object?.keys(allRules).forEach((ruleName) => {
       ruleCondition[ruleName] = allRules[ruleName].defaultCondition;
       valueMappings[ruleName] = allRules[ruleName].defaultValue;
     });
@@ -544,7 +544,6 @@
         if (mode === true) {
           try {
             newData = JSON?.parse(event.data) ?? [];
-            console.log(newData?.length);
             if (newData?.length > 0) {
               newData?.forEach((item) => {
                 item.dte = daysLeft(item?.date_expiration);
@@ -558,7 +557,9 @@
               ) {
                 //console.log(previousVolume,totalVolume,);
                 rawData = newData;
-                displayedData = rawData;
+                shouldLoadWorker.set(true);
+                //console.log('loading worker')
+                //displayedData = rawData;
 
                 if (!muted) {
                   audio?.play();

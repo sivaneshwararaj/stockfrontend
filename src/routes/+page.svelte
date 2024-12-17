@@ -710,6 +710,7 @@
                         {:else}
                           during market.
                         {/if}
+                        
                       {/if}Analysts estimate {abbreviateNumber(
                         item?.revenueEst,
                       )} in revenue ({(
