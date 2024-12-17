@@ -483,41 +483,37 @@
 
   //===============================================//
   function defaultTickMarkFormatter(timePoint, tickMarkType, locale) {
-    const formatOptions = {
-      timeZone: "UTC",
-    };
+  const formatOptions = {
+    timeZone: "UTC", // Ensure UTC time zone
+    hour12: true,    // Use 12-hour format
+  };
 
-    switch (tickMarkType) {
-      case 0: // TickMarkType.Year:
-        formatOptions.year = "numeric";
-        break;
-      case 1: // TickMarkType.Month:
-        formatOptions.month = "short";
-        break;
-      case 2: // TickMarkType.DayOfMonth:
-        formatOptions.day = "numeric";
-        break;
-      case 3: // TickMarkType.Time:
-        formatOptions.hour12 = true; // Use 12-hour clock
-        formatOptions.hour = "numeric"; // Use numeric hour without leading zero
-        break;
-      case 4: // TickMarkType.TimeWithSeconds:
-        formatOptions.hour12 = true; // Use 12-hour clock
-        formatOptions.hour = "numeric"; // Use numeric hour without leading zero
-        formatOptions.minute = "2-digit"; // Always show minutes with leading zero
-        formatOptions.second = "2-digit"; // Always show seconds with leading zero
-        break;
-      default:
-      // Ensure this default case handles unexpected tickMarkType values
-    }
-    if ([3, 4]?.includes(tickMarkType)) {
-      const date = new Date(timePoint?.timestamp * 1000);
-      return new Intl.DateTimeFormat(locale, formatOptions)?.format(date);
-    } else {
-      const date = new Date(timePoint?.timestamp);
-      return new Intl.DateTimeFormat(locale, formatOptions)?.format(date);
-    }
+  switch (tickMarkType) {
+    case 0: // TickMarkType.Year:
+      formatOptions.year = "numeric";
+      break;
+    case 1: // TickMarkType.Month:
+      formatOptions.month = "short";
+      break;
+    case 2: // TickMarkType.DayOfMonth:
+      formatOptions.day = "numeric";
+      break;
+    case 3: // TickMarkType.Time:
+      formatOptions.hour = "numeric";
+      break;
+    case 4: // TickMarkType.TimeWithSeconds:
+      formatOptions.hour = "numeric";
+      formatOptions.minute = "2-digit";
+      formatOptions.second = "2-digit";
+      break;
+    default:
+      return "";
   }
+
+  // Use 'en-US' to ensure the format '10 PM'
+  const date = new Date(timePoint.timestamp * 1000);
+  return new Intl.DateTimeFormat('en-US', formatOptions).format(date);
+}
 
   $: options = {
     width: width,
