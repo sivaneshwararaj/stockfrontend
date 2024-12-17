@@ -664,7 +664,7 @@
       category: "Valuation & Ratios",
     },
     returnOnInvestedCapital: {
-      label: "Return On Capital",
+      label: "Return On Invested Capital",
       step: ["100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
