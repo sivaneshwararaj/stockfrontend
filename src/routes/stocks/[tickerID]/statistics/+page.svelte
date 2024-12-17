@@ -311,9 +311,13 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
+              {#if rawData?.enterpriseValue !== null}
                 {$displayCompanyName} has an Enterprise Value (EV) of {abbreviateNumber(
                   rawData?.enterpriseValue,
                 )}.
+              {:else}
+              Currently the Enterprise Value (EV) is not available for {$displayCompanyName}.
+              {/if}
               </p>
               <table class="w-full">
                 <tbody
@@ -323,7 +327,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.evEarnings}</td
+                      >{rawData?.evEarnings ?? 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -331,7 +335,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.evSales}</td
+                      >{rawData?.evSales ?? 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -339,7 +343,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.evEBITDA}</td
+                      >{rawData?.evEBITDA ?? 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -347,7 +351,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.evEBIT}</td
+                      >{rawData?.evEBIT ?? 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -355,7 +359,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{rawData?.evFCF}</td
+                      >{rawData?.evFCF ?? 'n/a'}</td
                     >
                   </tr></tbody
                 >
@@ -608,12 +612,12 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
+              {#if rawData?.revenue !== null && rawData?.revenue !== 0}
                 In the last 12 months, {companyName} had revenue of {abbreviateNumber(
-                  rawData?.revenue,
-                  true,
-                )}
-                and earned {abbreviateNumber(rawData?.netIncome, true)} in profits.
-                Earnings per share was ${rawData?.eps}.
+                  rawData?.revenue)}
+                and earned {abbreviateNumber(rawData?.netIncome)} in profits.
+                Earnings per share was {rawData?.eps}.
+                {/if}
               </p>
               <table class="w-full">
                 <tbody
@@ -623,7 +627,7 @@
                     >
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{abbreviateNumber(rawData?.revenue)}</td
+                      >{rawData?.revenue !== 0 && rawData?.revenue !== null ? abbreviateNumber(rawData?.revenue) : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -663,7 +667,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{abbreviateNumber(rawData?.ebit)}</td
+                      >{rawData?.ebit !== 0 && rawData?.ebit !== null ? abbreviateNumber(rawData?.ebit) : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -830,6 +834,7 @@
               <p
                 class="mb-4 px-0.5 text-white xs:text-[1.05rem] lg:leading-normal"
               >
+              {#if rawData?.grossProfitMargin !== 0 && rawData?.grossProfitMargin !== null}
                 Gross margin is {checkValue(
                   rawData?.grossProfitMargin,
                   "int",
@@ -837,7 +842,8 @@
                   rawData?.operatingProfitMargin,
                   "int",
                 )}% and {checkValue(rawData?.netProfitMargin, "int")}%.
-              </p>
+              {/if}  
+            </p>
               <table class="w-full">
                 <tbody
                   ><tr class="border-y border-gray-600 odd:bg-secondary"
@@ -846,7 +852,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{checkValue(rawData?.grossProfitMargin, "int")}%</td
+                      >{rawData?.grossProfitMargin !== 0 && rawData?.grossProfitMargin !== null ? checkValue(rawData?.grossProfitMargin, "int")+'%' : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -854,7 +860,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{checkValue(rawData?.operatingProfitMargin, "int")}%</td
+                      >{rawData?.operatingProfitMargin !== 0 && rawData?.operatingProfitMargin !== null ? checkValue(rawData?.operatingProfitMargin, "int")+'%' : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -862,7 +868,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{checkValue(rawData?.pretaxProfitMargin, "int")}%</td
+                      >{rawData?.pretaxProfitMargin !== 0 && rawData?.pretaxProfitMargin !== null ? checkValue(rawData?.pretaxProfitMargin, "int")+'%' : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -870,7 +876,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{checkValue(rawData?.netProfitMargin, "int")}%</td
+                      >{rawData?.netProfitMargin !== 0 && rawData?.netProfitMargin !== null ? checkValue(rawData?.netProfitMargin, "int")+'%' : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -878,7 +884,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{checkValue(rawData?.ebitdaMargin, "int")}%</td
+                      >{rawData?.ebitdaMargin !== 0 && rawData?.ebitdaMargin !== null ? checkValue(rawData?.ebitdaMargin, "int")+'%' : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -886,7 +892,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{checkValue(rawData?.ebitMargin, "int")}%</td
+                      >{rawData?.ebitMargin !== 0 && rawData?.ebitMargin !== null ? checkValue(rawData?.ebitMargin, "int")+'%' : 'n/a'}</td
                     >
                   </tr><tr class="border-y border-gray-600 odd:bg-secondary"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -894,7 +900,7 @@
                     </td>
                     <td
                       class="px-[5px] py-1.5 text-right font-semibold xs:px-2.5 xs:py-2"
-                      >{checkValue(rawData?.freeCashFlowMargin, "int")}%</td
+                      >{rawData?.freeCashFlowMargin !== 0 && rawData?.freeCashFlowMargin !== null ? checkValue(rawData?.freeCashFlowMargin, "int")+'%' : 'n/a'}</td
                     >
                   </tr></tbody
                 >
