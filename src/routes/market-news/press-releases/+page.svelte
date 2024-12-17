@@ -5,7 +5,7 @@
   export let data;
 
   let rawData = data?.getData;
-  let news = rawData.slice(0, 15) ?? [];
+  let news = rawData.slice(0, 10) ?? [];
 
   const formatDate = (dateString) => {
     // Create a date object for the input dateString
