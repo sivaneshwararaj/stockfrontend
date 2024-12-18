@@ -42,16 +42,16 @@
             <div
               class="w-full p-2 text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
-              <h3 class="p-2 pt-4 text-xl font-semibold">Related Stocks</h3>
+              <h3 class="p-2 pt-4 text-2xl font-semibold">Related Stocks</h3>
               <table class="table table-sm table-compact w-full text-white">
                 <thead class="text-white"
                   ><tr
                     ><th
-                      class="whitespace-nowrap border-b font-semibold text-sm text-left"
+                      class="whitespace-nowrap border-b font-semibold text-[1rem] text-left"
                       >Company</th
                     >
                     <th
-                      class="whitespace-nowrap border-b font-semibold text-sm text-right"
+                      class="whitespace-nowrap border-b font-semibold text-[1rem] text-right"
                       >Employees</th
                     ></tr
                   ></thead
@@ -66,11 +66,11 @@
                       ><td class="text-left"
                         ><a
                           href={`/stocks/${item?.symbol}`}
-                          class="sm:hover:text-white text-blue-400"
+                          class="text-[1rem] sm:hover:text-white text-blue-400"
                           >{item?.symbol}</a
                         ></td
                       >
-                      <td class="text-right cursor-normal"
+                      <td class="text-right text-[1rem] cursor-normal"
                         >{item?.employees !== null &&
                         item?.employees !== undefined
                           ? parseFloat(item?.employees).toLocaleString(
