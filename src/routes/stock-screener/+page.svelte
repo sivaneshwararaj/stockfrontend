@@ -1699,7 +1699,7 @@
     checkedItems = new Map();
     ruleOfList = [...ruleOfList];
     await updateStockScreenerData();
-    await handleSave(false);
+    //await handleSave(false);
   }
 
   async function handleDeleteRule(state) {
@@ -1723,7 +1723,7 @@
     // Only create a new array if there are remaining rules
     ruleOfList = [...ruleOfList];
     await updateStockScreenerData();
-    await handleSave(false);
+    //await handleSave(false);
   }
 
   async function handleScroll() {
@@ -3134,7 +3134,6 @@ const handleKeyDown = (event) => {
                   <td class="border-b-[#09090B] whitespace-nowrap">
                     <a
                       href={"/stocks/" + item?.symbol}
-                      on:click={() => handleSave(false)}
                       class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
                       >{item?.symbol}</a
                     >
