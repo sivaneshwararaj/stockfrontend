@@ -285,7 +285,6 @@
       estimatedEpsAvg,
     );
 
-    console.log(estimatedEpsAvg, data?.getAnalystEstimate[index - 2]?.eps);
   }
 
   function getPriceForecastChart() {

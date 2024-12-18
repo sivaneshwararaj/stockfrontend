@@ -899,7 +899,6 @@
                           >Statistics</a
                         >
 
-                        {#if ["amd", "save", "ba", "adbe", "nflx", "pltr", "msft", "meta", "tsla", "nvda", "aapl", "gme"]?.includes($stockTicker?.toLowerCase())}
                           <a
                             href={`/stocks/${$stockTicker}/metrics`}
                             on:click={() => changeSection("metrics")}
@@ -909,7 +908,6 @@
                               : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
                             >Metrics</a
                           >
-                        {/if}
 
                         {#if Object?.keys(data?.getAnalystRating ?? {})?.length > 0}
                           <a

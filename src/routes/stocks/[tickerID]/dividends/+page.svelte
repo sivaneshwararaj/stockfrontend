@@ -50,13 +50,19 @@
         containLabel: true,
       },
       xAxis: {
-        data: dates,
         type: "category",
+        boundaryGap: false,
+        data: dates,
         axisLabel: {
           color: "#fff",
-        },
-        splitLine: {
-          show: false, // Disable x-axis grid lines
+          formatter: function (value) {
+            // Assuming dates are in the format 'yyyy-mm-dd'
+            // Extract the month and day from the date string and convert the month to its abbreviated name
+            const dateParts = value.split("-");
+            const year = dateParts[0].substring(2); // Extracting the last two digits of the year
+            const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+            return `${monthNames[monthIndex]} '${year} `;
+          },
         },
       },
       yAxis: [
