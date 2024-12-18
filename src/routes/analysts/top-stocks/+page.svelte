@@ -6,6 +6,7 @@
 
   export let data;
 
+  const rawData = data?.getTopAnalystStocks;
   const excludedRules = new Set([
     "upside",
     "priceTarget",
@@ -104,7 +105,7 @@
           <div class="w-full m-auto mt-10">
             <Table
               {data}
-              rawData={data?.getTopAnalystStocks}
+              {rawData}
               {defaultList}
               {excludedRules}
               {hideLastRow}

@@ -159,58 +159,59 @@
   checkedItems = new Set(ruleOfList?.map((item) => item.name));
 
   allRows = sortIndicatorCheckMarks(allRows);
+
+
   const handleDownloadMessage = (event) => {
-    let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
-
-    // Check if both arrays exist and have data
-    if (!updateData?.length || !rawData?.length) {
-      return;
-    }
-
-    // Create a new array to store the final data
-    const updatedRawData = rawData?.map((originalItem) => {
-      // Find the corresponding item in updateData by matching symbol
-      const updateItem = updateData?.find(
-        (item) => item.symbol === originalItem.symbol,
-      );
-
-      // If no matching update found, return the original item
-      if (!updateItem) {
-        return originalItem;
-      }
-
-      // Create a new object to merge data
-      let newData = { ...originalItem };
-
+  let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
+  // Check if both arrays exist and have data
+  if (!updateData?.length || !rawData?.length) {
+    return;
+  }
+  
+  // Create a new array to ensure reactivity
+  const updatedRawData = [...rawData];
+  
+  for (let i = 0; i < updateData.length; i++) {
+    if (updatedRawData[i]) {
+      // Create a new object to merge the data
+      let newData = {};
+      
       // Merge fields from updateData
-      Object.assign(newData, updateItem);
-
-      defaultRules?.forEach((rule) => {
-        // If the rule is missing in updateData but exists in original data, preserve original
-        if (rule in originalItem) {
-          newData[rule] = originalItem[rule];
+      Object.assign(newData, updateData[i]);
+      
+      // Merge fields from defaultRules that are missing in updateData
+      defaultRules.forEach((rule) => {
+        if (!(rule in updateData[i]) && rule in updatedRawData[i]) {
+          newData[rule] = updatedRawData[i][rule];
         }
-        //!(rule in updateItem) &&
       });
-
-      // Explicitly ensure 'rank' and 'years' are preserved if missing in update
-      if (!("rank" in updateItem) && "rank" in originalItem) {
-        newData.rank = originalItem.rank;
+      
+      // Preserve the original 'priceTarget' and other default rule values
+      for (let rule of defaultRules) {
+        if (rule in updatedRawData[i]) {
+          newData[rule] = updatedRawData[i][rule];
+        }
       }
-      if (!("years" in updateItem) && "years" in originalItem) {
-        newData.years = originalItem.years;
+      
+      // Ensure 'rank' and 'years' are added if they are missing in updateData
+      if (!("rank" in updateData[i]) && "rank" in updatedRawData[i]) {
+        newData.rank = updatedRawData[i]["rank"];
       }
-
-      return newData;
-    });
-
-    rawData = updatedRawData;
-    originalData = rawData;
-    stockList = originalData?.slice(0, 150);
-
-    columns = generateColumns(rawData);
-    sortOrders = generateSortOrders(rawData);
-  };
+      if (!("years" in updateData[i]) && "years" in updatedRawData[i]) {
+        newData.years = updatedRawData[i]["years"];
+      }
+      
+      // Update the specific item in the array
+      updatedRawData[i] = newData;
+    }
+  }
+  
+  // Trigger reactivity by creating a new reference
+  rawData = [...updatedRawData];
+  stockList = rawData?.slice(0, 100);
+  columns = generateColumns(rawData);
+  sortOrders = generateSortOrders(rawData);
+};
 
   const updateStockScreenerData = async () => {
     downloadWorker.postMessage({
@@ -473,6 +474,7 @@
 
   let previousList = [];
   let reconnectionTimeout;
+
   afterUpdate(async () => {
     // Compare only the symbols to detect changes
     const currentSymbols = rawData?.map((item) => item?.symbol).sort();
@@ -681,6 +683,7 @@
   };
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
+
 </script>
 
 <!-- Content area -->
