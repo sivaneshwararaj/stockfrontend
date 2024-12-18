@@ -1272,11 +1272,9 @@
       defaultCondition: "over",
       defaultValue: "any",
     },
-
     analystRating: {
       label: "Analyst Rating",
       step: ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"],
-
       defaultCondition: "",
       defaultValue: "any",
       category: ["Most Popular", "Forecasts, Analysts & Price Targets"],
@@ -1537,13 +1535,16 @@
     ruleName = "";
     selectedPopularStrategy = "";
     selectedStrategy = item?.id ?? "";
+
     ruleOfList =
       strategyList?.find((item) => item.id === selectedStrategy)?.rules ?? [];
-    ruleOfList.forEach((rule) => {
+
+      ruleOfList.forEach((rule) => {
       ruleCondition[rule.name] =
         rule.condition || allRules[rule.name].defaultCondition;
       valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
     });
+
     if (ruleOfList?.length === 0) {
       filteredData = [];
       displayResults = [];
@@ -1564,6 +1565,7 @@
         ) // Only include specific rules
         ?.map((rule) => [rule.name, new Set(rule.value)]), // Create Map from filtered rules
     );
+
   }
 
   function changeRule(state: string) {
@@ -1591,7 +1593,7 @@
   };
 
   const loadWorker = async () => {
-    if (displayTableTab === "performance" || hoverStatus) {
+    if (['performance', 'analysts']?.includes(displayTableTab) || hoverStatus) {
       syncWorker.postMessage({
         stockScreenerData,
         ruleOfList: [...ruleOfList, ...otherTabRules],
@@ -1605,7 +1607,7 @@
   };
 
   const updateStockScreenerData = async () => {
-    if (displayTableTab === "performance" || hoverStatus) {
+    if (["performance","analysts"]?.includes(displayTableTab) || hoverStatus) {
       downloadWorker.postMessage({
         ruleOfList: [...ruleOfList, ...otherTabRules],
       });
@@ -1789,7 +1791,7 @@ const handleKeyDown = (event) => {
         strategyList.find((item) => item.id === selectedStrategy).rules =
           ruleOfList;
 
-        const postData = {
+          const postData = {
           strategyId: selectedStrategy,
           rules: ruleOfList,
         };
@@ -1814,7 +1816,7 @@ const handleKeyDown = (event) => {
   }
 
   $: {
-    if (ruleOfList) {
+    if (ruleOfList ) {
       const ruleToUpdate = ruleOfList?.find((rule) => rule.name === ruleName);
       if (ruleToUpdate) {
         ruleToUpdate.value = valueMappings[ruleToUpdate.name];
@@ -2226,6 +2228,11 @@ const handleKeyDown = (event) => {
           { key: "name", label: "Name", align: "left" },
           { key: "marketCap", label: "Market Cap", align: "right" },
         ],
+        analysts: [
+          { key: "symbol", label: "Symbol", align: "left" },
+          { key: "name", label: "Name", align: "left" },
+          { key: "marketCap", label: "Market Cap", align: "right" },
+        ],
         filters: [
           { key: "symbol", label: "Symbol", align: "left" },
           { key: "name", label: "Name", align: "left" },
@@ -2235,6 +2242,11 @@ const handleKeyDown = (event) => {
 
       const baseSortOrdersMap = {
         performance: {
+          symbol: { order: "none", type: "string" },
+          name: { order: "none", type: "string" },
+          marketCap: { order: "none", type: "number" },
+        },
+        analysts: {
           symbol: { order: "none", type: "string" },
           name: { order: "none", type: "string" },
           marketCap: { order: "none", type: "number" },
@@ -2254,7 +2266,7 @@ const handleKeyDown = (event) => {
         sortOrders = { ...(baseSortOrdersMap[displayTableTab] || {}) };
 
         const rulesList =
-          displayTableTab === "performance" ? tabRuleList : displayRules;
+          ["performance","analysts"]?.includes(displayTableTab)  ? tabRuleList : displayRules;
         rulesList?.forEach((rule) => {
           if (rule.rule !== "marketCap") {
             columns.push({
@@ -2288,9 +2300,23 @@ const handleKeyDown = (event) => {
         .filter(Boolean);
 
       await updateStockScreenerData();
+    } else if (displayTableTab === "analysts") {
+      hoverStatus = false;
+      otherTabRules = [
+        { name: "marketCap", value: "any" },
+        { name: "analystRating", value: "any" },
+        { name: "analystCounter", value: "any" },
+        { name: "priceTarget", value: "any" },
+        { name: "upside", value: "any" },
+      ];
+      tabRuleList = otherTabRules
+        .map((rule) => allRows.find((row) => row.rule === rule.name))
+        .filter(Boolean);
+
+      await updateStockScreenerData();
     }
   }
-
+/*
   async function handleMouseOver() {
     if (displayTableTab !== "performance") {
       hoverStatus = true;
@@ -2306,8 +2332,23 @@ const handleKeyDown = (event) => {
         ?.filter(Boolean);
 
       await updateStockScreenerData();
+    } else if (displayTableTab !== "analysts") {
+      hoverStatus = true;
+      otherTabRules = [
+        { name: "marketCap", value: "any" },
+        { name: "analystRating", value: "any" },
+        { name: "analystCounter", value: "any" },
+        { name: "priceTarget", value: "any" },
+        { name: "upside", value: "any" },
+      ];
+      tabRuleList = otherTabRules
+        ?.map((rule) => allRows.find((row) => row.rule === rule.name))
+        ?.filter(Boolean);
+
+      await updateStockScreenerData();
     }
   }
+  */
 </script>
 
 <svelte:head>
@@ -3058,7 +3099,7 @@ const handleKeyDown = (event) => {
     >
       <nav class="w-full flex flex-row items-center py-2.5 sm:py-3 lg:py-1">
         <ul
-          class="flex flex-row items-center space-x-2 whitespace-nowrap text-base"
+          class="flex flex-row overflow-x-auto items-center space-x-2 whitespace-nowrap text-base"
         >
           <li>
             <button
@@ -3093,7 +3134,7 @@ const handleKeyDown = (event) => {
           </li>
           <li>
             <button
-              on:mouseover={handleMouseOver}
+        
               on:click={() => changeTab("performance")}
               class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-primary {displayTableTab ===
               'performance'
@@ -3101,6 +3142,17 @@ const handleKeyDown = (event) => {
                 : ''}"
             >
               Performance
+            </button>
+          </li>
+          <li>
+            <button
+              on:click={() => changeTab("analysts")}
+              class="text-[1rem] sm:text-lg block text-white rounded-md px-2 py-1 focus:outline-none sm:hover:bg-primary {displayTableTab ===
+              'analysts'
+                ? 'font-semibold bg-primary'
+                : ''}"
+            >
+              Analysts
             </button>
           </li>
         </ul>
@@ -3206,9 +3258,7 @@ const handleKeyDown = (event) => {
             <tbody>
               {#each displayResults as item (item?.symbol)}
                 <tr
-                  on:click={() => {
-                    handleSave(false);
-                  }}
+
                   class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
                 >
                   <td class="border-b-[#09090B] whitespace-nowrap">
@@ -3259,9 +3309,7 @@ const handleKeyDown = (event) => {
             <tbody>
               {#each displayResults as item (item?.symbol)}
                 <tr
-                  on:click={() => {
-                    handleSave(false);
-                  }}
+
                   class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
                 >
                   <td class="border-b-[#09090B] whitespace-nowrap">
@@ -3299,6 +3347,82 @@ const handleKeyDown = (event) => {
                         >
                       {:else}
                         <span class="text-[#fff]">-</span>
+                      {/if}
+                    </td>
+                  {/each}
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+        {:else if displayTableTab === "analysts"}
+        <div class="w-full rounded-md overflow-x-scroll">
+          <table
+            class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
+          >
+            <thead>
+              <TableHeader {columns} {sortOrders} {sortData} />
+            </thead>
+            <tbody>
+              {#each displayResults as item (item?.symbol)}
+                <tr
+
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
+                >
+                  <td class="border-b-[#09090B] whitespace-nowrap">
+                    <a
+                      href={"/stocks/" + item?.symbol}
+                      class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
+                      >{item?.symbol}</a
+                    >
+                  </td>
+                  <td
+                    class="whitespace-nowrap text-[1rem] text-white border-b-[#09090B]"
+                  >
+                    {item?.name?.length > charNumber
+                      ? item?.name?.slice(0, charNumber) + "..."
+                      : item?.name}
+                  </td>
+
+                  {#each tabRuleList as row (row?.rule)}
+                    <td
+                      class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
+                    >
+                      {#if row?.rule === "marketCap"}
+                        {abbreviateNumber(item[row?.rule])}
+                      
+                        {:else if ['analystCounter','priceTarget']?.includes(row?.rule)}
+                        <span class="text-white"
+                          >{abbreviateNumber(
+                            item[row?.rule],
+                          )}</span
+                        >
+
+                      {:else if row?.rule === 'upside'}
+                      {#if item[row?.rule] > 0}
+                        <span class="text-[#00FC50]"
+                          >+{item[row?.rule]?.toFixed(2)}%</span
+                        >
+                      {:else if item[row?.rule] < 0}
+                        <span class="text-[#FF2F1F]"
+                          >{item[row?.rule]?.toFixed(2)}%</span
+                        >
+                      {:else}
+                        <span class="text-[#fff]"
+                          >n/a</span
+                        >
+                      {/if}
+                       
+                      {:else if row?.rule === 'analystRating'}
+                        {#if ["Strong Buy", "Buy"].includes(item[row?.rule])}
+                        <span class="text-[#00FC50]">{item[row?.rule]}</span>
+                          {:else if ["Strong Sell", "Sell"].includes(item[row?.rule])}
+                            <span class="text-[#FF2F1F]">{item[row?.rule]}</span>
+                          {:else if item[row?.rule] === "Hold"}
+                            <span class="text-[#FFA838]">{item[row?.rule]}</span>
+                          {:else}
+                            -
+                        {/if}
                       {/if}
                     </td>
                   {/each}

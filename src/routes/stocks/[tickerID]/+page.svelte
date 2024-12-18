@@ -1133,7 +1133,7 @@
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-                      >Market Cap</td
+                      ><a href={`/stocks/${$stockTicker}/statistics/market-cap`} class="sm:hover:text-blue-400 text-white underline underline-offset-4">Market Cap</a></td
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
