@@ -681,6 +681,7 @@
                             >
                           </Button>
                           -->
+                          <!--
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -692,6 +693,7 @@
                               >Sentiment Tracker</a
                             >
                           </Button>
+                          -->
                         </div>
                       </Sheet.Close>
                     </Accordion.Content>
@@ -1108,11 +1110,13 @@
                             >Lobbying Tracker</a
                           >
                             -->
+                          <!--
                           <a
                             href="/sentiment-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Sentiment Tracker</a
                           >
+                            -->
                         </div>
                       </Accordion.Content>
                     </Accordion.Item>
