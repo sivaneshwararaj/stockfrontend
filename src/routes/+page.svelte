@@ -683,7 +683,7 @@
                 <ul style="padding-left: 5px;">
                   {#each data?.getDashboard?.upcomingEarnings as item}
                     <li
-                      style="margin-left: 8px; line-height: 22px; margin-bottom: 30px; list-style-type: disc;"
+                    class="text-sm sm:text-[1rem]" style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
                     >
                       <strong>{item?.name}</strong> (<HoverStockChart
                         symbol={item?.symbol}
@@ -771,7 +771,7 @@
                     )}:
 
                     <li
-                      style="color: #fff; line-height: 22px; margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
+                      class="text-sm sm:text-[1rem]" style="color: #fff;  margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
                     >
                       Revenue of {abbreviateNumber(item?.revenue)}
                       {item?.revenueSurprise > 0 ? "exceeds" : "misses"} estimates

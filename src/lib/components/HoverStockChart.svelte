@@ -98,7 +98,7 @@
         layout: {
           background: {
             type: ColorType.Solid,
-            color: "#09090B",
+            color: "#2A2E39",
           },
           lineColor: "#2B2B43",
           textColor: "#D9D9D9",
@@ -164,7 +164,6 @@
       chart &&
       typeof window !== "undefined"
     ) {
-      console.log("yes");
 
       chart?.timeScale()?.fitContent();
     }
@@ -184,12 +183,12 @@
         >
       </HoverCard.Trigger>
     </div>
-    <HoverCard.Content class=" w-96 bg-[#09090B] border border-gray-400">
+    <HoverCard.Content class=" w-96 bg-[#2A2E39] border border-gray-600">
       <div class="flex justify-between space-x-4 w-full text-white">
         <div class="space-y-1 w-full">
           <!--Hover Stock Chart-->
           <label
-            class=" text-sm flex flex-row items-center justify-start bg-[#09090B]"
+            class=" text-sm flex flex-row items-center justify-start bg-[#2A2E39]"
           >
             <div class="flex flex-col items-start w-full">
               <div class=" flex flex-col items-start pb-1">
