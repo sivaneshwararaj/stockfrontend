@@ -7,20 +7,19 @@
   export let data;
 
   const excludedRules = new Set([
-    "volume",
-    "price",
     "upside",
     "priceTarget",
     "marketCap",
-    "changesPercentage",
+    "analystCounter",
+    "analystRating"
   ]);
 
   const defaultList = [
-    { name: "Ratings Count", rule: "counter" },
-    { name: "Price Target", rule: "priceTarget" },
-    { name: "Price", rule: "price" },
-    { name: "% Change", rule: "changesPercentage" },
+    { name: "Analyst Count", rule: "analystCounter" },
     { name: "Upside", rule: "upside" },
+    { name: "Price Target", rule: "priceTarget" },
+    { name: "Market Cap", rule: "marketCap" },
+    {name: 'Analyst Rating', rule: 'analystRating'}
   ];
   const hideLastRow = true;
 </script>
@@ -30,7 +29,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
-    100 Strong Buy Stocks · Stocknear
+    Top Analyst Strong Buy Stocks · Stocknear
   </title>
   <meta
     name="description"

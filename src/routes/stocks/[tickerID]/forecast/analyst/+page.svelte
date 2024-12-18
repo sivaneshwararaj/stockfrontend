@@ -96,7 +96,7 @@
         })
         ?.slice(0, 30); //Consider only the last 30 ratings in the last 12 months
 
-      const filteredAnalystCount = recentData.length;
+      const filteredAnalystCount = recentData?.length;
       const priceTargets = recentData
         ?.map((item) => parseFloat(item.adjusted_pt_current))
         ?.filter((pt) => !isNaN(pt));
@@ -110,10 +110,10 @@
       priceTarget = medianPriceTarget;
       changesPercentage =
         medianPriceTarget !== "-" && data?.getStockQuote?.price != null
-          ? ((medianPriceTarget / data.getStockQuote.price - 1) * 100).toFixed(
+          ? ((medianPriceTarget / data?.getStockQuote.price - 1) * 100).toFixed(
               2,
             )
-          : "-";
+          : "n/a";
 
       // Consensus rating calculation based on rating_current
       const ratingScores = {
