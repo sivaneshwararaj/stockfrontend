@@ -11,6 +11,7 @@
   import { LineChart, BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
+  import Infobox from "$lib/components/Infobox.svelte";
   use([LineChart, BarChart, TooltipComponent, GridComponent, CanvasRenderer]);
 
   export let data;
@@ -118,6 +119,57 @@
     optionsDividend = await plotDividend();
     isLoaded = true;
   });
+
+function generateDividendInfoHTML() {
+  const history = rawData?.history || [];
+
+  if (history.length !== 0) {
+    if (!dateDistance) {
+      const formattedExDividendDate = new Date(exDividendDate).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+
+      const payoutFrequencyText =
+        payoutFrequency === 4
+          ? '3 months'
+          : payoutFrequency === 2
+          ? '6 months'
+          : payoutFrequency === 1
+          ? '12 months'
+          : 'n/a';
+
+      return `
+        <span>
+          ${$displayCompanyName} has an annual dividend of $${annualDividend} per share, with a forward yield of ${dividendYield}%. 
+          The dividend is paid every ${payoutFrequencyText} and the last ex-dividend date was ${formattedExDividendDate}.
+        </span>
+      `;
+    } else {
+      const latestDividendDate = new Date(history.at(0)?.date).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+
+      return `
+        <span>
+          ${$displayCompanyName} issued its most recent dividend on ${latestDividendDate}. 
+          Since then, the company has not distributed any further dividends for over 12 months.
+        </span>
+      `;
+    }
+  } else {
+    return `
+      <span>
+        No dividend history available for ${$displayCompanyName}.
+      </span>
+    `;
+  }
+}
+
+const htmlOutput = generateDividendInfoHTML();
 </script>
 
 <svelte:head>
@@ -169,55 +221,7 @@
             Dividends
           </h1>
 
-          <div
-            class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-          >
-            <svg
-              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#fff"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
-
-            {#if rawData?.history?.length !== 0}
-              {#if !dateDistance}
-                {$displayCompanyName} has an annual dividend of ${annualDividend}
-                per share, with a forward yield of
-                {dividendYield}%. The dividend is paid every
-                {payoutFrequency === 4
-                  ? "3 months"
-                  : payoutFrequency === 2
-                    ? "6 months"
-                    : payoutFrequency === 1
-                      ? "12 months"
-                      : "n/a"}
-                and the last ex-dividend date was
-                {new Date(exDividendDate)?.toLocaleString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  daySuffix: "2-digit",
-                })}
-              {:else}
-                {$displayCompanyName} issued its most recent dividend on
-                {new Date(rawData?.history?.at(0)?.date)?.toLocaleString(
-                  "en-US",
-                  {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    daySuffix: "2-digit",
-                  },
-                )}. Since then, the company has not distributed any further
-                dividends for over 12 months.
-              {/if}
-            {:else}
-              No dividend history available for {$displayCompanyName}.
-            {/if}
-          </div>
+         <Infobox text={htmlOutput} />
         </div>
 
         {#if rawData?.history?.length !== 0}

@@ -16,7 +16,7 @@
   import { BarChart, LineChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-
+  import Infobox from "$lib/components/Infobox.svelte";
   use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
@@ -570,13 +570,13 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
+<section class="w-full bg-[#09090B] overflow-hidden text-white min-h-screen">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-        <div class="w-full mb-6">
+      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0 ">
+        <div class="w-full mb-10">
           <div
             class="w-full m-auto sm:pb-6 {data?.getOptionsNetFlow?.length === 0
               ? 'hidden'
@@ -587,27 +587,18 @@
             {/await}
           </div>
 
-          <div
-            class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-          >
-            <svg
-              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#fff"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
 
-            {#if optionsPlotData?.length !== 0}
-              1 Year of options activity involving {$displayCompanyName} by major
-              institutional traders and hedge funds.
+          {#if optionsPlotData?.length !== 0}
+          <Infobox text={`1 Year of options activity involving ${$displayCompanyName} by major
+              institutional traders and hedge funds.`} />
+    
             {:else}
-              There's no data available, indicating that major traders may not
-              be actively betting on {$displayCompanyName}.
+            <Infobox text={`There's no data available, indicating that major traders may not
+              be actively betting on ${$displayCompanyName}.`} />
+             
             {/if}
-          </div>
+
+          
         </div>
 
         {#if optionsPlotData?.length !== 0}
@@ -779,11 +770,14 @@
             </div>
           {/if}
 
+         
+
+          {#if optionList?.length !== 0}
+
           <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
             {activeIdx === 0 ? "Historical Option Data" : "Option Chain Data"}
           </h3>
 
-          {#if optionList?.length !== 0}
             <div
               class="bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
             >
@@ -1124,23 +1118,7 @@
             </div>
 
             <UpgradeToPro {data} />
-          {:else}
-            <div class="flex justify-center items-center m-auto mt-16 mb-6">
-              <div
-                class="text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-gray-600 p-4"
-              >
-                <svg
-                  class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 256 256"
-                  ><path
-                    fill="#fff"
-                    d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                  /></svg
-                >
-                No Options activity found
-              </div>
-            </div>
+         
           {/if}
         {/if}
       </div>

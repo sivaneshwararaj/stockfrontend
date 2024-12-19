@@ -12,6 +12,7 @@
   import { BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
+  import Infobox from "$lib/components/Infobox.svelte";
   use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   import { abbreviateNumber } from "$lib/utils";
@@ -342,6 +343,56 @@
       goto("/pricing");
     }
   };
+
+  function generateEmployeeInfoHTML() {
+  if (employeeHistory?.length !== 0 && !dateDistance) {
+    const formattedEmployees = new Intl.NumberFormat('en').format(employees);
+    const latestFilingDate = new Date(
+      employeeHistory[employeeHistory.length - 1]['filingDate']
+    ).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+    const formattedChangeRate = new Intl.NumberFormat('en').format(changeRate);
+    const changeDirection = changeRate >= 0 && changeRate !== null ? 'increased' : 'decreased';
+    const growthRateClass = changeRate >= 0 && changeRate !== null ? 'text-[#00FC50]' : 'text-[#FF2F1F]';
+
+    return `
+      <span>
+        ${$displayCompanyName} had ${formattedEmployees} employees on ${latestFilingDate}. The number of employees ${changeDirection}
+        by ${formattedChangeRate} or
+        <span class="${growthRateClass}">
+          ${growthRate}%
+        </span>
+        compared to the previous year.
+      </span>
+    `;
+  } else if (employeeHistory?.length !== 0 && dateDistance) {
+    const abbreviatedEmployees = abbreviateNumber(employees);
+    const latestFilingDate = new Date(
+      employeeHistory[employeeHistory.length - 1]['filingDate']
+    ).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+
+    return `
+      <span>
+        ${$displayCompanyName} had ${abbreviatedEmployees} employees on ${latestFilingDate}. Since then, the company has not submitted any additional employee data for more than a year.
+      </span>
+    `;
+  } else {
+    return `
+      <span>
+        No employee history for ${$displayCompanyName}. Probably, no records of past employees.
+      </span>
+    `;
+  }
+}
+
+const htmlOutput = generateEmployeeInfoHTML();
 </script>
 
 <svelte:head>
@@ -392,72 +443,12 @@
             {$stockTicker} Employees
           </h2>
 
-          <div
-            class="text-white text-sm sm:text-[1rem] p-3 sm:p-5 mb-5 rounded-md border border-gray-800"
-          >
-            <span class="inline-block align-text-bottom">
-              <svg
-                class="w-5 h-5 inline-block align-text-bottom"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 256 256"
-              >
-                <path
-                  fill="#fff"
-                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                />
-              </svg>
-            </span>
-            {#if employeeHistory?.length !== 0 && !dateDistance}
-              <span>
-                {$displayCompanyName} had {new Intl.NumberFormat("en")?.format(
-                  employees,
-                )} employees on
-                {new Date(
-                  employeeHistory[employeeHistory?.length - 1]["filingDate"],
-                )?.toLocaleString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  daySuffix: "2-digit",
-                })}. The number of employees {changeRate >= 0 &&
-                changeRate !== null
-                  ? "increased"
-                  : "decreased"}
-                by {new Intl.NumberFormat("en")?.format(changeRate)} or
-                <span
-                  class={changeRate >= 0 && changeRate !== null
-                    ? "text-[#00FC50]"
-                    : "text-[#FF2F1F]"}
-                >
-                  {growthRate}%
-                </span>
-                compared to the previous year.
-              </span>
-            {:else if employeeHistory?.length !== 0 && dateDistance}
-              <span>
-                {$displayCompanyName} had {abbreviateNumber(employees)} employees
-                on
-                {new Date(
-                  employeeHistory[employeeHistory?.length - 1]["filingDate"],
-                )?.toLocaleString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  daySuffix: "2-digit",
-                })}. Since then, the company has not submitted any additional
-                employee data for more than a year.
-              </span>
-            {:else}
-              <span>
-                No employee history for {$displayCompanyName}. Probably, no
-                records of past employees.
-              </span>
-            {/if}
-          </div>
+          
+         <Infobox text={htmlOutput} />
         </div>
 
         <div
-          class="my-5 grid grid-cols-2 gap-3 px-1 xs:mt-6 bp:mt-7 sm:grid-cols-3 sm:gap-6 sm:px-4"
+          class="my-5 grid grid-cols-2 gap-3  xs:mt-6 bp:mt-7 sm:grid-cols-3 sm:gap-6 "
         >
           <div>
             Employees
@@ -537,7 +528,7 @@
           </h1>
           {#if historyList?.length > 0}
             <div
-              class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
+              class="flex flex-row items-center w-fit   ml-auto"
             >
               <div class="relative inline-block text-left grow">
                 <DropdownMenu.Root>
@@ -594,7 +585,7 @@
               </div>
               <Button
                 on:click={() => exportData("csv")}
-                class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                class="ml-2 w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
               >
                 <span class="truncate text-white">Download</span>
                 <svg

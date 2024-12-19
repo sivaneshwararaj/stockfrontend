@@ -59,6 +59,7 @@
   <div class="m-auto h-full overflow-hidden">
     <main class="w-fit sm:w-full sm:max-w-2xl">
       <div class="m-auto">
+        {#if names?.length > 0}
         <nav
           class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
         >
@@ -83,6 +84,7 @@
             {/each}
           </ul>
         </nav>
+        {/if}
       </div>
     </main>
 
