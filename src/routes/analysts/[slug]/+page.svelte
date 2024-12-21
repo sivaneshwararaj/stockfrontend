@@ -244,11 +244,11 @@
                   <h1 class="mb-0 text-2xl font-bold text-white">
                     {analystName}
                   </h1>
-                  <p class="mb-0.5 text-sm font-semibold text-gray-300">
+                  <p class="mb-0.5 text-[1rem] font-semibold text-gray-300">
                     Stock Analyst at {companyName}
                   </p>
                   <div class="inline-flex items-center">
-                    <div class="flex flex-row items-center mt-1">
+                    <div class="flex flex-row items-center ">
                       {#each Array.from({ length: 5 }) as _, i}
                         {#if i < Math.floor(analystScore)}
                           <svg
@@ -277,7 +277,7 @@
                         {/if}
                       {/each}
                     </div>
-                    <span class="ml-1 text-sm text-white">({analystScore})</span
+                    <span class="ml-1 text-[1rem] text-white">({analystScore})</span
                     >
                   </div>
                 </div>
@@ -289,7 +289,7 @@
                   <div class="text-2xl font-semibold tracking-tight text-white">
                     # {rank}
                   </div>
-                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
                     Out of {numOfAnalysts} analysts
                   </div>
                 </div>
@@ -299,7 +299,7 @@
                   <div class="text-2xl font-bold tracking-tight text-white">
                     {totalRatings}
                   </div>
-                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
                     Total ratings
                   </div>
                 </div>
@@ -313,7 +313,7 @@
                         : "text-[#EF4444]"}>{successRate?.toFixed(2)}%</span
                     >
                   </div>
-                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
                     Success rate
                   </div>
                 </div>
@@ -327,7 +327,7 @@
                         : "text-[#EF4444]"}>{avgReturn?.toFixed(2)}%</span
                     >
                   </div>
-                  <div class="text-sm font-semibold leading-6 text-gray-300">
+                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
                     Average return
                   </div>
                 </div>
