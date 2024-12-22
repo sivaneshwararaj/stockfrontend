@@ -1,6 +1,6 @@
 export const load = async ({ locals }) => {
   const getAllETFProviders = async () => {
-    const { apiKey, apiURL } = locals;
+    const { apiKey, apiURL, user } = locals;
     const response = await fetch(apiURL + "/all-etf-providers", {
       method: "GET",
       headers: {
@@ -9,8 +9,8 @@ export const load = async ({ locals }) => {
       },
     });
 
-    const output = await response.json();
-
+    let output = await response?.json();
+    output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
     return output;
   };
 

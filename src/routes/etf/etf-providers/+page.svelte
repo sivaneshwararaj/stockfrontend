@@ -1,8 +1,10 @@
 <script lang="ts">
   import { abbreviateNumber, formatETFName } from "$lib/utils";
   import { numberOfUnreadNotification } from "$lib/store";
-  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
   export let data;
   let etfProviderList = data?.getAllETFProviders;
 
@@ -118,27 +120,14 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full overflow-hidden m-auto">
-  <div
-    class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-md h-auto p-5 mb-4"
-  >
-    <svg
-      class="w-5 h-5 inline-block flex-shrink-0 mr-0.5 sm:mr-2"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 256 256"
-      ><path
-        fill="#fff"
-        d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-      /></svg
-    >
+<section class="w-full overflow-hidden  m-auto">
 
-    Every Exchange-Traded Fund (ETF) is managed by a specific company. Below is
-    a list of companies offering actively traded ETFs on the U.S. stock market.
-  </div>
+  <Infobox text={"Every Exchange-Traded Fund (ETF) is managed by a specific company. Below is a list of companies offering actively traded ETFs on the U.S. stock market."} />
 
   <!-- Page wrapper -->
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
     <!-- Content area -->
+     <div class="w-full">
     <div class="w-full overflow-x-scroll">
       <table
         class="table rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
@@ -147,10 +136,15 @@
           <TableHeader {columns} {sortOrders} {sortData} />
         </thead>
         <tbody>
-          {#each etfProviderList as item, index}
+          {#each etfProviderList as item,index}
             <!-- row -->
             <tr
-              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
+              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
+            1 ===
+            etfProviderList?.length &&
+          data?.user?.tier !== 'Pro'
+            ? 'opacity-[0.1]'
+            : ''}"
             >
               <td
                 class="text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]"
@@ -191,5 +185,8 @@
         </tbody>
       </table>
     </div>
+    <UpgradeToPro {data} />
+  </div>
+
   </div>
 </section>

@@ -2,7 +2,7 @@
   import { numberOfUnreadNotification } from "$lib/store";
   import Table from "$lib/components/Table/Table.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   export let data;
 
@@ -76,31 +76,13 @@
       >
         <main class="w-full  lg:pr-5">
           <div class="mb-6 border-b-[2px]">
-            <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
+            <h1 class="mb-3 text-white text-2xl sm:text-3xl font-bold">
               Top Strong Buy Stocks
             </h1>
-            <p class="mb-3 px-1 text-base font-semibold text-muted sm:px-0">
-              The "Strong Buy" stocks according to the best performing Wall
-              Street analysts.
-            </p>
           </div>
 
-          <div
-            class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 bg-[#09090B] border border-gray-800 sm:rounded-md h-auto p-5"
-          >
-            <svg
-              class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#fff"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
-            Strong Buy stocks by top-rated analysts with a star rating of 4 or above,
-            known for their exceptional accuracy and returns. Stocks are ranked based
-            on the volume of analyst ratings.
-          </div>
+          <Infobox text={"Strong Buy stocks by top-rated analysts with a star rating of 4 or above, known for their exceptional accuracy and returns. Stocks are ranked based on the volume of analyst ratings."}/>
+
 
           <div class="w-full m-auto mt-10">
             <Table

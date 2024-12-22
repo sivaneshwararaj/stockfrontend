@@ -2,8 +2,10 @@
   import { abbreviateNumber, formatETFName } from "$lib/utils";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { onMount } from "svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   export let data;
   let rawData = data?.getETFProviderData;
@@ -116,6 +118,21 @@
     // Sort using the generic comparison function
     etfProviderData = [...originalData].sort(compareValues)?.slice(0, 50);
   };
+
+
+  function generateStatementInfoHTML() {
+    return `
+     ${etfProviderName} has ${rawData?.length} ETFs listed with a total of ${abbreviateNumber(
+        totalAssets
+      )}
+      in assets under management. The funds have an average expense ratio of ${avgExpenseRatio?.toFixed(
+        2,
+      )}%.
+    `;
+}
+
+let htmlOutput = generateStatementInfoHTML();
+
 </script>
 
 <svelte:head>
@@ -149,27 +166,9 @@
 
 <section class="w-full overflow-hidden m-auto">
   {#if rawData?.length !== 0}
-    <div
-      class="w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-600 sm:rounded-md h-auto p-5 mb-4"
-    >
-      <svg
-        class="w-5 h-5 inline-block flex-shrink-0 mr-0.5 sm:mr-2"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 256 256"
-        ><path
-          fill="#fff"
-          d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-        /></svg
-      >
-
-      {etfProviderName} has {rawData?.length} ETFs listed with a total of {abbreviateNumber(
-        totalAssets,
-        true,
-      )}
-      in assets under management. The funds have an average expense ratio of {avgExpenseRatio?.toFixed(
-        2,
-      )}%.
-    </div>
+  <div class="mb-5">
+    <Infobox text={htmlOutput} />
+  </div>
   {/if}
 
   <div
@@ -177,7 +176,7 @@
   >
     <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
       <div class="flex items-center justify-between sm:block">
-        <div class="text-sm font-normal text-white">Listed Funds</div>
+        <div class="text-[1rem] font-normal text-white">Listed Funds</div>
         <div
           class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
         >
@@ -187,7 +186,7 @@
     </div>
     <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
       <div class="flex items-center justify-between sm:block">
-        <div class="text-sm font-normal text-white">Total Assets</div>
+        <div class="text-[1rem] font-normal text-white">Total Assets</div>
         <div
           class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
         >
@@ -197,7 +196,7 @@
     </div>
     <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
       <div class="flex items-center justify-between sm:block">
-        <div class="text-sm font-normal text-white">Average Cost</div>
+        <div class="text-[1rem] font-normal text-white">Average Cost</div>
         <div
           class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
         >
@@ -211,6 +210,7 @@
     <!-- Page wrapper -->
     <div class="flex justify-center w-full m-auto h-full overflow-hidden">
       <!-- Content area -->
+       <div class="w-full">
       <div class="w-full overflow-x-auto mt-5">
         <table
           class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
@@ -219,10 +219,15 @@
             <TableHeader {columns} {sortOrders} {sortData} />
           </thead>
           <tbody>
-            {#each etfProviderData as item}
+            {#each etfProviderData as item, index}
               <!-- row -->
               <tr
-                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
+                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
+            1 ===
+            etfProviderData?.length &&
+          data?.user?.tier !== 'Pro'
+            ? 'opacity-[0.1]'
+            : ''}"
               >
                 <td
                   class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
@@ -286,6 +291,9 @@
           </tbody>
         </table>
       </div>
+      <UpgradeToPro {data} />
+    </div>
+
     </div>
   {:else}
     <div
