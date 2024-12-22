@@ -1296,14 +1296,43 @@
       category: "Forecasts, Analysts & Price Targets",
     },
     upside: {
-      label: "Price Target Upside [%]",
+      label: "Price Target Upside",
       step: ["100%", "50%", "20%", "10%", "5%", "0%"],
 
       defaultCondition: "over",
       defaultValue: "any",
       category: "Forecasts, Analysts & Price Targets",
     },
+    topAnalystRating: {
+      label: "Top Analyst Rating",
+      step: ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"],
+      defaultCondition: "",
+      defaultValue: "any",
+      category: "Forecasts, Analysts & Price Targets",
+    },
+    topAnalystCounter: {
+      label: "Top Analyst Count",
+      step: ["10", "5", "3", "1"],
 
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Forecasts, Analysts & Price Targets",
+    },
+    topAnalystUpside: {
+      label: "Top Analyst Price Target Upside",
+      step: ["100%", "50%", "20%", "10%", "5%", "0%"],
+
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Forecasts, Analysts & Price Targets",
+    },
+    topAnalystPriceTarget: {
+      label: "Top Analyst Price Target",
+      step: ["1000", "500", "100", "10", "5", "1"],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Forecasts, Analysts & Price Targets",
+    },
     halalStocks: {
       label: "Halal Stocks",
       step: ["Compliant", "Non-Compliant"],
@@ -1452,6 +1481,7 @@
           ?.filter((rule) =>
             [
               "analystRating",
+              "topAnalystRating",
               "halalStocks",
               "sector",
               "country",
@@ -1555,6 +1585,7 @@
         ?.filter((rule) =>
           [
             "analystRating",
+            "topAnalystRating",
             "halalStocks",
             "sector",
             "country",
@@ -1569,7 +1600,7 @@
   }
 
   function changeRule(state: string) {
-    if (data?.user?.tier !== "Pro" && state === "score") {
+    if (data?.user?.tier !== "Pro" && ['topAnalystRating','topAnalystCounter','topAnalystPriceTarget','topAnalystUpside','score']?.includes(state)) {
       goto("/pricing");
     } else {
       selectedPopularStrategy = "";
@@ -1628,6 +1659,7 @@
 
     switch (ruleName) {
       case "analystRating":
+      case "topAnalystRating":
       case "halalStocks":
       case "score":
       case "sector":
@@ -1862,6 +1894,7 @@ const handleKeyDown = (event) => {
       ?.filter((rule) =>
         [
           "analystRating",
+          "topAnalystRating",
           "halalStocks",
           "sector",
           "country",
@@ -1949,6 +1982,7 @@ const handleKeyDown = (event) => {
         "ema200",
         "grahamNumber",
         "analystRating",
+        "topAnalystRating",
         "halalStocks",
         "score",
         "sector",
@@ -2112,7 +2146,7 @@ const handleKeyDown = (event) => {
               ? sectorList
               : ruleName === "industry"
                 ? industryList
-                : ruleName === "analystRating" || ruleName === "score"
+                : ['analystRating','topAnalystRating','score']?.includes(ruleName)
                   ? ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"]
                   : ["Compliant", "Non-Compliant"];
         testList =
@@ -2213,6 +2247,7 @@ const handleKeyDown = (event) => {
     "score",
     "sector",
     "analystRating",
+    "topAnalystRating",
     "halalStocks",
   ];
 
@@ -2797,7 +2832,7 @@ const handleKeyDown = (event) => {
                       <DropdownMenu.Content
                         class="w-64 min-h-auto max-h-72 overflow-y-auto scroller"
                       >
-                        {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
+                        {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "topAnalystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           <DropdownMenu.Label
                             class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]"
                           >
@@ -2960,6 +2995,7 @@ const handleKeyDown = (event) => {
                               autocomplete="off"
                               class="{![
                                 'analystRating',
+                                "topAnalystRating",
                                 'halalStocks',
                                 'score',
                                 'sector',
@@ -2975,7 +3011,7 @@ const handleKeyDown = (event) => {
                           </div>
                         {/if}
                         <DropdownMenu.Group class="min-h-10 mt-2">
-                          {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
+                          {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "topAnalystRating","halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                             {#each row?.step as newValue, index}
                               {#if ruleCondition[row?.rule] === "between"}
                                 {#if newValue && row?.step[index + 1]}
@@ -3044,7 +3080,7 @@ const handleKeyDown = (event) => {
                               </DropdownMenu.Item>
                             {/each}
                           {:else}
-                            {#each testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : row?.rule === "country" ? listOfRelevantCountries : row?.rule === "sector" ? sectorList : row?.rule === "industry" ? industryList : ruleName === "analystRating" || ruleName === "score" ? ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"] : ["Compliant", "Non-Compliant"] as item}
+                            {#each testList.length > 0 && searchQuery?.length > 0 ? testList : searchQuery?.length > 0 && testList?.length === 0 ? [] : row?.rule === "country" ? listOfRelevantCountries : row?.rule === "sector" ? sectorList : row?.rule === "industry" ? industryList : ['analystRating','topAnalystRating','score']?.includes(ruleName) ? ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"] : ["Compliant", "Non-Compliant"] as item}
                               <DropdownMenu.Item class="sm:hover:bg-primary">
                                 <div
                                   class="flex items-center"
@@ -3285,7 +3321,7 @@ const handleKeyDown = (event) => {
                       <td
                         class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
                       >
-                        {#if ["ema20", "ema50", "ema100", "ema200", "analystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
+                        {#if ["ema20", "ema50", "ema100", "ema200", "analystRating", "topAnalystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           {item[row?.rule]}
                         {:else}
                           {abbreviateNumber(item[row?.rule])}
@@ -3413,7 +3449,7 @@ const handleKeyDown = (event) => {
                         >
                       {/if}
                        
-                      {:else if row?.rule === 'analystRating'}
+                      {:else if ['analystRating','topAnalystRating']?.includes(row?.rule)}
                         {#if ["Strong Buy", "Buy"].includes(item[row?.rule])}
                         <span class="text-[#00FC50]">{item[row?.rule]}</span>
                           {:else if ["Strong Sell", "Sell"].includes(item[row?.rule])}
@@ -3593,7 +3629,7 @@ const handleKeyDown = (event) => {
               <div
                 class="flex w-full items-center space-x-1.5 py-1.5 md:w-1/2 lg:w-1/3 lg:py-1"
               >
-                {#if row?.rule === "score" && data?.user?.tier !== "Pro"}
+                {#if ['topAnalystRating','topAnalystCounter','topAnalystPriceTarget','topAnalystUpside','score']?.includes(row?.rule) && data?.user?.tier !== "Pro"}
                   <label id={row?.rule} on:click={() => changeRule(row?.rule)}>
                     <svg
                       class="w-4 h-4 mb-1 inline-block text-[#A3A3A3] sm:hover:text-white cursor-pointer"

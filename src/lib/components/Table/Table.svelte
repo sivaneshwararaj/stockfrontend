@@ -146,6 +146,10 @@
       rule: "institutionalOwnership",
       type: "percent",
     },
+    { name: "Top Analyst Rating", rule: "topAnalystRating", type: "rating" },
+    { name: "Top Analyst Count", rule: "topAnalystCounter", type: "int" },
+    { name: "Top Analyst Price Target", rule: "topAnalystPriceTarget", type: "float" },
+    { name: "Top Analyst PT Upside", rule: "topAnalystUpside", type: "percentSign" },
   ];
 
   allRows = [...allRows, ...specificRows];
@@ -543,8 +547,8 @@
     const preferredOrder = ["rank", "symbol", "name"];
 
     // Create a mapping of rule to name and type from allRows
-    const ruleToMetadataMap = Object.fromEntries(
-      allRows.map((row) => [row.rule, { name: row.name, type: row.type }]),
+    const ruleToMetadataMap = Object?.fromEntries(
+      allRows?.map((row) => [row.rule, { name: row.name, type: row.type }]),
     );
 
     // Separate preferred keys and other keys, excluding "type"

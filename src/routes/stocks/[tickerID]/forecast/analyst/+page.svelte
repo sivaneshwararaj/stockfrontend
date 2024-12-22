@@ -17,9 +17,9 @@
   let rawData = data?.getAnalystTickerHistory ?? [];
   let historyList = [];
   let priceTarget = "n/a";
-  let numOfAnalyst = 0;
+  let numOfAnalyst = "n/a";
   let consensusRating = "n/a";
-  let changesPercentage = 0;
+  let changesPercentage = "n/a";
 
   const tabs = [
     {
@@ -62,7 +62,7 @@
           const key = `${entry.analyst}-${entry.name}`;
 
           // Convert date and time to a Date object
-          const dateTimeStr = `${entry.date} ${entry.time}`;
+          const dateTimeStr = `${entry.date}`;
           const dateTime = new Date(dateTimeStr);
 
           // Check if this entry is the latest for the given key
@@ -96,7 +96,7 @@
         })
         ?.slice(0, 30); //Consider only the last 30 ratings in the last 12 months
 
-      const filteredAnalystCount = recentData?.length;
+      const filteredAnalystCount = recentData?.length ?? 'n/a';
       const priceTargets = recentData
         ?.map((item) => parseFloat(item.adjusted_pt_current))
         ?.filter((pt) => !isNaN(pt));
@@ -104,9 +104,9 @@
         ? priceTargets?.sort((a, b) => a - b)[
             Math.floor(priceTargets?.length / 2)
           ]
-        : "-";
+        : "n/a";
 
-      numOfAnalyst = filteredAnalystCount;
+      numOfAnalyst = filteredAnalystCount === 0 ? 'n/a' : filteredAnalystCount;
       priceTarget = medianPriceTarget;
       changesPercentage =
         medianPriceTarget !== "-" && data?.getStockQuote?.price != null
@@ -141,7 +141,8 @@
               ? "Hold"
               : averageRatingScore >= 1.5
                 ? "Sell"
-                : "Strong Sell";
+              : averageRatingScore >= 1
+                ? "Strong Sell" : 'n/a';
 
       rawData = recentData;
       historyList = rawData.slice(0, 50);

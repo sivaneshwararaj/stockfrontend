@@ -112,7 +112,7 @@ function createRuleCheck(rule, ruleName, ruleValue) {
 
   // Categorical checks
   const categoricalFields = [
-    'analystRating', 'halalStocks', 'score', 
+    'analystRating', 'topAnalystRating', 'halalStocks', 'score', 
     'sector', 'industry', 'country'
   ];
 
