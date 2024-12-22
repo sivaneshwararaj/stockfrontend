@@ -29,7 +29,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
     Top Analyst Strong Buy Stocks · Stocknear
   </title>
   <meta
