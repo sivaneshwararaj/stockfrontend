@@ -52,7 +52,8 @@
     },
   ];
 
-  async function handleSearch( symbol, assetType) {
+  async function handleSearch(event, symbol, assetType) {
+    event?.preventDefault();
     searchBarTicker(symbol);
     goto(`/${assetType === "ETF" ? "etf" : assetType === "Crypto" ? "crypto" : "stocks"}/${symbol}`)
   }
@@ -135,6 +136,7 @@
     if (!inputValue.trim()) {
       // Skip if query is empty or just whitespace
       searchBarData = []; // Clear previous results
+      isLoading = false;
       return;
     }
 
@@ -145,6 +147,7 @@
       searchBarData = await response?.json();
     }, 50); // delay
     isLoading = false;
+
   }
 
   const onKeyPress = (e) => {
@@ -356,7 +359,7 @@
               class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
               value={item?.symbol}
               label={item?.name}
-              on:click={() => handleSearch(item?.symbol, item?.type)}
+              on:click={(e) => handleSearch(e, item?.symbol, item?.type)}
             >
               <div
               class="flex flex-row items-center justify-between w-full">
