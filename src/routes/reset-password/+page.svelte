@@ -1,6 +1,5 @@
 <script lang="ts">
   import toast from "svelte-french-toast";
-  import Input from "$lib/components/Input.svelte";
   import { pb } from "$lib/pocketbase";
   import { goto } from "$app/navigation";
 
@@ -24,6 +23,8 @@
       );
     }
   }
+
+
 </script>
 
 <!-- HEADER FOR BETTER SEO -->
@@ -60,7 +61,7 @@
     <div class="w-full max-w-lg pt-2">
       <button
         type="submit"
-        class="btn bg-blue-600 hover:bg-blue-500 text-white w-full"
+        class="py-2.5 font-semibold rounded bg-white text-black w-full"
       >
         Request Password Reset
       </button>
