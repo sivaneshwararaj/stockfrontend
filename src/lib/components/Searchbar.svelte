@@ -53,9 +53,8 @@
   ];
 
   async function handleSearch( symbol, assetType) {
-  //event.preventDefault();
-  searchBarTicker(symbol);
-   goto(`/${assetType === "ETF" ? "etf" : assetType === "Crypto" ? "crypto" : "stocks"}/${symbol}`)
+    searchBarTicker(symbol);
+    goto(`/${assetType === "ETF" ? "etf" : assetType === "Crypto" ? "crypto" : "stocks"}/${symbol}`)
   }
 
   async function popularTicker(state) {
@@ -357,7 +356,7 @@
               class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
               value={item?.symbol}
               label={item?.name}
-              onclick={() => handleSearch(item?.symbol, item?.type)}
+              on:click={() => handleSearch(item?.symbol, item?.type)}
             >
               <div
               class="flex flex-row items-center justify-between w-full">
