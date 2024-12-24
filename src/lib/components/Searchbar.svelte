@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { screenWidth } from "$lib/store";
+  import { screenWidth, stockTicker } from "$lib/store";
   import { onMount } from "svelte";
   import Search from "lucide-svelte/icons/search";
   import { goto } from "$app/navigation";
@@ -52,10 +52,11 @@
     },
   ];
 
-  async function handleSearch(event, symbol, assetType) {
-    event?.preventDefault();
+  async function handleSearch(symbol, assetType) {
     searchBarTicker(symbol);
     goto(`/${assetType === "ETF" ? "etf" : assetType === "Crypto" ? "crypto" : "stocks"}/${symbol}`)
+
+
   }
 
   async function popularTicker(state) {
@@ -92,7 +93,6 @@
       !state ||
       !searchBarData?.find((item) => item?.symbol === state?.toUpperCase())
     ) {
-      inputValue = "";
       if ($screenWidth < 640) {
         const closePopup = document.getElementById("searchBarModal");
         closePopup?.dispatchEvent(new MouseEvent("click"));
@@ -125,8 +125,6 @@
         const closePopup = document.getElementById("searchBarModal");
         closePopup?.dispatchEvent(new MouseEvent("click"));
       }
-
-    inputValue = "";
   }
 
   async function search() {
@@ -204,10 +202,8 @@
   }
   const handleControlK = async (event) => {
     if (event.ctrlKey && event.key === "k") {
-
       //const keyboardSearch = document.getElementById("searchBarModal");
       //keyboardSearch?.dispatchEvent(new MouseEvent("click"));
-      touchedInput = true;
       event.preventDefault();
     }
   };
@@ -359,7 +355,7 @@
               class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
               value={item?.symbol}
               label={item?.name}
-              on:click={(e) => handleSearch(e, item?.symbol, item?.type)}
+              on:click={() => handleSearch(item?.symbol, item?.type)}
             >
               <div
               class="flex flex-row items-center justify-between w-full">
