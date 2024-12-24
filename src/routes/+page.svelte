@@ -9,6 +9,7 @@
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { compareTimes, formatTime, isPWAInstalled } from "$lib/utils";
+  import Infobox from "$lib/components/Infobox.svelte";
   import { closedPWA } from "$lib/store";
 
   export let data;
@@ -244,72 +245,78 @@
               </div>
             </Card.Header>
             <Card.Content>
-              <Table.Root class="overflow-x-scroll w-full">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.Head class="text-white font-semibold"
-                      >Symbol</Table.Head
-                    >
-                    <Table.Head
-                      class="hidden sm:table-cell text-white font-semibold"
-                      >Name</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >Price</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >Change</Table.Head
-                    >
-                    <Table.Head
-                      class="text-white text-right font-semibold whitespace-nowrap"
-                      >Market Cap</Table.Head
-                    >
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {#each gainersList as item}
+              {#if gainersList?.length > 0}
+                <Table.Root class="overflow-x-scroll w-full">
+                  <Table.Header>
                     <Table.Row>
-                      <Table.Cell class="text-sm sm:text-[1rem]">
-                        <HoverStockChart symbol={item?.symbol} />
-                      </Table.Cell>
-                      <Table.Cell
-                        class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
+                      <Table.Head class="text-white font-semibold"
+                        >Symbol</Table.Head
                       >
-                        {item?.name?.length > charNumber
-                          ? item?.name?.slice(0, charNumber) + "..."
-                          : item?.name}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                      <Table.Head
+                        class="hidden sm:table-cell text-white font-semibold"
+                        >Name</Table.Head
                       >
-                        {item?.price?.toFixed(2)}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
+                      <Table.Head class="text-white text-right font-semibold"
+                        >Price</Table.Head
                       >
-                        {#if item?.changesPercentage >= 0}
-                          <span class="text-[#00FC50]"
-                            >+{item?.changesPercentage >= 1000
-                              ? abbreviateNumber(item?.changesPercentage)
-                              : item?.changesPercentage?.toFixed(2)}%</span
-                          >
-                        {:else}
-                          <span class="text-[#FF2F1F]"
-                            >{item?.changesPercentage <= -1000
-                              ? abbreviateNumber(item?.changesPercentage)
-                              : item?.changesPercentage?.toFixed(2)}%
-                          </span>
-                        {/if}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                      <Table.Head class="text-white text-right font-semibold"
+                        >Change</Table.Head
                       >
-                        {abbreviateNumber(item?.marketCap)}
-                      </Table.Cell>
+                      <Table.Head
+                        class="text-white text-right font-semibold whitespace-nowrap"
+                        >Market Cap</Table.Head
+                      >
                     </Table.Row>
-                  {/each}
-                </Table.Body>
-              </Table.Root>
+                  </Table.Header>
+                  <Table.Body>
+                    {#each gainersList as item}
+                      <Table.Row>
+                        <Table.Cell class="text-sm sm:text-[1rem]">
+                          <HoverStockChart symbol={item?.symbol} />
+                        </Table.Cell>
+                        <Table.Cell
+                          class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
+                        >
+                          {item?.name?.length > charNumber
+                            ? item?.name?.slice(0, charNumber) + "..."
+                            : item?.name}
+                        </Table.Cell>
+                        <Table.Cell
+                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                        >
+                          {item?.price?.toFixed(2)}
+                        </Table.Cell>
+                        <Table.Cell
+                          class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
+                        >
+                          {#if item?.changesPercentage >= 0}
+                            <span class="text-[#00FC50]"
+                              >+{item?.changesPercentage >= 1000
+                                ? abbreviateNumber(item?.changesPercentage)
+                                : item?.changesPercentage?.toFixed(2)}%</span
+                            >
+                          {:else}
+                            <span class="text-[#FF2F1F]"
+                              >{item?.changesPercentage <= -1000
+                                ? abbreviateNumber(item?.changesPercentage)
+                                : item?.changesPercentage?.toFixed(2)}%
+                            </span>
+                          {/if}
+                        </Table.Cell>
+                        <Table.Cell
+                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                        >
+                          {abbreviateNumber(item?.marketCap)}
+                        </Table.Cell>
+                      </Table.Row>
+                    {/each}
+                  </Table.Body>
+                </Table.Root>
+              {:else}
+                <Infobox
+                  text="Currently, no market gainer data is available."
+                />
+              {/if}
             </Card.Content>
           </Card.Root>
           <Card.Root
@@ -346,72 +353,76 @@
               </div>
             </Card.Header>
             <Card.Content>
-              <Table.Root class="overflow-x-scroll w-full">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.Head class="text-white font-semibold"
-                      >Symbol</Table.Head
-                    >
-                    <Table.Head
-                      class="hidden sm:table-cell text-white font-semibold"
-                      >Name</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >Price</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >Change</Table.Head
-                    >
-                    <Table.Head
-                      class="text-white text-right font-semibold whitespace-nowrap"
-                      >Market Cap</Table.Head
-                    >
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {#each losersList as item}
+              {#if losersList?.length > 0}
+                <Table.Root class="overflow-x-scroll w-full">
+                  <Table.Header>
                     <Table.Row>
-                      <Table.Cell class="text-sm sm:text-[1rem]">
-                        <HoverStockChart symbol={item?.symbol} />
-                      </Table.Cell>
-                      <Table.Cell
-                        class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
+                      <Table.Head class="text-white font-semibold"
+                        >Symbol</Table.Head
                       >
-                        {item?.name?.length > charNumber
-                          ? item?.name?.slice(0, charNumber) + "..."
-                          : item?.name}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                      <Table.Head
+                        class="hidden sm:table-cell text-white font-semibold"
+                        >Name</Table.Head
                       >
-                        {item?.price?.toFixed(2)}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
+                      <Table.Head class="text-white text-right font-semibold"
+                        >Price</Table.Head
                       >
-                        {#if item?.changesPercentage >= 0}
-                          <span class="text-[#00FC50]"
-                            >+{item?.changesPercentage >= 1000
-                              ? abbreviateNumber(item?.changesPercentage)
-                              : item?.changesPercentage?.toFixed(2)}%</span
-                          >
-                        {:else}
-                          <span class="text-[#FF2F1F]"
-                            >{item?.changesPercentage <= -1000
-                              ? abbreviateNumber(item?.changesPercentage)
-                              : item?.changesPercentage?.toFixed(2)}%
-                          </span>
-                        {/if}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                      <Table.Head class="text-white text-right font-semibold"
+                        >Change</Table.Head
                       >
-                        {abbreviateNumber(item?.marketCap)}
-                      </Table.Cell>
+                      <Table.Head
+                        class="text-white text-right font-semibold whitespace-nowrap"
+                        >Market Cap</Table.Head
+                      >
                     </Table.Row>
-                  {/each}
-                </Table.Body>
-              </Table.Root>
+                  </Table.Header>
+                  <Table.Body>
+                    {#each losersList as item}
+                      <Table.Row>
+                        <Table.Cell class="text-sm sm:text-[1rem]">
+                          <HoverStockChart symbol={item?.symbol} />
+                        </Table.Cell>
+                        <Table.Cell
+                          class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
+                        >
+                          {item?.name?.length > charNumber
+                            ? item?.name?.slice(0, charNumber) + "..."
+                            : item?.name}
+                        </Table.Cell>
+                        <Table.Cell
+                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                        >
+                          {item?.price?.toFixed(2)}
+                        </Table.Cell>
+                        <Table.Cell
+                          class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
+                        >
+                          {#if item?.changesPercentage >= 0}
+                            <span class="text-[#00FC50]"
+                              >+{item?.changesPercentage >= 1000
+                                ? abbreviateNumber(item?.changesPercentage)
+                                : item?.changesPercentage?.toFixed(2)}%</span
+                            >
+                          {:else}
+                            <span class="text-[#FF2F1F]"
+                              >{item?.changesPercentage <= -1000
+                                ? abbreviateNumber(item?.changesPercentage)
+                                : item?.changesPercentage?.toFixed(2)}%
+                            </span>
+                          {/if}
+                        </Table.Cell>
+                        <Table.Cell
+                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
+                        >
+                          {abbreviateNumber(item?.marketCap)}
+                        </Table.Cell>
+                      </Table.Row>
+                    {/each}
+                  </Table.Body>
+                </Table.Root>
+              {:else}
+                <Infobox text="Currently, no market loser data is available." />
+              {/if}
             </Card.Content>
           </Card.Root>
         </div>
@@ -638,20 +649,9 @@
                   >
                 </table>
               {:else}
-                <div
-                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-gray-600 text-[1rem]"
-                >
-                  <svg
-                    class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 256 256"
-                    ><path
-                      fill="#fff"
-                      d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                    /></svg
-                  >
-                  Currently, there are no new analyst reports available.
-                </div>
+                <Infobox
+                  text="Currently, there are no new analyst reports available."
+                />
               {/if}
             </Card.Content>
           </Card.Root>
@@ -683,7 +683,8 @@
                 <ul style="padding-left: 5px;">
                   {#each data?.getDashboard?.upcomingEarnings as item}
                     <li
-                    class="text-sm sm:text-[1rem]" style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
+                      class="text-sm sm:text-[1rem]"
+                      style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
                     >
                       <strong>{item?.name}</strong> (<HoverStockChart
                         symbol={item?.symbol}
@@ -710,7 +711,6 @@
                         {:else}
                           during market.
                         {/if}
-                        
                       {/if}Analysts estimate {abbreviateNumber(
                         item?.revenueEst,
                       )} in revenue ({(
@@ -726,21 +726,9 @@
                   {/each}
                 </ul>
               {:else}
-                <div
-                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-gray-600 text-[1rem]"
-                >
-                  <svg
-                    class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 256 256"
-                    ><path
-                      fill="#fff"
-                      d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                    /></svg
-                  >
-                  Currently, there are no upcoming earnings reports available that
-                  include the latest analyst estimates.
-                </div>
+                <Infobox
+                  text="Currently, there are no upcoming earnings reports available that include the latest analyst estimates."
+                />
               {/if}
             </Card.Content>
           </Card.Root>
@@ -771,7 +759,8 @@
                     )}:
 
                     <li
-                      class="text-sm sm:text-[1rem]" style="color: #fff;  margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
+                      class="text-sm sm:text-[1rem]"
+                      style="color: #fff;  margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
                     >
                       Revenue of {abbreviateNumber(item?.revenue)}
                       {item?.revenueSurprise > 0 ? "exceeds" : "misses"} estimates
@@ -803,20 +792,9 @@
                   {/each}
                 </ul>
               {:else}
-                <div
-                  class="text-left text-white sm:p-5 w-fit rounded-md flex flex-row items-center sm:border sm:border-gray-600 text-[1rem]"
-                >
-                  <svg
-                    class="hidden sm:inline-block w-6 h-6 flex-shrink-0 sm:mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 256 256"
-                    ><path
-                      fill="#fff"
-                      d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                    /></svg
-                  >
-                  Currently, there are no recent earnings reports available.
-                </div>
+                <Infobox
+                  text="Currently, there are no recent earnings reports available."
+                />
               {/if}
             </Card.Content>
           </Card.Root>
