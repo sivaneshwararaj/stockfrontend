@@ -874,8 +874,8 @@
                           on:click={() => changeSection("overview")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'overview'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Overview
                         </a>
@@ -884,8 +884,8 @@
                           on:click={() => changeSection("financials")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'financials'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Financials
                         </a>
@@ -894,8 +894,8 @@
                           on:click={() => changeSection("statistics")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'statistics'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                           >Statistics</a
                         >
 
@@ -904,8 +904,8 @@
                           on:click={() => changeSection("metrics")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'metrics'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                           >Metrics</a
                         >
 
@@ -915,8 +915,8 @@
                             on:click={() => changeSection("forecast")}
                             class="p-2 px-5 cursor-pointer {displaySection ===
                             'forecast'
-                              ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                              ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                           >
                             Forecast
                           </a>
@@ -926,8 +926,8 @@
                           on:click={() => changeSection("options")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'options'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Options
                         </a>
@@ -936,8 +936,8 @@
                           on:click={() => changeSection("insider")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'insider'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Insider
                         </a>
@@ -946,8 +946,8 @@
                           on:click={() => changeSection("dividends")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'dividends'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Dividends
                         </a>
@@ -956,8 +956,8 @@
                           on:click={() => changeSection("profile")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'profile'
-                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Profile
                         </a>

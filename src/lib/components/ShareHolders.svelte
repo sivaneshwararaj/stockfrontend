@@ -11,6 +11,7 @@
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import DownloadData from "$lib/components/DownloadData.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   use([PieChart, GridComponent, CanvasRenderer]);
 
@@ -203,31 +204,32 @@
     // Sort using the generic comparison function
     displayList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
+
+  function generateStatementInfoHTML() {
+    if (shareholderList?.length > 0) {
+      return `
+      <span>
+         13F institutions, like mutual and pension funds, are large investors
+        required by the SEC to disclose their holdings quarterly, significantly
+        impacting company decisions and stock trends.
+      </span>
+    `;
+    } else {
+      return `
+      <span>
+        There are currently no records available for the 13 institutional
+        holders of ${$displayCompanyName}
+      </span>
+    `;
+    }
+  }
+
+  let htmlOutput = generateStatementInfoHTML();
 </script>
 
 <section class="overflow-hidden text-white h-full pb-8">
   <main class="overflow-hidden">
-    <div
-      class="w-full text-white text-start p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-    >
-      <svg
-        class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 256 256"
-        ><path
-          fill="#fff"
-          d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-        /></svg
-      >
-      {#if shareholderList?.length !== 0}
-        13F institutions, like mutual and pension funds, are large investors
-        required by the SEC to disclose their holdings quarterly, significantly
-        impacting company decisions and stock trends.
-      {:else}
-        There are currently no records available for the 13 institutional
-        holders of {$displayCompanyName}
-      {/if}
-    </div>
+    <Infobox text={htmlOutput} />
 
     {#if shareholderList?.length !== 0}
       <div class="pb-2 rounded-md bg-[#09090B] sm:bg-[#09090B]">
@@ -322,7 +324,7 @@
           >
             <!--Start Put/Call-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 bg-primary rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm">Put/Call</span>
@@ -378,7 +380,7 @@
             <!--End Put/Call-->
             <!--Start Call Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 bg-primary rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm">Call Flow</span>
@@ -436,7 +438,7 @@
 
             <!--Start Put Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 bg-primary rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-medium text-gray-200 text-sm">Put Flow</span>

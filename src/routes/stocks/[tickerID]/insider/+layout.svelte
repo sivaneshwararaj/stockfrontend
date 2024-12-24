@@ -87,8 +87,8 @@
                 href={`/stocks/${$stockTicker}/insider`}
                 on:click={() => changeSubSection("insider")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'insider'
-                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
-                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                  ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
               >
                 Insider Trading
               </a>
@@ -98,8 +98,8 @@
                 on:click={() => changeSubSection("institute")}
                 class="p-2 px-5 cursor-pointer {displaySubSection ===
                 'institute'
-                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
-                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                  ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
               >
                 13F Institute
               </a>
@@ -109,8 +109,8 @@
                 on:click={() => changeSubSection("congress-trading")}
                 class="p-2 px-5 cursor-pointer {displaySubSection ===
                 'congress-trading'
-                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
-                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                  ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
               >
                 Congress Trading
               </a>
@@ -119,8 +119,8 @@
                 on:click={() => changeSubSection("transcripts")}
                 class="p-2 px-5 cursor-pointer {displaySubSection ===
                 'transcripts'
-                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
-                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                  ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
               >
                 Transcripts
               </a>
@@ -154,7 +154,7 @@
 
           {#if newsList?.length !== 0}
             <div
-              class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary"
             >
               <div class="p-4 text-sm">
                 <h3 class="text-lg text-white font-semibold mb-3">

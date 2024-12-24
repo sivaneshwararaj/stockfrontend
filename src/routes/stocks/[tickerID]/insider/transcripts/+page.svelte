@@ -8,6 +8,7 @@
   } from "$lib/store";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
+  import Infobox from "$lib/components/Infobox.svelte";
   import { onMount } from "svelte";
 
   let chats = [];
@@ -114,7 +115,7 @@
 </svelte:head>
 
 <section
-  class="w-full bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0"
+  class="w-full bg-[#09090B] overflow-hidden text-white min-h-screen mb-40 sm:mb-0"
 >
   <div class="h-full overflow-hidden">
     <div class="relative flex justify-center items-center overflow-hidden">
@@ -250,21 +251,21 @@
                       </span>
                     </div>
                     <div
-                      class="ml-2 avatar rounded-full w-8 h-8 sm:w-10 sm:h-10 relative bg-[#0DDE00] bg-opacity-[0.6] flex items-center justify-center"
+                      class="ml-2 avatar rounded-full w-8 h-8 sm:w-10 sm:h-10 relative border border-gray-600 bg-[#09090B] bg-opacity-[0.6] flex items-center justify-center"
                     >
                       <svg
                         class="w-6 h-6 sm:w-7 sm:h-7"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         ><path
-                          fill="#27272A"
+                          fill="#fff"
                           d="M12 14q-1.25 0-2.125-.875T9 11V5q0-1.25.875-2.125T12 2q1.25 0 2.125.875T15 5v6q0 1.25-.875 2.125T12 14m-1 7v-3.075q-2.6-.35-4.3-2.325T5 11h2q0 2.075 1.463 3.538T12 16q2.075 0 3.538-1.463T17 11h2q0 2.625-1.7 4.6T13 17.925V21z"
                         /></svg
                       >
                     </div>
                   </div>
                   <div
-                    class="flex flex-col w-full leading-1.5 p-4 border border-gray-600 rounded-l-xl rounded-tr-xl"
+                    class="flex flex-col w-full leading-1.5 p-4 border border-gray-600 bg-primary rounded-l-xl rounded-tr-xl"
                   >
                     <p class="text-sm font-normal py-2.5 text-gray-200">
                       {@html item?.description}
@@ -292,7 +293,7 @@
                     </div>
                   </div>
                   <div
-                    class="flex flex-col w-full leading-1.5 p-4 border border-gray-600 rounded-r-xl rounded-tl-xl"
+                    class="flex flex-col w-full leading-1.5 p-4 border border-gray-600 bg-secondary rounded-r-xl rounded-tl-xl"
                   >
                     <p class="text-sm font-normal py-2.5 text-gray-200">
                       {@html item?.description}
@@ -309,12 +310,11 @@
               Back to top
             </label>
           {:else}
-            <h3
-              class="pl-4 pr-4 pt-5 flex justify-center items-center text-md sm:text-lg text-center text-slate-200"
-            >
-              No transcript available for {$displayCompanyName} for the Q{displayQuarter}
-              of {displayYear} 🧐.
-            </h3>
+            <div class="pt-5">
+              <Infobox
+                text={`No transcript available for ${$displayCompanyName} for the Q${displayQuarter} of ${displayYear}`}
+              />
+            </div>
           {/if}
         {:else}
           <div class="flex justify-center items-center h-80">

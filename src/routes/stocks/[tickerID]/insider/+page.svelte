@@ -397,7 +397,7 @@
                 >
                   <!--Start Put/Call-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 bg-primary rounded-md h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
@@ -459,7 +459,7 @@
                   <!--End Put/Call-->
                   <!--Start Call Flow-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 bg-primary rounded-md h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
@@ -521,7 +521,7 @@
                   <!--End Call Flow-->
                   <!--Start Put Flow-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md bg-primary h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
