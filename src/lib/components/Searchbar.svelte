@@ -319,7 +319,7 @@
           <Combobox.Input
             id="combobox-input"
             on:input={search}
-            class="grow rounded-sm border border-gray-600 py-2 pl-9 text-[1rem] placeholder-gray-400 focus:border-default focus:shadow-lg focus:outline-none focus:ring-0 tiny:pl-8 xs:pl-10 text-white md:py-2 w-full bg-secondary sm:hover:bg-[#09090B] focus:bg-[#09090B] dark:bg-dark-700 dark:hover:bg-dark-700 dark:focus:bg-dark-700"
+            class="grow rounded-sm border border-gray-600 py-2 pl-9 text-[1rem] placeholder-gray-400 focus:border-default focus:shadow-lg focus:outline-none focus:ring-0 tiny:pl-8 xs:pl-10 text-white md:py-2 w-full bg-secondary focus:bg-secondary"
             placeholder="Company or stock symbol..."
             aria-label="Company or stock symbol..."
           />
@@ -351,7 +351,7 @@
           </div>
         </div>
         <Combobox.Content
-          class="w-auto z-40 -mt-0.5 rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
+          class="w-auto z-40 -mt-0.5 rounded-md border border-gray-700 bg-secondary px-1 py-3 shadow-popover outline-none"
           sideOffset={8}
           on:keydown={handleKeyDown}
         >
@@ -370,7 +370,7 @@
                 </div>
               </Combobox.Item>
             {/each}
-          {:else if inputValue?.length === 0}
+          {:else if inputValue?.length === 0 && searchHistory?.length > 0}
             {#each searchHistory as item}
               <Combobox.Item
                 class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-3 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
