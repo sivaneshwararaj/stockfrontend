@@ -810,7 +810,7 @@
         <div
           class="relative w-full flex flex-row justify-end sm:justify-between items-center"
         >
-          <div class="sm:w-full xl:ml-16">
+          <div class="sm:w-full sm:ml-2 xl:ml-[75px]">
             <Searchbar />
           </div>
           <NotificationBell {data} {hasUnreadElement} />
@@ -888,7 +888,7 @@
       </div>
       <div>
         <div class="flex w-full">
-          <div class="hidden xl:block xl:w-1/6">
+          <div class="hidden xl:block xl:w-[300px]">
             <aside
               class="fixed overflow-y-auto scroller overflow-hidden inset-y-0 left-0 z-50 xl:flex w-64 flex-col xl:border-r xl:border-gray-800 bg-[#141417]"
             >
@@ -1178,7 +1178,7 @@
               </nav>
             </aside>
           </div>
-          <div class="w-full xl:w-5/6">
+          <div class="w-full">
             <main class="w-full overflow-y-auto bg-[#09090B] sm:p-4">
               <!--
               <button on:click={handleNotificationClick}>
