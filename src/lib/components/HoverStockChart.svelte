@@ -164,7 +164,6 @@
       chart &&
       typeof window !== "undefined"
     ) {
-
       chart?.timeScale()?.fitContent();
     }
   });
@@ -183,12 +182,14 @@
         >
       </HoverCard.Trigger>
     </div>
-    <HoverCard.Content class=" w-96 bg-[#2A2E39] border border-gray-600">
+    <HoverCard.Content
+      class=" w-96 bg-secondary border border-gray-500 shadow-lg"
+    >
       <div class="flex justify-between space-x-4 w-full text-white">
         <div class="space-y-1 w-full">
           <!--Hover Stock Chart-->
           <label
-            class=" text-sm flex flex-row items-center justify-start bg-[#2A2E39]"
+            class=" text-sm flex flex-row items-center justify-start bg-secondary"
           >
             <div class="flex flex-col items-start w-full">
               <div class=" flex flex-col items-start pb-1">

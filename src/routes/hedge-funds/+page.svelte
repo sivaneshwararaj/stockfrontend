@@ -110,10 +110,10 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-xl overflow-hidden min-h-screen pt-5 pb-40"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pt-5 pb-40 px-3"
 >
-  <body class="w-full max-w-6xl overflow-hidden m-auto">
-    <div class="text-sm sm:text-[1rem] breadcrumbs ml-4 sm:ml-0">
+  <body class="w-full overflow-hidden m-auto">
+    <div class="text-sm sm:text-[1rem] breadcrumbs">
       <ul>
         <li><a href="/" class="text-gray-300">Home</a></li>
         <li class="text-gray-300">Hedge Funds</li>
@@ -161,7 +161,7 @@
 
             <div class="w-full m-auto mt-4">
               <div
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-5"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-5"
               >
                 {#each displayList as item}
                   <a

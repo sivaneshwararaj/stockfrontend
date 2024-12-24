@@ -863,9 +863,9 @@
 
 <body class="overflow-y-auto">
   <section
-    class="w-full max-w-screen sm:max-w-7xl xl:max-w-7xl flex justify-center items-center bg-[#09090B] pb-20"
+    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-[#09090B] pb-20"
   >
-    <div class="w-full m-auto px-3 min-h-screen">
+    <div class="w-full m-auto min-h-screen">
       <!--
         <div class="text-sm sm:text-[1rem] breadcrumbs mb-5">
           <ul>

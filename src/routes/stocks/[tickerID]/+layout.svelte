@@ -573,12 +573,12 @@
             </div>
             <!--End Mobile Navbar-->
 
-            <div class="pt-14 sm:pt-0 w-full max-w-7xl px-3 sm:px-0">
+            <div class="pt-14 sm:pt-0 w-full px-3 sm:px-0">
               <div
                 class="md:flex md:justify-between md:divide-x md:divide-slate-800"
               >
                 <!-- Main content -->
-                <div class="pb-12 md:pb-20 w-full max-w-7xl">
+                <div class="pb-12 md:pb-20 w-full">
                   <div class="md:pr-6 lg:pr-10">
                     <!-----Start-Header-CandleChart-Indicators------>
 
