@@ -18,7 +18,6 @@
   let touchedInput = false;
 
   $: inputValue = "";
-  
 
   let searchOpen = false;
   let searchBarModalChecked = false; // Initialize it to false
@@ -54,9 +53,9 @@
 
   async function handleSearch(symbol, assetType) {
     searchBarTicker(symbol);
-    goto(`/${assetType === "ETF" ? "etf" : assetType === "Crypto" ? "crypto" : "stocks"}/${symbol}`)
-
-
+    goto(
+      `/${assetType === "ETF" ? "etf" : assetType === "Crypto" ? "crypto" : "stocks"}/${symbol}`,
+    );
   }
 
   async function popularTicker(state) {
@@ -97,7 +96,7 @@
         const closePopup = document.getElementById("searchBarModal");
         closePopup?.dispatchEvent(new MouseEvent("click"));
       }
-     
+
       return;
     }
 
@@ -122,9 +121,9 @@
     // Close search modal
     searchOpen = false;
     if ($screenWidth < 640) {
-        const closePopup = document.getElementById("searchBarModal");
-        closePopup?.dispatchEvent(new MouseEvent("click"));
-      }
+      const closePopup = document.getElementById("searchBarModal");
+      closePopup?.dispatchEvent(new MouseEvent("click"));
+    }
   }
 
   async function search() {
@@ -145,7 +144,6 @@
       searchBarData = await response?.json();
     }, 50); // delay
     isLoading = false;
-
   }
 
   const onKeyPress = (e) => {
@@ -198,12 +196,11 @@
       assetType = selectedItem?.type;
       focusedSuggestion = selectedItem?.symbol;
     }
-
   }
   const handleControlK = async (event) => {
     if (event.ctrlKey && event.key === "k") {
-      //const keyboardSearch = document.getElementById("searchBarModal");
-      //keyboardSearch?.dispatchEvent(new MouseEvent("click"));
+      const keyboardSearch = document.getElementById("combobox-input");
+      keyboardSearch?.dispatchEvent(new MouseEvent("click"));
       event.preventDefault();
     }
   };
@@ -242,7 +239,6 @@
       window.removeEventListener("keydown", handleEscape);
     };
   });
-
 
   $: {
     if (searchBarModalChecked === true && typeof window !== "undefined") {
@@ -284,105 +280,121 @@
       }
     }
   }
-
-
 </script>
 
-<div class="hidden sm:block  w-full sm:max-w-[600px] grow">
-  <div >
+<div class="hidden sm:block w-full sm:max-w-[600px]">
+  <div>
     <div class="relative flex items-center">
       <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
-        <svg class="h-4 w-4 text-icon xs:h-5 xs:w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" stroke="currentColor" viewBox="0 0 24 24" style="max-width: 40px" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div> 
-      <Combobox.Root
-      items={searchBarData}
-      bind:inputValue
-      bind:touchedInput
-    >
-      <div class="relative  w-full">
-        <div
-          class="absolute inset-y-0 left-0 flex items-center pl-2.5"
-        >
-          <svg
-            class="text-icon h-5 w-5"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="3"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            style="max-width: 40px"
-            aria-hidden="true"
-          >
-            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            ></path>
-          </svg>
-        </div>
-        <Combobox.Input
-          on:input={search}
-          class="grow rounded-sm border border-gray-600 py-2 pl-9 text-[1rem] placeholder-gray-400 focus:border-default focus:shadow-lg focus:outline-none focus:ring-0 tiny:pl-8 xs:pl-10 text-white md:py-2 w-full bg-secondary sm:hover:bg-[#09090B] focus:bg-[#09090B] dark:bg-dark-700 dark:hover:bg-dark-700 dark:focus:bg-dark-700" 
-          placeholder="Company or stock symbol..."
-          aria-label="Company or stock symbol..."
-        />
-        <div class="absolute inset-y-0 right-0 flex items-center gap-x-2 px-3 text-gray-350 font-semibold">
-          {#if isLoading}
-          <span class="loading loading-spinner loading-sm"></span>
-          {:else if inputValue?.length > 0}
-          <label class="cursor-pointer" on:click={() => inputValue = ""}>
-            <svg
-          class="w-6 h-6 "
-          xmlns="http://www.w3.org/2000/svg"
+        <svg
+          class="h-4 w-4 text-icon xs:h-5 xs:w-5"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="3"
+          stroke="currentColor"
           viewBox="0 0 24 24"
-          ><path
-            fill="white"
-            d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
-          /></svg
+          style="max-width: 40px"
+          aria-hidden="true"
+          ><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg
         >
-          </label>
-          {:else}
-          <div class="pointer-events-none rounded-md border border-gray-500 px-2 py-0.5">
-          /
+      </div>
+      <Combobox.Root items={searchBarData} bind:inputValue bind:touchedInput>
+        <div class="relative w-full">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
+            <svg
+              class="text-icon h-5 w-5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="3"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style="max-width: 40px"
+              aria-hidden="true"
+            >
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <Combobox.Input
+            id="combobox-input"
+            on:input={search}
+            class="grow rounded-sm border border-gray-600 py-2 pl-9 text-[1rem] placeholder-gray-400 focus:border-default focus:shadow-lg focus:outline-none focus:ring-0 tiny:pl-8 xs:pl-10 text-white md:py-2 w-full bg-secondary sm:hover:bg-[#09090B] focus:bg-[#09090B] dark:bg-dark-700 dark:hover:bg-dark-700 dark:focus:bg-dark-700"
+            placeholder="Company or stock symbol..."
+            aria-label="Company or stock symbol..."
+          />
+          <div
+            class="absolute inset-y-0 right-0 flex items-center gap-x-2 px-3 text-gray-350 font-semibold"
+          >
+            {#if isLoading}
+              <span class="loading loading-spinner loading-sm"></span>
+            {:else if inputValue?.length > 0}
+              <label class="cursor-pointer" on:click={() => (inputValue = "")}>
+                <svg
+                  class="w-6 h-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  ><path
+                    fill="white"
+                    d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+                  /></svg
+                >
+              </label>
+            {:else}
+              <div
+                class="pointer-events-none absolute end-6 top-2.5 gap-1 opacity-80 rtl:flex-row-reverse hidden lg:flex"
+              >
+                <kbd class="kbd kbd-sm">ctrl</kbd>
+                <kbd class="kbd kbd-sm">K</kbd>
+              </div>
+            {/if}
+          </div>
         </div>
-        {/if}
-      </div>
-      </div>
-      {#if inputValue?.length > 0}
         <Combobox.Content
           class="w-auto z-40 -mt-0.5 rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
           sideOffset={8}
+          on:keydown={handleKeyDown}
         >
-          {#each searchBarData as item}
-            <Combobox.Item
-              class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-5 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
-              value={item?.symbol}
-              label={item?.name}
-              on:click={() => handleSearch(item?.symbol, item?.type)}
-            >
-              <div
-              class="flex flex-row items-center justify-between w-full">
-                <span class="text-sm text-blue-400"
-                  >{item?.symbol}</span
-                >
-                <span class="ml-3 text-sm text-white"
-                  >{item?.name}</span
-                >
-                <span class="ml-auto text-sm text-white"
-                  >{item?.type}</span
-                >
-              </div>
-            </Combobox.Item>
+          {#if inputValue?.length > 0 && searchBarData?.length > 0}
+            {#each searchBarData as item}
+              <Combobox.Item
+                class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-3 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
+                value={item?.symbol}
+                label={item?.name}
+                on:click={() => handleSearch(item?.symbol, item?.type)}
+              >
+                <div class="flex flex-row items-center justify-between w-full">
+                  <span class="text-sm text-blue-400">{item?.symbol}</span>
+                  <span class="ml-3 text-sm text-white">{item?.name}</span>
+                  <span class="ml-auto text-sm text-white">{item?.type}</span>
+                </div>
+              </Combobox.Item>
+            {/each}
+          {:else if inputValue?.length === 0}
+            {#each searchHistory as item}
+              <Combobox.Item
+                class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-3 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
+                value={item?.symbol}
+                label={item?.name}
+                on:click={() => handleSearch(item?.symbol, item?.type)}
+              >
+                <div class="flex flex-row items-center justify-between w-full">
+                  <span class="text-sm text-blue-400">{item?.symbol}</span>
+                  <span class="ml-3 text-sm text-white">{item?.name}</span>
+                  <span class="ml-auto text-sm text-white">{item?.type}</span>
+                </div>
+              </Combobox.Item>
+            {/each}
           {:else}
             <span class="block px-5 py-2 text-sm text-white">
               No results found
             </span>
-          {/each}
+          {/if}
         </Combobox.Content>
-        {/if}
-    </Combobox.Root>
-  </div>
-
+      </Combobox.Root>
     </div>
   </div>
-
+</div>
 
 <label
   for="searchBarModal"
@@ -391,171 +403,187 @@
   <Search class="h-[20px] w-[20px]" />
 </label>
 
-  <input
-    type="checkbox"
-    id="searchBarModal"
-    class="modal-toggle"
-    bind:checked={searchBarModalChecked}
-  />
+<input
+  type="checkbox"
+  id="searchBarModal"
+  class="modal-toggle"
+  bind:checked={searchBarModalChecked}
+/>
 
-  <dialog id="searchBarModal" class="modal p-3 sm:p-0">
-    <label for="searchBarModal" class="cursor-pointer modal-backdrop"></label>
+<dialog id="searchBarModal" class="modal p-3 sm:p-0">
+  <label for="searchBarModal" class="cursor-pointer modal-backdrop"></label>
 
-    
-    <div
-      class="z-[999] modal-box overflow-hidden rounded-md bg-secondary border border-gray-600 sm:my-8 sm:m-auto sm:h-auto w-full sm:w-3/4 lg:w-1/2 2xl:w-1/3"
-    >
+  <div
+    class="z-[999] modal-box overflow-hidden rounded-md bg-secondary border border-gray-600 sm:my-8 sm:m-auto sm:h-auto w-full sm:w-3/4 lg:w-1/2 2xl:w-1/3"
+  >
     <label
-        for="searchBarModal"
-        class="inline-block cursor-pointer absolute right-3 top-3 text-[1.3rem] sm:text-[1.8rem] text-white"
+      for="searchBarModal"
+      class="inline-block cursor-pointer absolute right-3 top-3 text-[1.3rem] sm:text-[1.8rem] text-white"
+    >
+      <svg
+        class="w-6 h-6 sm:w-8 sm:h-8"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        ><path
+          fill="white"
+          d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+        /></svg
       >
-        <svg
-          class="w-6 h-6 sm:w-8 sm:h-8"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          ><path
-            fill="white"
-            d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
-          /></svg
+    </label>
+
+    <!-- Search layout -->
+    <div class="mt-8">
+      <div class="relative">
+        <div
+          class="inline-block cursor-pointer absolute right-5 top-1.5 text-[1.3rem] sm:text-[1.5rem] text-white"
         >
-      </label>
-
-      <!-- Search layout -->
-      <div class="mt-8">
-        <div class="relative">
-          <label for="modal-search" class="sr-only">Search</label>
-         
-          <input
-            id="modal-search"
-            class="rounded-md w-full text-white bg-secondary border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
-            type="search"
-            placeholder="Search Anything…"
-            bind:value={inputValue}
-            bind:this={inputElement}
-            on:input={search}
-            on:keydown={handleKeyDown}
-            on:keypress={onKeyPress}
-            autocomplete="off"
-          />
-          <button
-            on:click={() => searchBarTicker(inputValue)}
-            class="absolute inset-0 right-auto group"
-            type="submit"
-            aria-label="Search"
-          >
-            <svg
-              class="w-4 h-4 shrink-0 fill-current text-white ml-4 mr-2 text-slate-400"
-              viewBox="0 0 16 16"
-              xmlns="http://www.w3.org/2000/svg"
-              ><path
-                d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z"
-              />
-              <path
-                d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="py-4">
-        <!-- Popular searches -->
-        <div class="mb-3 last:mb-0 mt-3">
-          {#if !showSuggestions}
-            <div class="text-start text-sm font-semibold text-white mb-2">
-              {searchHistory?.length > 0 ? "Recent" : "Popular"}
-            </div>
+          {#if isLoading}
+            <span class="loading loading-spinner loading-sm"></span>
+          {:else if inputValue?.length > 0}
+            <label class="cursor-pointer" on:click={() => (inputValue = "")}>
+              <svg
+                class="w-6 h-6 mt-2 ml-1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                ><path
+                  fill="white"
+                  d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+                /></svg
+              >
+            </label>
+          {:else}
+            /
           {/if}
-
-          <ul class="text-sm">
-            {#if !showSuggestions}
-              {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
-                <li class="border-b border-gray-600">
-                  <a
-                    href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
-                    on:click={() => popularTicker(item?.symbol)}
-                    class="mb-2 {item?.symbol === focusedSuggestion
-                      ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-primary rounded group'
-                      : 'shake-ticker cursor-pointer bg-secondary sm:hover:bg-primary rounded-md flex justify-start items-center p-2 text-white  group'} w-full"
-                  >
-                    <div class="flex flex-row items-center w-full">
-
-                      <div class="flex flex-col">
-                        <span class="text-blue-400">{item?.symbol}</span>
-                        <span class="text-white"
-                          >{item?.name.length > 150
-                            ? item?.name?.slice(0, 150) + "..."
-                            : item?.name}</span
-                        >
-                      </div>
-
-                      <div class="text-white font-medium ml-auto">
-                        {item?.type}
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              {/each}
-            {:else if showSuggestions && searchBarData?.length > 0}
-              <div class="text-start text-sm font-semibold text-white mb-2">
-                Suggestions
-              </div>
-              {#each searchBarData as item}
-                <li class="border-b border-gray-600">
-                  <!-- svelte-ignore a11y-click-events-have-key-events -->
-                  <!-- svelte-ignore a11y-label-has-associated-control -->
-                  <a
-                    href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
-                    on:click={() => searchBarTicker(item?.symbol)}
-                    class="mb-2 {item?.symbol === focusedSuggestion
-                      ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-primary rounded group'
-                      : 'cursor-pointer mb-2 bg-secondary sm:hover:bg-primary rounded-md flex justify-start items-center p-2 text-white group'}"
-                  >
-                    <div class="flex flex-row items-center w-full">
-                      <div class="flex flex-col">
-                        <span class="text-blue-400">{item?.symbol}</span>
-                        <span class="text-white"
-                          >{item?.name?.length > 150
-                            ? item?.name?.slice(0, 150) + "..."
-                            : item?.name}</span
-                        >
-                      </div>
-
-                      <div class="text-white font-medium ml-auto">
-                        {item?.type}
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              {/each}
-            {:else if showSuggestions && searchBarData?.length === 0}
-              <li>
-                <label
-                  class="flex items-center p-2 text-white hover:text-white hover:bg-primary rounded group"
-                >
-                  <svg
-                    class="w-3 h-3 fill-slate-400 shrink-0 mr-3 dark:fill-slate-500"
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M11.953 4.29a.5.5 0 0 0-.454-.292H6.14L6.984.62A.5.5 0 0 0 6.12.173l-6 7a.5.5 0 0 0 .379.825h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z"
-                    />
-                  </svg>
-                  <span>No results found</span>
-                </label>
-              </li>
-            {/if}
-          </ul>
         </div>
+
+        <label for="modal-search" class="sr-only">Search</label>
+
+        <input
+          id="modal-search"
+          class="rounded-md w-full text-white bg-secondary border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
+          type="search"
+          placeholder="Company or stock symbol..."
+          bind:value={inputValue}
+          bind:this={inputElement}
+          on:input={search}
+          autocomplete="off"
+        />
+
+        <button
+          on:click={() => searchBarTicker(inputValue)}
+          class="absolute inset-0 right-auto group"
+          type="submit"
+          aria-label="Search"
+        >
+          <svg
+            class="w-4 h-4 shrink-0 fill-current text-white ml-4 mr-2 text-slate-400"
+            viewBox="0 0 16 16"
+            xmlns="http://www.w3.org/2000/svg"
+            ><path
+              d="M7 14c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zM7 2C4.243 2 2 4.243 2 7s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5z"
+            />
+            <path
+              d="M15.707 14.293L13.314 11.9a8.019 8.019 0 01-1.414 1.414l2.393 2.393a.997.997 0 001.414 0 .999.999 0 000-1.414z"
+            />
+          </svg>
+        </button>
       </div>
-
-
     </div>
-  </dialog>
 
+    <div class="py-4">
+      <!-- Popular searches -->
+      <div class="mb-3 last:mb-0 mt-3">
+        {#if !showSuggestions}
+          <div class="text-start text-sm font-semibold text-white mb-2">
+            {searchHistory?.length > 0 ? "Recent" : "Popular"}
+          </div>
+        {/if}
+
+        <ul class="text-sm">
+          {#if !showSuggestions}
+            {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
+              <li class="border-b border-gray-600">
+                <a
+                  href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                  on:click={() => popularTicker(item?.symbol)}
+                  class="mb-2 {item?.symbol === focusedSuggestion
+                    ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-primary rounded group'
+                    : 'shake-ticker cursor-pointer bg-secondary sm:hover:bg-primary rounded-md flex justify-start items-center p-2 text-white  group'} w-full"
+                >
+                  <div class="flex flex-row items-center w-full">
+                    <div class="flex flex-col">
+                      <span class="text-blue-400">{item?.symbol}</span>
+                      <span class="text-white"
+                        >{item?.name.length > 150
+                          ? item?.name?.slice(0, 150) + "..."
+                          : item?.name}</span
+                      >
+                    </div>
+
+                    <div class="text-white font-medium ml-auto">
+                      {item?.type}
+                    </div>
+                  </div>
+                </a>
+              </li>
+            {/each}
+          {:else if showSuggestions && searchBarData?.length > 0}
+            <div class="text-start text-sm font-semibold text-white mb-2">
+              Suggestions
+            </div>
+            {#each searchBarData as item}
+              <li class="border-b border-gray-600">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-label-has-associated-control -->
+                <a
+                  href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
+                  on:click={() => searchBarTicker(item?.symbol)}
+                  class="mb-2 {item?.symbol === focusedSuggestion
+                    ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-primary rounded group'
+                    : 'cursor-pointer mb-2 bg-secondary sm:hover:bg-primary rounded-md flex justify-start items-center p-2 text-white group'}"
+                >
+                  <div class="flex flex-row items-center w-full">
+                    <div class="flex flex-col">
+                      <span class="text-blue-400">{item?.symbol}</span>
+                      <span class="text-white"
+                        >{item?.name?.length > 150
+                          ? item?.name?.slice(0, 150) + "..."
+                          : item?.name}</span
+                      >
+                    </div>
+
+                    <div class="text-white font-medium ml-auto">
+                      {item?.type}
+                    </div>
+                  </div>
+                </a>
+              </li>
+            {/each}
+          {:else if showSuggestions && searchBarData?.length === 0}
+            <li>
+              <label
+                class="flex items-center p-2 text-white hover:text-white hover:bg-primary rounded group"
+              >
+                <svg
+                  class="w-3 h-3 fill-slate-400 shrink-0 mr-3 dark:fill-slate-500"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.953 4.29a.5.5 0 0 0-.454-.292H6.14L6.984.62A.5.5 0 0 0 6.12.173l-6 7a.5.5 0 0 0 .379.825h5.359l-.844 3.38a.5.5 0 0 0 .864.445l6-7a.5.5 0 0 0 .075-.534Z"
+                  />
+                </svg>
+                <span>No results found</span>
+              </label>
+            </li>
+          {/if}
+        </ul>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 <!--End Drawer Sidewise for mobile-->
 <!--End Drawer Sidewise for mobile-->

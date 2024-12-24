@@ -795,8 +795,6 @@
                 </Sheet.Close>
               {/if}
             </nav>
-
-        
           </Sheet.Content>
         </Sheet.Root>
 
@@ -809,78 +807,84 @@
           <span class="text-white font-semibold ml-2 text-lg">Stocknear</span>
         </a>
 
-  
-
-          <div class="relative w-full flex flex-row justify-end sm:justify-between items-center">
-            <div class="sm:w-full lg:ml-16">
+        <div
+          class="relative w-full flex flex-row justify-end sm:justify-between items-center"
+        >
+          <div class="sm:w-full xl:ml-16">
             <Searchbar />
           </div>
-            <NotificationBell {data} {hasUnreadElement} />
-  
-            <div class="ml-3">
-              {#if data?.user}
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild let:builder>
-                <Button
-                  size="icon"
-                  class="overflow-hidden rounded-md bg-[#09090B] sm:hover:bg-primary border border-gray-600 w-10 h-10"
-                  builders={[builder]}
-                >
-                  <svg
-                    class="h-[28px] w-[28px] overflow-hidden rounded-full text-gray-300"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><path
-                      fill="currentColor"
-                      d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"
-                    /></svg
+          <NotificationBell {data} {hasUnreadElement} />
+
+          <div class="ml-4">
+            {#if data?.user}
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild let:builder>
+                  <Button
+                    size="icon"
+                    class="overflow-hidden rounded-md bg-[#09090B] sm:hover:bg-primary border border-gray-600 w-10 h-10"
+                    builders={[builder]}
                   >
-                </Button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content align="end">
-                <a href="/profile" class="cursor-pointer ">
-                  <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
-                    My Account
-                  </DropdownMenu.Item>
-                </a>
-                <DropdownMenu.Separator />
-  
-                <a href="/watchlist/stocks" class="cursor-pointer">
-                  <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
-                    Watchlist
-                  </DropdownMenu.Item>
-                </a>
-                <a href="/price-alert" class="cursor-pointer">
-                  <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
-                    Price Alert
-                  </DropdownMenu.Item>
-                </a>
-  
-                <DropdownMenu.Separator />
-                <form class="cursor-pointer" action="/logout" method="POST">
-                  <button type="submit" class="w-full text-start cursor-pointer">
-                    <DropdownMenu.Item class="sm:hover:bg-primary cursor-pointer">
-                      <span class="text-start">Logout</span>
+                    <svg
+                      class="h-[28px] w-[28px] overflow-hidden rounded-full text-gray-300"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="currentColor"
+                        d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"
+                      /></svg
+                    >
+                  </Button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content align="end">
+                  <a href="/profile" class="cursor-pointer">
+                    <DropdownMenu.Item
+                      class="sm:hover:bg-primary cursor-pointer"
+                    >
+                      My Account
                     </DropdownMenu.Item>
-                  </button>
-                </form>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-          {:else}
-            <a
-              href="/login"
-              class="inline-flex items-center justify-center rounded-md bg-[#fff] px-4 py-2 text-sm font-semibold text-black shadow-sm transition-all duration-150 sm:hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
-            >
-              Login
-            </a>
-          {/if}
-            </div>
+                  </a>
+                  <DropdownMenu.Separator />
 
-            
+                  <a href="/watchlist/stocks" class="cursor-pointer">
+                    <DropdownMenu.Item
+                      class="sm:hover:bg-primary cursor-pointer"
+                    >
+                      Watchlist
+                    </DropdownMenu.Item>
+                  </a>
+                  <a href="/price-alert" class="cursor-pointer">
+                    <DropdownMenu.Item
+                      class="sm:hover:bg-primary cursor-pointer"
+                    >
+                      Price Alert
+                    </DropdownMenu.Item>
+                  </a>
+
+                  <DropdownMenu.Separator />
+                  <form class="cursor-pointer" action="/logout" method="POST">
+                    <button
+                      type="submit"
+                      class="w-full text-start cursor-pointer"
+                    >
+                      <DropdownMenu.Item
+                        class="sm:hover:bg-primary cursor-pointer"
+                      >
+                        <span class="text-start">Logout</span>
+                      </DropdownMenu.Item>
+                    </button>
+                  </form>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+            {:else}
+              <a
+                href="/login"
+                class="inline-flex items-center justify-center rounded-md bg-[#fff] px-4 py-2 text-sm font-semibold text-black shadow-sm transition-all duration-150 sm:hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
+              >
+                Login
+              </a>
+            {/if}
           </div>
-  
-
-     
+        </div>
       </div>
       <div>
         <div class="flex w-full">
@@ -1172,7 +1176,6 @@
                   </a>
                 {/if}
               </nav>
-            
             </aside>
           </div>
           <div class="w-full xl:w-5/6">
