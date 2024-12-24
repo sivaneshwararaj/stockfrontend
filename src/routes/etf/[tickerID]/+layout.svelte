@@ -760,10 +760,10 @@
     class="cursor-pointer modal-backdrop"
   ></label>
 
-  <div class="modal-box rounded-md w-full bg-[#1E222D] border border-gray-600">
+  <div class="modal-box rounded-md w-full bg-secondary border border-gray-600">
     <label
       for="addWatchListModal"
-      class="cursor-pointer bg-[#1E222D] absolute right-5 top-2 text-[1rem] sm:text-[1.8rem] text-white"
+      class="cursor-pointer bg-secondary absolute right-5 top-2 text-[1rem] sm:text-[1.5rem] text-white"
     >
       ✕
     </label>
@@ -771,18 +771,18 @@
     <div class="text-white">
       <h3 class="font-semibold text-lg sm:text-xl mb-10">Add to Watchlist</h3>
 
-      <div class="flex flex-col items-center w-full max-w-3xl bg-[#1E222D]">
+      <div class="flex flex-col items-center w-full max-w-3xl bg-secondary">
         {#each userWatchList as item}
           <label
             on:click|stopPropagation={() => toggleUserWatchlist(item?.id)}
             class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
           >
             <div
-              class="flex flex-row items-center w-full bg-[#2A2E39] p-3 rounded-md {item?.ticker?.includes(
+              class="flex flex-row items-center w-full p-3 border rounded-md {item?.ticker?.includes(
                 $etfTicker,
               )
                 ? 'border border-gray-400'
-                : ''}"
+                : 'border-gray-600'}"
             >
               <div class="flex flex-col items-center w-full">
                 <span class="ml-1 text-white font-medium mr-auto">
@@ -794,9 +794,7 @@
                 </span>
               </div>
 
-              <div
-                class="rounded-full w-8 h-8 relative border border-[#737373]"
-              >
+              <div class="rounded-full w-8 h-8 relative border border-gray-600">
                 {#if item?.ticker?.includes($etfTicker)}
                   <svg
                     class="w-full h-full rounded-full"

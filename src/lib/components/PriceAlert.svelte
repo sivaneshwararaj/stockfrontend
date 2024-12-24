@@ -100,7 +100,7 @@
   ></label>
 
   <div
-    class="modal-box rounded-md w-full bg-[#1E222D] border border-gray-600 min-h-fit h-[600px] sm:h-[500px]"
+    class="modal-box rounded-md w-full bg-secondary border border-gray-600 min-h-fit h-[600px] sm:h-[500px]"
   >
     <!--Start Trade Modal-->
     <label

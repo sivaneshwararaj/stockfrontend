@@ -899,15 +899,15 @@
                           >Statistics</a
                         >
 
-                          <a
-                            href={`/stocks/${$stockTicker}/metrics`}
-                            on:click={() => changeSection("metrics")}
-                            class="p-2 px-5 cursor-pointer {displaySection ===
-                            'metrics'
-                              ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
-                              : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
-                            >Metrics</a
-                          >
+                        <a
+                          href={`/stocks/${$stockTicker}/metrics`}
+                          on:click={() => changeSection("metrics")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'metrics'
+                            ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                          >Metrics</a
+                        >
 
                         {#if Object?.keys(data?.getAnalystRating ?? {})?.length > 0}
                           <a
@@ -1000,10 +1000,10 @@
     class="cursor-pointer modal-backdrop"
   ></label>
 
-  <div class="modal-box rounded-md w-full bg-[#1E222D] border border-gray-600">
+  <div class="modal-box rounded-md w-full bg-secondary border border-gray-600">
     <label
       for="addWatchListModal"
-      class="cursor-pointer bg-[#1E222D] absolute right-5 top-2 text-[1rem] sm:text-[1.8rem] text-white"
+      class="cursor-pointer bg-secondary absolute right-5 top-2 text-[1rem] sm:text-[1.5rem] text-white"
     >
       ✕
     </label>
@@ -1011,18 +1011,18 @@
     <div class="text-white">
       <h3 class="font-semibold text-lg sm:text-xl mb-10">Add to Watchlist</h3>
 
-      <div class="flex flex-col items-center w-full max-w-3xl bg-[#1E222D]">
+      <div class="flex flex-col items-center w-full max-w-3xl bg-secondary">
         {#each userWatchList as item}
           <label
             on:click|stopPropagation={() => toggleUserWatchlist(item?.id)}
             class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
           >
             <div
-              class="flex flex-row items-center w-full bg-[#2A2E39] p-3 rounded-md {item?.ticker?.includes(
+              class="flex flex-row items-center w-full border p-3 rounded-md {item?.ticker?.includes(
                 $stockTicker,
               )
                 ? 'border border-gray-400'
-                : ''}"
+                : 'border-gray-600'}"
             >
               <div class="flex flex-col items-center w-full">
                 <span class="ml-1 text-white font-medium mr-auto">
