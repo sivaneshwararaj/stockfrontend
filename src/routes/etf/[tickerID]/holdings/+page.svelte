@@ -6,6 +6,7 @@
   } from "$lib/store";
   import { formatString } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   export let data;
   let rawData = data?.getETFHoldings?.holdings;
@@ -32,6 +33,28 @@
     { name: "% Weight", rule: "weightPercentage", type: "percent" },
     { name: "Shares", rule: "sharesNumber", type: "int" },
   ];
+
+  function generateStatementInfoHTML() {
+    if (rawData?.length > 0) {
+      return `
+      <span>
+         The ${$displayCompanyName} holds ${rawData?.length} different assets
+              and the largest one in the portfolio is ${formatString(
+                rawData?.at(0)?.name,
+              )}, making up ${rawData?.at(0)?.weightPercentage?.toFixed(2)}% of
+              the total.
+      </span>
+    `;
+    } else {
+      return `
+      <span>
+        No financial data available for ${$displayCompanyName}.
+      </span>
+    `;
+    }
+  }
+
+  let htmlOutput = generateStatementInfoHTML();
 </script>
 
 <svelte:head>
@@ -72,37 +95,15 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] overflow-hidden text-white h-full min-h-screen mb-20 sm:mb-0 w-full mt-5 sm:mt-0"
+  class="bg-[#09090B] overflow-hidden text-white h-full min-h-screen mb-20 sm:mb-0 w-full mt-2 sm:mt-0"
 >
   <div class="flex justify-center m-auto h-full overflow-hidden w-full">
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-        <div class="mb-6">
-          <div
-            class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-          >
-            <svg
-              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#fff"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
-
-            {#if rawData?.length !== 0}
-              The {$displayCompanyName} holds {rawData?.length} different assets
-              and the largest one in the portfolio is {formatString(
-                rawData?.at(0)?.name,
-              )}, making up {rawData?.at(0)?.weightPercentage?.toFixed(2)}% of
-              the total.
-            {:else}
-              No information available for {$displayCompanyName}.
-            {/if}
-          </div>
+      <div class="sm:p-7 w-full m-auto">
+        <div class="mb-10">
+          <Infobox text={htmlOutput} />
         </div>
 
         {#if rawData?.length !== 0}

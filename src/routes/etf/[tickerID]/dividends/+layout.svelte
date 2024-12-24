@@ -1,11 +1,11 @@
 <script lang="ts">
+  import { etfTicker } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import { formatDate } from "$lib/utils";
 
   export let data;
 
-  const similarStocks = data?.getSimilarStocks?.sort(
-    (a, b) => b?.dividendYield - a?.dividendYield,
-  );
+  let newsList = data?.getNews ?? [];
 </script>
 
 <section class="w-auto overflow-hidden min-h-screen">
@@ -40,44 +40,29 @@
             </div>
           {/if}
 
-          {#if similarStocks?.length > 0}
+          {#if newsList?.length !== 0}
             <div
-              class="w-full p-2 text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full sm:hover:text-white text-white border border-gray-600 bg-primary rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
-              <h3 class="p-2 pt-4 text-xl font-semibold">Related Stocks</h3>
-              <table class="table table-sm table-compact w-full text-white">
-                <thead class="text-white"
-                  ><tr
-                    ><th
-                      class="whitespace-nowrap border-b font-semibold text-sm text-left"
-                      >Company</th
-                    >
-                    <th
-                      class="whitespace-nowrap border-b font-semibold text-sm text-right"
-                      >Dividend Yield</th
-                    ></tr
-                  ></thead
-                >
-                <tbody>
-                  {#each similarStocks?.slice(0, 8) as item}
-                    <tr class="border-gray-600 border-b"
-                      ><td class="text-left"
-                        ><a
-                          href={`/stocks/${item?.symbol}`}
-                          class="sm:hover:text-white text-blue-400"
-                          >{item?.symbol}</a
-                        ></td
+              <div class="p-4 text-sm">
+                <h3 class="text-lg text-white font-semibold mb-3">
+                  {$etfTicker} News
+                </h3>
+                <ul class="text-white">
+                  {#each newsList?.slice(0, 10) as item}
+                    <li class="mb-3 last:mb-1">
+                      {formatDate(item?.publishedDate)} &#183;
+                      <a
+                        class="sm:hover:text-white text-blue-400"
+                        href={item?.url}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow">{item?.title}</a
                       >
-                      <td class="text-right cursor-normal"
-                        >{item?.dividendYield !== null &&
-                        item?.dividendYield !== undefined
-                          ? item?.dividendYield + "%"
-                          : "n/a"}</td
-                      >
-                    </tr>
+                      - {item?.site}
+                    </li>
                   {/each}
-                </tbody>
-              </table>
+                </ul>
+              </div>
             </div>
           {/if}
         </aside>

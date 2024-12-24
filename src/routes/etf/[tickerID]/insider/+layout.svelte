@@ -42,7 +42,7 @@
 
           {#if newsList?.length !== 0}
             <div
-              class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full sm:hover:text-white text-white border border-gray-600 bg-primary rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <div class="p-4 text-sm">
                 <h3 class="text-lg text-white font-semibold mb-3">

@@ -201,14 +201,8 @@
     if (event.ctrlKey && event.key === "k") {
       const keyboardSearch = document.getElementById("combobox-input");
       keyboardSearch?.dispatchEvent(new MouseEvent("click"));
+      inputValue = "";
       event.preventDefault();
-    }
-  };
-
-  const handleEscape = (event) => {
-    if (event.key === "Escape") {
-      // Escape key is pressed, close the modal
-      searchBarModalChecked = false;
     }
   };
 
@@ -233,10 +227,8 @@
     }
 
     window.addEventListener("keydown", handleControlK);
-    window.addEventListener("keydown", handleEscape);
     return () => {
       window.removeEventListener("keydown", handleControlK);
-      window.removeEventListener("keydown", handleEscape);
     };
   });
 
@@ -319,6 +311,7 @@
           <Combobox.Input
             id="combobox-input"
             on:input={search}
+            on:click={() => (inputValue = "")}
             class="grow rounded-sm border border-gray-600 py-2 pl-9 text-[1rem] placeholder-gray-400 focus:border-default focus:shadow-lg focus:outline-none focus:ring-0 tiny:pl-8 xs:pl-10 text-white md:py-2 w-full bg-secondary focus:bg-secondary"
             placeholder="Company or stock symbol..."
             aria-label="Company or stock symbol..."

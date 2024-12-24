@@ -165,7 +165,7 @@
                 >
                   <!--Start Buy/Sell-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 bg-primary rounded-md h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
@@ -227,7 +227,7 @@
                   <!--End Buy/Sell-->
                   <!--Start Dem/Rep-->
                   <div
-                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 rounded-md h-20"
+                    class="flex flex-row items-center flex-wrap w-full px-3 sm:px-4 border border-gray-600 bg-primary rounded-md h-20"
                   >
                     <div class="flex flex-col items-start">
                       <span
