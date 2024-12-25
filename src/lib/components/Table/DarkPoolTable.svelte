@@ -4,58 +4,52 @@
 
   import VirtualList from "svelte-tiny-virtual-list";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
-  import toast from "svelte-french-toast";
 
   export let data;
-  export let optionsWatchlist;
   export let displayedData = [];
   export let filteredData = [];
   export let rawData = [];
 
-  let animationClass = "";
-  let animationId = "";
+  function formatToNewYorkTime(isoString) {
+    const date = new Date(isoString);
 
-  function formatTime(timeString) {
-    // Split the time string into components
-    const [hours, minutes, seconds] = timeString?.split(":").map(Number);
+    // Get the date components in New York time zone
+    const options = {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZone: "America/New_York",
+      hour12: false,
+    };
 
-    // Determine AM or PM
-    const period = hours >= 12 ? "PM" : "AM";
+    // Format date for New York timezone
+    const formatter = new Intl.DateTimeFormat("en-US", options);
+    const parts = formatter.formatToParts(date);
 
-    // Convert hours from 24-hour to 12-hour format
-    const formattedHours = hours % 12 || 12; // Converts 0 to 12 for midnight
+    const year = parts.find((p) => p.type === "year").value;
+    const day = parts.find((p) => p.type === "day").value;
+    const hour = parts.find((p) => p.type === "hour").value.padStart(2, "0");
+    const minute = parts
+      .find((p) => p.type === "minute")
+      .value.padStart(2, "0");
+    const second = parts
+      .find((p) => p.type === "second")
+      .value.padStart(2, "0");
 
-    // Format the time string
-    const formattedTimeString = `${formattedHours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")} ${period}`;
-
-    return formattedTimeString;
-  }
-
-  function reformatDate(dateString) {
-    return (
-      dateString.substring(5, 7) +
-      "/" +
-      dateString.substring(8) +
-      "/" +
-      dateString.substring(2, 4)
-    );
+    return `${day}/${year} ${hour}:${minute}:${second}`;
   }
 
   let sortOrders = {
-    time: "none",
+    date: "none",
     ticker: "none",
-    expiry: "none",
-    dte: "none",
-    strike: "none",
-    callPut: "none",
-    sentiment: "none",
-    spot: "none",
     price: "none",
     premium: "none",
-    type: "none",
-    exec: "none",
-    vol: "none",
-    oi: "none",
+    assetType: "none",
+    volume: "none",
+    size: "none",
   };
 
   // Generalized sorting function
@@ -83,11 +77,6 @@
     }
 
     const compareFunctions = {
-      time: (a, b) => {
-        const timeA = new Date("1970-01-01T" + a.time).getTime();
-        const timeB = new Date("1970-01-01T" + b.time).getTime();
-        return sortOrder === "asc" ? timeA - timeB : timeB - timeA;
-      },
       ticker: (a, b) => {
         const tickerA = a.ticker.toUpperCase();
         const tickerB = b.ticker.toUpperCase();
@@ -95,25 +84,10 @@
           ? tickerA.localeCompare(tickerB)
           : tickerB.localeCompare(tickerA);
       },
-      expiry: (a, b) => {
-        const timeA = new Date(a.date_expiration);
-        const timeB = new Date(b.date_expiration);
+      date: (a, b) => {
+        const timeA = new Date(a.date);
+        const timeB = new Date(b.date);
         return sortOrder === "asc" ? timeA - timeB : timeB - timeA;
-      },
-      dte: (a, b) => {
-        const timeA = new Date(a.date_expiration);
-        const timeB = new Date(b.date_expiration);
-        return sortOrder === "asc" ? timeA - timeB : timeB - timeA;
-      },
-      strike: (a, b) => {
-        const strikeA = parseFloat(a.strike_price);
-        const strikeB = parseFloat(b.strike_price);
-        return sortOrder === "asc" ? strikeA - strikeB : strikeB - strikeA;
-      },
-      spot: (a, b) => {
-        const spotA = parseFloat(a.underlying_price);
-        const spotB = parseFloat(b.underlying_price);
-        return sortOrder === "asc" ? spotA - spotB : spotB - spotA;
       },
       price: (a, b) => {
         const priceA = parseFloat(a.price);
@@ -121,8 +95,8 @@
         return sortOrder === "asc" ? priceA - priceB : priceB - priceA;
       },
       premium: (a, b) => {
-        const premiumA = parseFloat(a.cost_basis);
-        const premiumB = parseFloat(b.cost_basis);
+        const premiumA = parseFloat(a.premium);
+        const premiumB = parseFloat(b.premium);
         return sortOrder === "asc" ? premiumA - premiumB : premiumB - premiumA;
       },
       size: (a, b) => {
@@ -130,43 +104,26 @@
         const volB = parseFloat(b?.size);
         return sortOrder === "asc" ? volA - volB : volB - volA;
       },
-      vol: (a, b) => {
+      volume: (a, b) => {
         const volA = parseFloat(a.volume);
         const volB = parseFloat(b.volume);
         return sortOrder === "asc" ? volA - volB : volB - volA;
       },
-      oi: (a, b) => {
-        const oiA = parseFloat(a.open_interest);
-        const oiB = parseFloat(b.open_interest);
-        return sortOrder === "asc" ? oiA - oiB : oiB - oiA;
+      dailyVolume: (a, b) => {
+        const volA = parseFloat(a.dailyVolumePercentage);
+        const volB = parseFloat(b.dailyVolumePercentage);
+        return sortOrder === "asc" ? volA - volB : volB - volA;
       },
-      callPut: (a, b) => {
-        const callPutA = a.put_call?.toUpperCase();
-        const callPutB = b.put_call?.toUpperCase();
-        return sortOrder === "asc"
-          ? callPutA.localeCompare(callPutB)
-          : callPutB.localeCompare(callPutA);
+      avgVolume: (a, b) => {
+        const volA = parseFloat(a.avgVolumePercentage);
+        const volB = parseFloat(b.avgVolumePercentage);
+        return sortOrder === "asc" ? volA - volB : volB - volA;
       },
-      sentiment: (a, b) => {
-        const sentimentOrder = { BULLISH: 1, NEUTRAL: 2, BEARISH: 3 };
-        const sentimentA = sentimentOrder[a?.sentiment?.toUpperCase()] || 4;
-        const sentimentB = sentimentOrder[b?.sentiment?.toUpperCase()] || 4;
-        return sortOrder === "asc"
-          ? sentimentA - sentimentB
-          : sentimentB - sentimentA;
-      },
-      type: (a, b) => {
+      assetType: (a, b) => {
         const typeOrder = { SWEEP: 1, TRADE: 2 };
-        const typeA = typeOrder[a.option_activity_type?.toUpperCase()] || 3;
-        const typeB = typeOrder[b.option_activity_type?.toUpperCase()] || 3;
+        const typeA = typeOrder[a.assetType?.toUpperCase()] || 3;
+        const typeB = typeOrder[b.assetType?.toUpperCase()] || 3;
         return sortOrder === "asc" ? typeA - typeB : typeB - typeA;
-      },
-      exec: (a, b) => {
-        const tickerA = a?.execution_estimate?.toUpperCase();
-        const tickerB = b?.execution_estimate?.toUpperCase();
-        return sortOrder === "asc"
-          ? tickerA.localeCompare(tickerB)
-          : tickerB.localeCompare(tickerA);
       },
     };
 
@@ -183,15 +140,18 @@
       itemCount={displayedData.length}
       itemSize={40}
     >
-      <div slot="header" class="tr th sticky z-40 top-0">
+      <div
+        slot="header"
+        class="tr th m-auto sticky z-40 top-0 border-b border-gray-800 shadow-xl"
+      >
         <!-- Table headers -->
         <div
-          on:click={() => sortData("time")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          on:click={() => sortData("date")}
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
-          Time
+          Date
           <svg
-            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['time'] ===
+            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['date'] ===
             'asc'
               ? 'rotate-180'
               : ''} "
@@ -207,7 +167,7 @@
         </div>
         <div
           on:click={() => sortData("ticker")}
-          class="td cursor-pointer select-none bg-[#1E222D] font-bold text-slate-300 text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-[#121217] font-bold text-slate-300 text-xs text-start uppercase"
         >
           Symbol
           <svg
@@ -230,7 +190,7 @@
 
         <div
           on:click={() => sortData("price")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           Price
           <svg
@@ -252,7 +212,7 @@
         </div>
         <div
           on:click={() => sortData("premium")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           Premium
           <svg
@@ -275,7 +235,7 @@
 
         <div
           on:click={() => sortData("size")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           Size
           <svg
@@ -296,15 +256,15 @@
           >
         </div>
         <div
-          on:click={() => sortData("vol")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          on:click={() => sortData("volume")}
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           Volume
           <svg
-            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['vol'] ===
+            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['volume'] ===
             'asc'
               ? 'rotate-180'
-              : sortOrders['vol'] === 'desc'
+              : sortOrders['volume'] === 'desc'
                 ? ''
                 : 'hidden'} "
             viewBox="0 0 20 20"
@@ -319,15 +279,16 @@
         </div>
 
         <div
-          on:click={() => sortData("vol")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          on:click={() => sortData("dailyVolume")}
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           % Daily Volume
           <svg
-            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['vol'] ===
-            'asc'
+            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
+              'dailyVolume'
+            ] === 'asc'
               ? 'rotate-180'
-              : sortOrders['vol'] === 'desc'
+              : sortOrders['dailyVolume'] === 'desc'
                 ? ''
                 : 'hidden'} "
             viewBox="0 0 20 20"
@@ -342,15 +303,16 @@
         </div>
 
         <div
-          on:click={() => sortData("vol")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          on:click={() => sortData("avgVolume")}
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           % 30D Volume
           <svg
-            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['vol'] ===
-            'asc'
+            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
+              'avgVolume'
+            ] === 'asc'
               ? 'rotate-180'
-              : sortOrders['vol'] === 'desc'
+              : sortOrders['avgVolume'] === 'desc'
                 ? ''
                 : 'hidden'} "
             viewBox="0 0 20 20"
@@ -365,15 +327,15 @@
         </div>
 
         <div
-          on:click={() => sortData("vol")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          on:click={() => sortData("sector")}
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           Sector
           <svg
-            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['vol'] ===
+            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['sector'] ===
             'asc'
               ? 'rotate-180'
-              : sortOrders['vol'] === 'desc'
+              : sortOrders['sector'] === 'desc'
                 ? ''
                 : 'hidden'} "
             viewBox="0 0 20 20"
@@ -389,7 +351,7 @@
 
         <div
           on:click={() => sortData("vol")}
-          class="td cursor-pointer select-none bg-[#1E222D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           Issue Type
           <svg
@@ -416,15 +378,15 @@
         let:index
         let:style
         {style}
-        class="tr {index % 2 === 0 ? 'bg-secondary' : 'bg-[#09090B]'}"
+        class="tr {index % 2 === 0 ? 'bg-[#19191F]' : 'bg-[#121217]'}"
       >
         <!-- Row data -->
 
         <div
-          style="justify-content: center;"
-          class="td text-white text-sm sm:text-[1rem] text-start m-auto whitespace-nowrap"
+          style="justify-content: center; "
+          class=" td w-full text-white text-xs sm:text-sm whitespace-nowrap m-auto"
         >
-          {reformatDate(displayedData[index]?.date_expiration)}
+          {formatToNewYorkTime(displayedData[index]?.date)}
         </div>
         <div
           on:click|stopPropagation
@@ -433,7 +395,7 @@
         >
           <HoverStockChart
             symbol={displayedData[index]?.ticker}
-            assetType={displayedData[index]?.underlying_type}
+            assetType={displayedData[index]?.assetType}
           />
         </div>
 
@@ -448,7 +410,7 @@
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-start text-white"
         >
-          {@html abbreviateNumber(displayedData[index]?.cost_basis, true, true)}
+          {@html abbreviateNumber(displayedData[index]?.premium, true, true)}
         </div>
 
         <div
@@ -465,44 +427,41 @@
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-white text-end"
         >
-          {new Intl.NumberFormat("en", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          }).format(displayedData[index]?.volume)}
+          {@html abbreviateNumber(displayedData[index]?.volume, false, true)}
         </div>
 
         <div
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-white text-end"
         >
-          {new Intl.NumberFormat("en", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          }).format(displayedData[index]?.volume)}
+          {displayedData[index]?.dailyVolumePercentage > 0.01
+            ? displayedData[index]?.dailyVolumePercentage?.toFixed(2) + "%"
+            : "< 0.01%"}
         </div>
 
         <div
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-white text-end"
         >
-          {new Intl.NumberFormat("en", {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          }).format(displayedData[index]?.volume)}
+          {displayedData[index]?.avgVolume > 0.01
+            ? displayedData[index]?.avgVolume?.toFixed(2) + "%"
+            : "< 0.01%"}
         </div>
 
         <div
-          style="justify-content: center;"
-          class="td text-sm sm:text-[1rem] text-white text-end truncate"
+          style="justify-content: start;"
+          class="td text-sm sm:text-[1rem] text-white text-start"
         >
-          Healthcare
+          {displayedData[index]?.sector?.length > 13
+            ? displayedData[index]?.sector?.slice(0, 13) + "..."
+            : displayedData[index]?.sector}
         </div>
 
         <div
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-white text-end"
         >
-          Stock
+          {displayedData[index]?.assetType}
         </div>
       </div>
     </VirtualList>
@@ -537,7 +496,6 @@
   .th {
     display: none;
     font-weight: 700;
-    background-color: #09090b;
   }
 
   .th > .td {
@@ -570,28 +528,5 @@
     text-overflow: ellipsis;
     min-width: 0px;
     white-space: nowrap;
-  }
-
-  .heartbeat {
-    animation: heartbeat-animation 0.3s;
-    animation-timing-function: ease-in-out;
-  }
-
-  @keyframes heartbeat-animation {
-    0% {
-      transform: rotate(0deg) scale(0.95);
-    }
-    25% {
-      transform: rotate(10deg) scale(1.05);
-    }
-    50% {
-      transform: rotate(0deg) scale(1.2);
-    }
-    75% {
-      transform: rotate(-10deg) scale(1.05);
-    }
-    100% {
-      transform: rotate(0deg) scale(0.95);
-    }
   }
 </style>

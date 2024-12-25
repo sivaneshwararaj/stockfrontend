@@ -14,7 +14,6 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import * as Popover from "$lib/components/shadcn/popover/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
-  import { Calendar } from "$lib/components/shadcn/calendar/index.js";
   import CalendarIcon from "lucide-svelte/icons/calendar";
 
   import { page } from "$app/stores";
@@ -24,8 +23,6 @@
 
   export let data;
   let shouldLoadWorker = writable(false);
-
-  let optionsWatchlist = data?.getOptionsWatchlist;
 
   let ruleOfList = data?.getPredefinedCookieRuleOfList || [];
 
@@ -62,25 +59,7 @@
       defaultCondition: "over",
       defaultValue: "any",
     },
-    open_interest: {
-      label: "Open Interest",
-      step: ["100K", "10K", "1K"],
-      defaultCondition: "over",
-      defaultValue: "any",
-    },
-    volumeOIRatio: {
-      label: "Volume / Open Interest",
-      step: ["100%", "80%", "60%", "50%", "30%", "15%", "10%", "5%"],
-      defaultCondition: "over",
-      defaultValue: "any",
-    },
-    sizeOIRatio: {
-      label: "Size / Open Interest",
-      step: ["100%", "80%", "60%", "50%", "30%", "15%", "10%", "5%"],
-      defaultCondition: "over",
-      defaultValue: "any",
-    },
-    cost_basis: {
+    premium: {
       label: "Premium",
       step: [
         "10M",
@@ -98,43 +77,12 @@
       defaultCondition: "over",
       defaultValue: "any",
     },
-    moneyness: {
-      label: "Moneyness",
-      step: ["ITM", "OTM"],
-      defaultValue: "any",
-    },
-    flowType: {
-      label: "Flow Type",
-      step: ["Repeated Flow"],
-      defaultValue: "any",
-    },
-    put_call: {
-      label: "Contract Type",
-      step: ["Calls", "Puts"],
-      defaultValue: "any",
-    },
-    sentiment: {
-      label: "Sentiment",
-      step: ["Bullish", "Neutral", "Bearish"],
-      defaultValue: "any",
-    },
-    execution_estimate: {
-      label: "Execution",
-      step: ["Above Ask", "Below Bid", "At Ask", "At Bid", "At Midpoint"],
-      defaultValue: "any",
-    },
     option_activity_type: {
       label: "Option Type",
       step: ["Sweep", "Trade"],
       defaultValue: "any",
     },
-    date_expiration: {
-      label: "Date Expiration",
-      step: ["250", "180", "100", "80", "60", "50", "30", "20", "10", "5", "0"],
-      defaultCondition: "over",
-      defaultValue: "any",
-    },
-    underlying_type: {
+    assetType: {
       label: "Asset Type",
       step: ["Stock", "ETF"],
       defaultValue: "any",
@@ -148,7 +96,7 @@
     "sentiment",
     "execution_estimate",
     "option_activity_type",
-    "underlying_type",
+    "assetType",
   ];
 
   // Generate allRows from allRules
@@ -199,7 +147,7 @@
       ruleOfList?.some((rule) => rule.name === row.rule),
     );
     shouldLoadWorker.set(true);
-    await saveCookieRuleOfList();
+    //await saveCookieRuleOfList();
   }
 
   async function handleResetAll() {
@@ -217,7 +165,7 @@
       ruleOfList.some((rule) => rule.name === row.rule),
     );
     displayedData = rawData;
-    await saveCookieRuleOfList();
+    //await saveCookieRuleOfList();
   }
 
   function changeRule(state: string) {
@@ -249,7 +197,7 @@
       case "underlying_type":
         newRule = {
           name: ruleName,
-          value: Array.isArray(valueMappings[ruleName])
+          value: Array?.isArray(valueMappings[ruleName])
             ? valueMappings[ruleName]
             : [valueMappings[ruleName]],
         }; // Ensure value is an array
@@ -310,7 +258,6 @@
     filteredData = event.data?.filteredData ?? [];
     displayedData = filteredData;
     console.log("handle Message");
-    calculateStats(displayedData);
 
     //console.log(displayedData)
   };
@@ -435,7 +382,7 @@
 
     // Trigger worker load and save cookie
     shouldLoadWorker.set(true);
-    await saveCookieRuleOfList();
+    //await saveCookieRuleOfList();
   }
 
   async function stepSizeValue(value, condition) {
@@ -467,12 +414,8 @@
     }
   }
 
-  const currentTime = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
-  )?.getTime();
-
   const nyseDate = new Date(
-    data?.getOptionsFlowFeed?.at(0)?.date ?? null,
+    data?.getFlowData?.at(0)?.date ?? null,
   )?.toLocaleString("en-US", {
     month: "short",
     day: "numeric",
@@ -480,7 +423,7 @@
     timeZone: "Europe/Berlin",
   });
 
-  let rawData = data?.getOptionsFlowFeed?.filter((item) =>
+  let rawData = data?.getFlowData?.filter((item) =>
     Object?.values(item)?.every(
       (value) =>
         value !== null &&
@@ -491,9 +434,6 @@
           )),
     ),
   );
-  rawData?.forEach((item) => {
-    item.dte = daysLeft(item?.date_expiration);
-  });
 
   let displayedData = [];
 
@@ -517,7 +457,7 @@
       mode = !mode;
       if (mode === true && selectedDate !== undefined) {
         selectedDate = undefined;
-        rawData = data?.getOptionsFlowFeed;
+        rawData = data?.getFlowData;
         displayedData = [...rawData];
         shouldLoadWorker.set(true);
       }
@@ -527,17 +467,12 @@
       });
     }
   }
-
+  /*
   async function websocketRealtimeData() {
     newData = [];
     try {
       socket = new WebSocket(data?.wsURL + "/options-flow-reader");
-      /*
-    socket.addEventListener("open", () => {
-      const ids = rawData.map(item => item.id);
-      sendMessage(JSON.stringify({ ids }));
-    });
-    */
+
 
       socket.addEventListener("message", (event) => {
         const totalVolume = displayCallVolume + displayPutVolume;
@@ -567,11 +502,7 @@
               }
             }
 
-            /*
-          if (previousCallVolume !== displayCallVolume && !muted && audio) {
-            audio?.play();
-          }
-          */
+   
           } catch (e) {
             console.error("Error processing WebSocket message:", e);
           }
@@ -603,16 +534,7 @@
       setTimeout(() => websocketRealtimeData(), 400);
     }
   }
-
-  function daysLeft(targetDate) {
-    const targetTime = new Date(targetDate).getTime();
-    const difference = targetTime - currentTime;
-
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const daysLeft = Math?.ceil(difference / millisecondsPerDay);
-
-    return daysLeft;
-  }
+    */
 
   async function saveCookieRuleOfList() {
     const postData = {
@@ -628,9 +550,11 @@
     }); // make a POST request to the server with the FormData object
   }
 
+  /*
   $: if ($isOpen) {
     websocketRealtimeData();
   }
+  */
 
   onMount(async () => {
     if (filterQuery?.length > 0) {
@@ -647,7 +571,6 @@
 
     audio = new Audio(notifySound);
     displayedData = rawData;
-    calculateStats(rawData);
 
     if (!syncWorker) {
       const SyncWorker = await import("./workers/filterWorker?worker");
@@ -678,65 +601,7 @@
     }
   });
 
-  function calculateStats(data) {
-    const {
-      callVolumeSum,
-      putVolumeSum,
-      bullishCount,
-      bearishCount,
-      neutralCount,
-    } = data?.reduce(
-      (acc, item) => {
-        const volume = parseInt(item?.volume);
-
-        if (item?.put_call === "Calls") {
-          acc.callVolumeSum += volume;
-        } else if (item?.put_call === "Puts") {
-          acc.putVolumeSum += volume;
-        }
-
-        if (item?.sentiment === "Bullish") {
-          acc.bullishCount += 1;
-        } else if (item?.sentiment === "Bearish") {
-          acc.bearishCount += 1;
-        } else if (item?.sentiment === "Neutral") {
-          acc.neutralCount += 1;
-        }
-
-        return acc;
-      },
-      {
-        callVolumeSum: 0,
-        putVolumeSum: 0,
-        bullishCount: 0,
-        bearishCount: 0,
-        neutralCount: 0,
-      },
-    );
-
-    if (bullishCount > bearishCount) {
-      flowSentiment = "Bullish";
-    } else if (bullishCount < bearishCount) {
-      flowSentiment = "Bearish";
-    } else if (neutralCount > bearishCount && neutralCount > bullishCount) {
-      flowSentiment = "Neutral";
-    } else {
-      flowSentiment = "-";
-    }
-
-    putCallRatio = callVolumeSum !== 0 ? putVolumeSum / callVolumeSum : 0;
-
-    callPercentage =
-      callVolumeSum + putVolumeSum !== 0
-        ? Math.floor((callVolumeSum / (callVolumeSum + putVolumeSum)) * 100)
-        : 0;
-    putPercentage =
-      callVolumeSum + putVolumeSum !== 0 ? 100 - callPercentage : 0;
-
-    displayCallVolume = callVolumeSum;
-    displayPutVolume = putVolumeSum;
-  }
-
+  /*
   const getHistoricalFlow = async () => {
     // Create a delay using setTimeout wrapped in a Promise
     if (data?.user?.tier === "Pro") {
@@ -747,7 +612,6 @@
         ruleOfList.some((rule) => rule.name === row.rule),
       );
       displayedData = [];
-      calculateStats(displayedData);
 
       await new Promise((resolve) => setTimeout(resolve, 300));
 
@@ -769,12 +633,7 @@
         });
 
         rawData = await response?.json();
-        if (rawData?.length !== 0) {
-          rawData?.forEach((item) => {
-            item.dte = daysLeft(item?.date_expiration);
-          });
-          shouldLoadWorker.set(true);
-        }
+        shouldLoadWorker.set(true);
       } catch (error) {
         console.error("Error fetching historical flow:", error);
         rawData = [];
@@ -787,6 +646,7 @@
       });
     }
   };
+  */
 
   function handleInput(event) {
     filterQuery = event.target.value;
@@ -863,7 +723,7 @@
 
 <body class="overflow-y-auto">
   <section
-    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-[#09090B] pb-20"
+    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-[#09090B] pb-20 mt-5 sm:mt-0 px-3 sm:px-0"
   >
     <div class="w-full m-auto min-h-screen">
       <!--
@@ -884,8 +744,7 @@
             : nyseDate} (NYSE Time)
         </div>
       {/if}
-
-      <div class="rounded-md border border-gray-700 bg-[#1E222D] p-2">
+      <div class="rounded-md border border-gray-700 bg-[#121217] p-2">
         <div
           class="flex flex-col sm:flex-row items-center pt-3 sm:pt-1 pb-3 sm:border-b sm:border-gray-600"
         >
@@ -936,11 +795,14 @@
               class="inline-flex items-center cursor-pointer focus-none focus:outline-none"
             >
               <input
-                on:click={toggleMode}
+                on:click={() =>
+                  toast("Feature is coming soon 🔥", {
+                    style:
+                      "border-radius: 200px; background: #272B37; color: #fff; border: 1px solid #4B5563; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);",
+                  })}
                 type="checkbox"
                 checked={mode}
                 value={mode}
-                disabled={!$isOpen}
                 class="sr-only peer"
               />
 
@@ -963,14 +825,14 @@
           <div class="sm:ml-auto w-full sm:w-fit pt-5">
             <div class="relative flex flex-col sm:flex-row items-center">
               <div
-                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#2A2E39] rounded-md border border-gray-600"
+                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#19191F] rounded-md border border-gray-600"
               >
                 <label class="flex flex-row items-center">
                   <input
                     id="modal-search"
                     type="search"
                     class="text-white sm:ml-2 text-[1rem] placeholder-gray-300 border-transparent focus:border-transparent focus:ring-0 flex items-center justify-center w-full px-0 py-1.5 bg-inherit"
-                    placeholder="Search AAPL, SPY,..."
+                    placeholder="Stock or ETF symbol..."
                     bind:value={filterQuery}
                     on:input={debouncedHandleInput}
                     autocomplete="off"
@@ -997,6 +859,11 @@
               <Popover.Root>
                 <Popover.Trigger asChild let:builder>
                   <Button
+                    on:click={() =>
+                      toast("Feature is coming soon 🔥", {
+                        style:
+                          "border-radius: 200px; background: #272B37; color: #fff; border: 1px solid #4B5563; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);",
+                      })}
                     class={cn(
                       "w-full sm:w-[160px] truncate sm:mr-3 py-3 bg-[#000] sm:hover:bg-[#000] sm:hover:text-white text-white justify-center sm:justify-start text-center sm:text-left font-normal border-none rounded-md",
                       !selectedDate && "text-gray-300",
@@ -1004,19 +871,9 @@
                     builders={[builder]}
                   >
                     <CalendarIcon class="mr-2 h-4 w-4" />
-                    {selectedDate
-                      ? df.format(selectedDate?.toDate())
-                      : "Pick a date"}
+                    Pick a Date
                   </Button>
                 </Popover.Trigger>
-                <Popover.Content class="w-auto p-0 border-gray-500">
-                  <Calendar
-                    class="bg-[#09090B] text-white"
-                    bind:value={selectedDate}
-                    initialFocus
-                    onValueChange={getHistoricalFlow}
-                  />
-                </Popover.Content>
               </Popover.Root>
             </div>
           </div>
@@ -1442,212 +1299,11 @@
       </div>
 
       {#if isLoaded}
-        <div class="w-full mt-5 m-auto flex justify-center items-center">
-          <div class="w-full grid grid-cols-1 lg:grid-cols-4 gap-y-3 gap-x-3">
-            <!--Start Flow Sentiment-->
-            <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
-            >
-              <div class="flex flex-col items-start">
-                <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
-                  >Flow Sentiment</span
-                >
-                <span
-                  class="text-start text-[1rem] font-semibold {flowSentiment ===
-                  'Bullish'
-                    ? 'text-[#00FC50]'
-                    : flowSentiment === 'Bearish'
-                      ? 'text-[#FF2F1F]'
-                      : flowSentiment === 'Neutral'
-                        ? 'text-[#fff]'
-                        : 'text-white'}">{flowSentiment}</span
-                >
-              </div>
-            </div>
-            <!--End Flow Sentiment-->
-            <!--Start Put/Call-->
-            <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
-            >
-              <div class="flex flex-col items-start">
-                <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
-                  >Put/Call</span
-                >
-                <span class="text-start text-[1rem] font-semibold text-white">
-                  {putCallRatio?.toFixed(3)}
-                </span>
-              </div>
-              <!-- Circular Progress -->
-              <div class="relative size-14 ml-auto">
-                <svg
-                  class="size-full w-14 h-14"
-                  viewBox="0 0 36 36"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <!-- Background Circle -->
-                  <circle
-                    cx="18"
-                    cy="18"
-                    r="16"
-                    fill="none"
-                    class="stroke-current text-[#3E3E3E]"
-                    stroke-width="3"
-                  ></circle>
-                  <!-- Progress Circle inside a group with rotation -->
-                  <g class="origin-center -rotate-90 transform">
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-blue-500"
-                      stroke-width="3"
-                      stroke-dasharray="100"
-                      stroke-dashoffset={putCallRatio >= 1
-                        ? 0
-                        : 100 - (putCallRatio * 100)?.toFixed(2)}
-                    ></circle>
-                  </g>
-                </svg>
-                <!-- Percentage Text -->
-                <div
-                  class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2"
-                >
-                  <span class="text-center text-white text-sm"
-                    >{putCallRatio?.toFixed(2)}</span
-                  >
-                </div>
-              </div>
-              <!-- End Circular Progress -->
-            </div>
-            <!--End Put/Call-->
-            <!--Start Call Flow-->
-            <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
-            >
-              <div class="flex flex-col items-start">
-                <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
-                  >Call Flow</span
-                >
-                <span class="text-start text-[1rem] font-semibold text-white">
-                  {new Intl.NumberFormat("en", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  }).format(displayCallVolume)}
-                </span>
-              </div>
-              <!-- Circular Progress -->
-              <div class="relative size-14 ml-auto">
-                <svg
-                  class="size-full w-14 h-14"
-                  viewBox="0 0 36 36"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <!-- Background Circle -->
-                  <circle
-                    cx="18"
-                    cy="18"
-                    r="16"
-                    fill="none"
-                    class="stroke-current text-[#3E3E3E]"
-                    stroke-width="3"
-                  ></circle>
-                  <!-- Progress Circle inside a group with rotation -->
-                  <g class="origin-center -rotate-90 transform">
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#00FC50]"
-                      stroke-width="3"
-                      stroke-dasharray="100"
-                      stroke-dashoffset={100 - callPercentage?.toFixed(2)}
-                    ></circle>
-                  </g>
-                </svg>
-                <!-- Percentage Text -->
-                <div
-                  class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2"
-                >
-                  <span class="text-center text-white text-sm"
-                    >{callPercentage}%</span
-                  >
-                </div>
-              </div>
-              <!-- End Circular Progress -->
-            </div>
-            <!--End Call Flow-->
-            <!--Start Put Flow-->
-            <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
-            >
-              <div class="flex flex-col items-start">
-                <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
-                  >Put Flow</span
-                >
-                <span class="text-start text-[1rem] font-semibold text-white">
-                  {new Intl.NumberFormat("en", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  }).format(displayPutVolume)}
-                </span>
-              </div>
-              <!-- Circular Progress -->
-              <div class="relative size-14 ml-auto">
-                <svg
-                  class="size-full w-14 h-14"
-                  viewBox="0 0 36 36"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <!-- Background Circle -->
-                  <circle
-                    cx="18"
-                    cy="18"
-                    r="16"
-                    fill="none"
-                    class="stroke-current text-[#3E3E3E]"
-                    stroke-width="3"
-                  ></circle>
-                  <!-- Progress Circle inside a group with rotation -->
-                  <g class="origin-center -rotate-90 transform">
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="16"
-                      fill="none"
-                      class="stroke-current text-[#EE5365]"
-                      stroke-width="3"
-                      stroke-dasharray="100"
-                      stroke-dashoffset={100 - putPercentage?.toFixed(2)}
-                    ></circle>
-                  </g>
-                </svg>
-                <!-- Percentage Text -->
-                <div
-                  class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2"
-                >
-                  <span class="text-center text-white text-sm"
-                    >{putPercentage}%</span
-                  >
-                </div>
-              </div>
-              <!-- End Circular Progress -->
-            </div>
-          </div>
-        </div>
-
         <!-- Page wrapper -->
         <div class="flex w-full m-auto h-full overflow-hidden">
           {#if displayedData?.length !== 0}
-            <div class="mt-8 w-full overflow-x-auto h-[850px] overflow-hidden">
-              <DarkPoolTable
-                {data}
-                {optionsWatchlist}
-                {displayedData}
-                {filteredData}
-                {rawData}
-              />
+            <div class="mt-3 w-full overflow-x-auto h-[850px] overflow-hidden">
+              <DarkPoolTable {data} {displayedData} {filteredData} {rawData} />
             </div>
           {:else}
             <div
