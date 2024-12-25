@@ -49,8 +49,8 @@
     premium: "none",
     assetType: "none",
     volume: "none",
-    avgVolume: "none",
-    dailyVolume: "none",
+    sizeAvgVolRatio: "none",
+    sizeVolRatio: "none",
     size: "none",
     sector: "none",
   };
@@ -128,14 +128,14 @@
         const volB = parseFloat(b.volume);
         return sortOrder === "asc" ? volA - volB : volB - volA;
       },
-      dailyVolume: (a, b) => {
-        const volA = parseFloat(a.dailyVolumePercentage);
-        const volB = parseFloat(b.dailyVolumePercentage);
+      sizeVolRatio: (a, b) => {
+        const volA = parseFloat(a.sizeVolRatio);
+        const volB = parseFloat(b.sizeVolRatio);
         return sortOrder === "asc" ? volA - volB : volB - volA;
       },
-      avgVolume: (a, b) => {
-        const volA = parseFloat(a.avgVolumePercentage);
-        const volB = parseFloat(b.avgVolumePercentage);
+      sizeAvgVolRatio: (a, b) => {
+        const volA = parseFloat(a.sizeAvgVolRatio);
+        const volB = parseFloat(b.sizeAvgVolRatio);
         return sortOrder === "asc" ? volA - volB : volB - volA;
       },
       assetType: (a, b) => {
@@ -304,16 +304,16 @@
         </div>
 
         <div
-          on:click={() => sortData("dailyVolume")}
+          on:click={() => sortData("sizeVolRatio")}
           class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           % Size / Vol
           <svg
             class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
-              'dailyVolume'
+              'sizeVolRatio'
             ] === 'asc'
               ? 'rotate-180'
-              : sortOrders['dailyVolume'] === 'desc'
+              : sortOrders['sizeVolRatio'] === 'desc'
                 ? ''
                 : 'hidden'} "
             viewBox="0 0 20 20"
@@ -328,16 +328,16 @@
         </div>
 
         <div
-          on:click={() => sortData("avgVolume")}
+          on:click={() => sortData("sizeAvgVolRatio")}
           class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
           % Size / Avg Vol
           <svg
             class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
-              'avgVolume'
+              'sizeAvgVolRatio'
             ] === 'asc'
               ? 'rotate-180'
-              : sortOrders['avgVolume'] === 'desc'
+              : sortOrders['sizeAvgVolRatio'] === 'desc'
                 ? ''
                 : 'hidden'} "
             viewBox="0 0 20 20"
@@ -464,8 +464,8 @@
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-white text-end"
         >
-          {displayedData[index]?.dailyVolumePercentage > 0.01
-            ? displayedData[index]?.dailyVolumePercentage?.toFixed(2) + "%"
+          {displayedData[index]?.sizeVolRatio > 0.01
+            ? displayedData[index]?.sizeVolRatio?.toFixed(2) + "%"
             : "< 0.01%"}
         </div>
 
@@ -473,8 +473,8 @@
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-white text-end"
         >
-          {displayedData[index]?.avgVolume > 0.01
-            ? displayedData[index]?.avgVolume?.toFixed(2) + "%"
+          {displayedData[index]?.sizeAvgVolRatio > 0.01
+            ? displayedData[index]?.sizeAvgVolRatio?.toFixed(2) + "%"
             : "< 0.01%"}
         </div>
 

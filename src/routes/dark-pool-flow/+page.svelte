@@ -7,7 +7,7 @@
     isOpen,
   } from "$lib/store";
 
-  import { cn } from "$lib/utils";
+  import { cn, sectorList } from "$lib/utils";
   import { onMount, onDestroy } from "svelte";
   import toast from "svelte-french-toast";
   import { DateFormatter, type DateValue } from "@internationalized/date";
@@ -25,10 +25,11 @@
   export let data;
   let shouldLoadWorker = writable(false);
 
-  let ruleOfList = data?.getPredefinedCookieRuleOfList || [];
+  let ruleOfList = [];
   let displayRules = [];
   let filteredData = [];
   let filterQuery = $page.url.searchParams.get("query") || "";
+  let pagePathName = $page?.url?.pathname;
 
   let socket: WebSocket | null = null; // Initialize socket as null
 
@@ -55,7 +56,19 @@
     },
     volume: {
       label: "Volume",
-      step: ["100K", "50K", "20K", "10K", "5K", "2K", "1K", "100", "0"],
+      step: ["100M", "50M", "20M", "10M", "1M", "500K", "200K", "100K", "50K"],
+      defaultCondition: "over",
+      defaultValue: "any",
+    },
+    sizeVolRatio: {
+      label: "Size / Volume",
+      step: ["20%", "15%", "10%", "5%", "3%", "1%"],
+      defaultCondition: "over",
+      defaultValue: "any",
+    },
+    sizeAvgVolRatio: {
+      label: "Size / Avg Volume",
+      step: ["20%", "15%", "10%", "5%", "3%", "1%"],
       defaultCondition: "over",
       defaultValue: "any",
     },
@@ -77,27 +90,19 @@
       defaultCondition: "over",
       defaultValue: "any",
     },
-    option_activity_type: {
-      label: "Option Type",
-      step: ["Sweep", "Trade"],
-      defaultValue: "any",
-    },
     assetType: {
       label: "Asset Type",
       step: ["Stock", "ETF"],
       defaultValue: "any",
     },
+    sector: {
+      label: "Sector",
+      step: sectorList,
+      defaultValue: "any",
+    },
   };
 
-  const categoricalRules = [
-    "moneyness",
-    "flowType",
-    "put_call",
-    "sentiment",
-    "execution_estimate",
-    "option_activity_type",
-    "assetType",
-  ];
+  const categoricalRules = ["assetType", "sector"];
 
   // Generate allRows from allRules
   $: allRows = Object?.entries(allRules)
@@ -121,13 +126,6 @@
     }
   });
 
-  // Update ruleCondition and valueMappings based on existing rules
-  ruleOfList.forEach((rule) => {
-    ruleCondition[rule.name] =
-      rule.condition || allRules[rule.name].defaultCondition;
-    valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
-  });
-
   async function handleDeleteRule(state) {
     for (let i = 0; i < ruleOfList.length; i++) {
       if (ruleOfList[i].name === state) {
@@ -147,7 +145,7 @@
       ruleOfList?.some((rule) => rule.name === row.rule),
     );
     shouldLoadWorker.set(true);
-    //await saveCookieRuleOfList();
+    saveRules();
   }
 
   async function handleResetAll() {
@@ -165,7 +163,7 @@
       ruleOfList.some((rule) => rule.name === row.rule),
     );
     displayedData = rawData;
-    //await saveCookieRuleOfList();
+    saveRules();
   }
 
   function changeRule(state: string) {
@@ -380,7 +378,7 @@
 
     // Trigger worker load and save cookie
     shouldLoadWorker.set(true);
-    //await saveCookieRuleOfList();
+    saveRules();
   }
 
   async function stepSizeValue(value, condition) {
@@ -534,18 +532,13 @@
   }
     */
 
-  async function saveCookieRuleOfList() {
-    const postData = {
-      ruleOfList: ruleOfList,
-    };
-
-    const response = await fetch("/api/options-flow-filter-cookie", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    }); // make a POST request to the server with the FormData object
+  function saveRules() {
+    try {
+      // Save the version along with the rules
+      localStorage?.setItem(pagePathName, JSON?.stringify(ruleOfList));
+    } catch (e) {
+      console.log("Failed saving indicator rules: ", e);
+    }
   }
 
   /*
@@ -555,10 +548,36 @@
   */
 
   onMount(async () => {
+    try {
+      const savedRules = localStorage?.getItem(pagePathName);
+
+      if (savedRules) {
+        const parsedRules = JSON.parse(savedRules);
+        // Compare and update ruleOfList based on allRows
+        ruleOfList = parsedRules.map((rule) => {
+          const matchingRow = allRows.find((row) => row.name === rule.name);
+          if (matchingRow && matchingRow.type !== rule.type) {
+            return { ...rule, type: matchingRow.type };
+          }
+          return rule;
+        });
+      }
+    } catch (e) {
+      ruleOfList = [];
+      console.warn(e);
+    }
+
+    // Update ruleCondition and valueMappings based on existing rules
+    ruleOfList?.forEach((rule) => {
+      ruleCondition[rule.name] =
+        rule.condition || allRules[rule.name].defaultCondition;
+      valueMappings[rule.name] = rule.value || allRules[rule.name].defaultValue;
+    });
+
     if (filterQuery?.length > 0) {
       shouldLoadWorker.set(true);
     }
-    if (ruleOfList?.length !== 0) {
+    if (ruleOfList?.length > 0) {
       shouldLoadWorker.set(true);
       console.log("initial filter");
     }
