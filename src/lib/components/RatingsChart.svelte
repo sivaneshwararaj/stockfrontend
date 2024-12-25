@@ -159,9 +159,7 @@
         type: "line",
         smooth: true,
         showSymbol: false,
-        areaStyle: {
-          color: "rgba(255, 255, 255, 0.08)",
-        },
+
         lineStyle: {
           color: "#fff",
           width: 1,

@@ -885,7 +885,7 @@
         </div>
       {/if}
 
-      <div class="rounded-md border border-gray-700 bg-[#1E222D] p-2">
+      <div class="rounded-md border border-gray-700 bg-odd p-2">
         <div
           class="flex flex-col sm:flex-row items-center pt-3 sm:pt-1 pb-3 sm:border-b sm:border-gray-600"
         >
@@ -963,13 +963,13 @@
           <div class="sm:ml-auto w-full sm:w-fit pt-5">
             <div class="relative flex flex-col sm:flex-row items-center">
               <div
-                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#2A2E39] rounded-md border border-gray-600"
+                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#19191F] rounded-md border border-gray-600"
               >
                 <label class="flex flex-row items-center">
                   <input
                     id="modal-search"
                     type="search"
-                    class="text-white sm:ml-2 text-[1rem] placeholder-gray-300 border-transparent focus:border-transparent focus:ring-0 flex items-center justify-center w-full px-0 py-1.5 bg-inherit"
+                    class="text-white sm:ml-2 text-[1rem] placeholder-gray-300 border-transparent focus:border-transparent focus:ring-0 flex items-center justify-center w-full px-0 py-1.5 bg-[inherit]"
                     placeholder="Stock or ETF symbol..."
                     bind:value={filterQuery}
                     on:input={debouncedHandleInput}
@@ -1466,7 +1466,7 @@
           <div class="w-full grid grid-cols-1 lg:grid-cols-4 gap-y-3 gap-x-3">
             <!--Start Flow Sentiment-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1487,7 +1487,7 @@
             <!--End Flow Sentiment-->
             <!--Start Put/Call-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1543,7 +1543,7 @@
             <!--End Put/Call-->
             <!--Start Call Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1600,7 +1600,7 @@
             <!--End Call Flow-->
             <!--Start Put Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-[#1E222D] shadow-lg rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"

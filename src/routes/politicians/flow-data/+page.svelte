@@ -136,7 +136,7 @@
                           <thead>
                             <tr class="bg-[#09090B] border-b border-[#27272A]">
                               <th
-                                class="bg-[#09090B] text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                                class=" text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
                               >
                                 Person
                               </th>
@@ -165,7 +165,7 @@
                           <tbody>
                             {#each displayList as item, index}
                               <tr
-                                class="odd:bg-odd border-b-[#09090B] {index +
+                                class="odd:bg-odd border-b border-gray-800 {index +
                                   1 ===
                                   rawData?.length && data?.user?.tier !== 'Pro'
                                   ? 'opacity-[0.1]'
@@ -174,7 +174,7 @@
                                 <th
                                   class="{index % 2
                                     ? 'bg-[#09090B]'
-                                    : 'bg-secondary'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
+                                    : 'bg-odd'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   <div class="flex flex-row items-center">
                                     <div

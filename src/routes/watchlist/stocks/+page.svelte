@@ -1545,7 +1545,11 @@
                                 >
                                   {#if item?.[row?.rule] !== undefined && item?.[row?.rule] !== null}
                                     {#if row?.type === "int"}
-                                      {abbreviateNumber(item[row?.rule])}
+                                      {@html abbreviateNumber(
+                                        item[row?.rule],
+                                        false,
+                                        true,
+                                      )}
                                     {:else if row?.type === "str"}
                                       {item[row?.rule] !== null
                                         ? item[row?.rule]
