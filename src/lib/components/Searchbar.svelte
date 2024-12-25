@@ -1,24 +1,21 @@
 <script lang="ts">
-  import { screenWidth, stockTicker } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import { onMount } from "svelte";
   import Search from "lucide-svelte/icons/search";
   import { goto } from "$app/navigation";
   import { Combobox } from "bits-ui";
-  import { page } from "$app/stores";
 
   let searchHistory = [];
   let updatedSearchHistory = [];
   let searchBarData = [];
   let isLoading = false;
   let timeoutId;
-  let assetType = "";
   let focusedSuggestion = "";
-  let arrowMovement = false;
   let showSuggestions = false;
   let touchedInput = false;
 
   $: inputValue = "";
-
+  let nextPage = false;
   let searchOpen = false;
   let searchBarModalChecked = false; // Initialize it to false
   let inputElement;
@@ -52,7 +49,23 @@
   ];
 
   async function handleSearch(symbol, assetType) {
+    // Find the matching ticker data
+    const newSearchItem = searchBarData?.find(
+      (item) => item?.symbol === symbol?.toUpperCase(),
+    );
+    if (newSearchItem) {
+      // Ensure `upperState` matches the case of `item.symbol`
+      updatedSearchHistory = [
+        newSearchItem,
+        ...(searchHistory?.filter(
+          (item) => item?.symbol?.toUpperCase() !== symbol?.toUpperCase(),
+        ) || []),
+      ].slice(0, 5);
+    }
+
     searchBarTicker(symbol);
+
+    nextPage = true;
     goto(
       `/${assetType === "ETF" ? "etf" : assetType === "Crypto" ? "crypto" : "stocks"}/${symbol}`,
     );
@@ -146,31 +159,7 @@
     isLoading = false;
   }
 
-  const onKeyPress = (e) => {
-    if (e?.charCode === 13 && searchBarData?.length > 0) {
-      const assetActions = {
-        ETF: () => goto(`/etf/${inputValue}`),
-        Stock: () => goto(`/stocks/${inputValue}`),
-        Crypto: () => goto(`/crypto/${inputValue}`),
-      };
-      if (!arrowMovement && searchBarData?.length > 0) {
-        inputValue = searchBarData.at(0).symbol;
-        assetType = searchBarData.at(0).type;
-      }
-
-      // Call the function for the selected asset type
-      assetActions[assetType]?.();
-
-      // Trigger search bar action
-      searchBarTicker(inputValue);
-    }
-  };
-
-  function handleKeyDown(event) {
-    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
-
-    event.preventDefault(); // Prevent scrolling
-
+  function handleKeyDown(symbol) {
     const list = showSuggestions
       ? searchBarData
       : searchHistory?.length > 0
@@ -178,24 +167,8 @@
         : popularList;
     if (!list?.length) return;
 
-    const currentIndex = list.findIndex((item) => item?.symbol === inputValue);
-    const isMovingDown = event.key === "ArrowDown";
-
-    // Check if movement is within bounds
-    const isValidMove = isMovingDown
-      ? currentIndex < list.length - 1
-      : currentIndex > 0;
-
-    if (isValidMove) {
-      arrowMovement = true;
-      const newIndex = currentIndex + (isMovingDown ? 1 : -1);
-      const selectedItem = list[newIndex];
-
-      // Update all related states at once
-      inputValue = selectedItem?.symbol;
-      assetType = selectedItem?.type;
-      focusedSuggestion = selectedItem?.symbol;
-    }
+    const newData = list.find((item) => item?.symbol === symbol);
+    handleSearch(newData?.symbol, newData?.type);
   }
   const handleControlK = async (event) => {
     if (event.ctrlKey && event.key === "k") {
@@ -250,7 +223,10 @@
   }
 
   $: {
-    if (updatedSearchHistory?.length > 0 && searchBarModalChecked === false) {
+    if (
+      (nextPage === true || searchBarModalChecked === false) &&
+      updatedSearchHistory?.length > 0
+    ) {
       (async () => {
         // Add 500 ms delay is important otherwise bug since #each has searchHistory and updates too quickly and redirects to wrong symbol
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -259,6 +235,7 @@
         searchHistory = updatedSearchHistory;
         updatedSearchHistory = [];
         saveRecentTicker();
+        nextPage = false;
       })();
     }
   }
@@ -291,7 +268,12 @@
           ><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg
         >
       </div>
-      <Combobox.Root items={searchBarData} bind:inputValue bind:touchedInput>
+      <Combobox.Root
+        items={searchBarData}
+        bind:inputValue
+        bind:touchedInput
+        onSelectedChange={(state) => handleKeyDown(state?.value)}
+      >
         <div class="relative w-full">
           <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
             <svg
@@ -346,12 +328,16 @@
         <Combobox.Content
           class="w-auto z-40 -mt-0.5 rounded-md border border-gray-700 bg-secondary px-1 py-3 shadow-popover outline-none"
           sideOffset={8}
-          on:keydown={handleKeyDown}
         >
           {#if inputValue?.length > 0 && searchBarData?.length > 0}
+            <div
+              class="pl-2 pb-2 border-b border-gray-600 text-white text-sm font-semibold w-full"
+            >
+              Suggestions
+            </div>
             {#each searchBarData as item}
               <Combobox.Item
-                class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-3 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
+                class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-2 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
                 value={item?.symbol}
                 label={item?.name}
                 on:click={() => handleSearch(item?.symbol, item?.type)}
@@ -363,10 +349,15 @@
                 </div>
               </Combobox.Item>
             {/each}
-          {:else if inputValue?.length === 0 && searchHistory?.length > 0}
-            {#each searchHistory as item}
+          {:else if inputValue?.length === 0 && !showSuggestions}
+            <div
+              class="pl-2 pb-2 border-b border-gray-600 text-white text-sm font-semibold w-full"
+            >
+              {searchHistory?.length > 0 ? "Recent" : "Popular"}
+            </div>
+            {#each searchHistory?.length > 0 ? searchHistory : popularList as item}
               <Combobox.Item
-                class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-3 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
+                class="cursor-pointer text-white border-b border-gray-600 last:border-none flex h-fit w-auto select-none items-center rounded-button py-3 pl-2 pr-1.5 text-sm capitalize outline-none transition-all duration-75 data-[highlighted]:bg-primary"
                 value={item?.symbol}
                 label={item?.name}
                 on:click={() => handleSearch(item?.symbol, item?.type)}
