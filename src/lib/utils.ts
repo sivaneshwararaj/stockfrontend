@@ -661,7 +661,7 @@ export function abbreviateNumber(number, addDollarSign = false, color = false) {
       } else if (suffix === "M") {
         suffix = '<span class=\"font-semibold text-[#FACD38]\">M</span>';
       } else if (suffix === "B") {
-        suffix = '<span class=\"font-semibold text-[#FACD38]\">B</span>';
+        suffix = '<span class=\"font-semibold text-[#38FACD]\">B</span>';
       }
     }
 

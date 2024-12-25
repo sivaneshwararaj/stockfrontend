@@ -1,6 +1,6 @@
 <script lang="ts">
   import { screenWidth } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { abbreviateNumber, sectorNavigation } from "$lib/utils";
 
   import VirtualList from "svelte-tiny-virtual-list";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
@@ -482,9 +482,15 @@
           style="justify-content: start;"
           class="td text-sm sm:text-[1rem] text-white text-start"
         >
-          {displayedData[index]?.sector?.length > 13
-            ? displayedData[index]?.sector?.slice(0, 13) + "..."
-            : displayedData[index]?.sector}
+          <a
+            href={sectorNavigation?.find(
+              (item) => item?.title === displayedData[index]?.sector,
+            )?.link}
+            class="sm:hover:text-blue-400 text-white underline underline-offset-4"
+            >{displayedData[index]?.sector?.length > 13
+              ? displayedData[index]?.sector?.slice(0, 13) + "..."
+              : displayedData[index]?.sector}</a
+          >
         </div>
 
         <div

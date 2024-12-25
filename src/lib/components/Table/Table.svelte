@@ -888,7 +888,7 @@
                   {item[column.key]}
                 {/if}
               {:else if column?.type === "int"}
-                {abbreviateNumber(item[column.key])}
+                {@html abbreviateNumber(item[column.key], false, true)}
               {:else if column?.type === "decimal"}
                 {item[column.key]?.toLocaleString("en-US")}
               {:else if column.key === "price"}
