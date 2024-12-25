@@ -970,20 +970,40 @@
                     id="modal-search"
                     type="search"
                     class="text-white sm:ml-2 text-[1rem] placeholder-gray-300 border-transparent focus:border-transparent focus:ring-0 flex items-center justify-center w-full px-0 py-1.5 bg-inherit"
-                    placeholder="Search AAPL, SPY,..."
+                    placeholder="Stock or ETF symbol..."
                     bind:value={filterQuery}
                     on:input={debouncedHandleInput}
                     autocomplete="off"
                   />
-                  <svg
-                    class="ml-auto h-7 w-7 sm:h-8 sm:w-8 inline-block mr-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><path
-                      fill="#fff"
-                      d="m19.485 20.154l-6.262-6.262q-.75.639-1.725.989t-1.96.35q-2.402 0-4.066-1.663T3.808 9.503T5.47 5.436t4.064-1.667t4.068 1.664T15.268 9.5q0 1.042-.369 2.017t-.97 1.668l6.262 6.261zM9.539 14.23q1.99 0 3.36-1.37t1.37-3.361t-1.37-3.36t-3.36-1.37t-3.361 1.37t-1.37 3.36t1.37 3.36t3.36 1.37"
-                    /></svg
-                  >
+                  {#if filterQuery?.length > 0}
+                    <label
+                      class="cursor-pointer"
+                      on:click={() => {
+                        filterQuery = "";
+                        shouldLoadWorker.set(true);
+                      }}
+                    >
+                      <svg
+                        class="ml-auto h-6 w-6 inline-block mr-3"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="white"
+                          d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+                        /></svg
+                      >
+                    </label>
+                  {:else}
+                    <svg
+                      class="ml-auto h-7 w-7 sm:h-8 sm:w-8 inline-block mr-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="#fff"
+                        d="m19.485 20.154l-6.262-6.262q-.75.639-1.725.989t-1.96.35q-2.402 0-4.066-1.663T3.808 9.503T5.47 5.436t4.064-1.667t4.068 1.664T15.268 9.5q0 1.042-.369 2.017t-.97 1.668l6.262 6.261zM9.539 14.23q1.99 0 3.36-1.37t1.37-3.361t-1.37-3.36t-3.36-1.37t-3.361 1.37t-1.37 3.36t1.37 3.36t3.36 1.37"
+                      /></svg
+                    >
+                  {/if}
                 </label>
                 {#if notFound === true}
                   <span

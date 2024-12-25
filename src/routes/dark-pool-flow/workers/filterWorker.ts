@@ -367,7 +367,7 @@ onmessage = async (event: MessageEvent) => {
   let filteredData = await filterRawData(rawData, ruleOfList, filterQuery);
   
   filteredData = Array.from(
-    new Map(filteredData?.map((item) => [item?.id, item]))?.values()
+    new Map(filteredData?.map((item) => [item?.trackingID, item]))?.values()
   );
 
   postMessage({ message: "success", filteredData });

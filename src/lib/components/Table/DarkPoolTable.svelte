@@ -49,7 +49,10 @@
     premium: "none",
     assetType: "none",
     volume: "none",
+    avgVolume: "none",
+    dailyVolume: "none",
     size: "none",
+    sector: "none",
   };
 
   // Generalized sorting function
@@ -83,6 +86,22 @@
         return sortOrder === "asc"
           ? tickerA.localeCompare(tickerB)
           : tickerB.localeCompare(tickerA);
+      },
+      sector: (a, b) => {
+        const sectorA = a.sector || ""; // Default to empty string if undefined
+        const sectorB = b.sector || ""; // Default to empty string if undefined
+
+        // Check if either sector is an empty string and ensure it's placed at the bottom
+        if (sectorA === "" && sectorB !== "") return 1; // Move empty string to the bottom
+        if (sectorB === "" && sectorA !== "") return -1; // Move empty string to the bottom
+
+        // If both are non-empty, sort normally
+        const stringA = sectorA.toUpperCase();
+        const stringB = sectorB.toUpperCase();
+
+        return sortOrder === "asc"
+          ? stringA.localeCompare(stringB)
+          : stringB.localeCompare(stringA);
       },
       date: (a, b) => {
         const timeA = new Date(a.date);
@@ -120,7 +139,7 @@
         return sortOrder === "asc" ? volA - volB : volB - volA;
       },
       assetType: (a, b) => {
-        const typeOrder = { SWEEP: 1, TRADE: 2 };
+        const typeOrder = { STOCK: 1, ETF: 2 };
         const typeA = typeOrder[a.assetType?.toUpperCase()] || 3;
         const typeB = typeOrder[b.assetType?.toUpperCase()] || 3;
         return sortOrder === "asc" ? typeA - typeB : typeB - typeA;
@@ -136,7 +155,13 @@
   <div class="table">
     <VirtualList
       width="100%"
-      height={$screenWidth < 640 ? 550 : 850}
+      height={$screenWidth < 640
+        ? data?.user?.tier === "Pro"
+          ? 550
+          : 250
+        : data?.user?.tier === "Pro"
+          ? 850
+          : 250}
       itemCount={displayedData.length}
       itemSize={40}
     >
@@ -282,7 +307,7 @@
           on:click={() => sortData("dailyVolume")}
           class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
-          % Daily Volume
+          % Size / Vol
           <svg
             class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
               'dailyVolume'
@@ -306,7 +331,7 @@
           on:click={() => sortData("avgVolume")}
           class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
-          % 30D Volume
+          % Size / Avg Vol
           <svg
             class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
               'avgVolume'
@@ -350,15 +375,16 @@
         </div>
 
         <div
-          on:click={() => sortData("vol")}
+          on:click={() => sortData("assetType")}
           class="td cursor-pointer select-none bg-[#121217] text-slate-300 font-bold text-xs text-start uppercase"
         >
-          Issue Type
+          Asset Type
           <svg
-            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders['vol'] ===
-            'asc'
+            class="flex-shrink-0 w-4 h-4 inline-block {sortOrders[
+              'assetType'
+            ] === 'asc'
               ? 'rotate-180'
-              : sortOrders['vol'] === 'desc'
+              : sortOrders['assetType'] === 'desc'
                 ? ''
                 : 'hidden'} "
             viewBox="0 0 20 20"
@@ -378,7 +404,11 @@
         let:index
         let:style
         {style}
-        class="tr {index % 2 === 0 ? 'bg-[#19191F]' : 'bg-[#121217]'}"
+        class="tr {index % 2 === 0 ? 'bg-[#19191F]' : 'bg-[#121217]'} {index +
+          1 ===
+          rawData?.length && data?.user?.tier !== 'Pro'
+          ? 'opacity-[0.3]'
+          : ''}"
       >
         <!-- Row data -->
 

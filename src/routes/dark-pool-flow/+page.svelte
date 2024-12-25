@@ -15,6 +15,7 @@
   import * as Popover from "$lib/components/shadcn/popover/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import CalendarIcon from "lucide-svelte/icons/calendar";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   import { page } from "$app/stores";
 
@@ -25,7 +26,6 @@
   let shouldLoadWorker = writable(false);
 
   let ruleOfList = data?.getPredefinedCookieRuleOfList || [];
-
   let displayRules = [];
   let filteredData = [];
   let filterQuery = $page.url.searchParams.get("query") || "";
@@ -258,8 +258,6 @@
     filteredData = event.data?.filteredData ?? [];
     displayedData = filteredData;
     console.log("handle Message");
-
-    //console.log(displayedData)
   };
 
   async function changeRuleCondition(name: string, state: string) {
@@ -694,29 +692,29 @@
   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
 
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Options
-    Flow Feed · Stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Dark
+    Pool Flow Feed · Stocknear
   </title>
   <meta
     name="description"
-    content={`Explore unusual options from big institutional traders and hedge funds.`}
+    content={`Explore unusual dark pool trades from big institutional traders and hedge funds.`}
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Options Flow Feed · Stocknear`} />
+  <meta property="og:title" content={`Dark Pool Flow · Stocknear`} />
   <meta
     property="og:description"
-    content={`Explore unusual options from big institutional traders and hedge funds.`}
+    content={`Explore unusual dark pool trades from big institutional traders and hedge funds.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Options Flow Feed · Stocknear`} />
+  <meta name="twitter:title" content={`Dark Pool Flow · Stocknear`} />
   <meta
     name="twitter:description"
-    content={`Explore unusual options from big institutional traders and hedge funds.`}
+    content={`Explore unusual dark pool trades from big institutional traders and hedge funds.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -837,15 +835,35 @@
                     on:input={debouncedHandleInput}
                     autocomplete="off"
                   />
-                  <svg
-                    class="ml-auto h-7 w-7 sm:h-8 sm:w-8 inline-block mr-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    ><path
-                      fill="#fff"
-                      d="m19.485 20.154l-6.262-6.262q-.75.639-1.725.989t-1.96.35q-2.402 0-4.066-1.663T3.808 9.503T5.47 5.436t4.064-1.667t4.068 1.664T15.268 9.5q0 1.042-.369 2.017t-.97 1.668l6.262 6.261zM9.539 14.23q1.99 0 3.36-1.37t1.37-3.361t-1.37-3.36t-3.36-1.37t-3.361 1.37t-1.37 3.36t1.37 3.36t3.36 1.37"
-                    /></svg
-                  >
+                  {#if filterQuery?.length > 0}
+                    <label
+                      class="cursor-pointer"
+                      on:click={() => {
+                        filterQuery = "";
+                        shouldLoadWorker.set(true);
+                      }}
+                    >
+                      <svg
+                        class="ml-auto h-6 w-6 inline-block mr-3"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        ><path
+                          fill="white"
+                          d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+                        /></svg
+                      >
+                    </label>
+                  {:else}
+                    <svg
+                      class="ml-auto h-7 w-7 sm:h-8 sm:w-8 inline-block mr-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="#fff"
+                        d="m19.485 20.154l-6.262-6.262q-.75.639-1.725.989t-1.96.35q-2.402 0-4.066-1.663T3.808 9.503T5.47 5.436t4.064-1.667t4.068 1.664T15.268 9.5q0 1.042-.369 2.017t-.97 1.668l6.262 6.261zM9.539 14.23q1.99 0 3.36-1.37t1.37-3.361t-1.37-3.36t-3.36-1.37t-3.361 1.37t-1.37 3.36t1.37 3.36t3.36 1.37"
+                      /></svg
+                    >
+                  {/if}
                 </label>
                 {#if notFound === true}
                   <span
@@ -1304,6 +1322,7 @@
           {#if displayedData?.length !== 0}
             <div class="mt-3 w-full overflow-x-auto h-[850px] overflow-hidden">
               <DarkPoolTable {data} {displayedData} {filteredData} {rawData} />
+              <UpgradeToPro {data} />
             </div>
           {:else}
             <div
@@ -1322,12 +1341,6 @@
             </div>
           {/if}
         </div>
-
-        <!--
-          <div class="relative bottom-[400px] w-fit m-auto flex justify-center items-center">
-            <UpgradeToPro data={data} title="Get the recent Options Flow Data from Hedge Funds and major institutional traders to never miss out"/>
-          </div>
-          -->
       {:else}
         <div class="flex justify-center items-center h-80">
           <div class="relative">

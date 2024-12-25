@@ -1,5 +1,5 @@
 export const load = async ({ locals }) => {
-  const { apiURL, apiKey } = locals;
+  const { apiURL, apiKey, user } = locals;
 
   const getFlowData = async () => {
     // make the POST request to the endpoint
@@ -10,7 +10,8 @@ export const load = async ({ locals }) => {
         "X-API-KEY": apiKey,
       },
     });
-    const output = await response.json();
+    let output = await response.json();
+    output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
 
     return output;
   };
