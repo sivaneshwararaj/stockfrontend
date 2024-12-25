@@ -19,7 +19,7 @@
 
   import { page } from "$app/stores";
 
-  import OptionsFlowTable from "$lib/components/Table/OptionsFlowTable.svelte";
+  import DarkPoolTable from "$lib/components/Table/DarkPoolTable.svelte";
   import { writable } from "svelte/store";
 
   export let data;
@@ -1641,7 +1641,7 @@
         <div class="flex w-full m-auto h-full overflow-hidden">
           {#if displayedData?.length !== 0}
             <div class="mt-8 w-full overflow-x-auto h-[850px] overflow-hidden">
-              <OptionsFlowTable
+              <DarkPoolTable
                 {data}
                 {optionsWatchlist}
                 {displayedData}

@@ -33,7 +33,6 @@
   } from "$lib/store";
 
   import { Button } from "$lib/components/shadcn/button/index.ts";
-  import * as Card from "$lib/components/shadcn/card/index.ts";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.ts";
   import * as Sheet from "$lib/components/shadcn/sheet/index.ts";
   import * as Accordion from "$lib/components/shadcn/accordion/index.js";
@@ -49,6 +48,7 @@
   import Newspaper from "lucide-svelte/icons/newspaper";
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
+  import Moon from "lucide-svelte/icons/moon-star";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
   /*
   import {
@@ -731,6 +731,30 @@
                   class="bg-[#141417] hover:bg-[#141417] -ml-4 w-full"
                 >
                   <a
+                    href="/dark-pool-flow"
+                    class="flex flex-row items-center w-full -mt-2"
+                  >
+                    <div class="flex flex-row items-center mr-auto">
+                      <div
+                        class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
+                      >
+                        <Moon class="h-5.5 w-5.5" />
+                      </div>
+                      <span class="ml-3 text-white text-[1rem]"
+                        >Dark Pool Flow</span
+                      >
+                    </div>
+                  </a>
+                </Button>
+              </Sheet.Close>
+
+              <Sheet.Close asChild let:builder>
+                <Button
+                  builders={[builder]}
+                  type="submit"
+                  class="bg-[#141417] hover:bg-[#141417] -ml-4 w-full"
+                >
+                  <a
                     href="/hedge-funds"
                     class="flex flex-row items-center w-full -mt-2"
                   >
@@ -1137,6 +1161,18 @@
                     <Option class="h-5.5 w-5.5" />
                   </div>
                   <span class="ml-3 text-white">Options Flow</span>
+                </a>
+
+                <a
+                  href="/dark-pool-flow"
+                  class="flex flex-row items-center ml-9 w-full mt-3"
+                >
+                  <div
+                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
+                  >
+                    <Moon class="h-5.5 w-5.5" />
+                  </div>
+                  <span class="ml-3 text-white">Dark Pool Flow</span>
                 </a>
 
                 <a

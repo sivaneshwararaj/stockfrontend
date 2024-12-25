@@ -608,7 +608,7 @@ export function formatString(inputString) {
   return formattedString;
 }
 
-export function abbreviateNumber(number, addDollarSign = false) {
+export function abbreviateNumber(number, addDollarSign = false, color = false) {
   // Check if number is null or undefined, return "-" if true
   if (number == null) {
     return "-";
@@ -618,13 +618,14 @@ export function abbreviateNumber(number, addDollarSign = false) {
 
   // Handle special case for exactly 1000
   if (Math.abs(number) === 1000) {
+    const suffix = color ? '<span class=\"text-yellow-500\">K</span>' : 'K';
     return addDollarSign
       ? negative
-        ? "-$1K"
-        : "$1K"
+        ? `-\$1${suffix}`
+        : `\$1${suffix}`
       : negative
-      ? "-1K"
-      : "1K";
+      ? `-1${suffix}`
+      : `1${suffix}`;
   }
 
   if (Math.abs(number) !== 0 && Math.abs(number) > 1000) {
@@ -652,21 +653,33 @@ export function abbreviateNumber(number, addDollarSign = false) {
       minimumFractionDigits: 2,
     });
 
-    const formattedNumber = abbreviation + suffixes[index];
+    let suffix = suffixes[index];
+
+    if (color) {
+      if (suffix === "K") {
+        suffix = '<span class=\"font-semibold text-[#A4F720]\">K</span>';
+      } else if (suffix === "M") {
+        suffix = '<span class=\"font-semibold text-[#A4F720]\">M</span>';
+      } else if (suffix === "B") {
+        suffix = '<span class=\"font-semibold text-[#A4F720]\">B</span>';
+      }
+    }
+
+    const formattedNumber = abbreviation + suffix;
 
     return addDollarSign
-      ? (negative ? "-$" : "$") + formattedNumber
+      ? (negative ? "-\$" : "\$") + formattedNumber
       : negative
       ? "-" + formattedNumber
       : formattedNumber;
   } else if (Math.abs(number) >= 0 && Math.abs(number) < 1000) {
     return addDollarSign
-      ? (negative ? "-$" : "$") + Math.abs(number)
+      ? (negative ? "-\$" : "\$") + Math.abs(number)
       : negative
       ? "-" + Math.abs(number)
       : number.toString();
   } else {
-    return addDollarSign ? "$0" : "0";
+    return addDollarSign ? "\$0" : "0";
   }
 }
 
