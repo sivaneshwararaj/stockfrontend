@@ -491,7 +491,6 @@
     }
   }
 
-
   $: options = {
     width: width,
     height: height,
@@ -769,7 +768,7 @@
     >
       <!-- Main content -->
       <div class="pb-12 md:pb-20 w-full sm:pr-6 xl:pr-0">
-        <div class="xl:pr-10">
+        <div class="">
           <div
             class="hidden sm:flex flex-row items-center pl-1 sm:pl-6 w-full mt-4"
           >
@@ -1115,7 +1114,7 @@
               class="mt-10 lg:mt-0 order-5 lg:order-1 flex flex-row space-x-2 sm:space-x-3 xs:space-x-4"
             >
               <table
-                class="w-[50%] text-sm text-white sm:text-[1rem] lg:w-full lg:min-w-[210px]"
+                class="w-[50%] text-sm text-white sm:text-[1rem] xl:min-w-[300px]"
               >
                 <tbody
                   ><tr
@@ -1137,7 +1136,11 @@
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-                      ><a href={`/stocks/${$stockTicker}/statistics/market-cap`} class="sm:hover:text-blue-400 text-white underline underline-offset-4">Market Cap</a></td
+                      ><a
+                        href={`/stocks/${$stockTicker}/statistics/market-cap`}
+                        class="sm:hover:text-blue-400 text-white underline underline-offset-4"
+                        >Market Cap</a
+                      ></td
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
@@ -1235,9 +1238,7 @@
                   >
                 </tbody>
               </table>
-              <table
-                class="w-[50%] text-sm text-white lg:w-auto lg:min-w-[210px]"
-              >
+              <table class="w-[50%] text-sm text-white xl:min-w-[300px]">
                 <tbody
                   ><tr
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
@@ -1381,7 +1382,7 @@
               </div>
 
               <div
-                class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
+                class="w-full m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getNextEarnings || {},
                 )?.length !== 0
                   ? ''

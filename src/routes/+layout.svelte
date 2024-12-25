@@ -824,7 +824,7 @@
 
         <a href="/" class="-ml-2 flex flex-shrink-0">
           <img
-            class="avatar w-9 xl:w-10 rounded-full"
+            class="avatar w-9 3xl:w-10 rounded-full"
             src={stocknear_logo}
             alt="Stocknear Logo"
           />
@@ -834,7 +834,7 @@
         <div
           class="relative w-full flex flex-row justify-end sm:justify-between items-center"
         >
-          <div class="sm:w-full sm:ml-2 xl:ml-[75px]">
+          <div class="sm:w-full sm:ml-2 3xl:ml-[75px]">
             <Searchbar />
           </div>
           <NotificationBell {data} {hasUnreadElement} />
@@ -912,19 +912,19 @@
       </div>
       <div>
         <div class="flex w-full">
-          <div class="hidden xl:block xl:w-[300px]">
+          <div class="hidden 3xl:block 3xl:w-[300px]">
             <aside
-              class="fixed overflow-y-auto scroller overflow-hidden inset-y-0 left-0 z-50 xl:flex w-64 flex-col xl:border-r xl:border-gray-800 bg-[#141417]"
+              class="fixed overflow-y-auto scroller overflow-hidden inset-y-0 left-0 z-50 3xl:flex w-64 flex-col 3xl:border-r 3xl:border-gray-800 bg-[#141417]"
             >
               <nav
-                class="flex flex-col items-center mr-auto gap-y-4 xl:py-5 w-full"
+                class="flex flex-col items-center mr-auto gap-y-4 3xl:py-5 w-full"
               >
                 <a
                   href="/"
                   class="ml-3 mb-5 flex justify-end items-center h-9 w-9 shrink-0 gap-2 rounded-full text-lg font-semibold text-primary-foreground md:h-10 md:w-10 md:text-base"
                 >
                   <img
-                    class="avatar w-9 xl:w-12 rounded-full"
+                    class="avatar w-9 3xl:w-12 rounded-full"
                     src={stocknear_logo}
                     alt="Stocknear Logo"
                   />

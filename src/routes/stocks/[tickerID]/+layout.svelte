@@ -579,12 +579,10 @@
               >
                 <!-- Main content -->
                 <div class="pb-12 md:pb-20 w-full">
-                  <div class="md:pr-6 lg:pr-10">
+                  <div class="">
                     <!-----Start-Header-CandleChart-Indicators------>
 
-                    <div
-                      class="m-auto pl-0 sm:pl-4 overflow-hidden mb-3 xl:pr-7"
-                    >
+                    <div class="m-auto pl-0 sm:pl-4 overflow-hidden mb-3">
                       <div
                         class="hidden sm:flex flex-row w-full justify-between items-center"
                       >
@@ -709,20 +707,30 @@
                           </label>
                         </div>
                         <!--End Price Alert -->
+
+                        <div
+                          class="hidden sm:flex items-end justify-end absolute right-0 top-12 {$scoreComponent ===
+                          false
+                            ? 'invisible'
+                            : ''}"
+                        >
+                          <AIScore
+                            score={data?.getStockDeck?.score}
+                            tier={data?.user?.tier}
+                          />
+                        </div>
                       </div>
 
                       <!-- svelte-ignore a11y-click-events-have-key-events -->
                       <!-- svelte-ignore a11y-label-has-associated-control -->
 
-                      <div class="flex items-center w-full mt-3">
+                      <div class="flex items-center w-full mt-5">
                         <div
                           class="flex flex-row justify-start w-full items-center"
                         >
-                          <div
-                            class="flex flex-col items-start ml-2 sm:ml-3 w-full"
-                          >
+                          <div class="flex flex-col items-start w-full">
                             <div
-                              class="flex flex-row justify-between items-center w-full"
+                              class="flex flex-row justify-between items-center w-full sm:-mt-[50px] mb-5 sm:mb-10"
                             >
                               <span
                                 class="text-2xl lg:text-3xl font-bold text-white"
@@ -734,9 +742,9 @@
                                 ({$stockTicker?.toUpperCase()})
                               </span>
                               <div
-                                class="items-end justify-end {$scoreComponent ===
+                                class="sm:hidden items-end justify-end absolute right-3 top-14 {$scoreComponent ===
                                 false
-                                  ? '-mt-8 invisible'
+                                  ? 'invisible'
                                   : ''}"
                               >
                                 <AIScore
