@@ -161,7 +161,7 @@
                 class="w-full mt-5 mb-10 m-auto flex justify-center items-center"
               >
                 <div
-                  class="w-full grid grid-cols-2 sm:grid-cols-3 gap-y-3 lg:gap-y-3 gap-x-3"
+                  class="w-full grid grid-cols-2 lg:grid-cols-4 gap-y-3 lg:gap-y-3 gap-x-3"
                 >
                   <!--Start Buy/Sell-->
                   <div
@@ -321,10 +321,10 @@
                   <tbody>
                     {#each senateTradingList as item}
                       <tr
-                        class="odd:bg-secondary sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]"
+                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b border-gray-800"
                       >
                         <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3 border-b border-b-[#09090B]"
+                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3"
                         >
                           <div class="flex flex-row items-center">
                             <div
@@ -357,7 +357,7 @@
                         </td>
 
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {new Date(item?.transactionDate)?.toLocaleString(
                             "en-US",
@@ -371,12 +371,12 @@
                         </td>
 
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.amount}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {#if item?.type === "Bought"}
                             <span class="text-[#00FC50]">Bought</span>

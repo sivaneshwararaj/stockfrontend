@@ -174,7 +174,7 @@
                     {#each symbolList as item, index}
                       <tr
                         on:click={() => goto("/crypto/" + item?.symbol)}
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] shake-ticker cursor-pointer"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] shake-ticker cursor-pointer"
                       >
                         <td
                           class="text-blue-400 font-medium text-sm text-start border-b-[#09090B]"

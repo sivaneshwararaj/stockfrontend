@@ -575,7 +575,7 @@
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0 ">
+      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="w-full mb-10">
           <div
             class="w-full m-auto sm:pb-6 {data?.getOptionsNetFlow?.length === 0
@@ -587,18 +587,17 @@
             {/await}
           </div>
 
-
           {#if optionsPlotData?.length !== 0}
-          <Infobox text={`1 Year of options activity involving ${$displayCompanyName} by major
-              institutional traders and hedge funds.`} />
-    
-            {:else}
-            <Infobox text={`There's no data available, indicating that major traders may not
-              be actively betting on ${$displayCompanyName}.`} />
-             
-            {/if}
-
-          
+            <Infobox
+              text={`1 Year of options activity involving ${$displayCompanyName} by major
+              institutional traders and hedge funds.`}
+            />
+          {:else}
+            <Infobox
+              text={`There's no data available, indicating that major traders may not
+              be actively betting on ${$displayCompanyName}.`}
+            />
+          {/if}
         </div>
 
         {#if optionsPlotData?.length !== 0}
@@ -770,13 +769,10 @@
             </div>
           {/if}
 
-         
-
           {#if optionList?.length !== 0}
-
-          <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
-            {activeIdx === 0 ? "Historical Option Data" : "Option Chain Data"}
-          </h3>
+            <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
+              {activeIdx === 0 ? "Historical Option Data" : "Option Chain Data"}
+            </h3>
 
             <div
               class="bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
@@ -872,7 +868,7 @@
                         on:click={() => handleViewData(item?.date)}
                         on:mouseover={() =>
                           getDailyTransactions($stockTicker + "+" + item?.date)}
-                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
+                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
                           1 ===
                           optionList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
@@ -1061,8 +1057,7 @@
                   <tbody>
                     {#each data?.user?.tier === "Pro" ? optionChainList : optionChainList?.slice(0, 3) as item, index}
                       <tr
-                        class="odd:bg-secondary border-b-[#09090B] {index +
-                          1 ===
+                        class="odd:bg-odd border-b-[#09090B] {index + 1 ===
                           optionChainList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
@@ -1118,7 +1113,6 @@
             </div>
 
             <UpgradeToPro {data} />
-         
           {/if}
         {/if}
       </div>
@@ -1229,7 +1223,7 @@
             <tbody>
               {#each optionHistoryList as item}
                 <!-- row -->
-                <tr class="odd:bg-secondary border-b-[#09090B]">
+                <tr class="odd:bg-odd border-b-[#09090B]">
                   <td class="text-white text-sm text-start whitespace-nowrap">
                     {formatTime(item?.time)}
                   </td>

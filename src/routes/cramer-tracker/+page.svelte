@@ -224,9 +224,9 @@
             </p>
           </div>
 
- 
-
-          <Infobox text={"We update our data in realtime to provide you with the latest stock picks of Jim Cramer."} />
+          <Infobox
+            text={"We update our data in realtime to provide you with the latest stock picks of Jim Cramer."}
+          />
 
           <div class="w-full m-auto mt-10">
             <div
@@ -241,7 +241,7 @@
                 <tbody>
                   {#each stockList as item, index}
                     <tr
-                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-secondary {index +
+                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
                         1 ===
                         rawData?.length && data?.user?.tier !== 'Pro'
                         ? 'opacity-[0.1]'
@@ -374,7 +374,6 @@
               </table>
             </div>
             <UpgradeToPro {data} />
-
           </div>
         </main>
       </div>

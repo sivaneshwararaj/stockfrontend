@@ -185,7 +185,7 @@
                   <tbody>
                     {#each stockList as item, index}
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
                       >
                         <td
                           class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"

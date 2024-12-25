@@ -118,22 +118,10 @@
   });
 
   const transactionStyles = {
-    Bought: {
-      text: "Bought",
-      class: "text-[#00FC50]",
-      border: "border-[#00FC50]",
-    },
-    Grant: {
-      text: "Grant",
-      class: "text-[#F8901E]",
-      border: "border-[#F8901E]",
-    },
-    Sold: { text: "Sold", class: "text-[#FF2F1F]", border: "border-[#FF2F1F]" },
-    Exercise: {
-      text: "Exercise",
-      class: "text-[#F8901E]",
-      border: "border-[#v]",
-    },
+    Bought: "P - Purchase",
+    Grant: "G - Grant",
+    Sold: "S - Sale",
+    Exercise: "E - Exercise",
     "n/a": { text: "n/a", class: "text-gray-300" },
   };
 
@@ -143,6 +131,7 @@
     { key: "securitiesTransacted", label: "Shares", align: "right" },
     { key: "price", label: "Price", align: "right" },
     { key: "value", label: "Value", align: "right" },
+    { key: "transactionType", label: "Trade Type", align: "right" },
   ];
 
   let sortOrders = {
@@ -151,6 +140,7 @@
     securitiesTransacted: { order: "none", type: "number" },
     price: { order: "none", type: "number" },
     value: { order: "none", type: "number" },
+    transactionType: { order: "none", type: "string" },
   };
 
   const sortData = (key) => {
@@ -393,7 +383,7 @@
                 class="w-full mt-5 mb-10 m-auto flex justify-center items-center p-1"
               >
                 <div
-                  class="w-full grid grid-cols-2 lg:grid-cols-3 gap-y-3 lg:gap-y-3 gap-x-3"
+                  class="w-full grid grid-cols-2 lg:grid-cols-4 gap-y-3 lg:gap-y-3 gap-x-3"
                 >
                   <!--Start Put/Call-->
                   <div
@@ -599,14 +589,15 @@
                   {#each insiderTradingList as item, index}
                     {#if item?.price > 0}
                       <tr
-                        class="text-white odd:bg-secondary {index + 1 ===
+                        class="text-white odd:bg-odd border-b border-gray-800 {index +
+                          1 ===
                           insiderTradingList?.slice(0, 6)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
                           : ''}"
                       >
                         <td
-                          class="text-white text-sm sm:text-[1rem] border-b border-[#09090B] whitespace-nowrap"
+                          class="text-white text-sm sm:text-[1rem] ] whitespace-nowrap"
                         >
                           <div class="flex flex-col">
                             <span class=""
@@ -615,14 +606,14 @@
                                 "",
                               )}</span
                             >
-                            <span class="text-sm text-white/80"
+                            <span class="text-sm text-white"
                               >{extractOfficeInfo(item?.typeOfOwner)}</span
                             >
                           </div>
                         </td>
 
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white ]"
                         >
                           {new Date(item?.transactionDate)?.toLocaleString(
                             "en-US",
@@ -636,38 +627,32 @@
                         </td>
 
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white ]"
                         >
-                          {abbreviateNumber(item?.securitiesTransacted)}
+                          {@html abbreviateNumber(
+                            item?.securitiesTransacted,
+                            false,
+                            true,
+                          )}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white ]"
                         >
-                          {item?.price?.toFixed(2)}
+                          ${item?.price?.toFixed(2)}
                         </td>
                         <td
-                          class="font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
-                          <div class="flex flex-row items-center justify-end">
-                            {#if transactionStyles[item?.transactionType]}
-                              <div
-                                class={transactionStyles[item?.transactionType]
-                                  ?.class}
-                              >
-                                {abbreviateNumber(item?.value)}
-                              </div>
-                              <div
-                                class="{transactionStyles[item?.transactionType]
-                                  ?.class} {transactionStyles[
-                                  item?.transactionType
-                                ]
-                                  ?.border} ml-2 px-1.5 py-1.5 border text-center rounded-md text-xs font-semibold"
-                              >
-                                {transactionStyles[item?.transactionType].text}
-                              </div>
-                            {:else}
-                              <span class="text-gray-300">n/a</span>
-                            {/if}
+                          {@html abbreviateNumber(item?.value, false, true)}
+                        </td>
+                        <td class="text-end flex justify-end whitespace-nowrap">
+                          <div
+                            class="w-auto px-4 py-1 rounded-full uppercase {item?.transactionType ===
+                            'Bought'
+                              ? 'bg-[#75D377] text-black'
+                              : 'bg-[#cd4050] text-white'} font-semibold"
+                          >
+                            {transactionStyles[item?.transactionType]}
                           </div>
                         </td>
                       </tr>

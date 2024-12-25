@@ -206,7 +206,7 @@
                   <tbody>
                     {#each analystList as item, index}
                       <tr
-                        class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary {index +
+                        class="border-b border-[#27272A] sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
                           1 ===
                           rawData?.length && data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'

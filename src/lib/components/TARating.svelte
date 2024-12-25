@@ -206,7 +206,7 @@
             <tbody>
               {#each showFullStats ? signalList : signalList?.slice(0, 3) as item, index}
                 <tr
-                  class="border-y border-gray-800 odd:bg-secondary sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] {index ===
+                  class="border-y border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] {index ===
                     2 &&
                   !showFullStats &&
                   signalList?.length > 2

@@ -1501,7 +1501,7 @@
                       <tbody class="p-0">
                         {#each watchList as item}
                           <tr
-                            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
+                            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
                           >
                             <td
                               on:click={() => handleFilter(item?.symbol)}
@@ -1769,7 +1769,7 @@
                                   <strong>{item?.name}</strong>
                                   (<HoverStockChart symbol={item?.symbol} />)
                                   will report
-                                  
+
                                   {#if item?.time}
                                     {#if compareTimes(item?.time, "16:00") >= 0}
                                       after market closes.

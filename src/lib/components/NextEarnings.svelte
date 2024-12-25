@@ -38,7 +38,7 @@
 {#if Object?.keys(rawData)?.length !== 0}
   <div class="space-y-3 overflow-hidden">
     <!--Start Content-->
-    <div class="w-auto lg:w-full p-1 flex flex-col m-auto">
+    <div class="w-auto lg:w-full flex flex-col m-auto">
       <div class="flex flex-col items-center w-full mb-3">
         <div class="flex flex-row justify-start mr-auto items-center">
           <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div class="text-white text-[1rem] pl-1">
+      <div class="text-white text-[1rem]">
         {$displayCompanyName} is scheduled to release its earnings on {new Date(
           rawData?.date ?? null,
         )?.toLocaleString("en-US", {
@@ -70,7 +70,7 @@
         {/if}
         <br />Analysts project revenue of
         <span class="font-semibold"
-          >{abbreviateNumber(rawData?.revenueEst, true)}</span
+          >{@html abbreviateNumber(rawData?.revenueEst, true, true)}</span
         >, reflecting a
         <span
           class="{revenueRatio > 0
@@ -96,7 +96,7 @@
   </div>
 {/if}
 
-{#if Object?.keys(rawData)?.length !== 0}
+{#if data?.getNextEarnings?.past?.length !== 0}
   <div class="space-y-3 overflow-hidden mt-5">
     <!--Start Content-->
     <div class="w-auto lg:w-full p-1 flex flex-col m-auto">
@@ -113,7 +113,10 @@
         </div>
       </div>
 
-     <PastEarnings userTier={data?.user?.tier} rawData={data?.getNextEarnings?.past} />
+      <PastEarnings
+        userTier={data?.user?.tier}
+        rawData={data?.getNextEarnings?.past}
+      />
     </div>
   </div>
 {/if}

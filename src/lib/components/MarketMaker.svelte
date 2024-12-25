@@ -88,7 +88,7 @@
         <div class="flex justify-start items-center w-full m-auto">
           <table class="w-full" data-test="statistics-table">
             <tbody>
-              <tr class="border-y border-gray-800 odd:bg-secondary">
+              <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                   <span>Date</span>
                 </td>
@@ -98,7 +98,7 @@
                   {formatDateRange(historyData?.slice(-1)?.at(0)?.date)}
                 </td>
               </tr>
-              <tr class="border-y border-gray-800 odd:bg-secondary">
+              <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                   <span>Total Notional Sum</span>
                 </td>
@@ -110,7 +110,7 @@
                   )}
                 </td>
               </tr>
-              <tr class="border-y border-gray-800 odd:bg-secondary">
+              <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                   <span>Total Trade Count</span>
                 </td>
@@ -122,7 +122,7 @@
                   )}
                 </td>
               </tr>
-              <tr class="border-y border-gray-800 odd:bg-secondary">
+              <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                   <span>Total Share Quantity</span>
                 </td>
@@ -173,7 +173,7 @@
             <tbody>
               {#each showFullStats ? topMarketMakers?.slice(0, 10) : topMarketMakers?.slice(0, 3) as item, index}
                 <tr
-                  class="border-y border-gray-800 odd:bg-secondary {index ===
+                  class="border-y border-gray-800 odd:bg-odd {index ===
                     2 &&
                   !showFullStats &&
                   topMarketMakers?.length > 3

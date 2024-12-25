@@ -657,7 +657,7 @@ export function abbreviateNumber(number, addDollarSign = false, color = false) {
 
     if (color) {
       if (suffix === "K") {
-        suffix = '<span class=\"font-semibold text-[#8374DC]\">K</span>';
+        suffix = '<span class=\"font-semibold text-blue-400\">K</span>';
       } else if (suffix === "M") {
         suffix = '<span class=\"font-semibold text-[#FACD38]\">M</span>';
       } else if (suffix === "B") {

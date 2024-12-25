@@ -165,7 +165,7 @@
                           <tbody>
                             {#each displayList as item, index}
                               <tr
-                                class="odd:bg-secondary border-b-[#09090B] {index +
+                                class="odd:bg-odd border-b-[#09090B] {index +
                                   1 ===
                                   rawData?.length && data?.user?.tier !== 'Pro'
                                   ? 'opacity-[0.1]'

@@ -272,7 +272,7 @@
         <div class="flex justify-start items-center w-full m-auto mt-6">
           <table class="w-full" data-test="statistics-table">
             <tbody>
-              <tr class="border-y border-gray-800 odd:bg-secondary">
+              <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                   <span>Date</span>
                 </td>
@@ -282,7 +282,7 @@
                   {formatDateRange(rawData?.lastDate)}
                 </td>
               </tr>
-              <tr class="border-y border-gray-800 odd:bg-secondary">
+              <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                   <span>Volume in $</span>
                 </td>
@@ -292,7 +292,7 @@
                   {monthlyVolume}
                 </td>
               </tr>
-              <tr class="border-y border-gray-800 odd:bg-secondary">
+              <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
                   <span>Retail Sentiment Range</span>
                 </td>

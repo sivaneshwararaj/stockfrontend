@@ -120,73 +120,72 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full overflow-hidden  m-auto">
-
-  <Infobox text={"Every Exchange-Traded Fund (ETF) is managed by a specific company. Below is a list of companies offering actively traded ETFs on the U.S. stock market."} />
+<section class="w-full overflow-hidden m-auto">
+  <Infobox
+    text={"Every Exchange-Traded Fund (ETF) is managed by a specific company. Below is a list of companies offering actively traded ETFs on the U.S. stock market."}
+  />
 
   <!-- Page wrapper -->
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
     <!-- Content area -->
-     <div class="w-full">
-    <div class="w-full overflow-x-scroll">
-      <table
-        class="table rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
-      >
-        <thead>
-          <TableHeader {columns} {sortOrders} {sortData} />
-        </thead>
-        <tbody>
-          {#each etfProviderList as item,index}
-            <!-- row -->
-            <tr
-              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
-            1 ===
-            etfProviderList?.length &&
-          data?.user?.tier !== 'Pro'
-            ? 'opacity-[0.1]'
-            : ''}"
-            >
-              <td
-                class="text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]"
+    <div class="w-full">
+      <div class="w-full overflow-x-scroll">
+        <table
+          class="table rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+        >
+          <thead>
+            <TableHeader {columns} {sortOrders} {sortData} />
+          </thead>
+          <tbody>
+            {#each etfProviderList as item, index}
+              <!-- row -->
+              <tr
+                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
+                  1 ===
+                  etfProviderList?.length && data?.user?.tier !== 'Pro'
+                  ? 'opacity-[0.1]'
+                  : ''}"
               >
-                <a
-                  href={"/etf/etf-providers/" + item?.etfProvider}
-                  class="sm:hover:underline sm:hover:underline-offset-4 text-white"
+                <td
+                  class="text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]"
                 >
-                  {formatETFName(item?.etfProvider)}
-                </a>
-              </td>
+                  <a
+                    href={"/etf/etf-providers/" + item?.etfProvider}
+                    class="sm:hover:underline sm:hover:underline-offset-4 text-white"
+                  >
+                    {formatETFName(item?.etfProvider)}
+                  </a>
+                </td>
 
-              <td
-                class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B] text-end"
-              >
-                {abbreviateNumber(item?.totalAssets)}
-              </td>
+                <td
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B] text-end"
+                >
+                  {abbreviateNumber(item?.totalAssets)}
+                </td>
 
-              <td
-                class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-              >
-                {item?.funds}
-              </td>
+                <td
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                >
+                  {item?.funds}
+                </td>
 
-              <td
-                class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-              >
-                {item?.avgExpenseRatio}%
-              </td>
+                <td
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                >
+                  {item?.avgExpenseRatio}%
+                </td>
 
-              <td
-                class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
-              >
-                {item?.avgHoldings}
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+                <td
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                >
+                  {item?.avgHoldings}
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+      <UpgradeToPro {data} />
     </div>
-    <UpgradeToPro {data} />
-  </div>
-
   </div>
 </section>

@@ -321,7 +321,7 @@
                   <tbody>
                     {#each senateTradingList as item}
                       <tr
-                        class="odd:bg-secondary sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]"
+                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]"
                       >
                         <td
                           class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3 border-b border-b-[#09090B]"

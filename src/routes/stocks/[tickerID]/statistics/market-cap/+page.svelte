@@ -693,7 +693,11 @@
                           <td
                             class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b border-gray-800"
                           >
-                            {abbreviateNumber(item?.marketCap)}
+                            {@html abbreviateNumber(
+                              item?.marketCap,
+                              false,
+                              true,
+                            )}
                           </td>
 
                           <td

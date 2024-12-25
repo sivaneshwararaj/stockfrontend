@@ -391,36 +391,34 @@
     }
   }
 
-
   function generateStatementInfoHTML() {
-  if ($coolMode) {
-    const statementText = statementConfig?.find(
-      (item) => item?.propertyName === displayStatement
-    )?.text;
+    if ($coolMode) {
+      const statementText = statementConfig?.find(
+        (item) => item?.propertyName === displayStatement,
+      )?.text;
 
-    return `<span>${statementText || ''}</span>`;
-  } else if (cashFlow?.length > 0) {
-    return `
+      return `<span>${statementText || ""}</span>`;
+    } else if (cashFlow?.length > 0) {
+      return `
       <span>
        Get detailed ratio statement breakdowns, uncovering price to free cash flow ratio, price per earnings, and much more.
       </span>
     `;
-  } else {
-    return `
+    } else {
+      return `
       <span>
         No financial data available for ${$displayCompanyName}.
       </span>
     `;
+    }
   }
-}
 
-let htmlOutput = null;
-$: {
-  if($coolMode || displayStatement) {
-    htmlOutput = generateStatementInfoHTML()
-
+  let htmlOutput = null;
+  $: {
+    if ($coolMode || displayStatement) {
+      htmlOutput = generateStatementInfoHTML();
+    }
   }
-}
 </script>
 
 <svelte:head>
@@ -482,7 +480,7 @@ $: {
           </div>
 
           <div class="grid grid-cols-1 gap-2 w-full">
-           <Infobox text={htmlOutput} />
+            <Infobox text={htmlOutput} />
             {#if cashFlow?.length > 0}
               <div
                 class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
@@ -563,9 +561,7 @@ $: {
                   {/if}
                 </label>
 
-                <div
-                  class="flex flex-row items-center w-fit  sm:ml-auto"
-                >
+                <div class="flex flex-row items-center w-fit sm:ml-auto">
                   <div class="relative inline-block text-left grow">
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild let:builder>
@@ -708,10 +704,10 @@ $: {
 
                 <div class="w-full overflow-x-scroll">
                   <table
-                    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                    class="table table-sm table-compact rounded-md w-full m-auto mt-4"
                   >
                     <thead>
-                      <tr class="border border-gray-600">
+                      <tr class="border-b border-gray-800">
                         <th
                           class="text-white font-semibold text-start text-sm sm:text-[1rem]"
                           >{filterRule === "annual"
@@ -737,38 +733,39 @@ $: {
                     <tbody>
                       {#each tableList as item, index}
                         <!-- row -->
-                        <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] shake-ticker cursor-pointer"
-                        >
+                        <tr class="odd:bg-odd border-b border-gray-800">
                           <td
-                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                           >
                             {item?.date}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
                           >
-                            {abbreviateNumber(item?.value)}
+                            {@html abbreviateNumber(item?.value, false, true)}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
                           >
-                            {item?.value - tableList[index + 1]?.value !== 0
+                            {@html item?.value - tableList[index + 1]?.value !==
+                            0
                               ? abbreviateNumber(
                                   (
                                     item?.value - tableList[index + 1]?.value
                                   )?.toFixed(2),
+                                  false,
+                                  true,
                                 )
-                              : "-"}
+                              : "n/a"}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
                           >
                             {#if index + 1 - tableList?.length === 0}
-                              -
+                              n/a
                             {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
                               <span class="text-[#FF2F1F]">-100.00%</span>
                             {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
@@ -792,7 +789,7 @@ $: {
                                 )?.toFixed(2)}%
                               </span>
                             {:else}
-                              -
+                              n/a
                             {/if}
                           </td>
                         </tr>

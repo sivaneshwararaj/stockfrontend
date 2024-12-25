@@ -96,7 +96,7 @@
         })
         ?.slice(0, 30); //Consider only the last 30 ratings in the last 12 months
 
-      const filteredAnalystCount = recentData?.length ?? 'n/a';
+      const filteredAnalystCount = recentData?.length ?? "n/a";
       const priceTargets = recentData
         ?.map((item) => parseFloat(item.adjusted_pt_current))
         ?.filter((pt) => !isNaN(pt));
@@ -106,7 +106,7 @@
           ]
         : "n/a";
 
-      numOfAnalyst = filteredAnalystCount === 0 ? 'n/a' : filteredAnalystCount;
+      numOfAnalyst = filteredAnalystCount === 0 ? "n/a" : filteredAnalystCount;
       priceTarget = medianPriceTarget;
       changesPercentage =
         medianPriceTarget !== "-" && data?.getStockQuote?.price != null
@@ -141,8 +141,9 @@
               ? "Hold"
               : averageRatingScore >= 1.5
                 ? "Sell"
-              : averageRatingScore >= 1
-                ? "Strong Sell" : 'n/a';
+                : averageRatingScore >= 1
+                  ? "Strong Sell"
+                  : "n/a";
 
       rawData = recentData;
       historyList = rawData.slice(0, 50);
@@ -423,7 +424,7 @@
                   <tr
                     class="{latestInfoDate(item?.date)
                       ? 'bg-[#F9AB00] bg-opacity-[0.1]'
-                      : 'odd:bg-secondary'} border-b-[#09090B] {index + 1 ===
+                      : 'odd:bg-odd'} border-b-[#09090B] {index + 1 ===
                       historyList?.slice(0, 3)?.length &&
                     data?.user?.tier !== 'Pro'
                       ? 'opacity-[0.1]'

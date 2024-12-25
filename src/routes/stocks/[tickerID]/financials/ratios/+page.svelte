@@ -17,6 +17,7 @@
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
   import Infobox from "$lib/components/Infobox.svelte";
+  import FinancialTable from "$lib/components/FinancialTable.svelte";
 
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
@@ -133,6 +134,11 @@
       text: "Net Profit Margin is the percentage of revenue left as net income, or profits, after subtracting all costs and expenses from the revenue.",
     },
   ];
+
+  const fields = statementConfig.map((item) => ({
+    label: item.label,
+    key: item.propertyName,
+  }));
 
   function toggleMode() {
     $coolMode = !$coolMode;
@@ -349,36 +355,34 @@
     }
   }
 
-
   function generateStatementInfoHTML() {
-  if ($coolMode) {
-    const statementText = statementConfig?.find(
-      (item) => item?.propertyName === displayStatement
-    )?.text;
+    if ($coolMode) {
+      const statementText = statementConfig?.find(
+        (item) => item?.propertyName === displayStatement,
+      )?.text;
 
-    return `<span>${statementText || ''}</span>`;
-  } else if (ratios?.length > 0) {
-    return `
+      return `<span>${statementText || ""}</span>`;
+    } else if (ratios?.length > 0) {
+      return `
       <span>
         Discover comprehensive ratio statement breakdowns that reveal insights into revenue, expenses, and beyond.
       </span>
     `;
-  } else {
-    return `
+    } else {
+      return `
       <span>
         No financial data available for ${$displayCompanyName}.
       </span>
     `;
+    }
   }
-}
 
-let htmlOutput = null;
-$: {
-  if($coolMode || displayStatement) {
-    htmlOutput = generateStatementInfoHTML()
-
+  let htmlOutput = null;
+  $: {
+    if ($coolMode || displayStatement) {
+      htmlOutput = generateStatementInfoHTML();
+    }
   }
-}
 </script>
 
 <svelte:head>
@@ -441,7 +445,7 @@ $: {
           </div>
 
           <div class="grid grid-cols-1 gap-2">
-           <Infobox text={htmlOutput}  />
+            <Infobox text={htmlOutput} />
             {#if ratios?.length > 0}
               <div
                 class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mt-3 mb-6"
@@ -522,9 +526,7 @@ $: {
                   {/if}
                 </label>
 
-                <div
-                  class="flex flex-row items-center w-fit sm:ml-auto"
-                >
+                <div class="flex flex-row items-center w-fit sm:ml-auto">
                   <div class="relative inline-block text-left grow">
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild let:builder>
@@ -653,10 +655,10 @@ $: {
 
                 <div class="w-full overflow-x-scroll">
                   <table
-                    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                    class="table table-sm table-compact rounded-md w-full m-auto mt-4"
                   >
                     <thead>
-                      <tr class="border border-gray-600">
+                      <tr class="border-b border-gray-800">
                         <th
                           class="text-white font-semibold text-start text-sm sm:text-[1rem]"
                           >{filterRule === "annual"
@@ -682,38 +684,39 @@ $: {
                     <tbody>
                       {#each tableList as item, index}
                         <!-- row -->
-                        <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] shake-ticker cursor-pointer"
-                        >
+                        <tr class="odd:bg-odd border-b border-gray-800">
                           <td
-                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                           >
                             {item?.date}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
                           >
-                            {abbreviateNumber(item?.value)}
+                            {@html abbreviateNumber(item?.value, false, true)}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
                           >
-                            {item?.value - tableList[index + 1]?.value !== 0
+                            {@html item?.value - tableList[index + 1]?.value !==
+                            0
                               ? abbreviateNumber(
                                   (
                                     item?.value - tableList[index + 1]?.value
                                   )?.toFixed(2),
+                                  false,
+                                  true,
                                 )
-                              : "-"}
+                              : "n/a"}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
                           >
                             {#if index + 1 - tableList?.length === 0}
-                              -
+                              n/a
                             {:else if item?.value === 0 && tableList[index + 1]?.value < 0}
                               <span class="text-[#FF2F1F]">-100.00%</span>
                             {:else if item?.value === 0 && tableList[index + 1]?.value > 0}
@@ -737,7 +740,7 @@ $: {
                                 )?.toFixed(2)}%
                               </span>
                             {:else}
-                              -
+                              n/a
                             {/if}
                           </td>
                         </tr>
@@ -775,246 +778,7 @@ $: {
                     </thead>
                     <tbody>
                       <!-- row -->
-                      <tr class="text-white odd:bg-secondary whitespace-nowrap">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >PE Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.priceEarningsRatio / 4)?.toFixed(2)
-                              : item?.priceEarningsRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >PS Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.priceToSalesRatio / 4)?.toFixed(2)
-                              : item?.priceToSalesRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <!-- row -->
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >PB Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.priceToBookRatio / 4)?.toFixed(2)
-                              : item?.priceToBookRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary whitespace-nowrap">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >P/FCF Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.priceToFreeCashFlowsRatio / 4)?.toFixed(
-                                  2,
-                                )
-                              : item?.priceToFreeCashFlowsRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >P/OCF Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (
-                                  item?.priceToOperatingCashFlowsRatio / 4
-                                )?.toFixed(2)
-                              : item?.priceToOperatingCashFlowsRatio?.toFixed(
-                                  2,
-                                )}
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >OCF/S Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (
-                                  item?.operatingCashFlowSalesRatio / 4
-                                )?.toFixed(2)
-                              : item?.operatingCashFlowSalesRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Debt / Equity Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.debtEquityRatio / 4)?.toFixed(2)
-                              : item?.debtEquityRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <!-- row -->
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Quick Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.quickRatio / 4)?.toFixed(2)
-                              : item?.quickRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <!-- row -->
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Current Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.currentRatio / 4)?.toFixed(2)
-                              : item?.currentRatio?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem] whitespace-nowrap"
-                          >Asset Turnover</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {item?.assetTurnover?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Interest Coverage</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? (item?.interestCoverage / 4)?.toFixed(2)
-                              : item?.interestCoverage?.toFixed(2)}
-                          </td>
-                        {/each}
-                      </tr>
-                      <!-- row -->
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Return on Equity (ROE)</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {(item?.returnOnEquity * 100)?.toFixed(2)}%
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start whitespace-nowrap border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Return on Assets (ROA)</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end"
-                            >{(item?.returnOnAssets * 100)?.toFixed(2)}%</td
-                          >
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Return on Capital (ROIC)</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {(item?.returnOnCapitalEmployed * 100)?.toFixed(
-                              2,
-                            )}%</td
-                          >
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Dividend Yield</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {(item?.dividendYield * 100)?.toFixed(2)}%</td
-                          >
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Payout Ratio</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? ((item?.payoutRatio / 4) * 100)?.toFixed(2)
-                              : (item?.payoutRatio * 100)?.toFixed(2)}%
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Gross Profit Margin</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? ((item?.grossProfitMargin / 4) * 100)?.toFixed(
-                                  2,
-                                )
-                              : (item?.grossProfitMargin * 100)?.toFixed(2)}%
-                          </td>
-                        {/each}
-                      </tr>
-                      <tr class="text-white odd:bg-secondary">
-                        <td
-                          class="text-start border-r border-gray-700 text-sm sm:text-[1rem]"
-                          >Net Profit Margin</td
-                        >
-                        {#each ratios as item}
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {filterRule === "annual"
-                              ? ((item?.netProfitMargin / 4) * 100)?.toFixed(2)
-                              : (item?.netProfitMargin * 100)?.toFixed(2)}%
-                          </td>
-                        {/each}
-                      </tr>
+                      <FinancialTable data={ratios} {fields} />
                     </tbody>
                   </table>
                 </div>

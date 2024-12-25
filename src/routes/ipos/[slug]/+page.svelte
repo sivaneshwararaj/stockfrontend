@@ -80,12 +80,12 @@
 
 <section class="w-full overflow-hidden m-auto">
   {#if isLoaded}
-  <div class="mt-3 mb-3">
-  <Infobox text={`There have been ${totalIPOs} IPOs on the US stock market in ${year}.`} />
-</div>
+    <div class="mt-3 mb-3">
+      <Infobox
+        text={`There have been ${totalIPOs} IPOs on the US stock market in ${year}.`}
+      />
+    </div>
     <div class="flex flex-col justify-center items-center">
-     
-
       <div class="mr-auto flex flex-col jusitfy-start items-start mb-5 mt-5">
         <div class="text-white text-sm sm:text-[1rem] font-medium mr-2">
           Select Time period
@@ -146,7 +146,7 @@
             <tbody>
               {#each ipoList as item}
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
                 >
                   <td
                     class="text-white text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] whitespace-nowrap"

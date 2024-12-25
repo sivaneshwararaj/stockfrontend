@@ -248,11 +248,15 @@
           >
           Institutions hold a total of
           <span class="font-semibold"
-            >{abbreviateNumber(rawData?.numberOf13Fshares)}</span
+            >{@html abbreviateNumber(
+              rawData?.numberOf13Fshares,
+              false,
+              true,
+            )}</span
           >
           {$displayCompanyName} shares, with a combined investment of
           <span class="font-semibold"
-            >{abbreviateNumber(rawData?.totalInvested, true)}</span
+            >{@html abbreviateNumber(rawData?.totalInvested, true, true)}</span
           >.
         </div>
 
@@ -320,7 +324,7 @@
 
         <div class="w-full mt-5 mb-10 m-auto flex justify-center items-center">
           <div
-            class="w-full grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-3 lg:gap-y-3 gap-x-3"
+            class="w-full grid grid-cols-2 lg:grid-cols-4 gap-y-3 lg:gap-y-3 gap-x-3"
           >
             <!--Start Put/Call-->
             <div
@@ -530,7 +534,7 @@
             {#each displayList as item, index}
               {#if item?.investorName?.length > 0}
                 <tr
-                  class="border-y border-gray-800 odd:bg-secondary sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] {index +
+                  class="border-y border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] {index +
                     1 ===
                     shareholderList?.length && data?.user?.tier !== 'Pro'
                     ? 'opacity-[0.1]'
@@ -562,8 +566,8 @@
                   <td
                     class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                   >
-                    {item?.sharesNumber !== null
-                      ? abbreviateNumber(item?.sharesNumber)
+                    {@html item?.sharesNumber !== null
+                      ? abbreviateNumber(item?.sharesNumber, false, true)
                       : "-"}
                   </td>
 

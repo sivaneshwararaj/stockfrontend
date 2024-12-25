@@ -248,7 +248,7 @@
                     Stock Analyst at {companyName}
                   </p>
                   <div class="inline-flex items-center">
-                    <div class="flex flex-row items-center ">
+                    <div class="flex flex-row items-center">
                       {#each Array.from({ length: 5 }) as _, i}
                         {#if i < Math.floor(analystScore)}
                           <svg
@@ -277,7 +277,8 @@
                         {/if}
                       {/each}
                     </div>
-                    <span class="ml-1 text-[1rem] text-white">({analystScore})</span
+                    <span class="ml-1 text-[1rem] text-white"
+                      >({analystScore})</span
                     >
                   </div>
                 </div>
@@ -289,7 +290,9 @@
                   <div class="text-2xl font-semibold tracking-tight text-white">
                     # {rank}
                   </div>
-                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
+                  <div
+                    class="text-[1rem] font-semibold leading-6 text-gray-300"
+                  >
                     Out of {numOfAnalysts} analysts
                   </div>
                 </div>
@@ -299,7 +302,9 @@
                   <div class="text-2xl font-bold tracking-tight text-white">
                     {totalRatings}
                   </div>
-                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
+                  <div
+                    class="text-[1rem] font-semibold leading-6 text-gray-300"
+                  >
                     Total ratings
                   </div>
                 </div>
@@ -313,7 +318,9 @@
                         : "text-[#EF4444]"}>{successRate?.toFixed(2)}%</span
                     >
                   </div>
-                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
+                  <div
+                    class="text-[1rem] font-semibold leading-6 text-gray-300"
+                  >
                     Success rate
                   </div>
                 </div>
@@ -327,7 +334,9 @@
                         : "text-[#EF4444]"}>{avgReturn?.toFixed(2)}%</span
                     >
                   </div>
-                  <div class="text-[1rem] font-semibold leading-6 text-gray-300">
+                  <div
+                    class="text-[1rem] font-semibold leading-6 text-gray-300"
+                  >
                     Average return
                   </div>
                 </div>
@@ -388,7 +397,7 @@
                   <tbody>
                     {#each stockList as item, index}
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B]"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
                       >
                         <td class="hidden lg:table-cell"
                           ><button

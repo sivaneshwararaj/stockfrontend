@@ -290,7 +290,7 @@
                   <tbody>
                     {#each optionsWatchlist as item, index}
                       <!-- row -->
-                      <tr class="odd:bg-secondary border-b-[#09090B]">
+                      <tr class="odd:bg-odd border-b-[#09090B]">
                         <td
                           class="text-white text-sm text-start whitespace-nowrap"
                         >

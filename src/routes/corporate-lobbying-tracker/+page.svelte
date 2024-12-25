@@ -193,7 +193,7 @@
                 <tbody>
                   {#each displayList as item, index}
                     <tr
-                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-secondary {index +
+                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
                         1 ===
                         displayList?.length && data?.user?.tier !== 'Pro'
                         ? 'opacity-[0.1]'

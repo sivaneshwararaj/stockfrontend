@@ -727,7 +727,7 @@
                 </ul>
               {:else}
                 <Infobox
-                  text="Currently, there are no upcoming earnings reports available that include the latest analyst estimates."
+                  text="Currently, there are no upcoming earnings reports available."
                 />
               {/if}
             </Card.Content>

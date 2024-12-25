@@ -878,7 +878,7 @@
                         on:click={() => handleViewData(item?.date)}
                         on:mouseover={() =>
                           getDailyTransactions($etfTicker + "+" + item?.date)}
-                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
+                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
                           1 ===
                           optionList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
@@ -1067,8 +1067,7 @@
                   <tbody>
                     {#each data?.user?.tier === "Pro" ? optionChainList : optionChainList?.slice(0, 3) as item, index}
                       <tr
-                        class="odd:bg-secondary border-b-[#09090B] {index +
-                          1 ===
+                        class="odd:bg-odd border-b-[#09090B] {index + 1 ===
                           optionChainList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
@@ -1251,7 +1250,7 @@
             <tbody>
               {#each optionHistoryList as item}
                 <!-- row -->
-                <tr class="odd:bg-secondary border-b-[#09090B]">
+                <tr class="odd:bg-odd border-b-[#09090B]">
                   <td class="text-white text-sm text-start whitespace-nowrap">
                     {formatTime(item?.time)}
                   </td>

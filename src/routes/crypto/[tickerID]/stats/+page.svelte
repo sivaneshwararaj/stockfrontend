@@ -329,9 +329,7 @@ updateYearRange()
                 </thead>
                 <tbody class="shadow-md">
                   {#each quantStats[$cryptoTicker?.toUpperCase()]["Worst 10 Drawdowns"] as item}
-                    <tr
-                      class="text-white border-y border-gray-800 odd:bg-secondary"
-                    >
+                    <tr class="text-white border-y border-gray-800 odd:bg-odd">
                       <td
                         class="text-start text-sm sm:text-[1rem] text-white whitespace-nowrap"
                       >
@@ -432,9 +430,7 @@ updateYearRange()
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -476,9 +472,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -514,9 +508,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -536,9 +528,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -558,9 +548,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -598,9 +586,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -620,9 +606,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -642,9 +626,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -662,9 +644,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -682,9 +662,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -702,9 +680,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -724,9 +700,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -746,9 +720,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-starttext-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -786,9 +758,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -826,9 +796,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -866,9 +834,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -888,9 +854,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -910,9 +874,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -954,9 +916,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -998,9 +958,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1020,9 +978,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1040,9 +996,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-starttext-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1060,9 +1014,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1082,9 +1034,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1104,9 +1054,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1126,9 +1074,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1148,9 +1094,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1170,9 +1114,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1208,9 +1150,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1248,9 +1188,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1288,9 +1226,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-starttext-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1326,9 +1262,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1368,9 +1302,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1410,9 +1342,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1452,9 +1382,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1494,9 +1422,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1536,9 +1462,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1576,9 +1500,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1598,9 +1520,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1620,9 +1540,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1642,9 +1560,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1682,9 +1598,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1724,9 +1638,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1746,9 +1658,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1768,9 +1678,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >
@@ -1790,9 +1698,7 @@ updateYearRange()
                     </td>
                   </tr>
 
-                  <tr
-                    class="text-white odd:bg-secondary border-b border-[#27272A]"
-                  >
+                  <tr class="text-white odd:bg-odd border-b border-[#27272A]">
                     <td
                       class="text-start text-sm sm:text-[1rem] whitespace-nowrap"
                     >

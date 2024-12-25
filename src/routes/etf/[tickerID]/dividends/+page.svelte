@@ -366,7 +366,7 @@
                   </thead>
                   <tbody class="shadow-md">
                     {#each rawData?.history as item}
-                      <tr class="text-gray-200 odd:bg-secondary">
+                      <tr class="text-gray-200 odd:bg-odd">
                         <td
                           class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white font-medium border-b border-[#09090B]"
                         >

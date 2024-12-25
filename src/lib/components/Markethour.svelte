@@ -79,7 +79,7 @@
     >
       <!-- head -->
       <thead>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <th class="bg-primary text-white text-sm font-semibold">
             Exchange holidays
           </th>
@@ -88,44 +88,44 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold"> New Years Day</td>
           <td class="">01.01.2024</td>
         </tr>
         <!-- row 2 -->
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold">Martin Luther King, Jr. Day</td>
           <td class="">15.01.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold">Washington's Birthday</td>
           <td class="">19.02.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold"> Good Friday </td>
           <td class="bg-primary">29.03.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold">Memorial Day</td>
           <td class="">27.05.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold">Juneteenth National Independence Day</td>
           <td class="">19.06.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold">Independence Day</td>
           <td class="">04.07.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold">Labor Day</td>
           <td class="">02.09.2024</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-secondary">
+        <tr class="border-b border-slate-700 odd:bg-odd">
           <td class="font-semibold">Thanksgiving Day</td>
           <td class="">28.11.2024</td>
         </tr>
-        <tr class="odd:bg-secondary">
+        <tr class="odd:bg-odd">
           <td class="font-semibold">Christmas</td>
           <td class="">25.12.2024</td>
         </tr>

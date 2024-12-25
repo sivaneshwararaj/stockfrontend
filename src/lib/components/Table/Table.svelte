@@ -148,8 +148,16 @@
     },
     { name: "Top Analyst Rating", rule: "topAnalystRating", type: "rating" },
     { name: "Top Analyst Count", rule: "topAnalystCounter", type: "int" },
-    { name: "Top Analyst Price Target", rule: "topAnalystPriceTarget", type: "float" },
-    { name: "Top Analyst PT Upside", rule: "topAnalystUpside", type: "percentSign" },
+    {
+      name: "Top Analyst Price Target",
+      rule: "topAnalystPriceTarget",
+      type: "float",
+    },
+    {
+      name: "Top Analyst PT Upside",
+      rule: "topAnalystUpside",
+      type: "percentSign",
+    },
   ];
 
   allRows = [...allRows, ...specificRows];
@@ -164,58 +172,57 @@
 
   allRows = sortIndicatorCheckMarks(allRows);
 
-
   const handleDownloadMessage = (event) => {
-  let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
-  // Check if both arrays exist and have data
-  if (!updateData?.length || !rawData?.length) {
-    return;
-  }
-  
-  // Create a new array to ensure reactivity
-  const updatedRawData = [...rawData];
-  
-  for (let i = 0; i < updateData.length; i++) {
-    if (updatedRawData[i]) {
-      // Create a new object to merge the data
-      let newData = {};
-      
-      // Merge fields from updateData
-      Object.assign(newData, updateData[i]);
-      
-      // Merge fields from defaultRules that are missing in updateData
-      defaultRules.forEach((rule) => {
-        if (!(rule in updateData[i]) && rule in updatedRawData[i]) {
-          newData[rule] = updatedRawData[i][rule];
-        }
-      });
-      
-      // Preserve the original 'priceTarget' and other default rule values
-      for (let rule of defaultRules) {
-        if (rule in updatedRawData[i]) {
-          newData[rule] = updatedRawData[i][rule];
-        }
-      }
-      
-      // Ensure 'rank' and 'years' are added if they are missing in updateData
-      if (!("rank" in updateData[i]) && "rank" in updatedRawData[i]) {
-        newData.rank = updatedRawData[i]["rank"];
-      }
-      if (!("years" in updateData[i]) && "years" in updatedRawData[i]) {
-        newData.years = updatedRawData[i]["years"];
-      }
-      
-      // Update the specific item in the array
-      updatedRawData[i] = newData;
+    let updateData = event?.data?.rawData ?? []; // Use a new variable for updated data
+    // Check if both arrays exist and have data
+    if (!updateData?.length || !rawData?.length) {
+      return;
     }
-  }
-  
-  // Trigger reactivity by creating a new reference
-  rawData = [...updatedRawData];
-  stockList = rawData?.slice(0, 100);
-  columns = generateColumns(rawData);
-  sortOrders = generateSortOrders(rawData);
-};
+
+    // Create a new array to ensure reactivity
+    const updatedRawData = [...rawData];
+
+    for (let i = 0; i < updateData.length; i++) {
+      if (updatedRawData[i]) {
+        // Create a new object to merge the data
+        let newData = {};
+
+        // Merge fields from updateData
+        Object.assign(newData, updateData[i]);
+
+        // Merge fields from defaultRules that are missing in updateData
+        defaultRules.forEach((rule) => {
+          if (!(rule in updateData[i]) && rule in updatedRawData[i]) {
+            newData[rule] = updatedRawData[i][rule];
+          }
+        });
+
+        // Preserve the original 'priceTarget' and other default rule values
+        for (let rule of defaultRules) {
+          if (rule in updatedRawData[i]) {
+            newData[rule] = updatedRawData[i][rule];
+          }
+        }
+
+        // Ensure 'rank' and 'years' are added if they are missing in updateData
+        if (!("rank" in updateData[i]) && "rank" in updatedRawData[i]) {
+          newData.rank = updatedRawData[i]["rank"];
+        }
+        if (!("years" in updateData[i]) && "years" in updatedRawData[i]) {
+          newData.years = updatedRawData[i]["years"];
+        }
+
+        // Update the specific item in the array
+        updatedRawData[i] = newData;
+      }
+    }
+
+    // Trigger reactivity by creating a new reference
+    rawData = [...updatedRawData];
+    stockList = rawData?.slice(0, 100);
+    columns = generateColumns(rawData);
+    sortOrders = generateSortOrders(rawData);
+  };
 
   const updateStockScreenerData = async () => {
     downloadWorker.postMessage({
@@ -687,7 +694,6 @@
   };
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
-
 </script>
 
 <!-- Content area -->
@@ -857,7 +863,7 @@
     <tbody>
       {#each stockList as item, index}
         <tr
-          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
+          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
             1 ===
             rawData?.length &&
           data?.user?.tier !== 'Pro' &&

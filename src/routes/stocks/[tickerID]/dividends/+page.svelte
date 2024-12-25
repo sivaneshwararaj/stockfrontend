@@ -120,56 +120,62 @@
     isLoaded = true;
   });
 
-function generateDividendInfoHTML() {
-  const history = rawData?.history || [];
+  function generateDividendInfoHTML() {
+    const history = rawData?.history || [];
 
-  if (history.length !== 0) {
-    if (!dateDistance) {
-      const formattedExDividendDate = new Date(exDividendDate).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
+    if (history.length !== 0) {
+      if (!dateDistance) {
+        const formattedExDividendDate = new Date(exDividendDate).toLocaleString(
+          "en-US",
+          {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          },
+        );
 
-      const payoutFrequencyText =
-        payoutFrequency === 4
-          ? '3 months'
-          : payoutFrequency === 2
-          ? '6 months'
-          : payoutFrequency === 1
-          ? '12 months'
-          : 'n/a';
+        const payoutFrequencyText =
+          payoutFrequency === 4
+            ? "3 months"
+            : payoutFrequency === 2
+              ? "6 months"
+              : payoutFrequency === 1
+                ? "12 months"
+                : "n/a";
 
-      return `
+        return `
         <span>
           ${$displayCompanyName} has an annual dividend of $${annualDividend} per share, with a forward yield of ${dividendYield}%. 
           The dividend is paid every ${payoutFrequencyText} and the last ex-dividend date was ${formattedExDividendDate}.
         </span>
       `;
-    } else {
-      const latestDividendDate = new Date(history.at(0)?.date).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
+      } else {
+        const latestDividendDate = new Date(history.at(0)?.date).toLocaleString(
+          "en-US",
+          {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          },
+        );
 
-      return `
+        return `
         <span>
           ${$displayCompanyName} issued its most recent dividend on ${latestDividendDate}. 
           Since then, the company has not distributed any further dividends for over 12 months.
         </span>
       `;
-    }
-  } else {
-    return `
+      }
+    } else {
+      return `
       <span>
         No dividend history available for ${$displayCompanyName}.
       </span>
     `;
+    }
   }
-}
 
-const htmlOutput = generateDividendInfoHTML();
+  const htmlOutput = generateDividendInfoHTML();
 </script>
 
 <svelte:head>
@@ -221,7 +227,7 @@ const htmlOutput = generateDividendInfoHTML();
             Dividends
           </h1>
 
-         <Infobox text={htmlOutput} />
+          <Infobox text={htmlOutput} />
         </div>
 
         {#if rawData?.history?.length !== 0}
@@ -334,40 +340,42 @@ const htmlOutput = generateDividendInfoHTML();
               </div>
 
               <div
-                class="overflow-x-scroll no-scrollbar flex justify-start items-center w-full m-auto shadow-md rounded-none sm:rounded-md mb-4"
+                class="overflow-x-scroll no-scrollbar flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4"
               >
                 <table
                   class="table table-sm table-compact flex justify-start items-center w-full m-auto"
                 >
                   <thead>
-                    <tr class="bg-[#09090B] border-b-slate-600 shadow-md">
+                    <tr class="bg-[#09090B] border-b border-gray-800">
                       <th
-                        class="text-start bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
+                        class="text-start bg-[#09090B] text-white text-sm font-semibold"
                       >
                         Ex-Divid. Date
                       </th>
                       <th
-                        class="text-end bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
+                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
                       >
                         Cash Amount
                       </th>
                       <th
-                        class="text-end bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
+                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
                       >
                         Record Date
                       </th>
                       <th
-                        class="text-end bg-[#09090B] border-b border-[#09090B] text-white text-sm font-semibold"
+                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
                       >
                         Pay Date
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="shadow-md">
+                  <tbody class="">
                     {#each rawData?.history as item}
-                      <tr class="text-gray-200 odd:bg-secondary">
+                      <tr
+                        class="text-white odd:bg-odd border-b border-gray-800"
+                      >
                         <td
-                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white font-medium border-b border-[#09090B]"
+                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white font-medium"
                         >
                           {new Date(item?.date)?.toLocaleString("en-US", {
                             month: "short",
@@ -377,12 +385,12 @@ const htmlOutput = generateDividendInfoHTML();
                           })}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.adjDividend?.toFixed(3)}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.recordDate?.length !== 0
                             ? new Date(item?.recordDate)?.toLocaleString(
@@ -397,7 +405,7 @@ const htmlOutput = generateDividendInfoHTML();
                             : "n/a"}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.paymentDate?.length !== 0
                             ? new Date(item?.paymentDate)?.toLocaleString(

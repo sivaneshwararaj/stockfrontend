@@ -1144,7 +1144,11 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{abbreviateNumber(data?.getStockQuote?.marketCap)}</td
+                      >{@html abbreviateNumber(
+                        data?.getStockQuote?.marketCap,
+                        false,
+                        true,
+                      )}</td
                     ></tr
                   >
                   <tr
@@ -1155,9 +1159,9 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{stockDeck?.revenueTTM !== null &&
+                      >{@html stockDeck?.revenueTTM !== null &&
                       stockDeck?.revenueTTM !== 0
-                        ? abbreviateNumber(stockDeck?.revenueTTM)
+                        ? abbreviateNumber(stockDeck?.revenueTTM, false, true)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1169,8 +1173,8 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{stockDeck?.netIncomeTTM !== null
-                        ? abbreviateNumber(stockDeck?.netIncomeTTM)
+                      >{@html stockDeck?.netIncomeTTM !== null
+                        ? abbreviateNumber(stockDeck?.netIncomeTTM, false, true)
                         : "n/a"}</td
                     ></tr
                   >
@@ -1216,9 +1220,11 @@
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{data?.getStockQuote?.sharesOutstanding !== null
+                      >{@html data?.getStockQuote?.sharesOutstanding !== null
                         ? abbreviateNumber(
                             data?.getStockQuote?.sharesOutstanding,
+                            false,
+                            true,
                           )
                         : "n/a"}</td
                     ></tr
@@ -1335,8 +1341,8 @@
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{stockDeck?.floatShares !== null
-                        ? abbreviateNumber(stockDeck?.floatShares)
+                      >{@html stockDeck?.floatShares !== null
+                        ? abbreviateNumber(stockDeck?.floatShares, false, true)
                         : "n/a"}</td
                     ></tr
                   >

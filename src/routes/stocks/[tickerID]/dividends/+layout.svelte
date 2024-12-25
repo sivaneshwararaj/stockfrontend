@@ -42,33 +42,33 @@
 
           {#if similarStocks?.length > 0}
             <div
-              class="w-full p-2 text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full p-2 text-white border border-gray-600 bg-primary rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <h3 class="p-2 pt-4 text-xl font-semibold">Related Stocks</h3>
               <table class="table table-sm table-compact w-full text-white">
                 <thead class="text-white"
                   ><tr
                     ><th
-                      class="whitespace-nowrap border-b font-semibold text-sm text-left"
+                      class="whitespace-nowrap border-b font-semibold text-[1rem] text-left"
                       >Company</th
                     >
                     <th
-                      class="whitespace-nowrap border-b font-semibold text-sm text-right"
+                      class="whitespace-nowrap border-b font-semibold text-[1rem] text-right"
                       >Dividend Yield</th
                     ></tr
                   ></thead
                 >
                 <tbody>
                   {#each similarStocks?.slice(0, 8) as item}
-                    <tr class="border-gray-600 border-b"
-                      ><td class="text-left"
+                    <tr class="border-gray-600 border-b text-[1rem]"
+                      ><td class="text-left text-[1rem]"
                         ><a
                           href={`/stocks/${item?.symbol}`}
                           class="sm:hover:text-white text-blue-400"
                           >{item?.symbol}</a
                         ></td
                       >
-                      <td class="text-right cursor-normal"
+                      <td class="text-right cursor-normal text-[1rem]"
                         >{item?.dividendYield !== null &&
                         item?.dividendYield !== undefined
                           ? item?.dividendYield + "%"

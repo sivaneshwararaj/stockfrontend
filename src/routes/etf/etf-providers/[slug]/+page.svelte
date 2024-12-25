@@ -119,20 +119,18 @@
     etfProviderData = [...originalData].sort(compareValues)?.slice(0, 50);
   };
 
-
   function generateStatementInfoHTML() {
     return `
      ${etfProviderName} has ${rawData?.length} ETFs listed with a total of ${abbreviateNumber(
-        totalAssets
-      )}
+       totalAssets,
+     )}
       in assets under management. The funds have an average expense ratio of ${avgExpenseRatio?.toFixed(
         2,
       )}%.
     `;
-}
+  }
 
-let htmlOutput = generateStatementInfoHTML();
-
+  let htmlOutput = generateStatementInfoHTML();
 </script>
 
 <svelte:head>
@@ -166,9 +164,9 @@ let htmlOutput = generateStatementInfoHTML();
 
 <section class="w-full overflow-hidden m-auto">
   {#if rawData?.length !== 0}
-  <div class="mb-5">
-    <Infobox text={htmlOutput} />
-  </div>
+    <div class="mb-5">
+      <Infobox text={htmlOutput} />
+    </div>
   {/if}
 
   <div
@@ -210,90 +208,88 @@ let htmlOutput = generateStatementInfoHTML();
     <!-- Page wrapper -->
     <div class="flex justify-center w-full m-auto h-full overflow-hidden">
       <!-- Content area -->
-       <div class="w-full">
-      <div class="w-full overflow-x-auto mt-5">
-        <table
-          class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
-        >
-          <thead>
-            <TableHeader {columns} {sortOrders} {sortData} />
-          </thead>
-          <tbody>
-            {#each etfProviderData as item, index}
-              <!-- row -->
-              <tr
-                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] {index +
-            1 ===
-            etfProviderData?.length &&
-          data?.user?.tier !== 'Pro'
-            ? 'opacity-[0.1]'
-            : ''}"
-              >
-                <td
-                  class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+      <div class="w-full">
+        <div class="w-full overflow-x-auto mt-5">
+          <table
+            class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+          >
+            <thead>
+              <TableHeader {columns} {sortOrders} {sortData} />
+            </thead>
+            <tbody>
+              {#each etfProviderData as item, index}
+                <!-- row -->
+                <tr
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
+                    1 ===
+                    etfProviderData?.length && data?.user?.tier !== 'Pro'
+                    ? 'opacity-[0.1]'
+                    : ''}"
                 >
-                  <HoverStockChart symbol={item?.symbol} assetType={"etf"} />
-                </td>
+                  <td
+                    class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                  >
+                    <HoverStockChart symbol={item?.symbol} assetType={"etf"} />
+                  </td>
 
-                <td
-                  class="text-gray-200 border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
-                >
-                  {item?.name?.length > charNumber
-                    ? item?.name?.slice(0, charNumber) + "..."
-                    : item?.name}
-                </td>
+                  <td
+                    class="text-gray-200 border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+                  >
+                    {item?.name?.length > charNumber
+                      ? item?.name?.slice(0, charNumber) + "..."
+                      : item?.name}
+                  </td>
 
-                <td
-                  class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B] text-end"
-                >
-                  {item?.price}
-                </td>
+                  <td
+                    class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B] text-end"
+                  >
+                    {item?.price}
+                  </td>
 
-                <td
-                  class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B] text-end"
-                >
-                  {#if item?.changesPercentage >= 0}
-                    <span class="text-[#00FC50]"
-                      >+{item?.changesPercentage >= 1000
-                        ? abbreviateNumber(item?.changesPercentage)
-                        : item?.changesPercentage?.toFixed(2)}%</span
-                    >
-                  {:else if item?.changesPercentage < 0}
-                    <span class="text-[#FF2F1F]"
-                      >{item?.changesPercentage <= -1000
-                        ? abbreviateNumber(item?.changesPercentage)
-                        : item?.changesPercentage?.toFixed(2)}%
-                    </span>
-                  {:else}
-                    -
-                  {/if}
-                </td>
+                  <td
+                    class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b border-[#09090B] text-end"
+                  >
+                    {#if item?.changesPercentage >= 0}
+                      <span class="text-[#00FC50]"
+                        >+{item?.changesPercentage >= 1000
+                          ? abbreviateNumber(item?.changesPercentage)
+                          : item?.changesPercentage?.toFixed(2)}%</span
+                      >
+                    {:else if item?.changesPercentage < 0}
+                      <span class="text-[#FF2F1F]"
+                        >{item?.changesPercentage <= -1000
+                          ? abbreviateNumber(item?.changesPercentage)
+                          : item?.changesPercentage?.toFixed(2)}%
+                      </span>
+                    {:else}
+                      -
+                    {/if}
+                  </td>
 
-                <td
-                  class="text-white font-medium border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
-                >
-                  {abbreviateNumber(item?.totalAssets)}
-                </td>
+                  <td
+                    class="text-white font-medium border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
+                  >
+                    {abbreviateNumber(item?.totalAssets)}
+                  </td>
 
-                <td
-                  class="text-white font-medium text-end border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
-                >
-                  {item?.numberOfHoldings}
-                </td>
+                  <td
+                    class="text-white font-medium text-end border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+                  >
+                    {item?.numberOfHoldings}
+                  </td>
 
-                <td
-                  class="text-white font-medium text-end border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
-                >
-                  {item?.expenseRatio}%
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
+                  <td
+                    class="text-white font-medium text-end border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+                  >
+                    {item?.expenseRatio}%
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+        <UpgradeToPro {data} />
       </div>
-      <UpgradeToPro {data} />
-    </div>
-
     </div>
   {:else}
     <div
