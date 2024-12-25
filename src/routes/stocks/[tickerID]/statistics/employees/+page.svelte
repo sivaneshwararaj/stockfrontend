@@ -345,20 +345,26 @@
   };
 
   function generateEmployeeInfoHTML() {
-  if (employeeHistory?.length !== 0 && !dateDistance) {
-    const formattedEmployees = new Intl.NumberFormat('en').format(employees);
-    const latestFilingDate = new Date(
-      employeeHistory[employeeHistory.length - 1]['filingDate']
-    ).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-    const formattedChangeRate = new Intl.NumberFormat('en').format(changeRate);
-    const changeDirection = changeRate >= 0 && changeRate !== null ? 'increased' : 'decreased';
-    const growthRateClass = changeRate >= 0 && changeRate !== null ? 'text-[#00FC50]' : 'text-[#FF2F1F]';
+    if (employeeHistory?.length !== 0 && !dateDistance) {
+      const formattedEmployees = new Intl.NumberFormat("en").format(employees);
+      const latestFilingDate = new Date(
+        employeeHistory[employeeHistory.length - 1]["filingDate"],
+      ).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+      const formattedChangeRate = new Intl.NumberFormat("en").format(
+        changeRate,
+      );
+      const changeDirection =
+        changeRate >= 0 && changeRate !== null ? "increased" : "decreased";
+      const growthRateClass =
+        changeRate >= 0 && changeRate !== null
+          ? "text-[#00FC50]"
+          : "text-[#FF2F1F]";
 
-    return `
+      return `
       <span>
         ${$displayCompanyName} had ${formattedEmployees} employees on ${latestFilingDate}. The number of employees ${changeDirection}
         by ${formattedChangeRate} or
@@ -368,31 +374,31 @@
         compared to the previous year.
       </span>
     `;
-  } else if (employeeHistory?.length !== 0 && dateDistance) {
-    const abbreviatedEmployees = abbreviateNumber(employees);
-    const latestFilingDate = new Date(
-      employeeHistory[employeeHistory.length - 1]['filingDate']
-    ).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
+    } else if (employeeHistory?.length !== 0 && dateDistance) {
+      const abbreviatedEmployees = abbreviateNumber(employees);
+      const latestFilingDate = new Date(
+        employeeHistory[employeeHistory.length - 1]["filingDate"],
+      ).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
 
-    return `
+      return `
       <span>
         ${$displayCompanyName} had ${abbreviatedEmployees} employees on ${latestFilingDate}. Since then, the company has not submitted any additional employee data for more than a year.
       </span>
     `;
-  } else {
-    return `
+    } else {
+      return `
       <span>
         No employee history for ${$displayCompanyName}. Probably, no records of past employees.
       </span>
     `;
+    }
   }
-}
 
-const htmlOutput = generateEmployeeInfoHTML();
+  const htmlOutput = generateEmployeeInfoHTML();
 </script>
 
 <svelte:head>
@@ -443,12 +449,11 @@ const htmlOutput = generateEmployeeInfoHTML();
             {$stockTicker} Employees
           </h2>
 
-          
-         <Infobox text={htmlOutput} />
+          <Infobox text={htmlOutput} />
         </div>
 
         <div
-          class="my-5 grid grid-cols-2 gap-3  xs:mt-6 bp:mt-7 sm:grid-cols-3 sm:gap-6 "
+          class="my-5 grid grid-cols-2 gap-3 xs:mt-6 bp:mt-7 sm:grid-cols-3 sm:gap-6"
         >
           <div>
             Employees
@@ -515,7 +520,11 @@ const htmlOutput = generateEmployeeInfoHTML();
             <div
               class="mt-0.5 text-lg font-semibold bp:text-xl sm:mt-1.5 sm:text-2xl"
             >
-              {abbreviateNumber(data?.getStockQuote?.marketCap)}
+              {@html abbreviateNumber(
+                data?.getStockQuote?.marketCap,
+                false,
+                true,
+              )}
             </div>
           </div>
         </div>
@@ -527,9 +536,7 @@ const htmlOutput = generateEmployeeInfoHTML();
             Employees Chart
           </h1>
           {#if historyList?.length > 0}
-            <div
-              class="flex flex-row items-center w-fit   ml-auto"
-            >
+            <div class="flex flex-row items-center w-fit ml-auto">
               <div class="relative inline-block text-left grow">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild let:builder>
@@ -623,25 +630,25 @@ const htmlOutput = generateEmployeeInfoHTML();
             <table
               class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
             >
-              <thead>
+              <thead class="border-b border-gray-800">
                 <tr>
                   <th
-                    class="text-start border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
+                    class="text-start text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Date
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
+                    class="text-end text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Employees
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
+                    class="text-end text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Change
                   </th>
                   <th
-                    class="text-end border-b border-[#09090B] bg-[#09090B] text-white text-sm whitespace-nowrap font-semibold"
+                    class="text-end text-white text-sm whitespace-nowrap font-semibold"
                   >
                     Growth
                   </th>
@@ -649,9 +656,9 @@ const htmlOutput = generateEmployeeInfoHTML();
               </thead>
               <tbody class="">
                 {#each historyList as item, index}
-                  <tr class="text-gray-200 odd:bg-secondary">
+                  <tr class="text-gray-200 odd:bg-odd">
                     <td
-                      class="text-start border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      class="text-start border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >
                       {new Date(item?.filingDate)?.toLocaleString("en-US", {
                         month: "short",
@@ -661,12 +668,12 @@ const htmlOutput = generateEmployeeInfoHTML();
                       })}
                     </td>
                     <td
-                      class="text-end border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      class="text-end border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >
                       {new Intl.NumberFormat("en").format(item?.employeeCount)}
                     </td>
                     <td
-                      class="text-end border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      class="text-end border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >
                       {#if Number(item?.employeeCount - historyList[index + 1]?.employeeCount)}
                         {new Intl.NumberFormat("en")?.format(
@@ -678,7 +685,7 @@ const htmlOutput = generateEmployeeInfoHTML();
                       {/if}
                     </td>
                     <td
-                      class="text-end border-b border-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap text-white text-end"
+                      class="text-end border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white text-end"
                     >
                       {#if index + 1 - historyList?.length === 0}
                         n/a

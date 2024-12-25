@@ -8,10 +8,10 @@
 
   import { Chart } from "svelte-echarts";
   import { init, use } from "echarts/core";
-  import { LineChart, BarChart } from "echarts/charts";
+  import { BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-  use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+  use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
 
@@ -98,8 +98,7 @@
         {
           name: "Revenue",
           data: valueList,
-          type: "line",
-          areaStyle: { opacity: 0.08 },
+          type: "bar",
           smooth: true,
           symbol: "none",
           itemStyle: {
@@ -206,7 +205,7 @@
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
                 >
                   <thead>
-                    <tr class="border border-gray-600">
+                    <tr class="border-b border-gray-800">
                       <th
                         class="text-white font-semibold text-start text-sm sm:text-[1rem]"
                         >Quarter</th
@@ -229,9 +228,7 @@
                   <tbody>
                     {#each tableList as item, index}
                       <!-- row -->
-                      <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] cursor-pointer"
-                      >
+                      <tr class=" odd:bg-odd border-b border-gray-800">
                         <td
                           class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
                         >
@@ -248,20 +245,22 @@
                         <td
                           class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                         >
-                          {item?.value !== null
-                            ? abbreviateNumber(item?.value)
-                            : "-"}
+                          {@html item?.value !== null
+                            ? abbreviateNumber(item?.value, false, true)
+                            : "n/a"}
                         </td>
 
                         <td
                           class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
                         >
                           {#if Number(item?.value - tableList[index + 1]?.value)}
-                            {abbreviateNumber(
+                            {@html abbreviateNumber(
                               item?.value - tableList[index + 1]?.value,
+                              false,
+                              true,
                             )}
                           {:else}
-                            -
+                            n/a
                           {/if}
                         </td>
 
@@ -298,7 +297,7 @@
         <div class="w-full flex justify-center items-center h-80">
           <div class="relative">
             <label
-              class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              class="bg-odd rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             >
               <span class="loading loading-spinner loading-md text-gray-400"
               ></span>

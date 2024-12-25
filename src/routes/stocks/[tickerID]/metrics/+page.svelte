@@ -103,17 +103,17 @@
             class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
           >
             <table
-              class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+              class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B]"
             >
-              <thead>
+              <thead class="">
                 <tr>
                   <th
-                    class="bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm sm:text-[1rem] text-start"
+                    class=" border-b border-gray-800 text-white font-semibold text-sm sm:text-[1rem] text-start"
                     >Quarter</th
                   >
                   {#each xData as item}
                     <th
-                      class="z-20 bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm text-center bg-[#09090B]"
+                      class="z-20 border-b border-gray-800 text-white font-semibold text-sm text-center"
                       >{new Date(item ?? null)?.toLocaleString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -125,32 +125,30 @@
               </thead>
               <tbody class="shadow-md">
                 {#each revenueNames as name, index}
-                  <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-secondary">
+                  <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-odd">
                     <th
-                      class="whitespace-nowrap odd:bg-secondary text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
+                      class="whitespace-nowrap odd:bg-odd text-sm sm:text-[1rem] text-start font-medium border-b border-gray-800"
                     >
-                      {#if index < 3}
-                        <a
-                          href={getHref(name)}
-                          class="sm:hover:text-blue-400 cursor-pointer underline underline-offset-4"
-                        >
-                          {name} Revenue
-                        </a>
-                      {:else}
+                      <a
+                        href={getHref(name)}
+                        class="sm:hover:text-blue-400 cursor-pointer underline underline-offset-4"
+                      >
                         {name} Revenue
-                      {/if}
+                      </a>
                     </th>
                     {#each categoryValues[index] as value}
                       <td
-                        class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                        class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-gray-800"
                       >
-                        {value !== null && value !== undefined ? abbreviateNumber(value) : "n/a"}
+                        {@html value !== null && value !== undefined
+                          ? abbreviateNumber(value, false, true)
+                          : "n/a"}
                       </td>
                     {/each}
                   </tr>
                   <tr class="bg-[#09090B] border-b-[#09090B]">
                     <td
-                      class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                      class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-gray-800"
                     >
                       <span class="ml-2">{name} Revenue Growth</span>
                     </td>
@@ -160,9 +158,10 @@
                           ? 'text-[#00FC50]'
                           : growthValue < 0
                             ? 'text-[#FF2F1F]'
-                            : 'text-white'} font-medium border-b border-[#09090B]"
+                            : 'text-white'} font-medium border-b border-gray-800"
                       >
-                        {growthValue > 0 ? "+" : ""}{growthValue !== null && growthValue !== undefined
+                        {growthValue > 0 ? "+" : ""}{growthValue !== null &&
+                        growthValue !== undefined
                           ? growthValue?.toFixed(2) + "%"
                           : "n/a"}
                       </td>
@@ -187,12 +186,12 @@
                 <thead>
                   <tr>
                     <th
-                      class="bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm sm:text-[1rem] text-start"
+                      class="bg-[#09090B] border-b border-gray-800 text-white font-semibold text-sm sm:text-[1rem] text-start"
                       >Quarter</th
                     >
                     {#each geographicXData as item}
                       <th
-                        class="z-20 bg-[#09090B] border-b border-[#09090B] text-white font-semibold text-sm text-center bg-[#09090B]"
+                        class="z-20 bg-[#09090B] border-b border-gray-800 text-white font-semibold text-sm text-center bg-[#09090B]"
                         >{new Date(item ?? null)?.toLocaleString("en-US", {
                           month: "short",
                           day: "numeric",
@@ -204,26 +203,26 @@
                 </thead>
                 <tbody class="shadow-md">
                   {#each geographicNames as name, index}
-                    <tr
-                      class="bg-[#09090B] border-b-[#09090B] odd:bg-secondary"
-                    >
+                    <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-odd">
                       <th
-                        class="text-white whitespace-nowrap odd:bg-secondary text-sm sm:text-[1rem] text-start font-medium border-b border-[#09090B]"
+                        class="text-white whitespace-nowrap odd:bg-odd text-sm sm:text-[1rem] text-start font-medium border-b border-gray-800"
                         >{name} Revenue</th
                       >
                       {#each geographiCategoryValues[index] as value}
                         <th
-                          class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#09090B]"
+                          class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-gray-800"
                         >
-                          {value !== null && value !== 0 && value !== undefined
-                            ? abbreviateNumber(value)
-                            : "-"}
+                          {@html value !== null &&
+                          value !== 0 &&
+                          value !== undefined
+                            ? abbreviateNumber(value, false, true)
+                            : "n/a"}
                         </th>
                       {/each}
                     </tr>
                     <tr class="bg-[#09090B] border-b-[#09090B]">
                       <td
-                        class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-[#09090B]"
+                        class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-gray-800"
                       >
                         <span class="ml-2">{name} Revenue Growth</span>
                       </td>
@@ -234,13 +233,13 @@
                             ? 'text-[#00FC50]'
                             : growthValue < 0
                               ? 'text-[#FF2F1F]'
-                              : 'text-white'} font-medium border-b border-[#09090B]"
+                              : 'text-white'} font-medium border-b border-gray-800"
                         >
                           {growthValue > 0 ? "+" : ""}{growthValue !== null &&
                           growthValue !== 0 &&
                           growthValue !== undefined
                             ? growthValue?.toFixed(2) + "%"
-                            : "-"}
+                            : "n/a"}
                         </td>
                       {/each}
                     </tr>
@@ -250,30 +249,29 @@
             </div>
           {/if}
         {:else}
-        <div
-                class="mt-5 sm:mt-0 border-l-4 border-white p-0 sm:p-4 text-white flex flex-row items-center"
-              >
-                <svg
-                  class="h-6 w-6 hidden sm:block"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  style="max-width:40px"
-                  aria-hidden="true"
-                  ><path
-                    fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clip-rule="evenodd"
-                  ></path></svg
-                >
-                <div class="ml-3 w-full">
-                  <div class="flex w-full flex-row justify-between">
-                    <div>
-                      Currently, there are no business metrics available for {$stockTicker}.
-                    </div>
-                  </div>
+          <div
+            class="mt-5 sm:mt-0 border-l-4 border-white p-0 sm:p-4 text-white flex flex-row items-center"
+          >
+            <svg
+              class="h-6 w-6 hidden sm:block"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              style="max-width:40px"
+              aria-hidden="true"
+              ><path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd"
+              ></path></svg
+            >
+            <div class="ml-3 w-full">
+              <div class="flex w-full flex-row justify-between">
+                <div>
+                  Currently, there are no business metrics available for {$stockTicker}.
                 </div>
               </div>
-
+            </div>
+          </div>
         {/if}
       </div>
     </div>

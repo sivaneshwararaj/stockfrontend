@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { stockTicker, screenWidth } from "$lib/store";
+  import { stockTicker } from "$lib/store";
   import { page } from "$app/stores";
 
   export let data;
@@ -57,33 +57,34 @@
 
 <section class="w-full bg-[#09090B] overflow-hidden h-full">
   <div class="m-auto h-full overflow-hidden">
-    <main class="w-fit sm:w-full sm:max-w-2xl">
+    <main class="w-full">
       <div class="m-auto">
         {#if names?.length > 0}
-        <nav
-          class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
-        >
-          <ul class="flex flex-row items-center w-full text-white">
-            {#each subsectionTitles?.slice(0, 4) as title}
-              {@const sectionKey = title
-                ?.toLowerCase()
-                ?.replace(/&/g, "") // Remove & symbol
-                ?.replace(/\s+/g, "-") // Replace spaces with dash
-                ?.replace(/-{2,}/g, "-") // Replace multiple dashes with single dash
-                ?.replace(/^-|-$/g, "") // Remove leading/trailing dashes
-                ?.trim()}
-              <a
-                href={getHref(sectionKey)}
-                on:click={() => changeSubSection(sectionKey)}
-                class="p-2 px-5 cursor-pointer {displaySubSection === sectionKey
-                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
-                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
-              >
-                {title}
-              </a>
-            {/each}
-          </ul>
-        </nav>
+          <nav
+            class="sm:ml-4 pt-1 overflow-x-scroll text-sm sm:text-[1rem] whitespace-nowrap"
+          >
+            <ul class="flex flex-row items-center w-full text-white">
+              {#each subsectionTitles as title}
+                {@const sectionKey = title
+                  ?.toLowerCase()
+                  ?.replace(/&/g, "") // Remove & symbol
+                  ?.replace(/\s+/g, "-") // Replace spaces with dash
+                  ?.replace(/-{2,}/g, "-") // Replace multiple dashes with single dash
+                  ?.replace(/^-|-$/g, "") // Remove leading/trailing dashes
+                  ?.trim()}
+                <a
+                  href={getHref(sectionKey)}
+                  on:click={() => changeSubSection(sectionKey)}
+                  class="p-2 px-5 cursor-pointer {displaySubSection ===
+                  sectionKey
+                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                >
+                  {title}
+                </a>
+              {/each}
+            </ul>
+          </nav>
         {/if}
       </div>
     </main>

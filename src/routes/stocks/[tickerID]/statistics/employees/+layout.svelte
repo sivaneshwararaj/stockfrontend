@@ -40,7 +40,7 @@
           {/if}
           {#if similarStocks?.length > 0}
             <div
-              class="w-full p-2 text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full p-2 bg-primary text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <h3 class="p-2 pt-4 text-2xl font-semibold">Related Stocks</h3>
               <table class="table table-sm table-compact w-full text-white">

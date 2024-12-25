@@ -301,7 +301,6 @@
           name: "Mkt Cap",
           data: filteredData?.marketCapList,
           type: "line",
-          areaStyle: { opacity: 0.2 },
           smooth: true,
           symbol: "none",
           itemStyle: {
@@ -416,27 +415,27 @@
 
             {#if rawData?.length !== 0}
               <div class="grid grid-cols-1 gap-2">
-
-                <Infobox text={`${$displayCompanyName} has a market cap of ${abbreviateNumber(
-                    data?.getStockQuote?.marketCap
+                <Infobox
+                  text={`${$displayCompanyName} has a market cap of ${abbreviateNumber(
+                    data?.getStockQuote?.marketCap,
                   )} as of ${new Date()?.toLocaleString("en-US", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
                     daySuffix: "2-digit",
-                  })}. Its market cap has ${changePercentageYearAgo > 0
-                    ? "increased"
-                    : changePercentageYearAgo < 0
-                      ? "decreased"
-                      : "unchanged"} by ${abbreviateNumber(
+                  })}. Its market cap has ${
+                    changePercentageYearAgo > 0
+                      ? "increased"
+                      : changePercentageYearAgo < 0
+                        ? "decreased"
+                        : "unchanged"
+                  } by ${abbreviateNumber(
                     changePercentageYearAgo?.toFixed(2),
-                  )}% in one year.`} 
-              />
-
-               
+                  )}% in one year.`}
+                />
 
                 <div
-                  class="mb-4 mt-5 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+                  class="mb-4 mt-5 bg-primary flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
                 >
                   <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                     <div class="flex items-center justify-between sm:block">
@@ -446,7 +445,11 @@
                       <div
                         class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
                       >
-                        {abbreviateNumber(data?.getStockQuote?.marketCap)}
+                        {@html abbreviateNumber(
+                          data?.getStockQuote?.marketCap,
+                          false,
+                          true,
+                        )}
                       </div>
                     </div>
                   </div>
@@ -660,10 +663,10 @@
 
                 <div class="w-full overflow-x-scroll">
                   <table
-                    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                    class="table table-sm table-compact rounded-none sm:rounded-md w-full m-auto mt-4"
                   >
-                    <thead>
-                      <tr class="border border-gray-600">
+                    <thead class="">
+                      <tr class="border-b border-gray-800">
                         <th class="text-white font-semibold text-start text-sm"
                           >Date</th
                         >
@@ -679,22 +682,22 @@
                       {#each tableList as item, index}
                         <!-- row -->
                         <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-secondary border-b-[#09090B] shake-ticker cursor-pointer"
+                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
                         >
                           <td
-                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b border-gray-800"
                           >
                             {item?.date}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b border-gray-800"
                           >
                             {abbreviateNumber(item?.marketCap)}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b border-gray-800"
                           >
                             {#if index + 1 - tableList?.length === 0}
                               -
@@ -740,7 +743,7 @@
         <div class="w-full flex justify-center items-center h-80">
           <div class="relative">
             <label
-              class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              class="bg-odd rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             >
               <span class="loading loading-spinner loading-md text-gray-400"
               ></span>
