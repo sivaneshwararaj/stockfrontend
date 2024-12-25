@@ -655,15 +655,16 @@ export function abbreviateNumber(number, addDollarSign = false, color = false) {
 
     let suffix = suffixes[index];
 
-    if (color) {
-      if (suffix === "K") {
-        suffix = '<span class=\"font-semibold text-blue-400\">K</span>';
-      } else if (suffix === "M") {
-        suffix = '<span class=\"font-semibold text-[#FACD38]\">M</span>';
-      } else if (suffix === "B") {
-        suffix = '<span class=\"font-semibold text-[#38FACD]\">B</span>';
-      }
-    }
+if (color) {
+  if (suffix === "K") {
+    suffix = '<span class="font-semibold text-blue-600">K</span>';
+  } else if (suffix === "M") {
+    suffix = '<span class="font-semibold text-[#C8A32D]">M</span>';
+  } else if (suffix === "B") {
+    suffix = '<span class="font-semibold text-[#2CB8A6]">B</span>';
+  }
+}
+
 
     const formattedNumber = abbreviation + suffix;
 

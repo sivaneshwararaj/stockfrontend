@@ -276,7 +276,7 @@
                               {item?.valueGrowth?.toFixed(2)}%
                             </span>
                           {:else}
-                            -
+                            n/a
                           {/if}
                         </td>
                       </tr>

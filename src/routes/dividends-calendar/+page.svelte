@@ -9,7 +9,7 @@
   } from "date-fns";
   import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import Infobox from "$lib/components/Infobox.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
@@ -348,7 +348,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-5">
+        <main class="w-full lg:pr-5">
           <div class="mb-6 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
               Dividends Calendar
@@ -478,16 +478,14 @@
                           {#each day as item}
                             <!-- row -->
                             <tr
-                              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
+                              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
                             >
-                              <td
-                                class="border-b-[#09090B] text-sm sm:text-[1rem]"
-                              >
+                              <td class=" text-sm sm:text-[1rem]">
                                 <HoverStockChart symbol={item?.symbol} />
                               </td>
 
                               <td
-                                class="text-white border-b-[#09090B] whitespace-nowrap text-sm sm:text-[1rem]"
+                                class="text-white whitespace-nowrap text-sm sm:text-[1rem]"
                               >
                                 {item?.name.length > 20
                                   ? item?.name.slice(0, 20) + "..."
@@ -495,31 +493,35 @@
                               </td>
 
                               <td
-                                class="text-white border-b-[#09090B] text-sm text-end sm:text-[1rem]"
+                                class="text-white text-sm text-end sm:text-[1rem]"
                               >
-                                {item?.marketCap !== null
-                                  ? abbreviateNumber(item?.marketCap)
-                                  : "-"}
+                                {@html item?.marketCap !== null
+                                  ? abbreviateNumber(
+                                      item?.marketCap,
+                                      false,
+                                      true,
+                                    )
+                                  : "n/a"}
                               </td>
 
                               <td
-                                class="text-white border-b-[#09090B] text-sm sm:text-[1rem] text-end"
+                                class="text-white text-sm sm:text-[1rem] text-end"
                               >
                                 {item?.revenue !== null
                                   ? abbreviateNumber(item?.revenue)
-                                  : "-"}
+                                  : "n/a"}
                               </td>
 
                               <td
-                                class="text-white border-b-[#09090B] text-center text-sm sm:text-[1rem] text-end"
+                                class="text-white text-center text-sm sm:text-[1rem] text-end"
                               >
                                 {item?.adjDividend !== null
                                   ? item?.adjDividend?.toFixed(3)
-                                  : "-"}
+                                  : "n/a"}
                               </td>
 
                               <td
-                                class="text-white text-end border-b-[#09090B] text-sm sm:text-[1rem]"
+                                class="text-white text-end text-sm sm:text-[1rem]"
                               >
                                 {item?.paymentDate !== null
                                   ? new Date(item?.paymentDate)?.toLocaleString(
@@ -531,7 +533,7 @@
                                         daySuffix: "2-digit",
                                       },
                                     )
-                                  : "-"}
+                                  : "n/a"}
                               </td>
                             </tr>
                           {/each}
@@ -539,19 +541,8 @@
                       </table>
                     </div>
                   {:else}
-                    <div
-                      class="text-white p-5 mt-5 w-fit m-auto rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-[1rem]"
-                    >
-                      <svg
-                        class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 256 256"
-                        ><path
-                          fill="#fff"
-                          d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                        /></svg
-                      >
-                      No Dividends available for the day.
+                    <div class="mt-5">
+                      <Infobox text="No Dividends available for the day." />
                     </div>
                   {/if}
                 {/if}
@@ -559,67 +550,6 @@
             </div>
           </div>
         </main>
-
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
-            <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-            >
-              <a
-                href={"/pricing"}
-                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-              >
-                <div class="w-full flex justify-between items-center p-3 mt-3">
-                  <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription
-                  </h2>
-                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-                </div>
-                <span class="text-white p-3 ml-3 mr-3">
-                  Upgrade now for unlimited access to all data and tools.
-                </span>
-              </a>
-            </div>
-          {/if}
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/earnings-calendar"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Earnings Calendar
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Get the latest Earnings of companies
-              </span>
-            </a>
-          </div>
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
-          >
-            <a
-              href={"/economic-calendar"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Economic Events
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Stay updated on upcoming Economic Events worldwide.
-              </span>
-            </a>
-          </div>
-        </aside>
       </div>
     </div>
   </div>

@@ -478,16 +478,16 @@
                           {#each day as item, index}
                             <!-- row -->
                             <tr
-                              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
+                              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
                             >
                               <td
-                                class="text-blue-400 border-b-[#09090B] text-start text-sm sm:text-[1rem]"
+                                class="text-blue-400 text-start text-sm sm:text-[1rem]"
                               >
                                 <HoverStockChart symbol={item?.symbol} />
                               </td>
 
                               <td
-                                class="text-white whitespace-nowrap text-sm sm:text-[1rem] border-b-[#09090B]"
+                                class="text-white whitespace-nowrap text-sm sm:text-[1rem]"
                               >
                                 {item?.name.length > 20
                                   ? item?.name?.slice(0, 20) + "..."
@@ -495,23 +495,31 @@
                               </td>
 
                               <td
-                                class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem]"
+                                class="text-white text-end text-sm sm:text-[1rem]"
                               >
-                                {item?.marketCap !== null
-                                  ? abbreviateNumber(item?.marketCap)
-                                  : "-"}
+                                {@html item?.marketCap !== null
+                                  ? abbreviateNumber(
+                                      item?.marketCap,
+                                      false,
+                                      true,
+                                    )
+                                  : "n/a"}
                               </td>
 
                               <td
-                                class="text-white text-end border-b-[#09090B] text-sm sm:text-[1rem]"
+                                class="text-white text-end text-sm sm:text-[1rem]"
                               >
                                 <div
                                   class="flex flex-row items-center justify-end"
                                 >
                                   <span>
-                                    {item?.revenueEst !== null
-                                      ? abbreviateNumber(item?.revenueEst)
-                                      : "-"}
+                                    {@html item?.revenueEst !== null
+                                      ? abbreviateNumber(
+                                          item?.revenueEst,
+                                          false,
+                                          true,
+                                        )
+                                      : "n/a"}
                                   </span>
                                   {#if item?.revenueEst !== null && item?.revenueEst !== null}
                                     {#if item?.revenueEst / item?.revenuePrior - 1 >= 0}
@@ -538,7 +546,7 @@
                               </td>
 
                               <td
-                                class="text-white text-end border-b-[#09090B] text-sm sm:text-[1rem]"
+                                class="text-white text-end text-sm sm:text-[1rem]"
                               >
                                 <div
                                   class="flex flex-row items-center justify-end"
@@ -546,7 +554,7 @@
                                   <span>
                                     {item?.epsEst !== null
                                       ? item?.epsEst?.toFixed(2)
-                                      : "-"}
+                                      : "n/a"}
                                   </span>
                                   {#if item?.epsEst !== null && item?.epsPrior !== null && item?.epsPrior !== 0}
                                     {#if item?.epsEst / item?.epsPrior - 1 >= 0}
@@ -569,7 +577,7 @@
                               </td>
 
                               <td
-                                class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
+                                class="text-white text-end text-sm sm:text-[1rem] whitespace-nowrap"
                               >
                                 {#if item?.release === "amc"}
                                   <svg
