@@ -113,6 +113,7 @@
 <section
   class="bg-default min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 m-auto"
 >
+  <!--
   {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
     <div
       class="mb-5 -mt-10 sm:-mt-5 relative sm:rounded isolate text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#FFC233] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
@@ -149,6 +150,7 @@
       </div>
     </div>
   {/if}
+  -->
 
   <div class="px-3">
     <div class="mx-auto text-center mb-8">
