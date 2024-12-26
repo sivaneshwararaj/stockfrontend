@@ -19,7 +19,7 @@
   >
   <div class="ml-3 w-full">
     <div class="flex w-full flex-row justify-between">
-      <div>
+      <div class="p-3 sm:p-0 text-sm sm:text-[1rem]">
         {@html text}
       </div>
     </div>

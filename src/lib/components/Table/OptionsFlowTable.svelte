@@ -1,6 +1,6 @@
 <script lang="ts">
   import { screenWidth } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import { abbreviateNumberWithColor } from "$lib/utils";
 
   import VirtualList from "svelte-tiny-virtual-list";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
@@ -695,7 +695,7 @@
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-start text-white"
         >
-          {@html abbreviateNumber(
+          {@html abbreviateNumberWithColor(
             displayedData[index]?.cost_basis,
             false,
             true,

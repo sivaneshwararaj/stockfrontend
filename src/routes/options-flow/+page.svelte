@@ -863,7 +863,7 @@
 
 <body class="overflow-y-auto">
   <section
-    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-default pb-20"
+    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-default pb-20 10 p-3 sm:p-0"
   >
     <div class="w-full m-auto min-h-screen">
       <!--
@@ -885,7 +885,7 @@
         </div>
       {/if}
 
-      <div class="rounded-md border border-gray-700 bg-odd p-2">
+      <div class="rounded-md border border-gray-700 bg-primary p-2">
         <div
           class="flex flex-col sm:flex-row items-center pt-3 sm:pt-1 pb-3 sm:border-b sm:border-gray-600"
         >
@@ -963,7 +963,7 @@
           <div class="sm:ml-auto w-full sm:w-fit pt-5">
             <div class="relative flex flex-col sm:flex-row items-center">
               <div
-                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#19191F] rounded-md border border-gray-600"
+                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-secondary rounded-md border border-gray-600"
               >
                 <label class="flex flex-row items-center">
                   <input
@@ -1284,7 +1284,7 @@
                                         : ""}
                                       on:input={(e) =>
                                         handleValueInput(e, row?.rule, 0)}
-                                      class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                      class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-primary"
                                     />
                                     <span
                                       class="text-white text-[1rem] font-normal mt-1"
@@ -1301,7 +1301,7 @@
                                         : ""}
                                       on:input={(e) =>
                                         handleValueInput(e, row?.rule, 1)}
-                                      class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                      class="ios-zoom-fix block max-w-[3.5rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-primary"
                                     />
                                   </div>
                                 {:else}
@@ -1313,7 +1313,7 @@
                                       : valueMappings[row?.rule]}
                                     on:input={(e) =>
                                       handleValueInput(e, row?.rule)}
-                                    class="ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
+                                    class="ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-primary"
                                   />
                                 {/if}
 
@@ -1466,7 +1466,7 @@
           <div class="w-full grid grid-cols-1 lg:grid-cols-4 gap-y-3 gap-x-3">
             <!--Start Flow Sentiment-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-primary border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1487,7 +1487,7 @@
             <!--End Flow Sentiment-->
             <!--Start Put/Call-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-primary border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1543,7 +1543,7 @@
             <!--End Put/Call-->
             <!--Start Call Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-primary border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1600,7 +1600,7 @@
             <!--End Call Flow-->
             <!--Start Put Flow-->
             <div
-              class="flex flex-row items-center flex-wrap w-full px-5 bg-odd border border-gray-600 rounded-md h-20"
+              class="flex flex-row items-center flex-wrap w-full px-5 bg-primary border border-gray-600 rounded-md h-20"
             >
               <div class="flex flex-col items-start">
                 <span class="font-semibold text-gray-200 text-sm sm:text-[1rem]"
@@ -1696,7 +1696,7 @@
         <div class="flex justify-center items-center h-80">
           <div class="relative">
             <label
-              class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              class="bg-primary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             >
               <span class="loading loading-spinner loading-md text-gray-400"
               ></span>
@@ -1807,7 +1807,7 @@
               autocomplete="off"
               type="search"
               id="search"
-              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-600 rounded-md bg-secondary border border-blue-500"
+              class="placeholder-gray-300 block w-full p-2 ps-10 text-sm text-gray-200 border border-gray-600 rounded-md bg-primary border border-blue-500"
               placeholder="Search"
               bind:value={searchTerm}
             />
@@ -1876,7 +1876,7 @@
 
   <!-- Desktop modal content -->
   <div
-    class="modal-box rounded-md border border-gray-600 w-full bg-secondary flex flex-col items-center"
+    class="modal-box rounded-md border border-gray-600 w-full bg-primary flex flex-col items-center"
   >
     <div class="text-white mb-5 text-center">
       <h3 class="font-bold text-2xl mb-5">{tooltipTitle}</h3>

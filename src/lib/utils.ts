@@ -608,7 +608,8 @@ export function formatString(inputString) {
   return formattedString;
 }
 
-export function abbreviateNumber(number, addDollarSign = false, color = false) {
+
+export function abbreviateNumberWithColor(number, addDollarSign = false, color = false) {
   // Check if number is null or undefined, return "-" if true
   if (number == null) {
     return "-";
@@ -681,6 +682,69 @@ if (color) {
       : number.toString();
   } else {
     return addDollarSign ? "\$0" : "0";
+  }
+}
+
+
+export function abbreviateNumber(number, addDollarSign = false) {
+  // Check if number is null or undefined, return "-" if true
+  if (number == null) {
+    return "-";
+  }
+
+  const negative = number < 0;
+
+  // Handle special case for exactly 1000
+  if (Math.abs(number) === 1000) {
+    return addDollarSign
+      ? negative
+        ? "-$1K"
+        : "$1K"
+      : negative
+      ? "-1K"
+      : "1K";
+  }
+
+  if (Math.abs(number) !== 0 && Math.abs(number) > 1000) {
+    const suffixes = ["", "K", "M", "B", "B", "T", "Q", "Qu", "S", "O", "N", "D"];
+    const magnitude = Math.floor(Math.log10(Math.abs(number)));
+    let index = Math.min(Math.floor(magnitude / 3), suffixes.length - 1);
+
+    // Special case to keep numbers in trillions formatted as billions
+    if (index >= 4) {
+      index = 3; // Keep the suffix at "B"
+    }
+
+    let abbreviation = Math.abs(number) / Math.pow(10, index * 3);
+
+    // Set the desired number of decimals
+    if (abbreviation >= 1000) {
+      abbreviation = abbreviation.toFixed(1);
+      index++;
+    } else {
+      abbreviation = abbreviation.toFixed(2);
+    }
+
+    abbreviation = parseFloat(abbreviation).toLocaleString("en-US", {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    });
+
+    const formattedNumber = abbreviation + suffixes[index];
+
+    return addDollarSign
+      ? (negative ? "-$" : "$") + formattedNumber
+      : negative
+      ? "-" + formattedNumber
+      : formattedNumber;
+  } else if (Math.abs(number) >= 0 && Math.abs(number) < 1000) {
+    return addDollarSign
+      ? (negative ? "-$" : "$") + Math.abs(number)
+      : negative
+      ? "-" + Math.abs(number)
+      : number.toString();
+  } else {
+    return addDollarSign ? "$0" : "0";
   }
 }
 

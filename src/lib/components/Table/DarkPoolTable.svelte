@@ -1,6 +1,6 @@
 <script lang="ts">
   import { screenWidth } from "$lib/store";
-  import { abbreviateNumber, sectorNavigation } from "$lib/utils";
+  import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
 
   import VirtualList from "svelte-tiny-virtual-list";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
@@ -416,7 +416,9 @@
           style="justify-content: center; "
           class=" td w-full text-white text-xs sm:text-sm whitespace-nowrap m-auto"
         >
-          {formatToNewYorkTime(displayedData[index]?.date)}
+          {$screenWidth < 640
+            ? formatToNewYorkTime(displayedData[index]?.date)?.slice(0, -3)
+            : formatToNewYorkTime(displayedData[index]?.date)}
         </div>
         <div
           on:click|stopPropagation
@@ -440,7 +442,11 @@
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-start text-white"
         >
-          {@html abbreviateNumber(displayedData[index]?.premium, true, true)}
+          {@html abbreviateNumberWithColor(
+            displayedData[index]?.premium,
+            true,
+            true,
+          )}
         </div>
 
         <div
@@ -457,7 +463,11 @@
           style="justify-content: center;"
           class="td text-sm sm:text-[1rem] text-white text-end"
         >
-          {@html abbreviateNumber(displayedData[index]?.volume, false, true)}
+          {@html abbreviateNumberWithColor(
+            displayedData[index]?.volume,
+            false,
+            true,
+          )}
         </div>
 
         <div
