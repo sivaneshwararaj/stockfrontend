@@ -249,6 +249,12 @@
       }
     }
   }
+
+  $: {
+    if (inputValue) {
+      search();
+    }
+  }
 </script>
 
 <div class="hidden sm:block w-full sm:max-w-[600px]">
@@ -292,7 +298,6 @@
           </div>
           <Combobox.Input
             id="combobox-input"
-            on:input={search}
             on:click={() => (inputValue = "")}
             class="grow rounded-sm border border-gray-600 py-2 pl-9 text-[1rem] placeholder-gray-400 focus:border-default focus:shadow-lg focus:outline-none focus:ring-0 tiny:pl-8 xs:pl-10 text-white md:py-2 w-full bg-secondary focus:bg-secondary"
             placeholder="Company or stock symbol..."
@@ -349,7 +354,7 @@
                 </div>
               </Combobox.Item>
             {/each}
-          {:else if inputValue?.length === 0 && !showSuggestions}
+          {:else if inputValue?.length === 0 || !showSuggestions}
             <div
               class="pl-2 pb-2 border-b border-gray-600 text-white text-sm font-semibold w-full"
             >
@@ -449,7 +454,6 @@
           placeholder="Company or stock symbol..."
           bind:value={inputValue}
           bind:this={inputElement}
-          on:input={search}
           autocomplete="off"
         />
 
