@@ -274,19 +274,19 @@
 <svelte:window bind:innerWidth={$screenWidth} />
 
 <div class="app {$page?.url?.pathname === '/' ? 'bg-[#000]' : ''}">
-  <div class="flex min-h-screen w-full flex-col bg-[#09090B]">
+  <div class="flex min-h-screen w-full flex-col bg-default">
     <div class="w-full">
       <div
         class="w-full navbar sticky {$screenWidth < 640 && hideHeader
           ? 'invisible -mt-20'
-          : ''} top-0 z-40 bg-[#09090B] border-b border-gray-800 flex h-14 items-center gap-4 px-4 sm:h-auto sm:px-6"
+          : ''} top-0 z-40 bg-default border-b border-gray-800 flex h-14 items-center gap-4 px-4 sm:h-auto sm:px-6"
       >
         <Sheet.Root>
           <Sheet.Trigger asChild let:builder>
             <Button
               builders={[builder]}
               size="icon"
-              class="bg-[#09090B] text-white sm:hover:bg-primary border-none"
+              class="bg-default text-white sm:hover:bg-primary border-none"
             >
               <Menu class="h-5.5 w-5.5 sm:w-7 sm:h-7" />
               <span class="sr-only">Toggle Menu</span>
@@ -845,7 +845,7 @@
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
                     size="icon"
-                    class="overflow-hidden rounded-md bg-[#09090B] sm:hover:bg-primary border border-gray-600 w-10 h-10"
+                    class="overflow-hidden rounded-md bg-default sm:hover:bg-primary border border-gray-600 w-10 h-10"
                     builders={[builder]}
                   >
                     <svg
@@ -1215,7 +1215,7 @@
             </aside>
           </div>
           <div class="w-full">
-            <main class="w-full overflow-y-auto bg-[#09090B] sm:p-4">
+            <main class="w-full overflow-y-auto bg-default sm:p-4">
               <!--
               <button on:click={handleNotificationClick}>
                 Send Notification

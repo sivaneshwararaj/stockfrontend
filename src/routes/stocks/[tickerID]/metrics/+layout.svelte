@@ -55,7 +55,7 @@
 
 <!-- Rest of the component remains the same -->
 
-<section class="w-full bg-[#09090B] overflow-hidden h-full">
+<section class="w-full bg-default overflow-hidden h-full">
   <div class="m-auto h-full overflow-hidden">
     <main class="w-full">
       <div class="m-auto">

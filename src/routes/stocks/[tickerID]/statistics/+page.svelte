@@ -99,7 +99,7 @@
                 shares outstanding. The number of shares has increased by {rawData?.sharesYoY}%
                 in one year.
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -200,7 +200,7 @@
                 )}, so {rawData?.shortOutStandingPercent}% of the outstanding
                 shares have been sold short.
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -258,7 +258,7 @@
                   : ""}
               </p>
 
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -343,7 +343,7 @@
                   Currently the Enterprise Value (EV) is not available for {$displayCompanyName}.
                 {/if}
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -399,7 +399,7 @@
                 The company has a current ratio of {rawData?.currentRatio}, with
                 a Debt / Equity ratio of {rawData?.debtEquityRatio}.
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -467,7 +467,7 @@
                 Return on equity (ROE) is {rawData?.returnOnEquity}% and return
                 on capital (ROIC) is {rawData?.returnOnInvestedCapital}%.
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -556,7 +556,7 @@
             </div>
             <div>
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">Taxes</h2>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -597,7 +597,7 @@
                   ? "higher"
                   : "lower"} than the market average.
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -676,7 +676,7 @@
                   )} in profits. Earnings per share was {rawData?.eps}.
                 {/if}
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -786,7 +786,7 @@
                   true,
                 )}.
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -893,7 +893,7 @@
                   true,
                 )}.
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -964,7 +964,7 @@
                   )}% and {checkValue(rawData?.netProfitMargin, "int")}%.
                 {/if}
               </p>
-              <table class="w-full">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -1065,7 +1065,7 @@
                   {$stockTicker} does not appear to pay any dividends at this time.
                 {/if}
               </p>
-              <table class="w-full" data-test="statistics-table">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -1156,7 +1156,7 @@
                   Currently there are no analyst rating for {$stockTicker}.
                 {/if}
               </p>
-              <table class="w-full" data-test="statistics-table">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -1226,7 +1226,7 @@
                   {rawData?.splitType}
                   split with a ratio of {rawData?.splitRatio}.
                 </p>
-                <table class="w-full" data-test="statistics-table">
+                <table class="w-full bg-table border border-gray-800 rounded">
                   <tbody
                     ><tr class="border-y border-gray-800 odd:bg-odd"
                       ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"
@@ -1268,7 +1268,7 @@
             {/if}
             <div>
               <h2 class="mb-2 px-0.5 text-xl font-bold text-white">Scores</h2>
-              <table class="w-full" data-test="statistics-table">
+              <table class="w-full bg-table border border-gray-800 rounded">
                 <tbody
                   ><tr class="border-y border-gray-800 odd:bg-odd"
                     ><td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2"

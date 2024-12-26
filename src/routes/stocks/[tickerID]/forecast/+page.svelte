@@ -284,7 +284,6 @@
       estimatedEPSAvgNextYear,
       estimatedEpsAvg,
     );
-
   }
 
   function getPriceForecastChart() {
@@ -488,7 +487,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
+<section class="w-full bg-default overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"

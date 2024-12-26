@@ -184,7 +184,7 @@
                 {#if editMode}
                   <label
                     on:click={handleDelete}
-                    class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
+                    class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-default sm:hover:bg-default/60 ease-out"
                   >
                     <svg
                       class="inline-block w-5 h-5"
@@ -203,7 +203,7 @@
 
                 <label
                   on:click={() => (editMode = !editMode)}
-                  class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out"
+                  class="border text-sm border-gray-600 ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2 pl-3 pr-4 font-semibold text-white shadow-sm bg-default sm:hover:bg-default/60 ease-out"
                 >
                   <svg
                     class="inline-block w-5 h-5"
@@ -230,7 +230,7 @@
                 class="w-full rounded-md overflow-hidden overflow-x-scroll no-scrollbar"
               >
                 <table
-                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4 overflow-x-auto"
                 >
                   <thead>
                     <tr class="">
@@ -239,7 +239,7 @@
                         >Time</td
                       >
                       <th
-                        class="text-slate-200 bg-[#09090B] font-semibold text-sm text-start"
+                        class="text-slate-200 bg-default font-semibold text-sm text-start"
                         >Symbol</th
                       >
                       <td
@@ -300,7 +300,7 @@
                         <th
                           on:click={() => handleFilter(item?.id)}
                           class="{index % 2
-                            ? 'bg-[#09090B]'
+                            ? 'bg-default'
                             : 'bg-secondary'} font-normal text-sm sm:text-[1rem] text-start"
                         >
                           <div class=" flex flex-row items-center">

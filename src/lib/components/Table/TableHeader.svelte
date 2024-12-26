@@ -12,7 +12,7 @@
   `;
 </script>
 
-<tr class="bg-[#09090B] border-b border-[#27272A]">
+<tr class="bg-default border-b border-[#27272A]">
   {#each columns as column}
     <th
       on:click={() => sortData(column.key)}

@@ -39,7 +39,7 @@
   }
 </script>
 
-<section class="w-auto bg-[#09090B] overflow-hidden text-black h-full">
+<section class="w-auto bg-default overflow-hidden text-black h-full">
   <div class="m-auto h-full overflow-hidden">
     <main class="w-full">
       <div class="m-auto">

@@ -20,7 +20,7 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import DownloadData from "$lib/components/DownloadData.svelte";
-
+  import Infobox from "$lib/components/Infobox.svelte";
   import Input from "$lib/components/Input.svelte";
 
   //const userConfirmation = confirm('Unsaved changes detected. Leaving now will discard your strategy. Continue?');
@@ -2467,7 +2467,7 @@ const handleKeyDown = (event) => {
               <DropdownMenu.Trigger asChild let:builder>
                 <Button
                   builders={[builder]}
-                  class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                  class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                 >
                   <span class="truncate text-white"
                     >{selectedPopularStrategy?.length !== 0
@@ -2551,7 +2551,7 @@ const handleKeyDown = (event) => {
               <DropdownMenu.Trigger asChild let:builder>
                 <Button
                   builders={[builder]}
-                  class="min-w-[110px] w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                  class="min-w-[110px] w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                 >
                   <span class="truncate text-white"
                     >{selectedStrategy?.length !== 0
@@ -2652,7 +2652,7 @@ const handleKeyDown = (event) => {
         <div class="mt-3 flex flex-col gap-y-2.5 sm:flex-row lg:gap-y-2">
           <label
             for="ruleModal"
-            class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
+            class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-default/60 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
           >
             <svg
               class="h-5 w-5"
@@ -2674,7 +2674,7 @@ const handleKeyDown = (event) => {
             <label
               for={!data?.user ? "userLogin" : ""}
               on:click={() => handleSave(true)}
-              class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
+              class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-default/60 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
             >
               <svg
                 class="h-5 w-5"
@@ -2690,7 +2690,7 @@ const handleKeyDown = (event) => {
 
             <label
               for="deleteStrategy"
-              class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
+              class="sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-default/60 ease-out sm:hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
             >
               <svg
                 class="h-5 w-5"
@@ -2750,7 +2750,7 @@ const handleKeyDown = (event) => {
           {#each displayRules as row (row?.rule)}
             <!--Start Added Rules-->
             <div
-              class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default"
+              class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-white"
             >
               <div class="hide-scroll text-white">
                 {row?.label?.length > 20
@@ -2845,7 +2845,7 @@ const handleKeyDown = (event) => {
                       >
                         {#if !["sma20", "sma50", "sma100", "sma200", "ema20", "ema50", "ema100", "ema200", "grahamNumber", "analystRating", "topAnalystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           <DropdownMenu.Label
-                            class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]"
+                            class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-default"
                           >
                             <div
                               class="flex items-center justify-start gap-x-1"
@@ -2858,7 +2858,7 @@ const handleKeyDown = (event) => {
                                   <DropdownMenu.Trigger asChild let:builder
                                     ><Button
                                       builders={[builder]}
-                                      class="w-fit -mt-1 -ml-2 bg-[#09090B] flex flex-row justify-between items-center text-white"
+                                      class="w-fit -mt-1 -ml-2 bg-default flex flex-row justify-between items-center text-white"
                                     >
                                       <span
                                         class="truncate ml-2 text-sm sm:text-[1rem]"
@@ -3014,7 +3014,7 @@ const handleKeyDown = (event) => {
                                 'country',
                               ]?.includes(row?.rule)
                                 ? 'hidden'
-                                : ''} absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200
+                                : ''} absolute fixed sticky w-full border-0 bg-default border-b border-gray-200
                                       focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300"
                               type="search"
                               placeholder="Search..."
@@ -3219,7 +3219,7 @@ const handleKeyDown = (event) => {
       {#if displayTableTab === "general"}
         <div class="w-full rounded-md overflow-x-scroll">
           <table
-            class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
+            class="table table-sm table-compact w-full bg-table border border-gray-800"
           >
             <thead>
               <TableHeader {columns} {sortOrders} {sortData} />
@@ -3227,9 +3227,9 @@ const handleKeyDown = (event) => {
             <tbody>
               {#each displayResults as item}
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-odd"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] border-b border-gray-800 odd:bg-odd"
                 >
-                  <td class="border-b-[#09090B] whitespace-nowrap">
+                  <td class=" whitespace-nowrap">
                     <a
                       href={"/stocks/" + item?.symbol}
                       class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
@@ -3237,30 +3237,24 @@ const handleKeyDown = (event) => {
                     >
                   </td>
 
-                  <td
-                    class="whitespace-nowrap text-[1rem] text-white border-b-[#09090B]"
-                  >
+                  <td class="whitespace-nowrap text-[1rem] text-white">
                     {item?.name?.length > charNumber
                       ? item?.name?.slice(0, charNumber) + "..."
                       : item?.name}
                   </td>
 
-                  <td
-                    class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]"
-                  >
+                  <td class="text-white text-sm sm:text-[1rem] text-end">
                     {item?.marketCap < 100
                       ? "< 100"
                       : abbreviateNumber(item?.marketCap)}
                   </td>
 
-                  <td
-                    class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]"
-                  >
+                  <td class="text-white text-sm sm:text-[1rem] text-end">
                     {item?.price < 0.01 ? "< 0.01" : item?.price?.toFixed(2)}
                   </td>
 
                   <td
-                    class="text-white text-end text-sm sm:text-[1rem] font-medium border-b-[#09090B]"
+                    class="text-white text-end text-sm sm:text-[1rem] font-medium"
                   >
                     {#if item?.changesPercentage >= 0}
                       <span class="text-[#00FC50]"
@@ -3277,15 +3271,11 @@ const handleKeyDown = (event) => {
                     {/if}
                   </td>
 
-                  <td
-                    class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]"
-                  >
+                  <td class="text-white text-sm sm:text-[1rem] text-end">
                     {item?.volume === 0 ? "-" : abbreviateNumber(item?.volume)}
                   </td>
 
-                  <td
-                    class="text-white text-sm sm:text-[1rem] text-end border-b-[#09090B]"
-                  >
+                  <td class="text-white text-sm sm:text-[1rem] text-end">
                     {item?.pe}
                   </td>
                 </tr>
@@ -3296,7 +3286,7 @@ const handleKeyDown = (event) => {
       {:else if displayTableTab === "filters"}
         <div class="w-full rounded-md overflow-x-scroll">
           <table
-            class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
+            class="table table-sm table-compact w-full bg-table border border-gray-800"
           >
             <thead>
               <TableHeader {columns} {sortOrders} {sortData} />
@@ -3304,31 +3294,29 @@ const handleKeyDown = (event) => {
             <tbody>
               {#each displayResults as item (item?.symbol)}
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-odd"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] border-b border-gray-800 odd:bg-odd"
                 >
-                  <td class="border-b-[#09090B] whitespace-nowrap">
+                  <td class=" whitespace-nowrap">
                     <a
                       href={"/stocks/" + item?.symbol}
                       class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
                       >{item?.symbol}</a
                     >
                   </td>
-                  <td
-                    class=" whitespace-nowrap text-[1rem] text-white border-b-[#09090B]"
-                  >
+                  <td class=" whitespace-nowrap text-[1rem] text-white">
                     {item?.name?.length > charNumber
                       ? item?.name?.slice(0, charNumber) + "..."
                       : item?.name}
                   </td>
                   <td
-                    class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
+                    class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white"
                   >
                     {abbreviateNumber(item?.marketCap)}
                   </td>
                   {#each displayRules as row (row?.rule)}
                     {#if row?.rule !== "marketCap"}
                       <td
-                        class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
+                        class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white"
                       >
                         {#if ["ema20", "ema50", "ema100", "ema200", "analystRating", "topAnalystRating", "halalStocks", "score", "sector", "industry", "country"]?.includes(row?.rule)}
                           {item[row?.rule]}
@@ -3346,7 +3334,7 @@ const handleKeyDown = (event) => {
       {:else if displayTableTab === "performance"}
         <div class="w-full rounded-md overflow-x-scroll">
           <table
-            class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
+            class="table table-sm table-compact w-full bg-table border border-gray-800"
           >
             <thead>
               <TableHeader {columns} {sortOrders} {sortData} />
@@ -3354,18 +3342,16 @@ const handleKeyDown = (event) => {
             <tbody>
               {#each displayResults as item (item?.symbol)}
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-odd"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] border-b border-gray-800 odd:bg-odd"
                 >
-                  <td class="border-b-[#09090B] whitespace-nowrap">
+                  <td class=" whitespace-nowrap">
                     <a
                       href={"/stocks/" + item?.symbol}
                       class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
                       >{item?.symbol}</a
                     >
                   </td>
-                  <td
-                    class="whitespace-nowrap text-[1rem] text-white border-b-[#09090B]"
-                  >
+                  <td class="whitespace-nowrap text-[1rem] text-white">
                     {item?.name?.length > charNumber
                       ? item?.name?.slice(0, charNumber) + "..."
                       : item?.name}
@@ -3373,7 +3359,7 @@ const handleKeyDown = (event) => {
 
                   {#each tabRuleList as row (row?.rule)}
                     <td
-                      class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
+                      class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white"
                     >
                       {#if row?.rule === "marketCap"}
                         {abbreviateNumber(item[row?.rule])}
@@ -3402,7 +3388,7 @@ const handleKeyDown = (event) => {
       {:else if displayTableTab === "analysts"}
         <div class="w-full rounded-md overflow-x-scroll">
           <table
-            class="table table-sm table-compact w-full bg-[#09090B] border-bg-[#09090B]"
+            class="table table-sm table-compact w-full bg-table border border-gray-800"
           >
             <thead>
               <TableHeader {columns} {sortOrders} {sortData} />
@@ -3410,18 +3396,16 @@ const handleKeyDown = (event) => {
             <tbody>
               {#each displayResults as item (item?.symbol)}
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] odd:bg-odd"
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] border-b border-gray-800 odd:bg-odd"
                 >
-                  <td class="border-b-[#09090B] whitespace-nowrap">
+                  <td class=" whitespace-nowrap">
                     <a
                       href={"/stocks/" + item?.symbol}
                       class="sm:hover:text-white text-blue-400 text-sm sm:text-[1rem]"
                       >{item?.symbol}</a
                     >
                   </td>
-                  <td
-                    class="whitespace-nowrap text-[1rem] text-white border-b-[#09090B]"
-                  >
+                  <td class="whitespace-nowrap text-[1rem] text-white">
                     {item?.name?.length > charNumber
                       ? item?.name?.slice(0, charNumber) + "..."
                       : item?.name}
@@ -3429,7 +3413,7 @@ const handleKeyDown = (event) => {
 
                   {#each tabRuleList as row (row?.rule)}
                     <td
-                      class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
+                      class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white"
                     >
                       {#if row?.rule === "marketCap"}
                         {abbreviateNumber(item[row?.rule])}
@@ -3469,20 +3453,9 @@ const handleKeyDown = (event) => {
         </div>
       {/if}
     {:else}
-      <div
-        class="text-white p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-      >
-        <svg
-          class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 256 256"
-          ><path
-            fill="#fff"
-            d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-          /></svg
-        >
-        Looks like your taste is one-of-a-kind! No matches found... yet!
-      </div>
+      <Infobox
+        text="Looks like your taste is one-of-a-kind! No matches found... yet!"
+      />
     {/if}
   {:else}
     <div class="flex justify-center items-center h-80">

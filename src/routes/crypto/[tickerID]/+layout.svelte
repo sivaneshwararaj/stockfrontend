@@ -338,7 +338,7 @@
 </script>
 
 <body
-  class="bg-[#09090B] pb-40 w-full max-w-screen min-h-screen sm:max-w-7xl xl:max-w-screen-2xl overflow-hidden"
+  class="bg-default pb-40 w-full max-w-screen min-h-screen sm:max-w-7xl xl:max-w-screen-2xl overflow-hidden"
 >
   <!-- Page wrapper -->
   <div class="flex flex-col w-full">
@@ -347,7 +347,7 @@
         <div class="w-full">
           <div class="sm:flex sm:justify-start w-full">
             <!--Start Mobile Navbar-->
-            <div class="fixed top-0 left-0 right-0 z-20 bg-[#09090B] sm:hidden">
+            <div class="fixed top-0 left-0 right-0 z-20 bg-default sm:hidden">
               <div class="navbar w-full px-4 py-2">
                 <div
                   class="{isScrolled
@@ -567,7 +567,7 @@
                           <div class="flex flex-col ml-auto mr-2">
                             {#if userWatchList?.length !== 0}
                               <div
-                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                               >
                                 <label
                                   for="addWatchListModal"
@@ -598,7 +598,7 @@
                               </div>
                             {:else if userWatchList?.length === 0}
                               <div
-                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                               >
                                 <label
                                   on:click={() =>
@@ -632,7 +632,7 @@
                           </div>
                         {:else}
                           <div
-                            class="flex-shrink-0 ml-auto mr-2 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                            class="flex-shrink-0 ml-auto mr-2 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                           >
                             <label
                               for="userLogin"
@@ -655,7 +655,7 @@
                         <!--Start Price Alert -->
 
                         <div
-                          class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                          class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                         >
                           <label
                             on:click={() => ($openPriceAlert = true)}
@@ -723,14 +723,14 @@
                                         <div class="hidden sm:flex ml-auto">
                                         {#if holdingShares !== 0 && data?.user}
                                         
-                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length !== 0 ? 'typeOfTrade' : ''}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-secondary border border-gray-600 normal-case cursor-pointer items-center">
+                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length !== 0 ? 'typeOfTrade' : ''}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-default hover:bg-secondary border border-gray-600 normal-case cursor-pointer items-center">
                                           <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M8 2.5a.5.5 0 0 0-1 0V7H2.5a.5.5 0 0 0 0 1H7v4.5a.5.5 0 0 0 1 0V8h4.5a.5.5 0 0 0 0-1H8z"/></svg>
                                           <span class="text-white font-medium">
                                             Portfolio
                                           </span>
                                         </label>
                                         {:else}
-                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length === 0 ? 'addPortfolio' : 'buyTradeModal'}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-[#09090B] hover:bg-secondary border border-gray-600 normal-case  cursor-pointer items-center">
+                                        <label for="{!data?.user  ? 'userLogin' : userPortfolio?.length === 0 ? 'addPortfolio' : 'buyTradeModal'}" class="py-2 px-3 text-sm sm:text-[1rem] cursor-pointer mr-1 flex flex-row ease-in-out duration-100 rounded-full shadow-lg bg-default hover:bg-secondary border border-gray-600 normal-case  cursor-pointer items-center">
                                           <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M8 2.5a.5.5 0 0 0-1 0V7H2.5a.5.5 0 0 0 0 1H7v4.5a.5.5 0 0 0 1 0V8h4.5a.5.5 0 0 0 0-1H8z"/></svg>
                                           <span class="text-white font-medium">
                                             Portfolio
@@ -746,7 +746,7 @@
 
                     <!--Start Ticker Section-->
 
-                    <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-[#09090B]"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
+                    <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-default"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
                     <div
                       class="-ml-2 sm:ml-4 w-screen sm:w-full {$screenWidth <
                       640
@@ -754,7 +754,7 @@
                         : ''} mb-2"
                     >
                       <ul
-                        class="pr-4 sm:pr-0 w-screen font-medium flex flex-row items-center bg-[#09090B] overflow-x-scroll space-x-3 rtl:space-x-reverse py-2"
+                        class="pr-4 sm:pr-0 w-screen font-medium flex flex-row items-center bg-default overflow-x-scroll space-x-3 rtl:space-x-reverse py-2"
                       >
                         <li class="cursor-pointer flex flex-col items-center">
                           <a
@@ -764,14 +764,14 @@
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'overview'
                               ? 'text-white '
-                              : 'bg-[#09090B]'}"
+                              : 'bg-default'}"
                           >
                             Overview
                           </a>
                           <div
                             class="{displaySection === 'overview'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[3.5rem]"
+                              : 'bg-default'} mt-1 h-[3px] rounded-full w-[3.5rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -782,12 +782,12 @@
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'stats'
                               ? 'text-white '
-                              : 'bg-[#09090B]'}">Stats</a
+                              : 'bg-default'}">Stats</a
                           >
                           <div
                             class="{displaySection === 'stats'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
+                              : 'bg-default'} mt-1 h-[3px] rounded-full w-[2rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -798,14 +798,14 @@
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'forecast'
                               ? 'text-white '
-                              : 'bg-[#09090B]'}"
+                              : 'bg-default'}"
                           >
                             Forecast
                           </a>
                           <div
                             class="{displaySection === 'forecast'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
+                              : 'bg-default'} mt-1 h-[3px] rounded-full w-[2rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -817,14 +817,14 @@
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'congress-trading'
                               ? 'text-white '
-                              : 'bg-[#09090B]'}"
+                              : 'bg-default'}"
                           >
                             Insider
                           </a>
                           <div
                             class="{displaySection === 'congress-trading'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2.5rem]"
+                              : 'bg-default'} mt-1 h-[3px] rounded-full w-[2.5rem]"
                           />
                         </li>
                         <li class="cursor-pointer flex flex-col items-center">
@@ -835,14 +835,14 @@
                             class="px-3 text-sm sm:text-[1rem] font-medium text-gray-400 sm:hover:text-white {displaySection ===
                             'news'
                               ? 'text-white '
-                              : 'bg-[#09090B]'}"
+                              : 'bg-default'}"
                           >
                             News
                           </a>
                           <div
                             class="{displaySection === 'news'
                               ? 'bg-[#75D377]'
-                              : 'bg-[#09090B]'} mt-1 h-[3px] rounded-full w-[2rem]"
+                              : 'bg-default'} mt-1 h-[3px] rounded-full w-[2rem]"
                           />
                         </li>
                       </ul>

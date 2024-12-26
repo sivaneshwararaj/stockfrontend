@@ -53,7 +53,7 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0 w-full"
+  class="bg-default overflow-hidden text-white h-full mb-40 sm:mb-0 w-full"
 >
   <div class="flex justify-center m-auto h-full overflow-hidden w-full">
     <div

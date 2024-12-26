@@ -423,7 +423,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] overflow-hidden text-white h-full">
+<section class="bg-default overflow-hidden text-white h-full">
   <div
     class="flex justify-center w-full m-auto h-full overflow-hidden mt-4 sm:mt-0"
   >
@@ -532,7 +532,7 @@
                       <DropdownMenu.Trigger asChild let:builder>
                         <Button
                           builders={[builder]}
-                          class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                          class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                         >
                           <span class="truncate text-white">{$timeFrame}</span>
                           <svg
@@ -582,7 +582,7 @@
                   </div>
                   <Button
                     on:click={() => exportFundamentalData("csv")}
-                    class="ml-2 w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="ml-2 w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Download</span>
                     <svg
@@ -655,9 +655,9 @@
 
                 <div class="w-full overflow-x-scroll">
                   <table
-                    class="table table-sm table-compact rounded-md w-full m-auto mt-4"
+                    class="table table-sm table-compact bg-table border border-gray-800 rounded-md w-full m-auto mt-4"
                   >
-                    <thead>
+                    <thead class="bg-default">
                       <tr class="border-b border-gray-800">
                         <th
                           class="text-white font-semibold text-start text-sm sm:text-[1rem]"
@@ -752,20 +752,22 @@
                 <div
                   class="w-full rounded-none sm:rounded-md m-auto overflow-x-auto"
                 >
-                  <table class="table table-sm table-compact w-full">
-                    <thead>
+                  <table
+                    class="table table-sm table-compact bg-table border border-gray-800 w-full"
+                  >
+                    <thead class="bg-default">
                       <tr class="text-white">
                         <td class="text-start text-sm font-semibold">Year</td>
                         {#each ratios as item}
                           {#if filterRule === "annual"}
                             <td
-                              class="bg-[#09090B] font-semibold text-end text-sm"
+                              class="bg-default font-semibold text-end text-sm"
                             >
                               {"FY" + item?.calendarYear?.slice(-2)}
                             </td>
                           {:else}
                             <td
-                              class="bg-[#09090B] font-semibold text-end text-sm"
+                              class="bg-default font-semibold text-end text-sm"
                             >
                               {"FY" +
                                 item?.calendarYear?.slice(-2) +

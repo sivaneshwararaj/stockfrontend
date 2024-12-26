@@ -211,7 +211,7 @@
       <div class="w-full">
         <div class="w-full overflow-x-auto mt-5">
           <table
-            class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+            class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800"
           >
             <thead>
               <TableHeader {columns} {sortOrders} {sortData} />

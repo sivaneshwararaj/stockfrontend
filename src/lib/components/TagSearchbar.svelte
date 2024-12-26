@@ -297,7 +297,7 @@
     ></label>
 
     <div
-      class="modal-box overflow-hidden rounded-xl bg-[#09090B] sm:my-8 sm:m-auto sm:h-auto w-full sm:w-1/2 2xl:w-1/3"
+      class="modal-box overflow-hidden rounded-xl bg-default sm:my-8 sm:m-auto sm:h-auto w-full sm:w-1/2 2xl:w-1/3"
     >
       <!-- Search layout -->
       <div class="mt-5 sm:mt-0">
@@ -305,7 +305,7 @@
           <label for="modal-search" class="sr-only">Search</label>
           <input
             id="modal-search"
-            class="rounded-md w-full text-white bg-[#09090B] border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
+            class="rounded-md w-full text-white bg-default border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
             type="search"
             placeholder="Search Anything…"
             bind:value={searchQuery}
@@ -359,7 +359,7 @@
                       on:click={() => popularTicker(item?.symbol)}
                       class="mb-2 {item?.symbol === focusedSuggestion
                         ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#404040] bg-opacity-[0.25] rounded group'
-                        : 'shake-ticker cursor-pointer bg-[#09090B] sm:hover:bg-[#17171A] rounded-md flex justify-start items-center p-2 text-white  group'} w-full"
+                        : 'shake-ticker cursor-pointer bg-default sm:hover:bg-[#17171A] rounded-md flex justify-start items-center p-2 text-white  group'} w-full"
                     >
                       <div class="flex flex-row items-center w-full">
                         <div
@@ -401,7 +401,7 @@
                       on:click={() => searchBarTicker(item?.symbol, item?.type)}
                       class="mb-2 {item?.symbol === focusedSuggestion
                         ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#404040] bg-opacity-[0.25] rounded group'
-                        : 'cursor-pointer mb-2 bg-[#09090B] sm:hover:bg-[#17171A] rounded-md flex justify-start items-center p-2 text-white group'}"
+                        : 'cursor-pointer mb-2 bg-default sm:hover:bg-[#17171A] rounded-md flex justify-start items-center p-2 text-white group'}"
                     >
                       <div class="flex flex-row items-center w-full">
                         <div class="flex flex-col">
@@ -476,7 +476,7 @@
 
     <div class="drawer-side overflow-hidden">
       <div
-        class="modal-box overflow-hidden rounded-xl bg-[#09090B] min-h-screen w-screen pt-10"
+        class="modal-box overflow-hidden rounded-xl bg-default min-h-screen w-screen pt-10"
       >
         <!-- Search layout -->
         <div class="mt-5 sm:mt-0">
@@ -484,7 +484,7 @@
             <label for="modal-search" class="sr-only">Search</label>
             <input
               id="modal-search"
-              class="rounded-md w-full text-white bg-[#09090B] border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
+              class="rounded-md w-full text-white bg-default border border-gray-600 focus:ring-transparent placeholder-gray-200 py-3 pl-10 pr-4"
               type="search"
               placeholder="Search Anything…"
               bind:value={searchQuery}
@@ -541,7 +541,7 @@
                         on:click={() => popularTicker(item?.symbol, item?.type)}
                         class="mb-2 {item?.symbol === focusedSuggestion
                           ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#404040] bg-opacity-[0.25] rounded group'
-                          : 'cursor-pointer bg-[#09090B] rounded-md flex justify-start items-center p-2 text-white group'} w-full"
+                          : 'cursor-pointer bg-default rounded-md flex justify-start items-center p-2 text-white group'} w-full"
                       >
                         <div class="flex flex-row items-center w-full">
                           <div
@@ -586,7 +586,7 @@
                           searchBarTicker(item?.symbol, item?.type)}
                         class="mb-2 {item?.symbol === focusedSuggestion
                           ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-[#404040] bg-opacity-[0.25] rounded group'
-                          : 'cursor-pointer mb-2 bg-[#09090B] rounded-md flex justify-start items-center p-2 text-white group'}"
+                          : 'cursor-pointer mb-2 bg-default rounded-md flex justify-start items-center p-2 text-white group'}"
                       >
                         <div class="flex flex-row items-center w-full">
                           <div class="flex flex-col ml-1">

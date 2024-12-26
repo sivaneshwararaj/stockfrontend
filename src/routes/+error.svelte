@@ -7,7 +7,7 @@
 </script>
 
 <section class="min-h-screen pt-6">
-  <div class="bg-[#09090B] mt-10 m-auto overflow-hidden w-full max-w-4xl">
+  <div class="bg-default mt-10 m-auto overflow-hidden w-full max-w-4xl">
     <div class="lg:flex">
       <div class="mt-10 mb-5 m-auto">
         <h1 class="text-white text-center text-2xl sm:text-4xl font-bold mb-5">

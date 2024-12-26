@@ -70,7 +70,7 @@
     </ul>
   </div>
 
-  <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B] overflow-hidden">
+  <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-default overflow-hidden">
     <div class="mb-6">
       <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
         Stock Sectors & Industries

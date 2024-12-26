@@ -19,7 +19,7 @@
     : 'hidden'}"
 >
   <div
-    class="sm:rounded-md shadow-lg bg-[#000] sm:bg-[#09090B] sm:border sm:border-gray-600 h-auto {$screenWidth <
+    class="sm:rounded-md shadow-lg bg-[#000] sm:bg-default sm:border sm:border-gray-600 h-auto {$screenWidth <
     640
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px]"
@@ -42,15 +42,15 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-default"
                   >Company Name</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-default"
                   >Total Assets</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-default"
                   >% of Fund</th
                 >
               </tr>
@@ -58,7 +58,7 @@
             <tbody>
               {#each topETFHolder as item, index}
                 <tr
-                  class="sm:hover:text-white text-blue-400 sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]"
+                  class="sm:hover:text-white text-blue-400 sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-default border-b border-[#000] sm:border-[#27272A]"
                 >
                   {#if index <= 6}
                     <td>

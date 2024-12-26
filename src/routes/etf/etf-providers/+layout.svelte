@@ -83,7 +83,7 @@
             ETF Providers
           </h1>
 
-          <div class="w-full m-auto mb-10 bg-[#09090B] overflow-hidden">
+          <div class="w-full m-auto mb-10 bg-default overflow-hidden">
             <div class="w-full flex flex-col justify-center items-center">
               <slot />
             </div>

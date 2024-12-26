@@ -233,7 +233,7 @@
               class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
             >
               <table
-                class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+                class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
               >
                 <thead>
                   <TableHeader {columns} {sortOrders} {sortData} />
@@ -241,7 +241,7 @@
                 <tbody>
                   {#each stockList as item, index}
                     <tr
-                      class="sm:hover:bg-[#245073] border-b border-[#27272A] sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                      class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
                         1 ===
                         rawData?.length && data?.user?.tier !== 'Pro'
                         ? 'opacity-[0.1]'

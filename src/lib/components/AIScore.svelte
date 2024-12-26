@@ -17,7 +17,7 @@
   <main class="overflow-hidden">
     <div class="w-full">
       <div
-        class="flex flex-col items-center w-auto p-4 sm:p-4 bg-[#09090B] sm:bg-[#09090B] rounded-md relative"
+        class="flex flex-col items-center w-auto p-4 sm:p-4 bg-default sm:bg-default rounded-md relative"
       >
         <div class="relative">
           <h3 class="text-center text-white text-sm sm:text-[1rem] mb-2">
@@ -184,10 +184,12 @@
       for you.
     </p>
 
-    <table class="table table-sm table-compact w-full mt-5 mb-10 text-white">
+    <table
+      class="table table-sm table-compact bg-table border border-gray-800 w-full mt-5 mb-10 text-white"
+    >
       <!-- head -->
       <thead>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <th class=" text-white text-sm font-semibold">
             Bullish Probability
           </th>
@@ -197,48 +199,48 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+80% </td>
           <td class="text-sm sm:text-[1rem]">Strong Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">10</td>
         </tr>
         <!-- row 2 -->
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+75%</td>
           <td class="text-sm sm:text-[1rem]">Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">9</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+70%</td>
           <td class="text-sm sm:text-[1rem]">Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">8</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]"> +60% </td>
           <td class="text-sm sm:text-[1rem]">Buy</td>
           <td class="text-sm sm:text-[1rem] text-end">7</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+50%</td>
           <td class="text-sm sm:text-[1rem]">Hold</td>
           <td class="text-sm sm:text-[1rem] text-end">6</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+45%</td>
           <td class="text-sm sm:text-[1rem]">Hold</td>
           <td class="text-sm sm:text-[1rem] text-end">5</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+40%</td>
           <td class="text-sm sm:text-[1rem]">Hold</td>
           <td class="text-sm sm:text-[1rem] text-end">4</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+35%</td>
           <td class="text-sm sm:text-[1rem]">Sell</td>
           <td class="text-sm sm:text-[1rem] text-end">3</td>
         </tr>
-        <tr class="border-b border-slate-700 odd:bg-odd">
+        <tr class="border-b border-gray-800 odd:bg-odd">
           <td class="text-sm sm:text-[1rem]">+30%</td>
           <td class="text-sm sm:text-[1rem]">Sell</td>
           <td class="text-sm sm:text-[1rem] text-end">2</td>

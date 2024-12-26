@@ -12,7 +12,6 @@
   let isClicked = false;
   const emailAddress = "support@stocknear.com";
 
-
   const submitCancellation = () => {
     return async ({ result, update }) => {
       switch (result.type) {
@@ -239,7 +238,8 @@
                   {#if data?.user?.freeTrial === true}
                     Active
                   {:else}
-                    {subscriptionData?.status_formatted ?? "No Active Subscription"}
+                    {subscriptionData?.status_formatted ??
+                      "No Active Subscription"}
                   {/if}
                 </span>
               </div>
@@ -339,11 +339,13 @@
             </div>
             <div class="mt-2 mb-1">
               <ul class="list-disc pl-5">
-                <li>Send an email to <a
-                  href={`mailto:${emailAddress}`}
-                  class="text-blue-400 hover:text-white hover:underline"
-                  >{emailAddress}</a
-                ></li>
+                <li>
+                  Send an email to <a
+                    href={`mailto:${emailAddress}`}
+                    class="text-blue-400 hover:text-white hover:underline"
+                    >{emailAddress}</a
+                  >
+                </li>
                 <li>
                   Join our official Subreddit
                   <a
@@ -546,7 +548,7 @@
   ></label>
 
   <!-- Desktop modal content -->
-  <div class="modal-box w-full bg-[#09090B] flex flex-col items-center">
+  <div class="modal-box w-full bg-default flex flex-col items-center">
     <div
       class="mx-auto mb-8 h-1.5 w-20 flex-shrink-0 rounded-full bg-[#404040]"
     />

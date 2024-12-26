@@ -143,7 +143,7 @@
         {#if filteredNewsList?.length > 0}
           <div class="grid grid-cols-1 gap-2 pb-5 pt-5">
             {#each filteredNewsList as item, index}
-              <div class="w-full flex flex-col bg-[#09090B] rounded-md m-auto">
+              <div class="w-full flex flex-col bg-default rounded-md m-auto">
                 {#if checkIfYoutubeVideo(item.url)}
                   {#if showVideo[index]}
                     <!-- Show the YouTube iframe when the user clicks play -->

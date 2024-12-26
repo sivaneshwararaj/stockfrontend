@@ -232,7 +232,7 @@
     <Infobox text={htmlOutput} />
 
     {#if shareholderList?.length !== 0}
-      <div class="pb-2 rounded-md bg-[#09090B] sm:bg-[#09090B]">
+      <div class="pb-2 rounded-md bg-default sm:bg-default">
         <div class="text-white text-[1rem] mt-3">
           As of {new Date(rawData?.date)?.toLocaleString("en-US", {
             month: "short",
@@ -534,7 +534,7 @@
             {#each displayList as item, index}
               {#if item?.investorName?.length > 0}
                 <tr
-                  class="border-y border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] {index +
+                  class="border-y border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-default border-b-[#09090B] {index +
                     1 ===
                     shareholderList?.length && data?.user?.tier !== 'Pro'
                     ? 'opacity-[0.1]'

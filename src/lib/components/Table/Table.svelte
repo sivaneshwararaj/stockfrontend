@@ -705,7 +705,7 @@
     <DropdownMenu.Trigger asChild let:builder>
       <Button
         builders={[builder]}
-        class=" min-w-[110px] w-fit ml-3 border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md"
+        class=" min-w-[110px] w-fit ml-3 border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md"
       >
         <span class="w-fit text-white text-sm sm:text-[1rem]">Indicators</span>
         <svg
@@ -729,7 +729,7 @@
     >
       <!-- Search Input -->
       <div
-        class="sticky fixed -top-1 z-40 bg-[#09090B] p-2 border-b border-gray-600"
+        class="sticky fixed -top-1 z-40 bg-default p-2 border-b border-gray-600"
       >
         <div class="relative w-full">
           <!-- Input Field -->
@@ -738,7 +738,7 @@
             on:input={handleInput}
             autocomplete="off"
             autofocus=""
-            class="text-sm w-full border-0 bg-[#09090B] focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8"
+            class="text-sm w-full border-0 bg-default focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8"
             type="text"
             placeholder=""
           />
@@ -834,17 +834,17 @@
       </DropdownMenu.Group>
       <!-- Reset Selection button -->
       <div
-        class="sticky -bottom-1 bg-[#09090B] z-50 p-2 border-t border-gray-600 w-full flex justify-between items-center"
+        class="sticky -bottom-1 bg-default z-50 p-2 border-t border-gray-600 w-full flex justify-between items-center"
       >
         <label
           on:click={handleResetAll}
-          class="w-full sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
+          class="w-full sm:hover:text-white text-gray-300 bg-default text-start text-sm cursor-pointer"
         >
           Reset Selection
         </label>
         <label
           on:click={handleSelectAll}
-          class="w-full flex justify-end sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
+          class="w-full flex justify-end sm:hover:text-white text-gray-300 bg-default text-start text-sm cursor-pointer"
         >
           Select All
         </label>
@@ -855,7 +855,7 @@
 
 <div class="w-full overflow-x-scroll text-white">
   <table
-    class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+    class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
   >
     <thead>
       <TableHeader {columns} {sortOrders} {sortData} />
@@ -863,7 +863,7 @@
     <tbody>
       {#each stockList as item, index}
         <tr
-          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
+          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
             1 ===
             rawData?.length &&
           data?.user?.tier !== 'Pro' &&
@@ -873,7 +873,7 @@
         >
           {#each columns as column}
             <td
-              class="text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap"
+              class="text-sm sm:text-[1rem] whitespace-nowrap"
               class:text-left={column.align === "left"}
               class:text-right={column.align === "right"}
             >

@@ -95,7 +95,7 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] overflow-hidden text-white h-full min-h-screen mb-20 sm:mb-0 w-full mt-2 sm:mt-0"
+  class="bg-default overflow-hidden text-white h-full min-h-screen mb-20 sm:mb-0 w-full mt-2 sm:mt-0"
 >
   <div class="flex justify-center m-auto h-full overflow-hidden w-full">
     <div

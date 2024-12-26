@@ -155,7 +155,7 @@
 </svelte:head>
 
 <section
-  class="w-full bg-[#09090B] overflow-hidden text-white h-full mb-40 sm:mb-0"
+  class="w-full bg-default overflow-hidden text-white h-full mb-40 sm:mb-0"
 >
   <div class="h-full overflow-hidden">
     <div class="relative flex justify-center items-center overflow-hidden">
@@ -333,22 +333,22 @@
                 class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
               >
                 <table
-                  class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+                  class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
                 >
                   <thead>
-                    <tr class="bg-[#09090B]">
+                    <tr class="bg-default">
                       <th
-                        class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
+                        class="shadow-md text-start bg-default text-white text-sm font-semibold"
                       >
                         Person
                       </th>
                       <th
-                        class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
+                        class="shadow-md text-end bg-default text-white text-sm font-semibold"
                       >
                         Transaction Date
                       </th>
                       <th
-                        class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
+                        class="shadow-md text-end bg-default text-white text-sm font-semibold"
                       >
                         Amount
                       </th>
@@ -361,7 +361,7 @@
                   <tbody>
                     {#each senateTradingList as item}
                       <tr
-                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]"
+                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-default border-b-[#09090B]"
                       >
                         <td
                           class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3 border-b border-b-[#09090B]"
@@ -433,7 +433,7 @@
               <div class="relative w-full mt-10">
                 {#each senateTradingList as item}
                   <div
-                    class="w-full bg-[#09090B] border border-gray-600 shadow-lg h-auto pb-4 pt-4 mb-7"
+                    class="w-full bg-default border border-gray-600 shadow-lg h-auto pb-4 pt-4 mb-7"
                   >
                     <div class="flex flex-col relative">
                       {#if item?.party === "Republican"}

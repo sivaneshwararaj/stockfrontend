@@ -138,7 +138,7 @@
             </h1>
           </div>
 
-          <div class="w-full mt-5 m-auto mb-10 bg-[#09090B] overflow-hidden">
+          <div class="w-full mt-5 m-auto mb-10 bg-default overflow-hidden">
             <!--Start Top Winners/Losers-->
             <div class="flex flex-col justify-center items-center">
               <div class="text-start w-full text-white mb-2">
@@ -149,7 +149,7 @@
 
               <div class="w-full overflow-x-scroll">
                 <table
-                  class="mt-5 table table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto overflow-hidden"
+                  class="mt-5 table table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto overflow-hidden"
                 >
                   <thead>
                     <TableHeader {columns} {sortOrders} {sortData} />

@@ -88,7 +88,7 @@
   />
 </svelte:head>
 
-<section class="bg-[#09090B] overflow-hidden text-white min-h-screen w-full">
+<section class="bg-default overflow-hidden text-white min-h-screen w-full">
   <div class="flex justify-center m-auto h-full overflow-hidden w-full">
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"
@@ -103,9 +103,9 @@
             class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
           >
             <table
-              class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B]"
+              class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800"
             >
-              <thead class="">
+              <thead class="bg-default">
                 <tr>
                   <th
                     class=" border-b border-gray-800 text-white font-semibold text-sm sm:text-[1rem] text-start"
@@ -125,7 +125,7 @@
               </thead>
               <tbody class="shadow-md">
                 {#each revenueNames as name, index}
-                  <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-odd">
+                  <tr class="bg-table odd:bg-odd">
                     <th
                       class="whitespace-nowrap odd:bg-odd text-sm sm:text-[1rem] text-start font-medium border-b border-gray-800"
                     >
@@ -146,9 +146,9 @@
                       </td>
                     {/each}
                   </tr>
-                  <tr class="bg-[#09090B] border-b-[#09090B]">
+                  <tr class="bg-table border-b-[#09090B]">
                     <td
-                      class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-gray-800"
+                      class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-table border-b border-gray-800"
                     >
                       <span class="ml-2">{name} Revenue Growth</span>
                     </td>
@@ -181,17 +181,17 @@
               class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
             >
               <table
-                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800"
               >
                 <thead>
                   <tr>
                     <th
-                      class="bg-[#09090B] border-b border-gray-800 text-white font-semibold text-sm sm:text-[1rem] text-start"
+                      class="bg-default border-b border-gray-800 text-white font-semibold text-sm sm:text-[1rem] text-start"
                       >Quarter</th
                     >
                     {#each geographicXData as item}
                       <th
-                        class="z-20 bg-[#09090B] border-b border-gray-800 text-white font-semibold text-sm text-center bg-[#09090B]"
+                        class="z-20 bg-default border-b border-gray-800 text-white font-semibold text-sm text-center bg-default"
                         >{new Date(item ?? null)?.toLocaleString("en-US", {
                           month: "short",
                           day: "numeric",
@@ -203,14 +203,14 @@
                 </thead>
                 <tbody class="shadow-md">
                   {#each geographicNames as name, index}
-                    <tr class="bg-[#09090B] border-b-[#09090B] odd:bg-odd">
+                    <tr class="bg-table border-b-[#09090B] odd:bg-odd">
                       <th
                         class="text-white whitespace-nowrap odd:bg-odd text-sm sm:text-[1rem] text-start font-medium border-b border-gray-800"
                         >{name} Revenue</th
                       >
                       {#each geographiCategoryValues[index] as value}
                         <th
-                          class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-gray-800"
+                          class="text-white text-sm sm:text-[1rem] text-center font-medium border-b border-gray-800"
                         >
                           {@html value !== null &&
                           value !== 0 &&
@@ -220,15 +220,15 @@
                         </th>
                       {/each}
                     </tr>
-                    <tr class="bg-[#09090B] border-b-[#09090B]">
+                    <tr class="bg-table border-b-[#09090B]">
                       <td
-                        class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-[#09090B] border-b border-gray-800"
+                        class="text-white whitespace-nowrap text-sm sm:text-[1rem] text-start font-medium bg-table border-b border-gray-800"
                       >
                         <span class="ml-2">{name} Revenue Growth</span>
                       </td>
                       {#each geographicGrowthValues[index] as growthValue}
                         <td
-                          class="text-sm sm:text-[1rem] text-end {growthValue >
+                          class="text-sm sm:text-[1rem] text-center {growthValue >
                           0
                             ? 'text-[#00FC50]'
                             : growthValue < 0

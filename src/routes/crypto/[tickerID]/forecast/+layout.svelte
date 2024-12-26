@@ -13,9 +13,14 @@
       analyst: "analyst",
     };
 
-    const foundSection = parts?.find((part) => Object?.values(sectionMap)?.includes(part));
+    const foundSection = parts?.find((part) =>
+      Object?.values(sectionMap)?.includes(part),
+    );
 
-    displaySubSection = Object?.keys(sectionMap)?.find((key) => sectionMap[key] === foundSection) || "overview";
+    displaySubSection =
+      Object?.keys(sectionMap)?.find(
+        (key) => sectionMap[key] === foundSection,
+      ) || "overview";
   }
 
   function changeSubSection(state) {
@@ -24,7 +29,6 @@
       ai: "/forecast/ai",
       analyst: "/forecast/analyst",
     };
-
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
@@ -37,7 +41,10 @@
 
   const unsubscribe = page.subscribe(($page) => {
     const splitRoute = $page.url.pathname.split("/");
-    const routeState = splitRoute[splitRoute.length - 1] !== "forecast" ? splitRoute[splitRoute.length - 1] : "overview";
+    const routeState =
+      splitRoute[splitRoute.length - 1] !== "forecast"
+        ? splitRoute[splitRoute.length - 1]
+        : "overview";
 
     changeSubSection(routeState);
   });
@@ -47,9 +54,10 @@
   });
 </script>
 
-<section class="w-auto max-w-5xl bg-[#09090B] overflow-hidden text-black h-full mb-40">
+<section
+  class="w-auto max-w-5xl bg-default overflow-hidden text-black h-full mb-40"
+>
   <div class="m-auto h-full overflow-hidden">
-  
     <slot />
   </div>
 </section>

@@ -156,7 +156,7 @@
     {#if Object?.keys(varDict)?.length !== 0}
       <div class="pb-4 w-full mt-5">
         <div
-          class="w-auto p-4 sm:p-6 bg-[#09090B] sm:bg-[#09090B] rounded-md relative"
+          class="w-auto p-4 sm:p-6 bg-default sm:bg-default rounded-md relative"
         >
           <div class="flex flex-row items-center justify-between">
             <div class="relative size-[60px] sm:size-[90px] ml-auto">

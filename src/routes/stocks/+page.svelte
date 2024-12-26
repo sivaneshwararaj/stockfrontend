@@ -79,7 +79,7 @@
             </p>
           </div>
 
-          <div class="w-full m-auto mb-10 bg-[#09090B]">
+          <div class="w-full m-auto mb-10 bg-default">
             <!--Start Top Winners/Losers-->
             <div class="flex flex-col justify-center items-center">
               <Table {data} {rawData} />

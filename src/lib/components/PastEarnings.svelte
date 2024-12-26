@@ -109,7 +109,7 @@
             class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-3 m-auto overflow-x-scroll pr-5 sm:pr-0"
           >
             <table
-              class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+              class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800"
             >
               <thead class="">
                 <tr class="">
@@ -119,7 +119,7 @@
                   >
                   {#each xData as item}
                     <td
-                      class="z-20 bg-primary border-b border-[#000] text-white font-semibold text-sm text-end bg-[#09090B]"
+                      class="z-20 bg-primary border-b border-[#000] text-white font-semibold text-sm text-end bg-default"
                       >{item}</td
                     >
                   {/each}
@@ -134,7 +134,7 @@
                   </th>
                   {#each tableRevenue as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index !== 0}
                         {#if userTier !== "Pro"}
@@ -176,7 +176,7 @@
                   </th>
                   {#each tableRevenueEst as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index !== 0}
                         {#if userTier !== "Pro"}
@@ -218,7 +218,7 @@
                   </th>
                   {#each tableRevenueSurprise as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-semibold bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-semibold bg-default"
                     >
                       {#if index !== 0}
                         {#if userTier !== "Pro"}
@@ -274,7 +274,7 @@
                   </th>
                   {#each tableEPS as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index !== 0}
                         {#if userTier !== "Pro"}
@@ -314,7 +314,7 @@
                   </th>
                   {#each tableEPSEst as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index !== 0}
                         {#if userTier !== "Pro"}
@@ -354,7 +354,7 @@
                   </th>
                   {#each tableEPSSurprise as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-semibold bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-semibold bg-default"
                     >
                       {#if index !== 0}
                         {#if userTier !== "Pro"}
@@ -410,7 +410,7 @@
                   </th>
                   {#each tableVolatility as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-semibold bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-semibold bg-default"
                     >
                       {#if index !== 0}
                         {#if userTier !== "Pro"}

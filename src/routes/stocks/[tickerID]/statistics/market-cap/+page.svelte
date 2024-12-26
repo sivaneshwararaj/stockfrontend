@@ -398,7 +398,7 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] w-full overflow-hidden min-h-screen text-white h-full"
+  class="bg-default w-full overflow-hidden min-h-screen text-white h-full"
 >
   <div class="w-full flex justify-center w-full sm-auto h-full overflow-hidden">
     <div
@@ -508,7 +508,7 @@
                         <DropdownMenu.Trigger asChild let:builder>
                           <Button
                             builders={[builder]}
-                            class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                            class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                           >
                             <span class="truncate text-white">{timePeriod}</span
                             >
@@ -583,7 +583,7 @@
                     </div>
                     <Button
                       on:click={() => exportData("csv")}
-                      class="ml-2 w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                      class="ml-2 w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                     >
                       <span class="truncate text-white">Download</span>
                       <svg
@@ -663,10 +663,10 @@
 
                 <div class="w-full overflow-x-scroll">
                   <table
-                    class="table table-sm table-compact rounded-none sm:rounded-md w-full m-auto mt-4"
+                    class="table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md w-full m-auto mt-4"
                   >
-                    <thead class="">
-                      <tr class="border-b border-gray-800">
+                    <thead class="bg-default">
+                      <tr>
                         <th class="text-white font-semibold text-start text-sm"
                           >Date</th
                         >
@@ -685,13 +685,13 @@
                           class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
                         >
                           <td
-                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b border-gray-800"
+                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                           >
                             {item?.date}
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b border-gray-800"
+                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
                           >
                             {@html abbreviateNumber(
                               item?.marketCap,
@@ -701,7 +701,7 @@
                           </td>
 
                           <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b border-gray-800"
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
                           >
                             {#if index + 1 - tableList?.length === 0}
                               -

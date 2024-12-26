@@ -250,7 +250,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
+<section class="w-full bg-default overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -289,7 +289,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white">Year: {year}</span>
                         <svg
@@ -332,7 +332,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white"
                           >Quarter: Q{quarter}</span
@@ -580,7 +580,7 @@
               class="flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll no-scrollbar"
             >
               <table
-                class="table table-sm table-pin-rows table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+                class="table table-sm table-pin-rows table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
               >
                 <thead>
                   <TableHeader {columns} {sortOrders} {sortData} />

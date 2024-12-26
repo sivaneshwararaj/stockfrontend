@@ -144,7 +144,7 @@
 </svelte:head>
 
 <section
-  class="w-full bg-[#09090B] overflow-hidden min-h-screen text-white h-full"
+  class="w-full bg-default overflow-hidden min-h-screen text-white h-full"
 >
   <div class="h-full overflow-hidden w-full">
     <div class="relative flex justify-center items-center overflow-hidden">
@@ -293,22 +293,22 @@
                 class="mt-6 flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
               >
                 <table
-                  class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+                  class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
                 >
                   <thead>
-                    <tr class="bg-[#09090B] border-b border-[#27272A]">
+                    <tr class="bg-default border-b border-[#27272A]">
                       <th
-                        class="shadow-md text-start bg-[#09090B] text-white text-sm font-semibold"
+                        class="shadow-md text-start bg-default text-white text-sm font-semibold"
                       >
                         Person
                       </th>
                       <th
-                        class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
+                        class="shadow-md text-end bg-default text-white text-sm font-semibold"
                       >
                         Transaction Date
                       </th>
                       <th
-                        class="shadow-md text-end bg-[#09090B] text-white text-sm font-semibold"
+                        class="shadow-md text-end bg-default text-white text-sm font-semibold"
                       >
                         Amount
                       </th>
@@ -321,7 +321,7 @@
                   <tbody>
                     {#each senateTradingList as item}
                       <tr
-                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b border-gray-800"
+                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-default border-b border-gray-800"
                       >
                         <td
                           class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3"

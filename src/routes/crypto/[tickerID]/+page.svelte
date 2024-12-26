@@ -648,7 +648,7 @@ afterUpdate(async () => {
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] min-h-screen pb-40">
+<section class="bg-default min-h-screen pb-40">
   <div class="w-full m-auto">
     <div class="md:flex md:justify-between md:divide-x md:divide-slate-800">
       <!-- Main content -->
@@ -740,14 +740,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("1D")}
                 class="text-sm font-medium text-gray-400 {displayData === '1D'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1D
               </button>
               <div
                 class="{displayData === '1D'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem] rounded-full"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -756,14 +756,14 @@ afterUpdate(async () => {
                 class="w-full text-sm font-medium text-gray-400 {displayData ===
                 '1W'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1W
               </button>
               <div
                 class="{displayData === '1W'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -771,14 +771,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("1M")}
                 class="text-sm font-medium text-gray-400 {displayData === '1M'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1M
               </button>
               <div
                 class="{displayData === '1M'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -786,14 +786,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("6M")}
                 class="text-sm font-medium text-gray-400 {displayData === '6M'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 6M
               </button>
               <div
                 class="{displayData === '6M'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -801,14 +801,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("1Y")}
                 class="text-sm font-medium text-gray-400 {displayData === '1Y'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1Y
               </button>
               <div
                 class="{displayData === '1Y'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
 
@@ -817,20 +817,20 @@ afterUpdate(async () => {
                 on:click={() => changeData("MAX")}
                 class="text-sm font-medium text-gray-400 {displayData === 'MAX'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 MAX
               </button>
               <div
                 class="{displayData === 'MAX'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
 
             <Button
               on:click={changeChartType}
-              class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+              class="ml-auto border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
             >
               {#if displayChartType === "line"}
                 <svg
@@ -1160,14 +1160,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("1D")}
                 class="text-sm font-medium text-gray-400 {displayData === '1D'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1D
               </button>
               <div
                 class="{displayData === '1D'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] rounded-full"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem] rounded-full"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -1176,14 +1176,14 @@ afterUpdate(async () => {
                 class="w-full text-sm font-medium text-gray-400 {displayData ===
                 '1W'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1W
               </button>
               <div
                 class="{displayData === '1W'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -1191,14 +1191,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("1M")}
                 class="text-sm font-medium text-gray-400 {displayData === '1M'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1M
               </button>
               <div
                 class="{displayData === '1M'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -1206,14 +1206,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("6M")}
                 class="text-sm font-medium text-gray-400 {displayData === '6M'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 6M
               </button>
               <div
                 class="{displayData === '6M'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
             <div class="flex flex-col items-center mr-4">
@@ -1221,14 +1221,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("1Y")}
                 class="text-sm font-medium text-gray-400 {displayData === '1Y'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 1Y
               </button>
               <div
                 class="{displayData === '1Y'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
 
@@ -1237,14 +1237,14 @@ afterUpdate(async () => {
                 on:click={() => changeData("MAX")}
                 class="text-sm font-medium text-gray-400 {displayData === 'MAX'
                   ? 'text-white '
-                  : 'bg-[#09090B]'}"
+                  : 'bg-default'}"
               >
                 MAX
               </button>
               <div
                 class="{displayData === 'MAX'
                   ? `bg-[${colorChange}]`
-                  : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem]"
+                  : 'bg-default'} mt-1 h-[3px] w-[1.5rem]"
               />
             </div>
 

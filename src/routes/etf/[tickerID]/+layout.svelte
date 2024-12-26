@@ -292,7 +292,7 @@
 <svelte:window bind:scrollY={y} />
 
 <body
-  class="bg-[#09090B] w-full max-w-screen sm:max-w-7xl min-h-screen xl:max-w-screen-2xl overflow-hidden"
+  class="bg-default w-full max-w-screen sm:max-w-7xl min-h-screen xl:max-w-screen-2xl overflow-hidden"
 >
   <!-- Page wrapper -->
   <div class="flex flex-col w-full mt-5 relative w-full">
@@ -301,7 +301,7 @@
         <div class="w-full">
           <div class="sm:flex sm:justify-start w-full">
             <!--Start Mobile Navbar-->
-            <div class="fixed top-0 left-0 right-0 z-20 bg-[#09090B] sm:hidden">
+            <div class="fixed top-0 left-0 right-0 z-20 bg-default sm:hidden">
               <div class="navbar w-full px-4 py-2">
                 <div
                   class="{isScrolled
@@ -520,7 +520,7 @@
                           <div class="flex flex-col ml-auto mr-2">
                             {#if userWatchList?.length !== 0}
                               <div
-                                class="flex-shrink-0 rounded-full sm:hover:bg-white sm:hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                                class="flex-shrink-0 rounded-full sm:hover:bg-white sm:hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                               >
                                 <label
                                   for="addWatchListModal"
@@ -551,7 +551,7 @@
                               </div>
                             {:else if userWatchList?.length === 0}
                               <div
-                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                                class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                               >
                                 <label
                                   on:click={() =>
@@ -585,7 +585,7 @@
                           </div>
                         {:else}
                           <div
-                            class="flex-shrink-0 ml-auto mr-2 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                            class="flex-shrink-0 ml-auto mr-2 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                           >
                             <label
                               for="userLogin"
@@ -608,7 +608,7 @@
                         <!--Start Price Alert -->
 
                         <div
-                          class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-[#09090B] flex items-center justify-center"
+                          class="flex-shrink-0 rounded-full hover:bg-white hover:bg-opacity-[0.02] transition ease-out w-12 h-12 relative bg-default flex items-center justify-center"
                         >
                           <label
                             on:click={() => ($openPriceAlert = true)}
@@ -664,7 +664,7 @@
 
                     <!--Start Ticker Section-->
 
-                    <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-[#09090B]"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
+                    <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-default"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
                     <nav
                       class="sm:ml-4 border-b-[2px] overflow-x-scroll md:overflow-hidden whitespace-nowrap"
                     >

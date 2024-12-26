@@ -42,7 +42,7 @@
   }
 </script>
 
-<section class="bg-[#09090B] overflow-hidden text-white h-full sm:mb-0">
+<section class="bg-default overflow-hidden text-white h-full sm:mb-0">
   <div class="flex justify-center m-auto h-full overflow-hidden">
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"
@@ -82,7 +82,7 @@
                     : ''}"
                 >
                   <div
-                    class="flex-shrink-0 mr-3 rounded-full w-10 h-10 relative bg-[#09090B]"
+                    class="flex-shrink-0 mr-3 rounded-full w-10 h-10 relative bg-default"
                   >
                     <img
                       class="flex-shrink-0 rounded-full w-7 h-7 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"

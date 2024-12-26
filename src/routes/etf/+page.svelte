@@ -148,7 +148,7 @@
             </div>
           </div>
 
-          <div class="w-full mt-10 m-auto mb-10 bg-[#09090B] pl-3 pr-3">
+          <div class="w-full mt-10 m-auto mb-10 bg-default pl-3 pr-3">
             <!--Start Top Winners/Losers-->
             <div class="flex flex-col justify-center items-center">
               <div class="ml-4 text-start w-full text-white mb-2">
@@ -161,7 +161,7 @@
 
               <div class="w-full overflow-x-scroll">
                 <table
-                  class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+                  class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
                 >
                   <thead>
                     <tr>

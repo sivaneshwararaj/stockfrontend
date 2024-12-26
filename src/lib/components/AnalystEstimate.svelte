@@ -769,7 +769,7 @@
             class="no-scrollbar flex justify-start items-center w-screen sm:w-full mt-6 m-auto overflow-x-scroll pr-5 sm:pr-0"
           >
             <table
-              class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B]"
+              class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800"
             >
               <thead class="">
                 <tr class="">
@@ -779,7 +779,7 @@
                   >
                   {#each xData as item}
                     <td
-                      class="z-20 bg-primary border-b border-[#000] text-white font-semibold text-sm text-end bg-[#09090B]"
+                      class="z-20 bg-primary border-b border-[#000] text-white font-semibold text-sm text-end bg-default"
                       >{"FY" + item}</td
                     >
                   {/each}
@@ -794,7 +794,7 @@
                   </th>
                   {#each tableCombinedRevenue as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-default"
                     >
                       {item?.val === "0.00" ||
                       item?.val === null ||
@@ -813,7 +813,7 @@
                   </th>
                   {#each computeGrowthList(tableActualRevenue, tableCombinedRevenue) as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index === 0 || item?.growth === null}
                         n/a
@@ -848,7 +848,7 @@
                   </th>
                   {#each tableCombinedEPS as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-default"
                     >
                       {item?.val === "0.00" ||
                       item?.val === null ||
@@ -867,7 +867,7 @@
                   </th>
                   {#each computeGrowthList(tableActualEPS, tableCombinedEPS) as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index === 0 || item?.growth === null}
                         n/a
@@ -901,7 +901,7 @@
                   </th>
                   {#each tableCombinedNetIncome as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-default"
                     >
                       {item?.val === "0.00" ||
                       item?.val === null ||
@@ -920,7 +920,7 @@
                   </th>
                   {#each computeGrowthList(tableActualNetIncome, tableCombinedNetIncome) as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index === 0 || item?.growth === null}
                         n/a
@@ -955,7 +955,7 @@
                   </th>
                   {#each tableCombinedEbitda as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-default"
                     >
                       {item?.val === "0.00" ||
                       item?.val === null ||
@@ -974,7 +974,7 @@
                   </th>
                   {#each computeGrowthList(tableActualEbitda, tableCombinedEbitda) as item, index}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium bg-default"
                     >
                       {#if index === 0 || item?.growth === null}
                         n/a
@@ -1008,7 +1008,7 @@
                   >
                   {#each tableCombinedRevenue as item}
                     <td
-                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-[#09090B]"
+                      class="text-white text-sm sm:text-[1rem] text-end font-medium border-b border-[#27272A] bg-default"
                     >
                       {#if item?.FY > 24}
                         {item?.numOfAnalysts === (null || 0)

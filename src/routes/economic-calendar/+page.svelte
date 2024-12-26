@@ -399,7 +399,7 @@
                       class=" m-auto w-full cursor-pointer h-16 {index ===
                       selectedWeekday
                         ? 'bg-[#fff] text-black font-semibold'
-                        : ''} rounded sm:rounded-none flex bg-[#09090B] border border-gray-600 mb-3"
+                        : ''} rounded sm:rounded-none flex bg-default border border-gray-600 mb-3"
                     >
                       <div
                         class=" flex flex-row justify-center items-center w-full"
@@ -472,7 +472,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white">Filter Country</span>
                         <svg
@@ -503,7 +503,7 @@
                           bind:value={searchQuery}
                           on:input={handleInput}
                           autocomplete="off"
-                          class=" absolute fixed sticky w-full border-0 bg-[#09090B] border-b border-gray-200
+                          class=" absolute fixed sticky w-full border-0 bg-default border-b border-gray-200
           focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300"
                           type="search"
                           placeholder="Search..."
@@ -537,7 +537,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        class="border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white"
                           >Filter Importance</span
@@ -622,7 +622,7 @@
                   {#if filterList?.length !== 0}
                     <Button
                       on:click={() => handleReset()}
-                      class="w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-start items-center px-3 py-2 text-white rounded-md truncate"
+                      class="w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-start items-center px-3 py-2 text-white rounded-md truncate"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -674,7 +674,7 @@
 
                       <div class="w-full overflow-x-scroll no-scrollbar">
                         <table
-                          class="table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                          class="table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
                         >
                           <thead>
                             <TableHeader {columns} {sortOrders} {sortData} />

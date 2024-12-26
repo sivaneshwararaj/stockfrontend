@@ -273,7 +273,7 @@
     </ul>
   </div>
 
-  <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-[#09090B] overflow-hidden">
+  <div class="mt-10 sm:mt-5 w-full m-auto mb-10 bg-default overflow-hidden">
     <!--Start Top Winners/Losers-->
     <div class="flex flex-col justify-center items-center">
       <div class="ml-2 text-start w-full text-white mb-2">

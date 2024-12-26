@@ -28,6 +28,8 @@ module.exports = {
         primary: "#1E222D",
         secondary: "#2A2E39",
         odd: "#121217",
+        table: "#18181D",
+        default: "#09090B",
         destructive: {
           DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
           foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",

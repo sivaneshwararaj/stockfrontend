@@ -324,7 +324,7 @@
                   {#if editMode}
                     <label
                       on:click={handleDeleteTickers}
-                      class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500"
+                      class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white bg-default sm:hover:bg-default/60 ease-out sm:hover:text-red-500"
                     >
                       <svg
                         class="inline-block w-5 h-5"
@@ -342,7 +342,7 @@
                   {/if}
                   <label
                     on:click={handleEditMode}
-                    class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-primary ease-out sm:hover:text-red-500"
+                    class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-default sm:hover:bg-primary ease-out sm:hover:text-red-500"
                   >
                     <svg
                       class="inline-block w-5 h-5"
@@ -396,14 +396,14 @@
                     </div>
                     <Combobox.Input
                       on:input={search}
-                      class="text-sm sm:text-[1rem] controls-input text-white bg-[#09090B] focus:outline-none border border-gray-600 rounded-md placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs"
+                      class="text-sm sm:text-[1rem] controls-input text-white bg-default focus:outline-none border border-gray-600 rounded-md placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs"
                       placeholder="Add new stock"
                       aria-label="Add new stock"
                     />
                   </div>
                   {#if inputValue?.length !== 0}
                     <Combobox.Content
-                      class="w-auto z-10 rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
+                      class="w-auto z-10 rounded-md border border-gray-700 bg-default px-1 py-3 shadow-popover outline-none"
                       sideOffset={8}
                     >
                       {#each searchBarData as item}
@@ -439,7 +439,7 @@
                 class="w-full rounded-md overflow-hidden overflow-x-scroll no-scrollbar"
               >
                 <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
+                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
                 >
                   <!-- head -->
                   <thead>

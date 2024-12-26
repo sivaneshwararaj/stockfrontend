@@ -112,7 +112,7 @@
               >
                 <div
                   on:click={() => stockSelector(item?.symbol)}
-                  class="flex-shrink-0 mr-3 rounded-full w-8 h-8 sm:w-10 sm:h-10 relative bg-[#09090B]"
+                  class="flex-shrink-0 mr-3 rounded-full w-8 h-8 sm:w-10 sm:h-10 relative bg-default"
                 >
                   <img
                     class="avatar rounded-full w-5 h-5 absolute inset-1/2 transform -translate-x-1/2 -translate-y-1/2"

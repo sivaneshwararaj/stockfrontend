@@ -227,7 +227,7 @@ const output = await response.json();
                     on:click={() => (oauthLoading = !oauthLoading)}
                     on:mouseenter={handleHoverGoogle}
                     on:mouseleave={handleHoverGoogle}
-                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                   >
                     <svg
                       class="{isHoveredGoogle
@@ -276,7 +276,7 @@ const output = await response.json();
                     on:click={() => (oauthLoading = !oauthLoading)}
                     on:mouseenter={handleHoverDiscord}
                     on:mouseleave={handleHoverDiscord}
-                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                   >
                     <svg
                       class="{isHoveredDiscord
@@ -810,7 +810,7 @@ const output = await response.json();
                     on:click={() => (oauthLoading = !oauthLoading)}
                     on:mouseenter={handleHoverGithub}
                     on:mouseleave={handleHoverGithub}
-                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                   >
                     <svg
                       class="{isHoveredGithub
@@ -921,7 +921,7 @@ const output = await response.json();
                     on:click={() => (oauthLoading = !oauthLoading)}
                     on:mouseenter={handleHoverGoogle}
                     on:mouseleave={handleHoverGoogle}
-                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                   >
                     <svg
                       class="{isHoveredGoogle
@@ -970,7 +970,7 @@ const output = await response.json();
                     on:click={() => (oauthLoading = !oauthLoading)}
                     on:mouseenter={handleHoverDiscord}
                     on:mouseleave={handleHoverDiscord}
-                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                   >
                     <svg
                       class="{isHoveredDiscord
@@ -1504,7 +1504,7 @@ const output = await response.json();
                     on:click={() => (oauthLoading = !oauthLoading)}
                     on:mouseenter={handleHoverGithub}
                     on:mouseleave={handleHoverGithub}
-                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                    class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                   >
                     <svg
                       class="{isHoveredGithub
@@ -1636,7 +1636,7 @@ const output = await response.json();
                 <div class="w-full max-w-lg pt-5 m-auto pb-5">
                   <button
                     type="submit"
-                    class="btn bg-[#09090B] border border-gray-600 sm:hover:bg-secondary text-white btn-md w-full rounded-md m-auto text-white font-semibold text-md"
+                    class="btn bg-default border border-gray-600 sm:hover:bg-secondary text-white btn-md w-full rounded-md m-auto text-white font-semibold text-md"
                   >
                     Login
                   </button>
@@ -1654,7 +1654,7 @@ const output = await response.json();
                       on:click={() => (oauthLoading = !oauthLoading)}
                       on:mouseenter={handleHoverGoogle}
                       on:mouseleave={handleHoverGoogle}
-                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                     >
                       <svg
                         class="{isHoveredGoogle
@@ -1703,7 +1703,7 @@ const output = await response.json();
                       on:click={() => (oauthLoading = !oauthLoading)}
                       on:mouseenter={handleHoverDiscord}
                       on:mouseleave={handleHoverDiscord}
-                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                     >
                       <svg
                         class="{isHoveredDiscord
@@ -2237,7 +2237,7 @@ const output = await response.json();
                       on:click={() => (oauthLoading = !oauthLoading)}
                       on:mouseenter={handleHoverGithub}
                       on:mouseleave={handleHoverGithub}
-                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                     >
                       <svg
                         class="{isHoveredGithub
@@ -2318,7 +2318,7 @@ const output = await response.json();
                 <div class="w-full max-w-lg pt-5 m-auto pb-3">
                   <button
                     type="submit"
-                    class="btn bg-[#09090B] border border-gray-600 sm:hover:bg-secondary text-white btn-md w-full rounded-md m-auto font-semibold text-md"
+                    class="btn bg-default border border-gray-600 sm:hover:bg-secondary text-white btn-md w-full rounded-md m-auto font-semibold text-md"
                   >
                     Register
                   </button>
@@ -2337,7 +2337,7 @@ const output = await response.json();
                       on:click={() => (oauthLoading = !oauthLoading)}
                       on:mouseenter={handleHoverGoogle}
                       on:mouseleave={handleHoverGoogle}
-                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                     >
                       <svg
                         class="{isHoveredGoogle
@@ -2386,7 +2386,7 @@ const output = await response.json();
                       on:click={() => (oauthLoading = !oauthLoading)}
                       on:mouseenter={handleHoverDiscord}
                       on:mouseleave={handleHoverDiscord}
-                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                     >
                       <svg
                         class="{isHoveredDiscord
@@ -2920,7 +2920,7 @@ const output = await response.json();
                       on:click={() => (oauthLoading = !oauthLoading)}
                       on:mouseenter={handleHoverGithub}
                       on:mouseleave={handleHoverGithub}
-                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+                      class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
                     >
                       <svg
                         class="{isHoveredGithub

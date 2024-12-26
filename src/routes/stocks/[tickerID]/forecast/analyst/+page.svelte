@@ -9,7 +9,7 @@
   import { onMount } from "svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { goto } from "$app/navigation";
-
+  import Infobox from "$lib/components/Infobox.svelte";
   export let data;
 
   let analystRating = data?.getAnalystRating ?? {};
@@ -232,7 +232,7 @@
 </svelte:head>
 
 <section
-  class="bg-[#09090B] overflow-hidden text-white h-full min-h-screen mb-40 sm:mb-0 w-full"
+  class="bg-default overflow-hidden text-white h-full min-h-screen mb-40 sm:mb-0 w-full"
 >
   <div class="flex justify-center m-auto h-full overflow-hidden w-full">
     <div
@@ -313,9 +313,7 @@
           class="mb-4 grid grid-cols-2 grid-rows-2 divide-contrast rounded-md border border-gray-600 md:grid-cols-4 md:grid-rows-1 md:divide-x"
         >
           <div class="p-4 bp:p-5 sm:p-6">
-            <div class="text-sm font-normal text-default xs:text-base">
-              Total Analysts
-            </div>
+            <div class="text-[1rem] font-normal text-white">Total Analysts</div>
 
             <div
               class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
@@ -324,7 +322,7 @@
             </div>
           </div>
           <div class="p-4 bp:p-5 sm:p-6 border-l border-gray-600 md:border-0">
-            <div class="text-sm font-normal text-default xs:text-base">
+            <div class="text-[1rem] font-normal text-white">
               Consensus Rating
             </div>
             <div
@@ -334,9 +332,7 @@
             </div>
           </div>
           <div class="p-4 bp:p-5 sm:p-6 border-t border-gray-600 md:border-0">
-            <div class="text-sm font-normal text-default xs:text-base">
-              Price Target
-            </div>
+            <div class="text-[1rem] font-normal text-white">Price Target</div>
             <div
               class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
             >
@@ -348,9 +344,7 @@
           <div
             class="p-4 bp:p-5 sm:p-6 border-t border-gray-600 md:border-0 border-l border-gray-600 md:border-0"
           >
-            <div class="text-sm font-normal text-default xs:text-base">
-              Upside
-            </div>
+            <div class="text-[1rem] font-normal text-white">Upside</div>
             <div
               class="mt-1 break-words font-semibold leading-8 tiny:text-lg xs:text-xl sm:text-2xl {changesPercentage >=
               0
@@ -366,21 +360,9 @@
 
         {#if rawData?.length !== 0}
           {#if activeIdx === 1}
-            <div
-              class="w-full text-white text-start p-3 sm:p-5 mb-10 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-            >
-              <svg
-                class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 256 256"
-                ><path
-                  fill="#fff"
-                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                /></svg
-              >
-              Considering only the latest rating within the past 12 months from each
-              unique analyst with a 4-star or higher rating.
-            </div>
+            <Infobox
+              text="Considering only the latest rating within the past 12 months from each unique analyst with a 4-star or higher rating."
+            />
           {/if}
 
           <div
@@ -395,10 +377,10 @@
 
           <div class=" w-full m-auto mb-4 overflow-x-scroll lg:overflow-hidden">
             <table
-              class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+              class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
             >
-              <thead class="">
-                <tr class="border-b border-[#27272A]">
+              <thead class="bg-default">
+                <tr>
                   <td class="text-white font-semibold text-sm text-start"
                     >Analyst</td
                   >
@@ -424,7 +406,7 @@
                   <tr
                     class="{latestInfoDate(item?.date)
                       ? 'bg-[#F9AB00] bg-opacity-[0.1]'
-                      : 'odd:bg-odd'} border-b-[#09090B] {index + 1 ===
+                      : 'odd:bg-odd'} border-b border-gray-800 {index + 1 ===
                       historyList?.slice(0, 3)?.length &&
                     data?.user?.tier !== 'Pro'
                       ? 'opacity-[0.1]'

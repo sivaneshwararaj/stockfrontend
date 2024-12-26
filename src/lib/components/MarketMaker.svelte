@@ -34,7 +34,7 @@
           </div>
         </div>
 
-        <div class="pb-2 rounded-md bg-[#09090B]">
+        <div class="pb-2 rounded-md bg-default">
           <div class="app w-full h-[300px] mt-5">
             <Chart {init} options={optionsData} class="chart" />
           </div>
@@ -153,19 +153,19 @@
             <thead>
               <tr class="">
                 <th
-                  class="text-white shadow-md font-semibold text-sm text-start bg-[#09090B]"
+                  class="text-white shadow-md font-semibold text-sm text-start bg-default"
                   >Name</th
                 >
                 <th
-                  class="text-white shadow-md font-semibold text-sm text-end bg-[#09090B]"
+                  class="text-white shadow-md font-semibold text-sm text-end bg-default"
                   >Trade Count</th
                 >
                 <th
-                  class="text-white shadow-md font-semibold text-sm text-end bg-[#09090B]"
+                  class="text-white shadow-md font-semibold text-sm text-end bg-default"
                   >Share Quantity</th
                 >
                 <th
-                  class="text-white shadow-md font-semibold text-sm text-end bg-[#09090B]"
+                  class="text-white shadow-md font-semibold text-sm text-end bg-default"
                   >Notional Sum</th
                 >
               </tr>
@@ -178,7 +178,7 @@
                   !showFullStats &&
                   topMarketMakers?.length > 3
                     ? 'opacity-[0.5]'
-                    : ''} sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B]"
+                    : ''} sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-default border-b-[#09090B]"
                 >
                   <td
                     class="text-white text-sm sm:text-[1rem] font-medium whitespace-nowrap"

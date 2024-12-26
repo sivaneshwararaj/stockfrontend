@@ -1058,7 +1058,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
+                        class="min-w-[110px] w-full sm:w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
                       >
                         <span
                           class="truncate font-semibold text-white text-sm sm:text-[1rem]"
@@ -1155,7 +1155,7 @@
                     {#if editMode}
                       <label
                         on:click={handleDeleteTickers}
-                        class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white bg-[#09090B] sm:hover:bg-[#09090B]/60 ease-out sm:hover:text-red-500"
+                        class="border text-sm border-gray-600 mr-2 sm:ml-3 sm:mr-0 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 pl-3 pr-4 font-semibold text-white bg-default sm:hover:bg-default/60 ease-out sm:hover:text-red-500"
                       >
                         <svg
                           class="inline-block w-5 h-5"
@@ -1173,7 +1173,7 @@
                     {/if}
                     <label
                       on:click={handleEditMode}
-                      class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-[#09090B] sm:hover:bg-primary ease-out sm:hover:text-red-500"
+                      class="border text-sm border-gray-600 sm:ml-3 cursor-pointer inline-flex items-center justify-center space-x-1 whitespace-nowrap rounded-md py-2.5 px-3 text-white bg-default sm:hover:bg-primary ease-out sm:hover:text-red-500"
                     >
                       <svg
                         class="inline-block w-5 h-5"
@@ -1231,14 +1231,14 @@
                       </div>
                       <Combobox.Input
                         on:input={search}
-                        class="text-sm sm:text-[1rem] controls-input text-white bg-[#09090B] focus:outline-none border border-gray-600 rounded-md placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs"
+                        class="text-sm sm:text-[1rem] controls-input text-white bg-default focus:outline-none border border-gray-600 rounded-md placeholder:text-white/80 px-3 py-2 pl-8 xs:pl-10 flex-grow w-full sm:min-w-56 max-w-xs"
                         placeholder="Add new stock"
                         aria-label="Add new stock"
                       />
                     </div>
                     {#if inputValue?.length !== 0}
                       <Combobox.Content
-                        class="w-auto z-10 rounded-md border border-gray-700 bg-[#09090B] px-1 py-3 shadow-popover outline-none"
+                        class="w-auto z-10 rounded-md border border-gray-700 bg-default px-1 py-3 shadow-popover outline-none"
                         sideOffset={8}
                       >
                         {#each searchBarData as item}
@@ -1277,7 +1277,7 @@
                     <DropdownMenu.Trigger asChild let:builder>
                       <Button
                         builders={[builder]}
-                        class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
+                        class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
                       >
                         <span class="truncate text-white text-sm sm:text-[1rem]"
                           >Indicators</span
@@ -1303,7 +1303,7 @@
                     >
                       <!-- Search Input -->
                       <div
-                        class="sticky fixed -top-1 z-40 bg-[#09090B] p-2 border-b border-gray-600"
+                        class="sticky fixed -top-1 z-40 bg-default p-2 border-b border-gray-600"
                       >
                         <div class="relative w-full">
                           <!-- Input Field -->
@@ -1312,7 +1312,7 @@
                             on:input={handleInput}
                             autocomplete="off"
                             autofocus=""
-                            class="text-sm w-full border-0 bg-[#09090B] focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8"
+                            class="text-sm w-full border-0 bg-default focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8"
                             type="text"
                             placeholder=""
                           />
@@ -1419,17 +1419,17 @@
                       </DropdownMenu.Group>
                       <!-- Reset Selection button -->
                       <div
-                        class="sticky -bottom-1 bg-[#09090B] z-50 p-2 border-t border-gray-600 w-full flex justify-between items-center"
+                        class="sticky -bottom-1 bg-default z-50 p-2 border-t border-gray-600 w-full flex justify-between items-center"
                       >
                         <label
                           on:click={handleResetAll}
-                          class="w-full sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
+                          class="w-full sm:hover:text-white text-gray-300 bg-default text-start text-sm cursor-pointer"
                         >
                           Reset Selection
                         </label>
                         <label
                           on:click={handleSelectAll}
-                          class="w-full flex justify-end sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
+                          class="w-full flex justify-end sm:hover:text-white text-gray-300 bg-default text-start text-sm cursor-pointer"
                         >
                           Select All
                         </label>
@@ -1492,7 +1492,7 @@
 
                   <div class="w-full overflow-x-scroll">
                     <table
-                      class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto mt-4"
+                      class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
                     >
                       <!-- head -->
                       <thead>
@@ -1501,11 +1501,11 @@
                       <tbody class="p-0">
                         {#each watchList as item}
                           <tr
-                            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
+                            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
                           >
                             <td
                               on:click={() => handleFilter(item?.symbol)}
-                              class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] flex flex-row items-center"
+                              class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start flex flex-row items-center"
                             >
                               <input
                                 type="checkbox"
@@ -1531,7 +1531,7 @@
                             </td>
 
                             <td
-                              class="text-white text-sm sm:text-[1rem] border-b-[#09090B] whitespace-nowrap"
+                              class="text-white text-sm sm:text-[1rem] whitespace-nowrap"
                             >
                               {item?.name?.length > charNumber
                                 ? item?.name?.slice(0, charNumber) + "..."
@@ -1541,7 +1541,7 @@
                               {#if isChecked(row?.name)}
                                 <td
                                   id={item?.symbol}
-                                  class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white border-b-[#09090B]"
+                                  class="whitespace-nowrap text-sm sm:text-[1rem] text-end text-white"
                                 >
                                   {#if item?.[row?.rule] !== undefined && item?.[row?.rule] !== null}
                                     {#if row?.type === "int"}

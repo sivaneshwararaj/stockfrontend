@@ -125,12 +125,11 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-default"
                   >Company</th
                 >
 
-                <th
-                  class="text-white font-semibold text-sm text-end bg-[#09090B]"
+                <th class="text-white font-semibold text-sm text-end bg-default"
                   >Portfolio</th
                 >
               </tr>
@@ -221,15 +220,13 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-default"
                   >Ex-Dividend</th
                 >
-                <th
-                  class="text-white font-semibold text-sm text-end bg-[#09090B]"
+                <th class="text-white font-semibold text-sm text-end bg-default"
                   >Payment Date</th
                 >
-                <th
-                  class="text-white font-semibold text-sm text-end bg-[#09090B]"
+                <th class="text-white font-semibold text-sm text-end bg-default"
                   >Amount</th
                 >
               </tr>
@@ -237,7 +234,7 @@
 
             <tbody>
               {#each dividendHistoryList?.slice(0, 5) as item}
-                <tr class="text-white bg-[#09090B] border-b border-[#27272A]">
+                <tr class="text-white bg-default border-b border-[#27272A]">
                   <td class="text-start text-sm text-white font-medium">
                     {new Date(item?.date)?.toLocaleString("en-US", {
                       month: "short",

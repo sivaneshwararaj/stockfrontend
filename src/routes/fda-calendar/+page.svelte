@@ -99,39 +99,39 @@
               class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll sm:overflow-hidden"
             >
               <table
-                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
               >
                 <thead>
-                  <tr class="bg-[#09090B]">
+                  <tr class="bg-default">
                     <th
-                      class="text-start bg-[#09090B] text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
+                      class="text-start bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
                     >
                       Symbol
                     </th>
                    
                     <th
-                      class="text-start bg-[#09090B] text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
+                      class="text-start bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
                     >
                       Drug
                     </th>
                     <th
-                      class="text-start bg-[#09090B] text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
+                      class="text-start bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
                     >
                       Indication
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
+                      class="text-end bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
                     >
                       Status
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
+                      class="text-end bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
                     >
                       Target Date
                     </th>
 
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
+                      class="text-end bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
                     >
                       Change
                     </th>

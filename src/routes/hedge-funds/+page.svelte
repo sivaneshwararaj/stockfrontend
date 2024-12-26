@@ -127,7 +127,7 @@
         >
           <main class="w-full">
             <div class="w-full pb-3">
-              <div class="relative right-0 bg-[#09090B]">
+              <div class="relative right-0 bg-default">
                 <ul
                   class="relative grid grid-cols-1 sm:grid-cols-4 gap-y-3 gap-x-3 flex flex-wrap p-1 list-none rounded-[3px]"
                 >

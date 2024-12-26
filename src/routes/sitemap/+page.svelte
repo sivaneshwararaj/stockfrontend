@@ -188,7 +188,7 @@
             </h1>
           </div>
 
-          <div class=" w-full bg-[#09090B] m-auto text-white">
+          <div class=" w-full bg-default m-auto text-white">
             <div class="content">
               <p class="text-[1rem] sm:text-lg">
                 Explore a list of popular pages on our site. If you're searching

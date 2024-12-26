@@ -131,7 +131,7 @@
     <div class="w-full">
       <div class="w-full overflow-x-scroll">
         <table
-          class="table rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+          class="table rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
         >
           <thead>
             <TableHeader {columns} {sortOrders} {sortData} />

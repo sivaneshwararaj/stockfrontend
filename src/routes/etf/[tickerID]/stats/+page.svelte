@@ -145,7 +145,7 @@ updateYearRange()
             class="w-full grid grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-y-3 gap-x-3"
           >
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-md h-auto"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-default border border-gray-800 rounded-md h-auto"
             >
               <div class="flex flex-col items-center w-full p-3">
                 <span class="font-medium text-white text-xl font-semibold"
@@ -197,7 +197,7 @@ updateYearRange()
             </div>
 
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-md h-auto"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-default border border-gray-800 rounded-md h-auto"
             >
               <div class="flex flex-col items-center w-full p-3">
                 <span class="font-medium text-white text-xl font-semibold"
@@ -249,7 +249,7 @@ updateYearRange()
             </div>
 
             <div
-              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-[#09090B] border border-gray-800 rounded-md h-auto"
+              class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 bg-default border border-gray-800 rounded-md h-auto"
             >
               <div class="flex flex-col items-center w-full p-3">
                 <span class="font-medium text-white text-xl font-semibold"
@@ -319,7 +319,7 @@ updateYearRange()
               >
                 <thead>
                   <tr
-                    class="bg-[#09090B] border-gray-600 rounded text-white font-semibold"
+                    class="bg-default border-gray-600 rounded text-white font-semibold"
                   >
                     <th class="text-start text-sm sm:text-[1rem]">Started</th>
                     <th class="text-sm sm:text-[1rem] text-end">Recovered</th>
@@ -414,13 +414,13 @@ updateYearRange()
               >
                 <thead>
                   <tr
-                    class="bg-[#09090B] text-white text-sm border-b border-[#27272A]"
+                    class="bg-default text-white text-sm border-b border-[#27272A]"
                   >
                     <th class="text-start text-sm sm:text-[1rem] font-semibold">
                       Metric
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-sm sm:text-[1rem] font-semibold"
+                      class="text-end bg-default text-sm sm:text-[1rem] font-semibold"
                     >
                       {$etfTicker}
                     </th>

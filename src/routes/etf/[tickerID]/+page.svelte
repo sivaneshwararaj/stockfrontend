@@ -797,7 +797,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] min-h-screen pb-40 overflow-hidden w-full">
+<section class="bg-default min-h-screen pb-40 overflow-hidden w-full">
   <div class="w-full m-auto overflow-hidden">
     <div
       class="md:flex md:justify-between md:divide-x md:divide-slate-800 w-full"
@@ -906,7 +906,7 @@
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
                     builders={[builder]}
-                    class="ml-auto border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="ml-auto border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Export</span>
                     <svg
@@ -1032,7 +1032,7 @@
                             <div
                               class="{displayData === interval
                                 ? `bg-[${colorChange}] `
-                                : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
+                                : 'bg-default'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
                             />
                           </button>
                         </li>
@@ -1089,7 +1089,7 @@
                             <div
                               class="{displayData === interval
                                 ? `bg-[${colorChange}] `
-                                : 'bg-[#09090B]'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
+                                : 'bg-default'} mt-1 h-[3px] w-[1.5rem] m-auto rounded-full"
                             />
                           </button>
                         </li>

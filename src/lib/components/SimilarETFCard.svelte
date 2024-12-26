@@ -21,7 +21,7 @@
     : 'hidden'}"
 >
   <div
-    class="sm:rounded-md shadow-lg bg-[#000] sm:bg-[#09090B] sm:border sm:border-gray-600 h-auto {$screenWidth <
+    class="sm:rounded-md shadow-lg bg-[#000] sm:bg-default sm:border sm:border-gray-600 h-auto {$screenWidth <
     640
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px]"
@@ -38,15 +38,15 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-[#000] sm:bg-default"
                   >Fund Name</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-default"
                   >Total Assets</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#000] sm:bg-default"
                   >Holdings</th
                 >
               </tr>
@@ -55,7 +55,7 @@
               {#each similarTicker as item, index}
                 <tr
                   on:click={() => etfSelector(item?.symbol)}
-                  class="shake-ticker sm:hover:text-white text-blue-400 cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-[#09090B] border-b border-[#000] sm:border-[#27272A]"
+                  class="shake-ticker sm:hover:text-white text-blue-400 cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#000] sm:bg-default border-b border-[#000] sm:border-[#27272A]"
                 >
                   {#if index <= 6}
                     <td class="">
@@ -127,7 +127,7 @@
   <div class="bg-[#000] h-auto w-screen">
     <!--Start Header-->
     <div
-      class="bg-[#09090B] w-full p-1 flex flex-col items-center pb-5 h-auto rounded-b-[30px]"
+      class="bg-default w-full p-1 flex flex-col items-center pb-5 h-auto rounded-b-[30px]"
     >
       <h2 class="text-center m-auto text-[1.1rem] font-medium text-white mt-5">
         Similar Ticker

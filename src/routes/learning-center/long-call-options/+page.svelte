@@ -414,7 +414,7 @@ grid: {
             <!--End Paragraph-->
 
             <h2
-              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-[#09090B] p-3 mb-3 bg-opacity-[0.9]"
+              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-default p-3 mb-3 bg-opacity-[0.9]"
             >
               Effect of Time
             </h2>
@@ -451,7 +451,7 @@ grid: {
             <!--End Paragraph-->
 
             <h2
-              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-[#09090B] p-3 mb-3 bg-opacity-[0.9]"
+              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-default p-3 mb-3 bg-opacity-[0.9]"
             >
               Effect of Volatility
             </h2>
@@ -497,7 +497,7 @@ grid: {
             <!--End Paragraph-->
 
             <h2
-              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-[#09090B] p-3 bg-opacity-[0.9]"
+              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-default p-3 bg-opacity-[0.9]"
             >
               Pros of Long Call Options
             </h2>
@@ -522,7 +522,7 @@ grid: {
             <!--End Paragraph-->
 
             <h2
-              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-[#09090B] p-3 bg-opacity-[0.9]"
+              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-default p-3 bg-opacity-[0.9]"
             >
               Cons of Long Call Options
             </h2>
@@ -545,7 +545,7 @@ grid: {
             <!--End Paragraph-->
 
             <h2
-              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-[#09090B] p-3 bg-opacity-[0.9]"
+              class="mt-10 text-white font-bold text-3xl bg-[#111011] sm:bg-default p-3 bg-opacity-[0.9]"
             >
               Simple Example
             </h2>

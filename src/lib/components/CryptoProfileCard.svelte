@@ -49,7 +49,7 @@
 
 <div class="sm:space-y-3">
   <div
-    class="lg:rounded-md shadow-lg sm:border sm:border-gray-600 bg-[#000] lg:bg-[#09090B] h-auto h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
+    class="lg:rounded-md shadow-lg sm:border sm:border-gray-600 bg-[#000] lg:bg-default h-auto h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
   >
     <!--Start Header-->
     <div
@@ -93,21 +93,21 @@
               style="font-size: 0.8rem"
             >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >Name</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B]"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default"
                 >{$displayCompanyName?.length > 30
                   ? $displayCompanyName?.slice(0, 30) + "..."
                   : $displayCompanyName}</td
               >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >Ticker</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B]"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default"
                 >{$cryptoTicker}</td
               >
             </tr>
@@ -117,19 +117,19 @@
               style="font-size: 0.8rem"
             >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >Mkt Cap</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal"
                 >{abbreviateNumber(marketCap, true)}</td
               >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >Total Volume</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal"
                 >{abbreviateNumber(totalVolume)}</td
               >
             </tr>
@@ -139,19 +139,19 @@
               style="font-size: 0.8rem"
             >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >Circulating Supply</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal"
                 >{abbreviateNumber(circulatingSupply)}</td
               >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >Max Supply</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal"
                 >{maxSupply !== null
                   ? abbreviateNumber(maxSupply)
                   : "Uncapped"}</td
@@ -163,22 +163,22 @@
               style="font-size: 0.8rem"
             >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >ATH Price</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal"
                 >${new Intl.NumberFormat("en", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 }).format(athPrice)}</td
               >
               <td
-                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-medium"
+                class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-medium"
                 >ATH Date</td
               >
               <td
-                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal"
+                class="bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal"
                 >{new Date(athDate).toLocaleString("en-US", {
                   month: "short",
                   day: "numeric",

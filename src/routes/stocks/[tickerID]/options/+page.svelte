@@ -570,7 +570,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full bg-[#09090B] overflow-hidden text-white min-h-screen">
+<section class="w-full bg-default overflow-hidden text-white min-h-screen">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -707,7 +707,7 @@
             </select>
           </div>
 
-          <div class="app w-full bg-[#09090B]">
+          <div class="app w-full bg-default">
             {#if filteredList?.length !== 0}
               <Chart {init} {options} class="chart" />
             {:else}
@@ -764,7 +764,7 @@
               {/each}
             </div>
 
-            <div class="app w-full bg-[#09090B] mb-24">
+            <div class="app w-full bg-default mb-24">
               <Chart {init} options={optionsEX} class="chart" />
             </div>
           {/if}
@@ -829,10 +829,10 @@
             <div class="flex justify-start items-center m-auto overflow-x-auto">
               {#if activeIdx === 0}
                 <table
-                  class="w-full table table-sm table-compact rounded-none sm:rounded-md border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+                  class="w-full table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md m-auto mt-4 overflow-x-auto"
                 >
-                  <thead>
-                    <tr class="border-b border-[#27272A]">
+                  <thead class="bg-default">
+                    <tr class="">
                       <td class="text-white font-semibold text-sm text-start"
                         >Date</td
                       >
@@ -868,14 +868,16 @@
                         on:click={() => handleViewData(item?.date)}
                         on:mouseover={() =>
                           getDailyTransactions($stockTicker + "+" + item?.date)}
-                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
+                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
                           1 ===
                           optionList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
                           : ''}"
                       >
-                        <td class="text-white text-sm text-start">
+                        <td
+                          class="text-white text-sm sm:text-[1rem] text-start"
+                        >
                           {formatDate(item?.date)}
                         </td>
 
@@ -1002,18 +1004,23 @@
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-white text-end">
-                          {abbreviateNumber(item?.total_volume)}
+                          {@html abbreviateNumber(
+                            item?.total_volume,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(item?.total_oi)}
+                          {@html abbreviateNumber(item?.total_oi, false, true)}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(
+                          {@html abbreviateNumber(
                             item?.total_bull_prem +
                               item?.total_bear_prem +
                               item?.total_neutral_prem,
+                            false,
                             true,
                           )}
                         </td>
@@ -1023,33 +1030,29 @@
                 </table>
               {:else}
                 <table
-                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+                  class="table table-pin-cols table-sm bg-table border border-gray-800 table-compact rounded-none sm:rounded-md w-full m-auto mt-4 overflow-x-auto"
                 >
-                  <thead>
+                  <thead class="bg-default">
                     <tr class="">
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Call Prem</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Call OI</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Call Volume</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-center"
+                      <td class="text-white font-semibold text-sm text-center"
                         >Strike Price</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-start"
+                      <td class="text-white font-semibold text-sm text-start"
                         >Put Volume</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-start"
+                      <td class="text-white font-semibold text-sm text-start"
                         >Put OI</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-start"
+                      <td class="text-white font-semibold text-sm text-start"
                         >Put Prem</td
                       >
                     </tr>
@@ -1057,22 +1060,35 @@
                   <tbody>
                     {#each data?.user?.tier === "Pro" ? optionChainList : optionChainList?.slice(0, 3) as item, index}
                       <tr
-                        class="odd:bg-odd border-b-[#09090B] {index + 1 ===
+                        class="odd:bg-odd border-b border-gray-800 {index +
+                          1 ===
                           optionChainList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
                           : ''}"
                       >
                         <td class="text-white text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(item?.total_premium_call, true)}
+                          {@html abbreviateNumber(
+                            item?.total_premium_call,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(item?.total_open_interest_call)}
+                          {@html abbreviateNumber(
+                            item?.total_open_interest_call,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(item?.total_volume_call)}
+                          {@html abbreviateNumber(
+                            item?.total_volume_call,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td
@@ -1091,19 +1107,31 @@
                         <td
                           class="text-sm sm:text-[1rem] text-start text-white"
                         >
-                          {abbreviateNumber(item?.total_volume_put)}
+                          {@html abbreviateNumber(
+                            item?.total_volume_put,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td
                           class="text-sm sm:text-[1rem] text-start text-white"
                         >
-                          {abbreviateNumber(item?.total_open_interest_put)}
+                          {@html abbreviateNumber(
+                            item?.total_open_interest_put,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td
                           class="text-white text-sm sm:text-[1rem] text-start"
                         >
-                          {abbreviateNumber(item?.total_premium_put, true)}
+                          {@html abbreviateNumber(
+                            item?.total_premium_put,
+                            false,
+                            true,
+                          )}
                         </td>
                       </tr>
                     {/each}
@@ -1129,7 +1157,7 @@
   class="modal modal-bottom sm:modal-middle cursor-pointer bg-[#fff] bg-opacity-[0.02]"
 >
   <div
-    class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto"
+    class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-default border-t sm:border border-gray-600 h-auto"
   >
     <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
       <button
@@ -1176,54 +1204,38 @@
       <div class="flex justify-start items-center m-auto">
         {#if isLoaded}
           <table
-            class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+            class="table table-pin-cols table-sm bg-table border border-gray-800 table-compact rounded-none sm:rounded-md w-full m-auto mt-4 overflow-x-auto"
           >
-            <thead>
+            <thead class="bg-default">
               <tr class="">
-                <td class="text-slate-200 font-semibold text-sm text-start"
-                  >Time</td
+                <td class="text-white font-semibold text-sm text-start">Time</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-start"
-                  >Date</td
+                <td class="text-white font-semibold text-sm text-start">Date</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Expiry</td
+                <td class="text-white font-semibold text-sm text-end">Expiry</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Strike</td
+                <td class="text-white font-semibold text-sm text-end">Strike</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >C/P</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-start"
+                <td class="text-white font-semibold text-sm text-end">C/P</td>
+                <td class="text-white font-semibold text-sm text-start"
                   >Sent.</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-start"
+                <td class="text-white font-semibold text-sm text-start"
                   >Exec.</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Spot</td
+                <td class="text-white font-semibold text-sm text-end">Spot</td>
+                <td class="text-white font-semibold text-sm text-end">Price</td>
+                <td class="text-white font-semibold text-sm text-end">Prem.</td>
+                <td class="text-white font-semibold text-sm text-start">Type</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Price</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Prem.</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-start"
-                  >Type</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Vol.</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-end">OI</td
-                >
+                <td class="text-white font-semibold text-sm text-end">Vol.</td>
+                <td class="text-white font-semibold text-sm text-end">OI</td>
               </tr>
             </thead>
             <tbody>
               {#each optionHistoryList as item}
                 <!-- row -->
-                <tr class="odd:bg-odd border-b-[#09090B]">
+                <tr class="odd:bg-odd border-b border-gray-800">
                   <td class="text-white text-sm text-start whitespace-nowrap">
                     {formatTime(item?.time)}
                   </td>
@@ -1271,13 +1283,8 @@
                     {item?.price}
                   </td>
 
-                  <td
-                    class="text-sm sm:text-[1rem] text-end font-medium {item?.put_call ===
-                    'Puts'
-                      ? 'text-[#CB281C]'
-                      : 'text-[#0FB307]'} "
-                  >
-                    {abbreviateNumber(item?.cost_basis)}
+                  <td class="text-sm sm:text-[1rem] text-end text-white">
+                    {@html abbreviateNumber(item?.cost_basis, false, true)}
                   </td>
 
                   <td

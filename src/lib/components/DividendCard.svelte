@@ -24,7 +24,7 @@
     : 'hidden'}"
 >
   <div
-    class="sm:rounded-md shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-gray-600 h-auto {$screenWidth <=
+    class="sm:rounded-md shadow-lg bg-[#000] lg:bg-default lg:border lg:border-gray-600 h-auto {$screenWidth <=
     800
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px]"
@@ -45,15 +45,15 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-default"
                   >Ex-Dividend</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-default"
                   >Payment Date</th
                 >
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-default"
                   >Amount</th
                 >
               </tr>
@@ -62,7 +62,7 @@
             <tbody>
               {#each dividendHistoryList?.slice(0, 5) as item}
                 <tr
-                  class="text-white bg-[#000] lg:bg-[#09090B] border-b border-[#000] lg:border-[#27272A]"
+                  class="text-white bg-[#000] lg:bg-default border-b border-[#000] lg:border-[#27272A]"
                 >
                   <td class="text-start text-sm text-white font-medium">
                     {new Date(item?.date)?.toLocaleString("en-US", {

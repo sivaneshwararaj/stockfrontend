@@ -279,8 +279,8 @@
             <label
               on:click={() => (timePeriod = item)}
               class="px-4 py-2 {timePeriod === item
-                ? 'bg-primary'
-                : ''} sm:hover:bg-primary border border-gray-600 text-white rounded-md cursor-pointer"
+                ? 'bg-secondary'
+                : ''} sm:hover:bg-secondary border border-gray-600 text-white rounded-md cursor-pointer"
             >
               {item}
             </label>

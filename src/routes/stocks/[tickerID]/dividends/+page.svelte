@@ -216,7 +216,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
+<section class="w-full bg-default overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -346,24 +346,24 @@
                   class="table table-sm table-compact flex justify-start items-center w-full m-auto"
                 >
                   <thead>
-                    <tr class="bg-[#09090B] border-b border-gray-800">
+                    <tr class="bg-default border-b border-gray-800">
                       <th
-                        class="text-start bg-[#09090B] text-white text-sm font-semibold"
+                        class="text-start bg-default text-white text-sm font-semibold"
                       >
                         Ex-Divid. Date
                       </th>
                       <th
-                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                        class="text-end bg-default text-white text-sm font-semibold"
                       >
                         Cash Amount
                       </th>
                       <th
-                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                        class="text-end bg-default text-white text-sm font-semibold"
                       >
                         Record Date
                       </th>
                       <th
-                        class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                        class="text-end bg-default text-white text-sm font-semibold"
                       >
                         Pay Date
                       </th>

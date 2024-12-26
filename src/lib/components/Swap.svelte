@@ -218,7 +218,7 @@
           </div>
         </div>
 
-        <div class="pb-2 rounded-md bg-[#09090B]">
+        <div class="pb-2 rounded-md bg-default">
           <div
             class="bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
           >

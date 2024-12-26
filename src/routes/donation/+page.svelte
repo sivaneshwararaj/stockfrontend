@@ -58,7 +58,7 @@
             </h1>
           </div>
 
-          <div class="w-full bg-[#09090B] m-auto">
+          <div class="w-full bg-default m-auto">
             <div class="">
               <h2 class="text-white text-xl font-semibold mb-5">Hey 👋,</h2>
               <p class="text-white mb-5 text-[1rem]">

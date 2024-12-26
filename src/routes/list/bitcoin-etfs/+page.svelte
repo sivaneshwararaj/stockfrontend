@@ -101,7 +101,7 @@
 
 <section class="w-full overflow-hidden m-auto">
   <div
-    class="border border-gray-600 w-full sm:flex sm:flex-row sm:items-center m-auto text-white bg-[#09090B] sm:rounded-md h-auto p-5 mb-4"
+    class="border border-gray-600 w-full sm:flex sm:flex-row sm:items-center m-auto text-white bg-default sm:rounded-md h-auto p-5 mb-4"
   >
     <svg
       class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -165,7 +165,7 @@
     <!-- Content area -->
     <div class="w-full overflow-x-scroll">
       <table
-        class="table rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+        class="table rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
       >
         <thead>
           <TableHeader {columns} {sortOrders} {sortData} />

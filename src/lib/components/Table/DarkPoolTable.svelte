@@ -486,7 +486,7 @@
             href={sectorNavigation?.find(
               (item) => item?.title === displayedData[index]?.sector,
             )?.link}
-            class="sm:hover:text-blue-400 text-white underline underline-offset-4"
+            class="sm:hover:text-blue-400 text-white"
             >{displayedData[index]?.sector?.length > 13
               ? displayedData[index]?.sector?.slice(0, 13) + "..."
               : displayedData[index]?.sector}</a

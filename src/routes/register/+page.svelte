@@ -193,7 +193,7 @@
             on:click={() => (oauthLoading = !oauthLoading)}
             on:mouseenter={handleHoverGoogle}
             on:mouseleave={handleHoverGoogle}
-            class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+            class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
           >
             <svg
               class="{isHoveredGoogle ? 'shake-logo' : ''} w-6 h-6 inline-block"
@@ -240,7 +240,7 @@
             on:click={() => (oauthLoading = !oauthLoading)}
             on:mouseenter={handleHoverDiscord}
             on:mouseleave={handleHoverDiscord}
-            class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+            class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
           >
             <svg
               class="{isHoveredDiscord
@@ -774,7 +774,7 @@
             on:click={() => (oauthLoading = !oauthLoading)}
             on:mouseenter={handleHoverGithub}
             on:mouseleave={handleHoverGithub}
-            class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-[#09090B] flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
+            class="cursor-pointer flex-shrink-0 rounded-full w-12 h-12 relative bg-default flex items-center justify-center border border-gray-600 sm:hover:bg-secondary text-white"
           >
             <svg
               class="{isHoveredGithub

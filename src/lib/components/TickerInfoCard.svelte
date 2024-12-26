@@ -81,7 +81,7 @@
 
 <div class="sm:space-y-3">
   <div
-    class="sm:rounded-md lg:border lg:border-gray-600 bg-[#000] lg:bg-[#09090B] h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
+    class="sm:rounded-md lg:border lg:border-gray-600 bg-[#000] lg:bg-default h-auto w-screen pt-16 sm:w-full md:w-[420px] xl:w-[450px] lg:pt-0"
   >
     <!--Start Header-->
     <div
@@ -121,27 +121,27 @@
           <tbody>
             <!--
               <tr class="text-white border-b border-[#27272A]">
-                <td class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">CEO</td>
-                <td class="text-center sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal font-semibold">{ceoName}</td>
-                <td class="text-start sm:text-end lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Country</td>
-                <td class="text-start sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal font-semibold">{country}</td>
+                <td class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap">CEO</td>
+                <td class="text-center sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal font-semibold">{ceoName}</td>
+                <td class="text-start sm:text-end lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap">Country</td>
+                <td class="text-start sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal font-semibold">{country}</td>
               </tr>
               -->
             <tr class="text-white border-b border-[#27272A]">
               <td
-                class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Bid</td
               >
-              <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-center sm:text-end bg-[#000] lg:bg-default"
                 >{$wsBidPrice !== 0 && $wsBidPrice !== null
                   ? $wsBidPrice
                   : (data?.getStockQuote?.bid ?? "-")}</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Ask</td
               >
-              <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-start sm:text-end bg-[#000] lg:bg-default"
                 >{$wsAskPrice !== 0 && $wsAskPrice !== null
                   ? $wsAskPrice
                   : (data?.getStockQuote?.ask ?? "-")}</td
@@ -149,107 +149,107 @@
             </tr>
             <tr class="text-white border-b border-[#27272A]">
               <td
-                class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Mkt Cap</td
               >
-              <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-center sm:text-end bg-[#000] lg:bg-default"
                 >{abbreviateNumber(data?.getStockQuote?.marketCap)}</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Vol</td
               >
-              <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-start sm:text-end bg-[#000] lg:bg-default"
                 >{abbreviateNumber(data?.getStockQuote?.volume)}</td
               >
             </tr>
             <tr class="text-white border-b border-[#27272A]">
               <td
-                class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Beta</td
               >
-              <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-center sm:text-end bg-[#000] lg:bg-default"
                 >{beta}</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Avg. Vol</td
               >
-              <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-start sm:text-end bg-[#000] lg:bg-default"
                 >{abbreviateNumber(data?.getStockQuote?.avgVolume)}</td
               >
             </tr>
             <!--
               <tr class="text-white ">
-                <td class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white whitespace-pre-line font-semibold whitespace-nowrap">Sector</td>
-                <td class="text-center bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-pre-line font-semibold">{sector}</td>
-                <td class="text-start sm:text-center lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Employees</td>
-                <td class="text-start sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] font-semibold">{employees}</td>
+                <td class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white whitespace-pre-line font-semibold whitespace-nowrap">Sector</td>
+                <td class="text-center bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-pre-line font-semibold">{sector}</td>
+                <td class="text-start sm:text-center lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap">Employees</td>
+                <td class="text-start sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default font-semibold">{employees}</td>
               </tr>
               <tr class="text-white border-b border-[#27272A]">
-                <td class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Industry</td>
-                <td class="text-center bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] whitespace-normal font-semibold">{industry}</td>
-                <td class="text-start sm:text-center lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">Exchange</td>
-                <td class="text-start sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-[#09090B] font-semibold">{exchange}</td>
+                <td class="text-start lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap">Industry</td>
+                <td class="text-center bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default whitespace-normal font-semibold">{industry}</td>
+                <td class="text-start sm:text-center lg:border-b lg:border-[#27272A] bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap">Exchange</td>
+                <td class="text-start sm:text-end bg-[#000] lg:border-b lg:border-[#27272A] lg:bg-default font-semibold">{exchange}</td>
               </tr>
               -->
             <tr class="text-white border-b border-[#27272A]">
               <td
-                class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Open</td
               >
-              <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-center sm:text-end bg-[#000] lg:bg-default"
                 >{data?.getStockQuote?.open?.toFixed(2)}</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Prev. Close</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default whitespace-nowrap"
                 >{data?.getStockQuote?.previousClose?.toFixed(2) ?? "-"}</td
               >
             </tr>
             <!--
               {#if $screenWidth > 640}
               <tr class="text-white border-b border-[#27272A]">
-                <td class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap">1D-Range</td>
-                <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]">{data?.getStockQuote?.dayLow?.toFixed(2)} - {data?.getStockQuote?.dayHigh?.toFixed(2)}</td>
-                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap ">1Y-Range</td>
-                <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap ">{data?.getStockQuote?.yearLow?.toFixed(2)} - {data?.getStockQuote?.yearHigh?.toFixed(2)}</td>
+                <td class="text-start bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap">1D-Range</td>
+                <td class="text-center sm:text-end bg-[#000] lg:bg-default">{data?.getStockQuote?.dayLow?.toFixed(2)} - {data?.getStockQuote?.dayHigh?.toFixed(2)}</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap ">1Y-Range</td>
+                <td class="text-start sm:text-end bg-[#000] lg:bg-default whitespace-nowrap ">{data?.getStockQuote?.yearLow?.toFixed(2)} - {data?.getStockQuote?.yearHigh?.toFixed(2)}</td>
               </tr>
               {/if}
               -->
             <tr class="text-white border-b border-[#27272A]">
               <td
-                class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >EPS (ttm)</td
               >
-              <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-center sm:text-end bg-[#000] lg:bg-default"
                 >{data?.getStockQuote?.eps}</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >PE Ratio (ttm)</td
               >
-              <td class="text-start sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-start sm:text-end bg-[#000] lg:bg-default"
                 >{data?.getStockQuote?.pe}</td
               >
             </tr>
             <tr class="text-white border-b border-[#27272A]">
               <td
-                class="text-start bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Shares Out.</td
               >
-              <td class="text-center sm:text-end bg-[#000] lg:bg-[#09090B]"
+              <td class="text-center sm:text-end bg-[#000] lg:bg-default"
                 >{abbreviateNumber(data?.getStockQuote?.sharesOutstanding)}</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] text-white font-semibold whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default text-white font-semibold whitespace-nowrap"
                 >Forward PE</td
               >
               <td
-                class="text-start sm:text-end bg-[#000] lg:bg-[#09090B] whitespace-nowrap"
+                class="text-start sm:text-end bg-[#000] lg:bg-default whitespace-nowrap"
                 >{forwardPE === undefined || forwardPE === null
                   ? "-"
                   : forwardPE}</td

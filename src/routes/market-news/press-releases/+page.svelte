@@ -97,7 +97,7 @@
           <div class="grid grid-cols-1 gap-y-3">
             {#if news.length !== 0}
               {#each news as item}
-                <div class="w-full flex flex-col bg-[#09090B] m-auto">
+                <div class="w-full flex flex-col bg-default m-auto">
                   <div class="w-full flex flex-col sm:flex-row">
                     <a
                       href={item?.url}

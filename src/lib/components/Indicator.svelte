@@ -155,7 +155,7 @@
   <DropdownMenu.Trigger asChild let:builder>
     <Button
       builders={[builder]}
-      class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
+      class="sm:ml-auto min-w-[110px] w-full sm:w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2.5 text-white rounded-md truncate"
     >
       <span class="truncate text-white text-sm sm:text-[1rem]">Indicators</span>
       <svg
@@ -179,7 +179,7 @@
   >
     <!-- Search Input -->
     <div
-      class="sticky fixed -top-1 z-40 bg-[#09090B] p-2 border-b border-gray-600"
+      class="sticky fixed -top-1 z-40 bg-default p-2 border-b border-gray-600"
     >
       <div class="relative w-full">
         <!-- Input Field -->
@@ -188,7 +188,7 @@
           on:input={handleInput}
           autocomplete="off"
           autofocus=""
-          class="text-sm w-full border-0 bg-[#09090B] focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8"
+          class="text-sm w-full border-0 bg-default focus:border-gray-200 focus:ring-0 text-white placeholder:text-gray-300 pr-8"
           type="text"
           placeholder=""
         />
@@ -264,11 +264,11 @@
     </DropdownMenu.Group>
     <!-- Reset Selection button -->
     <div
-      class="sticky -bottom-1 bg-[#09090B] z-50 p-2 border-t border-gray-600 w-full"
+      class="sticky -bottom-1 bg-default z-50 p-2 border-t border-gray-600 w-full"
     >
       <label
         on:click={handleResetAll}
-        class="w-full sm:hover:text-white text-gray-300 bg-[#09090B] text-start text-sm cursor-pointer"
+        class="w-full sm:hover:text-white text-gray-300 bg-default text-start text-sm cursor-pointer"
       >
         Reset Selection
       </label>

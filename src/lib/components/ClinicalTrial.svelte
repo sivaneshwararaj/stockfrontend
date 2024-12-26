@@ -29,7 +29,7 @@
             </div>
           </div>
 
-          <div class="pb-2 rounded-md bg-[#09090B]">
+          <div class="pb-2 rounded-md bg-default">
             <div class="app w-full h-[300px] mt-5">
               <Chart {init} options={optionsData} class="chart" />
             </div>
@@ -45,15 +45,15 @@
           <table class="table table-sm table-compact table-pin-rows table-pin-cols w-full">
             <thead>
               <tr>
-                <th class="text-white shadow-md font-semibold text-sm text-start bg-[#09090B]">Drug</th>
-                <th class="text-white shadow-md font-semibold text-sm text-start bg-[#09090B]">Stage</th>
-                <th class="text-white shadow-md font-semibold text-sm text-center bg-[#09090B]">Phase Status</th>
-                <th class="text-white shadow-md font-semibold text-sm text-end bg-[#09090B]">Result</th>
+                <th class="text-white shadow-md font-semibold text-sm text-start bg-default">Drug</th>
+                <th class="text-white shadow-md font-semibold text-sm text-start bg-default">Stage</th>
+                <th class="text-white shadow-md font-semibold text-sm text-center bg-default">Phase Status</th>
+                <th class="text-white shadow-md font-semibold text-sm text-end bg-default">Result</th>
               </tr>
             </thead>
             <tbody>
               {#each displayList as item,index}
-              <tr on:click={() => handleViewData(item)} class="border-y border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-[#09090B] border-b-[#09090B] cursor-pointer">
+              <tr on:click={() => handleViewData(item)} class="border-y border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-default border-b-[#09090B] cursor-pointer">
                
                   <td class="text-white font-medium whitespace-nowrap">
                    {item["Interventions"]?.length === 0 ? '-' : item["Interventions"]?.length > charNumber ? formatString(item["Interventions"]?.slice(0,charNumber)) + "..." : formatString(item["Interventions"])}
@@ -223,7 +223,7 @@
 <div class="lg:hidden drawer drawer-end z-40 overflow-hidden w-screen">
   <input id="clinicalMobileModal" type="checkbox" class="drawer-toggle" />
   <div class="drawer-side overflow-hidden">
-    <div class="bg-[#09090B] min-h-screen w-screen pb-20 overflow-hidden">
+    <div class="bg-default min-h-screen w-screen pb-20 overflow-hidden">
       <label for="clinicalMobileModal" class="absolute left-6 top-6">
         <svg
           class="w-6 h-6 inline-block mb-0.5"
@@ -255,44 +255,44 @@
               <td class="">{trialId}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Start Date</td>
               <td class="">{trialStart}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">End Date</td>
               <td class="">{trialEnd}</td>
             </tr>
             <!-- row 2 -->
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Study Status</td>
               <td class="">{trialStage}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Phase Status</td>
               <td class="">{trialPhase}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Study Results</td>
               <td class="">{trialResult}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Sex</td>
               <td class="">{formatString(trialSex)}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Age</td>
               <td class=""
@@ -303,31 +303,31 @@
               >
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Sponsor</td>
               <td class="">{trialSponsor}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Enrollment</td>
               <td class="">{trialEnrollment}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Study Type</td>
               <td class="">{trialStudyType}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Funder Type</td>
               <td class="">{trialFunderType}</td>
             </tr>
             <tr
-              class="border-b border-slate-700 odd:bg-odd even:bg-[#09090B]"
+              class="border-b border-slate-700 odd:bg-odd even:bg-default"
             >
               <td class="font-semibold">Website</td>
               <td class=""

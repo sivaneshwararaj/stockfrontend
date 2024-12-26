@@ -45,7 +45,7 @@
             </h1>
           </div>
 
-          <div class=" w-full bg-[#09090B] m-auto">
+          <div class=" w-full bg-default m-auto">
             <div class="">
               <p class="text-gray-200 italic mb-2 text-sm">
                 Last updated: 09.11.2024

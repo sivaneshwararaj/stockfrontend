@@ -22,7 +22,7 @@
 </script>
 
 <section
-  class="bg-[#09090B] min-h-screen max-w-3xl sm:max-w-screen-lg w-full pt-24 m-auto"
+  class="bg-default min-h-screen max-w-3xl sm:max-w-screen-lg w-full pt-24 m-auto"
 >
   <div class="px-3">
     <div class="mx-auto text-center mb-8">
@@ -32,7 +32,7 @@
         Flexible plans and features
       </h1>
       <div
-        class="w-full flex justify-center items-center h-16 bg-[#09090B] rounded-md"
+        class="w-full flex justify-center items-center h-16 bg-default rounded-md"
       >
         <p
           class="font-medium font-serif text-center w-3/4 sm:w-full text-white text-[1rem] sm:text-xl italic"
@@ -78,7 +78,7 @@
     >
       <!-- Pricing Card -->
       <div
-        class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-[#09090B] rounded-md"
+        class="order-last sm:order-1 flex flex-col p-6 lg:p-8 mx-auto w-full text-center text-white border border-gray-800 bg-default rounded-md"
       >
         <div class="flex flex-row items-center justify-start items-center mt-2">
           <img

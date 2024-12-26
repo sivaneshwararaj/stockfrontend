@@ -41,7 +41,7 @@
   class="space-y-3 lg:pt-5 lg:{topHoldingList?.length !== 0 ? '' : 'hidden'}"
 >
   <div
-    class="sm:rounded-sm shadow-lg bg-[#000] lg:bg-[#09090B] lg:border lg:border-gray-600 h-auto {$screenWidth <=
+    class="sm:rounded-sm shadow-lg bg-[#000] lg:bg-default lg:border lg:border-gray-600 h-auto {$screenWidth <=
     800
       ? 'w-screen pt-16'
       : ''} md:w-[420px] xl:w-[450px]"
@@ -68,12 +68,12 @@
             <thead>
               <tr>
                 <th
-                  class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-start bg-[#000] lg:bg-default"
                   >Company</th
                 >
 
                 <th
-                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-[#09090B]"
+                  class="text-white font-semibold text-sm text-end bg-[#000] lg:bg-default"
                   >Portfolio</th
                 >
               </tr>
@@ -83,7 +83,7 @@
                 {#if item?.asset !== null}
                   <tr
                     on:click={() => stockSelector(item?.asset)}
-                    class="lg:shake-ticker sm:hover:text-white text-blue-400 cursor-pointer lg:hover:bg-[#245073] lg:hover:bg-opacity-[0.2] bg-[#000] lg:bg-[#09090B] border-b border-[#000] lg:border-[#27272A]"
+                    class="lg:shake-ticker sm:hover:text-white text-blue-400 cursor-pointer lg:hover:bg-[#245073] lg:hover:bg-opacity-[0.2] bg-[#000] lg:bg-default border-b border-[#000] lg:border-[#27272A]"
                   >
                     <td class="">
                       <div class="flex flex-row items-center">

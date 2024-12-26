@@ -438,7 +438,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="bg-[#09090B] w-full overflow-hidden text-white h-full">
+<section class="bg-default w-full overflow-hidden text-white h-full">
   <div class="w-full flex justify-center m-auto h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -542,7 +542,7 @@
                   <DropdownMenu.Trigger asChild let:builder>
                     <Button
                       builders={[builder]}
-                      class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                      class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                     >
                       <span class="truncate text-white">{sortBy}</span>
                       <svg
@@ -592,7 +592,7 @@
               </div>
               <Button
                 on:click={() => exportData("csv")}
-                class="ml-2 w-fit border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                class="ml-2 w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
               >
                 <span class="truncate text-white">Download</span>
                 <svg
@@ -628,9 +628,9 @@
 
           <div class="w-full overflow-x-scroll">
             <table
-              class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+              class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
             >
-              <thead class="border-b border-gray-800">
+              <thead class="bg-default">
                 <tr>
                   <th
                     class="text-start text-white text-sm whitespace-nowrap font-semibold"
@@ -656,9 +656,9 @@
               </thead>
               <tbody class="">
                 {#each historyList as item, index}
-                  <tr class="text-gray-200 odd:bg-odd">
+                  <tr class="text-white odd:bg-odd border-b border-gray-800">
                     <td
-                      class="text-start border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >
                       {new Date(item?.filingDate)?.toLocaleString("en-US", {
                         month: "short",
@@ -668,12 +668,12 @@
                       })}
                     </td>
                     <td
-                      class="text-end border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >
                       {new Intl.NumberFormat("en").format(item?.employeeCount)}
                     </td>
                     <td
-                      class="text-end border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                     >
                       {#if Number(item?.employeeCount - historyList[index + 1]?.employeeCount)}
                         {new Intl.NumberFormat("en")?.format(
@@ -685,7 +685,7 @@
                       {/if}
                     </td>
                     <td
-                      class="text-end border-b border-gray-800 text-sm sm:text-[1rem] whitespace-nowrap text-white text-end"
+                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white text-end"
                     >
                       {#if index + 1 - historyList?.length === 0}
                         n/a
@@ -718,7 +718,7 @@
           </div>
         {:else}
           <h1
-            class="text-xl m-auto flex justify-center text-gray-200 font-semibold mb-4 mt-10"
+            class="text-xl m-auto flex justify-center text-white font-semibold mb-4 mt-10"
           >
             No history found
           </h1>

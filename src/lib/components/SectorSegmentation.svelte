@@ -33,7 +33,7 @@
   }
 </script>
 
-<section class="bg-[#09090B] overflow-hidden text-white h-full sm:mb-0">
+<section class="bg-default overflow-hidden text-white h-full sm:mb-0">
   <div class="flex justify-center m-auto h-full overflow-hidden">
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"

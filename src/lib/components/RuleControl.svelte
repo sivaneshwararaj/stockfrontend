@@ -27,12 +27,12 @@
   {title?.replace('[%]','')} {condition} {value} {unit}
 
   <label on:click={() => changeRuleCondition('under')} class="ml-5 cursor-pointer flex flex-row mr-2 justify-center items-center">
-    <input type="radio" class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2" 
+    <input type="radio" class="radio checked:bg-[#fff] bg-default border border-gray-600 mr-2" 
            checked={condition === 'under'} name={ruleName} />
     <span class="label-text text-white">Under</span> 
   </label>
   <label on:click={() => changeRuleCondition('over')} class="cursor-pointer flex flex-row ml-2 justify-center items-center">
-    <input type="radio" class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2" 
+    <input type="radio" class="radio checked:bg-[#fff] bg-default border border-gray-600 mr-2" 
            checked={condition === 'over'} name={ruleName} />
     <span class="label-text text-white">Over</span> 
   </label>
@@ -45,7 +45,7 @@
 
 <!--Start Added Rules-->
 <div
-  class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default"
+  class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-white"
 >
   <div class="text-white text-[1rem]">
     {title?.replace("[%]", "")}
@@ -114,7 +114,7 @@
                 >
                   <input
                     type="radio"
-                    class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
+                    class="radio checked:bg-[#fff] bg-default border border-gray-600 mr-2"
                     checked={condition === "under"}
                     name={ruleName}
                   />
@@ -126,7 +126,7 @@
                 >
                   <input
                     type="radio"
-                    class="radio checked:bg-[#fff] bg-[#09090B] border border-gray-600 mr-2"
+                    class="radio checked:bg-[#fff] bg-default border border-gray-600 mr-2"
                     checked={condition === "over"}
                     name={ruleName}
                   />

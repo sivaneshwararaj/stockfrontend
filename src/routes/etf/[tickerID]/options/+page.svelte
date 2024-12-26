@@ -570,7 +570,7 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full bg-[#09090B] overflow-hidden text-white h-full">
+<section class="w-full bg-default overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -717,7 +717,7 @@
             </select>
           </div>
 
-          <div class="app w-full bg-[#09090B]">
+          <div class="app w-full bg-default">
             {#if filteredList?.length !== 0}
               <Chart {init} {options} class="chart" />
             {:else}
@@ -774,7 +774,7 @@
               {/each}
             </div>
 
-            <div class="app w-full bg-[#09090B] mb-24">
+            <div class="app w-full bg-default mb-24">
               <Chart {init} options={optionsEX} class="chart" />
             </div>
           {/if}
@@ -839,7 +839,7 @@
             <div class="flex justify-start items-center m-auto overflow-x-auto">
               {#if activeIdx === 0}
                 <table
-                  class="w-full table table-sm table-compact rounded-none sm:rounded-md border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+                  class="w-full table table-sm table-compact rounded-none sm:rounded-md border-bg-default m-auto mt-4 overflow-x-auto"
                 >
                   <thead>
                     <tr class="border-b border-[#27272A]">
@@ -1033,7 +1033,7 @@
                 </table>
               {:else}
                 <table
-                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4 overflow-x-auto"
                 >
                   <thead>
                     <tr class="">
@@ -1156,7 +1156,7 @@
   class="modal modal-bottom sm:modal-middle cursor-pointer bg-[#fff] bg-opacity-[0.02]"
 >
   <div
-    class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-[#09090B] border-t sm:border border-gray-600 h-auto"
+    class="modal-box w-full max-w-xl lg:max-w-3xl xl:max-w-5xl bg-[#141417] sm:bg-default border-t sm:border border-gray-600 h-auto"
   >
     <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
       <button
@@ -1203,7 +1203,7 @@
       <div class="flex justify-start items-center m-auto">
         {#if isLoaded}
           <table
-            class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4 overflow-x-auto"
+            class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4 overflow-x-auto"
           >
             <thead>
               <tr class="">

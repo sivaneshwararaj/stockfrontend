@@ -131,28 +131,28 @@
                         class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll sm:overflow-hidden"
                       >
                         <table
-                          class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-[#09090B] border-bg-[#09090B] m-auto"
+                          class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
                         >
                           <thead>
-                            <tr class="bg-[#09090B] border-b border-[#27272A]">
+                            <tr class="bg-default border-b border-[#27272A]">
                               <th
-                                class=" text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                                class=" text-start bg-default text-white text-sm font-medium sm:font-semibold"
                               >
                                 Person
                               </th>
                               <td
-                                class="text-start bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                                class="text-start bg-default text-white text-sm font-medium sm:font-semibold"
                               >
                                 Company
                               </td>
 
                               <td
-                                class="text-end bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                                class="text-end bg-default text-white text-sm font-medium sm:font-semibold"
                               >
                                 Date
                               </td>
                               <td
-                                class="text-center bg-[#09090B] text-white text-sm font-medium sm:font-semibold"
+                                class="text-center bg-default text-white text-sm font-medium sm:font-semibold"
                               >
                                 Amount
                               </td>
@@ -173,7 +173,7 @@
                               >
                                 <th
                                   class="{index % 2
-                                    ? 'bg-[#09090B]'
+                                    ? 'bg-default'
                                     : 'bg-odd'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   <div class="flex flex-row items-center">

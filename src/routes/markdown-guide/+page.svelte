@@ -57,7 +57,7 @@
     Flavored Markdown (with the exception of image tags and raw HTML).
   </span>
 
-  <div class="w-full m-auto mt-10 bg-[#09090B] rounded-md">
+  <div class="w-full m-auto mt-10 bg-default rounded-md">
     <table class="table table-sm table-compact h-full w-full text-white">
       <tbody class="">
         <tr>

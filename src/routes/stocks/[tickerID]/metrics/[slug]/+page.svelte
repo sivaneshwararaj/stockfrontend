@@ -179,7 +179,7 @@
   <meta name="twitter:description" content={`Revenue & Geographic Breakdown`} />
 </svelte:head>
 
-<section class="bg-[#09090B] w-full overflow-hidden text-white h-full">
+<section class="bg-default w-full overflow-hidden text-white h-full">
   <div class="w-full flex justify-center w-full sm-auto h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
@@ -202,9 +202,9 @@
 
               <div class="w-full overflow-x-scroll">
                 <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
                 >
-                  <thead>
+                  <thead class="bg-default">
                     <tr class="border-b border-gray-800">
                       <th
                         class="text-white font-semibold text-start text-sm sm:text-[1rem]"
@@ -230,7 +230,7 @@
                       <!-- row -->
                       <tr class=" odd:bg-odd border-b border-gray-800">
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
                           {new Date(item?.date ?? null)?.toLocaleString(
                             "en-US",
@@ -243,7 +243,7 @@
                         </td>
 
                         <td
-                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
                         >
                           {@html item?.value !== null
                             ? abbreviateNumber(item?.value, false, true)
@@ -251,7 +251,7 @@
                         </td>
 
                         <td
-                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap border-b-[#09090B]"
+                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
                         >
                           {#if Number(item?.value - tableList[index + 1]?.value)}
                             {@html abbreviateNumber(
@@ -265,7 +265,7 @@
                         </td>
 
                         <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end border-b-[#09090B]"
+                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
                         >
                           {#if item?.valueGrowth > 0}
                             <span class="text-[#00FC50]">

@@ -244,7 +244,7 @@
       {#if isLoaded}
         {#if fairPrice !== null}
           <div
-            class="p-3 sm:p-0 mt-2 pb-8 sm:pb-2 rounded-md bg-[#09090B] sm:bg-[#09090B]"
+            class="p-3 sm:p-0 mt-2 pb-8 sm:pb-2 rounded-md bg-default sm:bg-default"
           >
             <div
               class="mt-4 text-white text-[1rem] sm:text-xl pb-4 sm:pb-0 m-auto text-start"

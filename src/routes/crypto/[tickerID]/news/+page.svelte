@@ -100,7 +100,7 @@
 </svelte:head>
 
 <section
-  class="w-auto max-w-4xl bg-[#09090B] overflow-hidden text-black h-full mb-40"
+  class="w-auto max-w-4xl bg-default overflow-hidden text-black h-full mb-40"
 >
   <div class="m-auto h-full overflow-hidden">
     <main class="">
@@ -112,7 +112,7 @@
         {#if newsList?.length !== 0}
           <div class="grid grid-cols-1 gap-2 pb-5">
             {#each newsList as item}
-              <div class="w-full flex flex-col bg-[#09090B] rounded-md m-auto">
+              <div class="w-full flex flex-col bg-default rounded-md m-auto">
                 {#if (videoId = checkIfYoutubeVideo(item.url))}
                   <iframe
                     class="w-full h-96 rounded-md border border-gray-800"
@@ -172,7 +172,7 @@
           {/if}
         {:else}
           <div
-            class="w-screen max-w-xl sm:flex sm:flex-row sm:items-center justify-center m-auto text-gray-100 font-medium bg-[#09090B] sm:rounded-md h-auto p-5 mb-4"
+            class="w-screen max-w-xl sm:flex sm:flex-row sm:items-center justify-center m-auto text-gray-100 font-medium bg-default sm:rounded-md h-auto p-5 mb-4"
           >
             <svg
               class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"

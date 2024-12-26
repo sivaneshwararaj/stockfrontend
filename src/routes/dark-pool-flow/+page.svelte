@@ -740,7 +740,7 @@
 
 <body class="overflow-y-auto">
   <section
-    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-[#09090B] pb-20 mt-5 sm:mt-0 px-3 sm:px-0"
+    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-default pb-20 mt-5 sm:mt-0 px-3 sm:px-0"
   >
     <div class="w-full m-auto min-h-screen">
       <!--
@@ -946,7 +946,7 @@
           >
             <label
               for="ruleModal"
-              class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-[#09090B]/60 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
+              class="inline-flex cursor-pointer items-center justify-center space-x-1 whitespace-nowrap rounded-md border border-transparent bg-blue-brand_light py-2 pl-3 pr-4 text-base font-semibold text-white shadow-sm bg-[#000] sm:hover:bg-default/60 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-smaller"
             >
               <svg
                 class="h-5 w-5"
@@ -995,7 +995,7 @@
             {#each displayRules as row (row?.rule)}
               <!--Start Added Rules-->
               <div
-                class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-default"
+                class="flex items-center justify-between space-x-2 px-1 py-1.5 text-smaller leading-tight text-white"
               >
                 <div class="hide-scroll text-white">
                   {row?.label?.length > 20
@@ -1090,7 +1090,7 @@
                         >
                           {#if !categoricalRules?.includes(row?.rule)}
                             <DropdownMenu.Label
-                              class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-[#09090B]"
+                              class="absolute mt-2 h-11 border-gray-800 border-b -top-1 z-20 fixed sticky bg-default"
                             >
                               <div
                                 class="flex items-center justify-start gap-x-1"
@@ -1103,7 +1103,7 @@
                                     <DropdownMenu.Trigger asChild let:builder
                                       ><Button
                                         builders={[builder]}
-                                        class="w-fit -mt-1 -ml-2 bg-[#09090B] flex flex-row justify-between items-center text-white"
+                                        class="w-fit -mt-1 -ml-2 bg-default flex flex-row justify-between items-center text-white"
                                       >
                                         <span
                                           class="truncate ml-2 text-sm sm:text-[1rem]"

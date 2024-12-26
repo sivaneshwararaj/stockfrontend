@@ -299,47 +299,47 @@
 
             <div class="w-full overflow-x-scroll mt-10">
               <table
-                class=" table table-sm table-compact rounded-none sm:rounded-md w-full bg-[#09090B] m-auto mt-5"
+                class=" table table-sm table-compact rounded-none sm:rounded-md w-full bg-default m-auto mt-5"
               >
                 <!-- head -->
                 <thead>
-                  <tr class="bg-[#09090B]">
+                  <tr class="bg-default">
                     <th
-                      class="hidden lg:table-cell text-start bg-[#09090B] text-white text-sm font-semibold"
+                      class="hidden lg:table-cell text-start bg-default text-white text-sm font-semibold"
                     >
                     </th>
                     <th
-                      class="text-start bg-[#09090B] text-white text-sm font-semibold"
+                      class="text-start bg-default text-white text-sm font-semibold"
                     >
                       Symbol
                     </th>
                     <th
-                      class="text-start bg-[#09090B] text-white text-sm font-semibold"
+                      class="text-start bg-default text-white text-sm font-semibold"
                     >
                       Name
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                      class="text-end bg-default text-white text-sm font-semibold"
                     >
                       Transaction Type
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                      class="text-end bg-default text-white text-sm font-semibold"
                     >
                       Amount
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                      class="text-end bg-default text-white text-sm font-semibold"
                     >
                       Transaction
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                      class="text-end bg-default text-white text-sm font-semibold"
                     >
                       Last Trade
                     </th>
                     <th
-                      class="text-end bg-[#09090B] text-white text-sm font-semibold"
+                      class="text-end bg-default text-white text-sm font-semibold"
                     >
                       Filed
                     </th>

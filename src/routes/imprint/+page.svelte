@@ -58,7 +58,7 @@
             </h1>
           </div>
 
-          <div class="w-full bg-[#09090B] m-auto">
+          <div class="w-full bg-default m-auto">
             <div class="">
               <p class="text-white italic mb-2">
                 According to § 5 Telemediengesetz (TMG) ‍

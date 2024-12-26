@@ -845,7 +845,7 @@
 
               <div class="w-full overflow-x-scroll">
                 <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-[#09090B] m-auto mt-4"
+                  class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
                 >
                   <thead>
                     <tr class="border border-gray-600">

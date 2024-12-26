@@ -115,7 +115,7 @@
 </svelte:head>
 
 <section
-  class="w-full bg-[#09090B] overflow-hidden text-white min-h-screen mb-40 sm:mb-0"
+  class="w-full bg-default overflow-hidden text-white min-h-screen mb-40 sm:mb-0"
 >
   <div class="h-full overflow-hidden">
     <div class="relative flex justify-center items-center overflow-hidden">
@@ -131,7 +131,7 @@
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
                     builders={[builder]}
-                    class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Year: {year}</span>
                     <svg
@@ -177,7 +177,7 @@
                 <DropdownMenu.Trigger asChild let:builder>
                   <Button
                     builders={[builder]}
-                    class="w-full border-gray-600 border bg-[#09090B] sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
                   >
                     <span class="truncate text-white">Quarter: Q{quarter}</span>
                     <svg
@@ -251,7 +251,7 @@
                       </span>
                     </div>
                     <div
-                      class="ml-2 avatar rounded-full w-8 h-8 sm:w-10 sm:h-10 relative border border-gray-600 bg-[#09090B] bg-opacity-[0.6] flex items-center justify-center"
+                      class="ml-2 avatar rounded-full w-8 h-8 sm:w-10 sm:h-10 relative border border-gray-600 bg-default bg-opacity-[0.6] flex items-center justify-center"
                     >
                       <svg
                         class="w-6 h-6 sm:w-7 sm:h-7"

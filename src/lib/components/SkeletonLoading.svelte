@@ -3,14 +3,14 @@
   <!-- List container -->
   <div class="flex flex-col">
     <!-- Item -->
-    <div class="border border-gray-600 rounded-md bg-[#09090B]">
+    <div class="border border-gray-600 rounded-md bg-default">
       <div class="flex h-auto justify-between items-center">
         <div
           role="status"
           class="animate-pulse space-x-8 md:flex md:items-center mb-4"
         >
           <div
-            class="flex items-center justify-center w-48 h-28 sm:w-48 sm:h-48 bg-[#09090B] rounded"
+            class="flex items-center justify-center w-48 h-28 sm:w-48 sm:h-48 bg-default rounded"
           >
             <svg
               class="w-12 h-12 text-gray-200"
