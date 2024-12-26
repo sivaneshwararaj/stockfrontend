@@ -5,6 +5,7 @@
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   //import UpgradeToPro from '$lib/components/UpgradeToPro.svelte';
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   //  import * as XLSX from 'xlsx';
 
@@ -119,8 +120,12 @@
             </h1>
           </div>
 
+          <Infobox
+            text="We provide real-time updates on the latest congressional trading activities."
+          />
+
           <body class="w-full overflow-hidden m-auto">
-            <section class="w-full overflow-hidden m-auto sm:mt-10">
+            <section class="w-full overflow-hidden m-auto mt-5">
               <div class=" flex justify-center w-full m-auto overflow-hidden">
                 <div
                   class="relative flex justify-center items-center overflow-hidden w-full"
@@ -131,10 +136,10 @@
                         class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll sm:overflow-hidden"
                       >
                         <table
-                          class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
+                          class="table table-sm table-pin-cols table-compact rounded-none sm:rounded-md w-full bg-default border border-gray-800 m-auto"
                         >
-                          <thead>
-                            <tr class="bg-default border-b border-[#27272A]">
+                          <thead class="bg-default">
+                            <tr class="">
                               <th
                                 class=" text-start bg-default text-white text-sm font-medium sm:font-semibold"
                               >
@@ -165,7 +170,7 @@
                           <tbody>
                             {#each displayList as item, index}
                               <tr
-                                class="odd:bg-odd border-b border-gray-800 {index +
+                                class="bg-table odd:bg-odd border-bborder-gray-800 {index +
                                   1 ===
                                   rawData?.length && data?.user?.tier !== 'Pro'
                                   ? 'opacity-[0.1]'
@@ -173,7 +178,7 @@
                               >
                                 <th
                                   class="{index % 2
-                                    ? 'bg-default'
+                                    ? 'bg-table'
                                     : 'bg-odd'} text-white text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   <div class="flex flex-row items-center">
@@ -203,7 +208,7 @@
                                           ),
                                         )}</a
                                       >
-                                      <span class="text-gray-300"
+                                      <span class="text-white"
                                         >{item?.party}</span
                                       >
                                     </div>
