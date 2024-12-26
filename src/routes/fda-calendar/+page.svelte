@@ -1,25 +1,42 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
-  import InfiniteLoading from "$lib/components/InfiniteLoading.svelte";
-  import { onMount } from "svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-
+  import Infobox from "$lib/components/Infobox.svelte";
+  import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   export let data;
 
   let rawData = data?.getFDACalendar ?? [];
-  let displayList = rawData?.slice(0, 50) || [];
 
-  async function infiniteHandler({ detail: { loaded, complete } }) {
-    if (displayList?.length === rawData?.length) {
-      complete();
-    } else {
-      const nextIndex = displayList?.length;
-      const newArticles = rawData?.slice(nextIndex, nextIndex + 5);
-      displayList = [...displayList, ...newArticles];
-      loaded();
-    }
-  }
+  const groupNewsByStartDate = (rawData) => {
+    return (
+      Object.entries(
+        rawData.reduce((acc, item) => {
+          const dateKey = new Intl.DateTimeFormat("en-US", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }).format(new Date(item.start_date)); // Use start_date for grouping
+
+          if (!acc[dateKey]) acc[dateKey] = [];
+          acc[dateKey].push(item);
+          return acc;
+        }, {}),
+      )
+        // Sort the grouped dates in descending order
+        .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
+        .map(([date, items]) => {
+          // Sort items within each group by latest time (if needed)
+          items.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+          // Get unique tickers in the group
+          const tickers = [...new Set(items.map((item) => item.ticker))];
+
+          return { date, items, tickers };
+        })
+    );
+  };
+
+  let groupData = groupNewsByStartDate(rawData);
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
 </script>
@@ -56,12 +73,12 @@
 </svelte:head>
 
 <section
-  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
+  class="w-full max-w-3xl sm:max-w-screen-2xl overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3 text-white"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
-      <li class="text-gray-300">FDA Tracker</li>
+      <li class="text-gray-300">FDA Calendar</li>
     </ul>
   </div>
 
@@ -73,142 +90,83 @@
         <main class="w-full">
           <div class="mb-6 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
-              FDA Tracker
+              FDA Calendar
             </h1>
           </div>
 
-          <div
-            class="w-full text-center sm:text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-md h-auto p-5"
-          >
-            <svg
-              class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#fff"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
-            We update our data in realtime to provide you with the latest FDA Approvals
-            and Trials for new Drugs and Studies from US Stock Companies.
-          </div>
+          <Infobox
+            text=" We update our data in realtime to provide you with the latest FDA Approvals
+            and Trials for new Drugs and Studies from US Stock Companies."
+          />
 
-          <div class="w-full m-auto mt-20 sm:mt-10">
-            <!--
-            <div
-              class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll sm:overflow-hidden"
-            >
-              <table
-                class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
-              >
-                <thead>
-                  <tr class="bg-default">
-                    <th
-                      class="text-start bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
+          {#if groupData?.length > 0}
+            {#each groupData as { date, items }}
+              <h3 class="mb-1.5 mt-6 font-semibold text-white">
+                {date}
+              </h3>
+              <div class="border border-gray-700">
+                {#each items as item, index}
+                  <div
+                    class="flex border-gray-600 {index + 1 === items?.length
+                      ? 'opacity-[0.2]'
+                      : ''}"
+                  >
+                    <div
+                      class="hidden min-w-[80px] max-w-[80px] text-[1rem] text-center items-center justify-center bg-primary p-1 lg:flex"
                     >
-                      Symbol
-                    </th>
-                   
-                    <th
-                      class="text-start bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
-                    >
-                      Drug
-                    </th>
-                    <th
-                      class="text-start bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
-                    >
-                      Indication
-                    </th>
-                    <th
-                      class="text-end bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
-                    >
-                      Status
-                    </th>
-                    <th
-                      class="text-end bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
-                    >
-                      Target Date
-                    </th>
-
-                    <th
-                      class="text-end bg-default text-white text-sm sm:text-[1rem] whitespace-nowrap font-semibold"
-                    >
-                      Change
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each displayList as item, index}
-                    <tr
-                      on:click={() => goto(`/stocks/${item?.symbol}`)}
-                      class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
-                        1 ===
-                        displayList?.length && data?.user?.tier !== 'Pro'
-                        ? 'opacity-[0.1]'
-                        : ''} cursor-pointer"
-                    >
-                      <td
-                        class="text-sm text-start text-sm sm:text-[1rem] whitespace-nowrap"
+                      <a
+                        href={`/stocks/${item?.ticker}`}
+                        class="text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
                       >
-                        <div class="flex flex-col items-start w-32 sm:w-fit">
-                          <span class="text-blue-400">{item?.symbol}</span>
-                          <span class="text-white sm:hidden">
-                            {item?.name?.length > charNumber
-                              ? item?.name?.slice(0, charNumber) + "..."
-                              : item?.name}
-                          </span>
-                        </div>
-                      </td>
-                     
-
-                      <td
-                        class="text-start text-sm sm:text-[1rem] whitespace-nowrap font-medium text-white"
-                      >
-                        {item?.drugName?.length > charNumber
-                          ? item?.drugName?.slice(0, charNumber) + "..."
-                          : item?.drugName}
-                      </td>
-
-                      <td
-                        class="text-start text-sm sm:text-[1rem] font-medium text-white"
-                      >
-                        {item?.indication}
-                      </td>
-
-                      <td
-                        class="text-end text-sm sm:text-[1rem] font-medium text-white"
-                      >
-                        {item?.status?.length !== 0 ? item?.status : "n/a"}
-                      </td>
-
-                      <td
-                        class="text-end text-sm sm:text-[1rem] font-medium text-white"
-                      >
-                        {item?.targetDate?.length !== 0
-                          ? item?.targetDate
-                          : "n/a"}
-                      </td>
-
-                      <td
-                        class="text-end text-white text-sm sm:text-[1rem] font-medium"
-                      >
-                        {#if item?.changesPercentage >= 0}
-                          <span class="text-[#00FC50]"
-                            >+{item?.changesPercentage}%</span
+                        <HoverStockChart symbol={item?.ticker} />
+                      </a>
+                    </div>
+                    <div
+                      class="flex-grow px-3 py-2 lg:py-3 border-t border-gray-700"
+                    >
+                      <div class="text-white mb-2">
+                        <h4 class="font-semibold">
+                          Drug: <span class="font-normal">{item.drug}</span>
+                        </h4>
+                      </div>
+                      <div class="text-white mb-2">
+                        <h4 class="font-semibold">
+                          Description: <span class="font-normal"
+                            >{item.description}</span
                           >
-                        {:else}
-                          <span class="text-[#FF2F1F]"
-                            >{item?.changesPercentage}%
-                          </span>
-                        {/if}
-                      </td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
-            -->
-          </div>
+                        </h4>
+                      </div>
+                      <div class="text-white mb-2">
+                        <h4 class="font-semibold">
+                          Indication: <span class="font-normal"
+                            >{item.indication}</span
+                          >
+                        </h4>
+                      </div>
+                      <div class="text-white">
+                        <h4 class="font-semibold">
+                          Status: <span class="font-normal">{item.status}</span>
+                        </h4>
+                      </div>
+                      <div class="flex flex-wrap gap-x-2 pt-2 lg:pt-0.5">
+                        <div class="text-white lg:hidden">
+                          <h4 class="font-semibold">
+                            Company: <a
+                              href={`/stocks/${item?.ticker}`}
+                              class="font-normal text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
+                            >
+                              <HoverStockChart symbol={item?.ticker} />
+                            </a>
+                          </h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            {/each}
+          {/if}
+          <UpgradeToPro {data} />
         </main>
       </div>
     </div>

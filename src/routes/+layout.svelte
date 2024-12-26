@@ -512,11 +512,19 @@
                               >Earnings Calendar</a
                             >
                           </Button>
-                          <!--
-                          <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
-                            <a href="/fda-calendar" class="text-start w-full text-[1rem] text-white ml-4 mt-4">FDA Calendar</a>
+
+                          <Button
+                            builders={[builder]}
+                            type="submit"
+                            class="w-full bg-[#141417] hover:bg-[#141417]"
+                          >
+                            <a
+                              href="/fda-calendar"
+                              class="text-start w-full text-[1rem] text-white ml-4 mt-4"
+                              >FDA Calendar</a
+                            >
                           </Button>
-                          -->
+
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -528,11 +536,7 @@
                               >IPO Calendar</a
                             >
                           </Button>
-                          <!--
-                          <Button builders={[builder]} type="submit" class="w-full bg-[#141417] hover:bg-[#141417]">
-                            <a href="/fda-calendar" class="text-start w-full text-[1rem] text-white ml-4 mt-4">FDA Calendar</a>
-                          </Button>
-                          -->
+
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -1043,7 +1047,11 @@
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Earnings Calendar</a
                           >
-                          <!--<a href="/fda-calendar" class="text-[1rem] text-white ml-4 mt-4">FDA Calendar</a>-->
+                          <a
+                            href="/fda-calendar"
+                            class="text-[1rem] text-white ml-4 mt-4"
+                            >FDA Calendar</a
+                          >
                           <a
                             href="/ipos/2024"
                             class="text-[1rem] text-white ml-4 mt-4"

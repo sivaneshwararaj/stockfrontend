@@ -1,6 +1,6 @@
 export const load = async ({ locals }) => {
   const getFDACalendar = async () => {
-    const { apiURL, apiKey } = locals;
+    const { apiURL, apiKey, user } = locals;
 
     const response = await fetch(apiURL + "/fda-calendar", {
       method: "GET",
@@ -10,8 +10,8 @@ export const load = async ({ locals }) => {
       },
     });
 
-    const output = await response.json();
-
+    let output = await response.json();
+    output = user?.tier !== 'Pro' ? output?.slice(0,3) : output;
     return output;
   };
 
