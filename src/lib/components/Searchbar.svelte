@@ -160,11 +160,15 @@
   }
 
   function handleKeyDown(symbol) {
-    const list = showSuggestions
-      ? searchBarData
-      : searchHistory?.length > 0
-        ? searchHistory
-        : popularList;
+    const list = Array.from(
+      new Map(
+        [...searchHistory, ...searchBarData, ...popularList].map((item) => [
+          item.symbol,
+          item,
+        ]),
+      ).values(),
+    );
+
     if (!list?.length) return;
 
     const newData = list.find((item) => item?.symbol === symbol);
