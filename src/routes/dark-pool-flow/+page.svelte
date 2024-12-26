@@ -761,7 +761,7 @@
             : nyseDate} (NYSE Time)
         </div>
       {/if}
-      <div class="rounded-md border border-gray-700 bg-[#121217] p-2">
+      <div class="rounded-md border border-gray-700 bg-primary p-2">
         <div
           class="flex flex-col sm:flex-row items-center pt-3 sm:pt-1 pb-3 sm:border-b sm:border-gray-600"
         >
@@ -842,7 +842,7 @@
           <div class="sm:ml-auto w-full sm:w-fit pt-5">
             <div class="relative flex flex-col sm:flex-row items-center">
               <div
-                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-[#19191F] rounded-md border border-gray-600"
+                class="relative w-full sm:w-fit pl-3 sm:mr-5 mb-4 sm:mb-0 flex-auto text-center bg-secondary rounded-md border border-gray-600"
               >
                 <label class="flex flex-row items-center">
                   <input

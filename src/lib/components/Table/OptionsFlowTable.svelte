@@ -241,14 +241,11 @@
       itemCount={displayedData.length}
       itemSize={40}
     >
-      <div
-        slot="header"
-        class="tr th sticky z-40 top-0 border-b border-gray-800 shadow-xl"
-      >
+      <div slot="header" class="tr th sticky z-40 top-0 border border-gray-800">
         <!-- Table headers -->
         <div
           on:click={() => sortData("time")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Time
           <svg
@@ -268,7 +265,7 @@
         </div>
         <div
           on:click={() => sortData("ticker")}
-          class="td cursor-pointer select-none bg-[#17171D] font-bold text-slate-300 text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default font-bold text-white text-xs text-start uppercase"
         >
           Symbol
           <svg
@@ -289,13 +286,13 @@
           >
         </div>
         <div
-          class="td select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Save
         </div>
         <div
           on:click={() => sortData("expiry")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Expiry
           <svg
@@ -317,7 +314,7 @@
         </div>
         <div
           on:click={() => sortData("dte")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           DTE
           <svg
@@ -339,7 +336,7 @@
         </div>
         <div
           on:click={() => sortData("strike")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Strike
           <svg
@@ -361,7 +358,7 @@
         </div>
         <div
           on:click={() => sortData("callPut")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           C/P
           <svg
@@ -383,7 +380,7 @@
         </div>
         <div
           on:click={() => sortData("sentiment")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Sent.
           <svg
@@ -406,7 +403,7 @@
         </div>
         <div
           on:click={() => sortData("spot")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Spot
           <svg
@@ -428,7 +425,7 @@
         </div>
         <div
           on:click={() => sortData("price")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Price
           <svg
@@ -450,7 +447,7 @@
         </div>
         <div
           on:click={() => sortData("premium")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Prem
           <svg
@@ -472,7 +469,7 @@
         </div>
         <div
           on:click={() => sortData("type")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Type
           <svg
@@ -494,7 +491,7 @@
         </div>
         <div
           on:click={() => sortData("exec")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Exec
           <svg
@@ -516,7 +513,7 @@
         </div>
         <div
           on:click={() => sortData("size")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Size
           <svg
@@ -538,7 +535,7 @@
         </div>
         <div
           on:click={() => sortData("vol")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           Vol
           <svg
@@ -560,7 +557,7 @@
         </div>
         <div
           on:click={() => sortData("oi")}
-          class="td cursor-pointer select-none bg-[#17171D] text-slate-300 font-bold text-xs text-start uppercase"
+          class="td cursor-pointer select-none bg-default text-white font-bold text-xs text-start uppercase"
         >
           OI
           <svg
