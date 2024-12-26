@@ -657,7 +657,7 @@
           class="td text-sm sm:text-[1rem] {displayedData[index]?.put_call ===
           'Calls'
             ? 'text-[#00FC50]'
-            : 'text-[#FF2F1F]'} text-start"
+            : 'text-[#c44536]'} text-start"
         >
           {displayedData[index]?.put_call}
         </div>
@@ -701,8 +701,9 @@
 
         <div
           style="justify-content: center;"
-          class="td text-sm sm:text-[1rem] text-start {displayedData[index]
-            ?.option_activity_type === 'Sweep'
+          class="td text-sm sm:text-[1rem] uppercase text-start {displayedData[
+            index
+          ]?.option_activity_type === 'Sweep'
             ? 'text-[#C6A755]'
             : 'text-[#976DB7]'}"
         >
@@ -711,12 +712,21 @@
 
         <div
           style="justify-content: center;"
-          class="td text-sm sm:text-[1rem] text-start text-[#C6A755]"
+          class="td text-sm sm:text-[1rem] uppercase text-start {[
+            'At Ask',
+            'Above Ask',
+          ]?.includes(displayedData[index]?.execution_estimate)
+            ? 'text-[#C8A32D]'
+            : ['At Bid', 'Below Bid']?.includes(
+                  displayedData[index]?.execution_estimate,
+                )
+              ? 'text-[#8F82FE]'
+              : 'text-[#A98184]'}"
         >
-          {displayedData[index]?.execution_estimate?.replace(
-            "At Midpoint",
-            "Midpoint",
-          )}
+          {displayedData[index]?.execution_estimate
+            ?.replace("At", "")
+            ?.replace("Above", "")
+            ?.replace("Midpoint", "Mid")}
         </div>
 
         <div
