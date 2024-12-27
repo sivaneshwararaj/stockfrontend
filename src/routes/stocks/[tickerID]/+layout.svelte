@@ -573,7 +573,7 @@
             </div>
             <!--End Mobile Navbar-->
 
-            <div class="pt-14 sm:pt-0 w-full px-3 sm:px-0">
+            <div class="pt-14 sm:pt-0 w-full px-3 sm:px-0 lg:pr-3">
               <div
                 class="md:flex md:justify-between md:divide-x md:divide-slate-800"
               >
@@ -709,7 +709,7 @@
                         <!--End Price Alert -->
 
                         <div
-                          class="hidden sm:flex items-end justify-end absolute right-0 top-12 {$scoreComponent ===
+                          class="hidden sm:flex items-end justify-end absolute right-1.5 top-12 {$scoreComponent ===
                           false
                             ? 'invisible'
                             : ''}"

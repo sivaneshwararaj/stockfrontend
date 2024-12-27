@@ -1376,7 +1376,7 @@
               <div class="lg:sticky lg:top-20"></div>
             </div>
 
-            <div class="w-full">
+            <div class="lg:w-[65%] 2xl:w-[70%]">
               <div
                 class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {Object?.keys(
                   data?.getEarningsSurprise || {},

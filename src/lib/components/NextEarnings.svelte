@@ -97,9 +97,9 @@
 {/if}
 
 {#if data?.getNextEarnings?.past?.length !== 0}
-  <div class="space-y-3 overflow-hidden mt-5">
+  <div class="space-y-3 overflow-hidden mt-5 w-full">
     <!--Start Content-->
-    <div class="w-auto lg:w-full p-1 flex flex-col m-auto">
+    <div class="w-full p-1 flex flex-col">
       <div class="flex flex-col items-center w-full mb-3">
         <div class="flex flex-row justify-start mr-auto items-center">
           <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
