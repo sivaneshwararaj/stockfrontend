@@ -442,7 +442,7 @@
                   class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
                 >
                   <!-- head -->
-                  <thead>
+                  <thead class="bg-default">
                     <tr class="">
                       <th class="text-white font-semibold text-sm">Symbol</th>
                       <th class="text-white font-semibold text-sm">Company</th>
@@ -468,11 +468,11 @@
                     {#each priceAlertList as item}
                       <!-- row -->
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
                       >
                         <td
                           on:click={() => handleFilter(item?.id)}
-                          class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start border-b-[#09090B] flex flex-row items-center"
+                          class="text-blue-400 font-medium text-sm sm:text-[1rem] whitespace-nowrap text-start flex flex-row items-center"
                         >
                           <input
                             type="checkbox"
@@ -493,7 +493,7 @@
                         </td>
 
                         <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap"
                         >
                           {item?.name?.length > charNumber
                             ? item?.name?.slice(0, charNumber) + "..."
@@ -501,25 +501,25 @@
                         </td>
 
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                         >
                           {item?.targetPrice}
                         </td>
 
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                         >
                           {item?.condition}
                         </td>
 
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                         >
                           {item.price?.toFixed(2)}
                         </td>
 
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                         >
                           {#if item?.changesPercentage >= 0}
                             <span class="text-[#00FC50]"
@@ -532,7 +532,7 @@
                           {/if}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                         >
                           {abbreviateNumber(item?.volume)}
                         </td>
