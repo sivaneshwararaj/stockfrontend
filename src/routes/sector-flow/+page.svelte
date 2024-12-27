@@ -5,6 +5,14 @@
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+  import { Chart } from "svelte-echarts";
+
+  import { init, use } from "echarts/core";
+  import { LineChart, BarChart } from "echarts/charts";
+  import { GridComponent, TooltipComponent } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
+
+  use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
 
@@ -12,8 +20,6 @@
   let originalData = [...rawData]; // Unaltered copy of raw data
 
   let stockList = rawData?.slice(0, 50) ?? [];
-
-  $: charNumber = 20;
 
   $: columns = [
     { key: "ticker", label: "Symbol", align: "left" },
@@ -96,15 +102,140 @@
     // Sort using the generic comparison function
     stockList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
-  $: checkedSymbol = "";
-  function openGraph(symbol) {
-    // Clear all existing symbols
-    if (checkedSymbol === symbol) {
-      checkedSymbol = "";
-    } else {
-      checkedSymbol = symbol;
-    }
+
+  function getPlotOptions() {
+    const historyData = rawData?.at(1)?.premTickHistory;
+    console.log(rawData?.at(1));
+    const dates = historyData.map((item) => item.tape_time);
+    const priceList = historyData.map((item) => item.close);
+    const netCallPremList = historyData.map((item) => item.net_call_premium);
+    const netPutPremList = historyData.map((item) => item.net_put_premium);
+    const volumeList = historyData.map(
+      (item) => item.net_call_volume + item.net_put_volume,
+    );
+
+    return {
+      silent: true,
+      animation: false,
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+      },
+      axisPointer: {
+        link: [{ xAxisIndex: [0, 1] }],
+      },
+      grid: [
+        {
+          left: "1%",
+          right: "1%",
+          top: "5%",
+          height: "55%",
+          containLabel: true,
+        },
+        {
+          left: "1%",
+          right: "1%",
+          bottom: "5%",
+          height: "28%",
+          containLabel: true,
+        },
+      ],
+      xAxis: [
+        {
+          type: "category",
+          gridIndex: 0,
+          data: dates,
+          axisLabel: {
+            color: "#fff",
+            formatter: (value) => {
+              const timePart = value.split(" ")[1];
+              let [hours, minutes] = timePart.split(":").map(Number);
+              hours = minutes > 30 ? hours + 1 : hours;
+              const amPm = hours >= 12 ? "PM" : "AM";
+              hours = hours % 12 || 12;
+              return `${hours}:00 ${amPm}`;
+            },
+          },
+        },
+        {
+          type: "category",
+          gridIndex: 1,
+          data: dates,
+          axisLabel: {
+            color: "#fff",
+            formatter: (value) => {
+              const timePart = value.split(" ")[1];
+              let [hours, minutes] = timePart.split(":").map(Number);
+              hours = minutes > 30 ? hours + 1 : hours;
+              const amPm = hours >= 12 ? "PM" : "AM";
+              hours = hours % 12 || 12;
+              return `${hours}:00 ${amPm}`;
+            },
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: "value",
+          gridIndex: 0,
+          splitLine: { show: false },
+          axisLabel: { show: true, color: "#fff" },
+        },
+        {
+          type: "value",
+          gridIndex: 0,
+          position: "right",
+          splitLine: { show: false },
+          axisLabel: { show: true, color: "#fff" },
+        },
+        {
+          type: "value",
+          gridIndex: 1,
+          splitLine: { show: false },
+          axisLabel: { show: true, color: "#fff" },
+        },
+      ],
+      series: [
+        {
+          name: "XLV",
+          data: priceList,
+          type: "line",
+          xAxisIndex: 0,
+          yAxisIndex: 0,
+          itemStyle: { color: "#FFD700" },
+          showSymbol: false,
+        },
+        {
+          name: "Daily Put Premium",
+          data: netPutPremList,
+          type: "line",
+          xAxisIndex: 0,
+          yAxisIndex: 1,
+          itemStyle: { color: "#FF4444" },
+          showSymbol: false,
+        },
+        {
+          name: "Daily Call Premium",
+          data: netCallPremList,
+          type: "line",
+          xAxisIndex: 0,
+          yAxisIndex: 1,
+          itemStyle: { color: "#00FF9D" },
+          showSymbol: false,
+        },
+        {
+          name: "Volume",
+          data: volumeList,
+          type: "bar",
+          xAxisIndex: 1,
+          yAxisIndex: 2,
+          itemStyle: { color: "#00FF9D" },
+        },
+      ],
+    };
   }
+
+  let optionsData = rawData ? getPlotOptions() : null;
 </script>
 
 <svelte:head>
@@ -336,6 +467,14 @@
               </table>
             </div>
             <UpgradeToPro {data} />
+
+            {#if data?.user?.tier === "Pro" && optionsData !== null}
+              <div class="pb-8 sm:pb-2 rounded-md bg-default">
+                <div class="app w-full h-[300px] mt-5">
+                  <Chart {init} options={optionsData} class="chart" />
+                </div>
+              </div>
+            {/if}
           </div>
         </main>
       </div>
@@ -345,13 +484,13 @@
 
 <style>
   .app {
-    height: 150px;
+    height: 800px;
     max-width: 100%; /* Ensure chart width doesn't exceed the container */
   }
 
   @media (max-width: 640px) {
     .app {
-      height: 120px;
+      height: 210px;
     }
   }
 
