@@ -1,10 +1,9 @@
 <script lang="ts">
   import { numberOfUnreadNotification } from "$lib/store";
-  import { onMount } from "svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-  import { abbreviateNumberWithColor } from "$lib/utils";
+  import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
 
   export let data;
@@ -112,19 +111,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
   <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Jim
-    Carmer Tracker · Stocknear
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Live
+    Sector Flow · Stocknear
   </title>
   <meta
     name="description"
-    content={`Track the stock recommendations and performance of CNBC's Jim Cramer`}
+    content={`Track and compare historical and current options activity
+              performances of sectors`}
   />
 
   <!-- Other meta tags -->
   <meta property="og:title" content={`Jim Carmer Tracker · Stocknear`} />
   <meta
     property="og:description"
-    content={`Track the stock recommendations and performance of CNBC's Jim Cramer`}
+    content={`Track and compare historical and current options activity
+              performances of sectors`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -134,7 +135,8 @@
   <meta name="twitter:title" content={`Jim Carmer Tracker · Stocknear`} />
   <meta
     name="twitter:description"
-    content={`Track the stock recommendations and performance of CNBC's Jim Cramer`}
+    content={`Track and compare historical and current options activity
+              performances of sectors`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -196,9 +198,14 @@
                       <td
                         class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
                       >
-                        {item?.name?.length > charNumber
-                          ? item?.name?.slice(0, charNumber) + "..."
-                          : item?.name}
+                        <a
+                          href={sectorNavigation?.find(
+                            (listItem) => listItem?.title === item?.name,
+                          )?.link}
+                          class="sm:hover:underline sm:hover:underline-offset-4 text-white"
+                        >
+                          {item?.name}
+                        </a>
                       </td>
 
                       <td
@@ -270,7 +277,7 @@
 
                                 <!-- Neutral -->
                                 <div
-                                  class="bg-gray-100 h-full"
+                                  class="bg-gray-300 h-full"
                                   style="width: calc(({item
                                     ?.premium_ratio[1]} / ({item
                                     ?.premium_ratio[0]} + {item

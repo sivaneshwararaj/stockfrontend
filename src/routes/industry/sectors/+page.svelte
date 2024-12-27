@@ -95,7 +95,9 @@
   <div class="flex justify-center w-full m-auto h-full overflow-hidden">
     <!-- Content area -->
     <div class="w-full overflow-x-scroll">
-      <table class="table rounded-none sm:rounded-md w-full m-auto mt-4">
+      <table
+        class="table rounded-none sm:rounded-md w-full m-auto bg-table border border-gray-800 mt-4"
+      >
         <thead>
           <TableHeader {columns} {sortOrders} {sortData} />
         </thead>
@@ -103,11 +105,9 @@
           {#each displayList as item}
             <!-- row -->
             <tr
-              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
+              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
             >
-              <td
-                class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
-              >
+              <td class="font-medium text-sm sm:text-[1rem] whitespace-nowrap">
                 <a
                   href={sectorNavigation?.find(
                     (listItem) => listItem?.title === item?.sector,
@@ -121,25 +121,25 @@
               </td>
 
               <td
-                class="text-white text-end text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                class="text-white text-end text-sm sm:text-[1rem] whitespace-nowrap"
               >
                 {item?.numStocks}
               </td>
 
               <td
-                class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
                 {abbreviateNumber(item?.totalMarketCap) ?? "-"}
               </td>
 
               <td
-                class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
                 {item?.avgDividendYield?.toFixed(2) ?? "-"}%
               </td>
 
               <td
-                class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
                 {item?.pe?.toFixed(2) ?? "-"}
               </td>
@@ -147,7 +147,7 @@
               <td
                 class=" {item?.profitMargin >= 0
                   ? "before:content-['+'] text-[#00FC50]"
-                  : 'text-[#FF2F1F]'}  font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                  : 'text-[#FF2F1F]'}  font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
               >
                 {abbreviateNumber(item?.profitMargin)}%
               </td>
@@ -155,7 +155,7 @@
               <td
                 class="{item?.avgChange1M >= 0
                   ? "before:content-['+']  text-[#00FC50]"
-                  : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                  : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
                 {item?.avgChange1M?.toFixed(2) ?? "-"}%
               </td>
@@ -163,7 +163,7 @@
               <td
                 class="{item?.avgChange1Y >= 0
                   ? "before:content-['+']  text-[#00FC50]"
-                  : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                  : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
                 {item?.avgChange1Y?.toFixed(2) ?? "-"}%
               </td>
