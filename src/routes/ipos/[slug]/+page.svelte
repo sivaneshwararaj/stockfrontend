@@ -123,8 +123,8 @@
           <table
             class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto overflow-hidden"
           >
-            <thead>
-              <tr class="border-b border-[#27272A]">
+            <thead class="bg-default">
+              <tr>
                 <th class="text-white font-semibold text-sm text-start"
                   >IPO Date</th
                 >

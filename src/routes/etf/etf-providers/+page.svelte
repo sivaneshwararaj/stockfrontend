@@ -131,7 +131,7 @@
     <div class="w-full">
       <div class="w-full overflow-x-scroll">
         <table
-          class="table rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
+          class="table rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
         >
           <thead>
             <TableHeader {columns} {sortOrders} {sortData} />
@@ -140,14 +140,14 @@
             {#each etfProviderList as item, index}
               <!-- row -->
               <tr
-                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
+                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
                   1 ===
                   etfProviderList?.length && data?.user?.tier !== 'Pro'
                   ? 'opacity-[0.1]'
                   : ''}"
               >
                 <td
-                  class="text-sm sm:text-[1rem] whitespace-nowrap font-medium border-b-[#09090B]"
+                  class="text-sm sm:text-[1rem] whitespace-nowrap font-medium"
                 >
                   <a
                     href={"/etf/etf-providers/" + item?.etfProvider}
@@ -158,25 +158,25 @@
                 </td>
 
                 <td
-                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B] text-end"
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                 >
                   {abbreviateNumber(item?.totalAssets)}
                 </td>
 
                 <td
-                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                 >
                   {item?.funds}
                 </td>
 
                 <td
-                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                 >
                   {item?.avgExpenseRatio}%
                 </td>
 
                 <td
-                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end border-b-[#09090B]"
+                  class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap text-end"
                 >
                   {item?.avgHoldings}
                 </td>

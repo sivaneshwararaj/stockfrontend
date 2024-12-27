@@ -3,6 +3,7 @@
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { Chart } from "svelte-echarts";
   import Lazy from "$lib/components/Lazy.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   import { init, use } from "echarts/core";
   import { LineChart, BarChart } from "echarts/charts";
@@ -23,7 +24,6 @@
   let optionsInflation;
   let optionsFedFundRate;
 
-  let filterRule = "annual";
   let activeIdx = 0;
 
   const tabs = [
@@ -323,7 +323,7 @@
         name: "CPI",
         data: valueList,
         type: "line",
-        areaStyle: { opacity: 0.2 },
+        areaStyle: { opacity: 0.02 },
         smooth: true,
         symbol: "none",
         itemStyle: {
@@ -577,7 +577,7 @@
         name: "Fed Fund Rate",
         data: valueList,
         type: "line",
-        areaStyle: { opacity: 0.2 },
+        areaStyle: { opacity: 0.02 },
         smooth: true,
         symbol: "none",
         itemStyle: {
@@ -672,22 +672,11 @@
           </div>
 
           {#if isLoaded}
-            <div
-              class="mb-8 w-full text-start sm:flex sm:flex-row sm:items-center m-auto text-gray-100 border border-gray-800 sm:rounded-md h-auto p-5"
-            >
-              <svg
-                class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 256 256"
-                ><path
-                  fill="#fff"
-                  d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                /></svg
-              >
-              Real-time and historical data on key economic indicators like GDP,
+            <Infobox
+              text="Real-time and historical data on key economic indicators like GDP,
               unemployment, and inflation, essential for tracking economic performance
-              and growth trends.
-            </div>
+              and growth trends."
+            />
 
             <div class="w-full m-auto mt-10">
               <h2 class="text-xl sm:text-2xl text-gray-200 font-bold">
@@ -845,10 +834,10 @@
 
               <div class="w-full overflow-x-scroll">
                 <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
+                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
                 >
-                  <thead>
-                    <tr class="border border-gray-600">
+                  <thead class="bg-default">
+                    <tr class="">
                       <th
                         class="text-white font-semibold text-start text-sm sm:text-[1rem]"
                         >Date</th
@@ -907,70 +896,70 @@
                     {#each tableList as item}
                       <!-- row -->
                       <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] shake-ticker cursor-pointer"
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border border-gray-800"
                       >
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                         >
                           {item?.date}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.month1}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.month2 !== null ? item?.month2 : "-"}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.month3}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.month6}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year1}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year2}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year3}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year5}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year7}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year10}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year20}
                         </td>
                         <td
-                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap border-b-[#09090B]"
+                          class="text-white font-medium text-sm sm:text-[1rem] text-end whitespace-nowrap"
                         >
                           {item?.year30}
                         </td>
@@ -996,7 +985,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
             >
               <a
                 href="/pricing"
@@ -1016,7 +1005,7 @@
           {/if}
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href="/economic-calendar"
@@ -1035,7 +1024,7 @@
           </div>
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href="/earnings-calendar"

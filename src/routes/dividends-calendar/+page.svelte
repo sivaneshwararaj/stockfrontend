@@ -390,7 +390,7 @@
                       on:click={() => toggleDate(index)}
                       class=" m-auto w-full cursor-pointer h-16 {index ===
                       selectedWeekday
-                        ? 'bg-[#fff] text-black font-semibold'
+                        ? 'bg-white text-black font-semibold'
                         : ''} rounded-md sm:rounded-none flex bg-default border border-gray-600 mb-3"
                     >
                       <div
@@ -469,7 +469,7 @@
 
                     <div class="w-full overflow-x-scroll no-scrollbar">
                       <table
-                        class="table table-sm table-compact rounded-none sm:rounded-md w-full border-[#09090B] m-auto mt-4"
+                        class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
                       >
                         <thead>
                           <TableHeader {columns} {sortOrders} {sortData} />

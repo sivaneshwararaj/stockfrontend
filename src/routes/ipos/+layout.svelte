@@ -138,7 +138,7 @@
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
               on:click={() => goto("/pricing")}
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
             >
               <div
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
@@ -158,7 +158,7 @@
 
           <div
             on:click={() => goto("/analysts")}
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
               <div class="w-full flex justify-between items-center p-3 mt-3">
@@ -175,7 +175,7 @@
 
           <div
             on:click={() => goto("/politicians")}
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
               <div class="w-full flex justify-between items-center p-3 mt-3">

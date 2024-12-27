@@ -398,7 +398,7 @@
                       on:click={() => toggleDate(index)}
                       class=" m-auto w-full cursor-pointer h-16 {index ===
                       selectedWeekday
-                        ? 'bg-[#fff] text-black font-semibold'
+                        ? 'bg-white text-black font-semibold'
                         : ''} rounded sm:rounded-none flex bg-default border border-gray-600 mb-3"
                     >
                       <div
@@ -674,7 +674,7 @@
 
                       <div class="w-full overflow-x-scroll no-scrollbar">
                         <table
-                          class="table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
+                          class="table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
                         >
                           <thead>
                             <TableHeader {columns} {sortOrders} {sortData} />
@@ -683,11 +683,9 @@
                             {#each day as item}
                               <!-- row -->
                               <tr
-                                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd"
+                                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border border-gray-800"
                               >
-                                <td
-                                  class="text-white text-sm sm:text-[1rem] border-b-[#09090B]"
-                                >
+                                <td class="text-white text-sm sm:text-[1rem]">
                                   <label class="p-1.5 rounded-md">
                                     {item?.time}
                                   </label>
@@ -758,7 +756,7 @@
                                 </td>
 
                                 <td
-                                  class="text-start text-white border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+                                  class="text-start text-white text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   {item?.event?.length > 40
                                     ? item?.event?.slice(0, 40) + "..."
@@ -766,7 +764,7 @@
                                 </td>
 
                                 <td
-                                  class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
+                                  class="text-white text-end text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   {item?.actual !== (null || "")
                                     ? abbreviateNumber(item?.actual)
@@ -774,7 +772,7 @@
                                 </td>
 
                                 <td
-                                  class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
+                                  class="text-white text-end text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   {item?.consensus !== (null || "")
                                     ? abbreviateNumber(item?.consensus)
@@ -782,7 +780,7 @@
                                 </td>
 
                                 <td
-                                  class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
+                                  class="text-white text-end text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   {item?.prior !== (null || "")
                                     ? abbreviateNumber(item?.prior)
@@ -790,7 +788,7 @@
                                 </td>
 
                                 <td
-                                  class="text-white text-start text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                                  class="text-white text-start text-sm sm:text-[1rem] whitespace-nowrap"
                                 >
                                   <div
                                     class="flex flex-row items-center justify-end"
@@ -874,7 +872,7 @@
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
             >
               <a
                 href={"/pricing"}
@@ -894,7 +892,7 @@
           {/if}
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href={"/earnings-calendar"}
@@ -913,7 +911,7 @@
           </div>
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href={"/dividends-calendar"}

@@ -220,20 +220,20 @@
               {#each etfProviderData as item, index}
                 <!-- row -->
                 <tr
-                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
+                  class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
                     1 ===
                     etfProviderData?.length && data?.user?.tier !== 'Pro'
                     ? 'opacity-[0.1]'
                     : ''}"
                 >
                   <td
-                    class="font-medium text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                    class="font-medium text-sm sm:text-[1rem] whitespace-nowrap"
                   >
                     <HoverStockChart symbol={item?.symbol} assetType={"etf"} />
                   </td>
 
                   <td
-                    class="text-gray-200 border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+                    class="text-gray-200 text-sm sm:text-[1rem] whitespace-nowrap"
                   >
                     {item?.name?.length > charNumber
                       ? item?.name?.slice(0, charNumber) + "..."
@@ -267,19 +267,19 @@
                   </td>
 
                   <td
-                    class="text-white font-medium border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
+                    class="text-white font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap"
                   >
                     {abbreviateNumber(item?.totalAssets)}
                   </td>
 
                   <td
-                    class="text-white font-medium text-end border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+                    class="text-white font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap"
                   >
                     {item?.numberOfHoldings}
                   </td>
 
                   <td
-                    class="text-white font-medium text-end border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
+                    class="text-white font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap"
                   >
                     {item?.expenseRatio}%
                   </td>

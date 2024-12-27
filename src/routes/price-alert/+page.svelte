@@ -798,7 +798,7 @@
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
               on:click={() => goto("/pricing")}
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
             >
               <div
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
@@ -817,7 +817,7 @@
           {/if}
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href={"/watchlist/stocks"}
@@ -836,7 +836,7 @@
           </div>
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href={"/stock-screener"}

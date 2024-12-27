@@ -165,7 +165,7 @@
     <!-- Content area -->
     <div class="w-full overflow-x-scroll">
       <table
-        class="table rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4"
+        class="table rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto mt-4"
       >
         <thead>
           <TableHeader {columns} {sortOrders} {sortData} />
@@ -174,35 +174,29 @@
           {#each displayList as item}
             <!-- row -->
             <tr
-              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
+              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
             >
               <td
-                class="text-white font-semibold sm:font-normal text-center text-sm sm:text-[1rem] border-b-[#09090B]"
+                class="text-white font-semibold sm:font-normal text-center text-sm sm:text-[1rem]"
               >
                 {item?.rank}
               </td>
 
-              <td class="text-[1rem] border-b-[#09090B]">
+              <td class="text-[1rem]">
                 <HoverStockChart symbol={item?.symbol} assetType="etf" />
               </td>
 
-              <td
-                class="text-white border-b-[#09090B] text-sm sm:text-[1rem] whitespace-nowrap"
-              >
+              <td class="text-white text-sm sm:text-[1rem] whitespace-nowrap">
                 {item?.name?.length > charNumber
                   ? item?.name?.slice(0, charNumber) + "..."
                   : item?.name}
               </td>
 
-              <td
-                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
-              >
+              <td class="text-white text-end text-sm sm:text-[1rem]">
                 {item?.price}
               </td>
 
-              <td
-                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
-              >
+              <td class="text-white text-end text-sm sm:text-[1rem]">
                 {#if item?.changesPercentage >= 0}
                   <span class="text-[#00FC50]"
                     >+{item.changesPercentage?.toFixed(2)}%</span
@@ -214,14 +208,12 @@
                 {/if}
               </td>
 
-              <td
-                class="text-white text-end text-sm sm:text-[1rem] border-b-[#09090B]"
-              >
+              <td class="text-white text-end text-sm sm:text-[1rem]">
                 {item?.expenseRatio}%
               </td>
 
               <td
-                class="text-white font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap border-b-[#09090B]"
+                class="text-white font-medium text-end text-sm sm:text-[1rem] whitespace-nowrap"
               >
                 {abbreviateNumber(item?.totalAssets)}
               </td>
