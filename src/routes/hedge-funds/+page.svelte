@@ -121,7 +121,7 @@
     </div>
 
     <section class="w-full overflow-hidden m-auto sm:mt-10 px-0 mt-10">
-      <div class="p-3 sm:p-0 flex justify-center w-full m-auto overflow-hidden">
+      <div class=" flex justify-center w-full m-auto overflow-hidden">
         <div
           class="relative flex justify-center items-center overflow-hidden w-full"
         >

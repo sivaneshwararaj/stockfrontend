@@ -192,9 +192,7 @@
   <body class="w-full overflow-hidden m-auto">
     {#if isLoaded}
       <section class="w-full overflow-hidden m-auto sm:mt-10 mt-10">
-        <div
-          class="p-3 sm:p-0 flex justify-center w-full m-auto overflow-hidden"
-        >
+        <div class=" flex justify-center w-full m-auto overflow-hidden">
           <div
             class="relative flex justify-center items-center overflow-hidden w-full"
           >
@@ -264,12 +262,12 @@
                   {#each displayList as item}
                     <a
                       href={`/politicians/${item?.id}`}
-                      class="w-full cursor-pointer bg-[#141417] sm:hover:bg-[#000] transition-colors ease-in-out border sm:hover:border-[#000] {item?.party ===
+                      class="w-full cursor-pointer bg-[#141417] sm:hover:bg-[#000] transition-colors ease-in-out {item?.party ===
                       'Republican'
                         ? 'sm:hover:shadow-[#80000D]'
                         : item?.party === 'Democratic'
                           ? 'sm:hover:shadow-[#1358C3]'
-                          : 'sm:hover:shadow-[#636465]'} border-gray-600 shadow-md rounded-md h-auto pb-4 pt-4 mb-7"
+                          : 'sm:hover:shadow-[#636465]'}  shadow-md rounded-md h-auto pb-4 pt-4 mb-7"
                     >
                       <div class="flex flex-col relative">
                         <div
@@ -312,7 +310,7 @@
                           class="flex flex-col justify-center items-center rounded-2xl"
                         >
                           <div
-                            class="-mt-3 shadow-lg rounded-full border border-slate-600 w-20 h-20 relative {item?.party ===
+                            class="-mt-3 shadow-lg rounded-full border border-gray-800 w-20 h-20 relative {item?.party ===
                             'Republican'
                               ? 'republican-striped bg-[#98272B]'
                               : item?.party === 'Democratic'

@@ -331,7 +331,9 @@
               class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 bg-primary rounded-md h-20"
             >
               <div class="flex flex-col items-start">
-                <span class="font-medium text-gray-200 text-sm">Put/Call</span>
+                <span class="font-medium text-white text-sm sm:text-[1rem]"
+                  >Put/Call</span
+                >
                 <span
                   class="text-start text-sm sm:text-[1rem] font-medium text-white"
                 >
@@ -387,7 +389,9 @@
               class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 bg-primary rounded-md h-20"
             >
               <div class="flex flex-col items-start">
-                <span class="font-medium text-gray-200 text-sm">Call Flow</span>
+                <span class="font-medium text-white text-sm sm:text-[1rem]"
+                  >Call Flow</span
+                >
                 <span
                   class="text-start text-sm sm:text-[1rem] font-medium text-white"
                 >
@@ -445,7 +449,9 @@
               class="flex flex-row items-center flex-wrap w-full px-3 sm:px-5 border border-gray-600 bg-primary rounded-md h-20"
             >
               <div class="flex flex-col items-start">
-                <span class="font-medium text-gray-200 text-sm">Put Flow</span>
+                <span class="font-medium text-white text-sm sm:text-[1rem]"
+                  >Put Flow</span
+                >
                 <span
                   class="text-start text-sm sm:text-[1rem] font-medium text-white"
                 >
@@ -526,7 +532,9 @@
       <div
         class="flex justify-start items-center w-full m-auto mt-6 overflow-x-scroll"
       >
-        <table class="table table-sm table-compact w-full">
+        <table
+          class="table table-sm table-compact bg-table border border-gray-800 w-full"
+        >
           <thead>
             <TableHeader {columns} {sortOrders} {sortData} />
           </thead>
@@ -534,7 +542,7 @@
             {#each displayList as item, index}
               {#if item?.investorName?.length > 0}
                 <tr
-                  class="border-y border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-default border-b-[#09090B] {index +
+                  class="border-b border-gray-800 odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] {index +
                     1 ===
                     shareholderList?.length && data?.user?.tier !== 'Pro'
                     ? 'opacity-[0.1]'
