@@ -53,14 +53,21 @@
             <p class="mb-4">
               This indicator measures the daily aggregated premium and volume of
               option trades. It calculates the difference between the value of
-              options transacted at or near the ask price and those transacted
-              at or near the bid price.
+              options transacted at or near the <span
+                class="uppercase font-semibold">ask</span
+              >
+              price and those transacted at or near the
+              <span class="uppercase font-semibold">bid</span> price.
             </p>
 
             <div class="bg-table p-5 rounded-md mb-5">
               <p>
-                Example: If $15,000 in calls are transacted at the ask price and
-                $10,000 at the bid price, the aggregated call
+                Example: If $15,000 in calls are transacted at the <span
+                  class="uppercase font-semibold">ask</span
+                >
+                price and $10,000 at the
+                <span class="uppercase font-semibold">bid</span>
+                price, the aggregated call
                 <span class="text-[#00FC50] font-semibold uppercase"
                   >premium</span
                 > is:
@@ -70,8 +77,12 @@
 
             <div class="bg-table p-5 rounded-md mb-5">
               <p>
-                Example: If $10,000 in puts are transacted at the ask price and
-                $20,000 at the bid price, the aggregated put
+                Example: If $10,000 in puts are transacted at the <span
+                  class="uppercase font-semibold">ask</span
+                >
+                price and $20,000 at the
+                <span class="uppercase font-semibold">bid</span>
+                price, the aggregated put
                 <span class="text-[#FF2F1F] font-semibold uppercase"
                   >premium</span
                 > is:
@@ -80,10 +91,13 @@
             </div>
 
             <p class="mb-4">
-              More calls bought at the ask suggest bullish sentiment, while more
-              puts bought at the ask suggest bearish sentiment. If both lines
-              are close, the sentiment is neutral. Diverging trends indicate
-              increasing bullish or bearish sentiment.
+              More calls bought at the <span class="uppercase font-semibold"
+                >ask</span
+              >
+              suggest bullish sentiment, while more puts bought at the
+              <span class="uppercase font-semibold">ask</span> suggest bearish sentiment.
+              If both lines are close, the sentiment is neutral. Diverging trends
+              indicate increasing bullish or bearish sentiment.
             </p>
 
             <div class="bg-table p-5 rounded-md mb-5">
@@ -113,7 +127,9 @@
             <div class="bg-table p-5 rounded-md">
               <p>
                 Example: If 10,000 more calls and 5,000 more puts are transacted
-                at the ask compared to the bid, the aggregated volume is:
+                at the <span class="uppercase font-semibold">ask</span> compared
+                to the <span class="uppercase font-semibold">bid</span>, the
+                aggregated volume is:
               </p>
               <p class="font-mono mt-2">10,000 - 5,000 = 5,000</p>
               <p class="mt-2">
