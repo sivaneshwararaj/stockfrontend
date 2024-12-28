@@ -335,40 +335,34 @@
               </div>
 
               <div
-                class="overflow-x-scroll no-scrollbar flex justify-start items-center w-full m-auto shadow-md rounded-none sm:rounded-md mb-4"
+                class="overflow-x-scroll no-scrollbar flex justify-start items-center w-full m-auto rounded-none sm:rounded-md mb-4"
               >
                 <table
-                  class="table table-sm table-compact flex justify-start items-center w-full m-auto"
+                  class="table table-sm table-compact bg-table border border-gray-800 flex justify-start items-center w-full m-auto"
                 >
-                  <thead>
-                    <tr class="bg-default border-b-slate-600 shadow-md">
-                      <th
-                        class="text-start bg-default border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
+                  <thead class="bg-default">
+                    <tr class="">
+                      <th class="text-start text-white text-sm font-semibold">
                         Ex-Divid. Date
                       </th>
-                      <th
-                        class="text-end bg-default border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
+                      <th class="text-end text-white text-sm font-semibold">
                         Cash Amount
                       </th>
-                      <th
-                        class="text-end bg-default border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
+                      <th class="text-end text-white text-sm font-semibold">
                         Record Date
                       </th>
-                      <th
-                        class="text-end bg-default border-b border-[#09090B] text-white text-sm font-semibold"
-                      >
+                      <th class="text-end text-white text-sm font-semibold">
                         Pay Date
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="shadow-md">
+                  <tbody class="">
                     {#each rawData?.history as item}
-                      <tr class="text-gray-200 odd:bg-odd">
+                      <tr
+                        class="text-white odd:bg-odd border-b border-gray-800"
+                      >
                         <td
-                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white font-medium border-b border-[#09090B]"
+                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white font-medium"
                         >
                           {new Date(item?.date)?.toLocaleString("en-US", {
                             month: "short",
@@ -378,12 +372,12 @@
                           })}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.adjDividend?.toFixed(3)}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.recordDate?.length !== 0
                             ? new Date(item?.recordDate)?.toLocaleString(
@@ -398,7 +392,7 @@
                             : "n/a"}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.paymentDate?.length !== 0
                             ? new Date(item?.paymentDate)?.toLocaleString(

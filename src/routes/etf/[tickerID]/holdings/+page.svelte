@@ -101,25 +101,22 @@
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"
     >
-      <div class="sm:p-7 w-full m-auto">
-        <div class="mb-10">
+      <div class="mt-5 sm:mt-0 sm:p-7 w-full m-auto">
+        <div class="flex flex-row items-center md:space-x-4 md:border-0">
+          <h1 class=" text-xl sm:text-2xl font-bold">
+            {$etfTicker} Holdings List
+          </h1>
+          <div
+            class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] md:ml-0"
+          >
+            <span class="inline">As of </span>{formattedDate}
+          </div>
+        </div>
+        <div class="mt-5 mb-10">
           <Infobox text={htmlOutput} />
         </div>
 
         {#if rawData?.length !== 0}
-          <div class="text-white">
-            <div class="flex flex-row items-center md:space-x-4 md:border-0">
-              <h1 class=" text-xl sm:text-2xl font-semibold">
-                {$etfTicker} Holdings List
-              </h1>
-              <div
-                class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] md:ml-0"
-              >
-                <span class="inline">As of </span>{formattedDate}
-              </div>
-            </div>
-          </div>
-
           <Table
             {data}
             {rawData}

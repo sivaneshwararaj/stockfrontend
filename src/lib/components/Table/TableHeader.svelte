@@ -3,22 +3,6 @@
   export let sortOrders = {};
   export let sortData;
 
-  // Local sort orders specific to this table
-  let localSortOrders = { ...sortOrders };
-
-  // Handle sorting within this table
-  function handleSort(key) {
-    const currentOrder = localSortOrders[key]?.order || null;
-    const newOrder =
-      currentOrder === "asc" ? "desc" : currentOrder === "desc" ? null : "asc";
-    localSortOrders = { ...localSortOrders, [key]: { order: newOrder } };
-
-    // Notify parent with the updated sort state
-    if (sortData) {
-      sortData(key, newOrder);
-    }
-  }
-
   const SortIcon = ({ sortOrder }) => `
     <svg class="flex-shrink-0 w-4 h-4 inline-block ${
       sortOrder === "asc" ? "rotate-180" : sortOrder === "desc" ? "" : "hidden"
@@ -31,14 +15,14 @@
 <tr class="bg-default border-b border-[#27272A]">
   {#each columns as column}
     <th
-      on:click={() => handleSort(column.key)}
+      on:click={() => sortData(column.key)}
       class="cursor-pointer select-none text-white font-semibold text-sm whitespace-nowrap {column.align ===
       'right'
         ? 'text-end'
         : 'text-start'}"
     >
       {column.label}
-      {@html SortIcon({ sortOrder: localSortOrders[column.key]?.order })}
+      {@html SortIcon({ sortOrder: sortOrders[column.key].order })}
     </th>
   {/each}
 </tr>

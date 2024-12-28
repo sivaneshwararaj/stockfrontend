@@ -6,6 +6,7 @@
     etfTicker,
   } from "$lib/store";
   import { getPartyForPoliticians } from "$lib/utils";
+  import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
   export let data;
 
@@ -103,6 +104,83 @@
       window.removeEventListener("scroll", handleScroll);
     };
   });
+
+  let columns = [
+    { key: "representative", label: "Person", align: "left" },
+    { key: "party", label: "Party", align: "left" },
+    { key: "transactionDate", label: "Transaction Date", align: "right" },
+    {
+      key: "amount",
+      label: "Amount",
+      align: "right",
+    },
+    { key: "type", label: "Type", align: "right" },
+  ];
+
+  let sortOrders = {
+    representative: { order: "none", type: "string" },
+    party: { order: "none", type: "string" },
+    transactionDate: { order: "none", type: "date" },
+    amount: { order: "none", type: "string" },
+    type: { order: "none", type: "string" },
+  };
+
+  const sortData = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    let originalData = rawData;
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      senateTradingList = [...originalData]?.slice(0, 50); // Reset to original data (spread to avoid mutation)
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    senateTradingList = [...originalData].sort(compareValues)?.slice(0, 50);
+  };
 </script>
 
 <svelte:head>
@@ -161,7 +239,7 @@
                 class="w-full mt-5 mb-10 m-auto flex justify-center items-center"
               >
                 <div
-                  class="w-full grid grid-cols-2 sm:grid-cols-3 gap-y-3 lg:gap-y-3 gap-x-3"
+                  class="w-full grid grid-cols-2 lg:grid-cols-4 gap-y-3 lg:gap-y-3 gap-x-3"
                 >
                   <!--Start Buy/Sell-->
                   <div
@@ -296,35 +374,15 @@
                   class="table table-sm sm:table-md table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
                 >
                   <thead>
-                    <tr class="bg-default border-b border-[#27272A]">
-                      <th
-                        class="shadow-md text-start bg-default text-white text-sm font-semibold"
-                      >
-                        Person
-                      </th>
-                      <th
-                        class="shadow-md text-end bg-default text-white text-sm font-semibold"
-                      >
-                        Transaction Date
-                      </th>
-                      <th
-                        class="shadow-md text-end bg-default text-white text-sm font-semibold"
-                      >
-                        Amount
-                      </th>
-                      <th
-                        class="shadow-md text-white font-semibold text-end text-sm"
-                        >Type</th
-                      >
-                    </tr>
+                    <TableHeader {columns} {sortOrders} {sortData} />
                   </thead>
                   <tbody>
                     {#each senateTradingList as item}
                       <tr
-                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] bg-default border-b-[#09090B]"
+                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] border-b border-gray-800"
                       >
                         <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3 border-b border-b-[#09090B]"
+                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3"
                         >
                           <div class="flex flex-row items-center">
                             <div
@@ -350,14 +408,19 @@
                                   item?.representative?.replace("_", " "),
                                 )}</a
                               >
-                              <span class="text-gray-300">{item?.party}</span>
                             </div>
                           </div>
                           <!--{item?.firstName} {item?.lastName}-->
                         </td>
 
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#09090B]"
+                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                        >
+                          {item?.party}
+                        </td>
+
+                        <td
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {new Date(item?.transactionDate)?.toLocaleString(
                             "en-US",
@@ -371,12 +434,12 @@
                         </td>
 
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {item?.amount}
                         </td>
                         <td
-                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#09090B]"
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
                           {#if item?.type === "Bought"}
                             <span class="text-[#00FC50]">Bought</span>

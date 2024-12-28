@@ -2,6 +2,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import { page } from "$app/stores";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   export let data;
 
@@ -109,34 +110,13 @@
 </script>
 
 <section class="w-full overflow-hidden m-auto">
-  <div
-    class="w-full m-auto text-white border border-gray-600 rounded-md h-auto p-5 mb-4"
-  >
-    {currentCategoryData?.name} stocks have market capitalizations ranging {description}
-    USD.
-    <!--
-    , while additional categories include
-    {#each otherCategories as category, i}
-      {#if i === otherCategories.length - 1}
-        and
-        <a href={category.link} class="text-blue-400 sm:hover:text-white">
-          {category.name}
-        </a>.
-      {:else if i === otherCategories.length - 2}
-        <a href={category.link} class="text-blue-400 sm:hover:text-white">
-          {category.name}
-        </a>
-      {:else}
-        <a href={category.link} class="text-blue-400 sm:hover:text-white">
-          {category.name}
-        </a>,
-      {/if}
-    {/each}
-    -->
-  </div>
+  <Infobox
+    text={`${currentCategoryData?.name} stocks have market capitalizations ranging ${description}
+    USD.`}
+  />
 
   <div
-    class="mb-4 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+    class="mt-5 mb-4 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
   >
     <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
       <div class="flex items-center justify-between sm:block">

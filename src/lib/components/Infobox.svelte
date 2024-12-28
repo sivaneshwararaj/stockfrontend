@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="mt-5 bg-primary rounded-l-none rounded-md sm:mt-0 border-l-4 border-white p-0 sm:p-4 text-white flex flex-row items-center"
+  class="sm:mt-5 bg-primary rounded-l-none rounded-md sm:mt-0 border-l-4 border-white p-0 sm:p-4 text-white flex flex-row items-center"
 >
   <svg
     class="h-6 w-6 hidden sm:block"
