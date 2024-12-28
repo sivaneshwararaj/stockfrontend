@@ -2,7 +2,7 @@ export const load = async ({ locals }) => {
   const getData = async () => {
     const { apiKey, apiURL, user } = locals;
 
-    const response = await fetch(apiURL + "/sector-flow", {
+    const response = await fetch(apiURL + "/market-flow", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

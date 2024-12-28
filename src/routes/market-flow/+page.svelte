@@ -565,7 +565,7 @@
                   <TableHeader {columns} {sortOrders} {sortData} />
                 </thead>
                 <tbody>
-                  {#each stockList as item, index}
+                  {#each stockList as item}
                     <tr
                       class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd"
                     >
