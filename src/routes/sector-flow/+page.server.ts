@@ -10,8 +10,8 @@ export const load = async ({ locals }) => {
       },
     });
 
- let output = await response?.json();
-    output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
+  const output = await response?.json();
+    //output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
     return output;
   };
 

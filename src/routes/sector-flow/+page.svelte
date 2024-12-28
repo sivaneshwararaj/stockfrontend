@@ -5,6 +5,7 @@
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+  /*
   import { Chart } from "svelte-echarts";
 
   import { init, use } from "echarts/core";
@@ -13,13 +14,19 @@
   import { CanvasRenderer } from "echarts/renderers";
 
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+  */
 
   export let data;
 
-  let rawData = data?.getData || [];
-  let originalData = [...rawData]; // Unaltered copy of raw data
+  let sectorData = data?.getData?.sectorData || [];
+  let topSectorTickers = data?.getData?.topSectorTickers || {};
+  let selectedSector = "Technology";
+  let originalData = [...sectorData]; // Unaltered copy of raw data
 
-  let stockList = rawData?.slice(0, 50) ?? [];
+  let stockList = sectorData ?? [];
+
+  let originalTopTickers = [...topSectorTickers[selectedSector]];
+  let displayTopTickers = topSectorTickers[selectedSector];
 
   $: columns = [
     { key: "ticker", label: "Symbol", align: "left" },
@@ -34,6 +41,7 @@
   ];
 
   $: sortOrders = {
+    rank: { order: "none", type: "number" },
     date: { order: "none", type: "date" },
     ticker: { order: "none", type: "string" },
     name: { order: "none", type: "string" },
@@ -45,6 +53,34 @@
     avg30_call_volume: { order: "none", type: "string" },
     avg30_put_volume: { order: "none", type: "number" },
   };
+
+  $: sortTopTickersOrders = {
+    rank: { order: "none", type: "number" },
+    ticker: { order: "none", type: "string" },
+    name: { order: "none", type: "string" },
+    price: { order: "none", type: "number" },
+    changesPercentage: { order: "none", type: "number" },
+    netPremium: { order: "none", type: "number" },
+    netCallPremium: { order: "none", type: "number" },
+    netPutPremium: { order: "none", type: "number" },
+    gexRatio: { order: "none", type: "number" },
+    gexNetChange: { order: "none", type: "number" },
+    ivRank: { order: "none", type: "number" },
+  };
+
+  $: topColumns = [
+    { key: "rank", label: "Rank", align: "left" },
+    { key: "ticker", label: "Symbol", align: "left" },
+    { key: "name", label: "Name", align: "left" },
+    { key: "price", label: "Price", align: "right" },
+    { key: "changesPercentage", label: "% Change", align: "right" },
+    { key: "netPremium", label: "Net Prem", align: "right" },
+    { key: "netCallPremium", label: "Net Call Prem", align: "right" },
+    { key: "netPutPremium", label: "Net Put Prem", align: "right" },
+    { key: "gexRatio", label: "Gex Ratio", align: "right" },
+    { key: "gexNetChange", label: "Gex Change", align: "right" },
+    { key: "ivRank", label: "IV Rank", align: "right" },
+  ];
 
   const sortData = (key) => {
     // Reset all other keys to 'none' except the current key
@@ -64,7 +100,7 @@
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      originalData = [...rawData]; // Reset originalData to rawData
+      originalData = [...sectorData]; // Reset originalData to sectorData
       stockList = originalData?.slice(0, 50); // Reset displayed data
       return;
     }
@@ -103,9 +139,68 @@
     stockList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
 
+  const sortTopTickers = (key) => {
+    // Reset all other keys to 'none' except the current key
+    for (const k in sortOrders) {
+      if (k !== key) {
+        sortOrders[k].order = "none";
+      }
+    }
+
+    // Cycle through 'none', 'asc', 'desc' for the clicked key
+    const orderCycle = ["none", "asc", "desc"];
+
+    const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
+    sortOrders[key].order =
+      orderCycle[(currentOrderIndex + 1) % orderCycle.length];
+    const sortOrder = sortOrders[key].order;
+
+    // Reset to original data when 'none' and stop further sorting
+    if (sortOrder === "none") {
+      originalTopTickers = [...topSectorTickers[selectedSector]]; // Reset originalTopTickers to sectorData
+      displayTopTickers = originalTopTickers;
+      return;
+    }
+
+    // Define a generic comparison function
+    const compareValues = (a, b) => {
+      const { type } = sortOrders[key];
+      let valueA, valueB;
+
+      switch (type) {
+        case "date":
+          valueA = new Date(a[key]);
+          valueB = new Date(b[key]);
+          break;
+        case "string":
+          valueA = a[key].toUpperCase();
+          valueB = b[key].toUpperCase();
+          return sortOrder === "asc"
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+        case "number":
+        default:
+          valueA = parseFloat(a[key]);
+          valueB = parseFloat(b[key]);
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      } else {
+        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+      }
+    };
+
+    // Sort using the generic comparison function
+    displayTopTickers = [...originalTopTickers]
+      .sort(compareValues)
+      ?.slice(0, 50);
+  };
+  /*
   function getPlotOptions() {
-    const historyData = rawData?.at(1)?.premTickHistory;
-    console.log(rawData?.at(1));
+    const historyData = sectorData?.at(1)?.premTickHistory;
+    console.log(sectorData?.at(1));
     const dates = historyData.map((item) => item.tape_time);
     const priceList = historyData.map((item) => item.close);
     const netCallPremList = historyData.map((item) => item.net_call_premium);
@@ -235,7 +330,8 @@
     };
   }
 
-  let optionsData = rawData ? getPlotOptions() : null;
+  let optionsData = null; //sectorData ? getPlotOptions() : null;
+  */
 </script>
 
 <svelte:head>
@@ -313,7 +409,7 @@
                     <tr
                       class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
                         1 ===
-                        rawData?.length && data?.user?.tier !== 'Pro'
+                        sectorData?.length && data?.user?.tier !== 'Pro'
                         ? 'opacity-[0.1]'
                         : ''}"
                     >
@@ -467,7 +563,7 @@
               </table>
             </div>
             <UpgradeToPro {data} />
-
+            <!--
             {#if data?.user?.tier === "Pro" && optionsData !== null}
               <div class="pb-8 sm:pb-2 rounded-md bg-default">
                 <div class="app w-full h-[300px] mt-5">
@@ -475,6 +571,115 @@
                 </div>
               </div>
             {/if}
+            -->
+          </div>
+
+          <div class="w-full m-auto mt-10">
+            <h2 class="text-white text-2xl font-semibold mb-2">
+              Top 10 {selectedSector} Tickers by Net Premium
+            </h2>
+            <div
+              class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+            >
+              <table
+                class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
+              >
+                <thead>
+                  <TableHeader
+                    columns={topColumns}
+                    sortOrders={sortTopTickersOrders}
+                    sortData={sortTopTickers}
+                  />
+                </thead>
+                <tbody>
+                  {#each displayTopTickers as item, index}
+                    <tr
+                      class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                        1 ===
+                        sectorData?.length && data?.user?.tier !== 'Pro'
+                        ? 'opacity-[0.1]'
+                        : ''}"
+                    >
+                      <td
+                        class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      >
+                        {item?.rank}
+                      </td>
+
+                      <td
+                        class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
+                      >
+                        <HoverStockChart symbol={item?.ticker} />
+                      </td>
+
+                      <td
+                        class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      >
+                        <a
+                          href={sectorNavigation?.find(
+                            (listItem) => listItem?.title === item?.name,
+                          )?.link}
+                          class="sm:hover:underline sm:hover:underline-offset-4 text-white"
+                        >
+                          {item?.name}
+                        </a>
+                      </td>
+
+                      <td
+                        class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                      >
+                        {item?.price}
+                      </td>
+
+                      <td
+                        class="text-sm sm:text-[1rem] {item?.changesPercentage >=
+                        0
+                          ? "text-[#00FC50] before:content-['+'] "
+                          : 'text-[#FF2F1F]'} text-end"
+                      >
+                        {item?.changesPercentage}%
+                      </td>
+
+                      <td class="text-sm sm:text-[1rem] text-end">
+                        {@html abbreviateNumberWithColor(
+                          item?.netPremium,
+                          false,
+                          true,
+                        )}
+                      </td>
+                      <td class="text-sm sm:text-[1rem] text-end">
+                        {@html abbreviateNumberWithColor(
+                          item?.netCallPremium,
+                          false,
+                          true,
+                        )}
+                      </td>
+                      <td class="text-sm sm:text-[1rem] text-end">
+                        {@html abbreviateNumberWithColor(
+                          item?.netPutPremium,
+                          false,
+                          true,
+                        )}
+                      </td>
+
+                      <td class="text-sm sm:text-[1rem] text-end">
+                        {item?.gexRatio}
+                      </td>
+                      <td class="text-sm sm:text-[1rem] text-end">
+                        {@html abbreviateNumberWithColor(
+                          item?.gexNetChange,
+                          false,
+                          true,
+                        )}
+                      </td>
+                      <td class="text-sm sm:text-[1rem] text-end">
+                        {item?.ivRank}
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
           </div>
         </main>
       </div>
