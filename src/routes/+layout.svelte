@@ -41,7 +41,7 @@
   import Menu from "lucide-svelte/icons/menu";
   import Stock from "lucide-svelte/icons/chart-candlestick";
   import Calendar from "lucide-svelte/icons/calendar";
-  import Option from "lucide-svelte/icons/waves";
+  import Flow from "lucide-svelte/icons/tornado";
   import HandShake from "lucide-svelte/icons/handshake";
   import Layers from "lucide-svelte/icons/layers";
   import Boxes from "lucide-svelte/icons/boxes";
@@ -704,53 +704,59 @@
                 </Accordion.Root>
               </div>
 
-              <Sheet.Close asChild let:builder>
-                <Button
-                  builders={[builder]}
-                  type="submit"
-                  class="bg-[#141417] hover:bg-[#141417] -ml-4 w-full"
-                >
-                  <a
-                    href="/options-flow"
-                    class="flex flex-row items-center w-full -mt-2"
-                  >
-                    <div class="flex flex-row items-center mr-auto">
-                      <div
-                        class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
-                      >
-                        <Option class="h-5.5 w-5.5" />
-                      </div>
-                      <span class="ml-3 text-white text-[1rem]"
-                        >Options Flow</span
-                      >
-                    </div>
-                  </a>
-                </Button>
-              </Sheet.Close>
+              <div class="flex flex-row items-center w-full">
+                <Accordion.Root class="w-full">
+                  <Accordion.Item value="item-1">
+                    <Accordion.Trigger class="">
+                      <Flow class="h-5.5 w-5.5 mr-3 text-white ml-1" />
+                      <span class="text-white ml-1 mr-auto">Flow Feed</span>
+                    </Accordion.Trigger>
+                    <Accordion.Content
+                      class="border-l border-gray-500 ml-2 mt-5"
+                    >
+                      <Sheet.Close asChild let:builder>
+                        <div class="flex flex-col items-start">
+                          <Button
+                            builders={[builder]}
+                            type="submit"
+                            class="w-full bg-[#141417] hover:bg-[#141417]"
+                          >
+                            <a
+                              href="/market-flow"
+                              class="text-start w-full text-[1rem] text-white ml-4 mt-2"
+                              >Market Flow</a
+                            >
+                          </Button>
 
-              <Sheet.Close asChild let:builder>
-                <Button
-                  builders={[builder]}
-                  type="submit"
-                  class="bg-[#141417] hover:bg-[#141417] -ml-4 w-full"
-                >
-                  <a
-                    href="/dark-pool-flow"
-                    class="flex flex-row items-center w-full -mt-2"
-                  >
-                    <div class="flex flex-row items-center mr-auto">
-                      <div
-                        class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
-                      >
-                        <Moon class="h-5.5 w-5.5" />
-                      </div>
-                      <span class="ml-3 text-white text-[1rem]"
-                        >Dark Pool Flow</span
-                      >
-                    </div>
-                  </a>
-                </Button>
-              </Sheet.Close>
+                          <Button
+                            builders={[builder]}
+                            type="submit"
+                            class="w-full bg-[#141417] hover:bg-[#141417]"
+                          >
+                            <a
+                              href="/options-flow"
+                              class="text-start w-full text-[1rem] text-white ml-4 mt-4"
+                              >Options Flow</a
+                            >
+                          </Button>
+
+                          <Button
+                            builders={[builder]}
+                            type="submit"
+                            class="w-full bg-[#141417] hover:bg-[#141417]"
+                          >
+                            <a
+                              href="/dark-pool-flow"
+                              class="text-start w-full text-[1rem] text-white ml-4 mt-4"
+                              >Dark Pool Flow</a
+                            >
+                          </Button>
+                        </div>
+                      </Sheet.Close>
+                    </Accordion.Content>
+                  </Accordion.Item>
+                </Accordion.Root>
+              </div>
 
               <Sheet.Close asChild let:builder>
                 <Button
@@ -1159,29 +1165,37 @@
                   </Accordion.Root>
                 </div>
 
-                <a
-                  href="/options-flow"
-                  class="flex flex-row items-center ml-9 w-full mt-3"
-                >
-                  <div
-                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
-                  >
-                    <Option class="h-5.5 w-5.5" />
-                  </div>
-                  <span class="ml-3 text-white">Options Flow</span>
-                </a>
-
-                <a
-                  href="/dark-pool-flow"
-                  class="flex flex-row items-center ml-9 w-full mt-3"
-                >
-                  <div
-                    class="flex h-9 w-9 items-center justify-center rounded-md text-white transition-colors hover:text-white md:h-8 md:w-8"
-                  >
-                    <Moon class="h-5.5 w-5.5" />
-                  </div>
-                  <span class="ml-3 text-white">Dark Pool Flow</span>
-                </a>
+                <div class="flex flex-row items-center ml-9 w-full mt-3">
+                  <Accordion.Root class="w-full">
+                    <Accordion.Item value="item-1">
+                      <Accordion.Trigger class="">
+                        <Flow class="h-5.5 w-5.5 mr-3 text-white ml-1" />
+                        <span class="text-white ml-1 mr-auto">Flow Feed</span>
+                      </Accordion.Trigger>
+                      <Accordion.Content
+                        class="border-l border-gray-500 ml-2 mt-5"
+                      >
+                        <div class="flex flex-col items-start">
+                          <a
+                            href="/market-flow"
+                            class="text-[1rem] text-white ml-4 mt-4"
+                            >Market Flow</a
+                          >
+                          <a
+                            href="/options-flow"
+                            class="text-[1rem] text-white ml-4 mt-4"
+                            >Options Flow</a
+                          >
+                          <a
+                            href="/dark-pool-flow"
+                            class="text-[1rem] text-white ml-4 mt-4"
+                            >Dark Pool Flow</a
+                          >
+                        </div>
+                      </Accordion.Content>
+                    </Accordion.Item>
+                  </Accordion.Root>
+                </div>
 
                 <a
                   href="/hedge-funds"

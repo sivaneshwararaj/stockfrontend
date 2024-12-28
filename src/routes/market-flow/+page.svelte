@@ -1,22 +1,41 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
+  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
-  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-  import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
+  import {
+    abbreviateNumberWithColor,
+    sectorList,
+    sectorNavigation,
+  } from "$lib/utils";
+  import InfoModal from "$lib/components/InfoModal.svelte";
+
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import { Button } from "$lib/components/shadcn/button/index.js";
 
   import { Chart } from "svelte-echarts";
 
   import { init, use } from "echarts/core";
   import { LineChart, BarChart } from "echarts/charts";
-  import { GridComponent, TooltipComponent } from "echarts/components";
+  import {
+    GridComponent,
+    TooltipComponent,
+    LegendComponent,
+  } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
 
-  use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+  use([
+    LineChart,
+    BarChart,
+    GridComponent,
+    TooltipComponent,
+    LegendComponent,
+    CanvasRenderer,
+  ]);
 
   export let data;
-
+  let isLoading = false;
+  let optionsData = null;
   let sectorData = data?.getData?.sectorData || [];
   let topSectorTickers = data?.getData?.topSectorTickers || {};
   let marketTideData = data?.getData?.marketTide || [];
@@ -52,14 +71,6 @@
     premium_ratio: { order: "none", type: "number" },
     avg30_call_volume: { order: "none", type: "string" },
     avg30_put_volume: { order: "none", type: "number" },
-  };
-
-  $: sortTopTickersOrders = {
-    rank: { order: "none", type: "number" },
-    ticker: { order: "none", type: "string" },
-    name: { order: "none", type: "string" },
-    price: { order: "none", type: "number" },
-    changesPercentage: { order: "none", type: "number" },
     netPremium: { order: "none", type: "number" },
     netCallPremium: { order: "none", type: "number" },
     netPutPremium: { order: "none", type: "number" },
@@ -197,9 +208,26 @@
       .sort(compareValues)
       ?.slice(0, 50);
   };
+
   function getPlotOptions() {
-    const dates = marketTideData?.map((item) => item?.timestamp);
-    const priceList = marketTideData?.map((item) => item?.underlying_price);
+    isLoading = true;
+    let dates = marketTideData?.map((item) => item?.timestamp);
+    dates = dates.map((dateString) => {
+      const date = new Date(dateString);
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
+      return formatter.format(date);
+    });
+
+    const priceList = marketTideData?.map((item) => item?.close);
     const netCallPremList = marketTideData?.map(
       (item) => item?.net_call_premium,
     );
@@ -209,14 +237,62 @@
     const options = {
       silent: true,
       animation: false,
-      backgroundColor: "#09090B",
+      backgroundColor: "#18181D",
+      legend: {
+        data: ["SPY Price", "Vol", "Net Call Premium", "Net Put Premium"],
+        textStyle: {
+          color: "#fff",
+        },
+        axisPointer: {
+          lineStyle: {
+            color: "#fff",
+          },
+        },
+      },
+
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          // Get the timestamp from the first parameter
+          const timestamp = params[0].axisValue;
+
+          // Initialize result with timestamp
+          let result = timestamp + "<br/>";
+
+          // Sort params to ensure Vol appears last
+          params.sort((a, b) => {
+            if (a.seriesName === "Vol") return 1;
+            if (b.seriesName === "Vol") return -1;
+            return 0;
+          });
+
+          // Add each series data
+          params.forEach((param) => {
+            const marker =
+              '<span style="display:inline-block;margin-right:4px;' +
+              "border-radius:10px;width:10px;height:10px;background-color:" +
+              param.color +
+              '"></span>';
+            result +=
+              marker +
+              param.seriesName +
+              ": " +
+              abbreviateNumberWithColor(param.value, false, true) +
+              "<br/>";
+          });
+
+          return result;
+        },
         axisPointer: {
-          type: "cross",
           lineStyle: {
-            color: "#555",
+            color: "#fff",
           },
         },
       },
@@ -227,7 +303,7 @@
         {
           left: "3%",
           right: "3%",
-          top: "5%",
+          top: $screenWidth < 640 ? "15%" : "5%",
           height: "60%",
           containLabel: true,
         },
@@ -239,20 +315,22 @@
           containLabel: true,
         },
       ],
+
       xAxis: [
         {
           type: "category",
+          boundaryGap: false,
           data: dates,
-          gridIndex: 0,
-          axisLine: { lineStyle: { color: "#555" } },
           axisLabel: {
-            color: "#999",
+            color: "#fff",
             formatter: (value) => {
-              return new Date(value).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              });
+              const timePart = value.split(" ")[1];
+              let [hours, minutes] = timePart.split(":").map(Number);
+              hours = minutes >= 30 ? hours + 1 : hours;
+              minutes = 0;
+              const amPm = hours >= 12 ? "PM" : "AM";
+              hours = hours % 12 || 12;
+              return `${hours}:00 ${amPm}`;
             },
           },
         },
@@ -260,16 +338,11 @@
           type: "category",
           gridIndex: 1,
           data: dates,
-          axisLine: { lineStyle: { color: "#555" } },
+          splitLine: {
+            show: false,
+          },
           axisLabel: {
-            color: "#999",
-            formatter: (value) => {
-              return new Date(value).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              });
-            },
+            show: false,
           },
         },
       ],
@@ -278,9 +351,12 @@
           type: "value",
           gridIndex: 0,
           position: "left",
-          axisLine: { lineStyle: { color: "#555" } },
-          axisLabel: { color: "#999" },
-          splitLine: { lineStyle: { color: "#333" } },
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          },
           scale: true,
           min: (value) => Math.floor(value.min * 0.999),
           max: (value) => Math.ceil(value.max * 1.001),
@@ -289,17 +365,23 @@
           type: "value",
           gridIndex: 0,
           position: "right",
-          axisLine: { lineStyle: { color: "#555" } },
-          axisLabel: { color: "#999" },
-          splitLine: { show: false },
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          },
         },
         {
           type: "value",
           gridIndex: 1,
           position: "right",
-          axisLine: { lineStyle: { color: "#555" } },
-          axisLabel: { color: "#999" },
-          splitLine: { lineStyle: { color: "#333" } },
+          splitLine: {
+            show: false,
+          },
+          axisLabel: {
+            show: false,
+          },
         },
       ],
       series: [
@@ -310,7 +392,7 @@
           yAxisIndex: 0,
           xAxisIndex: 0,
           showSymbol: false,
-          lineStyle: { color: "#FFD700" },
+          lineStyle: { color: "#fff" },
           itemStyle: { color: "#FFD700" },
           smooth: true,
         },
@@ -337,22 +419,30 @@
           smooth: true,
         },
         {
-          name: "Volume",
-          type: "bar",
+          name: "Vol",
+          type: "line",
           data: volumeList,
           xAxisIndex: 1,
           yAxisIndex: 2,
+          showSymbol: false,
+          areaStyle: { opacity: 1 },
           itemStyle: {
-            color: "#FF6B6B",
-            opacity: 0.5,
+            color: "#E11D48",
           },
         },
       ],
     };
-
+    isLoading = false;
     return options;
   }
-  let optionsData = marketTideData ? getPlotOptions() : null;
+  optionsData = marketTideData ? getPlotOptions() : null;
+
+  $: {
+    if (selectedSector) {
+      originalTopTickers = [...topSectorTickers[selectedSector]];
+      displayTopTickers = topSectorTickers[selectedSector];
+    }
+  }
 </script>
 
 <svelte:head>
@@ -360,31 +450,29 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Live
-    Sector Flow · Stocknear
+    Market Flow · Stocknear
   </title>
   <meta
     name="description"
     content={`Track and compare historical and current options activity
-              performances of sectors`}
+              performances of the market & sectors`}
   />
 
   <!-- Other meta tags -->
-  <meta property="og:title" content={`Jim Carmer Tracker · Stocknear`} />
+  <meta property="og:title" content={`Live Market Flow · Stocknear`} />
   <meta
     property="og:description"
-    content={`Track and compare historical and current options activity
-              performances of sectors`}
+    content={`Track and compare historical and current options activity`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
 
   <!-- Twitter specific meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Jim Carmer Tracker · Stocknear`} />
+  <meta name="twitter:title" content={`Live Market Flow · Stocknear`} />
   <meta
     name="twitter:description"
-    content={`Track and compare historical and current options activity
-              performances of sectors`}
+    content={`              performances of the market & sectors`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -395,7 +483,7 @@
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
-      <li class="text-gray-300">Sector Flow</li>
+      <li class="text-gray-300">Market Flow</li>
     </ul>
   </div>
 
@@ -407,15 +495,66 @@
         <main class="w-full">
           <div class="mb-6 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
-              Sector Flow
+              Market Flow
             </h1>
             <p class="mb-3 px-1 text-base font-semibold text-muted sm:px-0">
-              Track and compare historical and current options activity
-              performances of sectors
+              The Market Flow provides a high level options overview of the
+              market.
             </p>
           </div>
 
-          <div class="w-full m-auto mt-10">
+          <div class="w-full m-auto">
+            <div class="flex flex-row items-center mb-3">
+              <label
+                for="marketTideInfo"
+                class="mr-1 cursor-pointer flex flex-row items-center text-white text-2xl font-bold"
+              >
+                Market Tide
+              </label>
+              <InfoModal
+                title={"Sector Flow"}
+                content={"Market Tide evaluates the balance between advancing and declining stocks by analyzing SPY price movements, net call premiums, and net put premiums, providing a real-time snapshot of market sentiment and momentum."}
+                id={"marketTideInfo"}
+              />
+            </div>
+            {#if optionsData !== null}
+              <div
+                class="pb-8 sm:pb-2 rounded-md bg-table border border-gray-800"
+              >
+                <div class="app w-full h-[300px] mt-5">
+                  {#if isLoading}
+                    <div class="flex justify-center items-center h-80">
+                      <div class="relative">
+                        <label
+                          class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        >
+                          <span
+                            class="loading loading-spinner loading-md text-white"
+                          ></span>
+                        </label>
+                      </div>
+                    </div>
+                  {:else}
+                    <Chart {init} options={optionsData} class="chart" />
+                  {/if}
+                </div>
+              </div>
+            {/if}
+            <div class="mb-3 mt-8">
+              <div class="flex flex-row items-center">
+                <label
+                  for="sectorFlowInfo"
+                  class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+                >
+                  Sector Flow
+                </label>
+                <InfoModal
+                  title={"Sector Flow"}
+                  content={"Sector Flow offers insights into options activity, helping traders identify trends and make informed decisions across market sectors."}
+                  id={"sectorFlowInfo"}
+                />
+              </div>
+            </div>
             <div
               class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
             >
@@ -583,20 +722,76 @@
                 </tbody>
               </table>
             </div>
-
-            {#if optionsData !== null}
-              <div class="pb-8 sm:pb-2 rounded-md bg-default">
-                <div class="app w-full h-[300px] mt-5">
-                  <Chart {init} options={optionsData} class="chart" />
-                </div>
-              </div>
-            {/if}
           </div>
 
           <div class="w-full m-auto mt-10">
-            <h2 class="text-white text-xl sm:text-2xl font-bold mb-3">
-              Top Sector Stocks by Net Premium
-            </h2>
+            <div
+              class="flex flex-wrap sm:flex-row items-center sm:justify-between mb-4"
+            >
+              <div class="flex flex-row items-center">
+                <label
+                  for="topSectorTickers"
+                  class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+                >
+                  Top Sector Stocks by Net Premium
+                </label>
+                <InfoModal
+                  title={"Top Sector Stocks by Net Premium"}
+                  content={"This list highlights top stocks in each sector based on net premium, displaying price changes and options activity. Discover which stocks are driving the sector and explore detailed options data."}
+                  id={"topSectorTickers"}
+                />
+              </div>
+
+              <div
+                class="flex flex-row items-center w-fit ml-auto mt-2 sm:mt-0"
+              >
+                <div class="relative inline-block text-left grow">
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild let:builder>
+                      <Button
+                        builders={[builder]}
+                        class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                      >
+                        <span class="truncate text-white">{selectedSector}</span
+                        >
+                        <svg
+                          class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          style="max-width:40px"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </Button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content
+                      class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                    >
+                      <DropdownMenu.Label class="text-gray-400">
+                        Select Sector
+                      </DropdownMenu.Label>
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Group>
+                        {#each sectorList as sector}
+                          <DropdownMenu.Item
+                            on:click={() => (selectedSector = sector)}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            {sector}
+                          </DropdownMenu.Item>
+                        {/each}
+                      </DropdownMenu.Group>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
+                </div>
+              </div>
+            </div>
+
             <div
               class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
             >
@@ -606,7 +801,7 @@
                 <thead>
                   <TableHeader
                     columns={topColumns}
-                    sortOrders={sortTopTickersOrders}
+                    {sortOrders}
                     sortData={sortTopTickers}
                   />
                 </thead>
@@ -708,13 +903,13 @@
 
 <style>
   .app {
-    height: 800px;
+    height: 600px;
     max-width: 100%; /* Ensure chart width doesn't exceed the container */
   }
 
   @media (max-width: 640px) {
     .app {
-      height: 210px;
+      height: 510px;
     }
   }
 
