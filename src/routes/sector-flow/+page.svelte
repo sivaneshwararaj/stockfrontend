@@ -5,7 +5,7 @@
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
-  /*
+
   import { Chart } from "svelte-echarts";
 
   import { init, use } from "echarts/core";
@@ -14,12 +14,12 @@
   import { CanvasRenderer } from "echarts/renderers";
 
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
-  */
 
   export let data;
 
   let sectorData = data?.getData?.sectorData || [];
   let topSectorTickers = data?.getData?.topSectorTickers || {};
+  let marketTideData = data?.getData?.marketTide || [];
   let selectedSector = "Technology";
   let originalData = [...sectorData]; // Unaltered copy of raw data
 
@@ -197,58 +197,62 @@
       .sort(compareValues)
       ?.slice(0, 50);
   };
-  /*
   function getPlotOptions() {
-    const historyData = sectorData?.at(1)?.premTickHistory;
-    console.log(sectorData?.at(1));
-    const dates = historyData.map((item) => item.tape_time);
-    const priceList = historyData.map((item) => item.close);
-    const netCallPremList = historyData.map((item) => item.net_call_premium);
-    const netPutPremList = historyData.map((item) => item.net_put_premium);
-    const volumeList = historyData.map(
-      (item) => item.net_call_volume + item.net_put_volume,
+    const dates = marketTideData?.map((item) => item?.timestamp);
+    const priceList = marketTideData?.map((item) => item?.underlying_price);
+    const netCallPremList = marketTideData?.map(
+      (item) => item?.net_call_premium,
     );
+    const netPutPremList = marketTideData?.map((item) => item?.net_put_premium);
+    const volumeList = marketTideData?.map((item) => item?.net_volume);
 
-    return {
+    const options = {
       silent: true,
       animation: false,
+      backgroundColor: "#09090B",
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
+        axisPointer: {
+          type: "cross",
+          lineStyle: {
+            color: "#555",
+          },
+        },
       },
       axisPointer: {
         link: [{ xAxisIndex: [0, 1] }],
       },
       grid: [
         {
-          left: "1%",
-          right: "1%",
+          left: "3%",
+          right: "3%",
           top: "5%",
-          height: "55%",
+          height: "60%",
           containLabel: true,
         },
         {
-          left: "1%",
-          right: "1%",
+          left: "3%",
+          right: "3%",
           bottom: "5%",
-          height: "28%",
+          height: "20%",
           containLabel: true,
         },
       ],
       xAxis: [
         {
           type: "category",
-          gridIndex: 0,
           data: dates,
+          gridIndex: 0,
+          axisLine: { lineStyle: { color: "#555" } },
           axisLabel: {
-            color: "#fff",
+            color: "#999",
             formatter: (value) => {
-              const timePart = value.split(" ")[1];
-              let [hours, minutes] = timePart.split(":").map(Number);
-              hours = minutes > 30 ? hours + 1 : hours;
-              const amPm = hours >= 12 ? "PM" : "AM";
-              hours = hours % 12 || 12;
-              return `${hours}:00 ${amPm}`;
+              return new Date(value).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              });
             },
           },
         },
@@ -256,15 +260,15 @@
           type: "category",
           gridIndex: 1,
           data: dates,
+          axisLine: { lineStyle: { color: "#555" } },
           axisLabel: {
-            color: "#fff",
+            color: "#999",
             formatter: (value) => {
-              const timePart = value.split(" ")[1];
-              let [hours, minutes] = timePart.split(":").map(Number);
-              hours = minutes > 30 ? hours + 1 : hours;
-              const amPm = hours >= 12 ? "PM" : "AM";
-              hours = hours % 12 || 12;
-              return `${hours}:00 ${amPm}`;
+              return new Date(value).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              });
             },
           },
         },
@@ -273,65 +277,82 @@
         {
           type: "value",
           gridIndex: 0,
-          splitLine: { show: false },
-          axisLabel: { show: true, color: "#fff" },
+          position: "left",
+          axisLine: { lineStyle: { color: "#555" } },
+          axisLabel: { color: "#999" },
+          splitLine: { lineStyle: { color: "#333" } },
+          scale: true,
+          min: (value) => Math.floor(value.min * 0.999),
+          max: (value) => Math.ceil(value.max * 1.001),
         },
         {
           type: "value",
           gridIndex: 0,
           position: "right",
+          axisLine: { lineStyle: { color: "#555" } },
+          axisLabel: { color: "#999" },
           splitLine: { show: false },
-          axisLabel: { show: true, color: "#fff" },
         },
         {
           type: "value",
           gridIndex: 1,
-          splitLine: { show: false },
-          axisLabel: { show: true, color: "#fff" },
+          position: "right",
+          axisLine: { lineStyle: { color: "#555" } },
+          axisLabel: { color: "#999" },
+          splitLine: { lineStyle: { color: "#333" } },
         },
       ],
       series: [
         {
-          name: "XLV",
+          name: "SPY Price",
+          type: "line",
           data: priceList,
-          type: "line",
-          xAxisIndex: 0,
           yAxisIndex: 0,
+          xAxisIndex: 0,
+          showSymbol: false,
+          lineStyle: { color: "#FFD700" },
           itemStyle: { color: "#FFD700" },
-          showSymbol: false,
+          smooth: true,
         },
         {
-          name: "Daily Put Premium",
-          data: netPutPremList,
+          name: "Net Call Premium",
           type: "line",
-          xAxisIndex: 0,
-          yAxisIndex: 1,
-          itemStyle: { color: "#FF4444" },
-          showSymbol: false,
-        },
-        {
-          name: "Daily Call Premium",
           data: netCallPremList,
-          type: "line",
-          xAxisIndex: 0,
           yAxisIndex: 1,
-          itemStyle: { color: "#00FF9D" },
+          xAxisIndex: 0,
           showSymbol: false,
+          lineStyle: { color: "#90EE90" },
+          itemStyle: { color: "#90EE90" },
+          smooth: true,
+        },
+        {
+          name: "Net Put Premium",
+          type: "line",
+          data: netPutPremList,
+          yAxisIndex: 1,
+          xAxisIndex: 0,
+          showSymbol: false,
+          lineStyle: { color: "#FF6B6B" },
+          itemStyle: { color: "#FF6B6B" },
+          smooth: true,
         },
         {
           name: "Volume",
-          data: volumeList,
           type: "bar",
+          data: volumeList,
           xAxisIndex: 1,
           yAxisIndex: 2,
-          itemStyle: { color: "#00FF9D" },
+          itemStyle: {
+            color: "#FF6B6B",
+            opacity: 0.5,
+          },
         },
       ],
     };
-  }
 
-  let optionsData = null; //sectorData ? getPlotOptions() : null;
-  */
+    return options;
+  }
+  let optionsData = marketTideData ? getPlotOptions() : null;
 </script>
 
 <svelte:head>
@@ -562,21 +583,19 @@
                 </tbody>
               </table>
             </div>
-            <UpgradeToPro {data} />
-            <!--
-            {#if data?.user?.tier === "Pro" && optionsData !== null}
+
+            {#if optionsData !== null}
               <div class="pb-8 sm:pb-2 rounded-md bg-default">
                 <div class="app w-full h-[300px] mt-5">
                   <Chart {init} options={optionsData} class="chart" />
                 </div>
               </div>
             {/if}
-            -->
           </div>
 
           <div class="w-full m-auto mt-10">
-            <h2 class="text-white text-2xl font-semibold mb-2">
-              Top 10 {selectedSector} Tickers by Net Premium
+            <h2 class="text-white text-xl sm:text-2xl font-bold mb-3">
+              Top Sector Stocks by Net Premium
             </h2>
             <div
               class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
