@@ -460,20 +460,3 @@
     </div>
   </main>
 </section>
-
-<style>
-  .app {
-    height: 300px;
-    max-width: 100%; /* Ensure chart width doesn't exceed the container */
-  }
-
-  @media (max-width: 640px) {
-    .app {
-      height: 210px;
-    }
-  }
-
-  .chart {
-    width: 100%;
-  }
-</style>
