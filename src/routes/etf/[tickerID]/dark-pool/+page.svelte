@@ -2,7 +2,7 @@
   import {
     numberOfUnreadNotification,
     displayCompanyName,
-    stockTicker,
+    etfTicker,
   } from "$lib/store";
   import HistoricalVolume from "$lib/components/DarkPool/HistoricalVolume.svelte";
   import PriceLevel from "$lib/components/DarkPool/PriceLevel.svelte";
@@ -19,22 +19,22 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Dark Pool Trades · Stocknear
+    {$displayCompanyName} ({$etfTicker}) Dark Pool Trades · Stocknear
   </title>
 
   <meta
     name="description"
-    content={`Get the latest dark pool trade insights for ${$displayCompanyName} (${$stockTicker}), including stock price quote, financials, news, statistics, and charts.`}
+    content={`Get the latest dark pool trade insights for ${$displayCompanyName} (${$etfTicker}), including stock price quote, financials, news, statistics, and charts.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Dark Pool Trades · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Dark Pool Trades · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Get the latest dark pool trade information for ${$displayCompanyName} (${$stockTicker})`}
+    content={`Get the latest dark pool trade information for ${$displayCompanyName} (${$etfTicker})`}
   />
   <meta property="og:type" content="website" />
 
@@ -42,11 +42,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Dark Pool Trades · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Dark Pool Trades · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Get the latest dark pool trade insights for ${$displayCompanyName} (${$stockTicker}), including stock price quote, financials, statistics, and more.`}
+    content={`Get the latest dark pool trade insights for ${$displayCompanyName} (${$etfTicker}), including stock price quote, financials, statistics, and more.`}
   />
 </svelte:head>
 

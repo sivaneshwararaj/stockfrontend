@@ -133,16 +133,12 @@
     </div>
 
     {#if isLoaded}
-      {#if rawData?.length !== 0}
+      {#if rawData?.length !== 0 && Object?.keys(metrics)?.length > 0}
         <div class="w-full flex flex-col items-start">
           <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-            Over the past week, GameStop Corp. has seen an average dark pool
+            Over the past week, {$displayCompanyName} has seen an average dark pool
             trade size of {@html abbreviateNumberWithColor(
               metrics?.avgTradeSize,
-              false,
-              true,
-            )}, a total volume of {@html abbreviateNumberWithColor(
-              metrics?.totalVolume,
               false,
               true,
             )} and an average premium per trade of {@html abbreviateNumberWithColor(
@@ -153,14 +149,14 @@
               metrics?.totalPrem,
               false,
               true,
-            )}
+            )}.
           </div>
         </div>
 
-        <div class="pb-2 rounded-md bg-default">
+        <div class="pb-2 rounded-md bg-default mt-14 sm:mt-0">
           <div class="app w-full h-[300px] mt-5 relative">
             <div
-              class="flex justify-start space-x-2 absolute right-0 -top-8 z-10 text-sm"
+              class="flex justify-start space-x-2 absolute right-0 -top-10 sm:-top-8 z-10 text-sm"
             >
               {#each ["Size", "Premium"] as item}
                 <label
