@@ -391,7 +391,7 @@
                       <td
                         class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
                       >
-                        <span class="font-semibold">
+                        <span class="">
                           {#if item?.type === "Bought"}
                             <span class="text-[#00FC50]">{item?.type}</span>
                           {:else if item?.type === "Sold"}
@@ -411,7 +411,7 @@
                       <td
                         class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white border-b border-b-[#27272A]"
                       >
-                        {item?.transaction}</td
+                        {item?.transaction?.toLocaleString("en-US")}</td
                       >
 
                       <td

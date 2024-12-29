@@ -344,7 +344,9 @@
                             class="cursor-pointer flex flex-col items-center"
                           >
                             <span class="text-white text-[1rem] font-semibold"
-                              >{abbreviateNumber(item?.totalTrades)}</span
+                              >{item?.totalTrades?.toLocaleString(
+                                "en-US",
+                              )}</span
                             >
                             <span class="text-slate-300 font-medium text-sm"
                               >Total Trades</span
