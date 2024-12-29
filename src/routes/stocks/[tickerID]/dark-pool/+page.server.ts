@@ -10,10 +10,10 @@ export const load = async ({ params, locals }) => {
       ticker: params.tickerID,
     };
 
-  const getStockDividend = async () => {
+  const getPriceLevel = async () => {
 
 
-    const response = await fetch(apiURL + "/stock-dividend", {
+    const response = await fetch(apiURL + "/dark-pool-level", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export const load = async ({ params, locals }) => {
 
   // Make sure to return a promise
   return {
-    getStockDividend: await getStockDividend(),
+    getPriceLevel: await getPriceLevel(),
     getHistoricalDarkPool: await getHistoricalDarkPool(),
 
   };
