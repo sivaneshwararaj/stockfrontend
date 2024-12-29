@@ -9,6 +9,7 @@
   import InfoModal from "$lib/components/InfoModal.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
   import HottestTrades from "$lib/components/DarkPool/HottestTrades.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { onMount } from "svelte";
 
   export let data;
@@ -95,11 +96,15 @@
               metrics={data?.getPriceLevel?.metrics}
             />
           {/if}
-          {#if hottestTrades?.length > 0}
-            <HottestTrades rawData={hottestTrades} />
-          {/if}
-          {#if historicalDarkPool?.length > 0}
-            <HistoricalVolume rawData={historicalDarkPool} />
+          {#if data?.user?.tier === "Pro"}
+            {#if hottestTrades?.length > 0}
+              <HottestTrades rawData={hottestTrades} />
+            {/if}
+            {#if historicalDarkPool?.length > 0}
+              <HistoricalVolume rawData={historicalDarkPool} />
+            {/if}
+          {:else}
+            <UpgradeToPro {data} />
           {/if}
         {:else}
           <div class="flex justify-center items-center h-80">
