@@ -5,63 +5,7 @@
 
   import { abbreviateNumberWithColor } from "$lib/utils";
 
-  export let rawData = [
-    {
-      date: "2024-12-27T17:52:33Z",
-      price: 31.89,
-      size: 14526,
-      volume: 6937280.0,
-      premium: "463232.6874",
-      sizeVolRatio: 0.21,
-      sizeAvgVolRatio: 0.14,
-      trackingID: 46353769264496,
-      rank: 1,
-    },
-    {
-      date: "2024-12-27T17:52:33Z",
-      price: 31.89,
-      size: 14526,
-      volume: 6937280.0,
-      premium: "463232.6874",
-      sizeVolRatio: 0.21,
-      sizeAvgVolRatio: 0.14,
-      trackingID: 46353769264496,
-      rank: 2,
-    },
-    {
-      date: "2024-12-27T18:03:31Z",
-      price: 32.0,
-      size: 12198,
-      volume: 7146904.0,
-      premium: "390336",
-      sizeVolRatio: 0.17,
-      sizeAvgVolRatio: 0.12,
-      trackingID: 47011633532241,
-      rank: 3,
-    },
-    {
-      date: "2024-12-27T18:03:31Z",
-      price: 32.0,
-      size: 12198,
-      volume: 7146904.0,
-      premium: "390336",
-      sizeVolRatio: 0.17,
-      sizeAvgVolRatio: 0.12,
-      trackingID: 47011633532241,
-      rank: 4,
-    },
-    {
-      date: "2024-12-27T20:00:53Z",
-      price: 31.78,
-      size: 7345,
-      volume: 8220987.0,
-      premium: "233424.10",
-      sizeVolRatio: 0.09,
-      sizeAvgVolRatio: 0.07,
-      trackingID: 54053503366366,
-      rank: 5,
-    },
-  ];
+  export let rawData = [];
 
   let stockList = [];
   let isLoaded = false;
