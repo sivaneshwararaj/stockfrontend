@@ -494,7 +494,7 @@
     >
       <div class="sm:pl-6 sm:pr-7 sm:pt-5 w-full m-auto mt-2 sm:mt-0">
         <h1 class="mb-px text-xl sm:text-2xl font-bold bp:text-3xl sm:pl-1">
-          {$displayCompanyName} Forcast
+          {$displayCompanyName} Forecast
         </h1>
         <div class="w-full mb-6 mt-3">
           <div
