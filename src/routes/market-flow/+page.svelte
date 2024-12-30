@@ -213,20 +213,6 @@
   function getPlotOptions() {
     isLoading = true;
     let dates = marketTideData?.map((item) => item?.timestamp);
-    dates = dates.map((dateString) => {
-      const date = new Date(dateString);
-      const formatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: "America/New_York",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      });
-      return formatter.format(date);
-    });
 
     const priceList = marketTideData?.map((item) => item?.close);
     const netCallPremList = marketTideData?.map(
@@ -240,7 +226,7 @@
       animation: false,
       backgroundColor: "#18181D",
       legend: {
-        data: ["SPY Price", "Vol", "Net Call Premium", "Net Put Premium"],
+        data: ["Price", "Vol", "Net Call Premium", "Net Put Premium"],
         textStyle: {
           color: "#fff",
         },
@@ -356,7 +342,8 @@
             show: false,
           },
           axisLabel: {
-            show: false,
+            color: "#fff",
+            show: true,
           },
           scale: true,
           min: (value) => Math.floor(value.min * 0.999),
@@ -387,14 +374,14 @@
       ],
       series: [
         {
-          name: "SPY Price",
+          name: "Price",
           type: "line",
           data: priceList,
           yAxisIndex: 0,
           xAxisIndex: 0,
           showSymbol: false,
           lineStyle: { color: "#fff" },
-          itemStyle: { color: "#FFD700" },
+          itemStyle: { color: "#fff" },
           smooth: true,
         },
         {
