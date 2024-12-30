@@ -84,8 +84,7 @@ function convertUnitToValue(input: string | number | string[]) {
 
     // Handle units (B, M, K)
     const units = { B: 1_000_000_000, M: 1_000_000, K: 1_000 };
-    const match = input.match(/^(\d+(\.\d+)?)([BMK])?$/);
-
+    const match = input.match(/^(-?\d+(\.\d+)?)([BMK])?$/); // Allow optional '-' at the beginning
     if (match) {
       const value = parseFloat(match[1]);
       const unit = match[3] as keyof typeof units;
@@ -171,12 +170,11 @@ function createRuleCheck(rule, ruleName, ruleValue) {
   // Default numeric comparisons
   return (item) => {
     const itemValue = item[rule.name];
-
     if (itemValue === null) return false;
 
    if (rule.condition === 'exactly' && itemValue !== ruleValue) return false;
   if (rule.condition === 'over' && itemValue <= ruleValue) return false;
-  if (rule.condition === 'under' && itemValue >= ruleValue) return false;
+  if (rule.condition === 'under' && itemValue > ruleValue) return false;
 
 
 

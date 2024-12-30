@@ -1371,6 +1371,76 @@
       defaultValue: "any",
       category: "Company Info",
     },
+    gexRatio: {
+      label: "Gex Ratio",
+      step: [20, 10, 5, 3, 1, 0.5, 0],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    ivRank: {
+      label: "IV Rank",
+      step: [50, 30, 20, 10, 5, 1, 0],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    iv30d: {
+      label: "IV 30d",
+      step: [1, 0.5, 0.3, 0.1, 0],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    totalOI: {
+      label: "Total OI",
+      step: ["500K", "300K", "200K", "100K", "50K", "10K", "1K"],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    changeOI: {
+      label: "Change OI",
+      step: ["5K", "3K", "1K", "500", "300", "100"],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    netCallPrem: {
+      label: "Net Call Prem",
+      step: ["1M", "500K", "100K", "50K", "-50K", "-100K", "-500K", "-1M"],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    netPutPrem: {
+      label: "Net Put Prem",
+      step: ["1M", "500K", "100K", "50K", "-50K", "-100K", "-500K", "-1M"],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    callVolume: {
+      label: "Call Volume",
+      step: ["100K", "50K", "20K", "10K", "5K", "1K"],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    putVolume: {
+      label: "Put Volume",
+      step: ["100K", "50K", "20K", "10K", "5K", "1K"],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
+    pcRatio: {
+      label: "P/C Ratio",
+      step: [10, 5, 3, 2, 1, 0.5],
+      defaultCondition: "over",
+      defaultValue: "any",
+      category: "Options Activity",
+    },
   };
 
   let filteredData = [];
@@ -1602,6 +1672,16 @@
     if (
       data?.user?.tier !== "Pro" &&
       [
+        "gexRatio",
+        "ivRank",
+        "iv30d",
+        "totalOI",
+        "changeOI",
+        "netCallPrem",
+        "netPutPrem",
+        "callVolume",
+        "putVolume",
+        "pcRatio",
         "topAnalystRating",
         "topAnalystCounter",
         "topAnalystPriceTarget",
@@ -3602,7 +3682,7 @@ const handleKeyDown = (event) => {
               <div
                 class="flex w-full items-center space-x-1.5 py-1.5 md:w-1/2 lg:w-1/3 lg:py-1"
               >
-                {#if ["topAnalystRating", "topAnalystCounter", "topAnalystPriceTarget", "topAnalystUpside", "score"]?.includes(row?.rule) && data?.user?.tier !== "Pro"}
+                {#if ["gexRatio", "ivRank", "iv30d", "totalOI", "changeOI", "netCallPrem", "netPutPrem", "callVolume", "putVolume", "pcRatio", "topAnalystRating", "topAnalystCounter", "topAnalystPriceTarget", "topAnalystUpside", "score"]?.includes(row?.rule) && data?.user?.tier !== "Pro"}
                   <label id={row?.rule} on:click={() => changeRule(row?.rule)}>
                     <svg
                       class="w-4 h-4 mb-1 inline-block text-[#A3A3A3] sm:hover:text-white cursor-pointer"
