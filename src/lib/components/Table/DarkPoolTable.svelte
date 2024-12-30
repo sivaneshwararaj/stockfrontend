@@ -22,7 +22,7 @@
       minute: "numeric",
       second: "numeric",
       timeZone: "America/New_York",
-      hour12: false,
+      hour12: true, // Enable AM/PM format
     };
 
     // Format date for New York timezone
@@ -35,11 +35,10 @@
     const minute = parts
       .find((p) => p.type === "minute")
       .value.padStart(2, "0");
-    const second = parts
-      .find((p) => p.type === "second")
-      .value.padStart(2, "0");
 
-    return `${day}/${year} ${hour}:${minute}:${second}`;
+    const ampm = parts.find((p) => p.type === "dayPeriod").value; // AM/PM
+
+    return `${day}/${year} ${hour}:${minute} ${ampm}`;
   }
 
   let sortOrders = {
