@@ -398,14 +398,14 @@
     }
   }
 
-  const nyseDate = new Date(
-    data?.getFlowData?.at(0)?.date ?? null,
-  )?.toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "Europe/Berlin",
-  });
+  const nyseDate = data?.getFlowData?.at(0)?.date
+    ? new Date(data.getFlowData.at(0).date).toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "America/New_York",
+      })
+    : null;
 
   let rawData = data?.getFlowData?.filter((item) =>
     Object?.values(item)?.every(
