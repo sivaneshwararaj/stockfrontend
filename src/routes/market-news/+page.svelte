@@ -1,10 +1,12 @@
 <script lang="ts">
   import { numberOfUnreadNotification } from "$lib/store";
+  import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { onMount } from "svelte";
 
   export let data;
 
-  let rawData = data?.getData;
+  let rawData = data?.getStockNews;
+  let marketNews = data?.getMarketNews;
   let news = rawData.slice(0, 10) ?? [];
 
   const formatDate = (dateString) => {
@@ -104,10 +106,12 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full overflow-hidden m-auto mt-10">
-  <div class="flex justify-center w-full m-auto overflow-hidden">
-    <div class="relative flex justify-center items-center overflow-hidden">
-      <main>
+<div class="w-full overflow-hidden m-auto mt-5">
+  <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
+    <div
+      class="relative flex justify-center items-start overflow-hidden w-full"
+    >
+      <main class="w-full lg:w-3/4 lg:pr-5">
         <div class="w-full m-auto">
           <div class="grid grid-cols-1 gap-y-3">
             {#if news?.length !== 0}
@@ -205,6 +209,31 @@
           </div>
         </div>
       </main>
+      <aside class="hidden lg:block relative fixed w-1/4 ml-4">
+        {#if marketNews?.length !== 0}
+          <div
+            class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary"
+          >
+            <div class="p-4 text-sm">
+              <h3 class="text-lg text-white font-semibold mb-3">Market News</h3>
+              <ul class="text-white">
+                {#each marketNews?.slice(0, 10) as item}
+                  <li class="mb-3 last:mb-1">
+                    {formatDate(item?.publishedDate)} ago -
+                    <a
+                      class="sm:hover:text-white text-blue-400"
+                      href={item?.url}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow">{item?.title}</a
+                    >
+                    - {item?.site}
+                  </li>
+                {/each}
+              </ul>
+            </div>
+          </div>
+        {/if}
+      </aside>
     </div>
   </div>
-</section>
+</div>
