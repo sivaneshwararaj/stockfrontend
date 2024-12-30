@@ -213,7 +213,6 @@
   function getPlotOptions() {
     isLoading = true;
     let dates = marketTideData?.map((item) => item?.timestamp);
-
     const priceList = marketTideData?.map((item) => item?.close);
     const netCallPremList = marketTideData?.map(
       (item) => item?.net_call_premium,
@@ -310,17 +309,24 @@
           data: dates,
           axisLabel: {
             color: "#fff",
-            formatter: (value) => {
-              const timePart = value.split(" ")[1];
+            formatter: (value, index) => {
+              const [datePart, timePart] = value.split(" ");
               let [hours, minutes] = timePart.split(":").map(Number);
-              hours = minutes >= 30 ? hours + 1 : hours;
-              minutes = 0;
-              const amPm = hours >= 12 ? "PM" : "AM";
-              hours = hours % 12 || 12;
-              return `${hours}:00 ${amPm}`;
+
+              // Only show labels at 30-minute intervals (XX:00 and XX:30)
+              if (minutes % 30 === 0) {
+                const amPm = hours >= 12 ? "PM" : "AM";
+                hours = hours % 12 || 12;
+                return minutes === 0
+                  ? `${hours} ${amPm}`
+                  : `${hours}:30 ${amPm}`;
+              }
+              return "";
             },
+            interval: 29, // Show label every 30 minutes (29 intervals between)
           },
         },
+
         {
           type: "category",
           gridIndex: 1,
