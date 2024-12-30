@@ -9,9 +9,18 @@
   import InfoModal from "$lib/components/InfoModal.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
   import HottestTrades from "$lib/components/DarkPool/HottestTrades.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+  import { onMount } from "svelte";
 
   export let data;
   let historicalDarkPool = data?.getHistoricalDarkPool || [];
+  let priceLevel = data?.getPriceLevel?.priceLevel || [];
+  let hottestTrades = data?.getPriceLevel?.hottestTrades || [];
+  let isLoaded = false;
+
+  onMount(() => {
+    isLoaded = true;
+  });
 </script>
 
 <svelte:head>
@@ -70,37 +79,46 @@
               id={"darkPoolInfo"}
             />
           </div>
-
-          <Infobox
-            text="Track the Dark Pool Trades of major whales to monitor hidden trading activity and trends."
-          />
+          {#if priceLevel?.length === 0 && hottestTrades?.length === 0 && historicalDarkPool?.length === 0}
+            <Infobox
+              text={`No Dark Pool activity are detected for ${$displayCompanyName}`}
+            />
+          {:else}
+            <Infobox
+              text="Track the Dark Pool Trades of major whales to monitor hidden trading activity and trends."
+            />
+          {/if}
         </div>
-
-        <PriceLevel
-          rawData={data?.getPriceLevel?.priceLevel}
-          metrics={data?.getPriceLevel?.metrics}
-        />
-        <HottestTrades rawData={data?.getPriceLevel?.hottestTrades} />
-        <HistoricalVolume rawData={historicalDarkPool} />
+        {#if isLoaded}
+          {#if priceLevel?.length > 0}
+            <PriceLevel
+              rawData={priceLevel}
+              metrics={data?.getPriceLevel?.metrics}
+            />
+          {/if}
+          {#if data?.user?.tier === "Pro"}
+            {#if hottestTrades?.length > 0}
+              <HottestTrades rawData={hottestTrades} />
+            {/if}
+            {#if historicalDarkPool?.length > 0}
+              <HistoricalVolume rawData={historicalDarkPool} />
+            {/if}
+          {:else}
+            <UpgradeToPro {data} />
+          {/if}
+        {:else}
+          <div class="flex justify-center items-center h-80">
+            <div class="relative">
+              <label
+                class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              >
+                <span class="loading loading-spinner loading-md text-gray-400"
+                ></span>
+              </label>
+            </div>
+          </div>
+        {/if}
       </div>
     </div>
   </div>
 </section>
-
-<style>
-  .app {
-    height: 400px;
-    width: 100%;
-  }
-
-  @media (max-width: 560px) {
-    .app {
-      width: 100%;
-      height: 300px;
-    }
-  }
-
-  .chart {
-    width: 100%;
-  }
-</style>
