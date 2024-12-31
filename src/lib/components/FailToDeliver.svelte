@@ -1,13 +1,9 @@
 <script lang="ts">
   import {
-    failToDeliverComponent,
     displayCompanyName,
     stockTicker,
     assetType,
     etfTicker,
-    screenWidth,
-    getCache,
-    setCache,
   } from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
   import { Chart } from "svelte-echarts";
@@ -19,11 +15,11 @@
   import { CanvasRenderer } from "echarts/renderers";
 
   export let data;
+  export let rawData = [];
 
   use([LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   let isLoaded = false;
-  let rawData = [];
   let optionsData;
   let avgFailToDeliver;
   let lowestPrice;
@@ -66,6 +62,41 @@
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          // Get the timestamp from the first parameter
+          const timestamp = params[0].axisValue;
+
+          // Initialize result with timestamp
+          let result = timestamp + "<br/>";
+
+          // Add each series data
+          params.forEach((param) => {
+            const marker =
+              '<span style="display:inline-block;margin-right:4px;' +
+              "border-radius:10px;width:10px;height:10px;background-color:" +
+              param.color +
+              '"></span>';
+            result +=
+              marker +
+              param.seriesName +
+              ": " +
+              abbreviateNumber(param.value, false, true) +
+              "<br/>";
+          });
+
+          return result;
+        },
+        axisPointer: {
+          lineStyle: {
+            color: "#fff",
+          },
+        },
       },
       animation: false,
       grid: {
@@ -137,45 +168,19 @@
     return option;
   }
 
-  const getFailToDeliver = async (ticker) => {
-    const cachedData = getCache(ticker, "getFailToDeliver");
-    if (cachedData) {
-      rawData = cachedData;
-    } else {
-      const postData = { ticker: ticker, path: "fail-to-deliver" };
-      const response = await fetch("/api/ticker-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-
-      rawData = await response.json();
-      setCache(ticker, rawData, "getFailToDeliver");
-    }
-
-    failToDeliverComponent.set(rawData?.length !== 0);
-  };
-
   $: {
     const ticker = $assetType === "stock" ? $stockTicker : $etfTicker;
     if (ticker && typeof window !== "undefined") {
       isLoaded = false;
-      Promise.all([getFailToDeliver(ticker)])
-        .then(() => {
-          if (rawData?.length !== 0) {
-            weightedFTD = (
-              (rawData?.slice(-1)?.at(0)?.failToDeliver /
-                data?.getStockQuote?.avgVolume) *
-              100
-            )?.toFixed(2);
-            optionsData = getPlotOptions();
-          }
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
+      console.log(rawData);
+      if (rawData?.length > 0) {
+        weightedFTD = (
+          (rawData?.slice(-1)?.at(0)?.failToDeliver /
+            data?.getStockQuote?.avgVolume) *
+          100
+        )?.toFixed(2);
+        optionsData = getPlotOptions();
+      }
       isLoaded = true;
     }
   }
@@ -183,18 +188,10 @@
 
 <section class="overflow-hidden text-white h-full pb-8">
   <main class="overflow-hidden">
-    <div class="flex flex-row items-center">
-      <label
-        for="failToDeliverInfo"
-        class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
-      >
-        Fail to Deliver
-      </label>
-      <InfoModal
-        title={"Fail to Deliver"}
-        content={"Failure to deliver in the stock market occurs when a seller does not deliver securities to the buyer within the settlement period. Naked shorts contribute to this by selling shares not owned or borrowed, potentially distorting market dynamics and regulations."}
-        id={"failToDeliverInfo"}
-      />
+    <div class="flex flex-row items-center w-full mt-5">
+      <h1 class="text-2xl text-white font-bold">
+        Historical {$stockTicker} Chart
+      </h1>
     </div>
 
     {#if isLoaded}
@@ -261,7 +258,7 @@
         </h2>
 
         <div class="flex justify-start items-center w-full m-auto">
-          <table class="w-full" data-test="statistics-table">
+          <table class="w-full bg-table border border-gray-800">
             <tbody>
               <tr class="border-y border-gray-800 odd:bg-odd">
                 <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">

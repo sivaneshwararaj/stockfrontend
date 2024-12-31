@@ -7,6 +7,7 @@
     setCache,
     getCache,
   } from "$lib/store";
+  import DailyStats from "$lib/components/Options/DailyStats.svelte";
   import { Chart } from "svelte-echarts";
   import { abbreviateNumber } from "$lib/utils";
   import InfoModal from "$lib/components/InfoModal.svelte";
@@ -16,14 +17,14 @@
   import { BarChart, LineChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-
+  import Infobox from "$lib/components/Infobox.svelte";
   use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
   let isLoaded = false;
   let activeEX = 0;
   let activeIdx = 0;
-
+  let dailyStats = data?.getDailyStats;
   const getDailyTransactions = async (transactionId) => {
     let output;
     const cachedData = getCache(transactionId, "getDailyTransactions");
@@ -521,7 +522,7 @@
   $: {
     if (
       (displayTimePeriod || displayData) &&
-      optionsPlotData?.length !== 0 &&
+      rawPlotData?.length !== 0 &&
       typeof window !== "undefined"
     ) {
       // Filter the raw plot data based on the selected time period
@@ -570,47 +571,23 @@
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
 
-<section class="w-full bg-default overflow-hidden text-white h-full">
+<section class="w-full bg-default overflow-hidden text-white min-h-screen">
   <div class="w-full flex h-full overflow-hidden">
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-        <div class="w-full mb-6">
-          <div
-            class="w-full m-auto sm:pb-6 {data?.getOptionsNetFlow?.length === 0
-              ? 'hidden'
-              : ''}"
-          >
-            {#await import("$lib/components/OptionsNetFlow.svelte") then { default: Comp }}
-              <svelte:component this={Comp} rawData={data?.getOptionsNetFlow} />
-            {/await}
+        {#if Object?.keys(dailyStats)?.length === 0 && rawPlotData?.length === 0}
+          <Infobox text="No Options data available" />
+        {/if}
+
+        {#if Object?.keys(dailyStats)?.length > 0}
+          <div class="w-full mb-10">
+            <DailyStats rawData={dailyStats} />
           </div>
+        {/if}
 
-          <div
-            class="w-fit text-white p-3 sm:p-5 mb-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-          >
-            <svg
-              class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256 256"
-              ><path
-                fill="#fff"
-                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-              /></svg
-            >
-
-            {#if optionsPlotData?.length !== 0}
-              1 Year of options activity involving {$displayCompanyName} by major
-              institutional traders and hedge funds.
-            {:else}
-              There's no data available, indicating that major traders may not
-              be actively betting on {$displayCompanyName}.
-            {/if}
-          </div>
-        </div>
-
-        {#if optionsPlotData?.length !== 0}
+        {#if rawPlotData?.length > 0}
           <div
             class="mb-4 grid grid-cols-2 grid-rows-2 divide-gray-600 rounded-md border border-gray-600 md:grid-cols-4 md:grid-rows-1 md:divide-x"
           >
@@ -779,11 +756,11 @@
             </div>
           {/if}
 
-          <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
-            {activeIdx === 0 ? "Historical Option Data" : "Option Chain Data"}
-          </h3>
-
           {#if optionList?.length !== 0}
+            <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
+              {activeIdx === 0 ? "Historical Option Data" : "Option Chain Data"}
+            </h3>
+
             <div
               class="bg-secondary w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-6 mb-6"
             >
@@ -839,10 +816,10 @@
             <div class="flex justify-start items-center m-auto overflow-x-auto">
               {#if activeIdx === 0}
                 <table
-                  class="w-full table table-sm table-compact rounded-none sm:rounded-md border-bg-default m-auto mt-4 overflow-x-auto"
+                  class="w-full table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md m-auto mt-4 overflow-x-auto"
                 >
-                  <thead>
-                    <tr class="border-b border-[#27272A]">
+                  <thead class="bg-default">
+                    <tr class="">
                       <td class="text-white font-semibold text-sm text-start"
                         >Date</td
                       >
@@ -878,14 +855,16 @@
                         on:click={() => handleViewData(item?.date)}
                         on:mouseover={() =>
                           getDailyTransactions($etfTicker + "+" + item?.date)}
-                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B] {index +
+                        class="cursor-pointer sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
                           1 ===
                           optionList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
                           : ''}"
                       >
-                        <td class="text-white text-sm text-start">
+                        <td
+                          class="text-white text-sm sm:text-[1rem] text-start"
+                        >
                           {formatDate(item?.date)}
                         </td>
 
@@ -1012,18 +991,23 @@
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-white text-end">
-                          {abbreviateNumber(item?.total_volume)}
+                          {@html abbreviateNumber(
+                            item?.total_volume,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(item?.total_oi)}
+                          {@html abbreviateNumber(item?.total_oi, false, true)}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(
+                          {@html abbreviateNumber(
                             item?.total_bull_prem +
                               item?.total_bear_prem +
                               item?.total_neutral_prem,
+                            false,
                             true,
                           )}
                         </td>
@@ -1033,33 +1017,29 @@
                 </table>
               {:else}
                 <table
-                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4 overflow-x-auto"
+                  class="table table-pin-cols table-sm bg-table border border-gray-800 table-compact rounded-none sm:rounded-md w-full m-auto mt-4 overflow-x-auto"
                 >
-                  <thead>
+                  <thead class="bg-default">
                     <tr class="">
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Call Prem</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Call OI</td
                       >
-                      <td class="text-slate-200 font-semibold text-sm text-end"
+                      <td class="text-white font-semibold text-sm text-end"
                         >Call Volume</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-center"
+                      <td class="text-white font-semibold text-sm text-center"
                         >Strike Price</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-start"
+                      <td class="text-white font-semibold text-sm text-start"
                         >Put Volume</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-start"
+                      <td class="text-white font-semibold text-sm text-start"
                         >Put OI</td
                       >
-                      <td
-                        class="text-slate-200 font-semibold text-sm text-start"
+                      <td class="text-white font-semibold text-sm text-start"
                         >Put Prem</td
                       >
                     </tr>
@@ -1067,22 +1047,35 @@
                   <tbody>
                     {#each data?.user?.tier === "Pro" ? optionChainList : optionChainList?.slice(0, 3) as item, index}
                       <tr
-                        class="odd:bg-odd border-b-[#09090B] {index + 1 ===
+                        class="odd:bg-odd border-b border-gray-800 {index +
+                          1 ===
                           optionChainList?.slice(0, 3)?.length &&
                         data?.user?.tier !== 'Pro'
                           ? 'opacity-[0.1]'
                           : ''}"
                       >
                         <td class="text-white text-sm sm:text-[1rem] text-end">
-                          {abbreviateNumber(item?.total_premium_call, true)}
+                          {@html abbreviateNumber(
+                            item?.total_premium_call,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(item?.total_open_interest_call)}
+                          {@html abbreviateNumber(
+                            item?.total_open_interest_call,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end text-white">
-                          {abbreviateNumber(item?.total_volume_call)}
+                          {@html abbreviateNumber(
+                            item?.total_volume_call,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td
@@ -1101,19 +1094,31 @@
                         <td
                           class="text-sm sm:text-[1rem] text-start text-white"
                         >
-                          {abbreviateNumber(item?.total_volume_put)}
+                          {@html abbreviateNumber(
+                            item?.total_volume_put,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td
                           class="text-sm sm:text-[1rem] text-start text-white"
                         >
-                          {abbreviateNumber(item?.total_open_interest_put)}
+                          {@html abbreviateNumber(
+                            item?.total_open_interest_put,
+                            false,
+                            true,
+                          )}
                         </td>
 
                         <td
                           class="text-white text-sm sm:text-[1rem] text-start"
                         >
-                          {abbreviateNumber(item?.total_premium_put, true)}
+                          {@html abbreviateNumber(
+                            item?.total_premium_put,
+                            false,
+                            true,
+                          )}
                         </td>
                       </tr>
                     {/each}
@@ -1123,23 +1128,6 @@
             </div>
 
             <UpgradeToPro {data} />
-          {:else}
-            <div class="flex justify-center items-center m-auto mt-16 mb-6">
-              <div
-                class="text-gray-100 text-sm sm:text-[1rem] rounded-md h-auto border border-gray-600 p-4"
-              >
-                <svg
-                  class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 256 256"
-                  ><path
-                    fill="#fff"
-                    d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                  /></svg
-                >
-                No Options activity found
-              </div>
-            </div>
           {/if}
         {/if}
       </div>
@@ -1203,54 +1191,38 @@
       <div class="flex justify-start items-center m-auto">
         {#if isLoaded}
           <table
-            class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4 overflow-x-auto"
+            class="table table-pin-cols table-sm bg-table border border-gray-800 table-compact rounded-none sm:rounded-md w-full m-auto mt-4 overflow-x-auto"
           >
-            <thead>
+            <thead class="bg-default">
               <tr class="">
-                <td class="text-slate-200 font-semibold text-sm text-start"
-                  >Time</td
+                <td class="text-white font-semibold text-sm text-start">Time</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-start"
-                  >Date</td
+                <td class="text-white font-semibold text-sm text-start">Date</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Expiry</td
+                <td class="text-white font-semibold text-sm text-end">Expiry</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Strike</td
+                <td class="text-white font-semibold text-sm text-end">Strike</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >C/P</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-start"
+                <td class="text-white font-semibold text-sm text-end">C/P</td>
+                <td class="text-white font-semibold text-sm text-start"
                   >Sent.</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-start"
+                <td class="text-white font-semibold text-sm text-start"
                   >Exec.</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Spot</td
+                <td class="text-white font-semibold text-sm text-end">Spot</td>
+                <td class="text-white font-semibold text-sm text-end">Price</td>
+                <td class="text-white font-semibold text-sm text-end">Prem.</td>
+                <td class="text-white font-semibold text-sm text-start">Type</td
                 >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Price</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Prem.</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-start"
-                  >Type</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-end"
-                  >Vol.</td
-                >
-                <td class="text-slate-200 font-semibold text-sm text-end">OI</td
-                >
+                <td class="text-white font-semibold text-sm text-end">Vol.</td>
+                <td class="text-white font-semibold text-sm text-end">OI</td>
               </tr>
             </thead>
             <tbody>
               {#each optionHistoryList as item}
                 <!-- row -->
-                <tr class="odd:bg-odd border-b-[#09090B]">
+                <tr class="odd:bg-odd border-b border-gray-800">
                   <td class="text-white text-sm text-start whitespace-nowrap">
                     {formatTime(item?.time)}
                   </td>
@@ -1298,13 +1270,8 @@
                     {item?.price}
                   </td>
 
-                  <td
-                    class="text-sm sm:text-[1rem] text-end font-medium {item?.put_call ===
-                    'Puts'
-                      ? 'text-[#CB281C]'
-                      : 'text-[#0FB307]'} "
-                  >
-                    {abbreviateNumber(item?.cost_basis)}
+                  <td class="text-sm sm:text-[1rem] text-end text-white">
+                    {@html abbreviateNumber(item?.cost_basis, false, true)}
                   </td>
 
                   <td

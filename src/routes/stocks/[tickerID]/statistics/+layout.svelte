@@ -8,6 +8,7 @@
     const subSectionMap = {
       "market-cap": "/statistics/market-cap",
       employees: "/statistics/employees",
+      "fail-to-deliver": "/statistics/fail-to-deliver",
     };
 
     if (state !== "overview" && subSectionMap[state]) {
@@ -25,6 +26,7 @@
       const sectionMap = {
         "market-cap": "market-cap",
         employees: "employees",
+        "fail-to-deliver": "fail-to-deliver",
       };
 
       const foundSection = parts?.find((part) =>
@@ -74,6 +76,16 @@
                 : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
               Employees
+            </a>
+            <a
+              href={`/stocks/${$stockTicker}/statistics/fail-to-deliver`}
+              on:click={() => changeSubSection("fail-to-deliver")}
+              class="p-2 px-5 cursor-pointer {displaySubSection ===
+              'fail-to-deliver'
+                ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+            >
+              Fail to Deliver
             </a>
           </ul>
         </nav>

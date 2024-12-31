@@ -318,15 +318,33 @@
           color: "#fff", // Optional: Text color for better visibility
         },
         formatter: function (params) {
-          const date = params[0].name; // Get the date from the x-axis value
-          const dateParts = date.split("-");
-          const year = dateParts[0];
-          const monthIndex = parseInt(dateParts[1]) - 1;
-          const day = dateParts[2];
-          const formattedDate = `${monthNames[monthIndex]} ${day}, ${year}`;
+          // Get the timestamp from the first parameter
+          const timestamp = params[0].axisValue;
 
-          // Return the tooltip content
-          return `${formattedDate}<br/> ${abbreviateNumber(params[0].value)}`;
+          // Initialize result with timestamp
+          let result = timestamp + "<br/>";
+
+          // Add each series data
+          params.forEach((param) => {
+            const marker =
+              '<span style="display:inline-block;margin-right:4px;' +
+              "border-radius:10px;width:10px;height:10px;background-color:" +
+              param.color +
+              '"></span>';
+            result +=
+              marker +
+              param.seriesName +
+              ": " +
+              abbreviateNumber(param.value, false, true) +
+              "<br/>";
+          });
+
+          return result;
+        },
+        axisPointer: {
+          lineStyle: {
+            color: "#fff",
+          },
         },
       },
     };
@@ -439,7 +457,7 @@
                 >
                   <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                     <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-normal text-white">
+                      <div class="text-sm font-semibold text-white">
                         Market Cap
                       </div>
                       <div
@@ -455,7 +473,9 @@
                   </div>
                   <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                     <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-normal text-white">Category</div>
+                      <div class="text-sm font-semibold text-white">
+                        Category
+                      </div>
                       <div
                         class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
                       >
@@ -474,7 +494,7 @@
                   </div>
                   <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                     <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-normal text-white">
+                      <div class="text-sm font-semibold text-white">
                         1-Year Change
                       </div>
                       <div
