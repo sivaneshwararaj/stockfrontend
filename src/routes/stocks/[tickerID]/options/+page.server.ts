@@ -6,12 +6,12 @@ import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 export const load = async ({ locals, params }) => {
   const { apiKey, apiURL } = locals;
 
-  const getOptionsNetFlow = async () => {
+  const getDailyStats = async () => {
     const postData = {
       ticker: params.tickerID,
     };
 
-    const response = await fetch(apiURL + "/options-net-flow-ticker", {
+    const response = await fetch(apiURL + "/options-stats-ticker", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export const load = async ({ locals, params }) => {
 
   // Make sure to return a promise
   return {
-    getOptionsNetFlow: await getOptionsNetFlow(),
+    getDailyStats: await getDailyStats(),
     getOptionsPlotData: await getOptionsPlotData(),
     getOptionsHistoricalData: await getOptionsHistoricalData(),
     getOptionsChainData: await getOptionsChainData(),

@@ -7,6 +7,7 @@
     setCache,
     getCache,
   } from "$lib/store";
+  import DailyStats from "$lib/components/Options/DailyStats.svelte";
   import { Chart } from "svelte-echarts";
   import { abbreviateNumber } from "$lib/utils";
   import InfoModal from "$lib/components/InfoModal.svelte";
@@ -16,14 +17,13 @@
   import { BarChart, LineChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-  import Infobox from "$lib/components/Infobox.svelte";
   use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
   let isLoaded = false;
   let activeEX = 0;
   let activeIdx = 0;
-
+  let dailyStats = data?.getDailyStats;
   const getDailyTransactions = async (transactionId) => {
     let output;
     const cachedData = getCache(transactionId, "getDailyTransactions");
@@ -577,27 +577,7 @@
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
         <div class="w-full mb-10">
-          <div
-            class="w-full m-auto sm:pb-6 {data?.getOptionsNetFlow?.length === 0
-              ? 'hidden'
-              : ''}"
-          >
-            {#await import("$lib/components/OptionsNetFlow.svelte") then { default: Comp }}
-              <svelte:component this={Comp} rawData={data?.getOptionsNetFlow} />
-            {/await}
-          </div>
-
-          {#if optionsPlotData?.length !== 0}
-            <Infobox
-              text={`1 Year of options activity involving ${$displayCompanyName} by major
-              institutional traders and hedge funds.`}
-            />
-          {:else}
-            <Infobox
-              text={`There's no data available, indicating that major traders may not
-              be actively betting on ${$displayCompanyName}.`}
-            />
-          {/if}
+          <DailyStats rawData={dailyStats} />
         </div>
 
         {#if optionsPlotData?.length !== 0}

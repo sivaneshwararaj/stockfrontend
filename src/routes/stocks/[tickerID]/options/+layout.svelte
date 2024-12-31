@@ -11,7 +11,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4">
+        <main class="w-full lg:w-3/4 mt-2 sm:mt-0">
           <slot />
         </main>
 
