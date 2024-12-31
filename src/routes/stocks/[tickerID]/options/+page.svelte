@@ -17,6 +17,7 @@
   import { BarChart, LineChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
+  import Infobox from "$lib/components/Infobox.svelte";
   use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
@@ -521,7 +522,7 @@
   $: {
     if (
       (displayTimePeriod || displayData) &&
-      optionsPlotData?.length !== 0 &&
+      rawPlotData?.length !== 0 &&
       typeof window !== "undefined"
     ) {
       // Filter the raw plot data based on the selected time period
@@ -576,11 +577,17 @@
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
       <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-        <div class="w-full mb-10">
-          <DailyStats rawData={dailyStats} />
-        </div>
+        {#if Object?.keys(dailyStats)?.length === 0 && rawPlotData?.length === 0}
+          <Infobox text="No Options data available" />
+        {/if}
 
-        {#if optionsPlotData?.length !== 0}
+        {#if Object?.keys(dailyStats)?.length > 0}
+          <div class="w-full mb-10">
+            <DailyStats rawData={dailyStats} />
+          </div>
+        {/if}
+
+        {#if rawPlotData?.length > 0}
           <div
             class="mb-4 grid grid-cols-2 grid-rows-2 divide-gray-600 rounded-md border border-gray-600 md:grid-cols-4 md:grid-rows-1 md:divide-x"
           >
