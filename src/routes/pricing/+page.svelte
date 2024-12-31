@@ -41,13 +41,10 @@
   async function purchasePlan(subscriptionType: string = "") {
     if (data?.user) {
       let subId = "";
-      let value = 0;
       if (mode) {
         subId = import.meta.env.VITE_LEMON_SQUEEZY_ANNUAL_ID;
-        value = 59.88;
       } else {
         subId = import.meta.env.VITE_LEMON_SQUEEZY_MONTHLY_ID;
-        value = 9.99;
       }
       try {
       } catch (e) {
@@ -190,7 +187,7 @@
 
         <div class="ml-3 -mb-4 flex flex-col items-start">
           <span class="text-sm font-semibold text-white"> Pay Yearly </span>
-          <span class="text-[#fff] text-sm font-semibold"> Save 50% </span>
+          <span class="text-[#fff] text-sm font-semibold"> Save 33% </span>
         </div>
       </div>
     </div>
@@ -419,17 +416,10 @@
 
         <div class="flex flex-col mb-6 items-center">
           <div class="flex flex-row items-center">
-            <span class="mr-2 text-4xl font-bold"
-              >{mode ? "$4.99" : "$9.99"}</span
-            >
+            <span class="mr-2 text-4xl font-bold">{mode ? "$10" : "$15"}</span>
             <span class="text-white text-xl">/month</span>
           </div>
-          {#if mode}
-            <div class="text-white">(Billed Annually)</div>
-            <div class="flex items-center mt-2 text-[1rem] text-center">
-              less than a 🍔
-            </div>
-          {/if}
+
           <!--
                     <div class="flex flex-col items-center">
                         <div class="flex flex-row items-center">
@@ -1318,8 +1308,8 @@
                   <p
                     class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
                   >
-                    Yes, you can select the annual option. It costs $59.88 per
-                    year, which is equivalent to getting 6 months free.
+                    Yes, you can choose the annual option for $120 per year.
+                    This allows you to save 33.33% compared to the monthly plan
                   </p>
                 </div>
               </details>
