@@ -9,7 +9,7 @@
 <div class="text-white">
   <label
     for="dailyStats"
-    class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+    class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
   >
     Daily Stats
     <InfoModal
@@ -31,7 +31,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(rawData?.call_volume, false, true)}</td
+            >{abbreviateNumber(rawData?.call_volume, false)}</td
           ></tr
         >
         <tr
@@ -42,11 +42,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.call_volume_ask_side,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.call_volume_ask_side, false)}</td
           ></tr
         >
         <tr
@@ -57,11 +53,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.call_volume_bid_side,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.call_volume_bid_side, false)}</td
           ></tr
         >
         <tr
@@ -72,7 +64,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(rawData?.call_premium, false, true)}</td
+            >{abbreviateNumber(rawData?.call_premium, false)}</td
           ></tr
         >
 
@@ -84,11 +76,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.net_call_premium,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.net_call_premium, false)}</td
           ></tr
         >
         <tr
@@ -99,11 +87,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.call_open_interest,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.call_open_interest, false)}</td
           ></tr
         >
         <tr
@@ -114,7 +98,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(rawData?.iv_rank, false, true)}</td
+            >{abbreviateNumber(rawData?.iv_rank, false)}</td
           ></tr
         >
         <tr
@@ -136,11 +120,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.total_open_interest,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.total_open_interest, false)}</td
           ></tr
         >
         <tr
@@ -166,7 +146,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(rawData?.put_volume, false, true)}</td
+            >{abbreviateNumber(rawData?.put_volume, false)}</td
           ></tr
         >
         <tr
@@ -177,11 +157,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.put_volume_ask_side,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.put_volume_ask_side, false)}</td
           ></tr
         >
         <tr
@@ -192,11 +168,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.put_volume_bid_side,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.put_volume_bid_side, false)}</td
           ></tr
         >
         <tr
@@ -207,7 +179,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(rawData?.put_premium, false, true)}</td
+            >{abbreviateNumber(rawData?.put_premium, false)}</td
           ></tr
         >
         <tr
@@ -218,7 +190,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(rawData?.net_put_premium, false, true)}</td
+            >{abbreviateNumber(rawData?.net_put_premium, false)}</td
           ></tr
         >
         <tr
@@ -229,11 +201,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.put_open_interest,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.put_open_interest, false)}</td
           ></tr
         >
         <tr
@@ -303,21 +271,21 @@
                 <div class="flex justify-between space-x-4">
                   <div class="space-y-1 flex flex-col items-start text-white">
                     <div>
-                      Bearish: {@html abbreviateNumber(
+                      Bearish: {abbreviateNumber(
                         rawData?.premium_ratio[0],
                         false,
                         true,
                       )}
                     </div>
                     <div>
-                      Neutral: {@html abbreviateNumber(
+                      Neutral: {abbreviateNumber(
                         rawData?.premium_ratio[1],
                         false,
                         true,
                       )}
                     </div>
                     <div>
-                      Bullish: {@html abbreviateNumber(
+                      Bullish: {abbreviateNumber(
                         rawData?.premium_ratio[2],
                         false,
                         true,
@@ -337,11 +305,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumber(
-              rawData?.open_interest_change,
-              false,
-              true,
-            )}</td
+            >{abbreviateNumber(rawData?.open_interest_change, false)}</td
           ></tr
         >
         <tr

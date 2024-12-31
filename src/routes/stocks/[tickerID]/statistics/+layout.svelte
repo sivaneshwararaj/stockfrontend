@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { stockTicker, screenWidth } from "$lib/store";
+  import { stockTicker } from "$lib/store";
   import { page } from "$app/stores";
 
   let displaySubSection = "overview";

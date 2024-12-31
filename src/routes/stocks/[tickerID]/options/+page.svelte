@@ -594,7 +594,7 @@
             <div class="p-4 bp:p-5 sm:p-6">
               <label
                 for="totaVolume"
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
+                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] w-fit"
               >
                 Total Volume
                 <InfoModal
@@ -613,7 +613,7 @@
             <div class="p-4 bp:p-5 sm:p-6 border-l border-contrast md:border-0">
               <label
                 for="totalOpenInterest"
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
+                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] w-fit"
               >
                 Total OI
                 <InfoModal
@@ -631,7 +631,7 @@
             <div class="p-4 bp:p-5 sm:p-6 border-t border-contrast md:border-0">
               <label
                 for="putCallRatio"
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
+                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] w-fit"
               >
                 P/C Ratio
                 <InfoModal
@@ -651,7 +651,7 @@
             >
               <label
                 for="openInteresteRatio"
-                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem]"
+                class="mr-1 cursor-pointer flex flex-row items-center text-white text-[1rem] w-fit"
               >
                 OI P/C Ratio
                 <InfoModal
@@ -702,7 +702,7 @@
                 class="text-xl text-white m-auto flex justify-center items-center h-full"
               >
                 <div
-                  class="text-gray-100 text-sm sm:text-[1rem] sm:rounded-md h-auto border border-gray-600 p-4"
+                  class="text-white text-sm sm:text-[1rem] sm:rounded-md h-auto border border-gray-600 p-4"
                 >
                   <svg
                     class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
@@ -720,7 +720,7 @@
           </div>
 
           {#if data?.getOptionsGexData?.length !== 0}
-            <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
+            <h3 class="text-2xl text-white font-bold mb-4 text-start">
               {activeEX === 0
                 ? "Daily Gamma Exposure (GEX)"
                 : "Daily Delta Exposure (DEX)"}
@@ -757,7 +757,7 @@
           {/if}
 
           {#if optionList?.length !== 0}
-            <h3 class="text-2xl text-gray-200 font-bold mb-4 text-start">
+            <h3 class="text-2xl text-white font-bold mb-4 text-start">
               {activeIdx === 0 ? "Historical Option Data" : "Option Chain Data"}
             </h3>
 
@@ -1162,7 +1162,7 @@
       </button>
     </form>
 
-    <p class="text-gray-200 mt-10 cursor-text">
+    <p class="text-white mt-10 cursor-text">
       <span class="text-white text-xl font-semibold mb-4"
         >Option Data Details:</span
       >

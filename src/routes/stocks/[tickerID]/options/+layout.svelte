@@ -1,8 +1,45 @@
 <script lang="ts">
   import { stockTicker } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import { page } from "$app/stores";
 
   export let data;
+
+  let displaySubSection = "overview";
+
+  function changeSubSection(state) {
+    const subSectionMap = {
+      overview: "/options",
+      "hottest-contracts": "/options/hottest-contracts",
+    };
+
+    if (state !== "overview" && subSectionMap[state]) {
+      displaySubSection = state;
+      //goto(`/stocks/${$stockTicker}${subSectionMap[state]}`);
+    } else {
+      displaySubSection = state;
+      //goto(`/stocks/${$stockTicker}/statistics`);
+    }
+  }
+
+  $: {
+    if ($page?.url?.pathname) {
+      const parts = $page?.url?.pathname.split("/");
+      const sectionMap = {
+        overview: "overview",
+        "hottest-contracts": "hottest-contracts",
+      };
+
+      const foundSection = parts?.find((part) =>
+        Object?.values(sectionMap)?.includes(part),
+      );
+
+      displaySubSection =
+        Object?.keys(sectionMap)?.find(
+          (key) => sectionMap[key] === foundSection,
+        ) || "overview";
+    }
+  }
 </script>
 
 <section class="w-full overflow-hidden min-h-screen">
@@ -11,8 +48,36 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 mt-2 sm:mt-0">
-          <slot />
+        <main class="w-full lg:w-3/4">
+          <nav
+            class="sm:ml-4 overflow-x-scroll pt-1 text-sm sm:text-[1rem] whitespace-nowrap"
+          >
+            <ul class="flex flex-row items-center w-full text-white">
+              <a
+                href={`/stocks/${$stockTicker}/options`}
+                on:click={() => changeSubSection("overview")}
+                class="p-2 px-5 cursor-pointer {displaySubSection === 'overview'
+                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+              >
+                Overview
+              </a>
+
+              <a
+                href={`/stocks/${$stockTicker}/options/hottest-contracts`}
+                on:click={() => changeSubSection("hottest-contracts")}
+                class="p-2 px-5 cursor-pointer {displaySubSection ===
+                'hottest-contracts'
+                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+              >
+                Hottest Contracts
+              </a>
+            </ul>
+          </nav>
+          <div class="mt-2 sm:mt-0">
+            <slot />
+          </div>
         </main>
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
