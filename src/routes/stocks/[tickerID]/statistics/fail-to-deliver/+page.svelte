@@ -15,6 +15,14 @@
 
   let rawData = data?.getData || [];
   let changePercentageYearAgo = 0;
+  let relativeFTD =
+    data?.getStockQuote?.avgVolume > 0
+      ? (
+          (rawData?.slice(-1)?.at(0)?.failToDeliver /
+            data?.getStockQuote?.avgVolume) *
+          100
+        )?.toFixed(2) + "%"
+      : "n/a";
 
   function computeYearOverYearChange(rawData) {
     if (rawData.length < 2) {
@@ -133,13 +141,7 @@
                       <div
                         class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
                       >
-                        {data?.getStockQuote?.avgVolume > 0
-                          ? (
-                              (rawData?.slice(-1)?.at(0)?.failToDeliver /
-                                data?.getStockQuote?.avgVolume) *
-                              100
-                            )?.toFixed(2) + "%"
-                          : "n/a"}
+                        {relativeFTD > 0.01 ? relativeFTD : "< 0.01%"}
                       </div>
                     </div>
                   </div>

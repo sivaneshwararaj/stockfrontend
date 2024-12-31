@@ -74,7 +74,7 @@
                           ></td
                         >
                         <td class="text-right cursor-normal text-[1rem]"
-                          >{abbreviateNumber(item?.relativeFTD)}%</td
+                          >{item?.relativeFTD > 0.01 abbreviateNumber(item?.relativeFTD)+"%" : '< 0.01%'}</td
                         >
                       </tr>
                     {/if}
