@@ -187,7 +187,7 @@
 
         <div class="ml-3 -mb-4 flex flex-col items-start">
           <span class="text-sm font-semibold text-white"> Pay Yearly </span>
-          <span class="text-[#fff] text-sm font-semibold"> Save 33% </span>
+          <span class="text-[#fff] text-sm font-semibold"> Save 25% </span>
         </div>
       </div>
     </div>
@@ -416,7 +416,8 @@
 
         <div class="flex flex-col mb-6 items-center">
           <div class="flex flex-row items-center">
-            <span class="mr-2 text-4xl font-bold">{mode ? "$10" : "$15"}</span>
+            <span class="mr-2 text-4xl font-bold">{mode ? "$7.50" : "$10"}</span
+            >
             <span class="text-white text-xl">/month</span>
           </div>
 
@@ -1308,8 +1309,8 @@
                   <p
                     class="text-sm sm:text-[1rem] pb-5 text-gray-200 overflow-hidden transition-all duration-300 ease-in-out"
                   >
-                    Yes, you can choose the annual option for $120 per year.
-                    This allows you to save 33.33% compared to the monthly plan
+                    Yes, you can choose the annual option for $90 per year. This
+                    allows you to save 25% compared to the monthly plan
                   </p>
                 </div>
               </details>
