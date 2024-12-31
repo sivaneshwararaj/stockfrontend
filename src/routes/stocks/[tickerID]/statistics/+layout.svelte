@@ -85,7 +85,7 @@
                 ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
                 : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
-              Fail to Deliver
+              Fail-to-Deliver
             </a>
           </ul>
         </nav>
