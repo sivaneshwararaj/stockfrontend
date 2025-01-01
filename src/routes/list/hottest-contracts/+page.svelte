@@ -5,6 +5,7 @@
   export let data;
 
   const defaultList = [
+    { name: "Total OI", rule: "totalOI" },
     { name: "Change OI", rule: "changeOI" },
     { name: "Price", rule: "price" },
     { name: "% Change", rule: "changesPercentage" },
@@ -19,6 +20,7 @@
     "eps",
     "marketCap",
     "changeOI",
+    "totalOI",
   ]);
 </script>
 

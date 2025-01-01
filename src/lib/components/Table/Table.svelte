@@ -159,6 +159,7 @@
       type: "percentSign",
     },
     { name: "Change OI", rule: "changeOI", type: "decimal" },
+    { name: "Total OI", rule: "totalOI", type: "int" },
   ];
 
   allRows = [...allRows, ...specificRows];
