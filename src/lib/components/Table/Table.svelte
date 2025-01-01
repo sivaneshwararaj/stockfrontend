@@ -158,6 +158,7 @@
       rule: "topAnalystUpside",
       type: "percentSign",
     },
+    { name: "Change OI", rule: "changeOI", type: "decimal" },
   ];
 
   allRows = [...allRows, ...specificRows];

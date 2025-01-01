@@ -30,7 +30,13 @@
     </li>
     <li>
       <a class="text-blue-400 sm:hover:text-white" href="/list/most-ftd-shares"
-        >U.S. Companies With The Most Fail-to-Deliver Shares</a
+        >U.S. Companies With The Most FTD Shares</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/hottest-contracts">U.S. Companies with Highest OI Change</a
       >
     </li>
   </ul>
@@ -184,6 +190,7 @@
         href="/list/overbought-stocks/">Overbought Stocks</a
       >
     </li>
+
     <li>
       <a class="text-blue-400 sm:hover:text-white" href="/list/reit-stocks"
         >All REITs</a

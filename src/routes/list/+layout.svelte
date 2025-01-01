@@ -206,6 +206,10 @@
       title: "Most Shorted Stocks",
       link: "/list/most-shorted-stocks",
     },
+    {
+      title: "Hottest Options Contracts",
+      link: "/list/hottest-contracts",
+    },
   ];
 
   navigation = [...navigationIndustry, ...navigation];
