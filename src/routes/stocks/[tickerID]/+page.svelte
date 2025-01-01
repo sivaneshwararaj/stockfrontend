@@ -1202,29 +1202,17 @@
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-                      >Shares Out
+                      ><a
+                        href={`/stocks/${$stockTicker}/forecast`}
+                        class="sm:hover:text-blue-400 text-white underline underline-offset-4"
+                        >Analyst</a
+                      >
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{@html data?.getStockQuote?.sharesOutstanding !== null
-                        ? abbreviateNumber(
-                            data?.getStockQuote?.sharesOutstanding,
-                            false,
-                            true,
-                          )
-                        : "n/a"}</td
-                    ></tr
-                  >
-                  <tr
-                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                    ><td
-                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-                      >Short % of Shares Out</td
-                    >
-                    <td
-                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{stockDeck?.shortOutStandingPercent !== null
-                        ? stockDeck?.shortOutStandingPercent + "%"
+                      >{data?.getAnalystRating?.consensusRating !== null &&
+                      data?.getAnalystRating?.consensusRating !== "n/a"
+                        ? data?.getAnalystRating?.consensusRating
                         : "n/a"}</td
                     ></tr
                   >
@@ -1256,6 +1244,19 @@
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
                       >{data?.getStockQuote?.volume?.toLocaleString(
+                        "en-us",
+                      )}</td
+                    ></tr
+                  >
+                  <tr
+                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
+                    ><td
+                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
+                      >Avg. Volume (20D)</td
+                    >
+                    <td
+                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
+                      >{data?.getStockQuote?.avgVolume?.toLocaleString(
                         "en-us",
                       )}</td
                     ></tr
@@ -1317,32 +1318,6 @@
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
                       >{stockDeck?.beta?.toFixed(2)}</td
-                    ></tr
-                  >
-                  <tr
-                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                    ><td
-                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-                      >Shares Float
-                    </td>
-                    <td
-                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{@html stockDeck?.floatShares !== null
-                        ? abbreviateNumber(stockDeck?.floatShares, false, true)
-                        : "n/a"}</td
-                    ></tr
-                  >
-                  <tr
-                    class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
-                    ><td
-                      class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-                      >Short % of Float</td
-                    >
-                    <td
-                      class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{stockDeck?.shortFloatPercent !== null
-                        ? stockDeck?.shortFloatPercent + "%"
-                        : "n/a"}</td
                     ></tr
                   >
                 </tbody>
