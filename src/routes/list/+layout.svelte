@@ -207,8 +207,8 @@
       link: "/list/most-shorted-stocks",
     },
     {
-      title: "Hottest Options Contracts",
-      link: "/list/hottest-contracts",
+      title: "Highest OI Change",
+      link: "/list/highest-open-interest-change",
     },
   ];
 

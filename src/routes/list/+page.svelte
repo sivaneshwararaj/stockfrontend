@@ -36,7 +36,8 @@
     <li>
       <a
         class="text-blue-400 sm:hover:text-white"
-        href="/list/hottest-contracts">U.S. Companies with Highest OI Change</a
+        href="/list/highest-open-interest-change"
+        >U.S. Companies with Highest OI Change</a
       >
     </li>
   </ul>
