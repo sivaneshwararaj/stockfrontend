@@ -26,9 +26,7 @@
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox
-    text="A list of the stocks with the highest number of shares shorted relative to
-    the stock's float. Float is the amount of shares that are considered
-    available for trading."
+    text="A list of stocks with the highest changes in open interest (OI). Open interest represents the total number of outstanding options contracts available for trading."
   />
 
   <!-- Page wrapper -->
