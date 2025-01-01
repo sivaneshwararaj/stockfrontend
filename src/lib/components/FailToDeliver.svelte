@@ -261,31 +261,37 @@
           <table class="w-full bg-table border border-gray-800">
             <tbody>
               <tr class="border-y border-gray-800 odd:bg-odd">
-                <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
+                <td
+                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+                >
                   <span>Date</span>
                 </td>
                 <td
-                  class="px-[5px] py-1.5 text-right whitespace-nowrap font-medium xs:px-2.5 xs:py-2"
+                  class="px-[5px] py-1.5 text-right whitespace-nowrap font-medium xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
                 >
                   {formatDateRange(rawData?.slice(-1)?.at(0)?.date)}
                 </td>
               </tr>
               <tr class="border-y border-gray-800 odd:bg-odd">
-                <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
+                <td
+                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+                >
                   <span>Price Range</span>
                 </td>
                 <td
-                  class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                  class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
                 >
                   {lowestPrice + "-" + highestPrice}
                 </td>
               </tr>
               <tr class="border-y border-gray-800 odd:bg-odd">
-                <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
+                <td
+                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+                >
                   <span>Latest FTD</span>
                 </td>
                 <td
-                  class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
+                  class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
                 >
                   {abbreviateNumber(rawData?.slice(-1)?.at(0)?.failToDeliver)}
                 </td>

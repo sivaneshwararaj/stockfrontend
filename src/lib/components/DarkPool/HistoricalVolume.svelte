@@ -234,11 +234,17 @@
           Latest Information
         </h2>
 
-        <div class="flex justify-start items-center w-full m-auto">
-          <table class="w-full bg-table border border-gray-800">
+        <div
+          class="flex justify-start items-center w-full m-auto overflow-x-auto"
+        >
+          <table
+            class="w-full bg-table table table-sm table-compact border border-gray-800"
+          >
             <tbody>
               <tr class="border-y border-gray-800 odd:bg-odd">
-                <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
+                <td
+                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+                >
                   <span>Date</span>
                 </td>
                 <td
@@ -248,7 +254,9 @@
                 </td>
               </tr>
               <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-odd">
-                <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
+                <td
+                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+                >
                   <span>Total Volume</span>
                 </td>
                 <td
@@ -258,7 +266,9 @@
                 </td>
               </tr>
               <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-odd">
-                <td class="px-[5px] py-1.5 xs:px-2.5 xs:py-2">
+                <td
+                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+                >
                   <span>Avg. Short % of Volume</span>
                 </td>
                 <td
