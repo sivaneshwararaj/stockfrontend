@@ -158,7 +158,7 @@
       rule: "topAnalystUpside",
       type: "percentSign",
     },
-    { name: "Change OI", rule: "changeOI", type: "decimal" },
+    { name: "Change OI", rule: "changeOI", type: "decimalSign" },
     { name: "Total OI", rule: "totalOI", type: "int" },
   ];
 
@@ -893,6 +893,16 @@
                 {@html abbreviateNumber(item[column.key], false, true)}
               {:else if column?.type === "decimal"}
                 {item[column.key]?.toLocaleString("en-US")}
+              {:else if column?.type === "decimalSign"}
+                {#if item[column.key] >= 0}
+                  <span class="text-[#00FC50]"
+                    >+{item[column.key]?.toLocaleString("en-US")}</span
+                  >
+                {:else if item[column.key] < 0}
+                  <span class="text-[#FF2F1F]"
+                    >{item[column.key]?.toLocaleString("en-US")}</span
+                  >
+                {/if}
               {:else if column.key === "price"}
                 <div class="relative flex items-center justify-end">
                   {#if item?.previous !== null && item?.previous !== undefined && Math.abs(item?.previous - item[column?.key]) >= 0.01}
