@@ -1100,7 +1100,7 @@
               class="mt-10 lg:mt-0 order-5 lg:order-1 flex flex-row space-x-2 sm:space-x-3 xs:space-x-4"
             >
               <table
-                class="w-[50%] text-sm text-white sm:text-[1rem] xl:min-w-[300px]"
+                class="w-[50%] text-sm text-white sm:text-[1rem] lg:min-w-[250px] xl:min-w-[300px]"
               >
                 <tbody
                   ><tr
@@ -1218,7 +1218,9 @@
                   >
                 </tbody>
               </table>
-              <table class="w-[50%] text-sm text-white xl:min-w-[300px]">
+              <table
+                class="w-[50%] text-sm text-white lg:min-w-[250px] xl:min-w-[300px]"
+              >
                 <tbody
                   ><tr
                     class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
