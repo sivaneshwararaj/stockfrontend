@@ -464,7 +464,10 @@
   $: {
     if (selectedSector) {
       originalTopTickers = [...topSectorTickers[selectedSector]];
-      displayTopTickers = topSectorTickers[selectedSector];
+      displayTopTickers =
+        data?.user?.tier === "Pro"
+          ? displayTopTickers
+          : displayTopTickers?.slice(0, 3);
     }
   }
 </script>
@@ -579,91 +582,89 @@
                   </thead>
                   <tbody>
                     {#each displayTopTickers as item, index}
-                      {#if index < 3}
-                        <tr
-                          class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
-                            1 ===
-                            sectorData?.length && data?.user?.tier !== 'Pro'
-                            ? 'opacity-[0.1]'
-                            : ''}"
+                      <tr
+                        class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                          1 ===
+                          sectorData?.length && data?.user?.tier !== 'Pro'
+                          ? 'opacity-[0.1]'
+                          : ''}"
+                      >
+                        <td
+                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
-                          <td
-                            class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                          {item?.rank}
+                        </td>
+
+                        <td
+                          class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
+                        >
+                          <HoverStockChart symbol={item?.ticker} />
+                        </td>
+
+                        <td
+                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                        >
+                          <a
+                            href={sectorNavigation?.find(
+                              (listItem) => listItem?.title === item?.name,
+                            )?.link}
+                            class="sm:hover:underline sm:hover:underline-offset-4 text-white"
                           >
-                            {item?.rank}
-                          </td>
+                            {item?.name}
+                          </a>
+                        </td>
 
-                          <td
-                            class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
-                          >
-                            <HoverStockChart symbol={item?.ticker} />
-                          </td>
+                        <td
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                        >
+                          {item?.price}
+                        </td>
 
-                          <td
-                            class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                          >
-                            <a
-                              href={sectorNavigation?.find(
-                                (listItem) => listItem?.title === item?.name,
-                              )?.link}
-                              class="sm:hover:underline sm:hover:underline-offset-4 text-white"
-                            >
-                              {item?.name}
-                            </a>
-                          </td>
+                        <td
+                          class="text-sm sm:text-[1rem] {item?.changesPercentage >=
+                          0
+                            ? "text-[#00FC50] before:content-['+'] "
+                            : 'text-[#FF2F1F]'} text-end"
+                        >
+                          {item?.changesPercentage}%
+                        </td>
 
-                          <td
-                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                          >
-                            {item?.price}
-                          </td>
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.netPremium,
+                            false,
+                            true,
+                          )}
+                        </td>
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.netCallPremium,
+                            false,
+                            true,
+                          )}
+                        </td>
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.netPutPremium,
+                            false,
+                            true,
+                          )}
+                        </td>
 
-                          <td
-                            class="text-sm sm:text-[1rem] {item?.changesPercentage >=
-                            0
-                              ? "text-[#00FC50] before:content-['+'] "
-                              : 'text-[#FF2F1F]'} text-end"
-                          >
-                            {item?.changesPercentage}%
-                          </td>
-
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {@html abbreviateNumberWithColor(
-                              item?.netPremium,
-                              false,
-                              true,
-                            )}
-                          </td>
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {@html abbreviateNumberWithColor(
-                              item?.netCallPremium,
-                              false,
-                              true,
-                            )}
-                          </td>
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {@html abbreviateNumberWithColor(
-                              item?.netPutPremium,
-                              false,
-                              true,
-                            )}
-                          </td>
-
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {item?.gexRatio}
-                          </td>
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {@html abbreviateNumberWithColor(
-                              item?.gexNetChange,
-                              false,
-                              true,
-                            )}
-                          </td>
-                          <td class="text-sm sm:text-[1rem] text-end">
-                            {item?.ivRank}
-                          </td>
-                        </tr>
-                      {/if}
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {item?.gexRatio}
+                        </td>
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.gexNetChange,
+                            false,
+                            true,
+                          )}
+                        </td>
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {item?.ivRank}
+                        </td>
+                      </tr>
                     {/each}
                   </tbody>
                 </table>
