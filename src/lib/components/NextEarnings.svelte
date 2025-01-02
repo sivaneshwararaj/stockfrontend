@@ -73,9 +73,14 @@
           >{@html abbreviateNumber(rawData?.revenueEst, true, true)}</span
         >, reflecting a
         <span
-          class="{revenueRatio > 0
+          class="{revenueRatio >= 0 && revenueRatio !== 'Infinity'
             ? "before:content-['+'] text-[#00FC50]"
-            : 'text-[#FF2F1F]'} ">{abbreviateNumber(revenueRatio)}%</span
+            : revenueRatio < 0 && revenueRatio !== 'Infinity'
+              ? 'text-[#FF2F1F]'
+              : 'text-white'} "
+          >{revenueRatio !== "Infinity"
+            ? abbreviateNumber(revenueRatio) + "%"
+            : "n/a"}</span
         >
         YoY {revenueRatio > 0 ? "growth" : revenueRatio < 0 ? "shrinking" : ""}
         {#if epsRatio !== null}
