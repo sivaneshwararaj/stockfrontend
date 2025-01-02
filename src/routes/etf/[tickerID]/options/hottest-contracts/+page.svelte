@@ -7,11 +7,6 @@
   import Infobox from "$lib/components/Infobox.svelte";
   export let data;
 
-  let rawData = data?.getData;
-  let openInterestList = rawData?.sort(
-    (a, b) => b?.open_interest - a?.open_interest,
-  );
-
   const currentTime = new Date(
     new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
   )?.getTime();
@@ -26,8 +21,18 @@
     return daysLeft + "D";
   }
 
+  let rawData = data?.getData?.map((item) => ({
+    ...item,
+    dte: daysLeft(item?.date_expiration),
+  }));
+
+  let openInterestList = rawData?.sort(
+    (a, b) => b?.open_interest - a?.open_interest,
+  );
+
   $: columns = [
-    { key: "date_expiration", label: "Chain", align: "left" },
+    { key: "strike_price", label: "Chain", align: "left" },
+    { key: "dte", label: "DTE", align: "right" },
     { key: "last_price", label: "Last", align: "right" },
     { key: "high_price", label: "Low-High", align: "right" },
     { key: "volume", label: "Volume", align: "right" },
@@ -38,7 +43,8 @@
   ];
 
   $: sortOrders = {
-    date_expiration: { order: "none", type: "string" },
+    strike_price: { order: "none", type: "number" },
+    dte: { order: "none", type: "number" },
     last_price: { order: "none", type: "number" },
     high_price: { order: "none", type: "number" },
     volume: { order: "none", type: "number" },
@@ -150,12 +156,13 @@
                       >
                         {item?.option_type === "C" ? "Call" : "Put"}
                       </span>
-                      {" " +
-                        item?.date_expiration +
-                        " " +
-                        `(${daysLeft(item?.date_expiration)})`}
+                      {" " + item?.date_expiration}
                     </td>
-
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+                    >
+                      {item?.dte}
+                    </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >

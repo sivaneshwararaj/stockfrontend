@@ -17,7 +17,6 @@
   let priceLevel = data?.getPriceLevel?.priceLevel || [];
   let hottestTrades = data?.getPriceLevel?.hottestTrades || [];
   let isLoaded = false;
-
   onMount(() => {
     isLoaded = true;
   });
@@ -100,7 +99,7 @@
             {#if hottestTrades?.length > 0}
               <HottestTrades rawData={hottestTrades} />
             {/if}
-            {#if historicalDarkPool?.length > 0}
+            {#if historicalDarkPool?.length > 10}
               <HistoricalVolume rawData={historicalDarkPool} />
             {/if}
           {:else}
