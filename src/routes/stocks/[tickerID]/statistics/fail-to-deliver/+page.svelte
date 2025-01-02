@@ -21,7 +21,7 @@
           (rawData?.slice(-1)?.at(0)?.failToDeliver /
             data?.getStockQuote?.avgVolume) *
           100
-        )?.toFixed(2) + "%"
+        )?.toFixed(2)
       : "n/a";
 
   function computeYearOverYearChange(rawData) {
@@ -141,7 +141,11 @@
                       <div
                         class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
                       >
-                        {relativeFTD > 0.01 ? relativeFTD : "< 0.01%"}
+                        {relativeFTD > 0.01
+                          ? relativeFTD + "%"
+                          : relativeFTD !== "n/a"
+                            ? "< 0.01%"
+                            : "n/a"}
                       </div>
                     </div>
                   </div>
