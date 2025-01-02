@@ -1,6 +1,5 @@
 <script lang="ts">
   import { numberOfUnreadNotification } from "$lib/store";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { onMount } from "svelte";
 
   export let data;

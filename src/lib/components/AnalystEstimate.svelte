@@ -1023,8 +1023,11 @@
               </tbody>
             </table>
           </div>
-
-          <div class="text-orange-400 text-xs sm:text-sm mt-2">
+          <div class="text-white text-sm mt-2">
+            Historical EPS numbers are GAAP, while forecasted numbers may be
+            non-GAAP.
+          </div>
+          <div class="text-orange-400 text-sm mt-2">
             &#42; This value depends on the forecast
           </div>
           <!--
