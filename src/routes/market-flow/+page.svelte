@@ -330,7 +330,7 @@
               let [hours, minutes] = timePart.split(":").map(Number);
 
               // Only show labels at 30-minute intervals (XX:00 and XX:30)
-              if (minutes % 30 === 0) {
+              if (minutes % 60 === 0) {
                 const amPm = hours >= 12 ? "PM" : "AM";
                 hours = hours % 12 || 12;
                 return minutes === 0
