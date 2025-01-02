@@ -222,6 +222,9 @@
     const netPutPremList = marketTideData?.map((item) => item?.net_put_premium);
     const volumeList = marketTideData?.map((item) => item?.net_volume);
 
+    const positiveVolume = volumeList.map((v) => (v >= 0 ? v : "-"));
+    const negativeVolume = volumeList.map((v) => (v < 0 ? v : "-"));
+
     const options = {
       silent: true,
       animation: false,
@@ -241,28 +244,47 @@
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
-        borderColor: "#969696", // Black border color
-        borderWidth: 1, // Border width of 1px
-        backgroundColor: "#313131", // Optional: Set background color for contrast
+        borderColor: "#969696",
+        borderWidth: 1,
+        backgroundColor: "#313131",
         textStyle: {
-          color: "#fff", // Optional: Text color for better visibility
+          color: "#fff",
         },
         formatter: function (params) {
-          // Get the timestamp from the first parameter
           const timestamp = params[0].axisValue;
-
-          // Initialize result with timestamp
           let result = timestamp + "<br/>";
 
-          // Sort params to ensure Vol appears last
-          params.sort((a, b) => {
-            if (a.seriesName === "Vol") return 1;
-            if (b.seriesName === "Vol") return -1;
-            return 0;
-          });
+          // Find volume value and determine color
+          const volParams = params.find((p) => p.seriesName.includes("Vol"));
+          const volIndex = volParams?.dataIndex ?? 0;
+          const volValue = volumeList[volIndex];
+          const volColor = volValue >= 0 ? "#90EE90" : "#FF6B6B";
 
-          // Add each series data
-          params.forEach((param) => {
+          // Sort and filter params
+          const filteredParams = params
+            .filter(
+              (p) =>
+                !p.seriesName.includes("Vol") ||
+                p.seriesName === "Positive Vol",
+            )
+            .map((p) => {
+              if (p.seriesName.includes("Vol")) {
+                return {
+                  ...p,
+                  seriesName: "Vol",
+                  value: volValue,
+                  color: volColor,
+                };
+              }
+              return p;
+            })
+            .sort((a, b) => {
+              if (a.seriesName === "Vol") return 1;
+              if (b.seriesName === "Vol") return -1;
+              return 0;
+            });
+
+          filteredParams.forEach((param) => {
             const marker =
               '<span style="display:inline-block;margin-right:4px;' +
               "border-radius:10px;width:10px;height:10px;background-color:" +
@@ -415,16 +437,30 @@
           smooth: true,
         },
         {
-          name: "Vol",
+          name: "Positive Vol",
           type: "line",
-          data: volumeList,
+          data: positiveVolume,
           xAxisIndex: 1,
           yAxisIndex: 2,
           showSymbol: false,
-          areaStyle: { opacity: 1 },
-          itemStyle: {
-            color: "#E11D48",
+          areaStyle: {
+            opacity: 1,
+            color: "#19AA75",
           },
+          itemStyle: { color: "#19AA75" },
+        },
+        {
+          name: "Negative Vol",
+          type: "line",
+          data: negativeVolume,
+          xAxisIndex: 1,
+          yAxisIndex: 2,
+          showSymbol: false,
+          areaStyle: {
+            opacity: 1,
+            color: "#F71F4F",
+          },
+          itemStyle: { color: "#F71F4F" },
         },
       ],
     };
