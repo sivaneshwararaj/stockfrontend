@@ -604,14 +604,7 @@
                         <td
                           class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
                         >
-                          <a
-                            href={sectorNavigation?.find(
-                              (listItem) => listItem?.title === item?.name,
-                            )?.link}
-                            class="sm:hover:underline sm:hover:underline-offset-4 text-white"
-                          >
-                            {item?.name}
-                          </a>
+                          {item?.name}
                         </td>
 
                         <td
