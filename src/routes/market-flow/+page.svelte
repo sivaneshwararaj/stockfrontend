@@ -1,21 +1,13 @@
 <script lang="ts">
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
-  import {
-    abbreviateNumberWithColor,
-    sectorList,
-    sectorNavigation,
-  } from "$lib/utils";
+  import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
   import InfoModal from "$lib/components/InfoModal.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
-  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
-  import { Button } from "$lib/components/shadcn/button/index.js";
-
   import { Chart } from "svelte-echarts";
 
   import { init, use } from "echarts/core";
@@ -41,7 +33,7 @@
   let optionsData = null;
   let sectorData = data?.getData?.sectorData || [];
   let topSectorTickers = data?.getData?.topSectorTickers || {};
-  let marketTideData = data?.getData?.marketTide || [];
+  let marketTideData = data?.getData?.marketTide["SPY"] || {};
   let selectedSector = "SPY";
   let originalData = [...sectorData]; // Unaltered copy of raw data
 
@@ -517,7 +509,7 @@
       >
         <main class="w-full">
           <div class="w-full m-auto">
-            {#if optionsData !== null && data?.user?.tier === "Pro"}
+            {#if optionsData !== null}
               <div class="flex flex-row items-center mb-3">
                 <label
                   for="marketTideInfo"
@@ -553,41 +545,41 @@
                 </div>
               </div>
             {/if}
-            {#if data?.user?.tier === "Pro"}
-              <div class="w-full m-auto mt-10">
-                <div
-                  class="flex flex-wrap sm:flex-row items-center sm:justify-between mb-4"
-                >
-                  <div class="flex flex-row items-center">
-                    <label
-                      for="topSectorTickers"
-                      class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
-                    >
-                      Top SPY Stocks by Net Premium
-                    </label>
-                    <InfoModal
-                      title={"Top Sector Stocks by Net Premium"}
-                      content={"This list highlights top stocks in each sector based on net premium, displaying price changes and options activity. Discover which stocks are driving the sector and explore detailed options data."}
-                      id={"topSectorTickers"}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
-                >
-                  <table
-                    class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
+            <div class="w-full m-auto mt-10">
+              <div
+                class="flex flex-wrap sm:flex-row items-center sm:justify-between mb-4"
+              >
+                <div class="flex flex-row items-center">
+                  <label
+                    for="topSectorTickers"
+                    class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
                   >
-                    <thead>
-                      <TableHeader
-                        columns={topColumns}
-                        {sortOrders}
-                        sortData={sortTopTickers}
-                      />
-                    </thead>
-                    <tbody>
-                      {#each displayTopTickers as item, index}
+                    Top S&P500 Stocks by Net Premium
+                  </label>
+                  <InfoModal
+                    title={"Top S&P500 Stocks by Net Premium"}
+                    content={"This list highlights top stocks based on net premium, displaying price changes and options activity. Discover which stocks are driving the sector and explore detailed options data."}
+                    id={"topSectorTickers"}
+                  />
+                </div>
+              </div>
+
+              <div
+                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+              >
+                <table
+                  class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
+                >
+                  <thead>
+                    <TableHeader
+                      columns={topColumns}
+                      {sortOrders}
+                      sortData={sortTopTickers}
+                    />
+                  </thead>
+                  <tbody>
+                    {#each displayTopTickers as item, index}
+                      {#if index < 3}
                         <tr
                           class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
                             1 ===
@@ -671,13 +663,195 @@
                             {item?.ivRank}
                           </td>
                         </tr>
-                      {/each}
-                    </tbody>
-                  </table>
+                      {/if}
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mb-3 mt-10">
+                <div class="flex flex-row items-center">
+                  <label
+                    for="sectorFlowInfo"
+                    class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
+                  >
+                    Sector Flow
+                  </label>
+                  <InfoModal
+                    title={"Sector Flow"}
+                    content={"Sector Flow offers insights into options activity, helping traders identify trends and make informed decisions across market sectors."}
+                    id={"sectorFlowInfo"}
+                  />
                 </div>
               </div>
-            {/if}
+              <div
+                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+              >
+                <table
+                  class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
+                >
+                  <thead>
+                    <TableHeader {columns} {sortOrders} {sortData} />
+                  </thead>
+                  <tbody>
+                    {#each stockList as item, index}
+                      <tr
+                        class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                          1 ===
+                          originalData?.length && data?.user?.tier !== 'Pro'
+                          ? 'opacity-[0.1]'
+                          : ''}"
+                      >
+                        <td
+                          class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
+                        >
+                          <HoverStockChart
+                            symbol={item?.ticker}
+                            assetType="etf"
+                          />
+                        </td>
 
+                        <td
+                          class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                        >
+                          <a
+                            href={sectorNavigation?.find(
+                              (listItem) => listItem?.title === item?.name,
+                            )?.link}
+                            class="sm:hover:underline sm:hover:underline-offset-4 text-white"
+                          >
+                            {item?.name}
+                          </a>
+                        </td>
+
+                        <td
+                          class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                        >
+                          {item?.price}
+                        </td>
+
+                        <td
+                          class="text-sm sm:text-[1rem] {item?.changesPercentage >=
+                          0
+                            ? "text-[#00FC50] before:content-['+'] "
+                            : 'text-[#FF2F1F]'} text-end"
+                        >
+                          {item?.changesPercentage}%
+                        </td>
+
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.call_volume,
+                            false,
+                            true,
+                          )}
+                        </td>
+
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.avg30_call_volume,
+                            false,
+                            true,
+                          )}
+                        </td>
+
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.put_volume,
+                            false,
+                            true,
+                          )}
+                        </td>
+
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.avg30_put_volume,
+                            false,
+                            true,
+                          )}
+                        </td>
+
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          <HoverCard.Root>
+                            <HoverCard.Trigger
+                              class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
+                            >
+                              <div class="flex items-center justify-end">
+                                <!-- Bar Container -->
+                                <div
+                                  class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
+                                >
+                                  <!-- Bearish -->
+                                  <div
+                                    class="bg-red-500 h-full"
+                                    style="width: calc(({item
+                                      ?.premium_ratio[0]} / ({item
+                                      ?.premium_ratio[0]} + {item
+                                      ?.premium_ratio[1]} + {item
+                                      ?.premium_ratio[2]})) * 100%)"
+                                  ></div>
+
+                                  <!-- Neutral -->
+                                  <div
+                                    class="bg-gray-300 h-full"
+                                    style="width: calc(({item
+                                      ?.premium_ratio[1]} / ({item
+                                      ?.premium_ratio[0]} + {item
+                                      ?.premium_ratio[1]} + {item
+                                      ?.premium_ratio[2]})) * 100%)"
+                                  ></div>
+
+                                  <!-- Bullish -->
+                                  <div
+                                    class="bg-green-500 h-full"
+                                    style="width: calc(({item
+                                      ?.premium_ratio[2]} / ({item
+                                      ?.premium_ratio[0]} + {item
+                                      ?.premium_ratio[1]} + {item
+                                      ?.premium_ratio[2]})) * 100%)"
+                                  ></div>
+                                </div>
+                              </div>
+                            </HoverCard.Trigger>
+                            <HoverCard.Content
+                              class="w-auto bg-secondary border border-gray-600"
+                            >
+                              <div class="flex justify-between space-x-4">
+                                <div
+                                  class="space-y-1 flex flex-col items-start text-white"
+                                >
+                                  <div>
+                                    Bearish: {@html abbreviateNumberWithColor(
+                                      item?.premium_ratio[0],
+                                      false,
+                                      true,
+                                    )}
+                                  </div>
+                                  <div>
+                                    Neutral: {@html abbreviateNumberWithColor(
+                                      item?.premium_ratio[1],
+                                      false,
+                                      true,
+                                    )}
+                                  </div>
+                                  <div>
+                                    Bullish: {@html abbreviateNumberWithColor(
+                                      item?.premium_ratio[2],
+                                      false,
+                                      true,
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </HoverCard.Content>
+                          </HoverCard.Root>
+                        </td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            </div>
             <UpgradeToPro {data} />
           </div>
         </main>

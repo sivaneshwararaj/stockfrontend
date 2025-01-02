@@ -1,6 +1,5 @@
 <script lang="ts">
   import { numberOfUnreadNotification, screenWidth } from "$lib/store";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
@@ -12,7 +11,6 @@
   import InfoModal from "$lib/components/InfoModal.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
-  import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
 
@@ -39,10 +37,25 @@
   export let data;
   let isLoading = false;
   let optionsData = null;
+  let selectedSector = "Technology";
+  const sectorDict = {
+    "Basic Materials": "XLB",
+    "Communication Services": "XLC",
+    Energy: "XLE",
+    "Financial Services": "XLF",
+    Industrials: "XLI",
+    Technology: "XLK",
+    "Consumer Defensive": "XLP",
+    "Real Estate": "XLRE",
+    Utilities: "XLU",
+    Healthcare: "XLV",
+    "Consumer Cyclical": "XLY",
+  };
+
   let sectorData = data?.getData?.sectorData || [];
   let topSectorTickers = data?.getData?.topSectorTickers || {};
-  let marketTideData = data?.getData?.marketTide || [];
-  let selectedSector = "Technology";
+  let marketTideData =
+    data?.getData?.marketTide[sectorDict[selectedSector]] || {};
   let originalData = [...sectorData]; // Unaltered copy of raw data
 
   let stockList = sectorData ?? [];
@@ -467,12 +480,14 @@
     isLoading = false;
     return options;
   }
-  optionsData = marketTideData ? getPlotOptions() : null;
 
   $: {
     if (selectedSector) {
       originalTopTickers = [...topSectorTickers[selectedSector]];
       displayTopTickers = topSectorTickers[selectedSector];
+      marketTideData =
+        data?.getData?.marketTide[sectorDict[selectedSector]] || {};
+      optionsData = marketTideData ? getPlotOptions() : null;
     }
   }
 </script>
@@ -517,21 +532,21 @@
       >
         <main class="w-full">
           <div class="w-full m-auto">
-            {#if optionsData !== null && data?.user?.tier === "Pro"}
+            {#if optionsData !== null}
               <div
                 class="flex flex-wrap sm:flex-row items-center sm:justify-between mb-4"
               >
                 <div class="flex flex-row items-center">
                   <label
-                    for="marketTideInfo"
+                    for="sectorTideInfo"
                     class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
                   >
-                    Sector Tide
+                    {selectedSector} Tide
                   </label>
                   <InfoModal
-                    title={"Market Tide"}
-                    content={"Market Tide evaluates the balance between advancing and declining stocks by analyzing SPY price movements, net call premiums, and net put premiums, providing a real-time snapshot of market sentiment and momentum. <a href='/learning-center/market-tide' class='text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4'>Learn more</a>"}
-                    id={"marketTideInfo"}
+                    title={"Sector Tide"}
+                    content={`Sector Tide evaluates the balance between advancing and declining stocks by analyzing ${selectedSector} sector price movements, net call premiums, and net put premiums, providing a real-time snapshot of market sentiment and momentum. <a href='/learning-center/market-tide' class='text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4'>Learn more</a>`}
+                    id={"sectorTideInfo"}
                   />
                 </div>
 
@@ -608,21 +623,24 @@
                 </div>
               </div>
             {/if}
-            <div class="mb-3 mt-10">
+          </div>
+          <div class="w-full m-auto mt-10">
+            <div class="flex flex-wrap sm:flex-row items-center mb-4">
               <div class="flex flex-row items-center">
                 <label
-                  for="sectorFlowInfo"
+                  for="topSectorTickers"
                   class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
                 >
-                  Sector Flow
+                  Top {selectedSector} Stocks by Net Premium
                 </label>
                 <InfoModal
-                  title={"Sector Flow"}
-                  content={"Sector Flow offers insights into options activity, helping traders identify trends and make informed decisions across market sectors."}
-                  id={"sectorFlowInfo"}
+                  title={"Top Sector Stocks by Net Premium"}
+                  content={"This list highlights top stocks in each sector based on net premium, displaying price changes and options activity. Discover which stocks are driving the sector and explore detailed options data."}
+                  id={"topSectorTickers"}
                 />
               </div>
             </div>
+
             <div
               class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
             >
@@ -630,253 +648,15 @@
                 class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
               >
                 <thead>
-                  <TableHeader {columns} {sortOrders} {sortData} />
+                  <TableHeader
+                    columns={topColumns}
+                    {sortOrders}
+                    sortData={sortTopTickers}
+                  />
                 </thead>
                 <tbody>
-                  {#each stockList as item, index}
-                    <tr
-                      class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
-                        1 ===
-                        originalData?.length && data?.user?.tier !== 'Pro'
-                        ? 'opacity-[0.1]'
-                        : ''}"
-                    >
-                      <td
-                        class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
-                      >
-                        <HoverStockChart
-                          symbol={item?.ticker}
-                          assetType="etf"
-                        />
-                      </td>
-
-                      <td
-                        class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                      >
-                        <a
-                          href={sectorNavigation?.find(
-                            (listItem) => listItem?.title === item?.name,
-                          )?.link}
-                          class="sm:hover:underline sm:hover:underline-offset-4 text-white"
-                        >
-                          {item?.name}
-                        </a>
-                      </td>
-
-                      <td
-                        class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                      >
-                        {item?.price}
-                      </td>
-
-                      <td
-                        class="text-sm sm:text-[1rem] {item?.changesPercentage >=
-                        0
-                          ? "text-[#00FC50] before:content-['+'] "
-                          : 'text-[#FF2F1F]'} text-end"
-                      >
-                        {item?.changesPercentage}%
-                      </td>
-
-                      <td class="text-sm sm:text-[1rem] text-end">
-                        {@html abbreviateNumberWithColor(
-                          item?.call_volume,
-                          false,
-                          true,
-                        )}
-                      </td>
-
-                      <td class="text-sm sm:text-[1rem] text-end">
-                        {@html abbreviateNumberWithColor(
-                          item?.avg30_call_volume,
-                          false,
-                          true,
-                        )}
-                      </td>
-
-                      <td class="text-sm sm:text-[1rem] text-end">
-                        {@html abbreviateNumberWithColor(
-                          item?.put_volume,
-                          false,
-                          true,
-                        )}
-                      </td>
-
-                      <td class="text-sm sm:text-[1rem] text-end">
-                        {@html abbreviateNumberWithColor(
-                          item?.avg30_put_volume,
-                          false,
-                          true,
-                        )}
-                      </td>
-
-                      <td class="text-sm sm:text-[1rem] text-end">
-                        <HoverCard.Root>
-                          <HoverCard.Trigger
-                            class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
-                          >
-                            <div class="flex items-center justify-end">
-                              <!-- Bar Container -->
-                              <div
-                                class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
-                              >
-                                <!-- Bearish -->
-                                <div
-                                  class="bg-red-500 h-full"
-                                  style="width: calc(({item
-                                    ?.premium_ratio[0]} / ({item
-                                    ?.premium_ratio[0]} + {item
-                                    ?.premium_ratio[1]} + {item
-                                    ?.premium_ratio[2]})) * 100%)"
-                                ></div>
-
-                                <!-- Neutral -->
-                                <div
-                                  class="bg-gray-300 h-full"
-                                  style="width: calc(({item
-                                    ?.premium_ratio[1]} / ({item
-                                    ?.premium_ratio[0]} + {item
-                                    ?.premium_ratio[1]} + {item
-                                    ?.premium_ratio[2]})) * 100%)"
-                                ></div>
-
-                                <!-- Bullish -->
-                                <div
-                                  class="bg-green-500 h-full"
-                                  style="width: calc(({item
-                                    ?.premium_ratio[2]} / ({item
-                                    ?.premium_ratio[0]} + {item
-                                    ?.premium_ratio[1]} + {item
-                                    ?.premium_ratio[2]})) * 100%)"
-                                ></div>
-                              </div>
-                            </div>
-                          </HoverCard.Trigger>
-                          <HoverCard.Content
-                            class="w-auto bg-secondary border border-gray-600"
-                          >
-                            <div class="flex justify-between space-x-4">
-                              <div
-                                class="space-y-1 flex flex-col items-start text-white"
-                              >
-                                <div>
-                                  Bearish: {@html abbreviateNumberWithColor(
-                                    item?.premium_ratio[0],
-                                    false,
-                                    true,
-                                  )}
-                                </div>
-                                <div>
-                                  Neutral: {@html abbreviateNumberWithColor(
-                                    item?.premium_ratio[1],
-                                    false,
-                                    true,
-                                  )}
-                                </div>
-                                <div>
-                                  Bullish: {@html abbreviateNumberWithColor(
-                                    item?.premium_ratio[2],
-                                    false,
-                                    true,
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </HoverCard.Content>
-                        </HoverCard.Root>
-                      </td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
-            <UpgradeToPro {data} />
-          </div>
-          {#if data?.user?.tier === "Pro"}
-            <div class="w-full m-auto mt-10">
-              <div
-                class="flex flex-wrap sm:flex-row items-center sm:justify-between mb-4"
-              >
-                <div class="flex flex-row items-center">
-                  <label
-                    for="topSectorTickers"
-                    class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
-                  >
-                    Top Sector Stocks by Net Premium
-                  </label>
-                  <InfoModal
-                    title={"Top Sector Stocks by Net Premium"}
-                    content={"This list highlights top stocks in each sector based on net premium, displaying price changes and options activity. Discover which stocks are driving the sector and explore detailed options data."}
-                    id={"topSectorTickers"}
-                  />
-                </div>
-
-                <div
-                  class="flex flex-row items-center w-fit ml-auto mt-2 sm:mt-0"
-                >
-                  <div class="relative inline-block text-left grow">
-                    <DropdownMenu.Root>
-                      <DropdownMenu.Trigger asChild let:builder>
-                        <Button
-                          builders={[builder]}
-                          class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                        >
-                          <span class="truncate text-white"
-                            >{selectedSector}</span
-                          >
-                          <svg
-                            class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            style="max-width:40px"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
-                            ></path>
-                          </svg>
-                        </Button>
-                      </DropdownMenu.Trigger>
-                      <DropdownMenu.Content
-                        class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                      >
-                        <DropdownMenu.Label class="text-gray-400">
-                          Select Sector
-                        </DropdownMenu.Label>
-                        <DropdownMenu.Separator />
-                        <DropdownMenu.Group>
-                          {#each sectorList as sector}
-                            <DropdownMenu.Item
-                              on:click={() => (selectedSector = sector)}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              {sector}
-                            </DropdownMenu.Item>
-                          {/each}
-                        </DropdownMenu.Group>
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Root>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
-              >
-                <table
-                  class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
-                >
-                  <thead>
-                    <TableHeader
-                      columns={topColumns}
-                      {sortOrders}
-                      sortData={sortTopTickers}
-                    />
-                  </thead>
-                  <tbody>
-                    {#each displayTopTickers as item, index}
+                  {#each displayTopTickers as item, index}
+                    {#if index < 3}
                       <tr
                         class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
                           1 ===
@@ -960,12 +740,13 @@
                           {item?.ivRank}
                         </td>
                       </tr>
-                    {/each}
-                  </tbody>
-                </table>
-              </div>
+                    {/if}
+                  {/each}
+                </tbody>
+              </table>
             </div>
-          {/if}
+          </div>
+          <UpgradeToPro {data} />
         </main>
       </div>
     </div>
