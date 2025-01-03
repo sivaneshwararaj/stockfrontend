@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    stockTicker,
+    etfTicker,
     numberOfUnreadNotification,
     displayCompanyName,
   } from "$lib/store";
@@ -252,7 +252,7 @@
       const a = document.createElement("a");
       a.setAttribute("hidden", "");
       a.setAttribute("href", url);
-      a.setAttribute("download", `${$stockTicker}_price_history.csv`);
+      a.setAttribute("download", `${$etfTicker}_price_history.csv`);
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -278,18 +278,17 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Historical Stock Price Data ·
-    Stocknear
+    {$displayCompanyName} ({$etfTicker}) Historical Stock Price Data · Stocknear
   </title>
   <meta
     name="description"
-    content={`Get a complete stock price history for ${$stockTicker}, starting from its first trading day. Includes open, high, low, close and volume.`}
+    content={`Get a complete stock price history for ${$etfTicker}, starting from its first trading day. Includes open, high, low, close and volume.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Historical Stock Price Data · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Historical Stock Price Data · Stocknear`}
   />
   <meta
     property="og:description"
@@ -302,7 +301,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Historical Stock Price Data · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Historical Stock Price Data · Stocknear`}
   />
   <meta
     name="twitter:description"
@@ -325,7 +324,7 @@
               class="flex flex-col sm:flex-row items-start w-full sm:justify-between md:space-x-4 md:border-0 w-full mb-5"
             >
               <h1 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-0">
-                {$stockTicker} Stock Price History
+                {$etfTicker} Stock Price History
               </h1>
               <div
                 class="flex flex-row items-center ml-auto w-fit mt-2 sm:mt-0"

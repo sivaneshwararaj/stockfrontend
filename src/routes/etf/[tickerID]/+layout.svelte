@@ -64,11 +64,7 @@
       options: "/options",
       "dark-pool": "/dark-pool",
       dividends: "/dividends",
-      statistics: "/statistics",
-      metrics: "metrics",
-      forecast: "/forecast",
-      financials: "/financials",
-      news: "/news",
+      history: "/history",
     };
 
     if (state !== "overview" && sectionMap[state]) {
@@ -280,6 +276,7 @@
         "dark-pool": "dark-pool",
         insider: "insider",
         dividends: "dividends",
+        history: "history",
       };
       displaySection =
         sectionMap[
@@ -733,6 +730,16 @@
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Dividends
+                        </a>
+                        <a
+                          href={`/etf/${$etfTicker}/history`}
+                          on:click={() => changeSection("history")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'history'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
+                        >
+                          History
                         </a>
                       </ul>
                     </nav>
