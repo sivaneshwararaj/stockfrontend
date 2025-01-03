@@ -76,6 +76,7 @@
       metrics: "metrics",
       forecast: "/forecast",
       financials: "/financials",
+      history: "/history",
       profile: "/profile",
     };
 
@@ -355,6 +356,7 @@
         insider: "insider",
         dividends: "dividends",
         forecast: "forecast",
+        history: "history",
         profile: "profile",
       };
       displaySection =
@@ -969,6 +971,16 @@
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Dividends
+                        </a>
+                        <a
+                          href={`/stocks/${$stockTicker}/history`}
+                          on:click={() => changeSection("history")}
+                          class="p-2 px-5 cursor-pointer {displaySection ===
+                          'history'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
+                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
+                        >
+                          History
                         </a>
                         <a
                           href={`/stocks/${$stockTicker}/profile`}

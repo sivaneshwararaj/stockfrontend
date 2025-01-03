@@ -9,7 +9,7 @@
   import Infobox from "$lib/components/Infobox.svelte";
 
   export let data;
-  let rawData = data?.getETFHoldings?.holdings;
+  let rawData = data?.getETFHoldings?.holdings || [];
 
   const lastUpdate = new Date(data?.getETFHoldings?.lastUpdate);
   const options = { month: "short", day: "numeric", year: "numeric" };
@@ -106,11 +106,13 @@
           <h1 class=" text-xl sm:text-2xl font-bold">
             {$etfTicker} Holdings List
           </h1>
-          <div
-            class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] md:ml-0"
-          >
-            <span class="inline">As of </span>{formattedDate}
-          </div>
+          {#if data?.getETFHoldings?.lastUpdate}
+            <div
+              class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] md:ml-0"
+            >
+              <span class="inline">As of </span>{formattedDate}
+            </div>
+          {/if}
         </div>
         <div class="mt-5 mb-10">
           <Infobox text={htmlOutput} />
@@ -124,12 +126,6 @@
             {defaultList}
             {specificRows}
           />
-        {:else}
-          <h2
-            class="pl-4 pr-4 flex justify-center items-center text-md sm:text-lg text-center text-slate-200"
-          >
-            No holdings are available for {$displayCompanyName}.
-          </h2>
         {/if}
       </div>
     </div>

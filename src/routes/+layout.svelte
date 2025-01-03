@@ -48,7 +48,6 @@
   import Newspaper from "lucide-svelte/icons/newspaper";
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
-  import Moon from "lucide-svelte/icons/venetian-mask";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
   /*
   import {
