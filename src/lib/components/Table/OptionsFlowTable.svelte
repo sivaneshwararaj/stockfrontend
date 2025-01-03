@@ -237,7 +237,13 @@
   <div class="table">
     <VirtualList
       width="100%"
-      height={$screenWidth < 640 ? 550 : 850}
+      height={$screenWidth < 640
+        ? data?.user?.tier === "Pro"
+          ? 550
+          : 250
+        : data?.user?.tier === "Pro"
+          ? 850
+          : 250}
       itemCount={displayedData.length}
       itemSize={40}
     >
@@ -584,7 +590,11 @@
         let:index
         let:style
         {style}
-        class="tr {index % 2 === 0 ? 'bg-odd' : 'bg-[#17171D]'}"
+        class="tr {index % 2 === 0 ? 'bg-[#19191F]' : 'bg-[#121217]'} {index +
+          1 ===
+          rawData?.length && data?.user?.tier !== 'Pro'
+          ? 'opacity-[0.3]'
+          : ''}"
       >
         <!-- Row data -->
 
@@ -791,7 +801,6 @@
   .th {
     display: none;
     font-weight: 700;
-    background-color: #09090b;
   }
 
   .th > .td {

@@ -10,7 +10,8 @@ export const load = async ({ locals, cookies }) => {
         "X-API-KEY": apiKey,
       },
     });
-    const output = await response.json();
+    let output = await response.json();
+    output = user?.tier !== "Pro" ? output?.slice(0, 6) : output;
 
     return output;
   };

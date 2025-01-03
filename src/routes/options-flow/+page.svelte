@@ -16,6 +16,7 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import { Calendar } from "$lib/components/shadcn/calendar/index.js";
   import CalendarIcon from "lucide-svelte/icons/calendar";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   import { page } from "$app/stores";
 
@@ -529,78 +530,74 @@
   }
 
   async function websocketRealtimeData() {
-    newData = [];
-    try {
-      socket = new WebSocket(data?.wsURL + "/options-flow-reader");
-      /*
-    socket.addEventListener("open", () => {
-      const ids = rawData.map(item => item.id);
-      sendMessage(JSON.stringify({ ids }));
-    });
-    */
+    if (data?.user?.tier === "Pro") {
+      newData = [];
+      try {
+        socket = new WebSocket(data?.wsURL + "/options-flow-reader");
 
-      socket.addEventListener("message", (event) => {
-        const totalVolume = displayCallVolume + displayPutVolume;
-        if (mode === true) {
-          try {
-            newData = JSON?.parse(event.data) ?? [];
-            if (newData?.length > 0) {
-              newData?.forEach((item) => {
-                item.dte = daysLeft(item?.date_expiration);
-              });
+        socket.addEventListener("message", (event) => {
+          const totalVolume = displayCallVolume + displayPutVolume;
+          if (mode === true) {
+            try {
+              newData = JSON?.parse(event.data) ?? [];
+              if (newData?.length > 0) {
+                newData?.forEach((item) => {
+                  item.dte = daysLeft(item?.date_expiration);
+                });
 
-              //calculateStats(newData);
-              //console.log(previousVolume);
-              if (
-                newData?.length > rawData?.length &&
-                previousVolume !== totalVolume
-              ) {
-                //console.log(previousVolume,totalVolume,);
-                rawData = newData;
-                shouldLoadWorker.set(true);
-                //console.log('loading worker')
-                //displayedData = rawData;
+                //calculateStats(newData);
+                //console.log(previousVolume);
+                if (
+                  newData?.length > rawData?.length &&
+                  previousVolume !== totalVolume
+                ) {
+                  //console.log(previousVolume,totalVolume,);
+                  rawData = newData;
+                  shouldLoadWorker.set(true);
+                  //console.log('loading worker')
+                  //displayedData = rawData;
 
-                if (!muted) {
-                  audio?.play();
+                  if (!muted) {
+                    audio?.play();
+                  }
                 }
               }
-            }
 
-            /*
+              /*
           if (previousCallVolume !== displayCallVolume && !muted && audio) {
             audio?.play();
           }
           */
-          } catch (e) {
-            console.error("Error processing WebSocket message:", e);
+            } catch (e) {
+              console.error("Error processing WebSocket message:", e);
+            }
+            newData = [];
+            previousVolume = totalVolume;
           }
-          newData = [];
-          previousVolume = totalVolume;
-        }
-      });
+        });
 
-      socket.addEventListener("close", (event) => {
-        console.log("WebSocket connection closed:", event.reason);
+        socket.addEventListener("close", (event) => {
+          console.log("WebSocket connection closed:", event.reason);
 
-        // Explicitly nullify the socket and remove all event listeners
-        if (socket) {
-          socket.onmessage = null;
-          socket.onopen = null;
-          socket.onclose = null;
-          socket.onerror = null;
-          socket = null;
-        }
-      });
+          // Explicitly nullify the socket and remove all event listeners
+          if (socket) {
+            socket.onmessage = null;
+            socket.onopen = null;
+            socket.onclose = null;
+            socket.onerror = null;
+            socket = null;
+          }
+        });
 
-      socket.addEventListener("error", (error) => {
-        console.error("WebSocket error:", error);
-        // Handle WebSocket errors here
-      });
-    } catch (error) {
-      console.error("WebSocket connection error:", error);
-      // Handle connection errors here
-      setTimeout(() => websocketRealtimeData(), 400);
+        socket.addEventListener("error", (error) => {
+          console.error("WebSocket error:", error);
+          // Handle WebSocket errors here
+        });
+      } catch (error) {
+        console.error("WebSocket connection error:", error);
+        // Handle connection errors here
+        setTimeout(() => websocketRealtimeData(), 400);
+      }
     }
   }
 
@@ -1668,6 +1665,7 @@
                 {filteredData}
                 {rawData}
               />
+              <UpgradeToPro {data} />
             </div>
           {:else}
             <div
@@ -1686,12 +1684,6 @@
             </div>
           {/if}
         </div>
-
-        <!--
-          <div class="relative bottom-[400px] w-fit m-auto flex justify-center items-center">
-            <UpgradeToPro data={data} title="Get the recent Options Flow Data from Hedge Funds and major institutional traders to never miss out"/>
-          </div>
-          -->
       {:else}
         <div class="flex justify-center items-center h-80">
           <div class="relative">
