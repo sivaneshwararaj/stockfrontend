@@ -8,7 +8,8 @@
   import Infobox from "$lib/components/Infobox.svelte";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
-  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+  import { goto } from "$app/navigation";
+  import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   import { onMount } from "svelte";
 
@@ -20,50 +21,76 @@
 
   let stockList = [];
   function prepareDataset(data, timePeriod = "Daily") {
-    if (timePeriod === "Weekly") {
-      // Group data by week
-      const weeklyData = [];
-      let currentWeek = null;
+    if (
+      timePeriod === "Weekly" ||
+      timePeriod === "Monthly" ||
+      timePeriod === "Quarterly" ||
+      timePeriod === "Annual"
+    ) {
+      // Group data by week, month, quarter, or year
+      const aggregatedData = [];
+      let currentPeriod = null;
 
       data.forEach((entry) => {
         const date = new Date(entry.time);
-        // Calculate the start of the week (Monday)
-        const dayOfWeek = date.getDay(); // 0 for Sunday, 1 for Monday, etc.
-        const weekStart = new Date(
-          date.setDate(date.getDate() - ((dayOfWeek + 6) % 7)), // Adjust to get Monday
-        );
+        let periodStart;
+        let periodKey;
 
-        if (
-          !currentWeek ||
-          currentWeek.weekStart.getTime() !== weekStart.getTime()
-        ) {
-          // Start a new week
-          currentWeek = {
-            weekStart,
+        if (timePeriod === "Weekly") {
+          // Calculate the start of the week (Monday)
+          const dayOfWeek = date.getDay(); // 0 for Sunday, 1 for Monday, etc.
+          periodStart = new Date(
+            date.setDate(date.getDate() - ((dayOfWeek + 6) % 7)), // Adjust to get Monday
+          );
+          periodKey = periodStart.getTime();
+        } else if (timePeriod === "Monthly") {
+          // Use year and month as the period key
+          periodKey = `${date.getFullYear()}-${date.getMonth()}`;
+          // Get the last day of the month
+          periodStart = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        } else if (timePeriod === "Quarterly") {
+          // Calculate quarter (0-3)
+          const quarter = Math.floor(date.getMonth() / 3);
+          periodKey = `${date.getFullYear()}-Q${quarter}`;
+          // Get the last day of the quarter
+          const lastMonthOfQuarter = (quarter + 1) * 3 - 1;
+          periodStart = new Date(date.getFullYear(), lastMonthOfQuarter + 1, 0);
+        } else {
+          // Annual
+          periodKey = date.getFullYear().toString();
+          // Get the last day of the year (December 31st)
+          periodStart = new Date(date.getFullYear(), 11, 31);
+        }
+
+        if (!currentPeriod || currentPeriod.periodKey !== periodKey) {
+          // Start a new period
+          currentPeriod = {
+            periodStart,
+            periodKey,
             open: entry.open,
             high: entry.high,
             low: entry.low,
             close: entry.close,
             volume: entry.volume,
           };
-          weeklyData.push(currentWeek);
+          aggregatedData.push(currentPeriod);
         } else {
-          // Update the current week's values
-          currentWeek.high = Math.max(currentWeek.high, entry.high);
-          currentWeek.low = Math.min(currentWeek.low, entry.low);
-          currentWeek.close = entry.close; // Update the close to the most recent in the week
-          currentWeek.volume += entry.volume;
+          // Update the current period's values
+          currentPeriod.high = Math.max(currentPeriod.high, entry.high);
+          currentPeriod.low = Math.min(currentPeriod.low, entry.low);
+          currentPeriod.close = entry.close; // Update the close to the most recent in the period
+          currentPeriod.volume += entry.volume;
         }
       });
 
-      // Replace Daily data with aggregated weekly data
-      data = weeklyData.map((week) => ({
-        time: week.weekStart.toISOString().split("T")[0],
-        open: week.open,
-        high: week.high,
-        low: week.low,
-        close: week.close,
-        volume: week.volume,
+      // Replace Daily data with aggregated data
+      data = aggregatedData.map((period) => ({
+        time: period.periodStart.toISOString().split("T")[0],
+        open: period.open,
+        high: period.high,
+        low: period.low,
+        close: period.close,
+        volume: period.volume,
       }));
     }
 
@@ -72,7 +99,6 @@
       if (index === 0) {
         return { ...entry, change: null, changesPercentage: null };
       }
-
       const previousClose = arr[index - 1]?.close;
       const currentClose = entry?.close;
       const change = (currentClose - previousClose)?.toFixed(2);
@@ -80,7 +106,6 @@
         previousClose !== 0
           ? (((currentClose - previousClose) / previousClose) * 100)?.toFixed(2)
           : null;
-
       return { ...entry, change, changesPercentage };
     });
 
@@ -185,12 +210,64 @@
     stockList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
 
+  async function exportData() {
+    if (data?.user?.tier === "Pro") {
+      let exportList = rawData?.map(
+        ({
+          time,
+          open,
+          high,
+          low,
+          close,
+          change,
+          changesPercentage,
+          volume,
+        }) => ({
+          time,
+          open,
+          high,
+          low,
+          close,
+          change,
+          changesPercentage,
+          volume,
+        }),
+      );
+
+      const csvRows = [];
+
+      // Add headers row
+      csvRows.push("time,open,high,low,close,change,changesPercentage,volume");
+
+      // Add data rows
+      for (const row of exportList) {
+        const csvRow = `${row.time},${row.open},${row.high},${row.low},${row.close},${row.change},${row.changesPercentage},${row.volume}`;
+        csvRows.push(csvRow);
+      }
+
+      // Create CSV blob and trigger download
+      const csv = csvRows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.setAttribute("hidden", "");
+      a.setAttribute("href", url);
+      a.setAttribute("download", `${$stockTicker}_price_history.csv`);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      goto("/pricing");
+    }
+  }
+
   $: {
     if (timePeriod && typeof window !== "undefined") {
       isLoaded = false;
-      rawData = prepareDataset(rawData, timePeriod);
+      rawData = prepareDataset(data?.getData, timePeriod);
       originalData = rawData;
       stockList = rawData?.slice(0, 50);
+      console.log(rawData);
       isLoaded = true;
     }
   }
@@ -236,193 +313,303 @@
 <section
   class="bg-default overflow-hidden text-white h-full min-h-screen mb-20 sm:mb-0 w-full mt-2 sm:mt-0"
 >
-  <div class="flex justify-center m-auto h-full overflow-hidden w-full">
-    <div
-      class="relative flex justify-center items-center overflow-hidden w-full"
-    >
-      <div class="mt-5 sm:mt-0 sm:p-7 w-full m-auto">
-        <div class="flex flex-row items-center md:space-x-4 md:border-0">
-          <h1 class=" text-xl sm:text-2xl font-bold">
-            {$stockTicker} Stock Price History
-          </h1>
-          <div
-            class="ml-3 sm:mt-1 whitespace-nowrap text-sm sm:text-[1rem] md:ml-0"
-          ></div>
-        </div>
-
-        <div class="w-full m-auto mt-2">
-          <div class="flex flex-row items-center w-fit sm:ml-auto mb-3">
-            <div class="relative inline-block text-left grow">
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild let:builder>
-                  <Button
-                    builders={[builder]}
-                    class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                  >
-                    <span class="truncate text-white px-1">{timePeriod}</span>
-                    <svg
-                      class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      style="max-width:40px"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                  </Button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content
-                  class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                >
-                  <DropdownMenu.Label class="text-gray-400">
-                    Select time frame
-                  </DropdownMenu.Label>
-                  <DropdownMenu.Separator />
-                  <DropdownMenu.Group>
-                    <DropdownMenu.Item
-                      on:click={() => (timePeriod = "Daily")}
-                      class="cursor-pointer hover:bg-primary"
-                    >
-                      Daily
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => (timePeriod = "Weekly")}
-                      class="cursor-pointer hover:bg-primary"
-                    >
-                      Weekly
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => (timePeriod = "Monthly")}
-                      class="cursor-pointer hover:bg-primary"
-                    >
-                      Monthly
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => (timePeriod = "Quarterly")}
-                      class="cursor-pointer hover:bg-primary"
-                    >
-                      Quarterly
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => (timePeriod = "Annual")}
-                      class="cursor-pointer hover:bg-primary"
-                    >
-                      Annual
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Group>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-            </div>
-            <!--
-                    <Button
-                      on:click={() => exportFundamentalData("csv")}
-                      class="ml-2 w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                    >
-                      <span class="truncate text-white">Download</span>
-                      <svg
-                        class="{data?.user?.tier === 'Pro'
-                          ? 'hidden'
-                          : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        ><path
-                          fill="#A3A3A3"
-                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                        /></svg
-                      >
-                    </Button>
-                    -->
-          </div>
-
-          <div
-            class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
-          >
-            <table
-              class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
+  <div class="w-full overflow-hidden m-auto mt-5">
+    <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
+      <div
+        class="relative flex justify-center items-start overflow-hidden w-full"
+      >
+        <main class="w-full lg:w-3/4">
+          <div class="sm:p-7 w-full m-auto">
+            <div
+              class="flex flex-col sm:flex-row items-start w-full sm:justify-between md:space-x-4 md:border-0 w-full mb-5"
             >
-              <thead>
-                <TableHeader {columns} {sortOrders} {sortData} />
-              </thead>
+              <h1 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-0">
+                {$stockTicker} Stock Price History
+              </h1>
+              <div
+                class="flex flex-row items-center ml-auto w-fit mt-2 sm:mt-0"
+              >
+                <div class="relative inline-block text-left ml-auto">
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild let:builder>
+                      <Button
+                        builders={[builder]}
+                        class="w-fit sm:w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                      >
+                        <span class="truncate text-white px-1"
+                          >{timePeriod}</span
+                        >
+                        <svg
+                          class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          style="max-width:40px"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </Button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content
+                      class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                    >
+                      <DropdownMenu.Label class="text-gray-400">
+                        Select time frame
+                      </DropdownMenu.Label>
+                      <DropdownMenu.Separator />
+                      <DropdownMenu.Group>
+                        <DropdownMenu.Item
+                          on:click={() => (timePeriod = "Daily")}
+                          class="cursor-pointer hover:bg-primary"
+                        >
+                          Daily
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item
+                          on:click={() => (timePeriod = "Weekly")}
+                          class="cursor-pointer hover:bg-primary"
+                        >
+                          Weekly
+                        </DropdownMenu.Item>
+                        {#if data?.user?.tier !== "Pro"}
+                          {#each ["Monthly", "Quarterly", "Annual"] as entry}
+                            <DropdownMenu.Item
+                              on:click={() => goto("/pricing")}
+                              class="cursor-pointer hover:bg-primary"
+                            >
+                              {entry}
+                              <svg
+                                class="ml-auto -mt-0.5 w-4 h-4 inline-block"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                ><path
+                                  fill="#A3A3A3"
+                                  d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                                /></svg
+                              >
+                            </DropdownMenu.Item>
+                          {/each}
+                        {:else}
+                          <DropdownMenu.Item
+                            on:click={() => (timePeriod = "Monthly")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            Monthly
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => (timePeriod = "Quarterly")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            Quarterly
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => (timePeriod = "Annual")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            Annual
+                          </DropdownMenu.Item>
+                        {/if}
+                      </DropdownMenu.Group>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
+                </div>
 
-              <tbody>
-                {#each stockList as item, index}
-                  <tr
-                    class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
-                      1 ===
-                      rawData?.length && data?.user?.tier !== 'Pro'
-                      ? 'opacity-[0.1]'
-                      : ''}"
+                <Button
+                  on:click={() => exportData()}
+                  class="ml-2 w-fit border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                >
+                  <span class="truncate text-white">Download</span>
+                  <svg
+                    class="{data?.user?.tier === 'Pro'
+                      ? 'hidden'
+                      : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    ><path
+                      fill="#A3A3A3"
+                      d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                    /></svg
                   >
-                    <td
-                      class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                </Button>
+              </div>
+            </div>
+            {#if isLoaded}
+              {#if rawData?.length !== 0}
+                <div class="w-full m-auto mt-2">
+                  <div
+                    class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+                  >
+                    <table
+                      class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
                     >
-                      {new Date(item?.time).toLocaleString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        daySuffix: "2-digit",
-                      })}
-                    </td>
-                    <td
-                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                    >
-                      {item?.open?.toFixed(2)}
-                    </td>
-                    <td
-                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                    >
-                      {item?.high?.toFixed(2)}
-                    </td>
-                    <td
-                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                    >
-                      {item?.low?.toFixed(2)}
-                    </td>
-                    <td
-                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                    >
-                      {item?.close?.toFixed(2)}
-                    </td>
-                    <td
-                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                    >
-                      {item?.change !== null ? item?.change : "n/a"}
-                    </td>
-                    <td
-                      class="text-sm sm:text-[1rem] {item?.changesPercentage >=
-                        0 && item?.changesPercentage !== null
-                        ? "text-[#00FC50] before:content-['+'] "
-                        : item?.changesPercentage < 0 &&
-                            item?.changesPercentage !== null
-                          ? 'text-[#FF2F1F]'
-                          : 'text-white'} text-end"
-                    >
-                      {item?.changesPercentage !== null
-                        ? item?.changesPercentage + "%"
-                        : "n/a"}
-                    </td>
-                    <td
-                      class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                    >
-                      {item?.volume?.toLocaleString("en-US")}
-                    </td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          </div>
-          <UpgradeToPro {data} />
-        </div>
+                      <thead>
+                        <TableHeader {columns} {sortOrders} {sortData} />
+                      </thead>
 
-        {#if rawData?.length !== 0}{:else}
-          <Infobox
-            text={`No price history are available for ${$displayCompanyName}.`}
-          />
-        {/if}
+                      <tbody>
+                        {#each stockList as item, index}
+                          <tr
+                            class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                              1 ===
+                              rawData?.length && data?.user?.tier !== 'Pro'
+                              ? 'opacity-[0.1]'
+                              : ''}"
+                          >
+                            <td
+                              class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                            >
+                              {#if timePeriod === "Weekly"}
+                                Week of {new Date(item?.time).toLocaleString(
+                                  "en-US",
+                                  {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                    daySuffix: "2-digit",
+                                  },
+                                )}
+                              {:else}
+                                {new Date(item?.time).toLocaleString("en-US", {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                  daySuffix: "2-digit",
+                                })}
+                              {/if}
+                            </td>
+                            <td
+                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                            >
+                              {item?.open?.toFixed(2)}
+                            </td>
+                            <td
+                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                            >
+                              {item?.high?.toFixed(2)}
+                            </td>
+                            <td
+                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                            >
+                              {item?.low?.toFixed(2)}
+                            </td>
+                            <td
+                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                            >
+                              {item?.close?.toFixed(2)}
+                            </td>
+                            <td
+                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                            >
+                              {item?.change !== null ? item?.change : "n/a"}
+                            </td>
+                            <td
+                              class="text-sm sm:text-[1rem] {item?.changesPercentage >=
+                                0 && item?.changesPercentage !== null
+                                ? "text-[#00FC50] before:content-['+'] "
+                                : item?.changesPercentage < 0 &&
+                                    item?.changesPercentage !== null
+                                  ? 'text-[#FF2F1F]'
+                                  : 'text-white'} text-end"
+                            >
+                              {item?.changesPercentage !== null
+                                ? item?.changesPercentage + "%"
+                                : "n/a"}
+                            </td>
+                            <td
+                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                            >
+                              {item?.volume?.toLocaleString("en-US")}
+                            </td>
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              {:else}
+                <Infobox
+                  text={`No price history are available for ${$displayCompanyName}.`}
+                />
+              {/if}
+            {:else}
+              <div class="flex justify-center items-center h-80">
+                <div class="relative">
+                  <label
+                    class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  >
+                    <span
+                      class="loading loading-spinner loading-md text-gray-400"
+                    ></span>
+                  </label>
+                </div>
+              </div>
+            {/if}
+          </div>
+        </main>
+        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
+          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
+            <div
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+            >
+              <a
+                href="/pricing"
+                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+              >
+                <div class="w-full flex justify-between items-center p-3 mt-3">
+                  <h2 class="text-start text-xl font-semibold text-white ml-3">
+                    Pro Subscription
+                  </h2>
+                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
+                </div>
+                <span class="text-white p-3 ml-3 mr-3">
+                  Upgrade now for unlimited access to all data and tools.
+                </span>
+              </a>
+            </div>
+          {/if}
+
+          <div
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+          >
+            <a
+              href="/stock-screener"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
+              <div class="w-full flex justify-between items-center p-3 mt-3">
+                <h2 class="text-start text-xl font-semibold text-white ml-3">
+                  Stock Screener
+                </h2>
+                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
+              </div>
+              <span class="text-white p-3 ml-3 mr-3">
+                Filter, sort and analyze all stocks to find your next
+                investment.
+              </span>
+            </a>
+          </div>
+
+          <div
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+          >
+            <a
+              href="/watchlist/stocks"
+              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
+            >
+              <div class="w-full flex justify-between items-center p-3 mt-3">
+                <h2 class="text-start text-xl font-semibold text-white ml-3">
+                  Watchlist
+                </h2>
+                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
+              </div>
+              <span class="text-white p-3 ml-3 mr-3">
+                Keep track of your favorite stocks in real-time.
+              </span>
+            </a>
+          </div>
+        </aside>
       </div>
     </div>
   </div>
