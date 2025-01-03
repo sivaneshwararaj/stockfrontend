@@ -5,6 +5,7 @@
 
   import { abbreviateNumberWithColor } from "$lib/utils";
 
+  export let data;
   export let rawData = [];
 
   let stockList = [];
@@ -162,7 +163,11 @@
             <tbody>
               {#each stockList as item, index}
                 <tr
-                  class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd"
+                  class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                    1 ===
+                    rawData?.length && data?.user?.tier !== 'Pro'
+                    ? 'opacity-[0.1]'
+                    : ''}"
                 >
                   <td
                     class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"

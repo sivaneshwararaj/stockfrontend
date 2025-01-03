@@ -95,10 +95,10 @@
               metrics={data?.getPriceLevel?.metrics}
             />
           {/if}
+          {#if hottestTrades?.length > 0}
+            <HottestTrades {data} rawData={hottestTrades} />
+          {/if}
           {#if data?.user?.tier === "Pro"}
-            {#if hottestTrades?.length > 0}
-              <HottestTrades rawData={hottestTrades} />
-            {/if}
             {#if historicalDarkPool?.length > 10}
               <HistoricalVolume rawData={historicalDarkPool} />
             {/if}
