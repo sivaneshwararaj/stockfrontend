@@ -469,7 +469,7 @@
                                     month: "short",
                                     day: "numeric",
                                     year: "numeric",
-                                    timeZone: "America/New_York",
+                                    timeZone: "Europe/Berlin",
                                   },
                                 )}
                               {:else}
@@ -477,7 +477,7 @@
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
-                                  timeZone: "America/New_York",
+                                  timeZone: "Europe/Berlin",
                                 })}
                               {/if}
                             </td>
