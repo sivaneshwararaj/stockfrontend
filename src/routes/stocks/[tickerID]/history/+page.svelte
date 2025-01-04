@@ -469,7 +469,7 @@
                                     month: "short",
                                     day: "numeric",
                                     year: "numeric",
-                                    daySuffix: "2-digit",
+                                    timeZone: "America/New_York",
                                   },
                                 )}
                               {:else}
@@ -477,7 +477,7 @@
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
-                                  daySuffix: "2-digit",
+                                  timeZone: "America/New_York",
                                 })}
                               {/if}
                             </td>
