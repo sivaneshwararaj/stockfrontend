@@ -14,11 +14,11 @@
     {#each data as item}
       <td class="text-sm sm:text-[1rem] text-end">
         {#if ["pretaxProfitMargin", "freeCashFlowMargin", "grossProfitMargin", "netProfitMargin", "operatingProfitMargin", "ebitdaMargin"]?.includes(key)}
-          {item[key] !== null && item[key] !== 0
+          {item[key] !== null && item[key] !== 0 && item[key] !== undefined
             ? abbreviateNumber(item[key]?.toFixed(2)) + "%"
             : "n/a"}
         {:else}
-          {item[key] !== null && item[key] !== 0
+          {item[key] !== null && item[key] !== 0 && item[key] !== undefined
             ? abbreviateNumber(item[key]?.toFixed(2))
             : "n/a"}
         {/if}
