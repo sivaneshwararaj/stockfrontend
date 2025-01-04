@@ -4,8 +4,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const data = await request.json();
   const { apiURL, apiKey } = locals;
 
-  const postData = { transactionId: data?.transactionId };
-  const response = await fetch(apiURL + "/options-daily-transactions", {
+  const postData = { params: data?.params };
+  const response = await fetch(apiURL + "/options-contract-history", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
