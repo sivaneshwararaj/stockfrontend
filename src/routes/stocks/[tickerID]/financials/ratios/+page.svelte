@@ -133,6 +133,26 @@
       label: "Net Profit Margin",
       text: "Net Profit Margin is the percentage of revenue left as net income, or profits, after subtracting all costs and expenses from the revenue.",
     },
+    {
+      propertyName: "pretaxProfitMargin",
+      label: "Pretax Profit Margin",
+      text: "Pretax margin is the percentage of revenue left as profits before subtracting taxes.",
+    },
+    {
+      propertyName: "operatingProfitMargin",
+      label: "Operating Profit Margin",
+      text: "Operating margin is the percentage of revenue left as operating income, after subtracting cost of revenue and all operating expenses from the revenue.",
+    },
+    {
+      propertyName: "freeCashFlowMargin",
+      label: "FCF Margin",
+      text: "FCF margin is the percentage of revenue left as free cash flow. FCF is calculated by subtracting capital expenditures (CapEx) from the operating cash flow (OCF). Both CapEx and OCF are shown on the cash flow statement.",
+    },
+    {
+      propertyName: "ebitdaMargin",
+      label: "EBITDA Margin",
+      text: "EBITDA margin is the percentage of revenue left as EBITDA, after subtracting all expenses except interest, taxes, depreciation and amortization from revenue.",
+    },
   ];
 
   const fields = statementConfig.map((item) => ({
@@ -607,7 +627,7 @@
                       class="w-36 select select-bordered select-sm p-0 pl-5 overflow-y-auto bg-secondary"
                       on:change={changeStatement}
                     >
-                      <option disabled>Choose an Income Variable</option>
+                      <option disabled>Choose a Variable</option>
                       <option value="priceEarningsRatio" selected
                         >PE Ratio</option
                       >
@@ -645,6 +665,14 @@
                         >Gross Profit Margin</option
                       >
                       <option value="netProfitMargin">Net Profit Margin</option>
+                      <option value="pretaxProfitMargin"
+                        >Pretax Profit Margin</option
+                      >
+                      <option value="operatingProfitMargin"
+                        >Operating Profit Margin</option
+                      >
+                      <option value="freeCashFlowMargin">FCF Margin</option>
+                      <option value="ebitdaMargin">EBITDA Margin</option>
                     </select>
                   </div>
                 </div>

@@ -245,7 +245,8 @@
                         <td
                           class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
                         >
-                          {@html item?.value !== null
+                          {@html item?.value !== null &&
+                          item?.value !== undefined
                             ? abbreviateNumber(item?.value, false, true)
                             : "n/a"}
                         </td>
