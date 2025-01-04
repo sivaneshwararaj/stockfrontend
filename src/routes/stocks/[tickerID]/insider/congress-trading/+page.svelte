@@ -7,6 +7,7 @@
   } from "$lib/store";
   import { getPartyForPoliticians } from "$lib/utils";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   export let data;
 
@@ -377,9 +378,14 @@
                     <TableHeader {columns} {sortOrders} {sortData} />
                   </thead>
                   <tbody>
-                    {#each senateTradingList as item}
+                    {#each senateTradingList as item, index}
                       <tr
-                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] border-b border-gray-800"
+                        class="odd:bg-odd sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] border-b border-gray-800 {index +
+                          1 ===
+                          rawData?.slice(0, 3)?.length &&
+                        data?.user?.tier !== 'Pro'
+                          ? 'opacity-[0.1]'
+                          : ''}"
                       >
                         <td
                           class="text-white text-sm sm:text-[1rem] whitespace-nowrap pb-3"
@@ -455,6 +461,7 @@
                 </table>
               </div>
 
+              <UpgradeToPro {data} />
               {#if rawData?.length >= 20}
                 <label
                   on:click={backToTop}

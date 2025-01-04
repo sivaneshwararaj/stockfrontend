@@ -1,6 +1,6 @@
 export const load = async ({ locals, params }) => {
   const getSenateTrading = async () => {
-    const { apiURL, apiKey } = locals;
+    const { apiURL, apiKey, user} = locals;
 
     const postData = {
       ticker: params.tickerID,
@@ -16,7 +16,8 @@ export const load = async ({ locals, params }) => {
       body: JSON.stringify(postData),
     });
 
-    const output = await response.json();
+    let output = await response.json();
+    output = user?.tier !== "Pro" ? output?.slice(0, 3) : output;
 
     return output;
   };
