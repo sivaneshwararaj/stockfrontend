@@ -1,14 +1,33 @@
 <script lang="ts">
-  import { abbreviateNumberWithColor } from "$lib/utils";
-  import { setCache, getCache, stockTicker } from "$lib/store";
-
+  import { abbreviateNumberWithColor, monthNames } from "$lib/utils";
+  import { setCache, getCache, stockTicker, screenWidth } from "$lib/store";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
-
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import { Chart } from "svelte-echarts";
+
+  import { init, use } from "echarts/core";
+  import { LineChart, BarChart } from "echarts/charts";
+  import {
+    GridComponent,
+    TooltipComponent,
+    LegendComponent,
+  } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
+
+  use([
+    LineChart,
+    BarChart,
+    GridComponent,
+    TooltipComponent,
+    LegendComponent,
+    CanvasRenderer,
+  ]);
+
   export let data;
   let isLoaded = false;
+  let optionsData = null;
 
   let optionHistoryList = [];
 
@@ -223,6 +242,166 @@
     openInterestList = [...originalData].sort(compareValues);
   };
 
+  function plotData() {
+    let data = rawDataHistory?.sort(
+      (a, b) => new Date(a?.date) - new Date(b?.date),
+    );
+
+    let dates = data?.map((item) => item?.date);
+    let avgPrice = data?.map((item) => item?.avg_price);
+    let bidVolume = data?.map((item) => item?.bid_volume);
+    let askVolume = data?.map((item) => item?.ask_volume);
+    let midVolume = data?.map((item) => item?.mid_volume);
+    const options = {
+      animation: false,
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          // Get the timestamp from the first parameter
+          const timestamp = params[0].axisValue;
+
+          // Initialize result with timestamp
+          let result = timestamp + "<br/>";
+
+          // Sort params to ensure Vol appears last
+          params.sort((a, b) => {
+            if (a.seriesName === "Vol") return 1;
+            if (b.seriesName === "Vol") return -1;
+            return 0;
+          });
+
+          // Add each series data
+          params?.forEach((param) => {
+            const marker =
+              '<span style="display:inline-block;margin-right:4px;' +
+              "border-radius:10px;width:10px;height:10px;background-color:" +
+              param.color +
+              '"></span>';
+            result +=
+              marker +
+              param.seriesName +
+              ": " +
+              abbreviateNumberWithColor(param.value, false, true) +
+              "<br/>";
+          });
+
+          return result;
+        },
+        axisPointer: {
+          lineStyle: {
+            color: "#fff",
+          },
+        },
+      },
+      silent: true,
+      grid: {
+        left: $screenWidth < 640 ? "5%" : "2%",
+        right: $screenWidth < 640 ? "5%" : "2%",
+        bottom: "20%",
+        containLabel: true,
+      },
+      xAxis: [
+        {
+          type: "category",
+          data: dates,
+          axisLabel: {
+            color: "#fff",
+
+            formatter: function (value) {
+              // Assuming dates are in the format 'yyyy-mm-dd'
+              const dateParts = value.split("-");
+              const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+              const year = parseInt(dateParts[0]);
+              const day = parseInt(dateParts[2]);
+              return `${day} ${monthNames[monthIndex]} ${year}`;
+            },
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          position: "right",
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+      ],
+      series: [
+        {
+          name: "Ask",
+          type: "bar",
+          stack: "Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: askVolume,
+          itemStyle: {
+            color: "#33B890",
+          },
+        },
+        {
+          name: "Mid",
+          type: "bar",
+          stack: "Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: midVolume,
+          itemStyle: {
+            color: "#007BFF",
+          },
+        },
+        {
+          name: "Bid",
+          type: "bar",
+          stack: "Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: bidVolume,
+          itemStyle: {
+            color: "#EE5365", //'#7A1C16'
+          },
+        },
+        {
+          name: "Avg Fill", // Name for the line chart
+          type: "line", // Type of the chart (line)
+          yAxisIndex: 1, // Use the second y-axis on the right
+          data: avgPrice, // iv60Data (assumed to be passed as priceList)
+          itemStyle: {
+            color: "#fff", // Choose a color for the line (gold in this case)
+          },
+          lineStyle: {
+            width: 2, // Set the width of the line
+          },
+          smooth: true, // Optional: make the line smooth
+          showSymbol: false,
+        },
+      ],
+    };
+    return options;
+  }
+
   const getContractHistory = async (contractId) => {
     let output;
     const cachedData = getCache(contractId, "getContractHistory");
@@ -255,6 +434,8 @@
     optionDetailsDesktopModal?.showModal();
 
     rawDataHistory = await getContractHistory(contractId);
+    optionsData = plotData();
+
     optionHistoryList = rawDataHistory?.slice(0, 20);
     isLoaded = true;
   }
@@ -632,10 +813,10 @@
 
 <dialog
   id="optionDetailsDesktopModal"
-  class="modal cursor-pointer bg-[#000] bg-opacity-[0.8] px-5"
+  class="modal cursor-pointer bg-[#000] bg-opacity-[0.8] sm:px-5"
 >
   <div
-    class="modal-box w-full max-w-7xl bg-[#141417] sm:bg-default border-t sm:border border-gray-600 h-auto"
+    class="modal-box w-full max-w-7xl bg-[#141417] rounded-md sm:bg-default border-t sm:border border-gray-600 h-auto"
   >
     <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
       <button
@@ -657,6 +838,27 @@
       Contract: {$stockTicker} 32 C 2025-01-03 (-1D)
     </p>
     <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
+    <div
+      class="pb-8 sm:pb-2 rounded-md bg-table border border-gray-800 overflow-hidden"
+    >
+      <div class="app w-full h-[300px] mt-5">
+        {#if isLoaded}
+          <Chart {init} options={optionsData} class="chart" />
+        {:else}
+          <div class="flex justify-center items-center h-80">
+            <div class="relative">
+              <label
+                class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              >
+                <span class="loading loading-spinner loading-md text-white"
+                ></span>
+              </label>
+            </div>
+          </div>
+        {/if}
+      </div>
+    </div>
+
     <div
       bind:this={container}
       on:scroll={getScroll}
@@ -868,3 +1070,21 @@
     <button>close</button>
   </form>
 </dialog>
+
+<style>
+  .app {
+    height: 400px;
+    width: 100%;
+  }
+
+  @media (max-width: 560px) {
+    .app {
+      width: 100%;
+      height: 300px;
+    }
+  }
+
+  .chart {
+    width: 100%;
+  }
+</style>

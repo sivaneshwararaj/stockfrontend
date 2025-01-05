@@ -144,10 +144,11 @@ function createRuleCheck(rule, ruleName, ruleValue) {
   }
 
   // Between condition
-  if (rule.condition === 'between' && Array.isArray(ruleValue)) {
+  if (rule.condition === 'between' && Array?.isArray(ruleValue)) {
     return (item) => {
       const itemValue = item[rule.name];
-      const [min, max] = ruleValue.map(convertUnitToValue);
+      const [min, max] = ruleValue?.map(convertUnitToValue);
+
 
       // Handle empty/undefined min and max
       if ((min === '' || min === undefined || min === null) && 
@@ -162,7 +163,7 @@ function createRuleCheck(rule, ruleName, ruleValue) {
       if (max === '' || max === undefined || max === null) {
         return itemValue > min;
       }
-
+      
       return itemValue > min && itemValue < max;
     };
   }

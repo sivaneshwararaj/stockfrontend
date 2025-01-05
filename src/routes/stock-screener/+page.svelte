@@ -68,7 +68,7 @@
       step: ["100M", "10M", "1M", "100K", "10K", "1K", "0"],
 
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: ["Most Popular", "Price & Volume"],
     },
     volume: {
@@ -76,7 +76,7 @@
       step: ["100M", "10M", "1M", "100K", "10K", "1K", "0"],
 
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Price & Volume",
     },
     rsi: {
@@ -84,35 +84,35 @@
       step: [90, 80, 70, 60, 50, 40, 30, 20],
       category: "Technical Analysis",
       defaultCondition: "over",
-      defaultValue: 40,
+      defaultValue: "any",
     },
     stochRSI: {
       label: "Stochastic RSI Fast",
       step: [90, 80, 70, 60, 50, 40, 30, 20],
       category: "Technical Analysis",
       defaultCondition: "over",
-      defaultValue: 40,
+      defaultValue: "any",
     },
     mfi: {
       label: "Money Flow Index",
       step: [90, 80, 70, 60, 50, 40, 30, 20],
       category: "Technical Analysis",
       defaultCondition: "over",
-      defaultValue: 40,
+      defaultValue: "any",
     },
     cci: {
       label: "Commodity Channel Index",
       step: [250, 200, 100, 50, 20, 0, -20, -50, -100, -200, -250],
       category: "Technical Analysis",
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
     },
     atr: {
       label: "Average True Range",
       step: [20, 15, 10, 5, 3, 1],
       category: "Technical Analysis",
       defaultCondition: "over",
-      defaultValue: 10,
+      defaultValue: "any",
     },
     sma20: {
       label: "SMA20",
@@ -212,7 +212,7 @@
       step: [1000, 500, 400, 300, 200, 150, 100, 80, 60, 50, 20, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: 10,
+      defaultValue: "any",
       category: "Price & Volume",
     },
 
@@ -323,7 +323,7 @@
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
       category: ["Most Popular", "Valuation & Ratios"],
     },
     workingCapital: {
@@ -352,7 +352,7 @@
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
       category: "Revenue / Sales",
     },
     revenueGrowthYears: {
@@ -392,7 +392,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: ["Most Popular", "Revenue / Sales"],
     },
     costOfRevenue: {
@@ -400,35 +400,35 @@
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
     },
     growthCostOfRevenue: {
       label: "Cost of Revenue Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     costAndExpenses: {
       label: "Cost & Expenses",
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
     },
     growthCostAndExpenses: {
       label: "Cost & Expenses Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     netIncome: {
       label: "Net Income",
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
       category: "Net Income",
     },
     growthNetIncome: {
@@ -436,7 +436,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Net Income",
     },
     grossProfit: {
@@ -444,7 +444,7 @@
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
       category: "Other Profits",
     },
     growthGrossProfit: {
@@ -452,7 +452,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Other Profits",
     },
     researchAndDevelopmentExpenses: {
@@ -460,21 +460,21 @@
       step: ["10B", "1B", "100M", "10M", "1M", 0],
 
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
     },
     growthResearchAndDevelopmentExpenses: {
       label: "R&D Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     payoutRatio: {
       label: "Payout Ratio",
       step: ["100%", "80%", "60%", "40%", "20%", "0%", "-20%", "-40%"],
 
       defaultCondition: "over",
-      defaultValue: "0%",
+      defaultValue: "any",
       category: "Dividends",
     },
     dividendYield: {
@@ -482,7 +482,7 @@
       step: ["50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: ["Most Popular", "Dividends"],
     },
     annualDividend: {
@@ -490,7 +490,7 @@
       step: [10, 5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Dividends",
     },
     dividendGrowth: {
@@ -498,7 +498,7 @@
       step: ["50%", "20%", "10%", "5%", "3%", "2%", "1%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Dividends",
     },
     eps: {
@@ -506,7 +506,7 @@
       step: [20, 15, 10, 5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     growthEPS: {
@@ -514,7 +514,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     interestIncome: {
@@ -522,49 +522,49 @@
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
     },
     interestExpense: {
       label: "Interest Expenses",
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
     },
     growthInterestExpense: {
       label: "Interest Expenses Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     operatingExpenses: {
       label: "Operating Expenses",
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
     },
     growthOperatingExpenses: {
       label: "Operating Expenses Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     ebit: {
       label: "EBIT",
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
     },
     operatingIncome: {
       label: "Operating Income",
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
       category: "Other Profits",
     },
     growthOperatingIncome: {
@@ -572,7 +572,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Other Profits",
     },
     growthFreeCashFlow: {
@@ -580,7 +580,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Cash Flow",
     },
     growthOperatingCashFlow: {
@@ -588,7 +588,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Cash Flow",
     },
     growthStockBasedCompensation: {
@@ -596,14 +596,14 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     growthTotalLiabilities: {
       label: "Total Liabilities Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Debt",
     },
     growthTotalDebt: {
@@ -611,7 +611,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Debt",
     },
     growthTotalStockholdersEquity: {
@@ -619,7 +619,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Shares Statistics",
     },
     researchDevelopmentRevenueRatio: {
@@ -627,7 +627,7 @@
       step: ["20%", "10%", "5%", "1%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Revenue / Sales",
     },
 
@@ -636,7 +636,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Revenue / Sales",
     },
     cagr5YearRevenue: {
@@ -644,7 +644,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Revenue / Sales",
     },
     cagr3YearEPS: {
@@ -652,7 +652,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     cagr5YearEPS: {
@@ -660,7 +660,7 @@
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     returnOnInvestedCapital: {
@@ -668,14 +668,14 @@
       step: ["100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     relativeVolume: {
       label: "Relative Volume",
       step: ["500%", "200%", "100%", "50%", "10%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "50%",
+      defaultValue: "any",
       category: "Price & Volume",
     },
     institutionalOwnership: {
@@ -683,21 +683,21 @@
       step: ["90%", "80%", "70%", "60%", "50%", "40%", "30%", "20%", "10%"],
 
       defaultCondition: "over",
-      defaultValue: "10%",
+      defaultValue: "any",
       category: "Shares Statistics",
     },
     pe: {
       label: "Price / Earnings (ttm)",
       step: [50, 40, 30, 20, 10, 5, 1],
       defaultCondition: "over",
-      defaultValue: 1,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     peg: {
       label: "PEG Ratio",
       step: [100, 10, 5, 3, 1, 0.5, 0],
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     forwardPE: {
@@ -705,7 +705,7 @@
       step: [50, 20, 10, 5, 1, 0, -1, -5, -10, -20, -50],
 
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     forwardPS: {
@@ -713,7 +713,7 @@
       step: [50, 20, 10, 5, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: 5,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
 
@@ -722,7 +722,7 @@
       step: [50, 40, 30, 20, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: 1,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     priceToSalesRatio: {
@@ -730,7 +730,7 @@
       step: [50, 40, 30, 20, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: 1,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     beta: {
@@ -738,7 +738,7 @@
       step: [10, 5, 1, -5, -10],
 
       defaultCondition: "over",
-      defaultValue: 1,
+      defaultValue: "any",
       category: "Price & Volume",
     },
     ebitda: {
@@ -746,14 +746,14 @@
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
     },
     growthEBITDA: {
       label: "EBITDA Growth",
       step: ["200%", "100%", "50%", "20%", "10%", "5%", "1%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
     },
     var: {
       label: "Value-at-Risk",
@@ -770,7 +770,7 @@
       step: [50, 40, 30, 20, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: 1,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     quickRatio: {
@@ -778,14 +778,14 @@
       step: [50, 40, 30, 20, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: 1,
+      defaultValue: "any",
     },
     debtEquityRatio: {
       label: "Debt / Equity",
       step: [50, 40, 30, 20, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: 1,
+      defaultValue: "any",
       category: "Debt",
     },
     debtRatio: {
@@ -801,70 +801,70 @@
       step: [200, 100, 50, 20, 10, 5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
     },
     returnOnAssets: {
       label: "Return on Assets",
       step: [10, 8, 6, 4, 2, 1, 0, -2, -4, -6, -8, -10],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
     },
     returnOnEquity: {
       label: "Return on Equity",
       step: [10, 8, 6, 4, 2, 1, 0, -2, -4, -6, -8, -10],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
     },
     returnOnTangibleAssets: {
       label: "Return on Tangible Assets",
       step: [10, 8, 6, 4, 2, 1, 0, -2, -4, -6, -8, -10],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
     },
     enterpriseValue: {
       label: "Enterprise Value",
       step: ["100B", "50B", "10B", "1B", "300M", "100M", "10M"],
 
       defaultCondition: "over",
-      defaultValue: "10M",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     evSales: {
       label: "EV / Sales",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     evEarnings: {
       label: "EV / Earnings",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     evEBITDA: {
       label: "EV / EBITDA",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     evEBIT: {
       label: "EV / EBIT",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     evFCF: {
       label: "EV / FCF",
       step: [50, 20, 10, 5, 1, 0],
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     freeCashFlowPerShare: {
@@ -872,7 +872,7 @@
       step: [10, 8, 6, 4, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Cash Flow",
     },
     cashPerShare: {
@@ -880,7 +880,7 @@
       step: [50, 20, 10, 5, 1, 0, -1, -5, -10, -20, -50],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     priceToFreeCashFlowsRatio: {
@@ -888,7 +888,7 @@
       step: [50, 20, 10, 5, 1, 0, -1, -5, -10, -20, -50],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Cash Flow",
     },
     interestCoverage: {
@@ -896,7 +896,7 @@
       step: [10, 5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
     },
     sharesShort: {
       label: "Short Interest",
@@ -911,7 +911,7 @@
       step: [10, 5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Short Selling Statistics",
     },
     shortFloatPercent: {
@@ -919,7 +919,7 @@
       step: ["50%", "30%", "20%", "10%", "5%", "1%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "0%",
+      defaultValue: "any",
       category: "Short Selling Statistics",
     },
     shortOutStandingPercent: {
@@ -927,7 +927,7 @@
       step: ["50%", "30%", "20%", "10%", "5%", "1%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "0%",
+      defaultValue: "any",
       category: "Short Selling Statistics",
     },
     failToDeliver: {
@@ -935,7 +935,7 @@
       step: ["1M", "500K", "200K", "100K", "50K", "10K", "1K"],
 
       defaultCondition: "over",
-      defaultValue: "1K",
+      defaultValue: "any",
       category: "Short Selling Statistics",
     },
     relativeFTD: {
@@ -943,7 +943,7 @@
       step: ["300%", "200%", "100%", "50%", "20%", "10%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "50%",
+      defaultValue: "any",
       category: "Short Selling Statistics",
     },
 
@@ -952,7 +952,7 @@
       step: ["50B", "10B", "1B", "100M", "10M", "1M", 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Cash Flow",
     },
     operatingCashFlow: {
@@ -960,7 +960,7 @@
       step: ["50B", "10B", "1B", "100M", "10M", "1M", 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Cash Flow",
     },
     operatingCashFlowPerShare: {
@@ -968,7 +968,7 @@
       step: [50, 40, 30, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: "1",
+      defaultValue: "any",
       category: "Cash Flow",
     },
     revenuePerShare: {
@@ -976,7 +976,7 @@
       step: [50, 40, 30, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: "1",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     netIncomePerShare: {
@@ -984,7 +984,7 @@
       step: [50, 40, 30, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: "1",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     shareholdersEquityPerShare: {
@@ -992,7 +992,7 @@
       step: [50, 40, 30, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: "1",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     interestDebtPerShare: {
@@ -1000,7 +1000,7 @@
       step: [50, 40, 30, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: "1",
+      defaultValue: "any",
       category: "Debt",
     },
     capexPerShare: {
@@ -1008,7 +1008,7 @@
       step: [50, 40, 30, 10, 5, 1],
 
       defaultCondition: "over",
-      defaultValue: "1",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
 
@@ -1028,7 +1028,7 @@
       ],
 
       defaultCondition: "over",
-      defaultValue: "0%",
+      defaultValue: "any",
       category: "Margins",
     },
     totalDebt: {
@@ -1036,14 +1036,14 @@
       step: ["200B", "100B", "50B", "10B", "1B", "100M", "10M", "1M"],
 
       defaultCondition: "over",
-      defaultValue: "1M",
+      defaultValue: "any",
       category: "Debt",
     },
     cashFlowToDebtRatio: {
       label: "Cash Flow / Debt",
       step: [50, 40, 30, 20, 10, 5, 1],
       defaultCondition: "over",
-      defaultValue: "1",
+      defaultValue: "any",
       category: "Debt",
     },
     operatingCashFlowSalesRatio: {
@@ -1051,14 +1051,14 @@
       step: [5, 3, 1, 0.5, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     priceCashFlowRatio: {
       label: "Price / Cash Flow",
       step: [20, 15, 10, 5, 3, 1, 0],
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     priceEarningsRatio: {
@@ -1066,7 +1066,7 @@
       step: [100, 50, 20, 10, 5, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: ["Most Popular", "Valuation & Ratios"],
     },
     priceEarningsToGrowthRatio: {
@@ -1074,7 +1074,7 @@
       step: [10, 5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     stockBasedCompensation: {
@@ -1082,14 +1082,14 @@
       step: ["10B", "1B", "100M", "10M", "1M", 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
     },
     totalStockholdersEquity: {
       label: "Shareholders Equity",
       step: ["100B", "50B", "10B", "1B", "100M", "50M", "10M", "1M", 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Shares Statistics",
     },
     sharesQoQ: {
@@ -1097,7 +1097,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Shares Statistics",
     },
     sharesYoY: {
@@ -1105,7 +1105,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Shares Statistics",
     },
     grossProfitMargin: {
@@ -1113,7 +1113,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Margins",
     },
     netProfitMargin: {
@@ -1121,7 +1121,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Margins",
     },
     pretaxProfitMargin: {
@@ -1129,7 +1129,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Margins",
     },
     ebitdaMargin: {
@@ -1137,7 +1137,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Margins",
     },
     ebitMargin: {
@@ -1145,7 +1145,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Margins",
     },
     operatingMargin: {
@@ -1153,7 +1153,7 @@
       step: ["80%", "60%", "50%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Margins",
     },
     longTermDebtToCapitalization: {
@@ -1161,7 +1161,7 @@
       step: ["80%", "60%", "50%", "30%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Debt",
     },
     shortTermDebtToCapitalization: {
@@ -1169,7 +1169,7 @@
       step: ["80%", "60%", "50%", "30%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Debt",
     },
     interestIncomeToCapitalization: {
@@ -1177,7 +1177,7 @@
       step: ["80%", "60%", "50%", "30%", "20%", "10%", "5%", "1%", "0.5%"],
 
       defaultCondition: "over",
-      defaultValue: "1%",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     assetTurnover: {
@@ -1185,14 +1185,14 @@
       step: [5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: 0,
+      defaultValue: "any",
     },
     earningsYield: {
       label: "Earnings Yield",
       step: ["20%", "15%", "10%", "5%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "0%",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     freeCashFlowYield: {
@@ -1200,7 +1200,7 @@
       step: ["20%", "15%", "10%", "5%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "0%",
+      defaultValue: "any",
       category: "Valuation & Ratios",
     },
     effectiveTaxRate: {
@@ -1208,21 +1208,21 @@
       step: ["20%", "15%", "10%", "5%", "0%"],
 
       defaultCondition: "over",
-      defaultValue: "0%",
+      defaultValue: "any",
     },
     fixedAssetTurnover: {
       label: "Fixed Asset Turnover",
       step: [10, 5, 3, 2, 1, 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
     },
     sharesOutStanding: {
       label: "Shares Outstanding",
       step: ["10B", "5B", "1B", "100M", "50M", "10M", "1M"],
 
       defaultCondition: "over",
-      defaultValue: "1M",
+      defaultValue: "any",
       category: "Shares Statistics",
     },
     employees: {
@@ -1238,7 +1238,7 @@
       step: ["5M", "3M", "2M", "1M", "500K", "100K", 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Company Info",
     },
 
@@ -1247,7 +1247,7 @@
       step: ["5M", "3M", "2M", "1M", "500K", "100K", 0],
 
       defaultCondition: "over",
-      defaultValue: "0",
+      defaultValue: "any",
       category: "Company Info",
     },
     totalLiabilities: {
@@ -1255,7 +1255,7 @@
       step: ["500B", "200B", "100B", "50B", "10B", "1B", "100M", "10M", "1M"],
 
       defaultCondition: "over",
-      defaultValue: "1M",
+      defaultValue: "any",
       category: "Debt",
     },
     altmanZScore: {
@@ -1827,14 +1827,32 @@
   async function handleDeleteRule(state) {
     selectedPopularStrategy = "";
 
-    // Find the index of the rule to be deleted
+    // Find the index of the rule to be deleted or updated
     const index = ruleOfList?.findIndex((rule) => rule.name === state);
-
     if (index !== -1) {
-      // Remove the element at the found index
-      ruleOfList?.splice(index, 1);
+      // Get the rule
+      const rule = ruleOfList[index];
+
+      // Check if the value is "any"
+      if (Array?.isArray(rule.value)) {
+        ruleOfList.splice(index, 1);
+      } else {
+        // For single string values
+        if (rule.value !== "any") {
+          // Set value to "any"
+          ruleOfList[index].value = "any";
+        } else {
+          // Remove the rule if its value is already "any"
+          ruleOfList.splice(index, 1);
+        }
+      }
+
+      // Update the stock screener data
+      ruleName = ruleOfList[index]?.name || "";
+      await handleChangeValue(ruleOfList[index]?.value);
     }
 
+    // Handle cases when the list is empty or matches the current rule name
     if (ruleOfList?.length === 0) {
       ruleName = "";
       filteredData = [];
@@ -1842,10 +1860,12 @@
     } else if (state === ruleName) {
       ruleName = "";
     }
-    // Only create a new array if there are remaining rules
+
+    // Ensure the array reference is updated
     ruleOfList = [...ruleOfList];
+
     await updateStockScreenerData();
-    //await handleSave(false);
+    // await handleSave(false);
   }
 
   async function handleScroll() {
@@ -2116,6 +2136,9 @@ const handleKeyDown = (event) => {
   }
 
   async function stepSizeValue(value, condition) {
+    if (value === "any") {
+      value = 0;
+    }
     const match = value.toString().match(/^(-?[\d.]+)([KMB%]?)$/);
     if (!match) return value;
 
@@ -2134,7 +2157,12 @@ const handleKeyDown = (event) => {
 
   async function handleValueInput(event, ruleName, index = null) {
     const newValue = event.target.value;
-
+    if (newValue?.length === 0) {
+      const index = ruleOfList?.findIndex((rule) => rule.name === ruleName);
+      if (index !== -1) {
+        ruleOfList[index].value = "any";
+      }
+    }
     if (ruleCondition[ruleName] === "between") {
       const currentValues = valueMappings[ruleName] || ["", ""];
       currentValues[index] = newValue;
@@ -2866,21 +2894,35 @@ const handleKeyDown = (event) => {
                   on:click={() => handleDeleteRule(row?.rule)}
                   class="mr-1.5 cursor-pointer text-gray-300 sm:hover:text-red-500 focus:outline-none"
                   title="Remove filter"
-                >
-                  <svg
-                    class="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="CurrentColor"
-                    style="max-width:40px"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    ></path>
-                  </svg>
+                  >{#if ruleOfList?.find((item) => item.name === row?.rule)?.value !== "any"}
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      style="max-width:40px"
+                      ><path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path></svg
+                    >
+                  {:else}
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="CurrentColor"
+                      style="max-width:40px"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>{/if}
                 </button>
                 <div class="relative inline-block text-left">
                   <div on:click={() => (ruleName = row?.rule)}>
@@ -3017,7 +3059,9 @@ const handleKeyDown = (event) => {
                                 <input
                                   type="text"
                                   placeholder="Value"
-                                  value={valueMappings[row?.rule]}
+                                  value={valueMappings[row?.rule] !== "any"
+                                    ? valueMappings[row?.rule]
+                                    : ""}
                                   on:input={(e) =>
                                     handleValueInput(e, row?.rule)}
                                   class="ios-zoom-fix block max-w-[4.8rem] rounded-sm placeholder:text-gray-200 font-normal p-1 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-secondary"
