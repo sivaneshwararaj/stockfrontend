@@ -68,11 +68,6 @@
     // Get the current stock price
     const currentPrice = data?.getStockQuote?.price;
 
-    // Ensure the current price and strike price are valid numbers
-    if (typeof currentPrice !== "number" || typeof strikePrice !== "number") {
-      throw new Error("Invalid current price or strike price");
-    }
-
     let otmPercentage = 0;
 
     if (optionType === "C") {
