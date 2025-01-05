@@ -22,12 +22,30 @@ export const load = async ({ locals, params }) => {
     output.openInterest = user?.tier !== "Pro" ? output?.openInterest?.slice(0, 3) : output?.openInterest;
 
     return output;
-  };
+  }; 
 
+
+   const getHistoricalPrice = async () => {
+     const postData = { ticker: params.tickerID, timePeriod: "six-months" };
+  const response = await fetch(apiURL + "/historical-price", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": apiKey,
+    },
+    body: JSON.stringify(postData),
+  });
+
+    const output = await response.json();
+    return output;
+  }; 
+
+  
 
   // Make sure to return a promise
   return {
     getData: await getData(),
+    getHistoricalPrice: await getHistoricalPrice(),
   };
 };
 

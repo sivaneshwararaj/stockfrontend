@@ -4,7 +4,7 @@
     abbreviateNumber,
     monthNames,
   } from "$lib/utils";
-  import { setCache, getCache, stockTicker, screenWidth } from "$lib/store";
+  import { setCache, getCache, etfTicker, screenWidth } from "$lib/store";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
 
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
@@ -67,6 +67,7 @@
   function computeOTM(strikePrice, optionType) {
     // Get the current stock price
     const currentPrice = data?.getStockQuote?.price;
+
     let otmPercentage = 0;
 
     if (optionType === "C") {
@@ -282,6 +283,7 @@
 
     let dates = data?.map((item) => item?.date);
     let avgPrice = data?.map((item) => item?.avg_price);
+    let priceList = data?.map((item) => item?.price);
     let bidVolume = data?.map((item) => item?.bid_volume);
     let askVolume = data?.map((item) => item?.ask_volume);
     let midVolume = data?.map((item) => item?.mid_volume);
@@ -291,122 +293,51 @@
     let ivList = data?.map((item) =>
       Math?.floor(item?.implied_volatility * 100),
     );
+
+    const createLineSeries = (name, data, color, yAxisIndex = 1) => ({
+      name,
+      type: "line",
+      yAxisIndex,
+      data,
+      itemStyle: { color },
+      lineStyle: { width: 2 },
+      smooth: true,
+      showSymbol: false,
+    });
+
+    const createBarSeries = (name, data, color, stack = null) => ({
+      name,
+      type: "bar",
+      stack,
+      data,
+      itemStyle: { color },
+      emphasis: { focus: "series" },
+    });
+
     let series = [];
     if (selectGraphType === "Bid/Ask") {
       series = [
-        {
-          name: "Ask",
-          type: "bar",
-          stack: "Ratio",
-          emphasis: {
-            focus: "series",
-          },
-          data: askVolume,
-          itemStyle: {
-            color: "#33B890",
-          },
-        },
-        {
-          name: "Mid",
-          type: "bar",
-          stack: "Ratio",
-          emphasis: {
-            focus: "series",
-          },
-          data: midVolume,
-          itemStyle: {
-            color: "#007BFF",
-          },
-        },
-        {
-          name: "Bid",
-          type: "bar",
-          stack: "Ratio",
-          emphasis: {
-            focus: "series",
-          },
-          data: bidVolume,
-          itemStyle: {
-            color: "#EE5365", //'#7A1C16'
-          },
-        },
-        {
-          name: "Avg Fill", // Name for the line chart
-          type: "line", // Type of the chart (line)
-          yAxisIndex: 1, // Use the second y-axis on the right
-          data: avgPrice, // iv60Data (assumed to be passed as priceList)
-          itemStyle: {
-            color: "#fff", // Choose a color for the line (gold in this case)
-          },
-          lineStyle: {
-            width: 2, // Set the width of the line
-          },
-          smooth: true, // Optional: make the line smooth
-          showSymbol: false,
-        },
+        createBarSeries("Ask", askVolume, "#33B890", "Ratio"),
+        createBarSeries("Mid", midVolume, "#007BFF", "Ratio"),
+        createBarSeries("Bid", bidVolume, "#EE5365", "Ratio"),
+        createLineSeries("Avg Fill", avgPrice, "#FAD776"),
+        createLineSeries("Stock Price", priceList, "#fff"),
       ];
     } else if (selectGraphType === "Vol/OI") {
       series = [
-        {
-          name: "Volume",
-          type: "bar",
-          data: volumeList,
-          itemStyle: {
-            color: "#FD7E14",
-          },
-        },
-        {
-          name: "OI",
-          type: "bar",
-          data: oiList,
-          itemStyle: {
-            color: "#33B890",
-          },
-        },
-
-        {
-          name: "Avg Fill", // Name for the line chart
-          type: "line", // Type of the chart (line)
-          yAxisIndex: 1, // Use the second y-axis on the right
-          data: avgPrice, // iv60Data (assumed to be passed as priceList)
-          itemStyle: {
-            color: "#fff", // Choose a color for the line (gold in this case)
-          },
-          lineStyle: {
-            width: 2, // Set the width of the line
-          },
-          smooth: true, // Optional: make the line smooth
-          showSymbol: false,
-        },
+        createBarSeries("Volume", volumeList, "#FD7E14"),
+        createBarSeries("OI", oiList, "#33B890"),
+        createLineSeries("Avg Fill", avgPrice, "#FAD776"),
+        createLineSeries("Stock Price", priceList, "#fff"),
       ];
     } else {
       series = [
-        {
-          name: "IV",
-          type: "line",
-          data: ivList,
-          itemStyle: {
-            color: "#B24BF3",
-          },
-          smooth: true, // Optional: make the line smooth
-          showSymbol: false,
-        },
-        {
-          name: "Avg Fill", // Name for the line chart
-          type: "line", // Type of the chart (line)
-          yAxisIndex: 1, // Use the second y-axis on the right
-          data: avgPrice, // iv60Data (assumed to be passed as priceList)
-          itemStyle: {
-            color: "#fff", // Choose a color for the line (gold in this case)
-          },
-          lineStyle: {
-            width: 2, // Set the width of the line
-          },
-          smooth: true, // Optional: make the line smooth
-          showSymbol: false,
-        },
+        createLineSeries("IV", ivList, "#B24BF3", 0),
+        createLineSeries("Avg Fill", avgPrice, "#FAD776"),
+        createLineSeries("Stock Price", priceList, "#fff"),
       ];
     }
+
     const options = {
       animation: false,
       tooltip: {
@@ -544,6 +475,15 @@
 
     rawDataHistory = await getContractHistory(item?.option_symbol);
     if (rawDataHistory?.length > 0) {
+      rawDataHistory.forEach((entry) => {
+        const matchingData = data?.getHistoricalPrice?.find(
+          (d) => d?.time === entry?.date,
+        );
+        if (matchingData) {
+          entry.price = matchingData?.close;
+        }
+      });
+      console.log(rawDataHistory);
       optionsData = plotData();
       rawDataHistory = rawDataHistory?.sort(
         (a, b) => new Date(b?.date) - new Date(a?.date),
@@ -971,7 +911,7 @@
       <p class="text-white text-[1rem] sm:text-xl font-semibold cursor-text">
         Contract: <span
           class={optionType === "C" ? "text-[#00FC50]" : "text-[#FF2F1F]"}
-          >{$stockTicker}
+          >{$etfTicker}
           {strikePrice}
           {optionType}
           {dateExpiration} ({daysLeft(dateExpiration)})
