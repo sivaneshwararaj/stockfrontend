@@ -586,6 +586,9 @@
                         {item?.option_type === "C" ? "Call" : "Put"}
                       </span>
                       <label
+                        on:click={() => handleViewData(item)}
+                        on:mouseover={() =>
+                          getContractHistory(item?.option_symbol)}
                         class="cursor-pointer text-[#04D9FF] sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
                       >
                         {item?.strike_price}
