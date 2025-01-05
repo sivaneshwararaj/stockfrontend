@@ -64,7 +64,7 @@
               </a>
 
               <a
-                href={`/stocks/${$etfTicker}/options/hottest-contracts`}
+                href={`/etf/${$etfTicker}/options/hottest-contracts`}
                 on:click={() => changeSubSection("hottest-contracts")}
                 class="p-2 px-5 cursor-pointer {displaySubSection ===
                 'hottest-contracts'
