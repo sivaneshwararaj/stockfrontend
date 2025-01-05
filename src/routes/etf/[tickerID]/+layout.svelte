@@ -16,6 +16,7 @@
     isOpen,
     shouldUpdatePriceChart,
     priceChartData,
+    previousPage,
   } from "$lib/store";
 
   import { onMount, onDestroy, afterUpdate } from "svelte";
@@ -310,7 +311,7 @@
                   <div
                     class="flex-1 flex-shrink-0 flex flex-row items-center justify-between -mt-2"
                   >
-                    <a href="/" class="ml-2 cursor-pointer">
+                    <a href={$previousPage || "/"} class="ml-2 cursor-pointer">
                       <svg
                         class="w-5 h-5 inline-block"
                         xmlns="http://www.w3.org/2000/svg"

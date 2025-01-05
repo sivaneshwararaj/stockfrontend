@@ -10,7 +10,7 @@
   export let form;
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
-  let mode = false;
+  let mode = true;
   //let mode = false;
   const emailAddress = "support@stocknear.com";
 
