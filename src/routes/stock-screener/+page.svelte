@@ -3028,10 +3028,10 @@ const handleKeyDown = (event) => {
                                   <input
                                     type="text"
                                     placeholder="Min"
-                                    value={Array.isArray(
+                                    value={Array?.isArray(
                                       valueMappings[row?.rule],
                                     )
-                                      ? (valueMappings[row?.rule][0] ?? "")
+                                      ? valueMappings[row?.rule]?.at(0)
                                       : ""}
                                     on:input={(e) =>
                                       handleValueInput(e, row?.rule, 0)}
@@ -3045,10 +3045,10 @@ const handleKeyDown = (event) => {
                                   <input
                                     type="text"
                                     placeholder="Max"
-                                    value={Array.isArray(
+                                    value={Array?.isArray(
                                       valueMappings[row?.rule],
                                     )
-                                      ? (valueMappings[row?.rule][1] ?? "")
+                                      ? valueMappings[row?.rule]?.at(1)
                                       : ""}
                                     on:input={(e) =>
                                       handleValueInput(e, row?.rule, 1)}
