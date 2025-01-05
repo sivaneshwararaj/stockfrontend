@@ -4,7 +4,14 @@
     abbreviateNumber,
     monthNames,
   } from "$lib/utils";
-  import { setCache, getCache, etfTicker, screenWidth } from "$lib/store";
+  import {
+    setCache,
+    getCache,
+    etfTicker,
+    screenWidth,
+    numberOfUnreadNotification,
+    displayCompanyName,
+  } from "$lib/store";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
 
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
@@ -510,6 +517,44 @@
   }
 </script>
 
+<svelte:head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
+    {$displayCompanyName} ({$etfTicker}) Hottest Options Chain Contract ·
+    Stocknear
+  </title>
+  <meta
+    name="description"
+    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+  />
+
+  <!-- Other meta tags -->
+  <meta
+    property="og:title"
+    content={`${$displayCompanyName} (${$etfTicker}) Hottest Options Chain Contract · Stocknear`}
+  />
+  <meta
+    property="og:description"
+    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+  />
+  <meta property="og:type" content="website" />
+  <!-- Add more Open Graph meta tags as needed -->
+
+  <!-- Twitter specific meta tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta
+    name="twitter:title"
+    content={`${$displayCompanyName} (${$etfTicker}) Hottest Options Chain Contract · Stocknear`}
+  />
+  <meta
+    name="twitter:description"
+    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+  />
+  <!-- Add more Twitter meta tags as needed -->
+</svelte:head>
+
 <section
   class="w-full bg-default overflow-hidden text-white min-h-screen pb-40"
 >
@@ -977,9 +1022,9 @@
             {#each ["Bid/Ask", "Vol/OI", "IV"] as item}
               <label
                 on:click={() => (selectGraphType = item)}
-                class="px-3 py-1.5 {selectGraphType === item
-                  ? 'bg-white text-black  mr-1'
-                  : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
+                class="px-3 py-1.5 mr-2 {selectGraphType === item
+                  ? 'bg-white text-black '
+                  : 'text-white bg-table text-opacity-[0.6] border border-gray-600'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
               >
                 {item}
               </label>
@@ -1111,67 +1156,30 @@
                     </td>
 
                     <td class="text-sm sm:text-[1rem] text-end">
-                      <HoverCard.Root>
-                        <HoverCard.Trigger
-                          class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
+                      <div class="flex items-center justify-end">
+                        <!-- Bar Container -->
+                        <div
+                          class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
                         >
-                          <div class="flex items-center justify-end">
-                            <!-- Bar Container -->
-                            <div
-                              class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
-                            >
-                              <!-- Bearish -->
-                              <div
-                                class="bg-red-500 h-full"
-                                style="width: calc(({item?.bid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
+                          <!-- Bearish -->
+                          <div
+                            class="bg-red-500 h-full"
+                            style="width: calc(({item?.bid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
+                          ></div>
 
-                              <!-- Neutral -->
-                              <div
-                                class="bg-gray-300 h-full"
-                                style="width: calc(({item?.mid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
+                          <!-- Neutral -->
+                          <div
+                            class="bg-gray-300 h-full"
+                            style="width: calc(({item?.mid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
+                          ></div>
 
-                              <!-- Bullish -->
-                              <div
-                                class="bg-green-500 h-full"
-                                style="width: calc(({item?.ask_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
-                            </div>
-                          </div>
-                        </HoverCard.Trigger>
-                        <HoverCard.Content
-                          class="w-auto bg-secondary border border-gray-600"
-                        >
-                          <div class="flex justify-between space-x-4">
-                            <div
-                              class="space-y-1 flex flex-col items-start text-white"
-                            >
-                              <div>
-                                Bid Vol: {@html abbreviateNumberWithColor(
-                                  item?.bid_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                              <div>
-                                Mid Vol: {@html abbreviateNumberWithColor(
-                                  item?.mid_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                              <div>
-                                Ask Vol: {@html abbreviateNumberWithColor(
-                                  item?.ask_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </HoverCard.Content>
-                      </HoverCard.Root>
+                          <!-- Bullish -->
+                          <div
+                            class="bg-green-500 h-full"
+                            style="width: calc(({item?.ask_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
+                          ></div>
+                        </div>
+                      </div>
                     </td>
 
                     <td class="text-sm sm:text-[1rem] text-end text-white">
