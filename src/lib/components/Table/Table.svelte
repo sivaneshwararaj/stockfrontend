@@ -880,7 +880,7 @@
               class:text-right={column.align === "right"}
             >
               {#if item[column.key] === null || item[column.key] === undefined}
-                -
+                n/a
               {:else if column.key === "symbol"}
                 <HoverStockChart symbol={item[column.key]} />
               {:else if column.key === "name"}
@@ -923,7 +923,7 @@
                   {/if}
                   {item[column.key] !== null
                     ? item[column.key]?.toFixed(2)
-                    : "-"}
+                    : "n/a"}
                 </div>
               {:else if column.type === "percent"}
                 {item[column.key] > 0.01
@@ -951,7 +951,7 @@
                 {:else if item[column.key] === "Hold"}
                   <span class="text-[#FFA838]">{item[column.key]}</span>
                 {:else}
-                  -
+                  n/a
                 {/if}
               {:else if column.type === "sentiment"}
                 <div

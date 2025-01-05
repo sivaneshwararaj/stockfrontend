@@ -136,6 +136,18 @@
       rule: "institutionalOwnership",
       type: "percent",
     },
+    { name: "Top Analyst Rating", rule: "topAnalystRating", type: "rating" },
+    { name: "Top Analyst Count", rule: "topAnalystCounter", type: "int" },
+    {
+      name: "Top Analyst Price Target",
+      rule: "topAnalystPriceTarget",
+      type: "float",
+    },
+    {
+      name: "Top Analyst PT Upside",
+      rule: "topAnalystUpside",
+      type: "percentSign",
+    },
   ];
 
   let ruleOfList = [
@@ -1553,7 +1565,7 @@
                                     {:else if row?.type === "str"}
                                       {item[row?.rule] !== null
                                         ? item[row?.rule]
-                                        : "-"}
+                                        : "n/a"}
                                     {:else if row?.type === "float"}
                                       <div
                                         class="relative flex items-center justify-end"
@@ -1579,12 +1591,12 @@
 
                                         {item[row?.rule] !== null
                                           ? item[row?.rule]?.toFixed(2)
-                                          : "-"}
+                                          : "n/a"}
                                       </div>
                                     {:else if row?.type === "percent"}
                                       {item[row?.rule] !== null
                                         ? item[row?.rule]?.toFixed(2) + "%"
-                                        : "-"}
+                                        : "n/a"}
                                     {:else if row?.type === "percentSign"}
                                       {#if item[row?.rule] >= 0}
                                         <span class="text-[#00FC50]"
@@ -1611,7 +1623,7 @@
                                       {/if}
                                     {/if}
                                   {:else}
-                                    -
+                                    n/a
                                   {/if}
                                 </td>
                               {/if}
