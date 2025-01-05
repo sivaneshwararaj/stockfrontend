@@ -6,8 +6,6 @@
   } from "$lib/utils";
   import { setCache, getCache, stockTicker, screenWidth } from "$lib/store";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
-  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
-  import { Button } from "$lib/components/shadcn/button/index.js";
 
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
@@ -262,6 +260,128 @@
     let bidVolume = data?.map((item) => item?.bid_volume);
     let askVolume = data?.map((item) => item?.ask_volume);
     let midVolume = data?.map((item) => item?.mid_volume);
+
+    let volumeList = data?.map((item) => item?.volume);
+    let oiList = data?.map((item) => item?.open_interest);
+    let ivList = data?.map((item) =>
+      Math.floor(item?.implied_volatility * 100),
+    );
+    let series = [];
+    if (selectGraphType === "Bid/Ask") {
+      series = [
+        {
+          name: "Ask",
+          type: "bar",
+          stack: "Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: askVolume,
+          itemStyle: {
+            color: "#33B890",
+          },
+        },
+        {
+          name: "Mid",
+          type: "bar",
+          stack: "Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: midVolume,
+          itemStyle: {
+            color: "#007BFF",
+          },
+        },
+        {
+          name: "Bid",
+          type: "bar",
+          stack: "Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: bidVolume,
+          itemStyle: {
+            color: "#EE5365", //'#7A1C16'
+          },
+        },
+        {
+          name: "Avg Fill", // Name for the line chart
+          type: "line", // Type of the chart (line)
+          yAxisIndex: 1, // Use the second y-axis on the right
+          data: avgPrice, // iv60Data (assumed to be passed as priceList)
+          itemStyle: {
+            color: "#fff", // Choose a color for the line (gold in this case)
+          },
+          lineStyle: {
+            width: 2, // Set the width of the line
+          },
+          smooth: true, // Optional: make the line smooth
+          showSymbol: false,
+        },
+      ];
+    } else if (selectGraphType === "Vol/OI") {
+      series = [
+        {
+          name: "Volume",
+          type: "bar",
+          data: volumeList,
+          itemStyle: {
+            color: "#FD7E14",
+          },
+        },
+        {
+          name: "OI",
+          type: "bar",
+          data: oiList,
+          itemStyle: {
+            color: "#33B890",
+          },
+        },
+
+        {
+          name: "Avg Fill", // Name for the line chart
+          type: "line", // Type of the chart (line)
+          yAxisIndex: 1, // Use the second y-axis on the right
+          data: avgPrice, // iv60Data (assumed to be passed as priceList)
+          itemStyle: {
+            color: "#fff", // Choose a color for the line (gold in this case)
+          },
+          lineStyle: {
+            width: 2, // Set the width of the line
+          },
+          smooth: true, // Optional: make the line smooth
+          showSymbol: false,
+        },
+      ];
+    } else {
+      series = [
+        {
+          name: "IV",
+          type: "line",
+          data: volumeList,
+          itemStyle: {
+            color: "#B24BF3",
+          },
+          smooth: true, // Optional: make the line smooth
+          showSymbol: false,
+        },
+        {
+          name: "Avg Fill", // Name for the line chart
+          type: "line", // Type of the chart (line)
+          yAxisIndex: 1, // Use the second y-axis on the right
+          data: avgPrice, // iv60Data (assumed to be passed as priceList)
+          itemStyle: {
+            color: "#fff", // Choose a color for the line (gold in this case)
+          },
+          lineStyle: {
+            width: 2, // Set the width of the line
+          },
+          smooth: true, // Optional: make the line smooth
+          showSymbol: false,
+        },
+      ];
+    }
     const options = {
       animation: false,
       tooltip: {
@@ -356,58 +476,7 @@
           },
         },
       ],
-      series: [
-        {
-          name: "Ask",
-          type: "bar",
-          stack: "Ratio",
-          emphasis: {
-            focus: "series",
-          },
-          data: askVolume,
-          itemStyle: {
-            color: "#33B890",
-          },
-        },
-        {
-          name: "Mid",
-          type: "bar",
-          stack: "Ratio",
-          emphasis: {
-            focus: "series",
-          },
-          data: midVolume,
-          itemStyle: {
-            color: "#007BFF",
-          },
-        },
-        {
-          name: "Bid",
-          type: "bar",
-          stack: "Ratio",
-          emphasis: {
-            focus: "series",
-          },
-          data: bidVolume,
-          itemStyle: {
-            color: "#EE5365", //'#7A1C16'
-          },
-        },
-        {
-          name: "Avg Fill", // Name for the line chart
-          type: "line", // Type of the chart (line)
-          yAxisIndex: 1, // Use the second y-axis on the right
-          data: avgPrice, // iv60Data (assumed to be passed as priceList)
-          itemStyle: {
-            color: "#fff", // Choose a color for the line (gold in this case)
-          },
-          lineStyle: {
-            width: 2, // Set the width of the line
-          },
-          smooth: true, // Optional: make the line smooth
-          showSymbol: false,
-        },
-      ],
+      series: series,
     };
     return options;
   }
@@ -459,6 +528,19 @@
     }
 
     isLoaded = true;
+  }
+
+  $: {
+    if (typeof window !== "undefined" && selectGraphType) {
+      isLoaded = false;
+      if (rawDataHistory?.length > 0) {
+        optionsData = plotData();
+      } else {
+        optionsData = null;
+      }
+
+      isLoaded = true;
+    }
   }
 </script>
 
@@ -940,6 +1022,7 @@
           <div class="flex justify-end ml-auto w-fit mr-2 mt-2">
             {#each ["Bid/Ask", "Vol/OI", "IV"] as item}
               <label
+                on:click={() => (selectGraphType = item)}
                 class="px-3 py-1.5 {selectGraphType === item
                   ? 'bg-white text-black  mr-1'
                   : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
