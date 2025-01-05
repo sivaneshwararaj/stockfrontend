@@ -1203,15 +1203,21 @@
                     ><td
                       class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
                       ><a
-                        href={`/stocks/${$stockTicker}/forecast`}
-                        class="sm:hover:text-blue-400 text-white underline underline-offset-4"
-                        >Analyst</a
+                        href={data?.getAnalystRating?.consensusRating !==
+                        undefined
+                          ? `/stocks/${$stockTicker}/forecast`
+                          : ""}
+                        class={data?.getAnalystRating?.consensusRating !==
+                        undefined
+                          ? "sm:hover:text-blue-400 text-white underline underline-offset-4"
+                          : "text-white cursor-text"}>Analyst</a
                       >
                     </td>
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
                       >{data?.getAnalystRating?.consensusRating !== null &&
-                      data?.getAnalystRating?.consensusRating !== "n/a"
+                      data?.getAnalystRating?.consensusRating !== "n/a" &&
+                      data?.getAnalystRating?.consensusRating !== undefined
                         ? data?.getAnalystRating?.consensusRating
                         : "n/a"}</td
                     ></tr
