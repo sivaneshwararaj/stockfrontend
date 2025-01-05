@@ -1,7 +1,14 @@
 <script lang="ts">
-  import { abbreviateNumberWithColor, monthNames } from "$lib/utils";
+  import {
+    abbreviateNumberWithColor,
+    abbreviateNumber,
+    monthNames,
+  } from "$lib/utils";
   import { setCache, getCache, stockTicker, screenWidth } from "$lib/store";
   import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
+  import { Button } from "$lib/components/shadcn/button/index.js";
+
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
@@ -30,9 +37,12 @@
   let optionsData = null;
 
   let optionHistoryList = [];
-
+  let selectGraphType = "Bid/Ask";
   let container;
   let rawDataHistory = [];
+  let strikePrice;
+  let optionType;
+  let dateExpiration;
 
   function formatDate(dateStr) {
     // Parse the input date string (YYYY-mm-dd)
@@ -429,14 +439,25 @@
     return output;
   };
 
-  async function handleViewData(contractId) {
+  async function handleViewData(item) {
     isLoaded = false;
     optionDetailsDesktopModal?.showModal();
 
-    rawDataHistory = await getContractHistory(contractId);
-    optionsData = plotData();
+    strikePrice = item?.strike_price;
+    optionType = item?.option_type;
+    dateExpiration = item?.date_expiration;
 
-    optionHistoryList = rawDataHistory?.slice(0, 20);
+    rawDataHistory = await getContractHistory(item?.option_symbol);
+    if (rawDataHistory?.length > 0) {
+      optionsData = plotData();
+      rawDataHistory = rawDataHistory?.sort(
+        (a, b) => new Date(b?.date) - new Date(a?.date),
+      );
+      optionHistoryList = rawDataHistory?.slice(0, 20);
+    } else {
+      optionsData = null;
+    }
+
     isLoaded = true;
   }
 </script>
@@ -653,7 +674,7 @@
                         {item?.option_type === "C" ? "Call" : "Put"}
                       </span>
                       <label
-                        on:click={() => handleViewData(item?.option_symbol)}
+                        on:click={() => handleViewData(item)}
                         on:mouseover={() =>
                           getContractHistory(item?.option_symbol)}
                         class="cursor-pointer text-[#04D9FF] sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
@@ -813,14 +834,30 @@
 
 <dialog
   id="optionDetailsDesktopModal"
-  class="modal cursor-pointer bg-[#000] bg-opacity-[0.8] sm:px-5"
+  class="modal {$screenWidth < 640
+    ? 'modal-bottom'
+    : ''} bg-[#000] bg-opacity-[0.8] sm:px-5"
 >
   <div
-    class="modal-box w-full max-w-7xl bg-[#141417] rounded-md sm:bg-default border-t sm:border border-gray-600 h-auto"
+    class="modal-box w-full {rawDataHistory?.length > 0
+      ? 'max-w-7xl'
+      : 'w-full'} rounded-md bg-table border-t sm:border border-gray-600 min-h-48 h-auto"
   >
-    <form method="dialog" class="modal-backdrop backdrop-blur-[4px]">
+    <form
+      method="dialog"
+      class="modal-backdrop backdrop-blur-[4px] flex flex-row items-center w-full justify-between"
+    >
+      <p class="text-white text-[1rem] sm:text-xl font-semibold cursor-text">
+        Contract: <span
+          class={optionType === "C" ? "text-[#00FC50]" : "text-[#FF2F1F]"}
+          >{$stockTicker}
+          {strikePrice}
+          {optionType}
+          {dateExpiration} ({daysLeft(dateExpiration)})
+        </span>
+      </p>
       <button
-        class="cursor-pointer absolute right-0 top-0 text-[1.8rem] text-white focus:outline-none"
+        class="cursor-pointer text-[1.8rem] text-white focus:outline-none"
       >
         <svg
           class="w-8 h-8"
@@ -833,238 +870,333 @@
         </svg>
       </button>
     </form>
+    {#if rawDataHistory?.length > 0}
+      <div
+        class="border-b border-gray-600 w-full mt-2 mb-2 sm:mb-3 sm:mt-3"
+      ></div>
 
-    <p class="text-white text-xl mt-10 font-semibold cursor-text">
-      Contract: {$stockTicker} 32 C 2025-01-03 (-1D)
-    </p>
-    <div class="border-gray-600 border-b w-full mb-3 mt-5"></div>
-    <div
-      class="pb-8 sm:pb-2 rounded-md bg-table border border-gray-800 overflow-hidden"
-    >
-      <div class="app w-full h-[300px] mt-5">
-        {#if isLoaded}
-          <Chart {init} options={optionsData} class="chart" />
-        {:else}
-          <div class="flex justify-center items-center h-80">
-            <div class="relative">
-              <label
-                class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-              >
-                <span class="loading loading-spinner loading-md text-white"
-                ></span>
-              </label>
-            </div>
-          </div>
-        {/if}
+      <div class="hidden sm:flex flex-wrap text-white pb-2">
+        <div
+          class="mr-3 whitespace-nowrap"
+          data-state="closed"
+          data-sentry-element="unknown"
+          data-sentry-source-file="Tooltip.tsx"
+        >
+          {formatDate(optionHistoryList?.at(0)?.date)}:
+        </div>
+        <div
+          class="mr-3 whitespace-nowrap"
+          data-state="closed"
+          data-sentry-element="unknown"
+          data-sentry-source-file="Tooltip.tsx"
+        >
+          <span class="text-[var(--light-text-color)] font-normal">Vol:</span>
+          {optionHistoryList?.at(0)?.volume?.toLocaleString("en-US")}
+        </div>
+        <div
+          class="mr-3 whitespace-nowrap"
+          data-state="closed"
+          data-sentry-element="unknown"
+          data-sentry-source-file="Tooltip.tsx"
+        >
+          <span class="text-[var(--light-text-color)] font-normal">OI:</span>
+          {optionHistoryList?.at(0)?.open_interest?.toLocaleString("en-US")}
+        </div>
+        <div
+          class="mr-3 whitespace-nowrap"
+          data-state="closed"
+          data-sentry-element="unknown"
+          data-sentry-source-file="Tooltip.tsx"
+        >
+          <span class="text-[var(--light-text-color)] font-normal">Avg:</span>
+          ${optionHistoryList?.at(0)?.avg_price}
+        </div>
+        <div
+          class="mr-3 whitespace-nowrap"
+          data-state="closed"
+          data-sentry-element="unknown"
+          data-sentry-source-file="Tooltip.tsx"
+        >
+          <span class="text-[var(--light-text-color)] font-normal">Prem:</span>
+          {abbreviateNumber(optionHistoryList?.at(0)?.total_premium, true)}
+        </div>
+        <div
+          class="mr-3 whitespace-nowrap"
+          data-state="closed"
+          data-sentry-element="unknown"
+          data-sentry-source-file="Tooltip.tsx"
+        >
+          <span class="text-[var(--light-text-color)] font-normal">IV:</span>
+          {(optionHistoryList?.at(0)?.implied_volatility * 100)?.toLocaleString(
+            "en-US",
+          )}%
+        </div>
       </div>
-    </div>
 
-    <div
-      bind:this={container}
-      on:scroll={getScroll}
-      class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto"
-    >
-      <div class="flex justify-start items-center m-auto">
-        {#if isLoaded}
-          <table
-            class="table table-pin-cols table-sm bg-table border border-gray-800 table-compact rounded-none sm:rounded-md w-full m-auto mt-4 overflow-x-auto"
-          >
-            <thead class="bg-default">
-              <tr class="">
-                <td class="text-white font-semibold text-sm text-start">Date</td
-                >
-                <td class="text-white font-semibold text-sm text-end">Vol</td>
-                <td class="text-white font-semibold text-sm text-end">OI</td>
-                <td class="text-white font-semibold text-sm text-end"
-                  >OI Change</td
-                >
-                <td class="text-white font-semibold text-sm text-end"
-                  >% Change OI</td
-                >
-                <td class="text-white font-semibold text-sm text-start"
-                  >Last Price</td
-                >
-                <td class="text-white font-semibold text-sm text-start"
-                  >Avg Price</td
-                >
-                <td class="text-white font-semibold text-sm text-start"
-                  >Bid/Ask</td
-                >
-                <td class="text-white font-semibold text-sm text-end">IV</td>
-                <td class="text-white font-semibold text-sm text-end">Floor</td>
-                <td class="text-white font-semibold text-sm text-end">Sweep</td>
-                <td class="text-white font-semibold text-sm text-start"
-                  >Multileg Vol</td
-                >
-                <td class="text-white font-semibold text-sm text-end"
-                  >Total Prem</td
-                >
-              </tr>
-            </thead>
-            <tbody>
-              {#each optionHistoryList as item}
-                <!-- row -->
-                <tr class="odd:bg-odd border-b border-gray-800">
-                  <td class="text-sm sm:text-[1rem] text-start text-white">
-                    {formatDate(item?.date)}
-                  </td>
+      {#if $screenWidth > 640}
+        <div
+          class="pb-8 sm:pb-2 rounded-md bg-table border border-gray-600 overflow-hidden"
+        >
+          <div class="flex justify-end ml-auto w-fit mr-2 mt-2">
+            {#each ["Bid/Ask", "Vol/OI", "IV"] as item}
+              <label
+                class="px-3 py-1.5 {selectGraphType === item
+                  ? 'bg-white text-black  mr-1'
+                  : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
+              >
+                {item}
+              </label>
+            {/each}
+          </div>
+          <div class="app w-full h-[300px] mt-5">
+            {#if isLoaded}
+              <Chart {init} options={optionsData} class="chart" />
+            {:else}
+              <div class="flex justify-center items-center h-80">
+                <div class="relative">
+                  <label
+                    class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  >
+                    <span class="loading loading-spinner loading-md text-white"
+                    ></span>
+                  </label>
+                </div>
+              </div>
+            {/if}
+          </div>
+        </div>
+      {/if}
 
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {item?.volume?.toLocaleString("en-US")}
-                  </td>
-
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {item?.open_interest !== undefined
-                      ? item?.open_interest?.toLocaleString("en-US")
-                      : "n/a"}
-                  </td>
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {#if item?.open_interest_change >= 0 && item?.open_interest_change !== undefined}
-                      <span class="text-[#00FC50]"
-                        >+{item?.open_interest_change?.toLocaleString(
-                          "en-US",
-                        )}</span
-                      >
-                    {:else if item?.open_interest_change < 0 && item?.open_interest_change !== undefined}
-                      <span class="text-[#FF2F1F]"
-                        >{item?.open_interest_change?.toLocaleString(
-                          "en-US",
-                        )}</span
-                      >
-                    {:else}
-                      n/a
-                    {/if}
-                  </td>
-
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {#if item?.open_interest_change_percent >= 0 && item?.open_interest_change_percent !== undefined}
-                      <span class="text-[#00FC50]"
-                        >+{item?.open_interest_change_percent + "%"}</span
-                      >
-                    {:else if item?.open_interest_change_percent < 0 && item?.open_interest_change_percent !== undefined}
-                      <span class="text-[#FF2F1F]"
-                        >{item?.open_interest_change_percent + "%"}</span
-                      >
-                    {:else}
-                      n/a
-                    {/if}
-                  </td>
-
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {item?.last_price}
-                  </td>
-
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {item?.avg_price}
-                  </td>
-
-                  <td class="text-sm sm:text-[1rem] text-end">
-                    <HoverCard.Root>
-                      <HoverCard.Trigger
-                        class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
-                      >
-                        <div class="flex items-center justify-end">
-                          <!-- Bar Container -->
-                          <div
-                            class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
-                          >
-                            <!-- Bearish -->
-                            <div
-                              class="bg-red-500 h-full"
-                              style="width: calc(({item?.bid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                            ></div>
-
-                            <!-- Neutral -->
-                            <div
-                              class="bg-gray-300 h-full"
-                              style="width: calc(({item?.mid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                            ></div>
-
-                            <!-- Bullish -->
-                            <div
-                              class="bg-green-500 h-full"
-                              style="width: calc(({item?.ask_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                            ></div>
-                          </div>
-                        </div>
-                      </HoverCard.Trigger>
-                      <HoverCard.Content
-                        class="w-auto bg-secondary border border-gray-600"
-                      >
-                        <div class="flex justify-between space-x-4">
-                          <div
-                            class="space-y-1 flex flex-col items-start text-white"
-                          >
-                            <div>
-                              Bid Vol: {@html abbreviateNumberWithColor(
-                                item?.bid_volume,
-                                false,
-                                true,
-                              )}
-                            </div>
-                            <div>
-                              Mid Vol: {@html abbreviateNumberWithColor(
-                                item?.mid_volume,
-                                false,
-                                true,
-                              )}
-                            </div>
-                            <div>
-                              Ask Vol: {@html abbreviateNumberWithColor(
-                                item?.ask_volume,
-                                false,
-                                true,
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </HoverCard.Content>
-                    </HoverCard.Root>
-                  </td>
-
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {(item?.implied_volatility * 100)?.toLocaleString("en-US") +
-                      "%"}
-                  </td>
-
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {((item?.floor_volume / item?.volume) * 100)?.toFixed(2) +
-                      "%"}
-                  </td>
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {((item?.sweep_volume / item?.volume) * 100)?.toFixed(2) +
-                      "%"}
-                  </td>
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {((item?.multi_leg_volume / item?.volume) * 100)?.toFixed(
-                      2,
-                    ) + "%"}
-                  </td>
-                  <td class="text-sm sm:text-[1rem] text-end text-white">
-                    {@html abbreviateNumberWithColor(
-                      item?.total_premium,
-                      false,
-                      true,
-                    )}
-                  </td>
+      <div
+        bind:this={container}
+        on:scroll={getScroll}
+        class="h-full max-h-[500px] overflow-y-scroll overflow-x-auto"
+      >
+        <div class="flex justify-start items-center m-auto cursor-normal">
+          {#if isLoaded}
+            <table
+              class="table table-pin-cols table-sm bg-table border border-gray-800 table-compact rounded-none sm:rounded-md w-full m-auto mt-4 overflow-x-auto"
+            >
+              <thead class="bg-default">
+                <tr class="">
+                  <td class="text-white font-semibold text-sm text-start"
+                    >Date</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end">Vol</td>
+                  <td class="text-white font-semibold text-sm text-end">OI</td>
+                  <td class="text-white font-semibold text-sm text-end"
+                    >OI Change</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end"
+                    >% Change OI</td
+                  >
+                  <td class="text-white font-semibold text-sm text-start"
+                    >Last Price</td
+                  >
+                  <td class="text-white font-semibold text-sm text-start"
+                    >Avg Price</td
+                  >
+                  <td class="text-white font-semibold text-sm text-start"
+                    >Bid/Ask</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end">IV</td>
+                  <td class="text-white font-semibold text-sm text-end"
+                    >Floor</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end"
+                    >Sweep</td
+                  >
+                  <td class="text-white font-semibold text-sm text-start"
+                    >Multileg Vol</td
+                  >
+                  <td class="text-white font-semibold text-sm text-end"
+                    >Total Prem</td
+                  >
                 </tr>
-              {/each}
-            </tbody>
-          </table>
-        {:else}
-          <div class="m-auto flex justify-center items-center h-80">
-            <div class="relative">
-              <label
-                class="bg-[#272727] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-              >
-                <span class="loading loading-spinner loading-md text-gray-400"
-                ></span>
-              </label>
+              </thead>
+              <tbody>
+                {#each optionHistoryList as item}
+                  <!-- row -->
+                  <tr class="odd:bg-odd border-b border-gray-800">
+                    <td class="text-sm sm:text-[1rem] text-start text-white">
+                      {formatDate(item?.date)}
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {item?.volume?.toLocaleString("en-US")}
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {item?.open_interest !== undefined
+                        ? item?.open_interest?.toLocaleString("en-US")
+                        : "n/a"}
+                    </td>
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {#if item?.open_interest_change >= 0 && item?.open_interest_change !== undefined}
+                        <span class="text-[#00FC50]"
+                          >+{item?.open_interest_change?.toLocaleString(
+                            "en-US",
+                          )}</span
+                        >
+                      {:else if item?.open_interest_change < 0 && item?.open_interest_change !== undefined}
+                        <span class="text-[#FF2F1F]"
+                          >{item?.open_interest_change?.toLocaleString(
+                            "en-US",
+                          )}</span
+                        >
+                      {:else}
+                        n/a
+                      {/if}
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {#if item?.open_interest_change_percent > 0 && item?.open_interest_change_percent !== undefined}
+                        <span class="text-[#00FC50]"
+                          >+{item?.open_interest_change_percent + "%"}</span
+                        >
+                      {:else if item?.open_interest_change_percent < 0 && item?.open_interest_change_percent !== undefined}
+                        <span class="text-[#FF2F1F]"
+                          >{item?.open_interest_change_percent + "%"}</span
+                        >
+                      {:else if item?.open_interest_change_percent === 0 && item?.open_interest_change_percent !== undefined}
+                        0%
+                      {:else}
+                        n/a
+                      {/if}
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {item?.last_price}
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {item?.avg_price}
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end">
+                      <HoverCard.Root>
+                        <HoverCard.Trigger
+                          class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
+                        >
+                          <div class="flex items-center justify-end">
+                            <!-- Bar Container -->
+                            <div
+                              class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
+                            >
+                              <!-- Bearish -->
+                              <div
+                                class="bg-red-500 h-full"
+                                style="width: calc(({item?.bid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
+                              ></div>
+
+                              <!-- Neutral -->
+                              <div
+                                class="bg-gray-300 h-full"
+                                style="width: calc(({item?.mid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
+                              ></div>
+
+                              <!-- Bullish -->
+                              <div
+                                class="bg-green-500 h-full"
+                                style="width: calc(({item?.ask_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
+                              ></div>
+                            </div>
+                          </div>
+                        </HoverCard.Trigger>
+                        <HoverCard.Content
+                          class="w-auto bg-secondary border border-gray-600"
+                        >
+                          <div class="flex justify-between space-x-4">
+                            <div
+                              class="space-y-1 flex flex-col items-start text-white"
+                            >
+                              <div>
+                                Bid Vol: {@html abbreviateNumberWithColor(
+                                  item?.bid_volume,
+                                  false,
+                                  true,
+                                )}
+                              </div>
+                              <div>
+                                Mid Vol: {@html abbreviateNumberWithColor(
+                                  item?.mid_volume,
+                                  false,
+                                  true,
+                                )}
+                              </div>
+                              <div>
+                                Ask Vol: {@html abbreviateNumberWithColor(
+                                  item?.ask_volume,
+                                  false,
+                                  true,
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </HoverCard.Content>
+                      </HoverCard.Root>
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {(item?.implied_volatility * 100)?.toLocaleString(
+                        "en-US",
+                      ) + "%"}
+                    </td>
+
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {item?.volume > 0
+                        ? ((item?.floor_volume / item?.volume) * 100)?.toFixed(
+                            2,
+                          ) + "%"
+                        : "n/a"}
+                    </td>
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {item?.volume > 0
+                        ? ((item?.sweep_volume / item?.volume) * 100)?.toFixed(
+                            2,
+                          ) + "%"
+                        : "n/a"}
+                    </td>
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {item?.volume > 0
+                        ? (
+                            (item?.multi_leg_volume / item?.volume) *
+                            100
+                          )?.toFixed(2) + "%"
+                        : "n/a"}
+                    </td>
+                    <td class="text-sm sm:text-[1rem] text-end text-white">
+                      {@html abbreviateNumberWithColor(
+                        item?.total_premium,
+                        false,
+                        true,
+                      )}
+                    </td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          {:else}
+            <div class="m-auto flex justify-center items-center h-80">
+              <div class="relative">
+                <label
+                  class="bg-[#272727] rounded-xl h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                >
+                  <span class="loading loading-spinner loading-md text-gray-400"
+                  ></span>
+                </label>
+              </div>
             </div>
-          </div>
-        {/if}
+          {/if}
+        </div>
       </div>
-    </div>
+    {:else}
+      <div
+        class="mt-10 flex justify-center sm:justify-start items-center w-full text-white"
+      >
+        No historical data available yet for the given contract
+      </div>
+    {/if}
   </div>
   <form method="dialog" class="modal-backdrop">
     <button>close</button>
