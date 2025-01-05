@@ -41,6 +41,7 @@
   let strikePrice;
   let optionType;
   let dateExpiration;
+  let otmPercentage;
 
   function formatDate(dateStr) {
     // Parse the input date string (YYYY-mm-dd)
@@ -61,6 +62,36 @@
     var formattedDate = day + "/" + year;
 
     return formattedDate;
+  }
+
+  function computeOTM(strikePrice, optionType) {
+    // Get the current stock price
+    const currentPrice = data?.getStockQuote?.price;
+
+    // Ensure the current price and strike price are valid numbers
+    if (typeof currentPrice !== "number" || typeof strikePrice !== "number") {
+      throw new Error("Invalid current price or strike price");
+    }
+
+    let otmPercentage = 0;
+
+    if (optionType === "C") {
+      // Call option: OTM is positive if strike > currentPrice, negative (ITM) otherwise
+      otmPercentage = (
+        ((strikePrice - currentPrice) / currentPrice) *
+        100
+      )?.toFixed(2);
+    } else if (optionType === "P") {
+      // Put option: OTM is positive if strike < currentPrice, negative (ITM) otherwise
+      otmPercentage = (
+        ((currentPrice - strikePrice) / currentPrice) *
+        100
+      )?.toFixed(2);
+    } else {
+      otmPercentage = "n/a";
+    }
+
+    return otmPercentage; // Return the percentage rounded to two decimal places
   }
 
   function getScroll() {
@@ -98,11 +129,13 @@
   let rawDataVolume = data?.getData?.volume?.map((item) => ({
     ...item,
     dte: daysLeft(item?.date_expiration),
+    otm: computeOTM(item?.strike_price, item?.option_type),
   }));
 
   let rawDataOI = data?.getData?.openInterest?.map((item) => ({
     ...item,
     dte: daysLeft(item?.date_expiration),
+    otm: computeOTM(item?.strike_price, item?.option_type),
   }));
 
   let volumeList = rawDataVolume;
@@ -111,6 +144,7 @@
   $: columns = [
     { key: "strike_price", label: "Chain", align: "left" },
     { key: "dte", label: "DTE", align: "right" },
+    { key: "otm", label: "% OTM", align: "right" },
     { key: "last_price", label: "Last", align: "right" },
     { key: "high_price", label: "Low-High", align: "right" },
     { key: "volume", label: "Volume", align: "right" },
@@ -123,6 +157,7 @@
   $: sortOrders = {
     strike_price: { order: "none", type: "number" },
     dte: { order: "none", type: "number" },
+    otm: { order: "none", type: "number" },
     last_price: { order: "none", type: "number" },
     high_price: { order: "none", type: "number" },
     volume: { order: "none", type: "number" },
@@ -142,9 +177,7 @@
 
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
-    let originalData = rawDataVolume?.sort(
-      (a, b) => b?.open_interest - a?.open_interest,
-    );
+    let originalData = rawDataVolume;
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
       orderCycle[(currentOrderIndex + 1) % orderCycle.length];
@@ -201,9 +234,7 @@
 
     // Cycle through 'none', 'asc', 'desc' for the clicked key
     const orderCycle = ["none", "asc", "desc"];
-    let originalData = rawDataOI?.sort(
-      (a, b) => b?.open_interest - a?.open_interest,
-    );
+    let originalData = rawDataOI;
     const currentOrderIndex = orderCycle.indexOf(sortOrders[key].order);
     sortOrders[key].order =
       orderCycle[(currentOrderIndex + 1) % orderCycle.length];
@@ -264,7 +295,7 @@
     let volumeList = data?.map((item) => item?.volume);
     let oiList = data?.map((item) => item?.open_interest);
     let ivList = data?.map((item) =>
-      Math.floor(item?.implied_volatility * 100),
+      Math?.floor(item?.implied_volatility * 100),
     );
     let series = [];
     if (selectGraphType === "Bid/Ask") {
@@ -359,7 +390,7 @@
         {
           name: "IV",
           type: "line",
-          data: volumeList,
+          data: ivList,
           itemStyle: {
             color: "#B24BF3",
           },
@@ -515,6 +546,7 @@
     strikePrice = item?.strike_price;
     optionType = item?.option_type;
     dateExpiration = item?.date_expiration;
+    otmPercentage = item?.otm;
 
     rawDataHistory = await getContractHistory(item?.option_symbol);
     if (rawDataHistory?.length > 0) {
@@ -610,6 +642,11 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {item?.dte}
+                    </td>
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+                    >
+                      {item?.otm}%
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
@@ -783,6 +820,11 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {item?.dte}
+                    </td>
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+                    >
+                      {item?.otm}%
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
@@ -961,60 +1003,35 @@
       ></div>
 
       <div class="hidden sm:flex flex-wrap text-white pb-2">
-        <div
-          class="mr-3 whitespace-nowrap"
-          data-state="closed"
-          data-sentry-element="unknown"
-          data-sentry-source-file="Tooltip.tsx"
-        >
+        <div class="mr-3 whitespace-nowrap">
           {formatDate(optionHistoryList?.at(0)?.date)}:
         </div>
-        <div
-          class="mr-3 whitespace-nowrap"
-          data-state="closed"
-          data-sentry-element="unknown"
-          data-sentry-source-file="Tooltip.tsx"
-        >
+        <div class="mr-3 whitespace-nowrap">
           <span class="text-[var(--light-text-color)] font-normal">Vol:</span>
           {optionHistoryList?.at(0)?.volume?.toLocaleString("en-US")}
         </div>
-        <div
-          class="mr-3 whitespace-nowrap"
-          data-state="closed"
-          data-sentry-element="unknown"
-          data-sentry-source-file="Tooltip.tsx"
-        >
+        <div class="mr-3 whitespace-nowrap">
           <span class="text-[var(--light-text-color)] font-normal">OI:</span>
           {optionHistoryList?.at(0)?.open_interest?.toLocaleString("en-US")}
         </div>
-        <div
-          class="mr-3 whitespace-nowrap"
-          data-state="closed"
-          data-sentry-element="unknown"
-          data-sentry-source-file="Tooltip.tsx"
-        >
+        <div class="mr-3 whitespace-nowrap">
           <span class="text-[var(--light-text-color)] font-normal">Avg:</span>
           ${optionHistoryList?.at(0)?.avg_price}
         </div>
-        <div
-          class="mr-3 whitespace-nowrap"
-          data-state="closed"
-          data-sentry-element="unknown"
-          data-sentry-source-file="Tooltip.tsx"
-        >
+        <div class="mr-3 whitespace-nowrap">
           <span class="text-[var(--light-text-color)] font-normal">Prem:</span>
           {abbreviateNumber(optionHistoryList?.at(0)?.total_premium, true)}
         </div>
-        <div
-          class="mr-3 whitespace-nowrap"
-          data-state="closed"
-          data-sentry-element="unknown"
-          data-sentry-source-file="Tooltip.tsx"
-        >
+        <div class="mr-3 whitespace-nowrap">
           <span class="text-[var(--light-text-color)] font-normal">IV:</span>
           {(optionHistoryList?.at(0)?.implied_volatility * 100)?.toLocaleString(
             "en-US",
           )}%
+        </div>
+
+        <div class="mr-3 whitespace-nowrap">
+          <span class="text-[var(--light-text-color)] font-normal">OTM:</span>
+          {otmPercentage}%
         </div>
       </div>
 
