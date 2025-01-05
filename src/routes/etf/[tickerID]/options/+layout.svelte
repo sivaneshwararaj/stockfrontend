@@ -15,10 +15,10 @@
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
-      //goto(`/etf/${$etfTicker}${subSectionMap[state]}`);
+      //goto(`/stocks/${$etfTicker}${subSectionMap[state]}`);
     } else {
       displaySubSection = state;
-      //goto(`/etf/${$etfTicker}/statistics`);
+      //goto(`/stocks/${$etfTicker}/statistics`);
     }
   }
 
@@ -64,7 +64,7 @@
               </a>
 
               <a
-                href={`/etf/${$etfTicker}/options/hottest-contracts`}
+                href={`/stocks/${$etfTicker}/options/hottest-contracts`}
                 on:click={() => changeSubSection("hottest-contracts")}
                 class="p-2 px-5 cursor-pointer {displaySubSection ===
                 'hottest-contracts'
@@ -135,7 +135,7 @@
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Build your Stock Screener to find profitable etf.
+                Build your Stock Screener to find profitable stocks.
               </span>
             </a>
           </div>
