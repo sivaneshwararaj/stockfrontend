@@ -304,7 +304,6 @@
     let data = rawDataHistory?.sort(
       (a, b) => new Date(a?.date) - new Date(b?.date),
     );
-    console.log(data);
     let dates = data?.map((item) => item?.date);
     let avgPrice = data?.map((item) => item?.avg_price);
     let priceList = data?.map((item) => item?.price);
@@ -428,9 +427,8 @@
             result += `${bidColor}Bid x ${askColor}Ask: ${bidValue} x ${askValue}<br/>`;
           }
 
-          // Add DTE at the end if the data point exists
           if (rawDataPoint?.dte !== undefined) {
-            result += `DTE: ${rawDataPoint.dte}<br/>`;
+            result += `Days to Expiration : ${rawDataPoint.dte}<br/>`;
           }
 
           return result;
