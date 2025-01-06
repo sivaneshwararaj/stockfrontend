@@ -210,6 +210,18 @@
       title: "Highest OI Change",
       link: "/list/highest-open-interest-change",
     },
+    {
+      title: "Highest OI",
+      link: "/list/highest-open-interest",
+    },
+    {
+      title: "Highest IV Rank",
+      link: "/list/highest-option-iv-rank",
+    },
+    {
+      title: "Highest Option Premium",
+      link: "/list/highest-option-premium",
+    },
   ];
 
   navigation = [...navigationIndustry, ...navigation];
@@ -290,14 +302,14 @@
         {/each}
       </div>
 
-      <div class="border-b-[2px] w-full mb-7" />
+      <div class="border-b-[2px] w-full mb-4" />
 
       <div class="flex justify-center w-full m-auto overflow-hidden">
         <main class="w-full lg:w-3/4 lg:pr-10">
           <slot />
         </main>
 
-        <aside class="hidden lg:block relative fixed w-1/4 -mt-4">
+        <aside class="hidden lg:block relative fixed w-1/4">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
               class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"

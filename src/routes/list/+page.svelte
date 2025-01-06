@@ -33,13 +33,6 @@
         >U.S. Companies With The Most FTD Shares</a
       >
     </li>
-    <li>
-      <a
-        class="text-blue-400 sm:hover:text-white"
-        href="/list/highest-open-interest-change"
-        >U.S. Companies with Highest OI Change</a
-      >
-    </li>
   </ul>
 </div>
 
@@ -139,8 +132,40 @@
 
 <!--End Index Group-->
 
-<!--Start Other Lists-->
+<div class="text-white">
+  <h2 class="mb-2 text-xl font-bold pt-10">Options Lists</h2>
+  <ul
+    class="list-outside list-disc space-y-1 p-1 pl-6 md:columns-2 md:gap-x-8 md:text-lg"
+  >
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/highest-open-interest">Companies with Highest OI</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/highest-open-interest-change"
+        >Companies with Highest OI Change</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/highest-option-iv-rank">Companies with Highest IV Rank</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/highest-option-premium">Companies with Highest Premium</a
+      >
+    </li>
+  </ul>
+</div>
 
+<!--Start Other Lists-->
 <div class="text-white">
   <h2 class="mb-2 text-xl font-bold pt-10">Other Lists</h2>
   <ul

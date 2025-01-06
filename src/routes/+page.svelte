@@ -563,11 +563,6 @@
                   </Card.Title>
                   {#if analystReport?.date}
                     <label
-                      class="text-black bg-[#fff] inline-block ml-3 mt-1 font-semibold not-italic text-xs rounded px-2 py-0.5"
-                      >New</label
-                    >
-
-                    <label
                       class="hidden sm:inline-block text-white text-sm italic ml-auto"
                       >Updated {analystReport?.date}</label
                     >
