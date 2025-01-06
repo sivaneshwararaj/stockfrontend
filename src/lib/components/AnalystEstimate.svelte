@@ -213,7 +213,7 @@
 
     // Normalize the data if needed (not required in this case, but leaving it here for reference)
 
-    let currentYearSuffix = new Date().getFullYear().toString().slice(-2);
+    let currentYearSuffix = new Date().getFullYear()?.toString().slice(-2);
     let searchString = `FY${currentYearSuffix}`;
     let currentYearIndex = dates?.findIndex((date) => date === searchString);
 
@@ -287,7 +287,6 @@
           val: val,
         })) || [];
     }
-
     const growthList = dates?.map((date) => {
       const fy = parseInt(date.replace("FY", ""), 10); // Extract numeric FY value
       const listToUse =
@@ -301,7 +300,6 @@
       const growth = listToUse?.find((r) => r.FY === fy); // Find matching FY
       return growth ? growth?.growth : null; // Return growth or null if not found
     });
-
     const option = {
       silent: true,
       tooltip: {
@@ -324,6 +322,38 @@
           color: "#fff",
         },
       },
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          // Get the timestamp from the first parameter
+          const timestamp = params[0].axisValue;
+
+          // Sort the params array to arrange High, Avg, Low
+          const sortedParams = params.sort((a, b) => {
+            const order = { High: 0, Avg: 1, Low: 2 };
+            return order[a.seriesName] - order[b.seriesName];
+          });
+
+          // Initialize result with timestamp
+          let result = timestamp + "<br/>";
+
+          // Loop through each sorted series data
+          sortedParams.forEach((param) => {
+            result +=
+              param.seriesName + ": " + abbreviateNumber(param.value) + "<br/>";
+          });
+
+          return result;
+        },
+      },
+
       yAxis: [
         {
           type: "value",
@@ -543,6 +573,13 @@
       ],
       tooltip: {
         trigger: "axis",
+        hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
         formatter: (params) => {
           const dataIndex = params[0].dataIndex;
           const mainValue = params[0].value;

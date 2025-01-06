@@ -185,7 +185,7 @@
               {/each}
             </tr><tr class="border-b border-gray-600 last:border-0"
               ><td class="whitespace-nowrap px-1 py-[3px] text-left">Avg</td>
-              {#each avgGrowthList?.filter((item) => item.FY >= 24) as item, index}
+              {#each avgGrowthList?.filter((item) => item.FY >= 25) as item, index}
                 <td class="px-1 py-[3px] text-sm sm:text-[1rem]">
                   {#if index !== 0}
                     {#if userTier !== "Pro" && index >= avgDataList?.length - 2}
