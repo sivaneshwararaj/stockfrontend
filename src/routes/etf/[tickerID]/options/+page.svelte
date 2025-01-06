@@ -60,7 +60,7 @@
     month = (month < 10 ? "0" : "") + month;
     day = (day < 10 ? "0" : "") + day;
 
-    var formattedDate = day + "/" + year;
+    var formattedDate = month + "/" + day + "/" + year;
 
     return formattedDate;
   }

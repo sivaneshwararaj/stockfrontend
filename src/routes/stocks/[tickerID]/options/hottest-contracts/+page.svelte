@@ -66,7 +66,7 @@
     month = (month < 10 ? "0" : "") + month;
     day = (day < 10 ? "0" : "") + day;
 
-    var formattedDate = day + "/" + year;
+    var formattedDate = month + "/" + day + "/" + year;
 
     return formattedDate;
   }
@@ -291,6 +291,7 @@
     let dates = data?.map((item) => item?.date);
     let avgPrice = data?.map((item) => item?.avg_price);
     let priceList = data?.map((item) => item?.price);
+
     let bidVolume = data?.map((item) => item?.bid_volume);
     let askVolume = data?.map((item) => item?.ask_volume);
     let midVolume = data?.map((item) => item?.mid_volume);
@@ -328,20 +329,20 @@
         createBarSeries("Mid", midVolume, "#007BFF", "Ratio"),
         createBarSeries("Bid", bidVolume, "#EE5365", "Ratio"),
         createLineSeries("Avg Fill", avgPrice, "#FAD776"),
-        createLineSeries("Stock Price", priceList, "#fff"),
+        createLineSeries("Stock Price", priceList, "#fff", 2),
       ];
     } else if (selectGraphType === "Vol/OI") {
       series = [
         createBarSeries("Volume", volumeList, "#FD7E14"),
         createBarSeries("OI", oiList, "#33B890"),
         createLineSeries("Avg Fill", avgPrice, "#FAD776"),
-        createLineSeries("Stock Price", priceList, "#fff"),
+        createLineSeries("Stock Price", priceList, "#fff", 2),
       ];
     } else {
       series = [
         createLineSeries("IV", ivList, "#B24BF3", 0),
         createLineSeries("Avg Fill", avgPrice, "#FAD776"),
-        createLineSeries("Stock Price", priceList, "#fff"),
+        createLineSeries("Stock Price", priceList, "#fff", 2),
       ];
     }
 
@@ -438,6 +439,16 @@
             show: false, // Hide y-axis labels
           },
         },
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          position: "top",
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
       ],
       series: series,
     };
@@ -473,6 +484,7 @@
 
   async function handleViewData(item) {
     isLoaded = false;
+    selectGraphType = "Bid/Ask";
     optionDetailsDesktopModal?.showModal();
 
     strikePrice = item?.strike_price;
@@ -490,7 +502,6 @@
           entry.price = matchingData?.close;
         }
       });
-      console.log(rawDataHistory);
       optionsData = plotData();
       rawDataHistory = rawDataHistory?.sort(
         (a, b) => new Date(b?.date) - new Date(a?.date),
