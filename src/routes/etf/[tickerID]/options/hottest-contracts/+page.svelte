@@ -128,6 +128,23 @@
     return daysLeft + "D";
   }
 
+  function calculateDTE(data, dateExpiration) {
+    // Convert the expiration date to a Date object
+    const expirationDate = new Date(dateExpiration);
+
+    return data.map((item) => {
+      const itemDate = new Date(item.date); // Convert item.date to a Date object
+      const timeDifference = expirationDate - itemDate; // Difference in milliseconds
+      const dte = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // Convert ms to days
+
+      // Add the calculated DTE to the object
+      return {
+        ...item,
+        dte, // Add DTE as a new property
+      };
+    });
+  }
+
   let rawDataVolume = data?.getData?.volume?.map((item) => ({
     ...item,
     dte: daysLeft(item?.date_expiration),
@@ -287,7 +304,7 @@
     let data = rawDataHistory?.sort(
       (a, b) => new Date(a?.date) - new Date(b?.date),
     );
-
+    console.log(data);
     let dates = data?.map((item) => item?.date);
     let avgPrice = data?.map((item) => item?.avg_price);
     let priceList = data?.map((item) => item?.price);
@@ -361,8 +378,19 @@
           // Get the timestamp from the first parameter
           const timestamp = params[0].axisValue;
 
+          // Find the matching data point in rawDataHistory based on the date
+          const rawDataPoint = rawDataHistory.find(
+            (item) => item.date === timestamp,
+          );
+
           // Initialize result with timestamp
           let result = timestamp + "<br/>";
+
+          // Variables to store bid and ask values and their colors
+          let bidValue = null;
+          let askValue = null;
+          let bidColor = null;
+          let askColor = null;
 
           // Sort params to ensure Vol appears last
           params.sort((a, b) => {
@@ -371,29 +399,50 @@
             return 0;
           });
 
-          // Add each series data
+          // Loop through each series data
           params?.forEach((param) => {
             const marker =
               '<span style="display:inline-block;margin-right:4px;' +
               "border-radius:10px;width:10px;height:10px;background-color:" +
               param.color +
               '"></span>';
-            result +=
-              marker +
-              param.seriesName +
-              ": " +
-              abbreviateNumberWithColor(param.value, false, true) +
-              "<br/>";
+
+            if (param.seriesName === "Bid") {
+              bidValue = param.value;
+              bidColor = marker;
+            } else if (param.seriesName === "Ask") {
+              askValue = param.value;
+              askColor = marker;
+            } else {
+              result +=
+                marker +
+                param.seriesName +
+                ": " +
+                abbreviateNumberWithColor(param.value, false, true) +
+                "<br/>";
+            }
           });
+
+          // Add Bid x Ask line if both are present
+          if (bidValue !== null && askValue !== null) {
+            result += `${bidColor}Bid x ${askColor}Ask: ${bidValue} x ${askValue}<br/>`;
+          }
+
+          // Add DTE at the end if the data point exists
+          if (rawDataPoint?.dte !== undefined) {
+            result += `DTE: ${rawDataPoint.dte}<br/>`;
+          }
 
           return result;
         },
+
         axisPointer: {
           lineStyle: {
             color: "#fff",
           },
         },
       },
+
       silent: true,
       grid: {
         left: $screenWidth < 640 ? "5%" : "2%",
@@ -502,6 +551,8 @@
           entry.price = matchingData?.close;
         }
       });
+
+      rawDataHistory = calculateDTE(rawDataHistory, dateExpiration);
       optionsData = plotData();
       rawDataHistory = rawDataHistory?.sort(
         (a, b) => new Date(b?.date) - new Date(a?.date),
