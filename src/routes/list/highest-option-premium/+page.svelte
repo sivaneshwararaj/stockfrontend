@@ -5,12 +5,12 @@
   export let data;
 
   const defaultList = [
-    { name: "Total Prem", rule: "totalPrem" },
-
-    { name: "IV Rank", rule: "ivRank" },
+    { name: "Total OI", rule: "totalOI" },
+    { name: "Change OI", rule: "changeOI" },
     { name: "Price", rule: "price" },
     { name: "% Change", rule: "changesPercentage" },
-    { name: "Market Cap", rule: "marketCap" },
+    { name: "IV Rank", rule: "ivRank" },
+    { name: "Total Prem", rule: "totalPrem" },
   ];
 
   const excludedRules = new Set([
@@ -19,9 +19,10 @@
     "changesPercentage",
     "revenue",
     "eps",
-    "marketCap",
-    "ivRank",
+    "changeOI",
+    "totalOI",
     "totalPrem",
+    "ivRank",
   ]);
 </script>
 

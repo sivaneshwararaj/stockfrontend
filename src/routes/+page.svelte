@@ -11,21 +11,12 @@
   import { compareTimes, formatTime, isPWAInstalled } from "$lib/utils";
   import Infobox from "$lib/components/Infobox.svelte";
   import { closedPWA } from "$lib/store";
+  import { options } from "marked";
 
   export let data;
-  let optionsMode = "premium";
+  let optionsMode = "openInterest";
 
-  function reformatDate(dateString) {
-    return (
-      dateString.substring(5, 7) +
-      "/" +
-      dateString.substring(8) +
-      "/" +
-      dateString.substring(2, 4)
-    );
-  }
-
-  let optionsTable = data?.getDashboard?.optionsFlow?.premium || [];
+  let optionsTable = data?.getDashboard?.optionsData?.openInterest || [];
   let gainersList = data?.getDashboard?.marketMovers?.gainers || [];
   let losersList = data?.getDashboard?.marketMovers?.losers || [];
   let marketStatus = data?.getDashboard?.marketStatus ?? 0;
@@ -34,11 +25,11 @@
   function changeTable(state) {
     optionsMode = state;
     if (optionsMode === "premium") {
-      optionsTable = data?.getDashboard?.optionsFlow?.premium || [];
-    } else if (optionsMode === "volume") {
-      optionsTable = data?.getDashboard?.optionsFlow?.volume || [];
-    } else {
-      optionsTable = data?.getDashboard?.optionsFlow?.openInterest || [];
+      optionsTable = data?.getDashboard?.optionsData?.premium || [];
+    } else if (optionsMode === "ivRank") {
+      optionsTable = data?.getDashboard?.optionsData?.ivRank || [];
+    } else if (optionsMode === "openInterest") {
+      optionsTable = data?.getDashboard?.optionsData?.openInterest || [];
     }
   }
   let Feedback;
@@ -434,10 +425,14 @@
                 <div class="flex flex-row w-full items-center">
                   <Card.Title
                     class="text-xl sm:text-2xl tex-white font-semibold"
-                    >Hottest Options Contract</Card.Title
+                    >Hottest Options Activity</Card.Title
                   >
                   <a
-                    href="/options-flow"
+                    href={optionsMode === "openInterest"
+                      ? "/list/highest-open-interest-change"
+                      : optionsMode === "ivRank"
+                        ? "/list/highest-option-iv-rank"
+                        : "/list/highest-option-premium"}
                     class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#fff] text-black"
                   >
                     View All
@@ -449,25 +444,22 @@
                 <Card.Description class="mt-2 text-sm sm:text-[1rem]"
                   >Recent unusual options with the highest ...</Card.Description
                 >
-                <Tabs.Root value="premium" class="w-full sm:w-fit mt-5 ">
+                <Tabs.Root value="openInterest" class="w-full sm:w-fit mt-5 ">
                   <Tabs.List class="grid w-full grid-cols-3 bg-secondary">
+                    <Tabs.Trigger
+                      on:click={() => changeTable("openInterest")}
+                      value="openInterest"
+                      class="text-sm">OI Change</Tabs.Trigger
+                    >
                     <Tabs.Trigger
                       on:click={() => changeTable("premium")}
                       value="premium"
                       class="text-sm">Premium</Tabs.Trigger
                     >
                     <Tabs.Trigger
-                      on:click={() => changeTable("volume")}
-                      value="volume"
-                      class="text-sm">Volume</Tabs.Trigger
-                    >
-                    <Tabs.Trigger
-                      on:click={() => changeTable("openInterest")}
-                      value="openInterest"
-                      class="text-sm"
-                      >{$screenWidth < 640
-                        ? "OI"
-                        : "Open Interest"}</Tabs.Trigger
+                      on:click={() => changeTable("ivRank")}
+                      value="ivRank"
+                      class="text-sm">IV Rank</Tabs.Trigger
                     >
                   </Tabs.List>
                 </Tabs.Root>
@@ -481,21 +473,17 @@
                       >Symbol</Table.Head
                     >
                     <Table.Head class="text-white text-right font-semibold"
-                      >Prem</Table.Head
+                      >Total OI</Table.Head
+                    >
+
+                    <Table.Head class="text-white text-right font-semibold"
+                      >Change OI</Table.Head
                     >
                     <Table.Head class="text-white text-right font-semibold"
-                      >Strike</Table.Head
+                      >Total Prem</Table.Head
                     >
                     <Table.Head class="text-white text-right font-semibold"
-                      >{optionsMode === "openInterest"
-                        ? "OI"
-                        : "Vol"}</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >C/P</Table.Head
-                    >
-                    <Table.Head class="text-right text-white font-semibold"
-                      >Expiry</Table.Head
+                      >IV Rank</Table.Head
                     >
                   </Table.Row>
                 </Table.Header>
@@ -503,45 +491,36 @@
                   {#each optionsTable as item}
                     <Table.Row>
                       <Table.Cell class="text-sm sm:text-[1rem]">
-                        <HoverStockChart
-                          symbol={item?.ticker}
-                          assetType={item?.underlying_type}
-                        />
+                        <HoverStockChart symbol={item?.symbol} />
                       </Table.Cell>
                       <Table.Cell
-                        class="text-right xl:table.-column text-sm sm:text-[1rem] {item?.put_call ===
-                        'Calls'
-                          ? 'text-[#00FC50]'
-                          : 'text-[#FF2F1F]'}"
+                        class="text-right xl:table.-column text-sm sm:text-[1rem] "
                       >
-                        {abbreviateNumber(item?.cost_basis, true)}
+                        {abbreviateNumber(item?.totalOI)}
                       </Table.Cell>
                       <Table.Cell
                         class="text-right xl:table.-column text-sm sm:text-[1rem]"
                       >
-                        ${item?.strike_price}
+                        {#if item?.changeOI >= 0}
+                          <span class="text-[#00FC50]"
+                            >+{item?.changeOI?.toLocaleString("en-US")}</span
+                          >
+                        {:else if item?.changeOI < 0}
+                          <span class="text-[#FF2F1F]"
+                            >{item?.changeOI?.toLocaleString("en-US")}</span
+                          >
+                        {/if}
                       </Table.Cell>
                       <Table.Cell
                         class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
                       >
-                        {abbreviateNumber(
-                          optionsMode === "openInterest"
-                            ? item?.open_interest
-                            : item?.volume,
-                        )}
+                        {abbreviateNumber(item?.totalPrem)}
                       </Table.Cell>
                       <Table.Cell
-                        class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] {item?.put_call ===
-                        'Calls'
-                          ? 'text-[#00FC50]'
-                          : 'text-[#FF2F1F]'}"
+                        class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
                       >
-                        {item?.put_call}
+                        {abbreviateNumber(item?.ivRank)}
                       </Table.Cell>
-
-                      <Table.Cell class="text-right text-sm sm:text-[1rem]"
-                        >{reformatDate(item?.date_expiration)}</Table.Cell
-                      >
                     </Table.Row>
                   {/each}
                 </Table.Body>
