@@ -27,7 +27,7 @@
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox
-    text="A list of stocks with the highest Implied Volatility (IV) Rank and a minimum of 1 million open interest (OI). IV Rank measures a stock's current implied volatility compared to its range over a specific period, helping identify potential opportunities in the options market."
+    text="A list of stocks with the highest total options premium. This premium is the sum of all options contract premiums for each stock, reflecting the overall market sentiment and expectations for volatility."
   />
 
   <!-- Page wrapper -->
