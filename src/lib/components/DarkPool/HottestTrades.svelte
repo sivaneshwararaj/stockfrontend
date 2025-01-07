@@ -31,6 +31,7 @@
     const parts = formatter.formatToParts(date);
 
     const year = parts.find((p) => p.type === "year").value;
+    const month = parts.find((p) => p.type === "month").value;
     const day = parts.find((p) => p.type === "day").value;
     const hour = parts.find((p) => p.type === "hour").value.padStart(2, "0");
     const minute = parts
@@ -39,7 +40,7 @@
 
     const ampm = parts.find((p) => p.type === "dayPeriod").value; // AM/PM
 
-    return `${day}/${year} ${hour}:${minute} ${ampm}`;
+    return `${month}/${day}/${year} ${hour}:${minute} ${ampm}`;
   }
 
   $: columns = [
