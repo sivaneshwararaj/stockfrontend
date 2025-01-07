@@ -52,24 +52,30 @@
   const categories = ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"];
 
   function findIndex(data) {
-    const currentYear = new Date().getFullYear();
+    let year = new Date().getFullYear() - 1;
 
-    // Find the index where the item's date is greater than the current year and revenue is null
-    const index = data?.findIndex(
-      (item) => item?.date > currentYear && item?.revenue === null,
-    );
-
-    // If index is found and there is at least one item in the data for the current year with non-null revenue
-    if (index !== -1) {
-      const hasNonNullRevenue = data?.some(
-        (item) => item?.date === currentYear && item?.revenue !== null,
+    while (year > 0) {
+      // Ensure we don't loop indefinitely
+      // Find the index where the item's date matches the current year and revenue is null
+      const index = data?.findIndex(
+        (item) => item?.date === year && item?.revenue === null,
       );
 
-      // Add +1 to the index if the condition is met
-      return hasNonNullRevenue ? index + 1 : index;
+      // If index is found and there is at least one item in the data for this year with non-null revenue
+      if (index !== -1) {
+        const hasNonNullRevenue = data?.some(
+          (item) => item?.date === year && item?.revenue !== null,
+        );
+
+        // Add +1 to the index if the condition is met
+        return hasNonNullRevenue ? index + 1 : index;
+      }
+
+      // Decrement the year to search the previous year
+      year--;
     }
 
-    return index; // Return the index or -1 if not found
+    return -1; // Return -1 if no matching index is found
   }
 
   function getTotalForDate(index) {
@@ -100,7 +106,7 @@
     const colors = ["#9E190A", "#D9220E", "#FF9E21", "#31B800", "#008A00"];
 
     // Create a consistent mapping for data
-    const formattedData = rawAnalystList.map((item) =>
+    const formattedData = rawAnalystList?.map((item) =>
       categories.map((cat) => item[cat] || 0),
     );
 
@@ -262,16 +268,14 @@
 
     // Calculate changes using the helper function
     const estimatedRevenueAvg =
-      data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg;
-    const revenue = data?.getAnalystEstimate[index - 2]?.revenue;
-    const estimatedRevenueAvgNextYear =
       data?.getAnalystEstimate[index]?.estimatedRevenueAvg;
-
-    const estimatedEpsAvg =
-      data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg;
-    const eps = data?.getAnalystEstimate[index - 2]?.eps;
+    const revenue = data?.getAnalystEstimate[index - 1]?.revenue;
+    const estimatedRevenueAvgNextYear =
+      data?.getAnalystEstimate[index + 1]?.estimatedRevenueAvg;
+    const estimatedEpsAvg = data?.getAnalystEstimate[index]?.estimatedEpsAvg;
+    const eps = data?.getAnalystEstimate[index - 1]?.eps;
     const estimatedEPSAvgNextYear =
-      data?.getAnalystEstimate[index]?.estimatedEpsAvg;
+      data?.getAnalystEstimate[index + 1]?.estimatedEpsAvg;
 
     // Calculate percentage changes for each metric
     changeRevenue = calculateChange(estimatedRevenueAvg, revenue);
@@ -284,6 +288,8 @@
       estimatedEPSAvgNextYear,
       estimatedEpsAvg,
     );
+
+    console.log(changeRevenue, revenue, estimatedRevenueAvg);
   }
 
   function getPriceForecastChart() {
@@ -380,7 +386,7 @@
         {
           name: "Historical",
           type: "line",
-          data: processedHistorical.map((point) => [point.date, point.value]),
+          data: processedHistorical?.map((point) => [point.date, point.value]),
           symbol: "circle",
           symbolSize: 6,
           itemStyle: {
@@ -393,7 +399,7 @@
         {
           name: "High",
           type: "line",
-          data: forecastHigh.map((point) => [point.date, point.value]),
+          data: forecastHigh?.map((point) => [point.date, point.value]),
           symbol: "none",
           lineStyle: {
             type: "dashed",
@@ -403,7 +409,7 @@
         {
           name: "Average",
           type: "line",
-          data: forecastAvg.map((point) => [point.date, point.value]),
+          data: forecastAvg?.map((point) => [point.date, point.value]),
           symbol: "none",
           lineStyle: {
             type: "dashed",
@@ -413,7 +419,7 @@
         {
           name: "Low",
           type: "line",
-          data: forecastLow.map((point) => [point.date, point.value]),
+          data: forecastLow?.map((point) => [point.date, point.value]),
           symbol: "none",
           lineStyle: {
             type: "dashed",
@@ -741,26 +747,27 @@
                   <div
                     class="flex items-baseline text-2xl font-semibold text-white"
                   >
-                    {data?.getAnalystEstimate[index - 1]
-                      ?.estimatedRevenueAvg !== null &&
-                    data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !==
-                      0
+                    {data?.getAnalystEstimate[index]?.estimatedRevenueAvg !==
+                      null &&
+                    data?.getAnalystEstimate[index]?.estimatedRevenueAvg !== 0
                       ? abbreviateNumber(
-                          data?.getAnalystEstimate[index - 1]
-                            ?.estimatedRevenueAvg,
+                          data?.getAnalystEstimate[index]?.estimatedRevenueAvg,
                         )
                       : "n/a"}
-                    {#if data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== 0}
+                    {#if data?.getAnalystEstimate[index]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index]?.estimatedRevenueAvg !== 0}
                       <div
                         class="ml-2 block text-sm font-semibold text-white lg:hidden"
                       >
-                        from {abbreviateNumber(
-                          data?.getAnalystEstimate[index - 2]?.revenue,
-                        )}
+                        from {data?.getAnalystEstimate[index - 1]?.revenue !==
+                        undefined
+                          ? abbreviateNumber(
+                              data?.getAnalystEstimate[index - 1]?.revenue,
+                            )
+                          : "n/a"}
                       </div>
                     {/if}
                   </div>
-                  {#if data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== 0}
+                  {#if data?.getAnalystEstimate[index]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index]?.estimatedRevenueAvg !== 0}
                     <div
                       class="inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-semibold md:mt-2 lg:mt-0 {changeRevenue >
                       0
@@ -788,13 +795,15 @@
                     </div>
                   {/if}
                 </div>
-                {#if data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg !== 0}
+                {#if data?.getAnalystEstimate[index]?.estimatedRevenueAvg !== null && data?.getAnalystEstimate[index]?.estimatedRevenueAvg !== 0}
                   <div
                     class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
                   >
-                    from {abbreviateNumber(
-                      data?.getAnalystEstimate[index - 2]?.revenue,
-                    )}
+                    from {data?.getAnalystEstimate[index - 1]?.revenue !== null
+                      ? abbreviateNumber(
+                          data?.getAnalystEstimate[index - 1]?.revenue,
+                        )
+                      : "n/a"}
                   </div>
                 {/if}
               </div>
@@ -810,16 +819,23 @@
                   <div
                     class="flex items-baseline text-2xl font-semibold text-white"
                   >
-                    {abbreviateNumber(
-                      data?.getAnalystEstimate[index]?.estimatedRevenueAvg,
-                    )}
+                    {data?.getAnalystEstimate[index + 1]
+                      ?.estimatedRevenueAvg !== undefined
+                      ? abbreviateNumber(
+                          data?.getAnalystEstimate[index + 1]
+                            ?.estimatedRevenueAvg,
+                        )
+                      : "n/a"}
                     <div
                       class="ml-2 block text-sm font-semibold text-white lg:hidden"
                     >
-                      from {abbreviateNumber(
-                        data?.getAnalystEstimate[index - 1]
-                          ?.estimatedRevenueAvg,
-                      )}
+                      from {data?.getAnalystEstimate[index]
+                        ?.estimatedRevenueAvg !== undefined
+                        ? abbreviateNumber(
+                            data?.getAnalystEstimate[index]
+                              ?.estimatedRevenueAvg,
+                          )
+                        : "n/a"}
                     </div>
                   </div>
                   <div
@@ -851,9 +867,12 @@
                 <div
                   class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
                 >
-                  from {abbreviateNumber(
-                    data?.getAnalystEstimate[index - 1]?.estimatedRevenueAvg,
-                  )}
+                  from {data?.getAnalystEstimate[index]?.estimatedRevenueAvg !==
+                  undefined
+                    ? abbreviateNumber(
+                        data?.getAnalystEstimate[index]?.estimatedRevenueAvg,
+                      )
+                    : "n/a"}
                 </div>
               </div>
               <div
@@ -869,12 +888,12 @@
                     class="flex items-baseline text-2xl font-semibold text-white"
                   >
                     {abbreviateNumber(
-                      data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg,
+                      data?.getAnalystEstimate[index]?.estimatedEpsAvg,
                     )}
                     <div
                       class="ml-2 block text-sm font-semibold text-white lg:hidden"
                     >
-                      from {data?.getAnalystEstimate[index - 2]?.eps}
+                      from {data?.getAnalystEstimate[index - 1]?.eps}
                     </div>
                   </div>
                   <div
@@ -906,7 +925,7 @@
                 <div
                   class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
                 >
-                  from {data?.getAnalystEstimate[index - 2]?.eps}
+                  from {data?.getAnalystEstimate[index - 1]?.eps}
                 </div>
               </div>
               <div
@@ -922,13 +941,13 @@
                     class="flex items-baseline text-2xl font-semibold text-white"
                   >
                     {abbreviateNumber(
-                      data?.getAnalystEstimate[index]?.estimatedEpsAvg,
+                      data?.getAnalystEstimate[index + 1]?.estimatedEpsAvg,
                     )}
                     <div
                       class="ml-2 block text-sm font-semibold text-white lg:hidden"
                     >
                       from {abbreviateNumber(
-                        data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg,
+                        data?.getAnalystEstimate[index]?.estimatedEpsAvg,
                       )}
                     </div>
                   </div>
@@ -962,7 +981,7 @@
                   class="ml-0.5 mt-1.5 hidden text-sm font-semibold text-white lg:block"
                 >
                   from {abbreviateNumber(
-                    data?.getAnalystEstimate[index - 1]?.estimatedEpsAvg,
+                    data?.getAnalystEstimate[index]?.estimatedEpsAvg,
                   )}
                 </div>
               </div>
