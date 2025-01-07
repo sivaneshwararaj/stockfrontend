@@ -471,7 +471,7 @@
                                 )
                               : item?.changesPercentage?.toFixed(2)}%</span
                           >
-                        {:else}
+                        {:else if item?.changesPercentage < 0}
                           <span class="text-[#FF2F1F]"
                             >{item?.changesPercentage <= -1000
                               ? abbreviateNumberWithColor(
@@ -479,6 +479,8 @@
                                 )
                               : item?.changesPercentage?.toFixed(2)}%
                           </span>
+                        {:else}
+                          n/a
                         {/if}
                       </td>
 
