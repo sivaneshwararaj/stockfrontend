@@ -276,7 +276,8 @@
 
       let change;
       let currentDataRowOneDay;
-      let baseClose = data?.getStockQuote?.previousClose;
+      let baseClose =
+        data?.getStockQuote?.previousClose || oneDayPrice?.at(0)?.open;
 
       const length = oneDayPrice?.length;
       for (let i = length - 1; i >= 0; i--) {
@@ -288,9 +289,9 @@
 
       // Calculate percentage change if baseClose and currentDataRow are valid
       const closeValue =
-        $realtimePrice !== null
+        $realtimePrice !== null && $realtimePrice !== undefined
           ? $realtimePrice
-          : (currentDataRowOneDay?.close ?? currentDataRowOneDay?.value);
+          : currentDataRowOneDay?.close || currentDataRowOneDay?.value;
 
       if (closeValue && baseClose) {
         change = ((closeValue / baseClose - 1) * 100)?.toFixed(2);
