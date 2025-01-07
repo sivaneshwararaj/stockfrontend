@@ -318,10 +318,10 @@
       // Set display legend
       displayLegend = {
         close:
-          $realtimePrice !== null
+          $realtimePrice !== null && $realtimePrice !== undefined
             ? $realtimePrice
-            : (currentDataRowOneDay?.close?.toFixed(2) ??
-              data?.getStockQuote?.price?.toFixed(2)),
+            : currentDataRowOneDay?.close?.toFixed(2) ||
+              data?.getStockQuote?.price?.toFixed(2),
         date: safeFormattedDate,
         change,
       };
