@@ -1339,10 +1339,9 @@
             class="mt-6 flex flex-col lg:flex-row gap-x-14 items-start w-full justify-between"
           >
             <div
-              class="lg:space-y-6 lg:order-2 lg:pt-1 sm:pl-7 lg:pl-0 w-full lg:w-[45%] sm:ml-auto"
+              class="lg:space-y-6 lg:order-2 lg:pt-1 sm:pl-7 lg:pl-0 w-full lg:w-[45%] sm:ml-auto max-w-[400px]"
             >
               <Sidecard {data} />
-              <div class="lg:sticky lg:top-20"></div>
             </div>
 
             <div class="w-full lg:w-[65%] 2xl:w-[70%]">

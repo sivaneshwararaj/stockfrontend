@@ -50,9 +50,13 @@
   }
 
   function loadMoreData() {
-    const nextIndex = newsList?.length;
-    const newArticles = rawData?.slice(nextIndex, nextIndex + 20);
-    newsList = [...newsList, ...newArticles];
+    const nextIndex = newsList.length; // Start from the current length of newsList
+    const remainingArticles = rawData?.slice(nextIndex, nextIndex + 20); // Get the next 20 articles
+
+    // Append the new articles to the newsList
+    if (remainingArticles.length > 0) {
+      newsList = [...newsList, ...remainingArticles];
+    }
   }
 
   $: filteredNewsList =
@@ -93,11 +97,7 @@
       </div>
     </div>
 
-    <div
-      class="{$page?.url?.pathname.includes('etf')
-        ? 'hidden'
-        : ''} mt-1 sm:mt-0 text-white"
-    >
+    <div class=" mt-1 sm:mt-0 text-white">
       <div
         class="hflex flex-row items-center justify-between overflow-x-auto border-b border-gray-600 py-1.5"
       >
@@ -113,27 +113,31 @@
                 : ''}">All</button
             >
           </li>
-          <li>
-            <button
-              on:click={() => (displaySection = "videos")}
-              class="rounded-md px-3 py-0.5 ml-2 sm:hover:bg-secondary {displaySection ===
-              'videos'
-                ? 'bg-secondary'
-                : ''}">Videos</button
-            >
-          </li>
-          <li>
-            <button
-              on:click={() => getPressRelease()}
-              class="rounded-md px-3 py-0.5 ml-2 sm:hover:bg-secondary {displaySection ===
-              'press-releases'
-                ? 'bg-secondary'
-                : ''}"
-              ><span class="inline sm:hidden">Press</span><span
-                class="hidden sm:inline">Press Releases</span
-              ></button
-            >
-          </li>
+          {#if rawData.some((item) => checkIfYoutubeVideo(item.url) !== null)}
+            <li>
+              <button
+                on:click={() => (displaySection = "videos")}
+                class="rounded-md px-3 py-0.5 ml-2 sm:hover:bg-secondary {displaySection ===
+                'videos'
+                  ? 'bg-secondary'
+                  : ''}">Videos</button
+              >
+            </li>
+          {/if}
+          {#if !$page?.url?.pathname.includes("etf")}
+            <li>
+              <button
+                on:click={() => getPressRelease()}
+                class="rounded-md px-3 py-0.5 ml-2 sm:hover:bg-secondary {displaySection ===
+                'press-releases'
+                  ? 'bg-secondary'
+                  : ''}"
+                ><span class="inline sm:hidden">Press</span><span
+                  class="hidden sm:inline">Press Releases</span
+                ></button
+              >
+            </li>
+          {/if}
         </ul>
       </div>
     </div>
@@ -261,10 +265,10 @@
             </div>
           </div>
         {/if}
-        {#if newsList?.length !== rawData?.length && filteredNewsList?.length > 0}
+        {#if newsList?.length !== rawData?.length && filteredNewsList?.length > 0 && displaySection === "all"}
           <label
             on:click={loadMoreData}
-            class="shadow-lg rounded-md cursor-pointer w-5/6 sm:w-full sm:max-w-3xl flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff]"
+            class="shadow-lg rounded-md cursor-pointer w-5/6 sm:w-full flex justify-center items-center py-3 h-full text-sm sm:text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff]"
           >
             Load More News
           </label>
