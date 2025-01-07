@@ -420,7 +420,7 @@
           </div>
           <div class="w-full overflow-x-scroll text-white">
             <table
-              class="w-full table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md m-auto overflow-x-auto"
+              class="w-full table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md m-auto mt-4 overflow-x-auto"
             >
               <thead>
                 <TableHeader {columns} {sortOrders} {sortData} />

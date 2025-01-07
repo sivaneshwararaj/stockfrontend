@@ -11,8 +11,8 @@
     const subSectionMap = {
       overview: "/options",
       "hottest-contracts": "/options/hottest-contracts",
-      GEX: "/options/gex",
-      DEX: "/options/dex",
+      gex: "/options/gex",
+      dex: "/options/dex",
     };
 
     if (state !== "overview" && subSectionMap[state]) {
