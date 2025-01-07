@@ -97,21 +97,23 @@
 
       // Calculate percentage change if baseClose and currentDataRow are valid
       const closeValue =
-        $realtimePrice !== null
+        $realtimePrice !== null && $realtimePrice !== undefined
           ? $realtimePrice
           : (currentDataRowOneDay?.close ?? currentDataRowOneDay?.value);
 
       const graphCloseValue =
-        $realtimePrice !== null
+        $realtimePrice !== null && $realtimePrice !== undefined
           ? $realtimePrice
           : (currentDataRow?.close ?? currentDataRow?.value);
 
       if (closeValue && baseClose) {
-        change = ((closeValue / baseClose - 1) * 100).toFixed(2);
+        change = ((closeValue / baseClose - 1) * 100)?.toFixed(2);
       }
 
       if (graphCloseValue && graphBaseClose) {
-        graphChange = ((graphCloseValue / graphBaseClose - 1) * 100).toFixed(2);
+        graphChange = ((graphCloseValue / graphBaseClose - 1) * 100)?.toFixed(
+          2,
+        );
       }
 
       // Format date
