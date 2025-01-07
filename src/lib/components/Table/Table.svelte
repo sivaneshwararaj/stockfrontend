@@ -16,6 +16,7 @@
 
   export let data;
   export let rawData;
+
   export let excludedRules = new Set([
     "volume",
     "price",
@@ -366,18 +367,6 @@
     window.scrollTo(0, scrollPosition);
   }
 
-  // Watch for changes in originalData and restore scroll position
-  $: if (originalData && typeof window !== "undefined" && sortMode === true) {
-    restoreScrollPosition();
-    activeSortKey = Object?.keys(sortOrders)?.find(
-      (key) => sortOrders[key]?.order !== "none",
-    );
-    if (["changesPercentage", "price"]?.includes(activeSortKey)) {
-      sortData(activeSortKey, true);
-    }
-    sortMode = false;
-  }
-
   function sendMessage(message) {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON?.stringify(message));
@@ -393,7 +382,9 @@
       socket.addEventListener("open", () => {
         console.log("WebSocket connection opened");
         // Send only current watchlist symbols
-        const tickerList = rawData?.map((item) => item?.symbol) || [];
+        //Only update 200 tickers because of a bug. The previous price is getting changed for tickers. To-do list.
+        const tickerList =
+          rawData?.slice(0, 200)?.map((item) => item?.symbol) || [];
         sendMessage(tickerList);
       });
 
