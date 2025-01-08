@@ -5,12 +5,12 @@
 
   let info;
 
-  let sector = "-";
-  let industry = "-";
-  let exchange = "-";
-  let employees = "-";
+  let sector = "n/a";
+  let industry = "n/a";
+  let exchange = "n/a";
+  let employees = "n/a";
   let description = "";
-  let website = "-";
+  let website = "n/a";
   let snippet;
 
   let buyCount = 0;
@@ -47,11 +47,11 @@
           : "n/a";
 
       //ceoName = info?.ceoName?.length !== 0 ? getAbbreviatedName(info?.ceoName) : "-";
-      sector = info?.sector ?? "-";
-      industry = info?.industry ?? "-";
+      sector = info?.sector ?? "n/a";
+      industry = info?.industry ?? "n/a";
       exchange = info?.exchange;
-      employees = info?.fullTimeEmployees ?? "-";
-      //country = info?.country ?? "-";
+      employees = info?.fullTimeEmployees ?? "n/a";
+      //country = info?.country ?? "n/a";
       description =
         info?.description ??
         "A detailed description of the company is not yet available.";
@@ -73,7 +73,7 @@
       priceTarget =
         data?.getAnalystRating?.medianPriceTarget !== ("n/a" && 0)
           ? data?.getAnalystRating?.medianPriceTarget
-          : "-";
+          : "n/a";
       consensusRating = data?.getAnalystRating?.consensusRating;
 
       try {
@@ -142,14 +142,16 @@
       <span class="block font-semibold">Ticker Symbol</span>
       <span>{$stockTicker}</span>
     </div>
-    <div class="col-span-1 whitespace-nowrap text-gray-200">
-      <span class="block font-semibold">Website</span>
-      <a
-        href={website}
-        class="hover:sm:text-white truncate text-blue-400"
-        target="_blank">{website}</a
-      >
-    </div>
+    {#if website}
+      <div class="col-span-1 whitespace-nowrap text-gray-200">
+        <span class="block font-semibold">Website</span>
+        <a
+          href={website}
+          class="hover:sm:text-white truncate text-blue-400"
+          target="_blank">{website}</a
+        >
+      </div>
+    {/if}
   </div>
 </div>
 

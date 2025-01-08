@@ -338,7 +338,7 @@
 </script>
 
 <body
-  class="bg-default pb-40 w-full max-w-screen min-h-screen sm:max-w-7xl xl:max-w-screen-2xl overflow-hidden"
+  class="bg-default pb-40 w-full max-w-screen min-h-screen sm:max-w-7xl sm:max-w-[1400px] overflow-hidden"
 >
   <!-- Page wrapper -->
   <div class="flex flex-col w-full">

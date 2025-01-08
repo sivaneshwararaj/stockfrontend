@@ -109,7 +109,7 @@
 </svelte:head>
 
 <div
-  class="w-full xl:max-w-screen-2xl overflow-hidden m-auto min-h-screen bg-default mb-40"
+  class="w-full sm:max-w-[1400px] overflow-hidden m-auto min-h-screen bg-default mb-40"
 >
   {#if AppInstalled && !$closedPWA}
     <svelte:component this={AppInstalled} />

@@ -1175,7 +1175,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{data?.getStockQuote?.eps}</td
+                      >{data?.getStockQuote?.eps ?? "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1186,7 +1186,7 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{data?.getStockQuote?.pe}</td
+                      >{data?.getStockQuote?.pe ?? "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1266,9 +1266,11 @@
                     >
                     <td
                       class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-                      >{data?.getStockQuote?.avgVolume?.toLocaleString(
-                        "en-us",
-                      )}</td
+                      >{data?.getStockQuote?.avgVolume !== undefined
+                        ? data?.getStockQuote?.avgVolume?.toLocaleString(
+                            "en-us",
+                          )
+                        : "n/a"}</td
                     ></tr
                   >
                   <tr
@@ -1341,7 +1343,7 @@
             class="mt-6 flex flex-col lg:flex-row gap-x-14 items-start w-full justify-between"
           >
             <div
-              class="lg:space-y-6 lg:order-2 lg:pt-1 sm:pl-7 lg:pl-0 w-full lg:w-[45%] sm:ml-auto max-w-[400px]"
+              class="lg:space-y-6 lg:order-2 lg:pt-1 sm:pl-7 lg:pl-0 w-full lg:w-[45%] sm:ml-auto lg:max-w-[400px]"
             >
               <Sidecard {data} />
             </div>

@@ -728,7 +728,7 @@
 
 <body class="overflow-y-auto">
   <section
-    class="w-full max-w-screen sm:max-w-7xl xl:max-w-screen-2xl flex justify-center items-center bg-default pb-20 mt-5 sm:mt-0 px-3 sm:px-0"
+    class="w-full max-w-screen sm:max-w-7xl sm:max-w-[1400px] flex justify-center items-center bg-default pb-20 mt-5 sm:mt-0 px-3 sm:px-0"
   >
     <div class="w-full m-auto min-h-screen">
       <!--

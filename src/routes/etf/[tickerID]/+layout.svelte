@@ -292,7 +292,7 @@
 <svelte:window bind:scrollY={y} />
 
 <body
-  class="bg-default w-full max-w-screen sm:max-w-7xl min-h-screen xl:max-w-screen-2xl overflow-hidden"
+  class="bg-default w-full max-w-screen sm:max-w-7xl min-h-screen sm:max-w-[1400px] overflow-hidden"
 >
   <!-- Page wrapper -->
   <div class="flex flex-col w-full mt-5 relative w-full">
