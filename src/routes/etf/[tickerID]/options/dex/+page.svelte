@@ -5,7 +5,7 @@
     monthNames,
   } from "$lib/utils";
   import {
-    stockTicker,
+    etfTicker,
     screenWidth,
     numberOfUnreadNotification,
     displayCompanyName,
@@ -337,7 +337,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Gamma Exposure · Stocknear
+    {$displayCompanyName} ({$etfTicker}) Delta Exposure · Stocknear
   </title>
   <meta
     name="description"
@@ -347,7 +347,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Delta Exposure · Stocknear`}
   />
   <meta
     property="og:description"
@@ -360,7 +360,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Delta Exposure · Stocknear`}
   />
   <meta
     name="twitter:description"
