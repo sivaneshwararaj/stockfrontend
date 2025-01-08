@@ -145,7 +145,7 @@
       grid: {
         left: $screenWidth < 640 ? "5%" : "0%",
         right: $screenWidth < 640 ? "5%" : "0%",
-        bottom: "20%",
+        bottom: "10%",
         containLabel: true,
       },
       xAxis: [
@@ -256,7 +256,7 @@
     { key: "date", label: "Date", align: "left" },
     { key: "call_gamma", label: "Call GEX", align: "right" },
     { key: "put_gamma", label: "Put GEX", align: "right" },
-    { key: "put_gamma", label: "Net GEX", align: "right" },
+    { key: "net_gamma", label: "Net GEX", align: "right" },
     { key: "put_call_ratio", label: "P/C GEX", align: "right" },
   ];
 
