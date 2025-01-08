@@ -1,11 +1,7 @@
 <script lang="ts">
+  import { abbreviateNumberWithColor } from "$lib/utils";
   import {
-    abbreviateNumberWithColor,
-    abbreviateNumber,
-    monthNames,
-  } from "$lib/utils";
-  import {
-    stockTicker,
+    etfTicker,
     screenWidth,
     numberOfUnreadNotification,
     displayCompanyName,
@@ -39,10 +35,10 @@
 
   rawData = rawData?.map((item) => ({
     ...item,
-    net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
+    net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
     put_call_ratio:
-      item?.call_gex > 0
-        ? Math.abs((item?.put_gex || 0) / item?.call_gex)
+      item?.call_delta > 0
+        ? Math.abs((item?.put_delta || 0) / item?.call_delta)
         : null,
   }));
 
@@ -65,16 +61,16 @@
     const processedData = rawData
       ?.map((d) => ({
         expiry: formatDate(d?.expiry),
-        callGamma: d?.call_gex,
-        putGamma: d?.put_gex,
-        netGamma: d?.net_gex,
+        callDelta: d?.call_delta,
+        putDelta: d?.put_delta,
+        netDelta: d?.net_delta,
       }))
       .sort((a, b) => a.strike - b.strike);
 
     const expiries = processedData.map((d) => d.expiry);
-    const callGamma = processedData.map((d) => d.callGamma?.toFixed(2));
-    const putGamma = processedData.map((d) => d.putGamma?.toFixed(2));
-    const netGamma = processedData.map((d) => d.netGamma?.toFixed(2));
+    const callDelta = processedData.map((d) => d.callDelta?.toFixed(2));
+    const putDelta = processedData.map((d) => d.putDelta?.toFixed(2));
+    const netDelta = processedData.map((d) => d.netDelta?.toFixed(2));
 
     const options = {
       animation: false,
@@ -96,9 +92,9 @@
           return `
           <div style="text-align:left;">
             <b>Expiry:</b> ${expiry}<br/>
-            <span style="color:#9B5DC4;">● Put Gamma:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
-            <span style="color:#C4E916;">● Call Gamma:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
-            <span style="color:#FF2F1F;">● Net Gamma:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
+            <span style="color:#9B5DC4;">● Put Delta:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
+            <span style="color:#C4E916;">● Call Delta:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
+            <span style="color:#FF2F1F;">● Net Delta:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
           </div>`;
         },
       },
@@ -110,7 +106,7 @@
       },
       xAxis: {
         type: "value",
-        name: "Gamma",
+        name: "Delta",
         nameTextStyle: { color: "#fff" },
         splitLine: { show: false },
         axisLabel: {
@@ -126,25 +122,25 @@
       },
       series: [
         {
-          name: "Put Gamma",
+          name: "Put Delta",
           type: "bar",
-          data: putGamma,
-          stack: "gamma",
+          data: putDelta,
+          stack: "Delta",
           itemStyle: { color: "#9B5DC4" },
           barWidth: "40%",
         },
         {
-          name: "Net Gamma",
+          name: "Net Delta",
           type: "bar",
-          data: netGamma,
-          stack: "gamma",
+          data: netDelta,
+          stack: "Delta",
           itemStyle: { color: "#FF2F1F" },
         },
         {
-          name: "Call Gamma",
+          name: "Call Delta",
           type: "bar",
-          data: callGamma,
-          stack: "gamma",
+          data: callDelta,
+          stack: "Delta",
           itemStyle: { color: "#C4E916" },
         },
       ],
@@ -173,17 +169,17 @@
 
   $: columns = [
     { key: "expiry", label: "Expiry Date", align: "left" },
-    { key: "call_gex", label: "Call GEX", align: "right" },
-    { key: "put_gex", label: "Put GEX", align: "right" },
-    { key: "net_gex", label: "Net GEX", align: "right" },
-    { key: "put_call_ratio", label: "P/C GEX", align: "right" },
+    { key: "call_delta", label: "Call Delta", align: "right" },
+    { key: "put_delta", label: "Put Delta", align: "right" },
+    { key: "net_delta", label: "Net Delta", align: "right" },
+    { key: "put_call_ratio", label: "P/C Delta", align: "right" },
   ];
 
   $: sortOrders = {
     expiry: { order: "none", type: "date" },
-    call_gex: { order: "none", type: "number" },
-    put_gex: { order: "none", type: "number" },
-    net_gex: { order: "none", type: "number" },
+    call_delta: { order: "none", type: "number" },
+    put_delta: { order: "none", type: "number" },
+    net_delta: { order: "none", type: "number" },
     put_call_ratio: { order: "none", type: "number" },
   };
 
@@ -256,21 +252,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Gamma Exposure by Expiry · Stocknear
+    {$displayCompanyName} ({$etfTicker}) Delta Exposure by Expiry · Stocknear
   </title>
   <meta
     name="description"
-    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
+    content={`Analyze Delta Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Expiry · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Delta Exposure by Expiry · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
+    content={`Analyze Delta Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -279,11 +275,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Expiry · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Delta Exposure by Expiry · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
+    content={`Analyze Delta Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -300,7 +296,7 @@
           <h2
             class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
           >
-            Gamma Exposure By Expiry
+            Delta Exposure By Expiry
           </h2>
 
           <div class="w-full overflow-hidden m-auto">
@@ -348,7 +344,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.call_gex?.toFixed(2),
+                        item?.call_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -357,7 +353,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.put_gex?.toFixed(2),
+                        item?.put_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -367,7 +363,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.net_gex?.toFixed(2),
+                        item?.net_delta?.toFixed(2),
                         false,
                         true,
                       )}

@@ -249,7 +249,7 @@
   </title>
   <meta
     name="description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Discover detailed Gamma Exposure analysis by strike price for ${$displayCompanyName} (${$etfTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
   />
 
   <!-- Other meta tags -->
@@ -259,7 +259,7 @@
   />
   <meta
     property="og:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Discover detailed Gamma Exposure analysis by strike price for ${$displayCompanyName} (${$etfTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -272,7 +272,7 @@
   />
   <meta
     name="twitter:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Discover detailed Gamma Exposure analysis by strike price for ${$displayCompanyName} (${$etfTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>

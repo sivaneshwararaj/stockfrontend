@@ -8,9 +8,9 @@
 
   function changeSubSection(state) {
     const subSectionMap = {
-      gex: "/options/gex",
-      strike: "/options/gex/strike",
-      expiry: "/options/gex/expiry",
+      dex: "/options/dex",
+      strike: "/options/dex/strike",
+      expiry: "/options/dex/expiry",
     };
 
     if (state !== "overview" && subSectionMap[state]) {
@@ -55,7 +55,7 @@
           >
             <ul class="flex flex-row items-center w-full text-white">
               <a
-                href={`/etf/${$etfTicker}/options/gex`}
+                href={`/etf/${$etfTicker}/options/dex`}
                 on:click={() => changeSubSection("overview")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'overview'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
@@ -65,7 +65,7 @@
               </a>
 
               <a
-                href={`/etf/${$etfTicker}/options/gex/strike`}
+                href={`/etf/${$etfTicker}/options/dex/strike`}
                 on:click={() => changeSubSection("strike")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'strike'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
@@ -74,7 +74,7 @@
                 By Strike
               </a>
               <a
-                href={`/etf/${$etfTicker}/options/gex/expiry`}
+                href={`/etf/${$etfTicker}/options/dex/expiry`}
                 on:click={() => changeSubSection("expiry")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'expiry'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'

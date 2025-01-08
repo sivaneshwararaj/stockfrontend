@@ -132,8 +132,8 @@
     // Convert the expiration date to a Date object
     const expirationDate = new Date(dateExpiration);
 
-    return data?.map((item) => {
-      const itemDate = new Date(item?.date); // Convert item.date to a Date object
+    return data.map((item) => {
+      const itemDate = new Date(item.date); // Convert item.date to a Date object
       const timeDifference = expirationDate - itemDate; // Difference in milliseconds
       const dte = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // Convert ms to days
 
@@ -427,7 +427,6 @@
             result += `${bidColor}Bid x ${askColor}Ask: ${bidValue} x ${askValue}<br/>`;
           }
 
-          // Add DTE at the end if the data point exists
           if (rawDataPoint?.dte !== undefined) {
             result += `Days to Expiration : ${rawDataPoint.dte}<br/>`;
           }

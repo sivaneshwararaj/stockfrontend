@@ -17,10 +17,10 @@
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
-      //goto(`/stocks/${$etfTicker}${subSectionMap[state]}`);
+      //goto(`/etf/${$etfTicker}${subSectionMap[state]}`);
     } else {
       displaySubSection = state;
-      //goto(`/stocks/${$etfTicker}/statistics`);
+      //goto(`/etf/${$etfTicker}/statistics`);
     }
   }
 
@@ -157,7 +157,7 @@
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Build your Stock Screener to find profitable stocks.
+                Build your Stock Screener to find profitable etf.
               </span>
             </a>
           </div>

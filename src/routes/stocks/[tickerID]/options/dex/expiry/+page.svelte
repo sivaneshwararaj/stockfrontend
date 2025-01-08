@@ -256,22 +256,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Gamma Exposure by Strike Price ·
-    Stocknear
+    {$displayCompanyName} ({$stockTicker}) Delta Exposure by Expiry · Stocknear
   </title>
   <meta
     name="description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Analyze Delta Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Delta Exposure by Expiry · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Analyze Delta Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -280,11 +279,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Delta Exposure by Expiry · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Analyze Delta Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
@@ -301,7 +300,7 @@
           <h2
             class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
           >
-            Gamma Exposure By Expiry
+            Delta Exposure By Expiry
           </h2>
 
           <div class="w-full overflow-hidden m-auto">

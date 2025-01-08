@@ -103,13 +103,14 @@
         },
       },
       grid: {
-        left: $screenWidth < 640 ? "0%" : "0%",
-        right: $screenWidth < 640 ? "0%" : "0%",
+        left: $screenWidth < 640 ? "5%" : "1%",
+        right: $screenWidth < 640 ? "5%" : "0%",
         bottom: "10%",
         containLabel: true,
       },
       xAxis: {
         type: "value",
+        name: "Gamma",
         nameTextStyle: { color: "#fff" },
         splitLine: { show: false },
         axisLabel: {
@@ -255,22 +256,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Gamma Exposure by Strike Price ·
-    Stocknear
+    {$displayCompanyName} ({$etfTicker}) Gamma Exposure by Expiry · Stocknear
   </title>
   <meta
     name="description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure by Expiry · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -279,11 +279,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure by Expiry · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
+    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
