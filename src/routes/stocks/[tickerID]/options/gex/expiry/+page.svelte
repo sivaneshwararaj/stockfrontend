@@ -77,6 +77,7 @@
     const netGamma = processedData.map((d) => d.netGamma?.toFixed(2));
 
     const options = {
+      animation: false,
       tooltip: {
         trigger: "axis",
         axisPointer: {

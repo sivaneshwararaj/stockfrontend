@@ -11,6 +11,8 @@
     const subSectionMap = {
       overview: "/options",
       "hottest-contracts": "/options/hottest-contracts",
+      gex: "/options/gex",
+      dex: "/options/dex",
     };
 
     if (state !== "overview" && subSectionMap[state]) {
@@ -28,6 +30,8 @@
       const sectionMap = {
         overview: "overview",
         "hottest-contracts": "hottest-contracts",
+        gex: "gex",
+        dex: "dex",
       };
 
       const foundSection = parts?.find((part) =>
@@ -72,6 +76,24 @@
                   : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
               >
                 Hottest Contracts
+              </a>
+              <a
+                href={`/etf/${$etfTicker}/options/gex`}
+                on:click={() => changeSubSection("gex")}
+                class="p-2 px-5 cursor-pointer {displaySubSection === 'gex'
+                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+              >
+                GEX
+              </a>
+              <a
+                href={`/etf/${$etfTicker}/options/dex`}
+                on:click={() => changeSubSection("dex")}
+                class="p-2 px-5 cursor-pointer {displaySubSection === 'dex'
+                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+              >
+                DEX
               </a>
             </ul>
           </nav>

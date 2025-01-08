@@ -39,10 +39,10 @@
 
   rawData = rawData?.map((item) => ({
     ...item,
-    net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
+    net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
     put_call_ratio:
-      item?.call_gex > 0
-        ? Math.abs((item?.put_gex || 0) / item?.call_gex)
+      item?.call_delta > 0
+        ? Math.abs((item?.put_delta || 0) / item?.call_delta)
         : null,
   }));
 
@@ -54,16 +54,16 @@
     const processedData = rawData
       ?.map((d) => ({
         strike: d?.strike,
-        callGamma: d?.call_gex,
-        putGamma: d?.put_gex,
-        netGamma: d?.net_gex,
+        callDelta: d?.call_delta,
+        putDelta: d?.put_delta,
+        netDelta: d?.net_delta,
       }))
       .sort((a, b) => a.strike - b.strike);
 
     const strikes = processedData.map((d) => d.strike);
-    const callGamma = processedData.map((d) => d.callGamma?.toFixed(2));
-    const putGamma = processedData.map((d) => d.putGamma?.toFixed(2));
-    const netGamma = processedData.map((d) => d.netGamma?.toFixed(2));
+    const callDelta = processedData.map((d) => d.callDelta?.toFixed(2));
+    const putDelta = processedData.map((d) => d.putDelta?.toFixed(2));
+    const netDelta = processedData.map((d) => d.netDelta?.toFixed(2));
 
     const options = {
       animation: false,
@@ -85,9 +85,9 @@
           return `
           <div style="text-align:left;">
             <b>Strike:</b> ${strike}<br/>
-            <span style="color:#9B5DC4;">● Put Gamma:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
-            <span style="color:#C4E916;">● Call Gamma:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
-            <span style="color:#FF2F1F;">● Net Gamma:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
+            <span style="color:#9B5DC4;">● Put Delta:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
+            <span style="color:#C4E916;">● Call Delta:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
+            <span style="color:#FF2F1F;">● Net Delta:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
           </div>`;
         },
       },
@@ -99,7 +99,7 @@
       },
       xAxis: {
         type: "value",
-        name: "Gamma",
+        name: "Delta",
         nameTextStyle: { color: "#fff" },
         splitLine: { show: false },
         axisLabel: {
@@ -115,24 +115,24 @@
       },
       series: [
         {
-          name: "Put Gamma",
+          name: "Put Delta",
           type: "bar",
-          data: putGamma,
-          stack: "gamma",
+          data: putDelta,
+          stack: "Delta",
           itemStyle: { color: "#9B5DC4" },
         },
         {
-          name: "Net Gamma",
+          name: "Net Delta",
           type: "bar",
-          data: netGamma,
-          stack: "gamma",
+          data: netDelta,
+          stack: "Delta",
           itemStyle: { color: "#FF2F1F" },
         },
         {
-          name: "Call Gamma",
+          name: "Call Delta",
           type: "bar",
-          data: callGamma,
-          stack: "gamma",
+          data: callDelta,
+          stack: "Delta",
           itemStyle: { color: "#C4E916" },
         },
       ],
@@ -161,17 +161,17 @@
 
   $: columns = [
     { key: "strike", label: "Strike Price", align: "left" },
-    { key: "call_gex", label: "Call GEX", align: "right" },
-    { key: "put_gex", label: "Put GEX", align: "right" },
-    { key: "net_gex", label: "Net GEX", align: "right" },
-    { key: "put_call_ratio", label: "P/C GEX", align: "right" },
+    { key: "call_delta", label: "Call Delta", align: "right" },
+    { key: "put_delta", label: "Put Delta", align: "right" },
+    { key: "net_delta", label: "Net Delta", align: "right" },
+    { key: "put_call_ratio", label: "P/C Delta", align: "right" },
   ];
 
   $: sortOrders = {
     strike: { order: "none", type: "number" },
-    call_gex: { order: "none", type: "number" },
-    put_gex: { order: "none", type: "number" },
-    net_gex: { order: "none", type: "number" },
+    call_delta: { order: "none", type: "number" },
+    put_delta: { order: "none", type: "number" },
+    net_delta: { order: "none", type: "number" },
     put_call_ratio: { order: "none", type: "number" },
   };
 
@@ -244,7 +244,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Gamma Exposure by Strike Price ·
+    {$displayCompanyName} ({$stockTicker}) Delta Exposure by Strike Price ·
     Stocknear
   </title>
   <meta
@@ -255,7 +255,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Delta Exposure by Strike Price · Stocknear`}
   />
   <meta
     property="og:description"
@@ -268,7 +268,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Delta Exposure by Strike Price · Stocknear`}
   />
   <meta
     name="twitter:description"
@@ -337,7 +337,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.call_gex?.toFixed(2),
+                        item?.call_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -346,7 +346,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.put_gex?.toFixed(2),
+                        item?.put_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -356,7 +356,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.net_gex?.toFixed(2),
+                        item?.net_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -387,11 +387,6 @@
         </div>
       {:else}
         <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-          <h2
-            class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
-          >
-            Hottest Contracts
-          </h2>
           <div class="mt-2">
             <Infobox text="No data is available" />
           </div>

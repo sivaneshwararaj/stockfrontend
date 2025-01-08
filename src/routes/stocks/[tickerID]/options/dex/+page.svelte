@@ -39,106 +39,199 @@
 
   rawData = rawData?.map((item) => ({
     ...item,
-    net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
+    net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
     put_call_ratio:
-      item?.call_gex > 0
-        ? Math.abs((item?.put_gex || 0) / item?.call_gex)
+      item?.call_delta > 0
+        ? Math.abs((item?.put_delta || 0) / item?.call_delta)
         : null,
   }));
 
   let displayList = rawData?.slice(0, 150);
+  let timePeriod = "3M";
+
   let options = null;
 
+  function filterDataByPeriod(historicalData, period = "3M") {
+    const currentDate = new Date();
+    let startDate = new Date();
+
+    // Calculate the start date based on the period input
+    switch (period) {
+      case "3M":
+        startDate.setMonth(currentDate.getMonth() - 3);
+        break;
+      case "6M":
+        startDate.setMonth(currentDate.getMonth() - 6);
+        break;
+      case "1Y":
+        startDate.setFullYear(currentDate.getFullYear() - 1);
+        break;
+      default:
+        throw new Error(`Unsupported period: ${period}`);
+    }
+
+    // Filter the data based on the calculated start date
+    let filteredData = historicalData?.filter((item) => {
+      if (!item?.date) return false;
+      const itemDate = new Date(item.date);
+      return itemDate >= startDate && itemDate <= currentDate;
+    });
+
+    filteredData?.forEach((entry) => {
+      const matchingData = data?.getHistoricalPrice?.find(
+        (d) => d?.time === entry?.date,
+      );
+      if (matchingData) {
+        entry.price = matchingData?.close;
+      }
+    });
+
+    // Extract the dates and gamma values from the filtered data
+    const dateList = filteredData?.map((item) => item.date);
+    const gammaList = filteredData?.map((item) => item.net_delta);
+    const priceList = filteredData?.map((item) => item.price);
+
+    return { dateList, gammaList, priceList };
+  }
+
   function plotData() {
-    // Process and sort data by strike in descending order
-    const processedData = rawData
-      ?.map((d) => ({
-        strike: d?.strike,
-        callGamma: d?.call_gex,
-        putGamma: d?.put_gex,
-        netGamma: d?.net_gex,
-      }))
-      .sort((a, b) => a.strike - b.strike);
-
-    const strikes = processedData.map((d) => d.strike);
-    const callGamma = processedData.map((d) => d.callGamma?.toFixed(2));
-    const putGamma = processedData.map((d) => d.putGamma?.toFixed(2));
-    const netGamma = processedData.map((d) => d.netGamma?.toFixed(2));
-
+    const data = rawData?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
+    const { dateList, gammaList, priceList } = filterDataByPeriod(
+      data,
+      timePeriod,
+    );
     const options = {
       animation: false,
       tooltip: {
         trigger: "axis",
-        axisPointer: {
-          type: "shadow",
-        },
-        backgroundColor: "#313131",
+        hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
         textStyle: {
-          color: "#fff",
+          color: "#fff", // Optional: Text color for better visibility
         },
         formatter: function (params) {
-          const strike = params[0].axisValue;
-          const put = params[0].data;
-          const call = params[1].data;
-          const net = params[2].data;
+          // Get the timestamp from the first parameter
+          const timestamp = params[0].axisValue;
 
-          return `
-          <div style="text-align:left;">
-            <b>Strike:</b> ${strike}<br/>
-            <span style="color:#9B5DC4;">● Put Gamma:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
-            <span style="color:#C4E916;">● Call Gamma:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
-            <span style="color:#FF2F1F;">● Net Gamma:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
-          </div>`;
+          // Initialize result with timestamp
+          let result = timestamp + "<br/>";
+
+          // Add each series data
+          params?.forEach((param) => {
+            const marker =
+              '<span style="display:inline-block;margin-right:4px;' +
+              "border-radius:10px;width:10px;height:10px;background-color:" +
+              param.color +
+              '"></span>';
+            result +=
+              marker +
+              param.seriesName +
+              ": " +
+              abbreviateNumber(param.value) +
+              "<br/>";
+          });
+
+          return result;
+        },
+        axisPointer: {
+          lineStyle: {
+            color: "#fff",
+          },
         },
       },
+      silent: true,
       grid: {
         left: $screenWidth < 640 ? "5%" : "0%",
         right: $screenWidth < 640 ? "5%" : "0%",
-        bottom: "5%",
+        bottom: "10%",
         containLabel: true,
       },
-      xAxis: {
-        type: "value",
-        name: "Gamma",
-        nameTextStyle: { color: "#fff" },
-        splitLine: { show: false },
-        axisLabel: {
-          show: false, // Hide y-axis labels
+      xAxis: [
+        {
+          type: "category",
+          data: dateList,
+          axisLabel: {
+            color: "#fff",
+
+            formatter: function (value) {
+              // Assuming dates are in the format 'yyyy-mm-dd'
+              const dateParts = value.split("-");
+              const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+              const year = parseInt(dateParts[0]);
+              const day = parseInt(dateParts[2]);
+              return `${day} ${monthNames[monthIndex]} ${year}`;
+            },
+          },
         },
-      },
-      yAxis: {
-        type: "category",
-        data: strikes,
-        axisLine: { lineStyle: { color: "#fff" } },
-        axisLabel: { color: "#fff" },
-        splitLine: { show: false },
-      },
+      ],
+      yAxis: [
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          position: "right",
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+      ],
       series: [
         {
-          name: "Put Gamma",
-          type: "bar",
-          data: putGamma,
-          stack: "gamma",
-          itemStyle: { color: "#9B5DC4" },
+          name: "Price",
+          type: "line",
+          data: priceList,
+          yAxisIndex: 1,
+          lineStyle: { width: 2 },
+          itemStyle: {
+            color: "#fff",
+          },
+          smooth: true,
+          showSymbol: false,
         },
         {
-          name: "Net Gamma",
+          name: "Gamma",
           type: "bar",
-          data: netGamma,
-          stack: "gamma",
-          itemStyle: { color: "#FF2F1F" },
-        },
-        {
-          name: "Call Gamma",
-          type: "bar",
-          data: callGamma,
-          stack: "gamma",
-          itemStyle: { color: "#C4E916" },
+          data: gammaList,
+          itemStyle: {
+            color: "#9B5DC4",
+          },
         },
       ],
     };
-
     return options;
+  }
+
+  function formatDate(dateStr) {
+    // Parse the input date string (YYYY-mm-dd)
+    var date = new Date(dateStr);
+
+    // Get month, day, and year
+    var month = date.getMonth() + 1; // Month starts from 0
+    var day = date.getDate();
+    var year = date.getFullYear();
+
+    // Extract the last two digits of the year
+    var shortYear = year.toString().slice(-2);
+
+    // Add leading zeros if necessary
+    month = (month < 10 ? "0" : "") + month;
+    day = (day < 10 ? "0" : "") + day;
+
+    var formattedDate = month + "/" + day + "/" + year;
+
+    return formattedDate;
   }
 
   async function handleScroll() {
@@ -160,18 +253,18 @@
   });
 
   $: columns = [
-    { key: "strike", label: "Strike Price", align: "left" },
-    { key: "call_gex", label: "Call GEX", align: "right" },
-    { key: "put_gex", label: "Put GEX", align: "right" },
-    { key: "net_gex", label: "Net GEX", align: "right" },
-    { key: "put_call_ratio", label: "P/C GEX", align: "right" },
+    { key: "date", label: "Date", align: "left" },
+    { key: "call_delta", label: "Call Delta", align: "right" },
+    { key: "put_delta", label: "Put Delta", align: "right" },
+    { key: "net_delta", label: "Net Delta", align: "right" },
+    { key: "put_call_ratio", label: "P/C Delta", align: "right" },
   ];
 
   $: sortOrders = {
-    strike: { order: "none", type: "number" },
-    call_gex: { order: "none", type: "number" },
-    put_gex: { order: "none", type: "number" },
-    net_gex: { order: "none", type: "number" },
+    date: { order: "none", type: "date" },
+    call_delta: { order: "none", type: "number" },
+    put_delta: { order: "none", type: "number" },
+    net_delta: { order: "none", type: "number" },
     put_call_ratio: { order: "none", type: "number" },
   };
 
@@ -233,7 +326,7 @@
   };
 
   $: {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && timePeriod) {
       options = plotData();
     }
   }
@@ -244,8 +337,7 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Gamma Exposure by Strike Price ·
-    Stocknear
+    {$displayCompanyName} ({$stockTicker}) Gamma Exposure · Stocknear
   </title>
   <meta
     name="description"
@@ -255,7 +347,7 @@
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure · Stocknear`}
   />
   <meta
     property="og:description"
@@ -268,7 +360,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure · Stocknear`}
   />
   <meta
     name="twitter:description"
@@ -289,12 +381,27 @@
           <h2
             class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
           >
-            Gamma Exposure By Strike
+            Daily Delta Exposure
           </h2>
 
-          <div class="w-full overflow-hidden m-auto">
+          <div class="w-full overflow-hidden m-auto mt-5">
             {#if options !== null}
               <div class="app w-full relative">
+                <div
+                  class="flex justify-start space-x-2 absolute right-0 top-0 z-10"
+                >
+                  {#each ["3M", "6M", "1Y"] as item}
+                    <label
+                      on:click={() => (timePeriod = item)}
+                      class="px-3 py-1 text-sm {timePeriod === item
+                        ? 'bg-white text-black '
+                        : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
+                    >
+                      {item}
+                    </label>
+                  {/each}
+                </div>
+
                 <Chart {init} {options} class="chart" />
               </div>
             {:else}
@@ -331,13 +438,13 @@
                     <td
                       class="text-white text-sm sm:text-[1rem] text-start whitespace-nowrap"
                     >
-                      {item?.strike?.toFixed(2)}
+                      {formatDate(item?.date)}
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.call_gex?.toFixed(2),
+                        item?.call_delta,
                         false,
                         true,
                       )}
@@ -346,17 +453,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.put_gex?.toFixed(2),
-                        false,
-                        true,
-                      )}
-                    </td>
-
-                    <td
-                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
-                    >
-                      {@html abbreviateNumberWithColor(
-                        item?.net_gex?.toFixed(2),
+                        item?.put_delta,
                         false,
                         true,
                       )}
@@ -365,16 +462,24 @@
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
-                      {#if item?.put_call_ratio <= 1 && item?.put_call_ratio !== null}
+                      {@html abbreviateNumberWithColor(
+                        item?.net_delta,
+                        false,
+                        true,
+                      )}
+                    </td>
+
+                    <td
+                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+                    >
+                      {#if item?.put_call_ratio <= 1}
                         <span class="text-[#00FC50]"
                           >{item?.put_call_ratio?.toFixed(2)}</span
                         >
-                      {:else if item?.put_call_ratio > 1 && item?.put_call_ratio !== null}
+                      {:else}
                         <span class="text-[#FF2F1F]"
                           >{item?.put_call_ratio?.toFixed(2)}</span
                         >
-                      {:else}
-                        n/a
                       {/if}
                     </td>
                   </tr>
@@ -403,14 +508,14 @@
 
 <style>
   .app {
-    height: 1000px;
+    height: 400px;
     width: 100%;
   }
 
   @media (max-width: 560px) {
     .app {
       width: 100%;
-      height: 500px;
+      height: 300px;
     }
   }
 

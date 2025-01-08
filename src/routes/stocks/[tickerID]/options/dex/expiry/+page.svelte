@@ -39,31 +39,42 @@
 
   rawData = rawData?.map((item) => ({
     ...item,
-    net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
+    net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
     put_call_ratio:
-      item?.call_gex > 0
-        ? Math.abs((item?.put_gex || 0) / item?.call_gex)
+      item?.call_delta > 0
+        ? Math.abs((item?.put_delta || 0) / item?.call_delta)
         : null,
   }));
 
   let displayList = rawData?.slice(0, 150);
   let options = null;
 
+  function formatDate(dateString) {
+    if (!dateString) return null; // Handle null or undefined input
+    const date = new Date(dateString);
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "2-digit",
+    });
+    return formatter.format(date);
+  }
+
   function plotData() {
     // Process and sort data by strike in descending order
     const processedData = rawData
       ?.map((d) => ({
-        strike: d?.strike,
-        callGamma: d?.call_gex,
-        putGamma: d?.put_gex,
-        netGamma: d?.net_gex,
+        expiry: formatDate(d?.expiry),
+        callDelta: d?.call_delta,
+        putDelta: d?.put_delta,
+        netDelta: d?.net_delta,
       }))
       .sort((a, b) => a.strike - b.strike);
 
-    const strikes = processedData.map((d) => d.strike);
-    const callGamma = processedData.map((d) => d.callGamma?.toFixed(2));
-    const putGamma = processedData.map((d) => d.putGamma?.toFixed(2));
-    const netGamma = processedData.map((d) => d.netGamma?.toFixed(2));
+    const expiries = processedData.map((d) => d.expiry);
+    const callDelta = processedData.map((d) => d.callDelta?.toFixed(2));
+    const putDelta = processedData.map((d) => d.putDelta?.toFixed(2));
+    const netDelta = processedData.map((d) => d.netDelta?.toFixed(2));
 
     const options = {
       animation: false,
@@ -77,29 +88,29 @@
           color: "#fff",
         },
         formatter: function (params) {
-          const strike = params[0].axisValue;
+          const expiry = params[0].axisValue;
           const put = params[0].data;
           const call = params[1].data;
           const net = params[2].data;
 
           return `
           <div style="text-align:left;">
-            <b>Strike:</b> ${strike}<br/>
-            <span style="color:#9B5DC4;">● Put Gamma:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
-            <span style="color:#C4E916;">● Call Gamma:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
-            <span style="color:#FF2F1F;">● Net Gamma:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
+            <b>Expiry:</b> ${expiry}<br/>
+            <span style="color:#9B5DC4;">● Put Delta:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
+            <span style="color:#C4E916;">● Call Delta:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
+            <span style="color:#FF2F1F;">● Net Delta:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
           </div>`;
         },
       },
       grid: {
-        left: $screenWidth < 640 ? "5%" : "0%",
+        left: $screenWidth < 640 ? "5%" : "1%",
         right: $screenWidth < 640 ? "5%" : "0%",
-        bottom: "5%",
+        bottom: "10%",
         containLabel: true,
       },
       xAxis: {
         type: "value",
-        name: "Gamma",
+        name: "Delta",
         nameTextStyle: { color: "#fff" },
         splitLine: { show: false },
         axisLabel: {
@@ -108,31 +119,32 @@
       },
       yAxis: {
         type: "category",
-        data: strikes,
+        data: expiries,
         axisLine: { lineStyle: { color: "#fff" } },
         axisLabel: { color: "#fff" },
         splitLine: { show: false },
       },
       series: [
         {
-          name: "Put Gamma",
+          name: "Put Delta",
           type: "bar",
-          data: putGamma,
-          stack: "gamma",
+          data: putDelta,
+          stack: "Delta",
           itemStyle: { color: "#9B5DC4" },
+          barWidth: "40%",
         },
         {
-          name: "Net Gamma",
+          name: "Net Delta",
           type: "bar",
-          data: netGamma,
-          stack: "gamma",
+          data: netDelta,
+          stack: "Delta",
           itemStyle: { color: "#FF2F1F" },
         },
         {
-          name: "Call Gamma",
+          name: "Call Delta",
           type: "bar",
-          data: callGamma,
-          stack: "gamma",
+          data: callDelta,
+          stack: "Delta",
           itemStyle: { color: "#C4E916" },
         },
       ],
@@ -160,18 +172,18 @@
   });
 
   $: columns = [
-    { key: "strike", label: "Strike Price", align: "left" },
-    { key: "call_gex", label: "Call GEX", align: "right" },
-    { key: "put_gex", label: "Put GEX", align: "right" },
-    { key: "net_gex", label: "Net GEX", align: "right" },
-    { key: "put_call_ratio", label: "P/C GEX", align: "right" },
+    { key: "expiry", label: "Expiry Date", align: "left" },
+    { key: "call_delta", label: "Call Delta", align: "right" },
+    { key: "put_delta", label: "Put Delta", align: "right" },
+    { key: "net_delta", label: "Net Delta", align: "right" },
+    { key: "put_call_ratio", label: "P/C Delta", align: "right" },
   ];
 
   $: sortOrders = {
-    strike: { order: "none", type: "number" },
-    call_gex: { order: "none", type: "number" },
-    put_gex: { order: "none", type: "number" },
-    net_gex: { order: "none", type: "number" },
+    expiry: { order: "none", type: "date" },
+    call_delta: { order: "none", type: "number" },
+    put_delta: { order: "none", type: "number" },
+    net_delta: { order: "none", type: "number" },
     put_call_ratio: { order: "none", type: "number" },
   };
 
@@ -289,7 +301,7 @@
           <h2
             class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
           >
-            Gamma Exposure By Strike
+            Gamma Exposure By Expiry
           </h2>
 
           <div class="w-full overflow-hidden m-auto">
@@ -331,13 +343,13 @@
                     <td
                       class="text-white text-sm sm:text-[1rem] text-start whitespace-nowrap"
                     >
-                      {item?.strike?.toFixed(2)}
+                      {formatDate(item?.expiry)}
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.call_gex?.toFixed(2),
+                        item?.call_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -346,7 +358,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.put_gex?.toFixed(2),
+                        item?.put_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -356,7 +368,7 @@
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
                       {@html abbreviateNumberWithColor(
-                        item?.net_gex?.toFixed(2),
+                        item?.net_delta?.toFixed(2),
                         false,
                         true,
                       )}
@@ -403,7 +415,7 @@
 
 <style>
   .app {
-    height: 1000px;
+    height: 600px;
     width: 100%;
   }
 
