@@ -136,8 +136,7 @@
       {#if rawData?.length !== 0 && Object?.keys(metrics)?.length > 0}
         <div class="w-full flex flex-col items-start">
           <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-            Over the past week, {$displayCompanyName} has seen an average dark pool
-            trade size of {@html abbreviateNumberWithColor(
+            {$displayCompanyName} has seen an average dark pool trade size of {@html abbreviateNumberWithColor(
               metrics?.avgTradeSize,
               false,
               true,
