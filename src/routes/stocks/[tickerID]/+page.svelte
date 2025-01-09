@@ -25,9 +25,6 @@
   import Sidecard from "$lib/components/Sidecard.svelte";
 
   import { convertTimestamp, abbreviateNumber } from "$lib/utils";
-  import { Button } from "$lib/components/shadcn/button/index.js";
-  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
-  import { goto } from "$app/navigation";
 
   export let data;
   export let form;
@@ -596,58 +593,6 @@
     }
   }
 
-  async function exportData(timePeriod: string) {
-    if (data?.user?.tier === "Pro") {
-      let exportList = [];
-
-      const response = await fetch("/api/export-price-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ticker: $stockTicker, timePeriod: timePeriod }),
-      });
-
-      exportList = await response.json();
-
-      exportList = exportList?.map(
-        ({ time, open, high, low, close, date, volume }) => ({
-          date: timePeriod === "max" ? time : date, // Use 'time' if timePeriod is "max", otherwise use 'date'
-          open,
-          high,
-          low,
-          close,
-          volume,
-        }),
-      );
-
-      const csvRows = [];
-
-      // Add headers row
-      csvRows.push("time,open,high,low,close, volume");
-
-      // Add data rows
-      for (const row of exportList) {
-        const csvRow = `${row.date},${row.open},${row.high},${row.low},${row.close},${row.volume}`;
-        csvRows.push(csvRow);
-      }
-
-      // Create CSV blob and trigger download
-      const csv = csvRows.join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.setAttribute("hidden", "");
-      a.setAttribute("href", url);
-      a.setAttribute("download", `${$stockTicker}_${timePeriod}.csv`);
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else {
-      goto("/pricing");
-    }
-  }
-
   function updateClosePrice(data, extendPriceChart) {
     const newDateParsedUTC = Date?.parse(extendPriceChart?.time + "Z") / 1000; // Parse the incoming time
     const closePrice = extendPriceChart?.price; // Store the close price for easier reference
@@ -770,100 +715,7 @@
     >
       <!-- Main content -->
       <div class="pb-12 md:pb-20 w-full sm:pr-6 xl:pr-0">
-        <div class="">
-          <div
-            class="hidden sm:flex flex-row items-center pl-1 sm:pl-6 w-full mt-4"
-          >
-            {#if !$stockTicker?.includes(".")}
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild let:builder>
-                  <Button
-                    builders={[builder]}
-                    class="ml-auto border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                  >
-                    <span class="truncate text-white">Export</span>
-                    <svg
-                      class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      style="max-width:40px"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                  </Button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content
-                  class="w-fit h-fit max-h-72 overflow-y-auto scroller"
-                >
-                  <DropdownMenu.Label class="text-gray-400">
-                    Historical Stock Price
-                  </DropdownMenu.Label>
-                  <DropdownMenu.Separator />
-                  <DropdownMenu.Group>
-                    <DropdownMenu.Item
-                      on:click={() => exportData("30min")}
-                      class="cursor-pointer sm:hover:bg-primary"
-                    >
-                      <svg
-                        class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
-                          ? 'hidden'
-                          : ''}"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        ><path
-                          fill="#A3A3A3"
-                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                        /></svg
-                      >
-
-                      30 min
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => exportData("1hour")}
-                      class="cursor-pointer sm:hover:bg-primary"
-                    >
-                      <svg
-                        class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
-                          ? 'hidden'
-                          : ''}"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        ><path
-                          fill="#A3A3A3"
-                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                        /></svg
-                      >
-                      1 hour
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item
-                      on:click={() => exportData("max")}
-                      class="cursor-pointer sm:hover:bg-primary"
-                    >
-                      <svg
-                        class="w-3.5 h-3.5 mr-1 {data?.user?.tier === 'Pro'
-                          ? 'hidden'
-                          : ''}"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        ><path
-                          fill="#A3A3A3"
-                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                        /></svg
-                      >
-                      1 day
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Group>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-            {/if}
-          </div>
-          <!--End Time Interval-->
-
+        <div class="mt-2">
           <!--End Ticker Section-->
           <!-- Start Graph -->
 
