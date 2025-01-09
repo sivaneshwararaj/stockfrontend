@@ -175,7 +175,11 @@
 {/if}
 
 {#if topHoldingList?.length !== 0}
-  <div class="space-y-3 pt-5 {topHoldingList?.length !== 0 ? '' : 'hidden'}">
+  <div
+    class="space-y-3 pt-8 sm:pt-5 {topHoldingList?.length !== 0
+      ? ''
+      : 'hidden'}"
+  >
     <div class="h-auto w-full">
       <!--Start Content-->
       <div class="w-auto lg:w-full flex flex-col m-auto">
