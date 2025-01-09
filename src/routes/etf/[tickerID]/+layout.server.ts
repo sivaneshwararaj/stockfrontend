@@ -50,6 +50,7 @@ export const load = async ({ params, locals }) => {
   const endpoints = [
     "/etf-profile",
     "/etf-holdings",
+    "/etf-sector-weighting",
     "/stock-dividend",
     "/stock-quote",
     "/wiim",
@@ -67,6 +68,7 @@ export const load = async ({ params, locals }) => {
   const [
     getETFProfile,
     getETFHoldings,
+    getETFSectorWeighting,
     getStockDividend,
     getStockQuote,
     getWhyPriceMoved,
@@ -78,6 +80,7 @@ export const load = async ({ params, locals }) => {
   return {
     getETFProfile,
     getETFHoldings,
+    getETFSectorWeighting,
     getStockDividend,
     getStockQuote,
     getWhyPriceMoved,

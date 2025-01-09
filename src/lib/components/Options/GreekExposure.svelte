@@ -4,16 +4,10 @@
     abbreviateNumber,
     monthNames,
   } from "$lib/utils";
-  import {
-    etfTicker,
-    screenWidth,
-    numberOfUnreadNotification,
-    displayCompanyName,
-  } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import { onMount } from "svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-  import Infobox from "$lib/components/Infobox.svelte";
   import { Chart } from "svelte-echarts";
 
   import { init, use } from "echarts/core";
@@ -35,6 +29,8 @@
   ]);
 
   export let data;
+  export let title;
+
   let rawData = data?.getData || [];
 
   rawData = rawData?.map((item) => ({
@@ -332,174 +328,104 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Gamma Exposure · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
-  />
+<div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+  <h2
+    class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
+  >
+    Daily Gamma Exposure
+  </h2>
 
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
-
-<section
-  class="w-full bg-default overflow-hidden text-white min-h-screen pb-40"
->
-  <div class="w-full flex h-full overflow-hidden">
-    <div
-      class="w-full relative flex justify-center items-center overflow-hidden"
-    >
-      {#if rawData?.length > 0}
-        <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-          <h2
-            class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
-          >
-            Daily Gamma Exposure
-          </h2>
-
-          <div class="w-full overflow-hidden m-auto mt-5">
-            {#if options !== null}
-              <div class="app w-full relative">
-                <div
-                  class="flex justify-start space-x-2 absolute right-0 top-0 z-10"
-                >
-                  {#each ["3M", "6M", "1Y"] as item}
-                    <label
-                      on:click={() => (timePeriod = item)}
-                      class="px-3 py-1 text-sm {timePeriod === item
-                        ? 'bg-white text-black '
-                        : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
-                    >
-                      {item}
-                    </label>
-                  {/each}
-                </div>
-
-                <Chart {init} {options} class="chart" />
-              </div>
-            {:else}
-              <div class="flex justify-center items-center h-80">
-                <div class="relative">
-                  <label
-                    class="bg-primary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  >
-                    <span
-                      class="loading loading-spinner loading-md sm:loading-[1rem] text-gray-400"
-                    ></span>
-                  </label>
-                </div>
-              </div>
-            {/if}
-          </div>
-          <div class="w-full overflow-x-scroll text-white">
-            <table
-              class="w-full table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md m-auto overflow-x-auto"
+  <div class="w-full overflow-hidden m-auto mt-5">
+    {#if options !== null}
+      <div class="app w-full relative">
+        <div class="flex justify-start space-x-2 absolute right-0 top-0 z-10">
+          {#each ["3M", "6M", "1Y"] as item}
+            <label
+              on:click={() => (timePeriod = item)}
+              class="px-3 py-1 text-sm {timePeriod === item
+                ? 'bg-white text-black '
+                : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
             >
-              <thead>
-                <TableHeader {columns} {sortOrders} {sortData} />
-              </thead>
-              <tbody>
-                {#each data?.user?.tier === "Pro" ? displayList : displayList?.slice(0, 3) as item, index}
-                  <tr
-                    class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
-                      1 ===
-                      displayList?.slice(0, 3)?.length &&
-                    data?.user?.tier !== 'Pro'
-                      ? 'opacity-[0.1]'
-                      : ''}"
-                  >
-                    <td
-                      class="text-white text-sm sm:text-[1rem] text-start whitespace-nowrap"
-                    >
-                      {formatDate(item?.date)}
-                    </td>
-                    <td
-                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
-                    >
-                      {@html abbreviateNumberWithColor(
-                        item?.call_gamma,
-                        false,
-                        true,
-                      )}
-                    </td>
-                    <td
-                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
-                    >
-                      {@html abbreviateNumberWithColor(
-                        item?.put_gamma,
-                        false,
-                        true,
-                      )}
-                    </td>
-
-                    <td
-                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
-                    >
-                      {@html abbreviateNumberWithColor(
-                        item?.net_gamma,
-                        false,
-                        true,
-                      )}
-                    </td>
-
-                    <td
-                      class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
-                    >
-                      {#if item?.put_call_ratio <= 1}
-                        <span class="text-[#00FC50]"
-                          >{item?.put_call_ratio?.toFixed(2)}</span
-                        >
-                      {:else}
-                        <span class="text-[#FF2F1F]"
-                          >{item?.put_call_ratio?.toFixed(2)}</span
-                        >
-                      {/if}
-                    </td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          </div>
-
-          <UpgradeToPro {data} />
+              {item}
+            </label>
+          {/each}
         </div>
-      {:else}
-        <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-          <div class="mt-2">
-            <Infobox text="No data is available" />
-          </div>
+
+        <Chart {init} {options} class="chart" />
+      </div>
+    {:else}
+      <div class="flex justify-center items-center h-80">
+        <div class="relative">
+          <label
+            class="bg-primary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          >
+            <span
+              class="loading loading-spinner loading-md sm:loading-[1rem] text-gray-400"
+            ></span>
+          </label>
         </div>
-      {/if}
-    </div>
+      </div>
+    {/if}
   </div>
-</section>
+  <div class="w-full overflow-x-scroll text-white">
+    <table
+      class="w-full table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md m-auto overflow-x-auto"
+    >
+      <thead>
+        <TableHeader {columns} {sortOrders} {sortData} />
+      </thead>
+      <tbody>
+        {#each data?.user?.tier === "Pro" ? displayList : displayList?.slice(0, 3) as item, index}
+          <tr
+            class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
+              1 ===
+              displayList?.slice(0, 3)?.length && data?.user?.tier !== 'Pro'
+              ? 'opacity-[0.1]'
+              : ''}"
+          >
+            <td
+              class="text-white text-sm sm:text-[1rem] text-start whitespace-nowrap"
+            >
+              {formatDate(item?.date)}
+            </td>
+            <td
+              class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+            >
+              {@html abbreviateNumberWithColor(item?.call_gamma, false, true)}
+            </td>
+            <td
+              class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+            >
+              {@html abbreviateNumberWithColor(item?.put_gamma, false, true)}
+            </td>
+
+            <td
+              class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+            >
+              {@html abbreviateNumberWithColor(item?.net_gamma, false, true)}
+            </td>
+
+            <td
+              class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+            >
+              {#if item?.put_call_ratio <= 1}
+                <span class="text-[#00FC50]"
+                  >{item?.put_call_ratio?.toFixed(2)}</span
+                >
+              {:else}
+                <span class="text-[#FF2F1F]"
+                  >{item?.put_call_ratio?.toFixed(2)}</span
+                >
+              {/if}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+
+  <UpgradeToPro {data} />
+</div>
 
 <style>
   .app {
