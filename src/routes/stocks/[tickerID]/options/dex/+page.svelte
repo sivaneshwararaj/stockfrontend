@@ -55,7 +55,7 @@
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
       {#if data?.getData?.length > 0}
-        <GreekExposure {data} title="Delta" params="" />
+        <GreekExposure {data} title="Delta" />
       {:else}
         <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
           <div class="mt-2">

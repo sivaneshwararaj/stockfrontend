@@ -60,11 +60,6 @@
         <GreekByExpiry {data} title="Gamma" />
       {:else}
         <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
-          <h2
-            class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
-          >
-            Hottest Contracts
-          </h2>
           <div class="mt-2">
             <Infobox text="No data is available" />
           </div>

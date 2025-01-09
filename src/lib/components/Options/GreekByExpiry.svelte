@@ -25,19 +25,33 @@
   ]);
 
   export let data;
-  export let title;
+  export let title = "Gamma";
 
   let rawData = data?.getData || [];
 
-  rawData = rawData?.map((item) => ({
-    ...item,
-    net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
-    put_call_ratio:
-      item?.call_gex > 0
-        ? Math.abs((item?.put_gex || 0) / item?.call_gex)
-        : null,
-  }));
+  const isGamma = title === "Gamma";
 
+  rawData = rawData?.map((item) => {
+    if (title === "Gamma") {
+      return {
+        ...item,
+        net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
+        put_call_ratio:
+          item?.call_gex > 0
+            ? Math.abs((item?.put_gex || 0) / item?.call_gex)
+            : null,
+      };
+    } else {
+      return {
+        ...item,
+        net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
+        put_call_ratio:
+          item?.call_delta > 0
+            ? Math.abs((item?.put_delta || 0) / item?.call_delta)
+            : null,
+      };
+    }
+  });
   let displayList = rawData?.slice(0, 150);
   let options = null;
 
@@ -53,20 +67,23 @@
   }
 
   function plotData() {
-    // Process and sort data by strike in descending order
+    // Determine if the current data is Gamma-based or not
+    const isGamma = title === "Gamma";
+
+    // Process and sort data by strike or expiry
     const processedData = rawData
       ?.map((d) => ({
         expiry: formatDate(d?.expiry),
-        callGamma: d?.call_gex,
-        putGamma: d?.put_gex,
-        netGamma: d?.net_gex,
+        callValue: isGamma ? d?.call_gex : d?.call_delta,
+        putValue: isGamma ? d?.put_gex : d?.put_delta,
+        netValue: isGamma ? d?.net_gex : d?.net_delta,
       }))
       .sort((a, b) => a.strike - b.strike);
 
     const expiries = processedData.map((d) => d.expiry);
-    const callGamma = processedData.map((d) => d.callGamma?.toFixed(2));
-    const putGamma = processedData.map((d) => d.putGamma?.toFixed(2));
-    const netGamma = processedData.map((d) => d.netGamma?.toFixed(2));
+    const callValue = processedData.map((d) => d.callValue?.toFixed(2));
+    const putValue = processedData.map((d) => d.putValue?.toFixed(2));
+    const netValue = processedData.map((d) => d.netValue?.toFixed(2));
 
     const options = {
       animation: false,
@@ -82,15 +99,15 @@
         formatter: function (params) {
           const expiry = params[0].axisValue;
           const put = params[0].data;
-          const call = params[1].data;
-          const net = params[2].data;
+          const net = params[1].data;
+          const call = params[2].data;
 
           return `
-          <div style="text-align:left;">
-            <b>Expiry:</b> ${expiry}<br/>
-            <span style="color:#9B5DC4;">● Put Gamma:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
-            <span style="color:#C4E916;">● Call Gamma:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
-            <span style="color:#FF2F1F;">● Net Gamma:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
+        <div style="text-align:left;">
+          <b>Expiry:</b> ${expiry}<br/>
+          <span style="color:#9B5DC4;">● Put ${isGamma ? "Gamma" : "Delta"}:</span> ${abbreviateNumberWithColor(put, false, true)}<br/>
+          <span style="color:#FF2F1F;">● Net ${isGamma ? "Gamma" : "Delta"}:</span> ${abbreviateNumberWithColor(net, false, true)}<br/>
+          <span style="color:#C4E916;">● Call ${isGamma ? "Gamma" : "Delta"}:</span> ${abbreviateNumberWithColor(call, false, true)}<br/>
           </div>`;
         },
       },
@@ -102,7 +119,7 @@
       },
       xAxis: {
         type: "value",
-        name: "Gamma",
+        name: isGamma ? "Gamma" : "Delta",
         nameTextStyle: { color: "#fff" },
         splitLine: { show: false },
         axisLabel: {
@@ -118,25 +135,25 @@
       },
       series: [
         {
-          name: "Put Gamma",
+          name: `Put ${isGamma ? "Gamma" : "Delta"}`,
           type: "bar",
-          data: putGamma,
-          stack: "gamma",
+          data: putValue,
+          stack: isGamma ? "gamma" : "delta",
           itemStyle: { color: "#9B5DC4" },
           barWidth: "40%",
         },
         {
-          name: "Net Gamma",
+          name: `Net ${isGamma ? "Gamma" : "Delta"}`,
           type: "bar",
-          data: netGamma,
-          stack: "gamma",
+          data: netValue,
+          stack: isGamma ? "gamma" : "delta",
           itemStyle: { color: "#FF2F1F" },
         },
         {
-          name: "Call Gamma",
+          name: `Call ${isGamma ? "Gamma" : "Delta"}`,
           type: "bar",
-          data: callGamma,
-          stack: "gamma",
+          data: callValue,
+          stack: isGamma ? "gamma" : "delta",
           itemStyle: { color: "#C4E916" },
         },
       ],
@@ -165,17 +182,33 @@
 
   $: columns = [
     { key: "expiry", label: "Expiry Date", align: "left" },
-    { key: "call_gex", label: "Call GEX", align: "right" },
-    { key: "put_gex", label: "Put GEX", align: "right" },
-    { key: "net_gex", label: "Net GEX", align: "right" },
-    { key: "put_call_ratio", label: "P/C GEX", align: "right" },
+    {
+      key: isGamma ? "call_gex" : "call_delta",
+      label: isGamma ? "Call GEX" : "Call Delta",
+      align: "right",
+    },
+    {
+      key: isGamma ? "put_gex" : "put_delta",
+      label: isGamma ? "Put GEX" : "Put Delta",
+      align: "right",
+    },
+    {
+      key: isGamma ? "net_gex" : "net_delta",
+      label: isGamma ? "Net GEX" : "Net Delta",
+      align: "right",
+    },
+    {
+      key: "put_call_ratio",
+      label: isGamma ? "P/C GEX" : "P/C Delta",
+      align: "right",
+    },
   ];
 
   $: sortOrders = {
     expiry: { order: "none", type: "date" },
-    call_gex: { order: "none", type: "number" },
-    put_gex: { order: "none", type: "number" },
-    net_gex: { order: "none", type: "number" },
+    [isGamma ? "call_gex" : "call_delta"]: { order: "none", type: "number" },
+    [isGamma ? "put_gex" : "put_delta"]: { order: "none", type: "number" },
+    [isGamma ? "net_gex" : "net_delta"]: { order: "none", type: "number" },
     put_call_ratio: { order: "none", type: "number" },
   };
 
@@ -247,7 +280,7 @@
   <h2
     class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
   >
-    Gamma Exposure By Expiry
+    {title} Exposure By Expiry
   </h2>
 
   <div class="w-full overflow-hidden m-auto">
@@ -294,7 +327,7 @@
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
               {@html abbreviateNumberWithColor(
-                item?.call_gex?.toFixed(2),
+                (isGamma ? item?.call_gex : item?.call_delta)?.toFixed(2),
                 false,
                 true,
               )}
@@ -303,7 +336,7 @@
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
               {@html abbreviateNumberWithColor(
-                item?.put_gex?.toFixed(2),
+                (isGamma ? item?.put_gex : item?.put_delta)?.toFixed(2),
                 false,
                 true,
               )}
@@ -313,7 +346,7 @@
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
               {@html abbreviateNumberWithColor(
-                item?.net_gex?.toFixed(2),
+                (isGamma ? item?.net_gex : item?.net_delta)?.toFixed(2),
                 false,
                 true,
               )}
