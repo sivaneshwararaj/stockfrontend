@@ -33,14 +33,27 @@
 
   let rawData = data?.getData || [];
 
-  rawData = rawData?.map((item) => ({
-    ...item,
-    net_gamma: (item?.call_gamma || 0) + (item?.put_gamma || 0),
-    put_call_ratio:
-      item?.call_gamma > 0
-        ? Math.abs((item?.put_gamma || 0) / item?.call_gamma)
-        : null,
-  }));
+  rawData = rawData?.map((item) => {
+    if (title === "Gamma") {
+      return {
+        ...item,
+        net_gamma: (item?.call_gamma || 0) + (item?.put_gamma || 0),
+        put_call_ratio:
+          item?.call_gamma > 0
+            ? Math.abs((item?.put_gamma || 0) / item?.call_gamma)
+            : null,
+      };
+    } else {
+      return {
+        ...item,
+        net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
+        put_call_ratio:
+          item?.call_delta > 0
+            ? Math.abs((item?.put_delta || 0) / item?.call_delta)
+            : null,
+      };
+    }
+  });
 
   let displayList = rawData?.slice(0, 150);
   let timePeriod = "3M";
@@ -84,15 +97,17 @@
 
     // Extract the dates and gamma values from the filtered data
     const dateList = filteredData?.map((item) => item.date);
-    const gammaList = filteredData?.map((item) => item.net_gamma);
+    const dataList = filteredData?.map((item) =>
+      title === "Gamma" ? item.net_gamma : item.net_delta,
+    );
     const priceList = filteredData?.map((item) => item.price);
 
-    return { dateList, gammaList, priceList };
+    return { dateList, dataList, priceList };
   }
 
   function plotData() {
     const data = rawData?.sort((a, b) => new Date(a?.date) - new Date(b?.date));
-    const { dateList, gammaList, priceList } = filterDataByPeriod(
+    const { dateList, dataList, priceList } = filterDataByPeriod(
       data,
       timePeriod,
     );
@@ -197,9 +212,9 @@
           showSymbol: false,
         },
         {
-          name: "Gamma",
+          name: title,
           type: "bar",
-          data: gammaList,
+          data: dataList,
           itemStyle: {
             color: "#9B5DC4",
           },
@@ -248,21 +263,39 @@
     };
   });
 
-  $: columns = [
-    { key: "date", label: "Date", align: "left" },
-    { key: "call_gamma", label: "Call GEX", align: "right" },
-    { key: "put_gamma", label: "Put GEX", align: "right" },
-    { key: "net_gamma", label: "Net GEX", align: "right" },
-    { key: "put_call_ratio", label: "P/C GEX", align: "right" },
-  ];
+  $: columns =
+    title === "Gamma"
+      ? [
+          { key: "date", label: "Date", align: "left" },
+          { key: "call_gamma", label: "Call GEX", align: "right" },
+          { key: "put_gamma", label: "Put GEX", align: "right" },
+          { key: "net_gamma", label: "Net GEX", align: "right" },
+          { key: "put_call_ratio", label: "P/C GEX", align: "right" },
+        ]
+      : [
+          { key: "date", label: "Date", align: "left" },
+          { key: "call_delta", label: "Call Delta", align: "right" },
+          { key: "put_delta", label: "Put Delta", align: "right" },
+          { key: "net_delta", label: "Net Delta", align: "right" },
+          { key: "put_call_ratio", label: "P/C Delta", align: "right" },
+        ];
 
-  $: sortOrders = {
-    date: { order: "none", type: "date" },
-    call_gamma: { order: "none", type: "number" },
-    put_gamma: { order: "none", type: "number" },
-    net_gamma: { order: "none", type: "number" },
-    put_call_ratio: { order: "none", type: "number" },
-  };
+  $: sortOrders =
+    title === "Gamma"
+      ? {
+          date: { order: "none", type: "date" },
+          call_gamma: { order: "none", type: "number" },
+          put_gamma: { order: "none", type: "number" },
+          net_gamma: { order: "none", type: "number" },
+          put_call_ratio: { order: "none", type: "number" },
+        }
+      : {
+          date: { order: "none", type: "date" },
+          call_delta: { order: "none", type: "number" },
+          put_delta: { order: "none", type: "number" },
+          net_delta: { order: "none", type: "number" },
+          put_call_ratio: { order: "none", type: "number" },
+        };
 
   const sortData = (key) => {
     // Reset all other keys to 'none' except the current key
@@ -332,7 +365,7 @@
   <h2
     class=" flex flex-row items-center text-white text-xl sm:text-2xl font-bold w-fit"
   >
-    Daily Gamma Exposure
+    Daily {title} Exposure
   </h2>
 
   <div class="w-full overflow-hidden m-auto mt-5">
@@ -391,18 +424,30 @@
             <td
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
-              {@html abbreviateNumberWithColor(item?.call_gamma, false, true)}
+              {@html abbreviateNumberWithColor(
+                title === "Gamma" ? item?.call_gamma : item?.call_delta,
+                false,
+                true,
+              )}
             </td>
             <td
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
-              {@html abbreviateNumberWithColor(item?.put_gamma, false, true)}
+              {@html abbreviateNumberWithColor(
+                title === "Gamma" ? item?.put_gamma : item?.put_delta,
+                false,
+                true,
+              )}
             </td>
 
             <td
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
-              {@html abbreviateNumberWithColor(item?.net_gamma, false, true)}
+              {@html abbreviateNumberWithColor(
+                title === "Gamma" ? item?.net_gamma : item?.net_delta,
+                false,
+                true,
+              )}
             </td>
 
             <td
