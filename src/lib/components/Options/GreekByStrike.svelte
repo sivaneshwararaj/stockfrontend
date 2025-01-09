@@ -125,6 +125,7 @@
           data: putValues,
           stack: "value",
           itemStyle: { color: "#9B5DC4" },
+          barWidth: "40%",
         },
         {
           name: `Net ${isGamma ? "Gamma" : "Delta"}`,
