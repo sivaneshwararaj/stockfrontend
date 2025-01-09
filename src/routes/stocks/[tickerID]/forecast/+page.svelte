@@ -15,7 +15,6 @@
   import { CanvasRenderer } from "echarts/renderers";
 
   export let data;
-
   use([
     LineChart,
     GaugeChart,
@@ -57,9 +56,7 @@
     while (year > 0) {
       // Ensure we don't loop indefinitely
       // Find the index where the item's date matches the current year and revenue is null
-      const index = data?.findIndex(
-        (item) => item?.date === year && item?.revenue === null,
-      );
+      const index = data?.findIndex((item) => item?.date === year);
 
       // If index is found and there is at least one item in the data for this year with non-null revenue
       if (index !== -1) {
