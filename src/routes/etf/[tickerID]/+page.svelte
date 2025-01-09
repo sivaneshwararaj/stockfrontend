@@ -26,9 +26,6 @@
   import ETFSidecard from "$lib/components/ETFSidecard.svelte";
 
   import { convertTimestamp, abbreviateNumber } from "$lib/utils";
-  import { Button } from "$lib/components/shadcn/button/index.js";
-  import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
-  import { goto } from "$app/navigation";
 
   export let data;
   export let form;
