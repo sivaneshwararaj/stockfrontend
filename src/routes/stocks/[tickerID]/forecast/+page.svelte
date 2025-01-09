@@ -285,8 +285,6 @@
       estimatedEPSAvgNextYear,
       estimatedEpsAvg,
     );
-
-    console.log(changeRevenue, revenue, estimatedRevenueAvg);
   }
 
   function getPriceForecastChart() {

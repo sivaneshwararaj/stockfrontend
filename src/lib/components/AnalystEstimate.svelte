@@ -123,14 +123,13 @@
 
   function findIndex(data) {
     const currentYear = new Date().getFullYear();
-
     // Find the index where the item's date is greater than or equal to the current year and revenue is null
-    const index = data.findIndex(
-      (item) => item.date > currentYear && item.revenue === null,
+    let index = data.findIndex(
+      (item) => item.date >= currentYear && item?.revenue === null,
     );
 
     // Check if there is any item for the current year with non-null revenue
-    const hasNonNullRevenue = data.some(
+    const hasNonNullRevenue = data?.some(
       (item) => item.date === currentYear && item.revenue !== null,
     );
 
@@ -171,19 +170,21 @@
         dates.push(`FY${date}`);
         switch (dataType) {
           case "Revenue":
-            valueList.push(item?.revenue);
-            avgList.push(isAfterStartIndex ? item.estimatedRevenueAvg : null);
-            lowList.push(isAfterStartIndex ? item.estimatedRevenueLow : null);
-            highList.push(isAfterStartIndex ? item.estimatedRevenueHigh : null);
+            valueList.push(isAfterStartIndex ? null : item.revenue);
+            avgList.push(isAfterStartIndex ? item?.estimatedRevenueAvg : null);
+            lowList.push(isAfterStartIndex ? item?.estimatedRevenueLow : null);
+            highList.push(
+              isAfterStartIndex ? item?.estimatedRevenueHigh : null,
+            );
             break;
           case "EPS":
-            valueList.push(item?.eps);
+            valueList.push(isAfterStartIndex ? null : item.eps);
             avgList.push(isAfterStartIndex ? item.estimatedEpsAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedEpsLow : null);
             highList.push(isAfterStartIndex ? item.estimatedEpsHigh : null);
             break;
           case "NetIncome":
-            valueList.push(item?.netIncome);
+            valueList.push(isAfterStartIndex ? null : item.netIncome);
             avgList.push(isAfterStartIndex ? item.estimatedNetIncomeAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedNetIncomeLow : null);
             highList.push(
@@ -191,7 +192,7 @@
             );
             break;
           case "Ebitda":
-            valueList.push(item?.ebitda);
+            valueList.push(isAfterStartIndex ? null : item.ebitda);
             avgList.push(isAfterStartIndex ? item.estimatedEbitdaAvg : null);
             lowList.push(isAfterStartIndex ? item.estimatedEbitdaLow : null);
             highList.push(isAfterStartIndex ? item.estimatedEbitdaHigh : null);
@@ -300,6 +301,7 @@
       const growth = listToUse?.find((r) => r.FY === fy); // Find matching FY
       return growth ? growth?.growth : null; // Return growth or null if not found
     });
+
     const option = {
       silent: true,
       tooltip: {
