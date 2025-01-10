@@ -230,9 +230,9 @@
                 class="w-full rounded-md overflow-hidden overflow-x-scroll no-scrollbar"
               >
                 <table
-                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full border-bg-default m-auto mt-4 overflow-x-auto"
+                  class="table table-pin-cols table-sm table-compact rounded-none sm:rounded-md w-full bg-table m-auto mt-4 overflow-x-auto"
                 >
-                  <thead>
+                  <thead class="bg-default">
                     <tr class="">
                       <td
                         class="text-slate-200 font-semibold text-sm text-start"
@@ -290,7 +290,7 @@
                   <tbody>
                     {#each optionsWatchlist as item, index}
                       <!-- row -->
-                      <tr class="odd:bg-odd border-b-[#09090B]">
+                      <tr class="odd:bg-odd border-b border-gray-800">
                         <td
                           class="text-white text-sm text-start whitespace-nowrap"
                         >
@@ -300,8 +300,8 @@
                         <th
                           on:click={() => handleFilter(item?.id)}
                           class="{index % 2
-                            ? 'bg-default'
-                            : 'bg-secondary'} font-normal text-sm sm:text-[1rem] text-start"
+                            ? 'bg-table'
+                            : 'bg-odd'} font-normal text-sm sm:text-[1rem] text-start"
                         >
                           <div class=" flex flex-row items-center">
                             <input
