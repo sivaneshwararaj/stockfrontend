@@ -13,6 +13,7 @@
       "hottest-contracts": "/options/hottest-contracts",
       gex: "/options/gex",
       dex: "/options/dex",
+      oi: "/options/oi",
     };
 
     if (state !== "overview" && subSectionMap[state]) {
@@ -32,6 +33,7 @@
         "hottest-contracts": "hottest-contracts",
         gex: "gex",
         dex: "dex",
+        oi: "oi",
       };
 
       const foundSection = parts?.find((part) =>
@@ -76,6 +78,15 @@
                   : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
               >
                 Hottest Contracts
+              </a>
+              <a
+                href={`/etf/${$etfTicker}/options/oi`}
+                on:click={() => changeSubSection("oi")}
+                class="p-2 px-5 cursor-pointer {displaySubSection === 'oi'
+                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+              >
+                OI
               </a>
               <a
                 href={`/etf/${$etfTicker}/options/gex`}
