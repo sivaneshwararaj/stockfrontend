@@ -738,15 +738,17 @@
                             <div
                               class="flex flex-row justify-between items-center w-full sm:-mt-[50px] mb-5 sm:mb-10"
                             >
-                              <span
+                              <div
                                 class="text-2xl lg:text-3xl font-bold text-white"
                               >
                                 {$displayCompanyName?.length > charNumber
                                   ? $displayCompanyName?.slice(0, charNumber) +
                                     "..."
                                   : $displayCompanyName}
-                                ({$stockTicker?.toUpperCase()})
-                              </span>
+                                <span class="hidden sm:inline-block"
+                                  >({$stockTicker?.toUpperCase()})</span
+                                >
+                              </div>
                               <div
                                 class="sm:hidden items-end justify-end absolute right-3 top-14 {$scoreComponent ===
                                 false
@@ -804,7 +806,7 @@
                                   {/if}
                                 </div>
                               </div>
-                              {#if Object?.keys(prePostData)?.length !== 0 && !$isOpen}
+                              {#if Object?.keys(prePostData)?.length !== 0 && !$isOpen && prePostData?.timestamp > 0}
                                 <div
                                   class="border-l border-default pl-3 bp:pl-5"
                                 >

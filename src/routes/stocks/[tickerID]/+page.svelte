@@ -969,7 +969,7 @@
                         ? $wsBidPrice
                         : ((data?.getStockQuote?.bid !== 0
                             ? data?.getStockQuote?.bid
-                            : "-") ?? "n/a")}</td
+                            : "n/a") ?? "n/a")}</td
                     ></tr
                   >
                   <tr
@@ -1094,7 +1094,7 @@
                         ? $wsAskPrice
                         : ((data?.getStockQuote?.ask !== 0
                             ? data?.getStockQuote?.ask
-                            : "-") ?? "n/a")}</td
+                            : "n/a") ?? "n/a")}</td
                     ></tr
                   >
                   <tr

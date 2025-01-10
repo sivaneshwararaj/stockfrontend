@@ -49,6 +49,15 @@
     }));
 
     const dates = processedData?.map((d) => d.expiry);
+    const formattedDates = dates.map((date) => {
+      const d = new Date(date);
+      return d.toLocaleDateString("en-US", {
+        month: "short", // Abbreviated month name
+        day: "numeric", // Day of the month
+        year: "2-digit", // Two-digit year
+      });
+    });
+
     const callValues = processedData?.map((d) => d.callValue?.toFixed(2));
     const putValues = processedData?.map((d) => d.putValue?.toFixed(2));
     const barWidthPercentage = Math.max(100 / processedData.length, 20); // Adjust automatically, max 80%
@@ -93,18 +102,13 @@
       },
       xAxis: {
         type: "category",
-        data: dates,
+        data: formattedDates,
         axisLine: { lineStyle: { color: "#fff" } },
         axisLabel: {
           color: "#fff",
-          interval: (index) => index % 2 === 0, // Show every 5th label
-          rotate: 45, // Rotate labels for better readability
-          fontSize: 12, // Adjust font size if needed
-          margin: 20,
         },
         splitLine: { show: false },
       },
-
       series: [
         {
           name: `Put`,

@@ -53,7 +53,7 @@
     const strikes = processedData?.map((d) => d.strike);
     const callValues = processedData?.map((d) => d.callValue?.toFixed(2));
     const putValues = processedData?.map((d) => d.putValue?.toFixed(2));
-    const barWidthPercentage = Math.max(100 / processedData.length, 30); // Adjust automatically, max 80%
+    const barWidthPercentage = Math.max(100 / processedData.length, 30);
 
     const options = {
       animation: false,
@@ -101,7 +101,7 @@
           color: "#fff",
           interval: (index) => index % 5 === 0, // Show every 5th label
           rotate: 45, // Rotate labels for better readability
-          fontSize: 14, // Adjust font size if needed
+          fontSize: $screenWidth < 640 ? 10 : 14, // Adjust font size if needed
           margin: 20,
         },
         splitLine: { show: false },

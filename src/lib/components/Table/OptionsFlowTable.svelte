@@ -736,6 +736,7 @@
           {displayedData[index]?.execution_estimate
             ?.replace("At", "")
             ?.replace("Above", "")
+            ?.replace("Below", "")
             ?.replace("Midpoint", "Mid")}
         </div>
 
