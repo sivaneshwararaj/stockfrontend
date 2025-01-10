@@ -749,33 +749,59 @@ export function abbreviateNumber(number, addDollarSign = false) {
 }
 
 
-export const formatDate = (dateString) => {
-  const date = new Date(dateString);
+export function formatDate(dateStr) {
+    try {
+        // Parse the input date string in New York timezone
+        const nyFormatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
 
-  // Get the current time in New York timezone
-  const now = new Date(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: "America/New_York",
-    }).format(new Date())
-  );
+        const parseDate = (date) => {
+            const parts = nyFormatter?.formatToParts(date);
+            const extract = (type) => parts?.find((p) => p?.type === type)?.value?.padStart(2, '0');
+            return new Date(
+                `${extract('year')}-${extract('month')}-${extract('day')}T${extract('hour')}:${extract('minute')}:${extract('second')}`
+            );
+        };
 
-  const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+        const nyDateObj = parseDate(new Date(dateStr));
+        const nyCurrentObj = parseDate(new Date());
 
-  if (diffInDays >= 30) {
-    const months = Math.floor(diffInDays / 30);
-    return `${months} month${months > 1 ? "s" : ""} ago`;
-  }
+        // Calculate the time difference in seconds
+        const seconds = Math.floor((nyCurrentObj - nyDateObj) / 1000);
 
-  if (diffInDays >= 7) {
-    const weeks = Math.floor(diffInDays / 7);
-    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
-  }
+        // Define time intervals in seconds
+        const intervals = [
+            { unit: 'year', seconds: 31536000 },
+            { unit: 'month', seconds: 2592000 },
+            { unit: 'week', seconds: 604800 },
+            { unit: 'day', seconds: 86400 },
+            { unit: 'hour', seconds: 3600 },
+            { unit: 'minute', seconds: 60 },
+        ];
 
-  return formatDistanceToNow(date, {
-    addSuffix: true,
-    includeSeconds: false,
-  }).replace(/about /i, "");
-};
+        // Determine the appropriate time interval
+        for (const { unit, seconds: secondsInUnit } of intervals) {
+            const count = Math?.floor(seconds / secondsInUnit);
+            if (count >= 1) {
+                return `${count} ${unit}${count === 1 ? '' : 's'} ago`;
+            }
+        }
+        // If less than a minute
+        return 'Just now';
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Invalid date';
+    }
+}
+
+
 
 
 export const formatRuleValue = (rule) => {
