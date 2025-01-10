@@ -16,6 +16,7 @@
 
   export let data;
   export let rawData;
+
   export let excludedRules = new Set([
     "volume",
     "price",
@@ -356,6 +357,16 @@
     }
   }
 
+  // Save scroll position before data changes
+  function saveScrollPosition() {
+    scrollPosition = window.scrollY;
+  }
+
+  // Restore scroll position after data changes
+  function restoreScrollPosition() {
+    window.scrollTo(0, scrollPosition);
+  }
+
   function sendMessage(message) {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON?.stringify(message));
@@ -371,6 +382,7 @@
       socket.addEventListener("open", () => {
         console.log("WebSocket connection opened");
         // Send only current watchlist symbols
+        //Only update 200 tickers because of a bug. The previous price is getting changed for tickers. To-do list.
         const tickerList = rawData?.map((item) => item?.symbol) || [];
         sendMessage(tickerList);
       });
@@ -380,15 +392,18 @@
         try {
           const newList = JSON?.parse(data);
           if (newList?.length > 0) {
-            stockList = calculateChange(stockList, newList);
-            //stockList = updateStockList(stockList, originalData);
-            setTimeout(() => {
-              stockList = stockList?.map((item) => ({
-                ...item,
-                previous: null,
-              }));
-            }, 800);
-            sortMode = true;
+            if (originalData?.some((item) => "changesPercentage" in item)) {
+              originalData = calculateChange(originalData, newList);
+              stockList = updateStockList(stockList, originalData);
+              setTimeout(() => {
+                stockList = stockList?.map((item) => ({
+                  ...item,
+                  previous: null,
+                }));
+              }, 800);
+              saveScrollPosition();
+              sortMode = true;
+            }
           }
         } catch (e) {
           console.error("Error parsing WebSocket message:", e);
@@ -402,53 +417,20 @@
       console.error("WebSocket connection error:", error);
     }
   }
-  /*
+
+  $: stockList = [...stockList];
+
   $: if ($isOpen) {
     websocketRealtimeData();
     console.log("WebSocket restarted");
   }
 
-    afterUpdate(async () => {
-    // Compare only the symbols to detect changes
-    const currentSymbols = rawData?.map((item) => item?.symbol).sort();
-    const previousSymbols = previousList?.map((item) => item?.symbol).sort();
-
-    // Check if symbols have changed
-    if (
-      JSON.stringify(currentSymbols) !== JSON.stringify(previousSymbols) &&
-      typeof socket !== "undefined"
-    ) {
-      // Update previous list
-      previousList = rawData;
-
-      try {
-        // Close existing socket if open
-        if (socket && socket.readyState !== WebSocket.CLOSED) {
-          socket?.close();
-        }
-
-        // Wait for socket to close
-        await new Promise((resolve) => {
-          socket?.addEventListener("close", resolve, { once: true });
-        });
-
-        // Reconnect with new symbols
-        if ($isOpen) {
-          await websocketRealtimeData();
-          console.log("WebSocket restarted due to watchlist changes");
-        }
-      } catch (error) {
-        console.error("Error restarting WebSocket:", error);
-      }
-    }
-  });
-  */
   onMount(async () => {
     try {
       const savedRules = localStorage?.getItem(pagePathName);
 
       if (savedRules) {
-        const parsedRules = JSON.parse(savedRules);
+        const parsedRules = JSON?.parse(savedRules);
 
         // Compare and update ruleOfList based on allRows
         ruleOfList = parsedRules.map((rule) => {
@@ -497,6 +479,41 @@
 
   let previousList = [];
   let reconnectionTimeout;
+
+  afterUpdate(async () => {
+    // Compare only the symbols to detect changes
+    const currentSymbols = rawData?.map((item) => item?.symbol).sort();
+    const previousSymbols = previousList?.map((item) => item?.symbol).sort();
+
+    // Check if symbols have changed
+    if (
+      JSON.stringify(currentSymbols) !== JSON.stringify(previousSymbols) &&
+      typeof socket !== "undefined"
+    ) {
+      // Update previous list
+      previousList = rawData;
+
+      try {
+        // Close existing socket if open
+        if (socket && socket.readyState !== WebSocket.CLOSED) {
+          socket?.close();
+        }
+
+        // Wait for socket to close
+        await new Promise((resolve) => {
+          socket?.addEventListener("close", resolve, { once: true });
+        });
+
+        // Reconnect with new symbols
+        if ($isOpen) {
+          await websocketRealtimeData();
+          console.log("WebSocket restarted due to watchlist changes");
+        }
+      } catch (error) {
+        console.error("Error restarting WebSocket:", error);
+      }
+    }
+  });
 
   onDestroy(() => {
     try {
@@ -594,11 +611,6 @@
         sortOrders[k].order = "none";
       }
     }
-
-    stockList = stockList?.map((item) => ({
-      ...item,
-      previous: null,
-    }));
 
     // If input is false, cycle through 'none', 'asc', 'desc' for the clicked key
     if (!input) {
