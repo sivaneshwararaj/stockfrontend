@@ -49,8 +49,20 @@
       link: "/hedge-funds",
     },
     {
-      title: "Jim Cramer Tracker",
-      link: "/cramer-tracker",
+      title: "Highest Open Interest",
+      link: "/list/highest-open-interest-change",
+    },
+    {
+      title: "Highest Open Interest Change",
+      link: "/list/highest-open-interest",
+    },
+    {
+      title: "Highest IV Rank",
+      link: "/list/highest-option-iv-rank",
+    },
+    {
+      title: "Highest Option Premium",
+      link: "/list/highest-option-premium",
     },
     {
       title: "Insider Tracker",
