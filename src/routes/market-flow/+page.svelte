@@ -3,7 +3,11 @@
 
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
-  import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
+  import {
+    abbreviateNumber,
+    abbreviateNumberWithColor,
+    sectorNavigation,
+  } from "$lib/utils";
   import InfoModal from "$lib/components/InfoModal.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
@@ -41,6 +45,35 @@
 
   let originalTopTickers = [...topSectorTickers[selectedSector]];
   let displayTopTickers = topSectorTickers[selectedSector];
+
+  function formatDate(dateStr) {
+    // Parse the input date string
+    var date = new Date(dateStr);
+
+    // Get month, day, and year
+    var month = date.getMonth() + 1; // Month starts from 0
+    var day = date.getDate();
+    var year = date.getFullYear();
+
+    // Get hours and minutes
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+
+    // Determine AM/PM and adjust hours
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours === 0 ? 12 : hours; // Convert 0 hours to 12 for AM/PM
+
+    // Add leading zeros if necessary
+    month = (month < 10 ? "0" : "") + month;
+    day = (day < 10 ? "0" : "") + day;
+    minutes = (minutes < 10 ? "0" : "") + minutes;
+
+    // Format the date as MM/DD/YYYY HH:MM AM/PM
+    var formattedDate = `${month}/${day}/${year} ${hours}:${minutes} ${ampm}`;
+
+    return formattedDate;
+  }
 
   $: columns = [
     { key: "ticker", label: "Symbol", align: "left" },
@@ -526,6 +559,68 @@
                   id={"marketTideInfo"}
                 />
               </div>
+              <div
+                class="mt-5 mb-4 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-4 sm:divide-x sm:divide-y-0"
+              >
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">Date</div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
+                    >
+                      {formatDate(marketTideData?.at(-1)?.timestamp)}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">Volume</div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
+                    >
+                      {@html abbreviateNumberWithColor(
+                        marketTideData?.at(-1)?.net_volume,
+                        false,
+                        true,
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">
+                      Net Call Premium
+                    </div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
+                    >
+                      {@html abbreviateNumberWithColor(
+                        marketTideData?.at(-1)?.net_call_premium,
+                        false,
+                        true,
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">
+                      Net Put Premium
+                    </div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
+                    >
+                      {@html abbreviateNumberWithColor(
+                        marketTideData?.at(-1)?.net_put_premium,
+                        false,
+                        true,
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div
                 class="pb-8 sm:pb-2 rounded-md bg-table border border-gray-800"
               >
