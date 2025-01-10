@@ -59,6 +59,18 @@
   let originalTopTickers = [...topSectorTickers[selectedSector]];
   let displayTopTickers = topSectorTickers[selectedSector];
 
+  function findLastNonNull(dataArray, key) {
+    for (let i = dataArray.length - 1; i >= 0; i--) {
+      if (
+        dataArray[i]?.net_call_premium !== null &&
+        dataArray[i]?.net_call_premium !== undefined
+      ) {
+        return dataArray[i][key];
+      }
+    }
+    return null; // Return null if no non-null value is found.
+  }
+
   function formatDate(dateStr) {
     // Parse the input date string
     var date = new Date(dateStr);
@@ -626,7 +638,7 @@
                     <div
                       class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
                     >
-                      {formatDate(marketTideData?.at(-1)?.timestamp)}
+                      {formatDate(findLastNonNull(marketTideData, "timestamp"))}
                     </div>
                   </div>
                 </div>
@@ -638,7 +650,7 @@
                       class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
                     >
                       {@html abbreviateNumberWithColor(
-                        marketTideData?.at(-1)?.net_volume,
+                        findLastNonNull(marketTideData, "net_volume"),
                         false,
                         true,
                       )}
@@ -654,7 +666,7 @@
                       class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
                     >
                       {@html abbreviateNumberWithColor(
-                        marketTideData?.at(-1)?.net_call_premium,
+                        findLastNonNull(marketTideData, "net_call_premium"),
                         false,
                         true,
                       )}
@@ -670,7 +682,7 @@
                       class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
                     >
                       {@html abbreviateNumberWithColor(
-                        marketTideData?.at(-1)?.net_put_premium,
+                        findLastNonNull(marketTideData, "net_put_premium"),
                         false,
                         true,
                       )}
