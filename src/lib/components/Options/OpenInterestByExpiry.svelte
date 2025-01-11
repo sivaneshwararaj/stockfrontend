@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { abbreviateNumberWithColor } from "$lib/utils";
+  import { abbreviateNumberWithColor, monthNames } from "$lib/utils";
   import { screenWidth } from "$lib/store";
   import { onMount } from "svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
@@ -49,14 +49,6 @@
     }));
 
     const dates = processedData?.map((d) => d.expiry);
-    const formattedDates = dates.map((date) => {
-      const d = new Date(date);
-      return d.toLocaleDateString("en-US", {
-        month: "short", // Abbreviated month name
-        day: "numeric", // Day of the month
-        year: "2-digit", // Two-digit year
-      });
-    });
 
     const callValues = processedData?.map((d) => d.callValue?.toFixed(2));
     const putValues = processedData?.map((d) => d.putValue?.toFixed(2));
@@ -100,15 +92,24 @@
           show: false, // Hide x-axis labels
         },
       },
-      xAxis: {
-        type: "category",
-        data: formattedDates,
-        axisLine: { lineStyle: { color: "#fff" } },
-        axisLabel: {
-          color: "#fff",
+      xAxis: [
+        {
+          type: "category",
+          data: dates,
+          axisLabel: {
+            color: "#fff",
+
+            formatter: function (value) {
+              // Assuming dates are in the format 'yyyy-mm-dd'
+              const dateParts = value.split("-");
+              const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+              const year = parseInt(dateParts[0]);
+              const day = parseInt(dateParts[2]);
+              return `${day} ${monthNames[monthIndex]} ${year}`;
+            },
+          },
         },
-        splitLine: { show: false },
-      },
+      ],
       series: [
         {
           name: `Put`,
