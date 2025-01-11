@@ -254,11 +254,7 @@
   });
 
   $: {
-    if (
-      $stockTicker &&
-      $stockTicker?.length !== 0 &&
-      typeof window !== "undefined"
-    ) {
+    if ($stockTicker && $stockTicker?.length !== 0) {
       // add a check to see if running on client-side
       $stockTicker = data?.getParams;
       $assetType = "stock";
@@ -337,17 +333,13 @@
   $: charNumber = $screenWidth < 640 ? 25 : 40;
 
   $: {
-    if (
-      $stockTicker &&
-      typeof window !== "undefined" &&
-      $page.url.pathname === `/stocks/${$stockTicker}`
-    ) {
+    if ($stockTicker && $page.url.pathname === `/stocks/${$stockTicker}`) {
       displaySection = "overview";
     }
   }
 
   $: {
-    if ($page?.url?.pathname && typeof window !== "undefined") {
+    if ($page?.url?.pathname) {
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
         statistics: "statistics",

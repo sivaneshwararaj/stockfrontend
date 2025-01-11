@@ -22,15 +22,20 @@
   import { onMount, onDestroy, afterUpdate } from "svelte";
   import { page } from "$app/stores";
   import toast from "svelte-french-toast";
-  import Markethour from "$lib/components/Markethour.svelte";
+  import { convertTimestamp } from "$lib/utils";
   import PriceAlert from "$lib/components/PriceAlert.svelte";
 
   export let data;
+  let prePostData = data?.getPrePostQuote || {};
   $: $realtimePrice = data?.getStockQuote?.price?.toFixed(2);
-
+  let oneDayPrice = [];
   let previousRealtimePrice = null;
   let previousTicker;
   let socket;
+
+  $etfTicker = data?.getParams;
+  $assetType = "stock";
+  $displayCompanyName = data?.companyName;
 
   let isScrolled = false;
   let y;
@@ -42,16 +47,17 @@
   //let availableCash = 0;
 
   let displaySection = "";
+  let displayLegend = {};
 
   function shareContent(url) {
     if (navigator.share) {
       navigator
-        .share({
+        ?.share({
           title: document.title,
           url,
         })
-        .then(() => console.log("Content shared successfully."))
-        .catch((error) => console.log("Error sharing content:", error));
+        ?.then(() => console.log("Content shared successfully."))
+        ?.catch((error) => console.log("Error sharing content:", error));
     } else {
       toast.error("Sharing is not supported by your device", {
         style: "background: #2A2E39; color: #fff;",
@@ -65,7 +71,12 @@
       options: "/options",
       "dark-pool": "/dark-pool",
       dividends: "/dividends",
+      statistics: "/statistics",
+      metrics: "metrics",
+      forecast: "/forecast",
+      financials: "/financials",
       history: "/history",
+      profile: "/profile",
     };
 
     if (state !== "overview" && sectionMap[state]) {
@@ -241,14 +252,74 @@
   });
 
   $: {
-    if (
-      $etfTicker &&
-      $etfTicker?.length !== 0 &&
-      typeof window !== "undefined"
-    ) {
+    if ($etfTicker && $etfTicker?.length !== 0) {
       // add a check to see if running on client-side
-
+      $etfTicker = data?.getParams;
+      $assetType = "stock";
+      $displayCompanyName = data?.companyName;
       $currentPortfolioPrice = data?.getStockQuote?.price;
+      prePostData = data?.getPrePostQuote || {};
+      const output = [...data?.getOneDayPrice] ?? [];
+      oneDayPrice = output?.map((item) => ({
+        time: Date?.parse(item?.time + "Z") / 1000,
+        open: item?.open !== null ? item?.open : NaN,
+        high: item?.high !== null ? item?.high : NaN,
+        low: item?.low !== null ? item?.low : NaN,
+        close: item?.close !== null ? item?.close : NaN,
+      }));
+
+      let change;
+      let currentDataRowOneDay;
+      let baseClose =
+        data?.getStockQuote?.previousClose || oneDayPrice?.at(0)?.open;
+
+      const length = oneDayPrice?.length;
+      for (let i = length - 1; i >= 0; i--) {
+        if (!isNaN(oneDayPrice[i]?.close)) {
+          currentDataRowOneDay = oneDayPrice[i];
+          break;
+        }
+      }
+
+      // Calculate percentage change if baseClose and currentDataRow are valid
+      const closeValue =
+        $realtimePrice !== null && $realtimePrice !== undefined
+          ? $realtimePrice
+          : currentDataRowOneDay?.close || currentDataRowOneDay?.value;
+
+      if (closeValue && baseClose) {
+        change = ((closeValue / baseClose - 1) * 100)?.toFixed(2);
+      }
+
+      // Format date
+      const date = new Date(currentDataRowOneDay?.time * 1000);
+
+      const options = {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZone: "UTC",
+      };
+
+      const formattedDate = date?.toLocaleString("en-US", options);
+
+      const safeFormattedDate =
+        formattedDate === "Invalid Date"
+          ? convertTimestamp(data?.getStockQuote?.timestamp)
+          : formattedDate;
+
+      // Set display legend
+      displayLegend = {
+        close:
+          $realtimePrice !== null && $realtimePrice !== undefined
+            ? $realtimePrice
+            : currentDataRowOneDay?.close?.toFixed(2) ||
+              data?.getStockQuote?.price?.toFixed(2),
+        date: safeFormattedDate,
+        change,
+      };
     }
   }
 
@@ -256,23 +327,20 @@
     (item) => item.user === data?.user?.id && item.ticker?.includes($etfTicker),
   );
 
-  $: charNumber = $screenWidth < 640 ? 15 : 25;
+  $: charNumber = $screenWidth < 640 ? 25 : 40;
 
   $: {
-    if (
-      $etfTicker &&
-      typeof window !== "undefined" &&
-      $page.url.pathname === `/etf/${$etfTicker}`
-    ) {
+    if ($etfTicker && $page.url.pathname === `/etf/${$etfTicker}`) {
       displaySection = "overview";
     }
   }
 
   $: {
-    if ($page?.url?.pathname && typeof window !== "undefined") {
+    if ($page?.url?.pathname) {
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
         holdings: "holdings",
+        options: "options",
         options: "options",
         "dark-pool": "dark-pool",
         insider: "insider",
@@ -292,10 +360,10 @@
 <svelte:window bind:scrollY={y} />
 
 <body
-  class="bg-default w-full max-w-screen sm:max-w-7xl min-h-screen sm:max-w-[1400px] overflow-hidden"
+  class="bg-default w-full max-w-screen sm:max-w-[1400px] min-h-screen overflow-hidden"
 >
   <!-- Page wrapper -->
-  <div class="flex flex-col w-full mt-5 relative w-full">
+  <div class="mt-5 flex flex-col w-full relative w-full">
     <main class="grow w-full">
       <section class="w-full">
         <div class="w-full">
@@ -330,9 +398,7 @@
                         ? "hidden"
                         : "flex flex-col items-center ml-6 transition-transform ease-in"}
                     >
-                      <span
-                        class="text-white text-[0.70rem] font-medium text-opacity-[0.6]"
-                      >
+                      <span class="text-white text-xs font-semibold">
                         {$etfTicker}
                       </span>
                       <span class="text-white font-medium text-sm">
@@ -497,23 +563,19 @@
             </div>
             <!--End Mobile Navbar-->
 
-            <div class="pt-14 sm:pt-0 w-full px-3 sm:px-0">
+            <div class="pt-14 sm:pt-0 w-full px-3 sm:px-0 lg:pr-3">
               <div
                 class="md:flex md:justify-between md:divide-x md:divide-slate-800"
               >
                 <!-- Main content -->
                 <div class="pb-12 md:pb-20 w-full">
-                  <div class="md:pr-6 lg:pr-10">
+                  <div class="">
                     <!-----Start-Header-CandleChart-Indicators------>
 
-                    <div
-                      class="m-auto pl-0 sm:pl-4 overflow-hidden mb-3 md:mt-10 xl:pr-7"
-                    >
+                    <div class="m-auto pl-0 sm:pl-4 overflow-hidden mb-3">
                       <div
                         class="hidden sm:flex flex-row w-full justify-between items-center"
                       >
-                        <Markethour />
-
                         <!--Start Watchlist-->
 
                         {#if data?.user}
@@ -640,22 +702,135 @@
                       <!-- svelte-ignore a11y-click-events-have-key-events -->
                       <!-- svelte-ignore a11y-label-has-associated-control -->
 
-                      <div class="flex items-center w-full mt-3">
+                      <div class="flex items-center w-full mt-5">
                         <div
                           class="flex flex-row justify-start w-full items-center"
                         >
-                          <div class="flex flex-col items-start ml-2 sm:ml-3">
-                            <span class="text-md sm:text-lg text-blue-400">
-                              {$etfTicker?.toUpperCase()}
-                            </span>
-                            <span
-                              class="text-xl sm:text-2xl font-semibold sm:font-bold text-white"
+                          <div class="flex flex-col items-start w-full">
+                            <div
+                              class="flex flex-row justify-between items-center w-full sm:-mt-[50px] mb-5 sm:mb-10"
                             >
-                              {$displayCompanyName?.length > charNumber
-                                ? $displayCompanyName?.slice(0, charNumber) +
-                                  "..."
-                                : $displayCompanyName}
-                            </span>
+                              <div
+                                class="text-2xl lg:text-3xl font-bold text-white"
+                              >
+                                {$displayCompanyName?.length > charNumber
+                                  ? $displayCompanyName?.slice(0, charNumber) +
+                                    "..."
+                                  : $displayCompanyName}
+                                <span class="hidden sm:inline-block"
+                                  >({$etfTicker?.toUpperCase()})</span
+                                >
+                              </div>
+                            </div>
+
+                            <div
+                              class="-mt-5 sm:-mt-8 mb-5 flex flex-row items-end space-x-2 xs:space-x-3 sm:space-x-5 text-white"
+                            >
+                              <div class="w-full max-w-[50%] whitespace-nowrap">
+                                <div
+                                  class="text-3xl sm:text-4xl font-bold {Object?.keys(
+                                    prePostData,
+                                  )?.length === 0
+                                    ? 'inline'
+                                    : 'block sm:inline'}"
+                                >
+                                  {displayLegend?.close}
+                                </div>
+                                <div
+                                  class="font-semibold {Object?.keys(
+                                    prePostData,
+                                  )?.length === 0
+                                    ? 'inline'
+                                    : 'block sm:inline'} text-lg xs:text-xl sm:text-2xl {displayLegend?.change >=
+                                  0
+                                    ? "before:content-['+'] text-[#00FC50]"
+                                    : 'text-[#FF2F1F]'}"
+                                >
+                                  {displayLegend?.change}%
+                                </div>
+                                <div class="mt-0.5 text-xs sm:text-sm">
+                                  {#if !$isOpen}
+                                    <span
+                                      class="block font-semibold sm:inline mb-0.5 sm:mb-0"
+                                      >At close:</span
+                                    >
+                                  {/if}
+                                  {displayLegend?.date}
+                                  {#if $isOpen}
+                                    <span
+                                      class="{Object?.keys(prePostData)
+                                        ?.length !== 0
+                                        ? 'block sm:inline'
+                                        : 'inline'} mb-0.5 sm:mb-0"
+                                      >- Market open</span
+                                    >
+                                  {/if}
+                                </div>
+                              </div>
+                              {#if Object?.keys(prePostData)?.length !== 0 && !$isOpen}
+                                <div
+                                  class="border-l border-default pl-3 bp:pl-5"
+                                >
+                                  <div
+                                    class="block text-2xl sm:text-[1.7rem] font-semibold leading-5 text-faded sm:inline"
+                                  >
+                                    {prePostData?.price?.toFixed(2)}
+                                  </div>
+                                  <div
+                                    class="mt-1.5 block text-sm xs:text-base sm:mt-0 sm:inline sm:text-lg {prePostData?.changesPercentage >=
+                                    0
+                                      ? "before:content-['+'] text-[#00FC50]"
+                                      : 'text-[#FF2F1F]'}"
+                                  >
+                                    {prePostData?.changesPercentage?.toFixed(
+                                      2,
+                                    )}%
+                                  </div>
+                                  <div class="mt-1 text-xs sm:text-sm sm:flex">
+                                    <span class="flex items-center">
+                                      {#if prePostData?.time?.includes("AM")}
+                                        <svg
+                                          class="h-4 w-4 inline text-yellow-500"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                          style="max-width:40px"
+                                          ><path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                                          ></path></svg
+                                        >
+                                      {:else}
+                                        <svg
+                                          class="h-4 w-4 inline text-blue-400"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                          style="max-width:40px"
+                                          ><path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                                          ></path></svg
+                                        >
+                                      {/if}
+                                      <span
+                                        class="ml-0.5 whitespace-nowrap font-semibold md:ml-1 mb-0.5 sm:mb-0"
+                                        >{prePostData?.time?.includes("AM")
+                                          ? "Pre-market"
+                                          : "After-hours"}</span
+                                      ></span
+                                    >
+                                    <span class="sm:ml-1 whitespace-nowrap"
+                                      >{prePostData?.time}</span
+                                    >
+                                  </div>
+                                </div>
+                              {/if}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -664,7 +839,6 @@
 
                     <!--Start Ticker Section-->
 
-                    <!--<div class="w-full max-w-3xl sm:max-w-2xl m-auto pt-2 pb-5 sm:pl-3 sticky z-20 bg-default"  style="top: {$screenWidth < 520 && $isScrollingUp ? '4rem' : '0rem'};">-->
                     <nav
                       class="sm:ml-4 border-b-[2px] overflow-x-scroll md:overflow-hidden whitespace-nowrap"
                     >
@@ -676,28 +850,28 @@
                           on:click={() => changeSection("overview")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'overview'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Overview
                         </a>
+
                         <a
                           href={`/etf/${$etfTicker}/holdings`}
                           on:click={() => changeSection("holdings")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'holdings'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Holdings
                         </a>
-
                         <a
                           href={`/etf/${$etfTicker}/options`}
                           on:click={() => changeSection("options")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'options'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Options
@@ -707,7 +881,7 @@
                           on:click={() => changeSection("dark-pool")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'dark-pool'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Dark Pool
@@ -717,7 +891,7 @@
                           on:click={() => changeSection("insider")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'insider'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Insider
@@ -727,7 +901,7 @@
                           on:click={() => changeSection("dividends")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'dividends'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           Dividends
@@ -737,7 +911,7 @@
                           on:click={() => changeSection("history")}
                           class="p-2 px-5 cursor-pointer {displaySection ===
                           'history'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
                             : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
                         >
                           History
@@ -746,6 +920,7 @@
                     </nav>
 
                     <!--Start-Main Content-->
+
                     <slot />
                     <!--End Main Content-->
                   </div>
@@ -767,6 +942,7 @@
 
 <!--Start SellTrade Modal-->
 <PriceAlert {data} ticker={$etfTicker} assetType={$assetType} />
+
 <!--Start Add Watchlist Modal-->
 <input type="checkbox" id="addWatchListModal" class="modal-toggle" />
 
@@ -798,7 +974,7 @@
             class="cursor-pointer w-full flex flex-row justify-start items-center mb-5"
           >
             <div
-              class="flex flex-row items-center w-full p-3 border rounded-md {item?.ticker?.includes(
+              class="flex flex-row items-center w-full border p-3 rounded-md {item?.ticker?.includes(
                 $etfTicker,
               )
                 ? 'border border-gray-400'
@@ -814,7 +990,9 @@
                 </span>
               </div>
 
-              <div class="rounded-full w-8 h-8 relative border border-gray-600">
+              <div
+                class="rounded-full w-8 h-8 relative border border-[#737373]"
+              >
                 {#if item?.ticker?.includes($etfTicker)}
                   <svg
                     class="w-full h-full rounded-full"

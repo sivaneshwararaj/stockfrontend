@@ -44,15 +44,15 @@ const fetchWatchlist = async (pb, userId) => {
 
 export const load = async ({ params, locals }) => {
   const { apiURL, apiKey, pb, user } = locals;
-
   const { tickerID } = params;
 
   const endpoints = [
-    "/etf-profile",
+   "/etf-profile",
     "/etf-holdings",
     "/etf-sector-weighting",
     "/stock-dividend",
     "/stock-quote",
+    "/pre-post-quote",
     "/wiim",
     "/one-day-price",
     "/stock-news",
@@ -66,23 +66,27 @@ export const load = async ({ params, locals }) => {
   ];
 
   const [
-    getETFProfile,
+     getETFProfile,
     getETFHoldings,
     getETFSectorWeighting,
     getStockDividend,
     getStockQuote,
+    getPrePostQuote,
     getWhyPriceMoved,
     getOneDayPrice,
     getNews,
     getUserWatchlist,
   ] = await Promise.all(promises);
 
+
+
   return {
-    getETFProfile,
+     getETFProfile,
     getETFHoldings,
     getETFSectorWeighting,
     getStockDividend,
     getStockQuote,
+    getPrePostQuote,
     getWhyPriceMoved,
     getOneDayPrice,
     getNews,

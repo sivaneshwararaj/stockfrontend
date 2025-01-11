@@ -6,22 +6,18 @@
     setCache,
     numberOfUnreadNotification,
     globalForm,
-    isCrosshairMoveActive,
     realtimePrice,
     priceIncrease,
     wsBidPrice,
     wsAskPrice,
     currentPortfolioPrice,
     etfTicker,
-    displayCompanyName,
-    isOpen,
-    isBeforeMarketOpen,
-    isWeekend,
     shouldUpdatePriceChart,
     priceChartData,
   } from "$lib/store";
   import { onDestroy, onMount } from "svelte";
   import WIIM from "$lib/components/WIIM.svelte";
+
   import News from "$lib/components/News.svelte";
   import ETFSidecard from "$lib/components/ETFSidecard.svelte";
 
@@ -30,8 +26,8 @@
   export let data;
   export let form;
 
-  let prePostData = {};
   let stockDeck = {};
+
   $: previousClose = data?.getStockQuote?.previousClose;
   //============================================//
   const intervals = ["1D", "1W", "1M", "6M", "1Y", "MAX"];
@@ -51,62 +47,71 @@
   $: {
     if (output !== null) {
       let change;
+      let graphChange;
       let currentDataRow;
-      let baseClose;
+      let currentDataRowOneDay;
+      let baseClose = previousClose;
+      let graphBaseClose;
+
+      const length = oneDayPrice?.length;
+      for (let i = length - 1; i >= 0; i--) {
+        if (!isNaN(oneDayPrice[i]?.close)) {
+          currentDataRowOneDay = oneDayPrice[i];
+          break;
+        }
+      }
 
       // Determine current data row and base close price based on displayData
       switch (displayData) {
-        case "1D":
-          const length = oneDayPrice?.length;
-          for (let i = length - 1; i >= 0; i--) {
-            if (!isNaN(oneDayPrice[i]?.close)) {
-              currentDataRow = oneDayPrice[i];
-              break;
-            }
-          }
-          baseClose = previousClose;
-          break;
-
         case "1W":
           currentDataRow = oneWeekPrice?.at(-1); // Latest entry for 1 week
-          baseClose = oneWeekPrice?.[0]?.close;
+          graphBaseClose = oneWeekPrice?.at(0)?.close;
           break;
 
         case "1M":
           currentDataRow = oneMonthPrice?.at(-1); // Latest entry for 1 month
-          baseClose = oneMonthPrice?.[0]?.close;
+          graphBaseClose = oneMonthPrice?.at(0)?.close;
           break;
 
         case "6M":
           currentDataRow = sixMonthPrice?.at(-1); // Latest entry for 6 months
-          baseClose = sixMonthPrice?.[0]?.close;
+          graphBaseClose = sixMonthPrice?.at(0)?.close;
           break;
 
         case "1Y":
           currentDataRow = oneYearPrice?.at(-1); // Latest entry for 1 year
-          baseClose = oneYearPrice?.[0]?.close;
+          graphBaseClose = oneYearPrice?.at(0)?.close;
           break;
 
         case "MAX":
           currentDataRow = maxPrice?.at(-1); // Latest entry for MAX range
-          baseClose = maxPrice?.[0]?.close;
+          graphBaseClose = maxPrice?.at(0)?.close;
           break;
       }
 
       // Calculate percentage change if baseClose and currentDataRow are valid
       const closeValue =
-        displayData === "1D" &&
-        !$isCrosshairMoveActive &&
-        $realtimePrice !== null
+        $realtimePrice !== null && $realtimePrice !== undefined
+          ? $realtimePrice
+          : (currentDataRowOneDay?.close ?? currentDataRowOneDay?.value);
+
+      const graphCloseValue =
+        $realtimePrice !== null && $realtimePrice !== undefined
           ? $realtimePrice
           : (currentDataRow?.close ?? currentDataRow?.value);
 
       if (closeValue && baseClose) {
-        change = ((closeValue / baseClose - 1) * 100).toFixed(2);
+        change = ((closeValue / baseClose - 1) * 100)?.toFixed(2);
+      }
+
+      if (graphCloseValue && graphBaseClose) {
+        graphChange = ((graphCloseValue / graphBaseClose - 1) * 100)?.toFixed(
+          2,
+        );
       }
 
       // Format date
-      const date = new Date(currentDataRow?.time * 1000);
+      const date = new Date(currentDataRowOneDay?.time * 1000);
 
       const options = {
         day: "2-digit",
@@ -117,15 +122,7 @@
         timeZone: "UTC",
       };
 
-      //const formattedDate = (displayData === '1D' || displayData === '1W' || displayData === '1M') ? date.toLocaleString('en-GB', options).replace(/\//g, '.') : date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      const formattedDate =
-        displayData === "1D" || displayData === "1W" || displayData === "1M"
-          ? date.toLocaleString("en-US", options)
-          : new Date(currentDataRow?.time)?.toLocaleDateString("en-US", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            });
+      const formattedDate = date?.toLocaleString("en-US", options);
 
       const safeFormattedDate =
         formattedDate === "Invalid Date"
@@ -135,11 +132,11 @@
       // Set display legend
       displayLegend = {
         close:
-          currentDataRow?.value ??
-          currentDataRow?.close ??
-          data?.getStockQuote?.price,
+          currentDataRowOneDay?.close?.toFixed(2) ??
+          data?.getStockQuote?.price?.toFixed(2),
         date: safeFormattedDate,
         change,
+        graphChange: displayData === "1D" ? change : graphChange,
       };
     }
   }
@@ -413,33 +410,7 @@
     }
   }
 
-  async function getPrePostQuote() {
-    if (!$isOpen) {
-      const postData = { ticker: $etfTicker, path: "pre-post-quote" };
-      const response = await fetch("/api/ticker-data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-
-      prePostData = await response.json();
-    }
-  }
-
-  let currentDataRow = { value: "-", date: "-" };
-
-  let lineLegend = null;
   let displayLegend = { close: "-", date: "-" };
-
-  function handleSeriesReference(ref) {
-    try {
-      lineLegend = ref;
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   let displayLastLogicalRangeValue;
 
@@ -686,19 +657,11 @@
       oneMonthPrice = [];
       oneYearPrice = [];
       maxPrice = [];
-      prePostData = {};
       output = null;
 
       stockDeck = data?.getETFProfile?.at(0); // Essential otherwise chart will not be updated since we wait until #layout.server.ts server response is finished
-      const asyncFunctions = [getPrePostQuote()];
 
-      Promise.all(asyncFunctions)
-        .then((results) => {
-          initializePrice();
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
+      initializePrice();
     }
   }
 </script>
@@ -708,21 +671,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Stock Price, Quote & News · Stocknear
+    {data?.companyName} ({$etfTicker}) Stock Price, Quote & News · Stocknear
   </title>
 
   <meta
     name="description"
-    content={`Get a real-time ${$displayCompanyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
   />
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Stock Price, Quote & News · Stocknear`}
+    content={`${data?.companyName} (${$etfTicker}) Stock Price, Quote & News · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Get a real-time ${$displayCompanyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
   />
   <!--<meta property="og:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <meta property="og:type" content="website" />
@@ -732,11 +695,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Stock Price, Quote & News · Stocknear`}
+    content={`${data?.companyName} (${$etfTicker}) Stock Price, Quote & News · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Get a real-time ${$displayCompanyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+    content={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
   />
   <!--<meta name="twitter:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
   <!-- Add more Twitter meta tags as needed -->
@@ -749,100 +712,7 @@
     >
       <!-- Main content -->
       <div class="pb-12 md:pb-20 w-full sm:pr-6 xl:pr-0">
-        <div class="xl:pr-10">
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-
-          <div class="flex flex-row items-start w-full sm:pl-6 mt-4">
-            <div class="flex flex-col items-start justify-start w-full">
-              <div
-                class="text-2xl md:text-3xl font-bold text-white flex flex-row items-center w-full"
-              >
-                {$realtimePrice ?? displayLegend?.close}
-
-                {#if $priceIncrease === true}
-                  <div
-                    style="background-color: green;"
-                    class="inline-block pulse rounded-full w-3 h-3 ml-2"
-                  ></div>
-                {:else if $priceIncrease === false}
-                  <div
-                    style="background-color: red;"
-                    class="inline-block pulse rounded-full w-3 h-3 ml-2"
-                  ></div>
-                {/if}
-              </div>
-
-              <div class="flex flex-row items-center w-full">
-                <span
-                  class="items-center justify-start {displayLegend?.change > 0
-                    ? "before:content-['+'] text-[#00FC50]"
-                    : 'text-[#FF2F1F]'} font-medium text-xs sm:text-sm"
-                  >{displayLegend?.change ?? "-"}%</span
-                >
-
-                <span class="ml-3 text-white text-xs sm:text-sm"
-                  >{displayLegend?.date}</span
-                >
-              </div>
-            </div>
-
-            <div class="ml-auto">
-              {#if Object?.keys(prePostData)?.length !== 0 && prePostData?.price !== 0}
-                <div class="flex flex-col justify-end items-end">
-                  <div class="flex flex-row items-center justify-end">
-                    <span class="text-white text-lg sm:text-2xl font-bold">
-                      {prePostData?.price}
-                    </span>
-                    {#if prePostData?.changesPercentage >= 0}
-                      <span
-                        class="ml-1 items-center justify-start text-[#00FC50] font-medium text-xs sm:text-sm"
-                        >({prePostData?.changesPercentage}%)</span
-                      >
-                    {:else if prePostData?.changesPercentage < 0}
-                      <span
-                        class="ml-1 items-center justify-start text-[#FF2F1F] font-medium text-xs sm:text-sm"
-                        >({prePostData?.changesPercentage}%)</span
-                      >
-                    {/if}
-                  </div>
-                  {#if $isBeforeMarketOpen && !$isOpen && !$isWeekend}
-                    <div
-                      class="flex flex-row items-center justify-end text-white text-xs sm:text-sm font-normal text-end w-24"
-                    >
-                      <span>Pre-market:</span>
-                      <svg
-                        class="ml-1 w-4 h-4 inline-block"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 256 256"
-                        ><path
-                          fill="#EA9703"
-                          d="M120 40V16a8 8 0 0 1 16 0v24a8 8 0 0 1-16 0m72 88a64 64 0 1 1-64-64a64.07 64.07 0 0 1 64 64m-16 0a48 48 0 1 0-48 48a48.05 48.05 0 0 0 48-48M58.34 69.66a8 8 0 0 0 11.32-11.32l-16-16a8 8 0 0 0-11.32 11.32Zm0 116.68l-16 16a8 8 0 0 0 11.32 11.32l16-16a8 8 0 0 0-11.32-11.32M192 72a8 8 0 0 0 5.66-2.34l16-16a8 8 0 0 0-11.32-11.32l-16 16A8 8 0 0 0 192 72m5.66 114.34a8 8 0 0 0-11.32 11.32l16 16a8 8 0 0 0 11.32-11.32ZM48 128a8 8 0 0 0-8-8H16a8 8 0 0 0 0 16h24a8 8 0 0 0 8-8m80 80a8 8 0 0 0-8 8v24a8 8 0 0 0 16 0v-24a8 8 0 0 0-8-8m112-88h-24a8 8 0 0 0 0 16h24a8 8 0 0 0 0-16"
-                        /></svg
-                      >
-                    </div>
-                  {:else}
-                    <div
-                      class="flex flex-row items-center justify-end text-white text-xs sm:text-sm font-normal text-end w-28"
-                    >
-                      <span>After-hours:</span>
-                      <svg
-                        class="ml-1 w-4 h-4 inline-block"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 256 256"
-                        ><path
-                          fill="#70A1EF"
-                          d="M232.13 143.64a6 6 0 0 0-6-1.49a90.07 90.07 0 0 1-112.27-112.3a6 6 0 0 0-7.49-7.48a102.88 102.88 0 0 0-51.89 36.31a102 102 0 0 0 142.84 142.84a102.88 102.88 0 0 0 36.31-51.89a6 6 0 0 0-1.5-5.99m-42 48.29a90 90 0 0 1-126-126a90.9 90.9 0 0 1 35.52-28.27a102.06 102.06 0 0 0 118.69 118.69a90.9 90.9 0 0 1-28.24 35.58Z"
-                        /></svg
-                      >
-                    </div>
-                  {/if}
-                </div>
-              {/if}
-            </div>
-          </div>
-          <!-----End-Header-CandleChart-Indicators------>
-
+        <div class="mt-2">
           <!--End Ticker Section-->
           <!-- Start Graph -->
 
@@ -876,20 +746,6 @@
                         </li>
                       {/each}
                     </ul>
-                  </div>
-                  <div
-                    class="flex shrink flex-row space-x-1 pr-1 text-sm sm:text-[1rem]"
-                  >
-                    <span
-                      class={displayLegend?.change >= 0
-                        ? "before:content-['+'] text-[#00FC50]"
-                        : "text-[#FF2F1F]"}
-                    >
-                      {displayLegend?.change ?? "-"}%
-                    </span>
-                    <span class="hidden text-gray-200 sm:block"
-                      >({displayData})</span
-                    >
                   </div>
                 </div>
                 <div class="h-[250px] sm:h-[350px]">
@@ -938,11 +794,11 @@
                     class="flex shrink flex-row space-x-1 pr-1 text-sm sm:text-[1rem]"
                   >
                     <span
-                      class={displayLegend?.change >= 0
+                      class={displayLegend?.graphChange >= 0
                         ? "before:content-['+'] text-[#00FC50]"
                         : "text-[#FF2F1F]"}
                     >
-                      {displayLegend?.change}%
+                      {displayLegend?.graphChange}%
                     </span>
                     <span class="hidden text-gray-200 sm:block"
                       >({displayData})</span
@@ -968,7 +824,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -988,7 +843,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1008,7 +862,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1028,7 +881,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1048,7 +900,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1068,7 +919,6 @@
                         lineColor={colorChange}
                         topColor={topColorChange}
                         bottomColor={bottomColorChange}
-                        ref={handleSeriesReference}
                         priceLineVisible={false}
                       >
                         <PriceLine
@@ -1101,7 +951,7 @@
               class="mt-10 lg:mt-0 order-5 lg:order-1 flex flex-row space-x-2 sm:space-x-3 xs:space-x-4"
             >
               <table
-                class="w-[50%] text-sm text-white tiny:text-small lg:w-full lg:min-w-[210px]"
+                class="w-[50%] text-sm text-white sm:text-[1rem] lg:min-w-[250px] 2xl:min-w-[300px]"
               >
                 <tbody
                   ><tr
@@ -1221,8 +1071,7 @@
                 </tbody>
               </table>
               <table
-                class="w-[48%] text-sm text-white tiny:text-small lg:w-auto lg:min-w-[210px]"
-                data-test="overview-quote"
+                class="w-[50%] text-sm text-white lg:min-w-[250px] 2xl:min-w-[300px]"
               >
                 <tbody
                   ><tr
@@ -1332,16 +1181,15 @@
           <!--End Graph-->
 
           <div
-            class="mt-6 flex flex-col lg:flex-row gap-x-14 items-start w-full"
+            class="mt-6 flex flex-col lg:flex-row gap-x-14 items-start w-full justify-between"
           >
             <div
-              class="lg:space-y-6 lg:order-2 lg:pt-1 sm:pl-7 lg:pl-0 w-full lg:w-[45%] sm:ml-auto"
+              class="lg:space-y-6 lg:order-2 lg:pt-1 sm:pl-7 lg:pl-0 w-full lg:w-[45%] sm:ml-auto lg:max-w-[400px]"
             >
               <ETFSidecard {data} />
-              <div class="lg:sticky lg:top-20"></div>
             </div>
 
-            <div class="w-full">
+            <div class="w-full lg:w-[65%] 2xl:w-[70%]">
               <div
                 class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 {data
                   ?.getWhyPriceMoved?.length !== 0
@@ -1351,7 +1199,7 @@
                 <WIIM {data} />
               </div>
 
-              <div class="w-full mt-10 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
+              <div class="w-full mt-5 sm:mt-0 m-auto sm:pl-6 sm:pb-6">
                 <News {data} />
               </div>
             </div>

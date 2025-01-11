@@ -34,7 +34,7 @@
   }
 
   $: {
-    if ($stockTicker && typeof window !== "undefined") {
+    if ($stockTicker) {
       info = data?.getStockDeck;
       ipoDate =
         info?.ipoDate !== null && info?.ipoDate?.length > 0

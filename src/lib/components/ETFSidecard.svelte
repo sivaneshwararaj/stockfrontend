@@ -6,7 +6,6 @@
     abbreviateNumber,
     sectorNavigation,
   } from "$lib/utils";
-  import defaultLogo from "$lib/images/stocks/logo/default_logo.png";
 
   import { goto } from "$app/navigation";
 
@@ -39,7 +38,7 @@
   }
 
   $: {
-    if ($etfTicker && typeof window !== "undefined") {
+    if ($etfTicker) {
       info = data?.getETFProfile?.at(0);
       topHoldingList = data?.getETFHoldings?.holdings || [];
       topSectorList = data?.getETFSectorWeighting || [];
@@ -215,21 +214,9 @@
                   >
                     <td class="">
                       <div class="flex flex-row items-center">
-                        <div
-                          class="rounded-full w-10 h-10 relative flex items-center justify-center"
-                        >
-                          <img
-                            style="clip-path: circle(50%);"
-                            class="w-6 h-6 rounded-full"
-                            src={item?.symbol?.length !== 0
-                              ? `https://financialmodelingprep.com/image-stock/${item?.symbol}.png`
-                              : defaultLogo}
-                            loading="lazy"
-                          />
-                        </div>
-                        <div class="flex flex-col ml-3 w-full">
+                        <div class="flex flex-col w-full">
                           <span class="text-sm font-medium"
-                            >{item?.symbol ?? "-"}</span
+                            >{item?.symbol ?? "n/a"}</span
                           >
                           <span class="text-white text-sm">
                             {#if typeof item?.name !== "undefined"}

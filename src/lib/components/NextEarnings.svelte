@@ -20,7 +20,7 @@
   }
 
   $: {
-    if ($stockTicker && typeof window !== "undefined") {
+    if ($stockTicker) {
       rawData = data?.getNextEarnings?.next;
       epsRatio =
         rawData?.epsPrior !== 0

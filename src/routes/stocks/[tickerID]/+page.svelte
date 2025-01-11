@@ -1230,7 +1230,7 @@
                 <WIIM {data} />
               </div>
 
-              <div class="w-full mt-5 sm:mt-0 m-auto sm:pl-6 sm:pb-6 sm:pt-6">
+              <div class="w-full mt-5 sm:mt-0 m-auto sm:pl-6 sm:pb-6">
                 <News {data} />
               </div>
             </div>
