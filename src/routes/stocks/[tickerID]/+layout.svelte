@@ -806,7 +806,7 @@
                                   {/if}
                                 </div>
                               </div>
-                              {#if Object?.keys(prePostData)?.length !== 0 && !$isOpen && prePostData?.timestamp > 0}
+                              {#if Object?.keys(prePostData)?.length !== 0 && !$isOpen}
                                 <div
                                   class="border-l border-default pl-3 bp:pl-5"
                                 >
