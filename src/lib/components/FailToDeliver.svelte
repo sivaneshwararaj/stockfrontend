@@ -170,7 +170,7 @@
 
   $: {
     const ticker = $assetType === "stock" ? $stockTicker : $etfTicker;
-    if (ticker && typeof window !== "undefined") {
+    if (ticker) {
       isLoaded = false;
       console.log(rawData);
       if (rawData?.length > 0) {

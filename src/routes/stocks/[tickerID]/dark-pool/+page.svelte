@@ -10,16 +10,11 @@
   import Infobox from "$lib/components/Infobox.svelte";
   import HottestTrades from "$lib/components/DarkPool/HottestTrades.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
-  import { onMount } from "svelte";
 
   export let data;
   let historicalDarkPool = data?.getHistoricalDarkPool || [];
   let priceLevel = data?.getPriceLevel?.priceLevel || [];
   let hottestTrades = data?.getPriceLevel?.hottestTrades || [];
-  let isLoaded = false;
-  onMount(() => {
-    isLoaded = true;
-  });
 </script>
 
 <svelte:head>
@@ -88,34 +83,21 @@
             />
           {/if}
         </div>
-        {#if isLoaded}
-          {#if priceLevel?.length > 0}
-            <PriceLevel
-              rawData={priceLevel}
-              metrics={data?.getPriceLevel?.metrics}
-            />
-          {/if}
-          {#if hottestTrades?.length > 0}
-            <HottestTrades {data} rawData={hottestTrades} />
-          {/if}
-          {#if data?.user?.tier === "Pro"}
-            {#if historicalDarkPool?.length > 10}
-              <HistoricalVolume rawData={historicalDarkPool} />
-            {/if}
-          {:else}
-            <UpgradeToPro {data} />
+        {#if priceLevel?.length > 0}
+          <PriceLevel
+            rawData={priceLevel}
+            metrics={data?.getPriceLevel?.metrics}
+          />
+        {/if}
+        {#if hottestTrades?.length > 0}
+          <HottestTrades {data} rawData={hottestTrades} />
+        {/if}
+        {#if data?.user?.tier === "Pro"}
+          {#if historicalDarkPool?.length > 10}
+            <HistoricalVolume rawData={historicalDarkPool} />
           {/if}
         {:else}
-          <div class="flex justify-center items-center h-80">
-            <div class="relative">
-              <label
-                class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-              >
-                <span class="loading loading-spinner loading-md text-gray-400"
-                ></span>
-              </label>
-            </div>
-          </div>
+          <UpgradeToPro {data} />
         {/if}
       </div>
     </div>

@@ -113,7 +113,7 @@
       <div class="flex items-center justify-between sm:block">
         <div class="text-sm font-semibold text-white">Total ETFs</div>
         <div
-          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+          class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
         >
           {new Intl.NumberFormat("en")?.format(rawData?.length)}
         </div>
@@ -123,7 +123,7 @@
       <div class="flex items-center justify-between sm:block">
         <div class="text-sm font-semibold text-white">Total Assets</div>
         <div
-          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+          class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
         >
           {abbreviateNumber(totalAssets)}
         </div>
@@ -133,7 +133,7 @@
       <div class="flex items-center justify-between sm:block">
         <div class="text-sm font-semibold text-white">Avg. Cost</div>
         <div
-          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+          class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
         >
           {avgExpenseRatio?.toFixed(2)}%
         </div>

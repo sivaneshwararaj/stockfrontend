@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { stockTicker, etfTicker } from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
 
@@ -8,8 +7,7 @@
   export let data;
   export let rawData = [];
 
-  let stockList = [];
-  let isLoaded = false;
+  let stockList = rawData || [];
 
   function formatToNewYorkTime(isoString) {
     const date = new Date(isoString);
@@ -120,12 +118,6 @@
     // Sort using the generic comparison function
     stockList = [...originalData].sort(compareValues)?.slice(0, 50);
   };
-
-  $: if (typeof window !== "undefined" && ($stockTicker || $etfTicker)) {
-    isLoaded = false;
-    stockList = rawData;
-    isLoaded = true;
-  }
 </script>
 
 <section class="overflow-hidden text-white h-full pb-8">
@@ -144,88 +136,71 @@
       />
     </div>
 
-    {#if isLoaded}
-      {#if rawData?.length !== 0}
-        <div class="w-full flex flex-col items-start">
-          <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-            Get in realtime the latest hottest trades based on premium.
-          </div>
+    {#if rawData?.length !== 0}
+      <div class="w-full flex flex-col items-start">
+        <div class="text-white text-[1rem] mt-2 mb-2 w-full">
+          Get in realtime the latest hottest trades based on premium.
         </div>
+      </div>
 
-        <div
-          class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+      <div
+        class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+      >
+        <table
+          class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
         >
-          <table
-            class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md text-white w-full bg-table border border-gray-800 m-auto"
-          >
-            <thead>
-              <TableHeader {columns} {sortOrders} {sortData} />
-            </thead>
-            <tbody>
-              {#each stockList as item, index}
-                <tr
-                  class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
-                    1 ===
-                    rawData?.length && data?.user?.tier !== 'Pro'
-                    ? 'opacity-[0.1]'
-                    : ''}"
+          <thead>
+            <TableHeader {columns} {sortOrders} {sortData} />
+          </thead>
+          <tbody>
+            {#each stockList as item, index}
+              <tr
+                class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                  1 ===
+                  rawData?.length && data?.user?.tier !== 'Pro'
+                  ? 'opacity-[0.1]'
+                  : ''}"
+              >
+                <td
+                  class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
                 >
-                  <td
-                    class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                  >
-                    {item?.rank}
-                  </td>
+                  {item?.rank}
+                </td>
 
-                  <td
-                    class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                  >
-                    {formatToNewYorkTime(item?.date)}
-                  </td>
+                <td
+                  class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                >
+                  {formatToNewYorkTime(item?.date)}
+                </td>
 
-                  <td
-                    class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                  >
-                    {item?.price}
-                  </td>
+                <td
+                  class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                >
+                  {item?.price}
+                </td>
 
-                  <td class="text-sm sm:text-[1rem] text-end">
-                    {@html abbreviateNumberWithColor(item?.size, false, true)}
-                  </td>
+                <td class="text-sm sm:text-[1rem] text-end">
+                  {@html abbreviateNumberWithColor(item?.size, false, true)}
+                </td>
 
-                  <td class="text-sm sm:text-[1rem] text-end">
-                    {@html abbreviateNumberWithColor(item?.volume, false, true)}
-                  </td>
+                <td class="text-sm sm:text-[1rem] text-end">
+                  {@html abbreviateNumberWithColor(item?.volume, false, true)}
+                </td>
 
-                  <td class="text-sm sm:text-[1rem] text-end">
-                    {item?.sizeVolRatio?.toFixed(2)}%
-                  </td>
-                  <td class="text-sm sm:text-[1rem] text-end">
-                    {item?.sizeAvgVolRatio?.toFixed(2)}%
-                  </td>
+                <td class="text-sm sm:text-[1rem] text-end">
+                  {item?.sizeVolRatio?.toFixed(2)}%
+                </td>
+                <td class="text-sm sm:text-[1rem] text-end">
+                  {item?.sizeAvgVolRatio?.toFixed(2)}%
+                </td>
 
-                  <td class="text-sm sm:text-[1rem] text-end">
-                    {@html abbreviateNumberWithColor(
-                      item?.premium,
-                      false,
-                      true,
-                    )}
-                  </td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-      {/if}
-    {:else}
-      <div class="flex justify-center items-center h-80">
-        <div class="relative">
-          <label
-            class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <span class="loading loading-spinner loading-md text-gray-400"
-            ></span>
-          </label>
-        </div>
+                <td class="text-sm sm:text-[1rem] text-end">
+                  {@html abbreviateNumberWithColor(item?.premium, false, true)}
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
       </div>
     {/if}
   </main>

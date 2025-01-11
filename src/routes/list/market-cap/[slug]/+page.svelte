@@ -122,7 +122,7 @@
       <div class="flex items-center justify-between sm:block">
         <div class="text-sm font-semibold text-white">Total Stocks</div>
         <div
-          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+          class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
         >
           {new Intl.NumberFormat("en")?.format(rawData?.length)}
         </div>
@@ -132,7 +132,7 @@
       <div class="flex items-center justify-between sm:block">
         <div class="text-sm font-semibold text-white">Total Market Cap</div>
         <div
-          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+          class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
         >
           {abbreviateNumber(totalMarketCap)}
         </div>
@@ -142,7 +142,7 @@
       <div class="flex items-center justify-between sm:block">
         <div class="text-sm font-semibold text-white">Total Revenue</div>
         <div
-          class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
+          class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
         >
           {abbreviateNumber(totalRevenue)}
         </div>

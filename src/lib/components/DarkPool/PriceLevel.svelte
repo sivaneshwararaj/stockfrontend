@@ -15,7 +15,6 @@
   export let rawData = [];
   export let metrics = {};
 
-  let isLoaded = false;
   let optionsData;
 
   function getPlotOptions(category) {
@@ -105,14 +104,8 @@
     return options;
   }
 
-  $: if (
-    typeof window !== "undefined" &&
-    ($stockTicker || $etfTicker) &&
-    category
-  ) {
-    isLoaded = false;
+  $: if (($stockTicker || $etfTicker) && category) {
     optionsData = getPlotOptions(category);
-    isLoaded = true;
   }
 </script>
 
@@ -132,56 +125,43 @@
       />
     </div>
 
-    {#if isLoaded}
-      {#if rawData?.length !== 0 && Object?.keys(metrics)?.length > 0}
-        <div class="w-full flex flex-col items-start">
-          <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-            {$displayCompanyName} has seen an average dark pool trade size of {@html abbreviateNumberWithColor(
-              metrics?.avgTradeSize,
-              false,
-              true,
-            )} and an average premium per trade of {@html abbreviateNumberWithColor(
-              metrics?.avgPremTrade,
-              false,
-              true,
-            )}, with a total premium of {@html abbreviateNumberWithColor(
-              metrics?.totalPrem,
-              false,
-              true,
-            )}.
-          </div>
+    {#if rawData?.length !== 0 && Object?.keys(metrics)?.length > 0}
+      <div class="w-full flex flex-col items-start">
+        <div class="text-white text-[1rem] mt-2 mb-2 w-full">
+          {$displayCompanyName} has seen an average dark pool trade size of {@html abbreviateNumberWithColor(
+            metrics?.avgTradeSize,
+            false,
+            true,
+          )} and an average premium per trade of {@html abbreviateNumberWithColor(
+            metrics?.avgPremTrade,
+            false,
+            true,
+          )}, with a total premium of {@html abbreviateNumberWithColor(
+            metrics?.totalPrem,
+            false,
+            true,
+          )}.
         </div>
+      </div>
 
-        <div class="pb-2 rounded-md bg-default mt-14 sm:mt-0">
-          <div class="app w-full h-[300px] mt-5 relative">
-            <div
-              class="flex justify-start space-x-2 absolute right-0 -top-10 sm:-top-8 z-10 text-sm"
-            >
-              {#each ["Size", "Premium"] as item}
-                <label
-                  on:click={() => (category = item)}
-                  class="px-4 py-2 {category === item
-                    ? 'bg-white text-black shadow-xl'
-                    : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
-                >
-                  {item}
-                </label>
-              {/each}
-            </div>
-
-            <Chart {init} options={optionsData} class="chart " />
-          </div>
-        </div>
-      {/if}
-    {:else}
-      <div class="flex justify-center items-center h-80">
-        <div class="relative">
-          <label
-            class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      <div class="pb-2 rounded-md bg-default mt-14 sm:mt-0">
+        <div class="app w-full h-[300px] mt-5 relative">
+          <div
+            class="flex justify-start space-x-2 absolute right-0 -top-10 sm:-top-8 z-10 text-sm"
           >
-            <span class="loading loading-spinner loading-md text-gray-400"
-            ></span>
-          </label>
+            {#each ["Size", "Premium"] as item}
+              <label
+                on:click={() => (category = item)}
+                class="px-4 py-2 {category === item
+                  ? 'bg-white text-black shadow-xl'
+                  : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
+              >
+                {item}
+              </label>
+            {/each}
+          </div>
+
+          <Chart {init} options={optionsData} class="chart " />
         </div>
       </div>
     {/if}

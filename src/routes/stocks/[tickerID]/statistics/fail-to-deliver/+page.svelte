@@ -5,13 +5,10 @@
     stockTicker,
   } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
-
-  import { onMount } from "svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
   import FailToDeliver from "$lib/components/FailToDeliver.svelte";
 
   export let data;
-
-  let isLoaded = false;
 
   let rawData = data?.getData || [];
   let changePercentageYearAgo = 0;
@@ -60,10 +57,7 @@
     return change;
   }
 
-  onMount(async () => {
-    changePercentageYearAgo = computeYearOverYearChange(rawData);
-    isLoaded = true;
-  });
+  changePercentageYearAgo = computeYearOverYearChange(rawData);
 </script>
 
 <svelte:head>
@@ -104,98 +98,81 @@
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      {#if isLoaded}
-        <main class="w-full">
-          <div class="sm:p-7 m-auto mt-2 sm:mt-0">
-            <div class="mb-3">
-              <h1 class="text-xl sm:text-2xl text-white font-bold">
-                Fail-to-Deliver (FTD)
-              </h1>
-            </div>
+      <main class="w-full">
+        <div class="sm:p-7 m-auto mt-2 sm:mt-0">
+          <div class="mb-3">
+            <h1 class="text-xl sm:text-2xl text-white font-bold">
+              Fail-to-Deliver (FTD)
+            </h1>
+          </div>
 
-            {#if rawData?.length !== 0}
-              <div class="grid grid-cols-1 gap-2">
-                <div
-                  class="mb-4 mt-5 bg-primary flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
-                >
-                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-                    <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-semibold text-white">
-                        FTD Shares
-                      </div>
-                      <div
-                        class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
-                      >
-                        {abbreviateNumber(
-                          rawData?.slice(-1)?.at(0)?.failToDeliver,
-                          false,
-                        )}
-                      </div>
+          {#if rawData?.length !== 0}
+            <div class="grid grid-cols-1 gap-2">
+              <div
+                class="mb-4 mt-5 bg-primary flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+              >
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">
+                      FTD Shares
                     </div>
-                  </div>
-                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-                    <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-semibold text-white">
-                        FTD / Avg Volume
-                      </div>
-                      <div
-                        class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
-                      >
-                        {relativeFTD > 0.01
-                          ? relativeFTD + "%"
-                          : relativeFTD !== "n/a"
-                            ? "< 0.01%"
-                            : "n/a"}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-                    <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-semibold text-white">
-                        1-Year Change
-                      </div>
-                      <div
-                        class="mt-1 break-words font-semibold leading-8 tiny:text-lg xs:text-xl sm:text-2xl {changePercentageYearAgo >=
-                          0 && changePercentageYearAgo !== null
-                          ? "before:content-['+'] text-[#00FC50]"
-                          : changePercentageYearAgo < 0 &&
-                              changePercentageYearAgo !== null
-                            ? 'text-[#FF2F1F]'
-                            : 'text-white'}"
-                      >
-                        {changePercentageYearAgo !== null
-                          ? abbreviateNumber(
-                              changePercentageYearAgo?.toFixed(2),
-                            ) + "%"
-                          : "n/a"}
-                      </div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+                    >
+                      {abbreviateNumber(
+                        rawData?.slice(-1)?.at(0)?.failToDeliver,
+                        false,
+                      )}
                     </div>
                   </div>
                 </div>
-
-                <FailToDeliver {data} {rawData} />
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">
+                      FTD / Avg Volume
+                    </div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+                    >
+                      {relativeFTD > 0.01
+                        ? relativeFTD + "%"
+                        : relativeFTD !== "n/a"
+                          ? "< 0.01%"
+                          : "n/a"}
+                    </div>
+                  </div>
+                </div>
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">
+                      1-Year Change
+                    </div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-[1rem] sm:text-lg {changePercentageYearAgo >=
+                        0 && changePercentageYearAgo !== null
+                        ? "before:content-['+'] text-[#00FC50]"
+                        : changePercentageYearAgo < 0 &&
+                            changePercentageYearAgo !== null
+                          ? 'text-[#FF2F1F]'
+                          : 'text-white'}"
+                    >
+                      {changePercentageYearAgo !== null
+                        ? abbreviateNumber(
+                            changePercentageYearAgo?.toFixed(2),
+                          ) + "%"
+                        : "n/a"}
+                    </div>
+                  </div>
+                </div>
               </div>
-            {:else}
-              <h2
-                class="mt-16 flex justify-center items-center text-2xl font-medium text-white mb-5 m-auto"
-              >
-                No data available
-              </h2>
-            {/if}
-          </div>
-        </main>
-      {:else}
-        <div class="w-full flex justify-center items-center h-80">
-          <div class="relative">
-            <label
-              class="bg-odd rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-              <span class="loading loading-spinner loading-md text-gray-400"
-              ></span>
-            </label>
-          </div>
+
+              <FailToDeliver {data} {rawData} />
+            </div>
+          {:else}
+            <Infobox text="No data available" />
+          {/if}
         </div>
-      {/if}
+      </main>
     </div>
   </div>
 </section>

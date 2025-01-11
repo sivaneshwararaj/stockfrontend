@@ -14,7 +14,6 @@
   import { onMount } from "svelte";
 
   export let data;
-  let isLoaded = false;
   let timePeriod = "Daily";
   let rawData = data?.getData || [];
   let originalData = [];
@@ -262,13 +261,10 @@
   }
 
   $: {
-    if (timePeriod && typeof window !== "undefined") {
-      isLoaded = false;
+    if (timePeriod) {
       rawData = prepareDataset(data?.getData, timePeriod);
       originalData = rawData;
       stockList = rawData?.slice(0, 50);
-      console.log(rawData);
-      isLoaded = true;
     }
   }
 </script>
@@ -437,116 +433,102 @@
                 </Button>
               </div>
             </div>
-            {#if isLoaded}
-              {#if rawData?.length !== 0}
-                <div class="w-full m-auto mt-2">
-                  <div
-                    class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+            {#if rawData?.length !== 0}
+              <div class="w-full m-auto mt-2">
+                <div
+                  class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
+                >
+                  <table
+                    class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
                   >
-                    <table
-                      class="table table-sm table-compact no-scrollbar rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
-                    >
-                      <thead>
-                        <TableHeader {columns} {sortOrders} {sortData} />
-                      </thead>
+                    <thead>
+                      <TableHeader {columns} {sortOrders} {sortData} />
+                    </thead>
 
-                      <tbody>
-                        {#each stockList as item, index}
-                          <tr
-                            class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
-                              1 ===
-                              rawData?.length && data?.user?.tier !== 'Pro'
-                              ? 'opacity-[0.1]'
-                              : ''}"
+                    <tbody>
+                      {#each stockList as item, index}
+                        <tr
+                          class="sm:hover:bg-[#245073] border-b border-gray-800 sm:hover:bg-opacity-[0.2] odd:bg-odd {index +
+                            1 ===
+                            rawData?.length && data?.user?.tier !== 'Pro'
+                            ? 'opacity-[0.1]'
+                            : ''}"
+                        >
+                          <td
+                            class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
                           >
-                            <td
-                              class="text-start text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                            >
-                              {#if timePeriod === "Weekly"}
-                                Week of {new Date(item?.time).toLocaleString(
-                                  "en-US",
-                                  {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                    timeZone: "Europe/Berlin",
-                                  },
-                                )}
-                              {:else}
-                                {new Date(item?.time).toLocaleString("en-US", {
+                            {#if timePeriod === "Weekly"}
+                              Week of {new Date(item?.time).toLocaleString(
+                                "en-US",
+                                {
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
                                   timeZone: "Europe/Berlin",
-                                })}
-                              {/if}
-                            </td>
-                            <td
-                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                            >
-                              {item?.open?.toFixed(2)}
-                            </td>
-                            <td
-                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                            >
-                              {item?.high?.toFixed(2)}
-                            </td>
-                            <td
-                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                            >
-                              {item?.low?.toFixed(2)}
-                            </td>
-                            <td
-                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                            >
-                              {item?.close?.toFixed(2)}
-                            </td>
-                            <td
-                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                            >
-                              {item?.change !== null ? item?.change : "n/a"}
-                            </td>
-                            <td
-                              class="text-sm sm:text-[1rem] {item?.changesPercentage >=
-                                0 && item?.changesPercentage !== null
-                                ? "text-[#00FC50] before:content-['+'] "
-                                : item?.changesPercentage < 0 &&
-                                    item?.changesPercentage !== null
-                                  ? 'text-[#FF2F1F]'
-                                  : 'text-white'} text-end"
-                            >
-                              {item?.changesPercentage !== null
-                                ? item?.changesPercentage + "%"
-                                : "n/a"}
-                            </td>
-                            <td
-                              class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
-                            >
-                              {item?.volume?.toLocaleString("en-US")}
-                            </td>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              {:else}
-                <Infobox
-                  text={`No price history are available for ${$displayCompanyName}.`}
-                />
-              {/if}
-            {:else}
-              <div class="flex justify-center items-center h-80">
-                <div class="relative">
-                  <label
-                    class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  >
-                    <span
-                      class="loading loading-spinner loading-md text-gray-400"
-                    ></span>
-                  </label>
+                                },
+                              )}
+                            {:else}
+                              {new Date(item?.time).toLocaleString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                                timeZone: "Europe/Berlin",
+                              })}
+                            {/if}
+                          </td>
+                          <td
+                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                          >
+                            {item?.open?.toFixed(2)}
+                          </td>
+                          <td
+                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                          >
+                            {item?.high?.toFixed(2)}
+                          </td>
+                          <td
+                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                          >
+                            {item?.low?.toFixed(2)}
+                          </td>
+                          <td
+                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                          >
+                            {item?.close?.toFixed(2)}
+                          </td>
+                          <td
+                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                          >
+                            {item?.change !== null ? item?.change : "n/a"}
+                          </td>
+                          <td
+                            class="text-sm sm:text-[1rem] {item?.changesPercentage >=
+                              0 && item?.changesPercentage !== null
+                              ? "text-[#00FC50] before:content-['+'] "
+                              : item?.changesPercentage < 0 &&
+                                  item?.changesPercentage !== null
+                                ? 'text-[#FF2F1F]'
+                                : 'text-white'} text-end"
+                          >
+                            {item?.changesPercentage !== null
+                              ? item?.changesPercentage + "%"
+                              : "n/a"}
+                          </td>
+                          <td
+                            class="text-end text-sm sm:text-[1rem] whitespace-nowrap text-white"
+                          >
+                            {item?.volume?.toLocaleString("en-US")}
+                          </td>
+                        </tr>
+                      {/each}
+                    </tbody>
+                  </table>
                 </div>
               </div>
+            {:else}
+              <Infobox
+                text={`No price history are available for ${$displayCompanyName}.`}
+              />
             {/if}
           </div>
         </main>

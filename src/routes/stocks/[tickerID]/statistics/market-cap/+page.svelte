@@ -15,13 +15,11 @@
   import { LineChart, BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
-  import { onMount } from "svelte";
   import Infobox from "$lib/components/Infobox.svelte";
   use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
 
-  let isLoaded = false;
   let optionsData;
 
   let rawData = data?.getHistoricalMarketCap || [];
@@ -201,13 +199,10 @@
     tableList?.sort((a, b) => new Date(b?.date) - new Date(a?.date));
   }
 
-  onMount(async () => {
-    optionsData = await plotData();
-    tableList = filterEndOfYearDates(rawData);
-    tableList?.sort((a, b) => new Date(b?.date) - new Date(a?.date));
-    changePercentageYearAgo = computeYearOverYearChange(rawData);
-    isLoaded = true;
-  });
+  optionsData = plotData();
+  tableList = filterEndOfYearDates(rawData);
+  tableList?.sort((a, b) => new Date(b?.date) - new Date(a?.date));
+  changePercentageYearAgo = computeYearOverYearChange(rawData);
 
   async function changeStatement(state) {
     timePeriod = state;
@@ -265,7 +260,7 @@
     return { dates, marketCapList };
   }
 
-  async function plotData() {
+  function plotData() {
     const filteredData = filterDataByTimePeriod(rawData, timePeriod);
 
     const options = {
@@ -277,13 +272,24 @@
         top: "10%",
         containLabel: true,
       },
-      xAxis: {
-        axisLabel: {
-          color: "#fff",
+      xAxis: [
+        {
+          type: "category",
+          data: filteredData?.dates,
+          axisLabel: {
+            color: "#fff",
+
+            formatter: function (value) {
+              // Assuming dates are in the format 'yyyy-mm-dd'
+              const dateParts = value.split("-");
+              const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+              const year = parseInt(dateParts[0]);
+              const day = parseInt(dateParts[2]);
+              return `${day} ${monthNames[monthIndex]} ${year}`;
+            },
+          },
         },
-        data: filteredData?.dates,
-        type: "category",
-      },
+      ],
       yAxis: [
         {
           type: "value",
@@ -422,359 +428,331 @@
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      {#if isLoaded}
-        <main class="w-full">
-          <div class="sm:p-7 m-auto mt-2 sm:mt-0">
-            <div class="mb-3">
-              <h1 class="text-xl sm:text-2xl text-white font-bold">
-                Market Cap
-              </h1>
-            </div>
+      <main class="w-full">
+        <div class="sm:p-7 m-auto mt-2 sm:mt-0">
+          <div class="mb-3">
+            <h1 class="text-xl sm:text-2xl text-white font-bold">Market Cap</h1>
+          </div>
 
-            {#if rawData?.length !== 0}
-              <div class="grid grid-cols-1 gap-2">
-                <Infobox
-                  text={`${$displayCompanyName} has a market cap of ${abbreviateNumber(
-                    data?.getStockQuote?.marketCap,
-                  )} as of ${new Date()?.toLocaleString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    daySuffix: "2-digit",
-                  })}. Its market cap has ${
-                    changePercentageYearAgo > 0
-                      ? "increased"
-                      : changePercentageYearAgo < 0
-                        ? "decreased"
-                        : "unchanged"
-                  } by ${abbreviateNumber(
-                    changePercentageYearAgo?.toFixed(2),
-                  )}% in one year.`}
-                />
+          {#if rawData?.length !== 0}
+            <div class="grid grid-cols-1 gap-2">
+              <Infobox
+                text={`${$displayCompanyName} has a market cap of ${abbreviateNumber(
+                  data?.getStockQuote?.marketCap,
+                )} as of ${new Date()?.toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  daySuffix: "2-digit",
+                })}. Its market cap has ${
+                  changePercentageYearAgo > 0
+                    ? "increased"
+                    : changePercentageYearAgo < 0
+                      ? "decreased"
+                      : "unchanged"
+                } by ${abbreviateNumber(
+                  changePercentageYearAgo?.toFixed(2),
+                )}% in one year.`}
+              />
 
-                <div
-                  class="mb-4 mt-5 bg-primary flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
-                >
-                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-                    <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-semibold text-white">
-                        Market Cap
-                      </div>
-                      <div
-                        class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
-                      >
-                        {@html abbreviateNumber(
-                          data?.getStockQuote?.marketCap,
-                          false,
-                          true,
-                        )}
-                      </div>
+              <div
+                class="mb-4 mt-5 bg-primary flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+              >
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">
+                      Market Cap
                     </div>
-                  </div>
-                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-                    <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-semibold text-white">
-                        Category
-                      </div>
-                      <div
-                        class="mt-1 break-words font-semibold leading-8 text-white tiny:text-lg xs:text-xl sm:text-2xl"
-                      >
-                        {#if capCategory}
-                          <a
-                            class="sm:hover:text-white text-blue-400"
-                            href={capCategory.link}
-                          >
-                            {capCategory.name}
-                          </a>
-                        {:else}
-                          n/a
-                        {/if}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-                    <div class="flex items-center justify-between sm:block">
-                      <div class="text-sm font-semibold text-white">
-                        1-Year Change
-                      </div>
-                      <div
-                        class="mt-1 break-words font-semibold leading-8 tiny:text-lg xs:text-xl sm:text-2xl {changePercentageYearAgo >=
-                          0 && changePercentageYearAgo !== null
-                          ? "before:content-['+'] text-[#00FC50]"
-                          : changePercentageYearAgo < 0 &&
-                              changePercentageYearAgo !== null
-                            ? 'text-[#FF2F1F]'
-                            : 'text-white'}"
-                      >
-                        {changePercentageYearAgo !== null
-                          ? abbreviateNumber(
-                              changePercentageYearAgo?.toFixed(2),
-                            ) + "%"
-                          : "n/a"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex flex-row items-center w-full mt-10 mb-8">
-                  <h1 class="text-2xl text-white font-bold">
-                    Market Cap Chart
-                  </h1>
-                  <div
-                    class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
-                  >
-                    <div class="relative inline-block text-left grow">
-                      <DropdownMenu.Root>
-                        <DropdownMenu.Trigger asChild let:builder>
-                          <Button
-                            builders={[builder]}
-                            class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
-                          >
-                            <span class="truncate text-white">{timePeriod}</span
-                            >
-                            <svg
-                              class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              style="max-width:40px"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"
-                              ></path>
-                            </svg>
-                          </Button>
-                        </DropdownMenu.Trigger>
-                        <DropdownMenu.Content
-                          class="w-56 h-fit max-h-72 overflow-y-auto scroller"
-                        >
-                          <DropdownMenu.Label class="text-gray-400">
-                            Select time frame
-                          </DropdownMenu.Label>
-                          <DropdownMenu.Separator />
-                          <DropdownMenu.Group>
-                            <DropdownMenu.Item
-                              on:click={() => changeStatement("1M")}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              1 Month
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              on:click={() => changeStatement("6M")}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              6 Months
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              on:click={() => changeStatement("1Y")}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              1 Year
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              on:click={() => changeStatement("3Y")}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              3 Years
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              on:click={() => changeStatement("5Y")}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              5 Years
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              on:click={() => changeStatement("10Y")}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              10 Years
-                            </DropdownMenu.Item>
-                            <DropdownMenu.Item
-                              on:click={() => changeStatement("Max")}
-                              class="cursor-pointer hover:bg-primary"
-                            >
-                              Max
-                            </DropdownMenu.Item>
-                          </DropdownMenu.Group>
-                        </DropdownMenu.Content>
-                      </DropdownMenu.Root>
-                    </div>
-                    <Button
-                      on:click={() => exportData("csv")}
-                      class="ml-2 w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
                     >
-                      <span class="truncate text-white">Download</span>
-                      <svg
-                        class="{data?.user?.tier === 'Pro'
-                          ? 'hidden'
-                          : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        ><path
-                          fill="#A3A3A3"
-                          d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                        /></svg
-                      >
-                    </Button>
+                      {@html abbreviateNumber(
+                        data?.getStockQuote?.marketCap,
+                        false,
+                        true,
+                      )}
+                    </div>
                   </div>
                 </div>
-
-                <div class="app w-full">
-                  <Chart {init} options={optionsData} class="chart" />
-                </div>
-
-                <h2 class="mt-10 text-xl text-gray-200 font-bold">
-                  Market Cap History
-                </h2>
-
-                <div
-                  class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto mb-6"
-                >
-                  <div
-                    class="bg-secondary w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
-                  >
-                    {#each tabs as item, i}
-                      {#if data?.user?.tier !== "Pro" && i > 0}
-                        <button
-                          on:click={() => goto("/pricing")}
-                          class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1"
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">Category</div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+                    >
+                      {#if capCategory}
+                        <a
+                          class="sm:hover:text-white text-blue-400"
+                          href={capCategory.link}
                         >
-                          <span class="relative text-sm block font-semibold">
-                            {item.title}
-                            <svg
-                              class="inline-block ml-0.5 -mt-1 w-3.5 h-3.5"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              ><path
-                                fill="#A3A3A3"
-                                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
-                              /></svg
-                            >
-                          </span>
-                        </button>
+                          {capCategory.name}
+                        </a>
                       {:else}
-                        <button
-                          on:click={() => changeTablePeriod(i)}
-                          class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
-                          i
-                            ? 'z-0'
-                            : ''} "
-                        >
-                          {#if activeIdx === i}
-                            <div
-                              class="absolute inset-0 rounded-md bg-[#fff]"
-                            ></div>
-                          {/if}
-                          <span
-                            class="relative text-sm block font-semibold {activeIdx ===
-                            i
-                              ? 'text-black'
-                              : 'text-white'}"
-                          >
-                            {item.title}
-                          </span>
-                        </button>
+                        n/a
                       {/if}
-                    {/each}
+                    </div>
                   </div>
                 </div>
-
-                <div class="w-full overflow-x-scroll">
-                  <table
-                    class="table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md w-full m-auto mt-4"
-                  >
-                    <thead class="bg-default">
-                      <tr>
-                        <th class="text-white font-semibold text-start text-sm"
-                          >Date</th
-                        >
-                        <th class="text-white font-semibold text-end text-sm"
-                          >Market Cap</th
-                        >
-                        <th class="text-white font-semibold text-end text-sm"
-                          >% Change</th
-                        >
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {#each tableList as item, index}
-                        <!-- row -->
-                        <tr
-                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
-                        >
-                          <td
-                            class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap"
-                          >
-                            {item?.date}
-                          </td>
-
-                          <td
-                            class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
-                          >
-                            {@html abbreviateNumber(
-                              item?.marketCap,
-                              false,
-                              true,
-                            )}
-                          </td>
-
-                          <td
-                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
-                          >
-                            {#if index + 1 - tableList?.length === 0}
-                              -
-                            {:else if item?.marketCap - tableList[index + 1]?.marketCap > 0}
-                              <span class="text-[#00FC50]">
-                                +{(
-                                  ((item?.marketCap -
-                                    tableList[index + 1]?.marketCap) /
-                                    item?.marketCap) *
-                                  100
-                                )?.toFixed(2)}%
-                              </span>
-                            {:else if item?.marketCap - tableList[index + 1]?.marketCap < 0}
-                              <span class="text-[#FF2F1F]">
-                                -{(
-                                  Math?.abs(
-                                    (tableList[index + 1]?.marketCap -
-                                      item?.marketCap) /
-                                      item?.marketCap,
-                                  ) * 100
-                                )?.toFixed(2)}%
-                              </span>
-                            {:else}
-                              -
-                            {/if}
-                          </td>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
+                <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
+                  <div class="flex items-center justify-between sm:block">
+                    <div class="text-sm font-semibold text-white">
+                      1-Year Change
+                    </div>
+                    <div
+                      class="mt-1 break-words font-semibold leading-8 text-[1rem] sm:text-lg {changePercentageYearAgo >=
+                        0 && changePercentageYearAgo !== null
+                        ? "before:content-['+'] text-[#00FC50]"
+                        : changePercentageYearAgo < 0 &&
+                            changePercentageYearAgo !== null
+                          ? 'text-[#FF2F1F]'
+                          : 'text-white'}"
+                    >
+                      {changePercentageYearAgo !== null
+                        ? abbreviateNumber(
+                            changePercentageYearAgo?.toFixed(2),
+                          ) + "%"
+                        : "n/a"}
+                    </div>
+                  </div>
                 </div>
               </div>
-            {:else}
-              <h2
-                class="mt-16 flex justify-center items-center text-2xl font-medium text-white mb-5 m-auto"
-              >
-                No data available
+
+              <div class="flex flex-row items-center w-full mt-10 mb-8">
+                <h1 class="text-2xl text-white font-bold">Market Cap Chart</h1>
+                <div
+                  class="flex flex-row items-center w-fit sm:w-[50%] md:w-auto ml-auto"
+                >
+                  <div class="relative inline-block text-left grow">
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild let:builder>
+                        <Button
+                          builders={[builder]}
+                          class="w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out  flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                        >
+                          <span class="truncate text-white">{timePeriod}</span>
+                          <svg
+                            class="-mr-1 ml-1 h-5 w-5 xs:ml-2 inline-block"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            style="max-width:40px"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content
+                        class="w-56 h-fit max-h-72 overflow-y-auto scroller"
+                      >
+                        <DropdownMenu.Label class="text-gray-400">
+                          Select time frame
+                        </DropdownMenu.Label>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Group>
+                          <DropdownMenu.Item
+                            on:click={() => changeStatement("1M")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            1 Month
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => changeStatement("6M")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            6 Months
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => changeStatement("1Y")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            1 Year
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => changeStatement("3Y")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            3 Years
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => changeStatement("5Y")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            5 Years
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => changeStatement("10Y")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            10 Years
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item
+                            on:click={() => changeStatement("Max")}
+                            class="cursor-pointer hover:bg-primary"
+                          >
+                            Max
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Group>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  </div>
+                  <Button
+                    on:click={() => exportData("csv")}
+                    class="ml-2 w-full border-gray-600 border bg-default sm:hover:bg-primary ease-out flex flex-row justify-between items-center px-3 py-2 text-white rounded-md truncate"
+                  >
+                    <span class="truncate text-white">Download</span>
+                    <svg
+                      class="{data?.user?.tier === 'Pro'
+                        ? 'hidden'
+                        : ''} ml-1 -mt-0.5 w-3.5 h-3.5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      ><path
+                        fill="#A3A3A3"
+                        d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                      /></svg
+                    >
+                  </Button>
+                </div>
+              </div>
+
+              <div class="app w-full">
+                <Chart {init} options={optionsData} class="chart" />
+              </div>
+
+              <h2 class="mt-10 text-xl text-white font-bold">
+                Market Cap History
               </h2>
-            {/if}
-          </div>
-        </main>
-      {:else}
-        <div class="w-full flex justify-center items-center h-80">
-          <div class="relative">
-            <label
-              class="bg-odd rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-            >
-              <span class="loading loading-spinner loading-md text-gray-400"
-              ></span>
-            </label>
-          </div>
+
+              <div
+                class="inline-flex justify-center w-full rounded-md sm:w-auto sm:ml-auto"
+              >
+                <div
+                  class="bg-secondary w-full min-w-24 sm:w-fit relative flex flex-wrap items-center justify-center rounded-md p-1 mt-4"
+                >
+                  {#each tabs as item, i}
+                    {#if data?.user?.tier !== "Pro" && i > 0}
+                      <button
+                        on:click={() => goto("/pricing")}
+                        class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1"
+                      >
+                        <span class="relative text-sm block font-semibold">
+                          {item.title}
+                          <svg
+                            class="inline-block ml-0.5 -mt-1 w-3.5 h-3.5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            ><path
+                              fill="#A3A3A3"
+                              d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+                            /></svg
+                          >
+                        </span>
+                      </button>
+                    {:else}
+                      <button
+                        on:click={() => changeTablePeriod(i)}
+                        class="group relative z-[1] rounded-full w-1/2 min-w-24 md:w-auto px-5 py-1 {activeIdx ===
+                        i
+                          ? 'z-0'
+                          : ''} "
+                      >
+                        {#if activeIdx === i}
+                          <div
+                            class="absolute inset-0 rounded-md bg-[#fff]"
+                          ></div>
+                        {/if}
+                        <span
+                          class="relative text-sm block font-semibold {activeIdx ===
+                          i
+                            ? 'text-black'
+                            : 'text-white'}"
+                        >
+                          {item.title}
+                        </span>
+                      </button>
+                    {/if}
+                  {/each}
+                </div>
+              </div>
+
+              <div class="w-full overflow-x-scroll">
+                <table
+                  class="table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md w-full m-auto mt-4"
+                >
+                  <thead class="bg-default">
+                    <tr>
+                      <th class="text-white font-semibold text-start text-sm"
+                        >Date</th
+                      >
+                      <th class="text-white font-semibold text-end text-sm"
+                        >Market Cap</th
+                      >
+                      <th class="text-white font-semibold text-end text-sm"
+                        >% Change</th
+                      >
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {#each tableList as item, index}
+                      <!-- row -->
+                      <tr
+                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
+                      >
+                        <td
+                          class="text-white font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                        >
+                          {item?.date}
+                        </td>
+
+                        <td
+                          class="text-white text-sm sm:text-[1rem] text-right whitespace-nowrap"
+                        >
+                          {@html abbreviateNumber(item?.marketCap, false, true)}
+                        </td>
+
+                        <td
+                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap font-medium text-end"
+                        >
+                          {#if index + 1 - tableList?.length === 0}
+                            -
+                          {:else if item?.marketCap - tableList[index + 1]?.marketCap > 0}
+                            <span class="text-[#00FC50]">
+                              +{(
+                                ((item?.marketCap -
+                                  tableList[index + 1]?.marketCap) /
+                                  item?.marketCap) *
+                                100
+                              )?.toFixed(2)}%
+                            </span>
+                          {:else if item?.marketCap - tableList[index + 1]?.marketCap < 0}
+                            <span class="text-[#FF2F1F]">
+                              -{(
+                                Math?.abs(
+                                  (tableList[index + 1]?.marketCap -
+                                    item?.marketCap) /
+                                    item?.marketCap,
+                                ) * 100
+                              )?.toFixed(2)}%
+                            </span>
+                          {:else}
+                            -
+                          {/if}
+                        </td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {:else}
+            <Infobox text="No data available" />
+          {/if}
         </div>
-      {/if}
+      </main>
     </div>
   </div>
 </section>

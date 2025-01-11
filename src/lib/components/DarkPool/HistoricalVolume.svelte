@@ -2,7 +2,7 @@
   import { displayCompanyName, stockTicker, etfTicker } from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
   import { Chart } from "svelte-echarts";
-  import { abbreviateNumber, formatDateRange } from "$lib/utils";
+  import { abbreviateNumber, formatDateRange, monthNames } from "$lib/utils";
   import { init, use } from "echarts/core";
   import { LineChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
@@ -12,7 +12,6 @@
 
   export let rawData = [];
 
-  let isLoaded = false;
   let optionsData;
   let avgVolume = 0;
   let avgShortVolume = 0;
@@ -110,12 +109,24 @@
         top: "5%",
         containLabel: true,
       },
-      xAxis: {
-        type: "category",
-        boundaryGap: false,
-        data: dates,
-        axisLabel: { color: "#fff" },
-      },
+      xAxis: [
+        {
+          type: "category",
+          data: dates,
+          axisLabel: {
+            color: "#fff",
+
+            formatter: function (value) {
+              // Assuming dates are in the format 'yyyy-mm-dd'
+              const dateParts = value.split("-");
+              const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+              const year = parseInt(dateParts[0]);
+              const day = parseInt(dateParts[2]);
+              return `${day} ${monthNames[monthIndex]} ${year}`;
+            },
+          },
+        },
+      ],
       yAxis: [
         {
           type: "value",
@@ -143,10 +154,8 @@
     };
   }
 
-  $: if (typeof window !== "undefined" && ($stockTicker || $etfTicker)) {
-    isLoaded = false;
+  $: if ($stockTicker || $etfTicker) {
     optionsData = getPlotOptions();
-    isLoaded = true;
   }
 </script>
 
@@ -166,131 +175,117 @@
       />
     </div>
 
-    {#if isLoaded}
-      {#if rawData?.length !== 0}
-        <div class="w-full flex flex-col items-start">
-          <div class="text-white text-[1rem] mt-2 mb-2 w-full">
-            Over the past 12 months, {$displayCompanyName} has experienced an average
-            dark pool trading volume of
-            <span class="font-semibold">{abbreviateNumber(avgVolume)}</span>
-            shares. Out of this total, an average of
-            <span class="font-semibold">{abbreviateNumber(avgShortVolume)}</span
-            >
-            shares, constituting approximately
-            <span class="font-semibold"
-              >{((avgShortVolume / avgVolume) * 100)?.toFixed(2)}%</span
-            >, were short volume.
-          </div>
+    {#if rawData?.length !== 0}
+      <div class="w-full flex flex-col items-start">
+        <div class="text-white text-[1rem] mt-2 mb-2 w-full">
+          Over the past 12 months, {$displayCompanyName} has experienced an average
+          dark pool trading volume of
+          <span class="font-semibold">{abbreviateNumber(avgVolume)}</span>
+          shares. Out of this total, an average of
+          <span class="font-semibold">{abbreviateNumber(avgShortVolume)}</span>
+          shares, constituting approximately
+          <span class="font-semibold"
+            >{((avgShortVolume / avgVolume) * 100)?.toFixed(2)}%</span
+          >, were short volume.
         </div>
+      </div>
 
-        <div class="pb-2 rounded-md bg-default">
-          <div class="app w-full h-[300px] mt-5">
-            <Chart {init} options={optionsData} class="chart" />
-          </div>
+      <div class="pb-2 rounded-md bg-default">
+        <div class="app w-full h-[300px] mt-5">
+          <Chart {init} options={optionsData} class="chart" />
         </div>
+      </div>
 
+      <div
+        class="flex flex-row items-center justify-between mx-auto mt-5 w-full sm:w-11/12"
+      >
         <div
-          class="flex flex-row items-center justify-between mx-auto mt-5 w-full sm:w-11/12"
+          class="mt-3.5 sm:mt-0 flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
         >
           <div
-            class="mt-3.5 sm:mt-0 flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
-          >
-            <div
-              class="h-full transform -translate-x-1/2"
-              aria-hidden="true"
-            ></div>
-            <div
-              class="w-3 h-3 bg-[#fff] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2"
-              aria-hidden="true"
-            ></div>
-            <span
-              class="mt-2 sm:mt-0 text-white text-center sm:text-start text-xs sm:text-md inline-block"
-            >
-              Total Volume
-            </span>
-          </div>
+            class="h-full transform -translate-x-1/2"
+            aria-hidden="true"
+          ></div>
           <div
-            class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
+            class="w-3 h-3 bg-[#fff] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2"
+            aria-hidden="true"
+          ></div>
+          <span
+            class="mt-2 sm:mt-0 text-white text-center sm:text-start text-xs sm:text-md inline-block"
           >
-            <div
-              class="h-full transform -translate-x-1/2"
-              aria-hidden="true"
-            ></div>
-            <div
-              class="w-3 h-3 bg-[#E11D48] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2"
-              aria-hidden="true"
-            ></div>
-            <span
-              class="mt-2 sm:mt-0 text-white text-xs sm:text-md sm:font-medium inline-block"
-            >
-              Short Volume
-            </span>
-          </div>
+            Total Volume
+          </span>
         </div>
-
-        <h2
-          class="mt-10 mr-1 flex flex-row items-center text-white text-xl sm:text-2xl font-bold mb-3"
-        >
-          Latest Information
-        </h2>
-
         <div
-          class="flex justify-start items-center w-full m-auto overflow-x-auto"
+          class="flex flex-col sm:flex-row items-center ml-3 sm:ml-0 w-1/2 justify-center"
         >
-          <table
-            class="w-full bg-table table table-sm table-compact border border-gray-800"
+          <div
+            class="h-full transform -translate-x-1/2"
+            aria-hidden="true"
+          ></div>
+          <div
+            class="w-3 h-3 bg-[#E11D48] border-4 box-content border-[#27272A] rounded-full transform sm:-translate-x-1/2"
+            aria-hidden="true"
+          ></div>
+          <span
+            class="mt-2 sm:mt-0 text-white text-xs sm:text-md sm:font-medium inline-block"
           >
-            <tbody>
-              <tr class="border-y border-gray-800 odd:bg-odd">
-                <td
-                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
-                >
-                  <span>Date</span>
-                </td>
-                <td
-                  class="text-sm sm:text-[1rem] px-[5px] py-1.5 whitespace-nowrap text-right font-medium xs:px-2.5 xs:py-2"
-                >
-                  {formatDateRange(rawData?.slice(-1)?.at(0)?.date)}
-                </td>
-              </tr>
-              <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-odd">
-                <td
-                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
-                >
-                  <span>Total Volume</span>
-                </td>
-                <td
-                  class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
-                >
-                  {monthlyVolume}
-                </td>
-              </tr>
-              <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-odd">
-                <td
-                  class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
-                >
-                  <span>Avg. Short % of Volume</span>
-                </td>
-                <td
-                  class="px-[5px] py-1.5 text-right font-medium xs:px-2.5 xs:py-2"
-                >
-                  {avgMonthlyShort}%
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            Short Volume
+          </span>
         </div>
-      {/if}
-    {:else}
-      <div class="flex justify-center items-center h-80">
-        <div class="relative">
-          <label
-            class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <span class="loading loading-spinner loading-md text-gray-400"
-            ></span>
-          </label>
-        </div>
+      </div>
+
+      <h2
+        class="mt-10 mr-1 flex flex-row items-center text-white text-xl sm:text-2xl font-bold mb-3"
+      >
+        Latest Information
+      </h2>
+
+      <div
+        class="flex justify-start items-center w-full m-auto overflow-x-auto"
+      >
+        <table
+          class="w-full bg-table table table-sm table-compact border border-gray-800"
+        >
+          <tbody>
+            <tr class="border-y border-gray-800 odd:bg-odd">
+              <td
+                class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+              >
+                <span>Date</span>
+              </td>
+              <td
+                class="text-sm sm:text-[1rem] px-[5px] py-1.5 whitespace-nowrap text-right font-medium xs:px-2.5 xs:py-2"
+              >
+                {formatDateRange(rawData?.slice(-1)?.at(0)?.date)}
+              </td>
+            </tr>
+            <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-odd">
+              <td
+                class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+              >
+                <span>Total Volume</span>
+              </td>
+              <td
+                class="text-sm sm:text-[1rem] px-[5px] py-1.5 whitespace-nowrap text-right font-medium xs:px-2.5 xs:py-2"
+              >
+                {monthlyVolume}
+              </td>
+            </tr>
+            <tr class="border-y border-gray-800 whitespace-nowrap odd:bg-odd">
+              <td
+                class="px-[5px] py-1.5 xs:px-2.5 xs:py-2 text-sm sm:text-[1rem]"
+              >
+                <span>Avg. Short % of Volume</span>
+              </td>
+              <td
+                class="text-sm sm:text-[1rem] px-[5px] py-1.5 whitespace-nowrap text-right font-medium xs:px-2.5 xs:py-2"
+              >
+                {avgMonthlyShort}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     {/if}
   </main>

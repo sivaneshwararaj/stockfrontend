@@ -11,7 +11,7 @@
   import { compareTimes, formatTime, isPWAInstalled } from "$lib/utils";
   import Infobox from "$lib/components/Infobox.svelte";
   import { closedPWA } from "$lib/store";
-  import { options } from "marked";
+  import Feedback from "$lib/components/Feedback.svelte";
 
   export let data;
   let optionsMode = "openInterest";
@@ -32,7 +32,6 @@
       optionsTable = data?.getDashboard?.optionsData?.openInterest || [];
     }
   }
-  let Feedback;
   let pwaInstalled = false;
   let AppInstalled = null;
 
@@ -64,8 +63,6 @@
         console.error("Error loading AppInstalled component:", e);
       }
     }
-
-    Feedback = (await import("$lib/components/Feedback.svelte")).default;
   });
 
   $: charNumber = $screenWidth < 640 ? 20 : 15;
@@ -165,9 +162,7 @@
 
   <div class="flex flex-col m-auto justify-center items-center">
     <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10">
-      {#if Feedback}
-        <Feedback {data} />
-      {/if}
+      <Feedback {data} />
       <!--
       <div class="text-center mb-10 relative w-fit flex justify-center m-auto">
         <a
