@@ -28,15 +28,21 @@
 
   let rawData = data?.getData || [];
 
-  rawData = rawData?.map((item) => {
-    return {
-      ...item,
-      put_call_ratio:
-        item?.call_oi > 0
-          ? Math.abs((item?.put_oi || 0) / item?.call_oi)
-          : null,
-    };
-  });
+  const today = new Date();
+
+  rawData = rawData?.reduce((result, item) => {
+    const itemDate = new Date(item?.expiry);
+    if (itemDate >= today) {
+      result.push({
+        ...item,
+        put_call_ratio:
+          item?.call_oi > 0
+            ? Math.abs((item?.put_oi || 0) / item.call_oi)
+            : null,
+      });
+    }
+    return result;
+  }, []);
 
   let displayList = rawData?.slice(0, 150);
   let options = null;

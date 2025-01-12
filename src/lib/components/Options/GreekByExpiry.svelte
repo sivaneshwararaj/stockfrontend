@@ -30,28 +30,34 @@
   let rawData = data?.getData || [];
 
   const isGamma = title === "Gamma";
+  const today = new Date();
 
-  rawData = rawData?.map((item) => {
-    if (title === "Gamma") {
-      return {
-        ...item,
-        net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
-        put_call_ratio:
-          item?.call_gex > 0
-            ? Math.abs((item?.put_gex || 0) / item?.call_gex)
-            : null,
-      };
-    } else {
-      return {
-        ...item,
-        net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
-        put_call_ratio:
-          item?.call_delta > 0
-            ? Math.abs((item?.put_delta || 0) / item?.call_delta)
-            : null,
-      };
+  rawData = rawData?.reduce((result, item) => {
+    const itemDate = new Date(item?.expiry);
+    if (itemDate >= today) {
+      if (title === "Gamma") {
+        result.push({
+          ...item,
+          net_gex: (item?.call_gex || 0) + (item?.put_gex || 0),
+          put_call_ratio:
+            item?.call_gex > 0
+              ? Math.abs((item?.put_gex || 0) / item?.call_gex)
+              : null,
+        });
+      } else {
+        result.push({
+          ...item,
+          net_delta: (item?.call_delta || 0) + (item?.put_delta || 0),
+          put_call_ratio:
+            item?.call_delta > 0
+              ? Math.abs((item?.put_delta || 0) / item?.call_delta)
+              : null,
+        });
+      }
     }
-  });
+    return result;
+  }, []);
+
   let displayList = rawData?.slice(0, 150);
   let options = null;
 
