@@ -109,7 +109,7 @@
               <tr class="">
                 <th
                   class="bg-primary border-b border-[#000] text-white font-semibold text-sm text-start"
-                  >Date</th
+                  >FY Date</th
                 >
                 {#each xData as item}
                   <td
