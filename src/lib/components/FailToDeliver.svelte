@@ -172,7 +172,6 @@
     const ticker = $assetType === "stock" ? $stockTicker : $etfTicker;
     if (ticker) {
       isLoaded = false;
-      console.log(rawData);
       if (rawData?.length > 0) {
         weightedFTD = (
           (rawData?.slice(-1)?.at(0)?.failToDeliver /

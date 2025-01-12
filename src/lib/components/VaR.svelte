@@ -4,12 +4,12 @@
     displayCompanyName,
     stockTicker,
     etfTicker,
-    cryptoTicker,
     assetType,
     getCache,
     setCache,
   } from "$lib/store";
   import InfoModal from "$lib/components/InfoModal.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   import { Chart } from "svelte-echarts";
 
@@ -19,6 +19,7 @@
   import { CanvasRenderer } from "echarts/renderers";
 
   export let data;
+  export let rawData = {};
 
   use([LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
@@ -26,17 +27,18 @@
   let rating: string | undefined;
   let outlook: string | undefined;
   let valueAtRisk: number | string | undefined;
-  let varDict: Record<string, any> = {};
   let optionsData: any;
   let monthlyVarAvg: string | undefined;
 
   function getPlotOptions() {
     const dates: string[] = [];
     const varList: number[] = [];
+    const priceList = [];
 
-    varDict?.history?.forEach((item: { date: string; var: number }) => {
-      dates.push(item.date);
-      varList.push(item.var);
+    rawData?.history?.forEach((item: { date: string; var: number }) => {
+      dates.push(item?.date);
+      varList.push(item?.var);
+      priceList.push(item?.price);
     });
 
     const sum = varList.reduce((acc, curr) => acc + curr, 0);
@@ -77,14 +79,26 @@
           splitLine: { show: false },
           axisLabel: { show: false },
         },
+        {
+          type: "value",
+          splitLine: { show: false },
+          axisLabel: { show: false },
+        },
       ],
       series: [
         {
           name: "VaR",
           data: varList,
           type: "line",
-          areaStyle: { opacity: 0.8 },
           itemStyle: { color: "#E11D48" },
+          showSymbol: false,
+        },
+        {
+          name: "Stock Price",
+          data: priceList,
+          type: "line",
+          yAxisIndex: 1,
+          itemStyle: { color: "#fff" },
           showSymbol: false,
         },
       ],
@@ -93,46 +107,16 @@
     return option;
   }
 
-  const getVaR = async (ticker: string) => {
-    const cachedData = getCache(ticker, "getVaR");
-    if (cachedData) {
-      varDict = cachedData;
-    } else {
-      const postData = { ticker, path: "value-at-risk" };
-      const response = await fetch("/api/ticker-data", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(postData),
-      });
-
-      varDict = await response.json();
-      setCache(ticker, varDict, "getVaR");
-    }
-
-    $varComponent = Object.keys(varDict).length !== 0;
-  };
-
   $: {
-    const ticker =
-      $assetType === "stock"
-        ? $stockTicker
-        : $assetType === "etf"
-          ? $etfTicker
-          : $cryptoTicker;
-    if (ticker && typeof window !== "undefined") {
+    const ticker = $assetType === "stock" ? $stockTicker : "etf";
+
+    if (ticker) {
       isLoaded = false;
 
-      getVaR(ticker)
-        .then(() => {
-          rating = varDict.rating;
-          outlook = varDict.outlook;
-          valueAtRisk = varDict.history?.slice(-1)?.at(0)?.var ?? "n/a";
-          optionsData = getPlotOptions();
-        })
-        .catch((error) => console.error("An error occurred:", error))
-        .finally(() => {
-          isLoaded = true;
-        });
+      rating = rawData.rating;
+      outlook = rawData.outlook;
+      valueAtRisk = rawData.history?.slice(-1)?.at(0)?.var ?? "n/a";
+      optionsData = getPlotOptions();
     }
   }
 </script>
@@ -142,7 +126,7 @@
     <div class="flex flex-row items-center">
       <label
         for="varInfo"
-        class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-3xl font-bold"
+        class="mr-1 cursor-pointer flex flex-row items-center text-white text-xl sm:text-2xl font-bold"
       >
         Value at Risk
       </label>
@@ -153,7 +137,7 @@
       />
     </div>
 
-    {#if Object?.keys(varDict)?.length !== 0}
+    {#if Object?.keys(rawData)?.length !== 0}
       <div class="pb-4 w-full mt-5">
         <div
           class="w-auto p-4 sm:p-6 bg-default sm:bg-default rounded-md relative"
@@ -223,13 +207,7 @@
                   class="font-semibold">95%</span
                 >
                 probability that
-                <span class="text-blue-400"
-                  >${$assetType === "stock"
-                    ? $stockTicker
-                    : $assetType === "etf"
-                      ? $etfTicker
-                      : $cryptoTicker}</span
-                >
+                {$assetType === "stock" ? $stockTicker : $etfTicker}
                 will incur a maximum loss of
                 <span class="text-[#FF2F1F] font-semibold">{valueAtRisk}%</span>
                 in the upcoming week.
@@ -244,18 +222,15 @@
       </h2>
       <div class="text-white text-[1rem] mt-3">
         Based on historical price data, the company experienced an average
-        monthly Value at Risk (VaR) of {monthlyVarAvg}%.
+        monthly Value-at-Risk <span class="font-semibold">{monthlyVarAvg}%</span
+        >.
       </div>
 
       <div class="app w-full h-[300px] mt-5">
         <Chart {init} options={optionsData} class="chart" />
       </div>
     {:else}
-      <h2
-        class="mt-10 mb-5 flex justify-center items-center text-2xl font-bold text-slate-700 m-auto"
-      >
-        No data available
-      </h2>
+      <Infobox text="No data available" />
     {/if}
   </main>
 </section>

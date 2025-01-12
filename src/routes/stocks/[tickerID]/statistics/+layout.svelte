@@ -13,10 +13,8 @@
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
-      //goto(`/stocks/${$stockTicker}${subSectionMap[state]}`);
     } else {
       displaySubSection = state;
-      //goto(`/stocks/${$stockTicker}/statistics`);
     }
   }
 
@@ -77,6 +75,7 @@
             >
               Employees
             </a>
+
             <a
               href={`/stocks/${$stockTicker}/statistics/fail-to-deliver`}
               on:click={() => changeSubSection("fail-to-deliver")}
