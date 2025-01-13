@@ -494,7 +494,7 @@
                   </div>
                 </div>
               </Lazy>
-              <Card.Root class="order-0 overflow-x-scroll no-scrollbar">
+              <Card.Root class="order-0 overflow-x-auto no-scrollbar">
                 <Card.Header>
                   <div
                     class="text-start text-xl w-full flex flex-col sm:flex-row items-start sm:items-center mb-3"
@@ -505,9 +505,7 @@
                       >Updated {formattedDate}</span
                     >
                   </div>
-                  <nav
-                    class="border-b-[2px] overflow-x-scroll whitespace-nowrap"
-                  >
+                  <nav class="border-b-[2px] overflow-x-auto whitespace-nowrap">
                     <ul
                       class="flex flex-row items-center w-full text-sm sm:text-[1rem] text-white"
                     >

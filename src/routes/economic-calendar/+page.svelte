@@ -6,6 +6,7 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   import { onMount } from "svelte";
   import { page } from "$app/stores";
@@ -828,42 +829,16 @@
                         </table>
                       </div>
                     {:else}
-                      <div
-                        class="text-white p-5 mt-5 w-fit m-auto rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-[1rem]"
-                      >
-                        <svg
-                          class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 256 256"
-                          ><path
-                            fill="#fff"
-                            d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                          /></svg
-                        >
-                        No Events available for the day.
-                      </div>
+                      <Infobox text="No Events available for the day." />
                     {/if}
                   {/if}
                 {/each}
-
-                <div
-                  class="w-full text-white text-start p-3 sm:p-5 mt-5 rounded-md sm:flex sm:flex-row sm:items-center border border-gray-600 text-sm sm:text-[1rem]"
-                >
-                  <svg
-                    class="w-6 h-6 flex-shrink-0 inline-block sm:mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 256 256"
-                    ><path
-                      fill="#fff"
-                      d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-                    /></svg
-                  >
-
-                  Stocknear's Economic Calendar displays the latest and upcoming
+                <Infobox
+                  text="Stocknear's Economic Calendar displays the latest and upcoming
                   economic events that may impact various assets, regions, and
                   global markets — including stocks, Forex, and bonds. Times are
-                  shown in ET (Eastern Time).
-                </div>
+                  shown in ET (Eastern Time)."
+                />
               </div>
             </div>
           </div>
