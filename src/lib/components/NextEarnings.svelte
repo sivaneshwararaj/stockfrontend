@@ -1,7 +1,6 @@
 <script lang="ts">
   import { stockTicker, displayCompanyName } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
-  import PastEarnings from "$lib/components/PastEarnings.svelte";
   export let data;
 
   let rawData = {};
@@ -21,7 +20,7 @@
 
   $: {
     if ($stockTicker) {
-      rawData = data?.getNextEarnings?.next;
+      rawData = data?.getNextEarnings;
       epsRatio =
         rawData?.epsPrior !== 0
           ? ((rawData?.epsEst / rawData?.epsPrior - 1) * 100)?.toFixed(2)
@@ -97,31 +96,6 @@
           <span class="font-semibold">{rawData?.epsEst}</span>.
         {/if}
       </div>
-    </div>
-  </div>
-{/if}
-
-{#if data?.getNextEarnings?.past?.length !== 0}
-  <div class="space-y-3 overflow-hidden mt-5 w-full">
-    <!--Start Content-->
-    <div class="w-full p-1 flex flex-col">
-      <div class="flex flex-col items-center w-full mb-3">
-        <div class="flex flex-row justify-start mr-auto items-center">
-          <!--<img class="h-10 inline-block mr-2" src={copilotIcon} />-->
-          <div class="flex flex-row items-center">
-            <h3
-              class="mr-1 flex flex-row items-center text-white text-2xl font-bold"
-            >
-              Past Earnings Volatility
-            </h3>
-          </div>
-        </div>
-      </div>
-
-      <PastEarnings
-        userTier={data?.user?.tier}
-        rawData={data?.getNextEarnings?.past}
-      />
     </div>
   </div>
 {/if}

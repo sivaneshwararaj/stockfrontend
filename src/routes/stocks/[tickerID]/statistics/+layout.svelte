@@ -7,6 +7,7 @@
   function changeSubSection(state) {
     const subSectionMap = {
       "market-cap": "/statistics/market-cap",
+      "price-reaction": "/statistics/price-reaction",
       employees: "/statistics/employees",
       "fail-to-deliver": "/statistics/fail-to-deliver",
     };
@@ -23,6 +24,7 @@
       const parts = $page?.url?.pathname.split("/");
       const sectionMap = {
         "market-cap": "market-cap",
+        "price-reaction": "price-reaction",
         employees: "employees",
         "fail-to-deliver": "fail-to-deliver",
       };
@@ -65,6 +67,16 @@
                 : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
             >
               Market Cap
+            </a>
+            <a
+              href={`/stocks/${$stockTicker}/statistics/price-reaction`}
+              on:click={() => changeSubSection("price-reaction")}
+              class="p-2 px-5 cursor-pointer {displaySubSection ===
+              'price-reaction'
+                ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+            >
+              Price Reaction
             </a>
             <a
               href={`/stocks/${$stockTicker}/statistics/employees`}

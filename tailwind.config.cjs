@@ -30,6 +30,9 @@ module.exports = {
         odd: "#121217",
         table: "#18181D",
         default: "#09090B",
+        positive: "#00FC50",
+        negative: "#FF2F1F",
+        neutral: "#FFA838",
         destructive: {
           DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
           foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
