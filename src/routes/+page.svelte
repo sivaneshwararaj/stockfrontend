@@ -163,25 +163,27 @@
   <div class="flex flex-col m-auto justify-center items-center">
     <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10">
       <Feedback {data} />
-      <!--
-      <div class="text-center mb-10 relative w-fit flex justify-center m-auto">
-        <a
-          href="/insider-tracker"
-          class="text-white antialiased bg-primary w-full px-4 py-2 rounded m-auto font-medium text-[1rem] flex items-center"
-        >
-          <span class="text-white sm:hover:text-blue-400"
-            >Realtime Insider Tracker</span
+
+      <div
+        class="text-center mb-10 relative w-fit flex justify-center m-auto text-white"
+      >
+        <div class="-mt-4 mb-4 flex justify-center lg:-mt-8 lg:mb-8">
+          <a href="/stocks/NVDA/statistics/price-reaction"
+            ><div
+              class="flex items-center justify-center sm:hover:text-white text-blue-400"
+            >
+              <div class="text-lg sm:text-xl font-semibold">
+                Price Reaction to Earnings
+              </div>
+              <div
+                class="-mt-2 ml-1 -rotate-6 rounded-lg bg-red-500 px-1 py-0.5 text-xs font-semibold text-white"
+              >
+                New
+              </div>
+            </div></a
           >
-        </a>
-        <div class="absolute top-[-1.2rem] -right-5 sm:-right-8 rotate-[7deg]">
-          <span
-            class="bg-[#fff] text-black text-sm sm:text-[0.9rem] rounded font-semibold sm:me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300"
-          >
-            New
-          </span>
         </div>
       </div>
-      -->
 
       <h1
         class="hidden sm:block text-3xl lg:text-4xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto"
