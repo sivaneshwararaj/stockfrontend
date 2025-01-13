@@ -87,7 +87,7 @@
                 class="table-fixed leading-3 border-separate border-spacing-0 font-sans tabular-nums text-white w-full"
               >
                 <thead
-                  ><tr class="bg-inherit text-[#c3c6d0]"
+                  ><tr class="bg-inherit text-[#c3c6d0] text-sm sm:text-[1rem]"
                     ><th
                       class="w-44 whitespace-nowrap font-normal h-5 text-left px-1"
                       >Report Date</th
@@ -169,17 +169,17 @@
                         </div></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t border-l px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.backward_2_days_close}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.backward_1_days_close}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t border-r rounded-tr-md px-4 last:pr-11 w-17 last:w-24.5 border-r px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.forward_0_days_close}</span
                         ></td
                       ><td
@@ -189,53 +189,58 @@
                         0
                           ? 'rounded-tl-md border-t-violet-500'
                           : ''} px-4 last:pr-11 w-17 last:w-24.5 border-l border-l-violet-500 px-1 text-right"
-                        ><span class="text-white">{item?.open}</span></td
+                        ><span class="text-white text-sm sm:text-[1rem]"
+                          >{item?.open}</span
+                        ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t {index ===
                         0
                           ? 'border-t-violet-500'
                           : ''} px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white">{item?.high}</span></td
+                        ><span class="text-white text-sm sm:text-[1rem]"
+                          >{item?.high}</span
+                        ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t {index ===
                         0
                           ? 'border-t-violet-500'
                           : ''} px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white">{item?.low?.toFixed(2)}</span
+                        ><span class="text-white text-sm sm:text-[1rem]"
+                          >{item?.low?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t {index ===
                         0
                           ? 'rounded-tr-md border-t-violet-500'
                           : ''} border-r border-r-violet-500 px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 px-4 last:pr-11 w-17 last:w-24.5 px-1"
                       ></td><td
                         class="border-primary px-3.5 py-0.5 border-t border-l rounded-tl-md px-4 last:pr-11 w-17 last:w-24.5 border-l px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.forward_2_days_close}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.forward_3_days_close}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.forward_4_days_close}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t border-l px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.forward_6_days_close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t border-r px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
-                        ><span class="text-white"
+                        ><span class="text-white text-sm sm:text-[1rem]"
                           >{item?.backward_4_days_close?.toFixed(2)}</span
                         ></td
                       ></tr
@@ -258,7 +263,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.backward_2_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.backward_2_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
@@ -269,7 +274,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.backward_1_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.backward_1_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
@@ -280,7 +285,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.backward_1_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.backward_1_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
@@ -293,7 +298,7 @@
                       ></td><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l border-l-violet-500 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-[1rem] font-medium {item?.open_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.open_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"
@@ -303,7 +308,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-[1rem] font-medium {item?.high_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.high_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"
@@ -313,7 +318,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-[1rem] font-medium {item?.low_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.low_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"
@@ -323,7 +328,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-r border-r-violet-500 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-[1rem] font-medium {item?.close_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.close_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"
@@ -335,7 +340,7 @@
                       ></td><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.forward_2_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.forward_2_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
@@ -346,7 +351,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.forward_3_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.forward_3_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
@@ -357,7 +362,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.forward_4_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.forward_4_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
@@ -368,7 +373,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.forward_6_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.forward_6_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
@@ -379,7 +384,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-r px-1 text-right"
                         ><span
-                          class="w-full items-baseline justify-end whitespace-nowrap {item?.backward_4_days_change_percent >=
+                          class="w-full text-sm sm:text-[1rem] items-baseline justify-end whitespace-nowrap {item?.backward_4_days_change_percent >=
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
