@@ -4,6 +4,7 @@
     displayCompanyName,
     stockTicker,
   } from "$lib/store";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
 
   export let data;
@@ -245,7 +246,11 @@
                         ></td
                       ></tr
                     >
-                    <tr class="group"
+                    <tr
+                      class="group {index + 1 === rawData?.length &&
+                      data?.user?.tier !== 'Pro'
+                        ? 'opacity-[0.1]'
+                        : ''}"
                       ><td
                         class="border-l border-primary pl-1 text-[#c3c6d0] text-sm px-1"
                         ><div class="flex w-full justify-between">
@@ -408,6 +413,7 @@
                 >
               </table>
             </div>
+            <UpgradeToPro {data} />
           {:else}
             <Infobox text="No data available" />
           {/if}
