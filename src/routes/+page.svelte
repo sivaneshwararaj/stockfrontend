@@ -167,7 +167,7 @@
       <div
         class="text-center mb-10 relative w-fit flex justify-center m-auto text-white"
       >
-        <div class="-mt-4 mb-4 flex justify-center lg:-mt-8 lg:mb-8">
+        <div class="mb-4 flex justify-center -mt-3 lg:mb-8">
           <a href="/stocks/NVDA/statistics/price-reaction"
             ><div
               class="flex items-center justify-center sm:hover:text-white text-blue-400"
