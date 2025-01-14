@@ -259,7 +259,7 @@
                             <div
                               class="leading-3 w-full whitespace-nowrap text-purple-400 font-medium text-white"
                             >
-                              {item?.iv ?? "n/a"}
+                              {item?.iv ?? "-"}
                             </div>
                           </div>
 
