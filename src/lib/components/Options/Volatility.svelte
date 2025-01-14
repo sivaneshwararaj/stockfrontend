@@ -4,7 +4,7 @@
     abbreviateNumber,
     monthNames,
   } from "$lib/utils";
-  import { screenWidth } from "$lib/store";
+  import { screenWidth, displayCompanyName } from "$lib/store";
   import { onMount } from "svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
@@ -413,55 +413,10 @@
   >
     Volatility Exposure
   </h2>
-
-  <div
-    class="mt-5 mb-4 flex flex-col divide-y divide-gray-600 rounded-md border border-gray-600 sm:grid sm:grid-cols-4 sm:divide-x sm:divide-y-0"
-  >
-    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-      <div class="flex items-center justify-between sm:block">
-        <div class="text-sm font-semibold text-white">Date</div>
-        <div
-          class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
-        >
-          af
-        </div>
-      </div>
-    </div>
-
-    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-      <div class="flex items-center justify-between sm:block">
-        <div class="text-sm font-semibold text-white">
-          Avg. Implied Volatility
-        </div>
-        <div
-          class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
-        >
-          {avgIV?.toFixed(2)}
-        </div>
-      </div>
-    </div>
-    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-      <div class="flex items-center justify-between sm:block">
-        <div class="text-sm font-semibold text-white">
-          Avg. Realized Volatility
-        </div>
-        <div
-          class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
-        >
-          {avgRV?.toFixed(2)}
-        </div>
-      </div>
-    </div>
-    <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
-      <div class="flex items-center justify-between sm:block">
-        <div class="text-sm font-semibold text-white">IV / RV</div>
-        <div
-          class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
-        >
-          a
-        </div>
-      </div>
-    </div>
+  <div class="w-full mt-2">
+    {$displayCompanyName} has experienced an average implied volatility of {avgIV?.toFixed(
+      2,
+    )} and an average realized volatility of {avgRV?.toFixed(2)}.
   </div>
 
   <div class="w-full overflow-hidden m-auto mt-5">
