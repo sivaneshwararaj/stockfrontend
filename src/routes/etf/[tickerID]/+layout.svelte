@@ -268,7 +268,8 @@
         close: item?.close !== null ? item?.close : NaN,
       }));
 
-      let change;
+      let changesPercentage = null;
+      let change = null;
       let currentDataRowOneDay;
       let baseClose =
         data?.getStockQuote?.previousClose || oneDayPrice?.at(0)?.open;
@@ -288,7 +289,8 @@
           : currentDataRowOneDay?.close || currentDataRowOneDay?.value;
 
       if (closeValue && baseClose) {
-        change = ((closeValue / baseClose - 1) * 100)?.toFixed(2);
+        change = (closeValue - baseClose)?.toFixed(2);
+        changesPercentage = ((closeValue / baseClose - 1) * 100)?.toFixed(2);
       }
 
       // Format date
@@ -318,11 +320,11 @@
             : currentDataRowOneDay?.close?.toFixed(2) ||
               data?.getStockQuote?.price?.toFixed(2),
         date: safeFormattedDate,
+        changesPercentage,
         change,
       };
     }
   }
-
   $: isTickerIncluded = userWatchList?.some(
     (item) => item.user === data?.user?.id && item.ticker?.includes($etfTicker),
   );
@@ -741,12 +743,22 @@
                                     prePostData,
                                   )?.length === 0
                                     ? 'inline'
-                                    : 'block sm:inline'} text-lg xs:text-xl sm:text-2xl {displayLegend?.change >=
-                                  0
-                                    ? "before:content-['+'] text-[#00FC50]"
-                                    : 'text-[#FF2F1F]'}"
+                                    : 'block sm:inline'} text-lg xs:text-xl sm:text-2xl"
                                 >
-                                  {displayLegend?.change}%
+                                  <span
+                                    class={displayLegend?.change >= 0
+                                      ? "before:content-['+'] text-[#00FC50]"
+                                      : "text-[#FF2F1F]"}
+                                  >
+                                    {displayLegend?.change}
+                                  </span>
+                                  <span
+                                    class={displayLegend?.changesPercentage >= 0
+                                      ? "text-[#00FC50]"
+                                      : "text-[#FF2F1F]"}
+                                  >
+                                    ({displayLegend?.changesPercentage}%)
+                                  </span>
                                 </div>
                                 <div class="mt-0.5 text-xs sm:text-sm">
                                   {#if !$isOpen}
