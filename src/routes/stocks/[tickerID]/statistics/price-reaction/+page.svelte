@@ -171,17 +171,17 @@
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t border-l px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.backward_2_days_close}</span
+                          >{item?.backward_2_days_close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.backward_1_days_close}</span
+                          >{item?.backward_1_days_close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t border-r rounded-tr-md px-4 last:pr-11 w-17 last:w-24.5 border-r px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.forward_0_days_close}</span
+                          >{item?.forward_0_days_close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 px-4 last:pr-11 w-17 last:w-24.5 px-1"
@@ -191,7 +191,7 @@
                           ? 'rounded-tl-md border-t-violet-500'
                           : ''} px-4 last:pr-11 w-17 last:w-24.5 border-l border-l-violet-500 px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.open}</span
+                          >{item?.open?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t {index ===
@@ -199,7 +199,7 @@
                           ? 'border-t-violet-500'
                           : ''} px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.high}</span
+                          >{item?.high?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t {index ===
@@ -222,17 +222,17 @@
                       ></td><td
                         class="border-primary px-3.5 py-0.5 border-t border-l rounded-tl-md px-4 last:pr-11 w-17 last:w-24.5 border-l px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.forward_2_days_close}</span
+                          >{item?.forward_2_days_close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.forward_3_days_close}</span
+                          >{item?.forward_3_days_close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
                         ><span class="text-white text-sm sm:text-[1rem]"
-                          >{item?.forward_4_days_close}</span
+                          >{item?.forward_4_days_close?.toFixed(2)}</span
                         ></td
                       ><td
                         class="border-primary px-3.5 py-0.5 border-t border-l px-4 last:pr-11 w-17 last:w-24.5 px-1 text-right"
@@ -252,14 +252,23 @@
                         ? 'opacity-[0.1]'
                         : ''}"
                       ><td
-                        class="border-l border-primary pl-1 text-[#c3c6d0] text-sm px-1"
+                        class="border-l border-primary pl-1 text-gray-200 text-sm px-1"
                         ><div class="flex w-full justify-between">
                           <div class="flex items-center">
-                            <div class="mr-1">RSI</div>
+                            <div class="mr-1 text-purple-400">IV:</div>
                             <div
-                              class="leading-3 w-full whitespace-nowrap rounded-[3px] p-1 font-medium bg-secondary text-white"
+                              class="leading-3 w-full whitespace-nowrap text-purple-400 font-medium text-white"
                             >
-                              {item?.rsi}
+                              {item?.iv ?? "n/a"}
+                            </div>
+                          </div>
+
+                          <div class="flex items-center">
+                            <div class="mr-1 text-purple-400">RSI:</div>
+                            <div
+                              class="leading-3 w-full whitespace-nowrap text-purple-400 font-medium text-white"
+                            >
+                              {item?.rsi ?? "n/a"}
                             </div>
                           </div>
 
@@ -283,9 +292,9 @@
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
-                          >{item?.backward_1_days_change_percent}%<span
-                            class="w-0 text-center"
-                          ></span></span
+                          >{item?.backward_1_days_change_percent?.toFixed(
+                            2,
+                          )}%<span class="w-0 text-center"></span></span
                         ></td
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l px-1 text-right"
@@ -294,9 +303,9 @@
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
-                          >{item?.backward_1_days_change_percent}%<span
-                            class="w-0 text-center"
-                          ></span></span
+                          >{item?.backward_1_days_change_percent?.toFixed(
+                            2,
+                          )}%<span class="w-0 text-center"></span></span
                         ></td
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
@@ -349,9 +358,9 @@
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
-                          >{item?.forward_2_days_change_percent}%<span
-                            class="w-0 text-center"
-                          ></span></span
+                          >{item?.forward_2_days_change_percent?.toFixed(
+                            2,
+                          )}%<span class="w-0 text-center"></span></span
                         ></td
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
@@ -360,9 +369,9 @@
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
-                          >{item?.forward_3_days_change_percent}%<span
-                            class="w-0 text-center"
-                          ></span></span
+                          >{item?.forward_3_days_change_percent?.toFixed(
+                            2,
+                          )}%<span class="w-0 text-center"></span></span
                         ></td
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
@@ -371,9 +380,9 @@
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
-                          >{item?.forward_4_days_change_percent}%<span
-                            class="w-0 text-center"
-                          ></span></span
+                          >{item?.forward_4_days_change_percent?.toFixed(
+                            2,
+                          )}%<span class="w-0 text-center"></span></span
                         ></td
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l px-1 text-right"
@@ -382,9 +391,9 @@
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
-                          >{item?.forward_6_days_change_percent}%<span
-                            class="w-0 text-center"
-                          ></span></span
+                          >{item?.forward_6_days_change_percent?.toFixed(
+                            2,
+                          )}%<span class="w-0 text-center"></span></span
                         ></td
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-r px-1 text-right"
@@ -393,9 +402,9 @@
                           0
                             ? "text-positive before:content-['+']"
                             : 'text-negative'}"
-                          >{item?.backward_4_days_change_percent}%<span
-                            class="w-0 text-center"
-                          ></span></span
+                          >{item?.backward_4_days_change_percent?.toFixed(
+                            2,
+                          )}%<span class="w-0 text-center"></span></span
                         ></td
                       ></tr
                     >
