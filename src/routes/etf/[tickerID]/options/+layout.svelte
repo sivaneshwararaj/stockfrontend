@@ -11,6 +11,7 @@
     const subSectionMap = {
       overview: "/options",
       "hottest-contracts": "/options/hottest-contracts",
+      volatility: "/options/volatility",
       gex: "/options/gex",
       dex: "/options/dex",
       oi: "/options/oi",
@@ -31,6 +32,7 @@
       const sectionMap = {
         overview: "overview",
         "hottest-contracts": "hottest-contracts",
+        volatility: "volatility",
         gex: "gex",
         dex: "dex",
         oi: "oi",
@@ -78,6 +80,16 @@
                   : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
               >
                 Hottest Contracts
+              </a>
+              <a
+                href={`/etf/${$etfTicker}/options/volatility`}
+                on:click={() => changeSubSection("volatility")}
+                class="p-2 px-5 cursor-pointer {displaySubSection ===
+                'volatility'
+                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+              >
+                Volatility
               </a>
               <a
                 href={`/etf/${$etfTicker}/options/oi`}
