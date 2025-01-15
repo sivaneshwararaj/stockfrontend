@@ -168,12 +168,12 @@
         class="text-center mb-10 relative w-fit flex justify-center m-auto text-white"
       >
         <div class="mb-4 flex justify-center -mt-3 lg:mb-8">
-          <a href="/stocks/NVDA/statistics/price-reaction"
+          <a href="/stocks/NVDA/options/volatility"
             ><div
               class="flex items-center justify-center sm:hover:text-white text-blue-400"
             >
               <div class="text-lg sm:text-xl font-semibold">
-                Price Reaction to Earnings
+                Volatility Exposure
               </div>
               <div
                 class="-mt-2 ml-1 -rotate-6 rounded-lg bg-red-500 px-1 py-0.5 text-xs font-semibold text-white"
