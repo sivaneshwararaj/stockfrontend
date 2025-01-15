@@ -750,15 +750,18 @@
                     >
                       EPS of {item?.eps}
                       {item?.epsSurprise > 0 ? "exceeds" : "misses"} estimates by
-                      {item?.epsSurprise?.toFixed(2)}, with {(
-                        ((item?.eps - item?.epsPrior) /
-                          Math.abs(item?.epsPrior)) *
-                        100
-                      )?.toFixed(2)}% YoY {(item?.eps - item?.epsPrior) /
-                        Math.abs(item?.epsPrior) <
-                      0
-                        ? "decline"
-                        : "growth"}.
+                      {item?.epsSurprise?.toFixed(2)}
+                      {#if item?.epsPrior}
+                        with {(
+                          ((item?.eps - item?.epsPrior) /
+                            Math.abs(item?.epsPrior)) *
+                          100
+                        )?.toFixed(2)}% YoY {(item?.eps - item?.epsPrior) /
+                          Math.abs(item?.epsPrior) <
+                        0
+                          ? "decline"
+                          : "growth"}.
+                      {/if}
                     </li>
                   {/each}
                 </ul>
