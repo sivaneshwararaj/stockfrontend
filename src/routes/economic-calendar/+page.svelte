@@ -83,7 +83,6 @@
 
   const handleMessage = (event) => {
     weekdayFiltered = event.data?.finalData?.output ?? [];
-    originalData = weekdayFiltered;
   };
 
   const loadWorker = async () => {

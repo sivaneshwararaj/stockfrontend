@@ -47,7 +47,6 @@ const countryMap = Object.fromEntries(
 onmessage = async (event: MessageEvent) => {
   const rawData = event.data?.rawData;
   const filterList: (string | number)[] = event.data?.filterList;
-  console.log(filterList);
 
   // Separate importance filters and country filters
   const importanceFilters = filterList.filter(
