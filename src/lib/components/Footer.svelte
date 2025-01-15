@@ -93,7 +93,7 @@
       </div>
 
       <div class="flex-1 mb-2 sm:mb-0">
-        <p class="uppercase text-slate-100 md:mb-6">Products</p>
+        <p class="uppercase text-slate-100 md:mb-6">Services</p>
         <ul class="list-reset mb-6">
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
             <a
@@ -102,7 +102,13 @@
               >Stock Analysis Pro</a
             >
           </li>
-
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/advertise"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >Advertise</a
+            >
+          </li>
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
             <a
               href="/donation"
