@@ -748,7 +748,6 @@ export function abbreviateNumber(number, addDollarSign = false) {
   }
 }
 
-
 export function formatDate(dateStr) {
     try {
         // Parse the input date string in New York timezone
@@ -772,16 +771,18 @@ export function formatDate(dateStr) {
 
         const nyDateObj = parseDate(new Date(dateStr));
         const nyCurrentObj = parseDate(new Date());
-        
+
         // Calculate the time difference in seconds
         const seconds = Math.floor((nyCurrentObj - nyDateObj) / 1000);
-        
+
         // Define time intervals in seconds
         const intervals = [
             { unit: 'year', seconds: 31536000 },
             { unit: 'month', seconds: 2592000 },
             { unit: 'week', seconds: 604800 },
-            { unit: 'day', seconds: 86400 }
+            { unit: 'day', seconds: 86400 },
+            { unit: 'hour', seconds: 3600 },
+            { unit: 'minute', seconds: 60 },
         ];
 
         // Determine the appropriate time interval
@@ -791,14 +792,14 @@ export function formatDate(dateStr) {
                 return `${count} ${unit}${count === 1 ? '' : 's'} ago`;
             }
         }
-
-        // If less than a day, return "Just now"
+        // If less than a minute
         return 'Just now';
     } catch (error) {
         console.error('Error formatting date:', error);
         return 'Invalid date';
     }
 }
+
 
 
 
