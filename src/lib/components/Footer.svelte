@@ -93,6 +93,42 @@
       </div>
 
       <div class="flex-1 mb-2 sm:mb-0">
+        <p class="uppercase text-slate-100 md:mb-6">Sections</p>
+        <ul class="list-reset mb-6">
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/stocks"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >Stocks</a
+            >
+          </li>
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/etf"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >ETFs</a
+            >
+          </li>
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/blog"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >Blog</a
+            >
+          </li>
+          <!--
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/donation"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >Learning Center</a
+            >
+          </li>
+          -->
+        </ul>
+      </div>
+
+      <div class="flex-1 mb-2 sm:mb-0">
         <p class="uppercase text-slate-100 md:mb-6">Services</p>
         <ul class="list-reset mb-6">
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
@@ -104,9 +140,9 @@
           </li>
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
             <a
-              href="/advertise"
+              href="/newsletter"
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
-              >Advertise</a
+              >Free Newsletter</a
             >
           </li>
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
@@ -120,27 +156,28 @@
       </div>
 
       <div class="flex-1 mb-2 sm:mb-0">
-        <p class="uppercase text-slate-100 md:mb-6">Legal</p>
+        <p class="uppercase text-slate-100 md:mb-6">Website</p>
         <ul class="list-reset mb-6">
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
             <a
-              href="/terms-of-use"
+              href="/login"
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
-              >Terms of Use</a
+              >Login</a
             >
           </li>
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
             <a
-              href="/privacy-policy"
+              href="/sitemap"
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
-              >Privacy Policy</a
             >
+              Sitemap
+            </a>
           </li>
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
             <a
-              href="/imprint"
+              href="/advertise"
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
-              >Imprint</a
+              >Advertise</a
             >
           </li>
         </ul>
@@ -165,13 +202,27 @@
               Contact Us
             </a>
           </li>
+
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">
             <a
-              href="/sitemap"
+              href="/terms-of-use"
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >Terms of Use</a
             >
-              Sitemap
-            </a>
+          </li>
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/privacy-policy"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >Privacy Policy</a
+            >
+          </li>
+          <li class="mt-2 inline-block mr-2 md:block md:mr-0">
+            <a
+              href="/imprint"
+              class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
+              >Imprint</a
+            >
           </li>
           <!--
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">

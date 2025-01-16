@@ -1,0 +1,123 @@
+<script>
+  import { numberOfUnreadNotification } from "$lib/store";
+  import { getImageURL } from "$lib/utils";
+
+  export let data;
+
+  const article = data?.getArticle;
+</script>
+
+<svelte:head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
+    {article?.title} · stocknear</title
+  >
+  <meta
+    name="description"
+    content="Latest articles on stocks, finance and investing"
+  />
+  <!-- Other meta tags -->
+  <meta property="og:title" content={article?.title} />
+  <meta property="og:description" content={article?.abstract} />
+  <meta property="og:type" content="article" />
+  <!-- Add more Open Graph meta tags as needed -->
+
+  <!-- Twitter specific meta tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={article?.title} />
+  <meta name="twitter:description" content={article?.abstract} />
+  <!-- Add more Twitter meta tags as needed -->
+</svelte:head>
+<div>
+  <main id="main" class="mt-2 text-white min-h-screen pb-40">
+    <div class="mx-auto max-w-screen-xl">
+      <img
+        src={getImageURL(article?.collectionId, article?.id, article?.cover)}
+        class="h-[200px] w-full object-cover lg:h-[350px]"
+        loading="lazy"
+        alt="Wallpaper"
+      />
+      <div class="lg:flex">
+        <article
+          class="z-5 relative mx-1 -mt-10 rounded-t-md bg-default p-3 xs:p-4 lg:-mt-16 lg:ml-3 lg:p-5 xl:mx-4"
+        >
+          <header class="article-header">
+            <h1 class="mb-3 text-3xl font-bold text-white md:text-4xl">
+              {article?.title}
+            </h1>
+            <div class="text-base text-muted">
+              <div>
+                Published {new Date(article?.created)?.toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  daySuffix: "2-digit",
+                })}
+              </div>
+            </div>
+          </header>
+
+          <div class="text-lg mt-4">
+            <div class="content">
+              {@html article?.description}
+            </div>
+          </div>
+        </article>
+
+        <div class="mt-5 lg:w-full">
+          <div
+            class="flex flex-wrap gap-y-5 justify-center px-5 lg:sticky lg:top-20 lg:px-0"
+          >
+            {#if !data?.user}
+              <div
+                class="w-full text-white border border-gray-600 rounded-md h-fit bg-primary sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
+              >
+                <div class="space-y-6 p-6">
+                  <h4 class="text-2xl font-bold">
+                    Stay informed in just 2 minutes
+                  </h4>
+                  <p class="text-base text-white lg:text-lg">
+                    Get a daily email with the top market-moving news in bullet
+                    point format, for free.
+                  </p>
+                  <div>
+                    <a
+                      href="/register"
+                      class=" btn bg-[#fff] border border-gray-600 sm:hover:bg-gray-300 transition duration-100 btn-md w-full rounded-md m-auto text-black font-semibold text-[1rem]"
+                    >
+                      <span class="text-[1rem]">Sign Up</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {/if}
+            <a
+              href="/watchlist/stocks"
+              class="w-full text-white border border-gray-600 rounded-md h-fit bg-primary sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
+            >
+              <div class="space-y-3 p-6">
+                <h4 class="text-xl font-semibold">Watchlist</h4>
+                <p class="text-base text-white lg:text-lg">
+                  Build your watchlist to keep track of their performance
+                </p>
+              </div>
+            </a>
+            <a
+              href="/analysts/top-stocks"
+              class="w-full text-white border border-gray-600 rounded-md h-fit bg-primary sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
+            >
+              <div class="space-y-3 p-6">
+                <h4 class="text-xl font-semibold">Top Stocks</h4>
+                <p class="text-base text-white lg:text-lg">
+                  Get the latest Top Wall Street Analyst Ratings
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
