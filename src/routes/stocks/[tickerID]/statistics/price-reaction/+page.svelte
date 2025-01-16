@@ -312,7 +312,7 @@
                       ></td><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-l border-l-violet-500 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.open_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm border-gray-800 badge text-white text-sm sm:text-[1rem] font-medium {item?.open_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"
@@ -322,7 +322,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.high_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm border-gray-800 badge text-white text-sm sm:text-[1rem] font-medium {item?.high_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"
@@ -332,7 +332,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.low_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm border-gray-800 badge text-white text-sm sm:text-[1rem] font-medium {item?.low_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"
@@ -342,7 +342,7 @@
                       ><td
                         class="px-4 last:pr-11 w-17 last:w-24.5 border-primary px-3.5 py-0.5 border-r border-r-violet-500 px-1 text-right"
                         ><div
-                          class="w-full whitespace-nowrap rounded-sm badge text-white text-sm sm:text-[1rem] font-medium {item?.close_change_percent >=
+                          class="w-full whitespace-nowrap rounded-sm border-gray-800 badge text-white text-sm sm:text-[1rem] font-medium {item?.close_change_percent >=
                           0
                             ? "bg-positive bg-opacity-[0.5] before:content-['+'] "
                             : 'bg-negative bg-opacity-[0.6]'}"

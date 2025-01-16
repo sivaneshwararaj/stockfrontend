@@ -285,13 +285,15 @@
         onSelectedChange={(state) => handleKeyDown(state?.value)}
       >
         <div class="relative w-full">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-2.5">
+          <div
+            class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-gray-400"
+          >
             <svg
               class="text-icon h-5 w-5"
               fill="none"
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="3"
+              stroke-width="2"
               stroke="currentColor"
               viewBox="0 0 24 24"
               style="max-width: 40px"
@@ -328,8 +330,8 @@
               <div
                 class="pointer-events-none absolute end-6 top-2.5 gap-1 opacity-80 rtl:flex-row-reverse hidden lg:flex"
               >
-                <kbd class="kbd kbd-sm">ctrl</kbd>
-                <kbd class="kbd kbd-sm">K</kbd>
+                <kbd class="kbd kbd-sm bg-[#1C2128] text-gray-400">ctrl</kbd>
+                <kbd class="kbd kbd-sm bg-[#1C2128] text-gray-400">K</kbd>
               </div>
             {/if}
           </div>
@@ -499,8 +501,8 @@
                   href={`/${item?.type === "ETF" ? "etf" : item?.type === "Crypto" ? "crypto" : "stocks"}/${item?.symbol}`}
                   on:click={() => popularTicker(item?.symbol)}
                   class="mb-2 {item?.symbol === focusedSuggestion
-                    ? 'shake-ticker cursor-pointer flex justify-start items-center p-2 text-white bg-primary rounded group'
-                    : 'shake-ticker cursor-pointer bg-secondary sm:hover:bg-primary rounded-md flex justify-start items-center p-2 text-white  group'} w-full"
+                    ? 'cursor-pointer flex justify-start items-center p-2 text-white bg-primary rounded group'
+                    : 'cursor-pointer bg-secondary sm:hover:bg-primary rounded-md flex justify-start items-center p-2 text-white  group'} w-full"
                 >
                   <div class="flex flex-row items-center w-full">
                     <div class="flex flex-col">
