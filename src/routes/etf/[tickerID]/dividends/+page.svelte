@@ -216,7 +216,7 @@
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+      <div class="sm:pl-7 sm:pb-7 sm:pt-7 w-full m-auto mt-2 sm:mt-0">
         <div class="w-full mb-6">
           <h1 class="text-xl sm:text-2xl text-gray-200 font-bold mb-4 w-full">
             Dividends

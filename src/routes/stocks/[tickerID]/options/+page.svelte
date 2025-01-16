@@ -42,7 +42,7 @@
   let putOpenInterestList; //= data?.getOptionsPlotData?.putOpenInterestList;
   let priceList;
 
-  let displayTimePeriod = "threeMonths";
+  let displayTimePeriod = "oneYear";
 
   function formatDate(dateStr) {
     // Parse the input date string (YYYY-mm-dd)
@@ -110,7 +110,7 @@
               marker +
               param.seriesName +
               ": " +
-              abbreviateNumber(param.value) +
+              abbreviateNumberWithColor(param.value, false, true) +
               "<br/>";
           });
 
@@ -126,7 +126,7 @@
       grid: {
         left: $screenWidth < 640 ? "5%" : "2%",
         right: $screenWidth < 640 ? "5%" : "2%",
-        bottom: "20%",
+        bottom: "10%",
         containLabel: true,
       },
       xAxis: [
@@ -288,7 +288,7 @@
   });
 
   $: {
-    if ((displayTimePeriod || displayData) && typeof window !== "undefined") {
+    if (displayTimePeriod || displayData) {
       // Filter the raw plot data based on the selected time period
       filteredList = filterDate(rawData, displayTimePeriod);
       // Process the filtered list to generate the plot data
@@ -339,7 +339,7 @@
     <div
       class="w-full relative flex justify-center items-center overflow-hidden"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+      <div class="sm:pl-7 sm:pb-7 sm:pt-7 w-full m-auto mt-2 sm:mt-0">
         {#if Object?.keys(dailyStats)?.length === 0 && rawData?.length === 0}
           <Infobox text="No Options data available" />
         {/if}
@@ -358,10 +358,10 @@
             >
               <option disabled>Choose a time period</option>
               <option value="oneWeek">1 Week</option>
-              <option value="oneMonth" selected>1 Month</option>
-              <option value="threeMonths" selected>3 Months</option>
+              <option value="oneMonth">1 Month</option>
+              <option value="threeMonths">3 Months</option>
               <option value="sixMonths">6 Months</option>
-              <option value="oneYear">1 Year</option>
+              <option value="oneYear" selected>1 Year</option>
             </select>
 
             <select

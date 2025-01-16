@@ -59,7 +59,7 @@
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+      <div class="sm:pl-7 sm:pb-7 sm:pt-7 w-full m-auto mt-2 sm:mt-0">
         <Lazy>
           <div
             class="w-full mt-10 sm:mt-0 m-auto sm:pt-6 {Object?.keys(

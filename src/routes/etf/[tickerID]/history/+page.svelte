@@ -319,7 +319,7 @@
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4">
-          <div class="sm:p-7 w-full m-auto">
+          <div class="sm:pl-7 sm:pb-7 sm:pt-7 w-full m-auto">
             <div
               class="flex flex-col sm:flex-row items-start w-full sm:justify-between md:space-x-4 md:border-0 w-full mb-5"
             >

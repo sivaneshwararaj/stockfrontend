@@ -101,7 +101,7 @@
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"
     >
-      <div class="mt-5 sm:mt-0 sm:p-7 w-full m-auto">
+      <div class="mt-5 sm:mt-0 sm:pl-7 sm:pb-7 sm:pt-7 w-full m-auto">
         <div class="flex flex-row items-center md:space-x-4 md:border-0">
           <h1 class=" text-xl sm:text-2xl font-bold">
             {$etfTicker} Holdings List

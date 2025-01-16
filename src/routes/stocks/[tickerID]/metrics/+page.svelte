@@ -106,7 +106,7 @@
     <div
       class="relative flex justify-center items-center overflow-hidden w-full"
     >
-      <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+      <div class="sm:pl-7 sm:pb-7 sm:pt-7 w-full m-auto mt-2 sm:mt-0">
         {#if revenueNames?.length !== 0 || geographicNames?.length !== 0}
           <h2 class="mt-5 text-xl sm:text-2xl text-gray-200 font-bold mb-4">
             {$displayCompanyName} Revenue Breakdown

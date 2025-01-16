@@ -60,7 +60,7 @@
       {#if data?.getData?.length > 0}
         <GreekByStrike {data} title="Gamma" />
       {:else}
-        <div class="sm:p-7 w-full m-auto mt-2 sm:mt-0">
+        <div class="sm:pl-7 sm:pb-7 sm:pt-7 w-full m-auto mt-2 sm:mt-0">
           <div class="mt-2">
             <Infobox text="No data is available" />
           </div>

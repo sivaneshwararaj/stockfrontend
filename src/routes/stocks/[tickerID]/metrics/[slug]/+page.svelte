@@ -188,7 +188,7 @@
     >
       {#if isLoaded}
         <main class="w-full">
-          <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
+          <div class="sm:pl-7 sm:pb-7 sm:pt-7 m-auto mt-2 sm:mt-0 w-full">
             <div class="mb-3">
               <h1 class="text-2xl text-gray-200 font-bold">
                 {convertToTitleCase(data?.getParams)} Revenue

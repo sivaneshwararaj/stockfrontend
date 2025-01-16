@@ -466,7 +466,7 @@
       class="relative flex justify-center items-center overflow-hidden w-full"
     >
       <main class="w-full">
-        <div class="sm:p-7 m-auto mt-2 sm:mt-0 w-full">
+        <div class="sm:pl-7 sm:pb-7 sm:pt-7 m-auto mt-2 sm:mt-0 w-full">
           <div class="mb-3">
             <h1 class="text-xl sm:text-2xl text-white font-bold">
               {#if $coolMode}
