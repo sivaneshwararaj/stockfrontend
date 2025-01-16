@@ -441,6 +441,12 @@
                       >% OI Change</td
                     >
                     <td class="text-white font-semibold text-sm text-end"
+                      >C Prem</td
+                    >
+                    <td class="text-white font-semibold text-sm text-end"
+                      >P Prem</td
+                    >
+                    <td class="text-white font-semibold text-sm text-end"
                       >Net Prem</td
                     >
                     <td class="text-white font-semibold text-sm text-end"
@@ -612,6 +618,22 @@
                         {:else}
                           <span class="text-white"> n/a </span>
                         {/if}
+                      </td>
+
+                      <td class="text-sm sm:text-[1rem] text-end text-white">
+                        {@html abbreviateNumberWithColor(
+                          item?.call_premium,
+                          false,
+                          true,
+                        )}
+                      </td>
+
+                      <td class="text-sm sm:text-[1rem] text-end text-white">
+                        {@html abbreviateNumberWithColor(
+                          item?.put_premium,
+                          false,
+                          true,
+                        )}
                       </td>
 
                       <td class="text-sm sm:text-[1rem] text-end text-white">
