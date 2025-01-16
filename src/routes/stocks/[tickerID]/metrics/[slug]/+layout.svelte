@@ -10,14 +10,14 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4">
+        <main class="w-full lg:w-3/4 lg:pr-10">
           <slot />
         </main>
 
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
+        <aside class="hidden lg:block relative fixed w-1/4 mt-3">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
             >
               <a
                 href="/pricing"
@@ -37,7 +37,7 @@
           {/if}
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href={"/price-alert"}
@@ -56,7 +56,7 @@
           </div>
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href={"/stock-screener"}

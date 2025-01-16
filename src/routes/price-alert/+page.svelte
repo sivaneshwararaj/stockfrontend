@@ -306,7 +306,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-5">
+        <main class="w-full">
           <div class="mb-6 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
               Price Alerts
@@ -793,67 +793,6 @@
             </div>
           {/if}
         </main>
-
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
-            <div
-              on:click={() => goto("/pricing")}
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
-            >
-              <div
-                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-              >
-                <div class="w-full flex justify-between items-center p-3 mt-3">
-                  <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription
-                  </h2>
-                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-                </div>
-                <span class="text-white p-3 ml-3 mr-3">
-                  Upgrade now for unlimited access to all data and tools.
-                </span>
-              </div>
-            </div>
-          {/if}
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
-          >
-            <a
-              href={"/watchlist/stocks"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Watchlist
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Build your watchlist to keep track of their performance.
-              </span>
-            </a>
-          </div>
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
-          >
-            <a
-              href={"/stock-screener"}
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Stock Screener
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Build your Stock Screener to find profitable stocks.
-              </span>
-            </a>
-          </div>
-        </aside>
       </div>
     </div>
   </div>

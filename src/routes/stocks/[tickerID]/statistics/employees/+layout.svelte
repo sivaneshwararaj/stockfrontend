@@ -13,14 +13,14 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4">
+        <main class="w-full lg:w-3/4 lg:pr-10">
           <slot />
         </main>
 
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
+        <aside class="hidden lg:block relative fixed w-1/4 mt-3">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
             >
               <a
                 href="/pricing"
@@ -40,18 +40,18 @@
           {/if}
           {#if similarStocks?.length > 0}
             <div
-              class="w-full p-2 bg-primary text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full p-2 bg-inherit text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer"
             >
               <h3 class="p-2 pt-4 text-2xl font-semibold">Related Stocks</h3>
               <table class="table table-sm table-compact w-full text-white">
                 <thead class="text-white"
                   ><tr
                     ><th
-                      class="whitespace-nowrap border-b font-semibold text-[1rem] text-left"
+                      class="whitespace-nowrap border-b border-gray-600 font-semibold text-[1rem] text-left"
                       >Company</th
                     >
                     <th
-                      class="whitespace-nowrap border-b font-semibold text-[1rem] text-right"
+                      class="whitespace-nowrap border-b border-gray-600 font-semibold text-[1rem] text-right"
                       >Employees</th
                     ></tr
                   ></thead
@@ -59,7 +59,7 @@
                 <tbody>
                   {#each similarStocks?.slice(0, 8) as item, index}
                     <tr
-                      class="border-gray-600 {index !==
+                      class="border-gray-800 {index !==
                       similarStocks?.slice(0, 8).length - 1
                         ? 'border-b'
                         : ''}"

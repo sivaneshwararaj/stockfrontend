@@ -76,7 +76,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4">
+        <main class="w-full lg:w-3/4 lg:pr-10">
           <nav
             class="mb-5 sm:mb-0 sm:ml-4 pt-1 overflow-x-scroll md:overflow-hidden text-sm sm:text-[1rem] whitespace-nowrap"
           >
@@ -118,10 +118,10 @@
           <slot />
         </main>
 
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
+        <aside class="hidden lg:block relative fixed w-1/4 mt-3">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
             >
               <a
                 href="/pricing"
@@ -142,7 +142,7 @@
 
           {#if newsList?.length !== 0}
             <div
-              class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary"
+              class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit"
             >
               <div class="p-4 text-sm">
                 <h3 class="text-lg text-white font-semibold mb-3">

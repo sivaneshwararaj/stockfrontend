@@ -57,8 +57,8 @@
       animation: false,
       grid: {
         left: "0%", // Adjust to create space for y-axis labels
-        right: "10%",
-        bottom: "5%",
+        right: "5%",
+        bottom: "0%",
         top: "5%",
         containLabel: true,
       },
