@@ -116,7 +116,7 @@
     <div
       class="relative flex justify-center items-start overflow-hidden w-full"
     >
-      <main class="w-full lg:w-3/4 lg:pr-5">
+      <main class="w-full lg:w-3/4 lg:pr-10">
         <div class="w-full m-auto">
           <div class="grid grid-cols-1 gap-y-3">
             {#if news?.length !== 0}
@@ -214,13 +214,13 @@
           </div>
         </div>
       </main>
-      <aside class="hidden lg:block relative fixed w-1/4 ml-4">
+      <aside class="hidden lg:block relative fixed w-1/4">
         {#if stockNews?.length !== 0}
           <div
-            class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary"
+            class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit"
           >
             <div class="p-4 text-sm">
-              <h3 class="text-lg text-white font-semibold mb-3">Stock News</h3>
+              <h3 class="text-xl text-white font-bold mb-3">Stock News</h3>
               <ul class="text-white">
                 {#each stockNews?.slice(0, 10) as item}
                   <li class="mb-3 last:mb-1">

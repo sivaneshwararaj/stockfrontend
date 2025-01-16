@@ -165,6 +165,14 @@
       link: "/newsletter",
     },
     {
+      title: "Blog",
+      link: "/blog",
+    },
+    {
+      title: "Data Disclaimer",
+      link: "/data-disclaimer",
+    },
+    {
       title: "Advertise with Us",
       link: "/advertise",
     },
