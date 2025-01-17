@@ -377,11 +377,7 @@
   }
 
   $: {
-    if (
-      employeeHistory?.length > 0 &&
-      $stockTicker &&
-      typeof window !== "undefined"
-    ) {
+    if (employeeHistory?.length > 0 && $stockTicker) {
       employeeHistory = data?.getHistoryEmployee ?? [];
       historyList = sortByDate(employeeHistory);
 
@@ -409,7 +405,7 @@
     }
   }
 
-  let htmlOutput;
+  let htmlOutput = generateEmployeeInfoHTML();
 </script>
 
 <svelte:head>

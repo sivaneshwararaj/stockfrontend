@@ -1,9 +1,16 @@
 <script lang="ts">
+  import { stockTicker } from "$lib/store";
   export let data;
 
-  const similarStocks = data?.getSimilarStocks?.sort(
-    (a, b) => b?.employees - a?.employees,
-  );
+  let similarStocks;
+
+  $: {
+    if ($stockTicker) {
+      similarStocks = data?.getSimilarStocks?.sort(
+        (a, b) => b?.employees - a?.employees,
+      );
+    }
+  }
 </script>
 
 <section class="w-full overflow-hidden">
@@ -44,7 +51,7 @@
                         : ''}"
                       ><td class="text-left"
                         ><a
-                          href={`/stocks/${item?.symbol}/statistics/employees`}
+                          href={`/stocks/${item?.symbol}/profile/employees`}
                           class="text-[1rem] sm:hover:text-white text-blue-400"
                           >{item?.name?.length > 30
                             ? item?.name?.slice(0, 30) + "..."
