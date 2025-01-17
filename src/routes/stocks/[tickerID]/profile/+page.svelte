@@ -406,7 +406,9 @@ ${paragraphs.join("\n")}
             {:else}
               No SEC filings available.
             {/if}
-            <div class="border-b border-gray-600 py-3 text-xl font-semibold">
+            <div
+              class="border-b border-gray-600 py-3 text-lg sm:text-xl font-semibold"
+            >
               <a
                 class="text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
                 href={`https://www.sec.gov/cgi-bin/browse-edgar?CIK=${rawData?.cik}&amp;count=100`}

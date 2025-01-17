@@ -413,21 +413,24 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Number of Employees · Stocknear
+    {$displayCompanyName} ({$stockTicker}) Number of Employees {historyList
+      ?.at(-1)
+      ?.filingDate?.slice(0, 4)} - {historyList?.at(0)?.filingDate?.slice(0, 4)}
+    · Stocknear
   </title>
   <meta
     name="description"
-    content={`Detailed historical employees number for ${$displayCompanyName} (${$stockTicker}). See many years of change, growth and the impact.`}
+    content={`Current and historical number of employees for ${$displayCompanyName} (${$stockTicker}) with related statistics, a chart and a data table.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees ${historyList?.at(-1)?.filingDate?.slice(0, 4)} - ${historyList?.at(0)?.filingDate?.slice(0, 4)} · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Detailed historical employees number for ${$displayCompanyName} (${$stockTicker}). See many years of change, growth and the impact.`}
+    content={`Current and historical number of employees for ${$displayCompanyName} (${$stockTicker}) with related statistics, a chart and a data table.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -436,11 +439,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Number of Employees ${historyList?.at(-1)?.filingDate?.slice(0, 4)} - ${historyList?.at(0)?.filingDate?.slice(0, 4)} · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Detailed historical employees number for ${$displayCompanyName} (${$stockTicker}). See many years of change, growth and the impact.`}
+    content={`Current and historical number of employees for ${$displayCompanyName} (${$stockTicker}) with related statistics, a chart and a data table.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>
