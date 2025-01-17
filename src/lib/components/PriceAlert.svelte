@@ -127,15 +127,19 @@
         class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-5 font-semibold text-white"
       >
         <label class="text-sm w-[20%] mb-1 sm:mb-0">Symbol</label>
+
         <label
           class="rounded-md bg-[#2A2E39] w-full sm:w-[80%] py-2 px-2 text-sm border border-gray-600"
         >
+          <!--
           <img
             style="clip-path: circle(50%);"
             class="w-4 h-4 inline-block -mt-1 mr-1"
             src={`https://financialmodelingprep.com/image-stock/${ticker?.toUpperCase()}.png`}
+            alt="logo"
             loading="lazy"
           />
+          -->
 
           {ticker?.toUpperCase()}, Regular trading hours
         </label>
