@@ -42,6 +42,7 @@
     const sectionMap = {
       institute: "institute",
       "congress-trading": "congress-trading",
+      transcripts: "transcripts",
     };
 
     const foundSection = parts?.find((part) =>
@@ -58,6 +59,7 @@
     const subSectionMap = {
       "congress-trading": "/insider/congress-trading",
       institute: "/insider/institute",
+      transcripts: "/insider/transcripts",
     };
 
     if (state !== "insider" && subSectionMap[state]) {
@@ -111,6 +113,16 @@
                   : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
               >
                 Congress Trading
+              </a>
+              <a
+                href={`/stocks/${$stockTicker}/insider/transcripts`}
+                on:click={() => changeSubSection("transcripts")}
+                class="p-2 px-5 cursor-pointer {displaySubSection ===
+                'transcripts'
+                  ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
+              >
+                Transcripts
               </a>
             </ul>
           </nav>
