@@ -76,7 +76,7 @@ export async function GET({ locals }) {
 
 
 
-  const rawData = await fetch(apiURL + "/searchbar-data", {
+  const rawData = await fetch(apiURL + "/full-searchbar", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
