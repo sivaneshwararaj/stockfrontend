@@ -1,16 +1,26 @@
 <script lang="ts">
-  import { articleId, numberOfUnreadNotification } from "$lib/store";
-  import { goto } from "$app/navigation";
+  import { numberOfUnreadNotification } from "$lib/store";
   import { getImageURL } from "$lib/utils";
 
   export let data;
 
-  function blogSelector(state: string) {
-    $articleId = state;
-    goto("/blog/article/" + $articleId);
-  }
-
   let allBlogPosts = data?.getAllBlogPost;
+
+  function convertToSlug(title) {
+    // Remove punctuation and special characters
+    const cleanedTitle = title
+      .replace(/[.,?!:"]/g, "") // Remove punctuation
+      .replace(/\s+/g, " ") // Replace multiple spaces with a single space
+      .trim(); // Remove leading and trailing spaces
+
+    // Convert to lowercase, split by spaces, and join with hyphens
+    const words = cleanedTitle.toLowerCase().split(" ");
+    const truncatedWords = words;
+
+    // Join with hyphens and add ellipsis if necessary
+    const slug = truncatedWords.join("-");
+    return slug;
+  }
 </script>
 
 <svelte:head>
@@ -66,7 +76,7 @@
                   class="flex flex-col overflow-hidden rounded-lg shadow-lg sm:hover:shadow-2xl border border-gray-600"
                 >
                   <div class="flex-shrink-0">
-                    <a href={"/blog/article/" + item?.id}
+                    <a href={"/blog/article/" + convertToSlug(item?.title)}
                       ><img
                         class="h-48 w-full object-cover"
                         src={getImageURL(
@@ -83,7 +93,9 @@
                     class="flex flex-1 flex-col justify-between bg-table p-4 xs:p-5 sm:p-6"
                   >
                     <div class="flex-1">
-                      <a href={"/blog/article/" + item?.id} class="mt-2 block"
+                      <a
+                        href={"/blog/article/" + convertToSlug(item?.title)}
+                        class="mt-2 block"
                         ><h2 class="text-xl font-semibold text-white">
                           {item?.title}
                         </h2>

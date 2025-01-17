@@ -7,7 +7,6 @@ export const load = async ({locals}) => {
 
       // make the POST request to the endpoint
       const output = await pb.collection("articles").getFullList({
-        expand: "user",
         sort: "-created",
       });
 
