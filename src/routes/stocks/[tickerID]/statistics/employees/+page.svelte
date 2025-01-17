@@ -266,28 +266,6 @@
     return options;
   }
 
-  if (employeeHistory?.length !== 0) {
-    employees = employeeHistory?.at(-1)?.employeeCount;
-
-    changeRate = employees - employeeHistory?.at(-2)?.employeeCount;
-
-    dateDistance =
-      new Date(employeeHistory[employeeHistory?.length - 1]["filingDate"]) <
-      new Date(new Date().setFullYear(new Date().getFullYear() - 1))
-        ? true
-        : false;
-
-    growthRate = (
-      (employeeHistory[employeeHistory?.length - 1]?.employeeCount /
-        employeeHistory[employeeHistory?.length - 2]?.employeeCount -
-        1) *
-      100
-    )?.toFixed(2);
-    optionsTotal = plotTotal();
-    optionsChange = plotChange();
-    optionsGrowth = plotGrowth();
-  }
-
   const exportData = (format = "csv") => {
     if (data?.user?.tier === "Pro") {
       // Add headers row
@@ -398,7 +376,40 @@
     }
   }
 
-  const htmlOutput = generateEmployeeInfoHTML();
+  $: {
+    if (
+      employeeHistory?.length > 0 &&
+      $stockTicker &&
+      typeof window !== "undefined"
+    ) {
+      employeeHistory = data?.getHistoryEmployee ?? [];
+      historyList = sortByDate(employeeHistory);
+
+      employees = employeeHistory?.at(-1)?.employeeCount;
+
+      changeRate = employees - employeeHistory?.at(-2)?.employeeCount;
+
+      dateDistance =
+        new Date(employeeHistory[employeeHistory?.length - 1]["filingDate"]) <
+        new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+          ? true
+          : false;
+
+      growthRate = (
+        (employeeHistory[employeeHistory?.length - 1]?.employeeCount /
+          employeeHistory[employeeHistory?.length - 2]?.employeeCount -
+          1) *
+        100
+      )?.toFixed(2);
+      optionsTotal = plotTotal();
+      optionsChange = plotChange();
+      optionsGrowth = plotGrowth();
+
+      htmlOutput = generateEmployeeInfoHTML();
+    }
+  }
+
+  let htmlOutput;
 </script>
 
 <svelte:head>

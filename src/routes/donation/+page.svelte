@@ -148,26 +148,7 @@
 
         <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
-          >
-            <a
-              href="/pricing"
-              class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-            >
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Pro Subscription
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Upgrade now for unlimited access to all data and tools.
-              </span>
-            </a>
-          </div>
-
-          <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href="/about"
@@ -186,7 +167,7 @@
           </div>
 
           <div
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-primary sm:hover:bg-secondary transition ease-out duration-100"
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
               href="/contact"
