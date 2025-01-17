@@ -418,7 +418,7 @@
 
         <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
           <Card.Root
-            class="order-1 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[550px]"
+            class="order-1 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[470px]"
           >
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
