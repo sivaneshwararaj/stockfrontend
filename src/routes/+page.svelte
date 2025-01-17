@@ -436,26 +436,21 @@
                   {#each recentWIIM as item}
                     <li
                       class="text-sm sm:text-[1rem]"
-                      style=" margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
+                      style="margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
                     >
-                      <div class="flex flex-col items-start">
-                        <div>{item?.text}</div>
+                      {item?.text}
 
-                        <div class="mt-1.5 inline-block">
-                          <span>Stocks:</span>
-                          <a
-                            href={`/stocks/${item?.ticker}`}
-                            class="badge rounded-sm ml-1 text-blue-400 sm:hover:text-white"
-                            >{item?.ticker}</a
-                          >
-                        </div>
-                      </div>
+                      <a
+                        href={`/stocks/${item?.ticker}`}
+                        class="inline-block badge rounded-sm ml-1 px-2 m-auto text-blue-400 sm:hover:text-white"
+                        >{item?.ticker}</a
+                      >
                     </li>
                   {/each}
                 </ul>
               {:else}
                 <Infobox
-                  text="There are no major upcoming earnings to report today but you can check the earnings calendar for a complete list."
+                  text="There are no major stock market news available yet."
                 />
               {/if}
             </Card.Content>
