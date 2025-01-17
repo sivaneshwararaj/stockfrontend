@@ -21,6 +21,7 @@
   let losersList = data?.getDashboard?.marketMovers?.losers || [];
   let marketStatus = data?.getDashboard?.marketStatus ?? 0;
   let analystReport = data?.getDashboard?.analystReport || {};
+  let recentWIIM = data?.getDashboard?.wiim || [];
 
   function changeTable(state) {
     optionsMode = state;
@@ -416,6 +417,51 @@
         </div>
 
         <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
+          <Card.Root
+            class="order-1 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[550px]"
+          >
+            <Card.Header class="flex flex-row items-center">
+              <div class="flex flex-col items-start w-full">
+                <div class="flex flex-row w-full items-center">
+                  <Card.Title
+                    class="text-xl sm:text-2xl tex-white font-semibold"
+                    >Stock & Market News</Card.Title
+                  >
+                </div>
+              </div>
+            </Card.Header>
+            <Card.Content>
+              {#if recentWIIM?.length !== 0}
+                <ul style="padding-left: 5px;">
+                  {#each recentWIIM as item}
+                    <li
+                      class="text-sm sm:text-[1rem]"
+                      style=" margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
+                    >
+                      <div class="flex flex-col items-start">
+                        <div>{item?.text}</div>
+
+                        <div class="mt-1.5 inline-block">
+                          <span>Stocks:</span>
+                          <a
+                            href={`/stocks/${item?.ticker}`}
+                            class="badge rounded-sm ml-1 text-blue-400 sm:hover:text-white"
+                            >{item?.ticker}</a
+                          >
+                        </div>
+                      </div>
+                    </li>
+                  {/each}
+                </ul>
+              {:else}
+                <Infobox
+                  text="There are no major upcoming earnings to report today but you can check the earnings calendar for a complete list."
+                />
+              {/if}
+            </Card.Content>
+          </Card.Root>
+
+          <!--
           <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-auto">
             <Card.Header class="flex flex-row items-center">
               <div class="flex flex-col items-start w-full">
@@ -524,6 +570,7 @@
               </Table.Root>
             </Card.Content>
           </Card.Root>
+          -->
 
           <Card.Root
             class="order-3 sm:order-1 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[470px]"
