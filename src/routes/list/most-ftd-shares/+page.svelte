@@ -1,6 +1,8 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
+
   export let data;
 
   const defaultList = [
@@ -10,6 +12,11 @@
     { name: "% Change", rule: "changesPercentage" },
   ];
 </script>
+
+<SEO
+  title={"Most FTD Shares"}
+  description={"A list of the biggest U.S. companies ranked by failed to deliver shares (FTD) reported by the SEC."}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

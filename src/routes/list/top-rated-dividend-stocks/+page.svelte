@@ -1,6 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
   export let data;
 
   const defaultList = [
@@ -10,6 +11,11 @@
     { name: "Market Cap", rule: "marketCap" },
   ];
 </script>
+
+<SEO
+  title={"List of Dividend Stocks Rated as Buy or Strong Buy"}
+  description={"A list of dividend-paying stocks that have an average rating of buy or strong buy according to stock analysts."}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

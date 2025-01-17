@@ -3,6 +3,7 @@
   import Table from "$lib/components/Table/Table.svelte";
   import { page } from "$app/stores";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -108,6 +109,11 @@
       })()
     : "";
 </script>
+
+<SEO
+  title={`List of ${currentCategoryData?.name} Stocks ${description} Market Cap`}
+  description={`${currentCategoryData?.name} stocks are defined as having a market capitalization of ${description} USD.`}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

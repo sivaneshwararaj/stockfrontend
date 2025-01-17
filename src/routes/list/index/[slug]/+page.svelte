@@ -2,6 +2,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -24,7 +25,18 @@
     sp500:
       "A list of all stocks in the S&P 500, an index of the 500 largest U.S.-listed companies. There are over 500 tickers, as some companies have multiple symbols.",
   };
+
+  const exchangeNavigation = {
+    dowjones: "Dow Jones",
+    nasdaq100: "Nasdaq 100",
+    sp500: "S&P500",
+  };
 </script>
+
+<SEO
+  title={`All Stocks Listed on the ${exchangeNavigation[data?.getParams?.toLowerCase()]}`}
+  description={`All of the stocks listed on the ${exchangeNavigation[data?.getParams?.toLowerCase()]} in the US.`}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox text={`${indexNavigation[data?.getParams?.toLowerCase()]}`} />

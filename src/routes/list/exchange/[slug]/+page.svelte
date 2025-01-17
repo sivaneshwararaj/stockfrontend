@@ -2,6 +2,8 @@
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
+
   export let data;
 
   let rawData = data?.getExchangeCategory;
@@ -21,6 +23,11 @@
     nasdaq: "NASDAQ",
   };
 </script>
+
+<SEO
+  title={`All Stocks Listed on the ${exchangeNavigation[data?.getParams?.toLowerCase()]}`}
+  description={`All of the stocks listed on the ${exchangeNavigation[data?.getParams?.toLowerCase()]} in the US.`}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

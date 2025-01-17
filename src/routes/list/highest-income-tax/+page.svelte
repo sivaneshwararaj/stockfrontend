@@ -1,6 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -11,6 +12,11 @@
     { name: "Market Cap", rule: "marketCap" },
   ];
 </script>
+
+<SEO
+  title={"The U.S. Companies That Pay The Most Taxes"}
+  description={"A list of the biggest U.S. companies ranked by the total amount of income taxed payed"}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox
