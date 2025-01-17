@@ -5,6 +5,8 @@
   import { onMount } from "svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import RatingsChart from "$lib/components/RatingsChart.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
+
   export let data;
 
   let analystStats = data?.getAnalystStats;
@@ -16,7 +18,7 @@
 
   let analystScore = analystStats?.analystScore;
   let rank = analystStats?.rank;
-  let analystName = analystStats?.analystName;
+  let analystName = analystStats?.analystName ?? "n/a";
   let companyName = analystStats?.companyName;
   let totalRatings = analystStats?.totalRatings;
   let successRate = analystStats?.successRate;
@@ -30,7 +32,7 @@
   function processTickerData(data) {
     const tickerMap = new Map();
 
-    data.forEach((item) => {
+    data?.forEach((item) => {
       const { ticker } = item;
 
       if (!ticker) return; // Skip if ticker is not defined
@@ -212,7 +214,7 @@
       <li><a href="/" class="text-gray-300">Home</a></li>
       <li><a href="/analysts" class="text-gray-300">Analyst</a></li>
 
-      <li class="text-gray-300">{analystName}</li>
+      <li class="text-gray-300">{analystName ?? "n/a"}</li>
     </ul>
   </div>
 
@@ -242,15 +244,15 @@
                 </div>
                 <div class="mt-0 pt-0.5 text-left">
                   <h1 class="mb-0 text-2xl font-bold text-white">
-                    {analystName}
+                    {analystName ?? "n/a"}
                   </h1>
                   <p class="mb-0.5 text-[1rem] font-semibold text-gray-300">
-                    Stock Analyst at {companyName}
+                    Stock Analyst at {companyName ?? "n/a"}
                   </p>
                   <div class="inline-flex items-center">
                     <div class="flex flex-row items-center">
                       {#each Array.from({ length: 5 }) as _, i}
-                        {#if i < Math.floor(analystScore)}
+                        {#if i < Math?.floor(analystScore)}
                           <svg
                             class="w-5 h-5 text-[#FBCE3C]"
                             aria-hidden="true"
@@ -278,7 +280,7 @@
                       {/each}
                     </div>
                     <span class="ml-1 text-[1rem] text-white"
-                      >({analystScore})</span
+                      >({analystScore ?? "n/a"})</span
                     >
                   </div>
                 </div>
@@ -288,19 +290,19 @@
               >
                 <div class="flex flex-col px-4 py-2 bp:px-6 md:py-6">
                   <div class="text-2xl font-semibold tracking-tight text-white">
-                    # {rank}
+                    # {rank ?? "n/a"}
                   </div>
                   <div
                     class="text-[1rem] font-semibold leading-6 text-gray-300"
                   >
-                    Out of {numOfAnalysts} analysts
+                    Out of {numOfAnalysts ?? "n/a"} analysts
                   </div>
                 </div>
                 <div
                   class="flex flex-col px-4 py-2 bp:px-6 sm:border-l sm:border-gray-600 md:py-6"
                 >
                   <div class="text-2xl font-bold tracking-tight text-white">
-                    {totalRatings}
+                    {totalRatings ?? "n/a"}
                   </div>
                   <div
                     class="text-[1rem] font-semibold leading-6 text-gray-300"
@@ -313,9 +315,14 @@
                 >
                   <div class="text-2xl font-bold tracking-tight">
                     <span
-                      class={successRate >= 0
+                      class={successRate >= 0 && successRate !== undefined
                         ? "before:content-['+'] text-[#36D984]"
-                        : "text-[#EF4444]"}>{successRate?.toFixed(2)}%</span
+                        : successRate < 0 && successRate !== undefined
+                          ? "text-[#EF4444]"
+                          : "text-white"}
+                      >{successRate !== undefined
+                        ? successRate?.toFixed(2) + "%"
+                        : "n/a"}</span
                     >
                   </div>
                   <div
@@ -329,9 +336,14 @@
                 >
                   <div class="text-2xl font-bold tracking-tight text-white">
                     <span
-                      class={avgReturn >= 0
+                      class={avgReturn >= 0 && avgReturn !== undefined
                         ? "before:content-['+'] text-[#36D984]"
-                        : "text-[#EF4444]"}>{avgReturn?.toFixed(2)}%</span
+                        : avgReturn < 0 && avgReturn !== undefined
+                          ? "text-[#EF4444]"
+                          : "text-white"}
+                      >{avgReturn !== undefined
+                        ? avgReturn?.toFixed(2) + "%"
+                        : "n/a"}</span
                     >
                   </div>
                   <div
@@ -343,267 +355,277 @@
               </div>
             </div>
 
-            <div class="mb-10 mt-10 text-white">
-              <div
-                class="relative my-3 space-y-2 rounded border border-gray-600 sm:my-6 p-4"
-              >
-                <div class="flex flex-col sm:flex-row">
-                  <div class="mb-2 font-semibold sm:mb-0">Main Sectors:</div>
-                  <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
-                    {#each data?.getAnalystStats?.mainSectors as item}
-                      <a
-                        href={sectorNavigation?.find(
-                          (listItem) => listItem?.title === item,
-                        )?.link}
-                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
-                      >
-                        {item}
-                      </a>
-                    {/each}
+            {#if data?.getAnalystStats?.mainSectors?.length > 0}
+              <div class="mb-10 mt-10 text-white">
+                <div
+                  class="relative my-3 space-y-2 rounded border border-gray-600 sm:my-6 p-4"
+                >
+                  <div class="flex flex-col sm:flex-row">
+                    <div class="mb-2 font-semibold sm:mb-0">Main Sectors:</div>
+                    <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
+                      {#each data?.getAnalystStats?.mainSectors as item}
+                        <a
+                          href={sectorNavigation?.find(
+                            (listItem) => listItem?.title === item,
+                          )?.link}
+                          class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        >
+                          {item}
+                        </a>
+                      {/each}
+                    </div>
                   </div>
-                </div>
-                <div class="flex flex-col sm:flex-row">
-                  <div class="mb-2 whitespace-nowrap font-semibold sm:mb-0">
-                    Top Industries:
-                  </div>
-                  <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
-                    {#each data?.getAnalystStats?.mainIndustries as item}
-                      <a
-                        href={`/list/industry/${item?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
-                        class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
-                      >
-                        {item}
-                      </a>
-                    {/each}
+                  <div class="flex flex-col sm:flex-row">
+                    <div class="mb-2 whitespace-nowrap font-semibold sm:mb-0">
+                      Top Industries:
+                    </div>
+                    <div class="flex flex-wrap gap-x-2 gap-y-3 sm:ml-2">
+                      {#each data?.getAnalystStats?.mainIndustries as item}
+                        <a
+                          href={`/list/industry/${item?.replace(/ /g, "-")?.replace(/&/g, "and")?.replace(/-{2,}/g, "-")?.toLowerCase()}`}
+                          class="px-3 text-sm py-1 sm:text-[1rem] rounded-md bg-white bg-opacity-[0.1] sm:hover:bg-opacity-[0.2] ml-0"
+                        >
+                          {item}
+                        </a>
+                      {/each}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            {/if}
 
-            <span class="text-white font-semibold text-xl sm:text-2xl">
-              {numOfStocks} Stocks
-            </span>
+            {#if rawData?.length > 0}
+              <span class="text-white font-semibold text-xl sm:text-2xl">
+                {numOfStocks} Stocks
+              </span>
 
-            <div class="w-full m-auto mt-10">
-              <div
-                class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
-              >
-                <table
-                  class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
+              <div class="w-full m-auto mt-10">
+                <div
+                  class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
                 >
-                  <thead>
-                    <TableHeader {columns} {sortOrders} {sortData} />
-                  </thead>
-                  <tbody>
-                    {#each stockList as item, index}
-                      <tr
-                        class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
-                      >
-                        <td class="hidden lg:table-cell"
-                          ><button
-                            on:click={() => openGraph(item?.ticker)}
-                            class="h-full pl-2 pr-2 align-middle lg:pl-3"
-                            ><svg
-                              class="w-5 h-5 text-icon {checkedSymbol ===
-                              item?.ticker
-                                ? 'rotate-180'
-                                : ''}"
-                              viewBox="0 0 20 20"
-                              fill="white"
-                              style="max-width:40px"
-                              ><path
-                                fill-rule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clip-rule="evenodd"
-                              ></path></svg
-                            ></button
-                          ></td
+                  <table
+                    class="table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto"
+                  >
+                    <thead>
+                      <TableHeader {columns} {sortOrders} {sortData} />
+                    </thead>
+                    <tbody>
+                      {#each stockList as item, index}
+                        <tr
+                          class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
                         >
+                          <td class="hidden lg:table-cell"
+                            ><button
+                              on:click={() => openGraph(item?.ticker)}
+                              class="h-full pl-2 pr-2 align-middle lg:pl-3"
+                              ><svg
+                                class="w-5 h-5 text-icon {checkedSymbol ===
+                                item?.ticker
+                                  ? 'rotate-180'
+                                  : ''}"
+                                viewBox="0 0 20 20"
+                                fill="white"
+                                style="max-width:40px"
+                                ><path
+                                  fill-rule="evenodd"
+                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"
+                                ></path></svg
+                              ></button
+                            ></td
+                          >
 
-                        <td
-                          class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
-                        >
-                          {#if index >= 5 && data?.user?.tier !== "Pro"}
-                            <a class="block relative" href="/pricing">
-                              <span
-                                class="text-base font-semibold text-blue-link blur group-hover:blur-[6px]"
-                              >
-                                XXXX
-                              </span>
-
-                              <div
-                                class="ml-px max-w-[130px] truncate text-sm text-white blur group-hover:blur-[6px] lg:max-w-[150px]"
-                              >
-                                XXXXXXXXXXXXXXXX
-                              </div>
-
-                              <div class="absolute top-3 flex items-center">
-                                <svg
-                                  class="size-5 text-[#fff]"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                  style="max-width: 40px;"
-                                >
-                                  <path
-                                    fill-rule="evenodd"
-                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                    clip-rule="evenodd"
-                                  >
-                                  </path>
-                                </svg>
-
+                          <td
+                            class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
+                          >
+                            {#if index >= 5 && data?.user?.tier !== "Pro"}
+                              <a class="block relative" href="/pricing">
                                 <span
-                                  class="ml-1 font-semibold text-gray-300 group-hover:text-white"
+                                  class="text-base font-semibold text-blue-link blur group-hover:blur-[6px]"
                                 >
-                                  Upgrade
+                                  XXXX
+                                </span>
+
+                                <div
+                                  class="ml-px max-w-[130px] truncate text-sm text-white blur group-hover:blur-[6px] lg:max-w-[150px]"
+                                >
+                                  XXXXXXXXXXXXXXXX
+                                </div>
+
+                                <div class="absolute top-3 flex items-center">
+                                  <svg
+                                    class="size-5 text-[#fff]"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    style="max-width: 40px;"
+                                  >
+                                    <path
+                                      fill-rule="evenodd"
+                                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                      clip-rule="evenodd"
+                                    >
+                                    </path>
+                                  </svg>
+
+                                  <span
+                                    class="ml-1 font-semibold text-gray-300 group-hover:text-white"
+                                  >
+                                    Upgrade
+                                  </span>
+                                </div>
+                              </a>
+                            {:else}
+                              <div class="flex flex-col items-start">
+                                <HoverStockChart symbol={item?.ticker} />
+
+                                <span class="text-white">
+                                  {item?.name?.length > charNumber
+                                    ? item?.name?.slice(0, charNumber) + "..."
+                                    : item?.name}
                                 </span>
                               </div>
-                            </a>
-                          {:else}
-                            <div class="flex flex-col items-start">
-                              <HoverStockChart symbol={item?.ticker} />
+                            {/if}
+                          </td>
 
-                              <span class="text-white">
-                                {item?.name?.length > charNumber
-                                  ? item?.name?.slice(0, charNumber) + "..."
-                                  : item?.name}
+                          <td
+                            class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
+                          >
+                            <div class="flex flex-col sm:flex-row items-start">
+                              <span class="font-medium text-white mr-1"
+                                >{item?.action_company}:</span
+                              >
+                              <span
+                                class="font-medium {[
+                                  'Strong Buy',
+                                  'Buy',
+                                  'Outperform',
+                                ]?.includes(item?.rating_current)
+                                  ? 'text-[#00FC50]'
+                                  : item?.rating_current === 'Hold'
+                                    ? 'text-[#FF7070]'
+                                    : [
+                                          'Strong Sell',
+                                          'Sell',
+                                          'Underperform',
+                                        ]?.includes(item?.rating_current)
+                                      ? 'text-[#FF2F1F]'
+                                      : 'text-gray-300'}"
+                              >
+                                {item?.rating_current}
                               </span>
                             </div>
-                          {/if}
-                        </td>
+                          </td>
 
-                        <td
-                          class="text-sm sm:text-[1rem] text-start whitespace-nowrap"
-                        >
-                          <div class="flex flex-col sm:flex-row items-start">
-                            <span class="font-medium text-white mr-1"
-                              >{item?.action_company}:</span
-                            >
-                            <span
-                              class="font-medium {[
-                                'Strong Buy',
-                                'Buy',
-                                'Outperform',
-                              ]?.includes(item?.rating_current)
-                                ? 'text-[#00FC50]'
-                                : item?.rating_current === 'Hold'
-                                  ? 'text-[#FF7070]'
-                                  : [
-                                        'Strong Sell',
-                                        'Sell',
-                                        'Underperform',
-                                      ]?.includes(item?.rating_current)
-                                    ? 'text-[#FF2F1F]'
-                                    : 'text-gray-300'}"
-                            >
-                              {item?.rating_current}
-                            </span>
-                          </div>
-                        </td>
+                          <td
+                            class="text-white text-sm sm:text-[1rem] whitespace-nowrap"
+                          >
+                            <div class="flex flex-row items-center justify-end">
+                              {#if Math?.ceil(item?.adjusted_pt_prior) !== 0}
+                                <span class="text-gray-100 font-normal"
+                                  >{Math?.ceil(item?.adjusted_pt_prior)}</span
+                                >
+                                <svg
+                                  class="w-3 h-3 ml-1 mr-1 inline-block"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  ><path
+                                    fill="none"
+                                    stroke="white"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="1.5"
+                                    d="M4 12h16m0 0l-6-6m6 6l-6 6"
+                                  /></svg
+                                >
+                                <span class="text-white font-semibold"
+                                  >{Math?.ceil(item?.adjusted_pt_current)}</span
+                                >
+                              {:else if Math?.ceil(item?.adjusted_pt_current) !== 0}
+                                <span class="text-white font-semibold"
+                                  >{Math?.ceil(item?.adjusted_pt_current)}</span
+                                >
+                              {:else}
+                                n/a
+                              {/if}
+                            </div>
+                          </td>
 
-                        <td
-                          class="text-white text-sm sm:text-[1rem] whitespace-nowrap"
-                        >
-                          <div class="flex flex-row items-center justify-end">
-                            {#if Math?.ceil(item?.adjusted_pt_prior) !== 0}
-                              <span class="text-gray-100 font-normal"
-                                >{Math?.ceil(item?.adjusted_pt_prior)}</span
-                              >
-                              <svg
-                                class="w-3 h-3 ml-1 mr-1 inline-block"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                ><path
-                                  fill="none"
-                                  stroke="white"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="1.5"
-                                  d="M4 12h16m0 0l-6-6m6 6l-6 6"
-                                /></svg
-                              >
-                              <span class="text-white font-semibold"
-                                >{Math?.ceil(item?.adjusted_pt_current)}</span
-                              >
-                            {:else if Math?.ceil(item?.adjusted_pt_current) !== 0}
-                              <span class="text-white font-semibold"
-                                >{Math?.ceil(item?.adjusted_pt_current)}</span
-                              >
-                            {:else}
-                              n/a
-                            {/if}
-                          </div>
-                        </td>
+                          <td
+                            class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                          >
+                            {item?.price !== null ? item?.price : "n/a"}
+                          </td>
 
-                        <td
-                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
-                        >
-                          {item?.price !== null ? item?.price : "n/a"}
-                        </td>
+                          <td
+                            class="{item?.upside >= 0 && item?.upside !== null
+                              ? "before:content-['+'] text-[#00FC50]"
+                              : item?.upside < 0 && item?.upside !== null
+                                ? 'text-[#FF2F1F]'
+                                : 'text-white'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                          >
+                            {item?.upside !== null ? item?.upside + "%" : "n/a"}
+                          </td>
 
-                        <td
-                          class="{item?.upside >= 0 && item?.upside !== null
-                            ? "before:content-['+'] text-[#00FC50]"
-                            : item?.upside < 0 && item?.upside !== null
-                              ? 'text-[#FF2F1F]'
-                              : 'text-white'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
-                        >
-                          {item?.upside !== null ? item?.upside + "%" : "n/a"}
-                        </td>
+                          <td
+                            class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                          >
+                            {item?.ratings !== null ? item?.ratings : "n/a"}
+                          </td>
 
-                        <td
-                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
-                        >
-                          {item?.ratings !== null ? item?.ratings : "n/a"}
-                        </td>
-
-                        <td
-                          class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
-                        >
-                          {new Date(item?.date).toLocaleString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                            daySuffix: "2-digit",
-                          })}
-                        </td>
-                      </tr>
-                      {#if checkedSymbol === item?.ticker}
-                        <tr
-                          ><td colspan="8" class="px-0" style=""
-                            ><div class="-mt-0.5 px-0 pb-2">
-                              <div class="relative h-[400px]">
-                                <div class="absolute top-0 w-full">
-                                  <div
-                                    class="h-[250px] w-full xs:h-[300px] sm:h-[400px]"
-                                    style="overflow: hidden;"
-                                  >
+                          <td
+                            class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
+                          >
+                            {new Date(item?.date).toLocaleString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                              daySuffix: "2-digit",
+                            })}
+                          </td>
+                        </tr>
+                        {#if checkedSymbol === item?.ticker}
+                          <tr
+                            ><td colspan="8" class="px-0" style=""
+                              ><div class="-mt-0.5 px-0 pb-2">
+                                <div class="relative h-[400px]">
+                                  <div class="absolute top-0 w-full">
                                     <div
-                                      style="position: relative; height: 0px; z-index: 1;"
+                                      class="h-[250px] w-full xs:h-[300px] sm:h-[400px]"
+                                      style="overflow: hidden;"
                                     >
-                                      <RatingsChart
-                                        ratingsList={data?.getAnalystStats?.ratingsList?.map(
-                                          (item) => ({
-                                            ...item,
-                                            type: item?.rating_current,
-                                          }),
-                                        )}
-                                        symbol={item?.ticker}
-                                        numOfRatings={item?.ratings}
-                                      />
+                                      <div
+                                        style="position: relative; height: 0px; z-index: 1;"
+                                      >
+                                        <RatingsChart
+                                          ratingsList={data?.getAnalystStats?.ratingsList?.map(
+                                            (item) => ({
+                                              ...item,
+                                              type: item?.rating_current,
+                                            }),
+                                          )}
+                                          symbol={item?.ticker}
+                                          numOfRatings={item?.ratings}
+                                        />
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div></td
-                          >
-                        </tr>
-                      {/if}
-                    {/each}
-                  </tbody>
-                </table>
+                              </div></td
+                            >
+                          </tr>
+                        {/if}
+                      {/each}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            {:else}
+              <div class="pt-5">
+                <Infobox
+                  text="No data is available for the searched analyst."
+                />
+              </div>
+            {/if}
           </div>
         </main>
       </div>
