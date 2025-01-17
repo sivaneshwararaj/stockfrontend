@@ -1,15 +1,4 @@
-function convertToSlug(title) {
-  // Remove punctuation and special characters
-  const cleanedTitle = title
-    .replace(/[.,?!:"]/g, "") // Remove punctuation
-    .replace(/\s+/g, " ") // Replace multiple spaces with a single space
-    .trim(); // Remove leading and trailing spaces
-
-  // Convert to lowercase, split by spaces, and join with hyphens
-  const words = cleanedTitle.toLowerCase().split(" ");
-  const slug = words.join("-");
-  return slug;
-}
+import { convertToSlug } from "$lib/utils";
 
 export const load = async ({ locals, params }) => {
   const { pb } = locals;

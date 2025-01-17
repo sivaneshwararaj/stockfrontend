@@ -19,6 +19,21 @@ type FlyAndScaleParams = {
 };
 
 
+export function convertToSlug(title) {
+    // Remove punctuation, hyphens, and special characters
+    const cleanedTitle = title
+        .replace(/[-.,?!:"]/g, "") // Remove punctuation and hyphens
+        .replace(/\s+/g, " ") // Replace multiple spaces with a single space
+        .trim(); // Remove leading and trailing spaces
+
+    // Convert to lowercase, split by spaces, and join with hyphens
+    const words = cleanedTitle.toLowerCase().split(" ");
+    const truncatedWords = words;
+
+    // Join with hyphens
+    const slug = truncatedWords.join("-");
+    return slug;
+}
 
 
 export function isPWAInstalled() {

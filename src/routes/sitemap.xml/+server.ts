@@ -1,3 +1,5 @@
+import { convertToSlug } from "$lib/utils";
+
 const pages = [
   { title: "/" },
   { title: "/cramer-tracker" },
@@ -66,13 +68,12 @@ const pages = [
   { title: "/analysts/top-stocks" },
 ];
 
-const site = "https://stocknear.com";
 const website = "https://stocknear.com";
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ locals }) {
   //get all posts;
-  const { apiKey, apiURL } = locals;
+  const { apiKey, apiURL, pb } = locals;
 
 
 
@@ -90,7 +91,12 @@ export async function GET({ locals }) {
     type: item?.type,
   }));
 
-  const body = sitemap(stocks, pages);
+
+    const articles = await pb.collection("articles").getFullList({
+        sort: "-created",
+      });
+
+  const body = sitemap(stocks, articles, pages);
   const response = new Response(body);
   response.headers.set("Cache-Control", "max-age=0, s-maxage=3600");
   response.headers.set("Content-Type", "application/xml");
@@ -100,6 +106,7 @@ export async function GET({ locals }) {
 // Modified sitemap function
 const sitemap = (
   stocks,
+  articles,
   pages,
 ) => `<?xml version="1.0" encoding="UTF-8" ?>
 <urlset
@@ -115,6 +122,15 @@ const sitemap = (
       (page) => `
   <url>
     <loc>${website}${page.title}</loc>
+  </url>
+  `,
+    )
+    .join("")}
+     ${articles
+    .map(
+      (item) => `
+  <url>
+    <loc>${website}/blog/${convertToSlug(item?.title)}</loc>
   </url>
   `,
     )

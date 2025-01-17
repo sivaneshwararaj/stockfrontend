@@ -1,26 +1,10 @@
 <script lang="ts">
   import { numberOfUnreadNotification } from "$lib/store";
-  import { getImageURL } from "$lib/utils";
+  import { getImageURL, convertToSlug } from "$lib/utils";
 
   export let data;
 
   let allBlogPosts = data?.getAllBlogPost;
-
-  function convertToSlug(title) {
-    // Remove punctuation and special characters
-    const cleanedTitle = title
-      .replace(/[.,?!:"]/g, "") // Remove punctuation
-      .replace(/\s+/g, " ") // Replace multiple spaces with a single space
-      .trim(); // Remove leading and trailing spaces
-
-    // Convert to lowercase, split by spaces, and join with hyphens
-    const words = cleanedTitle.toLowerCase().split(" ");
-    const truncatedWords = words;
-
-    // Join with hyphens and add ellipsis if necessary
-    const slug = truncatedWords.join("-");
-    return slug;
-  }
 </script>
 
 <svelte:head>
