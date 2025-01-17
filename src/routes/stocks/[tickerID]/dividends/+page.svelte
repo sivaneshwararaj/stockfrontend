@@ -8,8 +8,7 @@
 
   export let data;
   let dateDistance;
-  let rawData = data?.getStockDividend;
-  let optionsDividend;
+  let rawData = data?.getStockDividend || [];
 
   let exDividendDate = rawData?.history?.at(0)?.date;
   let dividendYield = rawData?.dividendYield;
@@ -73,7 +72,21 @@
     }
   }
 
-  const htmlOutput = generateDividendInfoHTML();
+  let htmlOutput = generateDividendInfoHTML();
+
+  $: {
+    if ($stockTicker) {
+      rawData = data?.getStockDividend || [];
+      exDividendDate = rawData?.history?.at(0)?.date;
+      dividendYield = rawData?.dividendYield;
+      annualDividend = rawData?.annualDividend;
+      payoutFrequency = rawData?.payoutFrequency;
+      payoutRatio = rawData?.payoutRatio;
+      dividendGrowth = rawData?.dividendGrowth;
+
+      htmlOutput = generateDividendInfoHTML();
+    }
+  }
 </script>
 
 <svelte:head>

@@ -1,11 +1,16 @@
 <script lang="ts">
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import { stockTicker } from "$lib/store";
 
   export let data;
+  let similarStocks;
 
-  const similarStocks = data?.getSimilarStocks?.sort(
-    (a, b) => b?.dividendYield - a?.dividendYield,
-  );
+  $: {
+    if ($stockTicker) {
+      similarStocks = data?.getSimilarStocks?.sort(
+        (a, b) => b?.dividendYield - a?.dividendYield,
+      );
+    }
+  }
 </script>
 
 <section class="w-auto overflow-hidden min-h-screen">
@@ -42,9 +47,11 @@
                     <tr class="border-gray-800 border-b text-[1rem]"
                       ><td class="text-left text-[1rem]"
                         ><a
-                          href={`/stocks/${item?.symbol}`}
+                          href={`/stocks/${item?.symbol}/dividends`}
                           class="sm:hover:text-white text-blue-400"
-                          >{item?.symbol}</a
+                          >{item?.name?.length > 30
+                            ? item?.name?.slice(0, 30) + "..."
+                            : item?.name}</a
                         ></td
                       >
                       <td class="text-right cursor-normal text-[1rem]"
