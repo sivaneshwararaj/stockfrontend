@@ -75,13 +75,13 @@
   <div class="w-full overflow-hidden m-auto">
     <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
       <div
-        class="relative flex justify-center items-start overflow-hidden w-full"
+        class="relative flex flex-col lg:flex-row justify-center items-start overflow-hidden w-full"
       >
         <main class="w-full lg:w-3/4 lg:pr-10">
           <slot />
         </main>
 
-        <aside class="hidden lg:block relative fixed w-1/4 mt-3">
+        <aside class="inline-block relative w-full lg:w-1/4 mt-3">
           {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
             <div
               class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
@@ -91,23 +91,48 @@
                 class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
               >
                 <div class="w-full flex justify-between items-center p-3 mt-3">
-                  <h2 class="text-start text-xl font-semibold text-white ml-3">
+                  <h2
+                    class="text-start text-xl font-semibold text-white sm:ml-3"
+                  >
                     Pro Subscription
                   </h2>
-                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
+                  <ArrowLogo class="w-6 h-6 sm:w-8 sm:h-8 mr-3 flex-shrink-0" />
                 </div>
-                <span class="text-white p-3 ml-3 mr-3">
+                <span class="text-white p-3 sm:ml-3 sm:mr-3">
                   Upgrade now for unlimited access to all data and tools.
                 </span>
               </a>
             </div>
           {/if}
 
+          <div
+            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 bg-inherit transition ease-out duration-100"
+          >
+            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
+              <div class="pl-4 pr-4">
+                <div class="w-full flex justify-between items-center mt-3">
+                  <h2 class="text-start text-xl font-semibold text-white">
+                    Market Capitalization
+                  </h2>
+                </div>
+                <span class="text-white">
+                  Market capitalization, also called net worth, is the total
+                  value of all of a company's outstanding shares. It is
+                  calculated by multiplying the stock price by the number of
+                  shares outstanding.
+                  <br />
+                  <br />
+                  Formula: Market Cap = Stock Price * Shares Outstanding
+                </span>
+              </div>
+            </div>
+          </div>
+
           {#if similarStocks?.length > 0}
             <div
-              class="w-full p-2 text-white border border-gray-600 bg-inherit rounded-md h-fit pb-4 mt-4 cursor-pointer"
+              class="w-full p-2 text-white border border-gray-600 bg-inherit rounded-md h-fit pb-4 mt-4"
             >
-              <h3 class="p-2 pt-4 text-2xl font-semibold">Related Stocks</h3>
+              <h3 class="p-2 pt-4 text-xl font-semibold">Related Stocks</h3>
               <table class="table table-sm table-compact w-full text-white">
                 <thead class="text-white"
                   ><tr

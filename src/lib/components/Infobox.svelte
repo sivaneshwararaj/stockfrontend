@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="sm:mt-5 bg-inherit rounded-l-none rounded-md sm:mt-0 border-l-4 border-white p-0 sm:p-4 text-white flex flex-row items-center"
+  class="sm:mt-5 bg-inherit rounded-l-none rounded-md sm:mt-0 border-l-4 border-l-white border-gray-600 border p-0 sm:p-4 text-white flex flex-row items-center"
 >
   <svg
     class="h-6 w-6 hidden sm:block"
@@ -17,7 +17,7 @@
       clip-rule="evenodd"
     ></path></svg
   >
-  <div class="ml-3 w-full">
+  <div class="ml-1 sm:ml-3 w-full">
     <div class="flex w-full flex-row justify-between">
       <div class="p-3 sm:p-0 text-sm sm:text-[1rem]">
         {@html text}
