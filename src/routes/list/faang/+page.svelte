@@ -2,6 +2,8 @@
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
+
   export let data;
   let rawData = data?.getFAANG;
 
@@ -10,6 +12,11 @@
   let totalRevenue =
     rawData?.reduce((total, stock) => total + stock?.revenue, 0) ?? 0;
 </script>
+
+<SEO
+  title="A List of The Five FAANG Companies"
+  description="The FAANG stocks are a list of five U.S. technology companies: Facebook (now Meta), Amazon, Apple, Netflix and Alphabet (Google)."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

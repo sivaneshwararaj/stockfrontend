@@ -1,6 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -25,6 +26,11 @@
     "ivRank",
   ]);
 </script>
+
+<SEO
+  title="Top US Companies with the highest IV Rank"
+  description="Explore the largest US companies ranked by their IV Rank."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

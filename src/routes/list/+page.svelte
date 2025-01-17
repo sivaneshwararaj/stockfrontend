@@ -1,3 +1,12 @@
+<script lang="ts">
+  import SEO from "$lib/components/SEO.svelte";
+</script>
+
+<SEO
+  title="Stock Lists "
+  description="Lists of stocks that share common characteristics. See companies ranked by market cap, employee count, sales or others."
+/>
+
 <!--Start Market Cap Group-->
 
 <div class="text-white">

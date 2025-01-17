@@ -1,6 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -25,6 +26,11 @@
     "ivRank",
   ]);
 </script>
+
+<SEO
+  title="Top US Companies with the Highest Open Interest"
+  description="Explore the largest US companies ranked by their highest open interest."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

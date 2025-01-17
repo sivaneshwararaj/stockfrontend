@@ -2,6 +2,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
   let rawData = data?.getMagnificentSeven;
@@ -11,6 +12,11 @@
   let totalRevenue =
     rawData?.reduce((total, stock) => total + stock?.revenue, 0) ?? 0;
 </script>
+
+<SEO
+  title="A List of All Magnificent Seven Stocks"
+  description="The Magnificent Seven stocks refer to seven leading U.S. technology companies: Meta (formerly Facebook), Amazon, Apple, Microsoft, Nvidia, Alphabet (Google), and Tesla."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

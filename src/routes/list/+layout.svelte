@@ -235,37 +235,6 @@
   const combinedNavigation = navigation?.concat(updatedNavigation);
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
-    Lists · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="Lists of stocks that share common characteristics. See companies ranked by market cap, employee count, sales or others."
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Stock Lists · Stocknear" />
-  <meta
-    property="og:description"
-    content="Lists of stocks that share common characteristics. See companies ranked by market cap, employee count, sales or others."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stock Lists · Stocknear" />
-  <meta
-    name="twitter:description"
-    content="Lists of stocks that share common characteristics. See companies ranked by market cap, employee count, sales or others."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
-
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
 >
