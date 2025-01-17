@@ -12,10 +12,14 @@
   let rawData = data?.getData || [];
 
   function checkTime(timeString) {
+    if (!timeString) {
+      return "n/a"; // Return "n/a" if timeString is undefined or null
+    }
+
     const [hours, minutes, seconds] = timeString.split(":").map(Number);
 
     // Convert the time to total seconds for easy comparison
-    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    const totalSeconds = hours * 3600 + minutes * 60 + (seconds || 0);
 
     // Define the reference times in seconds
     const amcStart = 16 * 3600; // 16:00:00
@@ -26,7 +30,7 @@
     } else if (totalSeconds < bmcEnd) {
       return "BMC";
     } else {
-      return "None"; // Optional: if the time is in between
+      return "n/a"; // Optional: if the time is in between
     }
   }
 </script>
@@ -77,7 +81,7 @@
             </h1>
           </div>
 
-          {#if rawData?.length !== 0}
+          {#if rawData?.length !== 0 && rawData?.at(0)?.high !== undefined}
             <div class="mb-10 w-full">
               <Infobox
                 text="This table provides an overview of how a stock's price historically reacted around earnings reports. It displays key metrics like price changes over specific timeframes and Relative Strength Index (RSI)."
