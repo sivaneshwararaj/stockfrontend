@@ -43,18 +43,21 @@
         <article
           class="z-5 relative mx-1 -mt-10 rounded-t-md bg-default p-3 xs:p-4 lg:-mt-16 lg:ml-3 lg:p-5 xl:mx-4"
         >
-          <header class="article-header">
+          <header class="pb-3 border-b-[2px] border-white">
             <h1 class="mb-3 text-3xl font-bold text-white md:text-4xl">
               {article?.title}
             </h1>
             <div class="text-base text-muted">
               <div>
-                Published {new Date(article?.created)?.toLocaleString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                  daySuffix: "2-digit",
-                })}
+                Last Updated: {new Date(article?.updated)?.toLocaleString(
+                  "en-US",
+                  {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                    daySuffix: "2-digit",
+                  },
+                )}
               </div>
             </div>
           </header>
@@ -72,10 +75,10 @@
           >
             {#if !data?.user}
               <div
-                class="w-full text-white border border-gray-600 rounded-md h-fit bg-primary sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
+                class="w-full text-white border border-gray-600 rounded-md h-fit bg-inherit lg:mx-0 lg:w-[300px] xl:w-[360px]"
               >
                 <div class="space-y-6 p-6">
-                  <h4 class="text-2xl font-bold">
+                  <h4 class="text-xl font-semibold sm:text-2xl sm:font-bold">
                     Stay informed in just 2 minutes
                   </h4>
                   <p class="text-base text-white lg:text-lg">
@@ -95,7 +98,7 @@
             {/if}
             <a
               href="/watchlist/stocks"
-              class="w-full text-white border border-gray-600 rounded-md h-fit bg-primary sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
+              class="w-full text-white border border-gray-600 rounded-md h-fit bg-inherit sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
             >
               <div class="space-y-3 p-6">
                 <h4 class="text-xl font-semibold">Watchlist</h4>
@@ -106,7 +109,7 @@
             </a>
             <a
               href="/analysts/top-stocks"
-              class="w-full text-white border border-gray-600 rounded-md h-fit bg-primary sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
+              class="w-full text-white border border-gray-600 rounded-md h-fit bg-inherit sm:hover:bg-secondary transition ease-out duration-100 lg:mx-0 lg:w-[300px] xl:w-[360px]"
             >
               <div class="space-y-3 p-6">
                 <h4 class="text-xl font-semibold">Top Stocks</h4>
