@@ -40,15 +40,6 @@
     };
   };
 
-  /*
-	function checkPassword() {
-		hasLetter = /[a-zA-Z]/.test(password);
-		hasNumber = /\d/.test(password);
-		isLengthValid = password.length >= 8;
-		hasSpecialChar = /[!@#$%^&*()]/.test(password);
-	  }
-	*/
-
   let isHoveredGoogle = false;
   let isHoveredDiscord = false;
   let isHoveredGithub = false;
@@ -77,28 +68,6 @@
   />
 </svelte:head>
 
-<!--
-	<label class="w-full max-w-lg">
-		<input
-		  class="input input-bordered w-full max-w-lg bg-secondary whitespace-normal ring-2"
-		  type="password"
-		  bind:value={password}
-		  on:input={checkPassword}
-		/>
-		
-	
-	  </label>
-	
-	
-	  <div class="flex flex-row w-full max-w-lg">
-		<svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSBlockSix0"><path fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M18 18h12v12H18V18ZM6 18h12v12H6V18Zm24 0h12v12H30V18Z"/></mask><path fill={hasLetter ? 'green' : 'red'} d="M0 0h48v48H0z" mask="url(#ipSBlockSix0)"/></svg>
-		<svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSBlockSix0"><path fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M18 18h12v12H18V18ZM6 18h12v12H6V18Zm24 0h12v12H30V18Z"/></mask><path fill={hasNumber ? 'green' : 'red'} d="M0 0h48v48H0z" mask="url(#ipSBlockSix0)"/></svg>
-		<svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSBlockSix0"><path fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M18 18h12v12H18V18ZM6 18h12v12H6V18Zm24 0h12v12H30V18Z"/></mask><path fill={isLengthValid ? 'green' : 'red'} d="M0 0h48v48H0z" mask="url(#ipSBlockSix0)"/></svg>
-		<svg class="w-6 h-6 inline-block " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSBlockSix0"><path fill="#fff" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M18 18h12v12H18V18ZM6 18h12v12H6V18Zm24 0h12v12H30V18Z"/></mask><path fill={hasSpecialChar ? 'green' : 'red'} d="M0 0h48v48H0z" mask="url(#ipSBlockSix0)"/></svg>
-	</div>
-	
-	-->
-
 <div
   class="relative w-full max-w-3xl mx-auto min-h-screen pb-40 sm:mt-10 {oauthLoading
     ? 'opacity-[0.2]'
@@ -106,11 +75,11 @@
 >
   <div class="grid grid-cols-1 gap-4">
     <div class="relative">
-      <h2
+      <h1
         class="text-center text-white text-2xl sm:text-3xl pt-10 sm:pt-0 font-semibold"
       >
         Getting Started
-      </h2>
+      </h1>
     </div>
 
     <span class="text-gray-400 text-center">

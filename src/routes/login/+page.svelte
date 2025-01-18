@@ -109,11 +109,11 @@
 >
   <div class="grid grid-cols-1 gap-4">
     <div class="relative">
-      <h2
+      <h1
         class="text-center text-white text-2xl sm:text-3xl pt-10 sm:pt-0 font-semibold"
       >
         Sign In
-      </h2>
+      </h1>
     </div>
 
     <span class="text-gray-400 text-center"> Welcome back! </span>

@@ -1721,9 +1721,9 @@
         class="fixed w-full h-fit sticky -top-6 z-40 bg-primary shadow-sm opacity-100 pb-6 pt-5 border-gray-600 border-b"
       >
         <div class="flex flex-row items-center justify-between mb-2">
-          <h2 class="text-white text-[1rem] sm:text-xl font-semibold">
+          <h1 class="text-white text-[1rem] sm:text-xl font-semibold">
             Select screener filters ({allRows?.length} total)
-          </h2>
+          </h1>
           <label
             for="ruleModal"
             class="inline-block cursor-pointer absolute right-0 top-3 text-[1.3rem] sm:text-[1.8rem] text-white"
