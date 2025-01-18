@@ -96,6 +96,8 @@
     { key: "avg30_call_volume", label: "Avg Call Vol", align: "right" },
     { key: "put_volume", label: "Put Vol", align: "right" },
     { key: "avg30_put_volume", label: "Avg Put Vol", align: "right" },
+    { key: "call_premium", label: "Call Prem", align: "right" },
+    { key: "put_premium", label: "Put Prem", align: "right" },
     { key: "premium_ratio", label: "🐻/🐂 Prem", align: "right" },
   ];
 
@@ -114,6 +116,8 @@
     netPremium: { order: "none", type: "number" },
     netCallPremium: { order: "none", type: "number" },
     netPutPremium: { order: "none", type: "number" },
+    call_premium: { order: "none", type: "number" },
+    put_premium: { order: "none", type: "number" },
     gexRatio: { order: "none", type: "number" },
     gexNetChange: { order: "none", type: "number" },
     ivRank: { order: "none", type: "number" },
@@ -867,6 +871,22 @@
                         <td class="text-sm sm:text-[1rem] text-end">
                           {@html abbreviateNumberWithColor(
                             item?.avg30_put_volume,
+                            false,
+                            true,
+                          )}
+                        </td>
+
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.call_premium,
+                            false,
+                            true,
+                          )}
+                        </td>
+
+                        <td class="text-sm sm:text-[1rem] text-end">
+                          {@html abbreviateNumberWithColor(
+                            item?.put_premium,
                             false,
                             true,
                           )}
