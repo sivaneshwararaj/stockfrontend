@@ -1,45 +1,14 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import logo from "$lib/images/newsletter.png";
+  import SEO from "$lib/components/SEO.svelte";
+
   export let data;
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Free
-    Market Newsletter: Stay Informed in Just 2 Minutes Per Day · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Get our free newsletter to be up to date with the current market.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`Free Market Newsletter: Stay Informed in Just 2 Minutes Per Day · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Get our free newsletter to be up to date with the current market.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Free Market Newsletter: Stay Informed in Just 2 Minutes Per Day · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Get our free newsletter to be up to date with the current market.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Market Newsletter: Stay Informed in Just 2 Minutes Per Day"
+  description="Stay ahead in the market with our free newsletter! Get the latest updates, trends, and insights delivered straight to your inbox."
+/>
 
 <div class="w-full max-w-7xl min-h-screen text-white m-auto mt-5">
   <main

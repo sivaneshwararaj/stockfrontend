@@ -159,6 +159,7 @@
         <form method="post" action="?/oauth2">
           <input class="hidden" name="provider" value="google" />
           <button
+            aria-label="Google Login"
             on:click={() => (oauthLoading = !oauthLoading)}
             on:mouseenter={handleHoverGoogle}
             on:mouseleave={handleHoverGoogle}
@@ -206,6 +207,7 @@
         <form method="post" action="?/oauth2">
           <input class="hidden" name="provider" value="discord" />
           <button
+            aria-label="Discord Login"
             on:click={() => (oauthLoading = !oauthLoading)}
             on:mouseenter={handleHoverDiscord}
             on:mouseleave={handleHoverDiscord}
@@ -740,6 +742,7 @@
         <form method="post" action="?/oauth2">
           <input class="hidden" name="provider" value="github" />
           <button
+            aria-label="Github Login"
             on:click={() => (oauthLoading = !oauthLoading)}
             on:mouseenter={handleHoverGithub}
             on:mouseleave={handleHoverGithub}

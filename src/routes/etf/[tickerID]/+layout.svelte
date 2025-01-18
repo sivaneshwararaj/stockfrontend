@@ -712,7 +712,7 @@
                             <div
                               class="flex flex-row justify-between items-center w-full sm:-mt-[50px] mb-5 sm:mb-10"
                             >
-                              <div
+                              <h1
                                 class="text-2xl lg:text-3xl font-bold text-white"
                               >
                                 {$displayCompanyName?.length > charNumber
@@ -722,7 +722,7 @@
                                 <span class="hidden sm:inline-block"
                                   >({$etfTicker?.toUpperCase()})</span
                                 >
-                              </div>
+                              </h1>
                             </div>
 
                             <div
