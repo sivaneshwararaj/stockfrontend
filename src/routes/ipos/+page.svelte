@@ -1,139 +1,91 @@
 <script lang="ts">
-  import { formatString, abbreviateNumber } from "$lib/utils";
-  import { screenWidth } from "$lib/store";
-  import { onMount } from "svelte";
+  import SEO from "$lib/components/SEO.svelte";
+  import Table from "$lib/components/Table/Table.svelte";
 
   export let data;
 
-  let rawData = data?.getIPOCalendar;
-  let ipoList = rawData?.slice(0, 150);
+  let ipoNews = data?.getNews;
+  let rawData = data?.getIPOCalendar?.slice(0, 200) ?? [];
+  const excludedRules = new Set([
+    "volume",
+    "price",
+    "ipoPrice",
+    "return",
+    "changesPercentage",
+    "eps",
+    "ipoDate",
+    "marketCap",
+  ]);
 
-  let isLoaded = false;
+  const defaultList = [
+    { name: "IPO Date", rule: "ipoDate" },
+    { name: "IPO Price", rule: "ipoPrice" },
+    { name: "Current Price", rule: "currentPrice" },
+    { name: "Return Since", rule: "return" },
+  ];
 
-  async function handleScroll() {
-    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
-    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
-    if (isBottom && ipoList?.length !== rawData?.length) {
-      const nextIndex = ipoList?.length;
-      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
-      ipoList = [...ipoList, ...filteredNewResults];
-    }
-  }
-
-  onMount(() => {
-   
-
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
-
-  let charNumber = 40;
-  $: {
-    if ($screenWidth < 640) {
-      charNumber = 20;
-    } else {
-      charNumber = 40;
-    }
-  }
+  const specificRows = [
+    { name: "Return Since", rule: "return", type: "percentSign" },
+    { name: "IPO Date", rule: "ipoDate", type: "date" },
+    { name: "IPO Price", rule: "ipoPrice", type: "float" },
+    { name: "Current Price", rule: "currentPrice", type: "float" },
+  ];
 </script>
 
-<section class="w-full overflow-hidden m-auto">
-    
+<SEO
+  title="200 Most Recent IPOs"
+  description="Detailed information the last 200 IPOs (initial public offerings) on the stock market. Includes IPO prices, dates, total returns and more."
+/>
 
-      <div class="w-full overflow-x-scroll">
-        <table
-          class="mt-5 table table-sm table-compact rounded-none sm:rounded-md w-full bg-table border border-gray-800 m-auto overflow-hidden"
-        >
-          <thead>
-            <tr>
-              <th class="text-white font-medium text-[1rem] text-start"
-                >IPO Date</th
-              >
-              <th class="text-white font-medium text-[1rem] text-start"
-                >Symbol</th
-              >
-              <th class="text-white font-medium text-[1rem]">Name</th>
-              <th class="text-white font-medium text-end text-[1rem]"
-                >IPO Price</th
-              >
-              <th class="text-white font-medium text-end text-[1rem]"
-                >Current Price</th
-              >
-              <th class="text-white font-medium text-end text-[1rem]"
-                >Return Since</th
-              >
-            </tr>
-          </thead>
-          <tbody>
-            {#each ipoList as item}
-              <tr
-                class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b-[#09090B]"
-              >
-                <td
-                  class="text-white text-sm sm:text-[1rem] text-start border-b-[#09090B] whitespace-nowrap"
-                >
-                  {new Date(item?.date)?.toLocaleString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    daySuffix: "2-digit",
-                  })}
-                </td>
-
-                <td
-                  class="whitespace-nowrap text-sm sm:text-[1rem] text-start border-b-[#09090B]"
-                >
-                  <a
-                    href={"/stocks/" + item?.symbol}
-                    class="sm:hover:text-white text-blue-400"
-                  >
-                    {item?.symbol}
-                  </a>
-                </td>
-
-                <td
-                  class="text-white whitespace-nowrap text-sm sm:text-[1rem] border-b-[#09090B]"
-                >
-                  {item?.name?.length > charNumber
-                    ? formatString(item?.name?.slice(0, charNumber)) + "..."
-                    : formatString(item?.name)}
-                </td>
-
-                <td
-                  class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
-                >
-                  {item?.ipoPrice !== null ? item?.ipoPrice : "-"}
-                </td>
-
-                <td
-                  class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap"
-                >
-                  {item?.currentPrice !== null ? "$" + item?.currentPrice : "-"}
-                </td>
-
-                <td
-                  class="text-white border-b-[#09090B] text-end text-sm sm:text-[1rem] whitespace-nowrap flex flex-row items-center justify-end"
-                >
-                  {#if item?.return >= 0 && item?.return !== null}
-                    <span class="inline-block text-[#00FC50] text-md"
-                      >{abbreviateNumber(item?.return)}%</span
+<div class="w-full overflow-hidden m-auto mt-5">
+  <h2 class="text-white text-xl font- text-start mt-5 w-full font-semibold">
+    Last {rawData?.length} IPOs
+  </h2>
+  <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
+    <div
+      class="relative flex justify-center items-start overflow-hidden w-full"
+    >
+      <main class="w-full lg:w-3/4 lg:pr-10">
+        <div class="w-full overflow-x-scroll">
+          <Table
+            {data}
+            {rawData}
+            {excludedRules}
+            {defaultList}
+            {specificRows}
+          />
+        </div>
+      </main>
+      <aside class="hidden lg:block relative fixed w-1/4">
+        {#if ipoNews?.length !== 0}
+          <div
+            class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit"
+          >
+            <div class="p-4 text-sm">
+              <h3 class="text-xl text-white font-bold mb-3">IPO News</h3>
+              <ul class="text-white">
+                {#each ipoNews?.slice(0, 10) as item}
+                  <li class="mb-3 last:mb-1">
+                    {item?.timestamp}
+                    <a
+                      class="sm:hover:text-white text-blue-400"
+                      href={item?.link}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow">{item?.title}</a
                     >
-                  {:else if item?.return < 0 && item?.return !== null}
-                    <span class="inline-block text-[#FF2F1F] text-md"
-                      >{abbreviateNumber(item?.return)}%
-                    </span>
-                  {:else}
-                    <span class="inline-block text-white text-md"> - </span>
-                  {/if}
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+                  </li>
+                {/each}
+              </ul>
+              <a
+                href={`/ipos/news`}
+                class="flex justify-center items-center rounded cursor-pointer w-full py-2 mt-3 text-[1rem] text-center font-semibold text-black m-auto sm:hover:bg-gray-300 bg-[#fff] transition duration-100"
+              >
+                More IPO News
+              </a>
+            </div>
+          </div>
+        {/if}
+      </aside>
     </div>
-
-</section>
+  </div>
+</div>

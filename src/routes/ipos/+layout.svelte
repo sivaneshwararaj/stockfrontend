@@ -1,18 +1,14 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { numberOfUnreadNotification } from "$lib/store";
-  import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import { goto } from "$app/navigation";
-  import SEO from "$lib/components/SEO.svelte";
+  import ScrollToTop from "$lib/components/ScrollToTop.svelte";
 
   export let data;
 
   let navigation = [];
-  let displaySection = "2025";
-  let ipoNews = data?.getNews?.slice(0, 10);
+  let displaySection = "Latest";
 
   for (let year = 2025; year >= 2019; year--) {
-    navigation?.push({ title: year, link: `/ipos/${year}` });
+    navigation.push({ title: year, link: `/ipos/${year}` });
   }
 
   $: {
@@ -30,25 +26,38 @@
       displaySection =
         sectionMap[
           parts?.find((part) => Object?.keys(sectionMap)?.includes(part))
-        ] || "overview";
+        ] || "Latest";
     }
+  }
+
+  const tabs = [
+    {
+      title: "Recent",
+      path: "/ipos",
+    },
+    {
+      title: "IPO News",
+      path: "/ipos/news",
+    },
+  ];
+
+  let activeIdx = 0;
+
+  // Subscribe to the $page store to reactively update the activeIdx based on the URL
+  $: if ($page.url.pathname === "/ipos") {
+    activeIdx = 0;
+  } else if ($page.url.pathname.startsWith("/ipos/news")) {
+    activeIdx = 1;
   }
 </script>
 
-<!-- HEADER FOR BETTER SEO -->
-<SEO
-  title="IPOs
-    Calendar"
-  description="A list of upcoming ipos on the US stock market."
-/>
-
 <section
-  class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
+  class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden pb-20 pt-5 px-4 lg:px-3"
 >
-  <div class="text-sm breadcrumbs">
+  <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
-      <li class="text-gray-300">Recent IPOs</li>
+      <li class="text-gray-300">IPO Data</li>
     </ul>
   </div>
 
@@ -57,90 +66,62 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-10">
-          <div class="mb-5">
-            <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
-              Recent IPOs
-            </h1>
-          </div>
+        <main class="w-full lg:pr-5">
+          <h1 class="mb-6 text-white text-2xl sm:text-3xl font-bold">
+            {activeIdx === 0 ? "Recent IPOs" : "IPO News"}
+          </h1>
 
-          <div
-            class="w-full {$page?.url?.pathname === '/ipos'
-              ? 'hidden'
-              : ''} mb-2"
-          >
-            <nav class="border-b-[2px] overflow-x-scroll whitespace-nowrap">
-              <ul
-                class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
-              >
+          <nav class=" border-b-[2px] overflow-x-scroll whitespace-nowrap">
+            <ul class="flex flex-row items-center w-full text-lg text-white">
+              {#each tabs as item, i}
                 <a
-                  href={`/ipos`}
-                  on:click={() => (displaySection = "recent")}
-                  class="p-2 px-5 cursor-pointer {displaySection === 'recent'
-                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  href={item?.path}
+                  class="p-2 px-5 cursor-pointer {activeIdx === i
+                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
                     : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
                 >
-                  Recent
+                  {item.title}
                 </a>
-                <a
-                  href={`/ipos/news`}
-                  on:click={() => (displaySection = "news")}
-                  class="p-2 px-5 cursor-pointer {displaySection === 'news'
-                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
-                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
-                >
-                  News
-                </a>
-              </ul>
-            </nav>
+              {/each}
+            </ul>
+          </nav>
 
+          {#if activeIdx === 0}
             <nav class=" overflow-x-scroll whitespace-nowrap">
               <ul
                 class="flex flex-row items-center w-full text-[1rem] text-white"
               >
-                {#each ["2025", "2024", "2023", "2022", "2021", "2020", "2019"] as item}
-                  <a
-                    href={`/ipos/${item}`}
-                    on:click={() => (displaySection = item)}
-                    class="p-2 px-5 cursor-pointer {displaySection === item
-                      ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
-                      : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
-                  >
-                    {item}
-                  </a>
+                {#each ["Latest", "2025", "2024", "2023", "2022", "2021", "2020", "2019"] as item}
+                  {#if item !== "Latest"}
+                    <a
+                      href={`/ipos/${item}`}
+                      on:click={() => (displaySection = item)}
+                      class="p-2 px-5 cursor-pointer {displaySection === item
+                        ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                        : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                    >
+                      {item}
+                    </a>
+                  {:else}
+                    <a
+                      href={`/ipos`}
+                      on:click={() => (displaySection = item)}
+                      class="p-2 px-5 cursor-pointer {displaySection === item
+                        ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                        : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                    >
+                      {item}
+                    </a>
+                  {/if}
                 {/each}
               </ul>
             </nav>
-          </div>
+          {/if}
 
           <slot />
-        </main>
 
-        <aside class="hidden lg:block relative fixed w-1/4">
-          {#if ipoNews?.length !== 0}
-            <div
-              class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit"
-            >
-              <div class="p-4 text-sm">
-                <h3 class="text-xl text-white font-bold mb-3">IPO News</h3>
-                <ul class="text-white">
-                  {#each ipoNews?.slice(0, 10) as item}
-                    <li class="mb-3 last:mb-1">
-                      {item?.timestamp}
-                      <br />
-                      <a
-                        class="sm:hover:text-white text-blue-400"
-                        href={item?.link}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow">{item?.title}</a
-                      >
-                    </li>
-                  {/each}
-                </ul>
-              </div>
-            </div>
-          {/if}
-        </aside>
+          <ScrollToTop />
+        </main>
       </div>
     </div>
   </div>

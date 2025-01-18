@@ -881,8 +881,16 @@
                 {:else}
                   {item[column.key]}
                 {/if}
+              {:else if column?.type === "date"}
+                {new Date(item[column.key]).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               {:else if column?.type === "int"}
-                {@html abbreviateNumber(item[column.key], false, true)}
+                {@html column.key === "marketCap" && item[column.key] === 0
+                  ? "n/a"
+                  : abbreviateNumber(item[column.key], false, true)}
               {:else if column?.type === "decimal"}
                 {item[column.key]?.toLocaleString("en-US")}
               {:else if column?.type === "decimalSign"}

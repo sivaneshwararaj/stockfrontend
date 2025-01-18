@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import { onMount } from "svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -74,36 +74,11 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} All
-    Stock News · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`The latest news on individual stocks on the US stock market, gathered from trusted finance and investing websites.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`All Stock News · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`The latest news on individual stocks on the US stock market, gathered from trusted finance and investing websites.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`All Stock News · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`The latest news on individual stocks on the US stock market, gathered from trusted finance and investing websites.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="All
+    Stock News"
+  description="The latest news on individual stocks on the US stock market, gathered from trusted finance and investing websites."
+/>
 
 <div class="w-full overflow-hidden m-auto mt-5">
   <div class="sm:p-0 flex justify-center w-full m-auto overflow-hidden">
