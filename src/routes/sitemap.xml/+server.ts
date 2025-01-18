@@ -128,7 +128,7 @@ const sitemap = (
     .map(
       (item) => `
   <url>
-    <loc>${website}/blog/${convertToSlug(item?.title)}</loc>
+    <loc>${website}/blog/article/${convertToSlug(item?.title)}</loc>
   </url>
   `,
     )
