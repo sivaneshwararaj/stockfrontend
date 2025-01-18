@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
   import { enhance } from "$app/forms";
   import Input from "$lib/components/Input.svelte";
   import toast from "svelte-french-toast";
-  //import { trackPageDuration, trackButtonClick} from '$lib/mixpanel';
-  import { numberOfUnreadNotification } from "$lib/store";
+  import SEO from "$lib/components/SEO.svelte";
+
   export let form;
 
   let isClicked = false;
@@ -71,36 +71,10 @@
   }
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Sign
-    In · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="Sign In to to improve your stock analysis for free"
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Sign In · Stocknear" />
-  <meta
-    property="og:description"
-    content="Sign In to to improve your stock analysis for free"
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Sign In · Stocknear" />
-  <meta
-    name="twitter:description"
-    content="Sign In to to improve your stock analysis for free"
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Log in to Stocknear"
+  description="Log in to your Stocknear account using your email and password."
+/>
 
 <div
   class="relative w-full max-w-3xl mx-auto min-h-screen pb-40 sm:mt-10 {oauthLoading
