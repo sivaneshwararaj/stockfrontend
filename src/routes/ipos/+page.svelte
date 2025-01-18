@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
   import { formatString, abbreviateNumber } from "$lib/utils";
   import { screenWidth } from "$lib/store";
   import { onMount } from "svelte";
 
   export let data;
 
-  let rawData;
-  let ipoList;
+  let rawData = data?.getIPOCalendar;
+  let ipoList = rawData?.slice(0, 150);
+
   let isLoaded = false;
 
   async function handleScroll() {
@@ -21,10 +21,8 @@
   }
 
   onMount(() => {
-    rawData = data?.getIPOCalendar;
-    ipoList = rawData?.slice(0, 50);
+   
 
-    isLoaded = true;
 
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -43,22 +41,7 @@
 </script>
 
 <section class="w-full overflow-hidden m-auto">
-  {#if isLoaded}
-    <div class="flex flex-col justify-center items-center p-3 sm:p-0">
-      <div
-        class="mt-0 sm:mt-5 mb-2 w-full sm:flex sm:flex-row sm:items-center m-auto text-gray-100 font-medium border border-gray-800 sm:rounded-md h-auto p-5"
-      >
-        <svg
-          class="w-5 h-5 inline-block sm:mr-2 flex-shrink-0"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 256 256"
-          ><path
-            fill="#fff"
-            d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-4 48a12 12 0 1 1-12 12a12 12 0 0 1 12-12m12 112a16 16 0 0 1-16-16v-40a8 8 0 0 1 0-16a16 16 0 0 1 16 16v40a8 8 0 0 1 0 16"
-          /></svg
-        >
-        All {rawData?.length} IPOs on the US stock market in between 2019 - 2024.
-      </div>
+    
 
       <div class="w-full overflow-x-scroll">
         <table
@@ -152,15 +135,5 @@
         </table>
       </div>
     </div>
-  {:else}
-    <div class="flex justify-center items-center h-80">
-      <div class="relative">
-        <label
-          class="bg-secondary rounded-md h-14 w-14 flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        >
-          <span class="loading loading-spinner loading-md text-gray-400"></span>
-        </label>
-      </div>
-    </div>
-  {/if}
+
 </section>

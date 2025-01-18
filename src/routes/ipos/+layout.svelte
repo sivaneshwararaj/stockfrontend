@@ -1,35 +1,25 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
+  import { numberOfUnreadNotification } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { goto } from "$app/navigation";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
   let navigation = [];
-  let displaySection = "2024";
+  let displaySection = "2025";
+  let ipoNews = data?.getNews?.slice(0, 10);
 
-  for (let year = 2024; year >= 2019; year--) {
-    navigation.push({ title: year, link: `/ipos/${year}` });
-  }
-
-  function scrollToItem(itemId) {
-    const item = document.getElementById(itemId);
-    if (item) {
-      item.scrollIntoView({ behavior: "smooth" });
-      window.scrollTo(0, 0);
-    }
-  }
-
-  function changeSection(state, item) {
-    scrollToItem(item);
-    displaySection = state;
+  for (let year = 2025; year >= 2019; year--) {
+    navigation?.push({ title: year, link: `/ipos/${year}` });
   }
 
   $: {
     if ($page.url.pathname) {
       const parts = $page?.url?.pathname?.split("/");
       const sectionMap = {
+        "2025": "2025",
         "2024": "2024",
         "2023": "2023",
         "2022": "2022",
@@ -46,44 +36,11 @@
 </script>
 
 <!-- HEADER FOR BETTER SEO -->
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} IPOs
-    Calendar · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="A list of upcoming ipos on the US stock market."
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="IPOs Calendar · Stocknear" />
-  <meta
-    property="og:description"
-    content="A list of upcoming ipos on the US stock market."
-  />
-  <meta
-    property="og:image"
-    content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="IPOs Calendar · Stocknear" />
-  <meta
-    name="twitter:description"
-    content="A list of upcoming ipos on the US stock market."
-  />
-  <meta
-    name="twitter:image"
-    content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="IPOs
+    Calendar"
+  description="A list of upcoming ipos on the US stock market."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
@@ -91,7 +48,7 @@
   <div class="text-sm breadcrumbs">
     <ul>
       <li><a href="/" class="text-gray-300">Home</a></li>
-      <li class="text-gray-300">IPO Calendar</li>
+      <li class="text-gray-300">Recent IPOs</li>
     </ul>
   </div>
 
@@ -100,10 +57,10 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-5">
+        <main class="w-full lg:w-3/4 lg:pr-10">
           <div class="mb-5">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
-              IPO Calendar
+              Recent IPOs
             </h1>
           </div>
 
@@ -116,7 +73,32 @@
               <ul
                 class="flex flex-row items-center w-full text-[1rem] sm:text-lg text-white"
               >
-                {#each ["2024", "2023", "2022", "2021", "2020", "2019"] as item}
+                <a
+                  href={`/ipos`}
+                  on:click={() => (displaySection = "recent")}
+                  class="p-2 px-5 cursor-pointer {displaySection === 'recent'
+                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                >
+                  Recent
+                </a>
+                <a
+                  href={`/ipos/news`}
+                  on:click={() => (displaySection = "news")}
+                  class="p-2 px-5 cursor-pointer {displaySection === 'news'
+                    ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                    : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                >
+                  News
+                </a>
+              </ul>
+            </nav>
+
+            <nav class=" overflow-x-scroll whitespace-nowrap">
+              <ul
+                class="flex flex-row items-center w-full text-[1rem] text-white"
+              >
+                {#each ["2025", "2024", "2023", "2022", "2021", "2020", "2019"] as item}
                   <a
                     href={`/ipos/${item}`}
                     on:click={() => (displaySection = item)}
@@ -134,61 +116,30 @@
           <slot />
         </main>
 
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
-          {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial}
+        <aside class="hidden lg:block relative fixed w-1/4">
+          {#if ipoNews?.length !== 0}
             <div
-              on:click={() => goto("/pricing")}
-              class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
+              class="w-full sm:hover:text-white text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit"
             >
-              <div
-                class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
-              >
-                <div class="w-full flex justify-between items-center p-3 mt-3">
-                  <h2 class="text-start text-xl font-semibold text-white ml-3">
-                    Pro Subscription
-                  </h2>
-                  <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-                </div>
-                <span class="text-white p-3 ml-3 mr-3">
-                  Upgrade now for unlimited access to all data and tools.
-                </span>
+              <div class="p-4 text-sm">
+                <h3 class="text-xl text-white font-bold mb-3">IPO News</h3>
+                <ul class="text-white">
+                  {#each ipoNews?.slice(0, 10) as item}
+                    <li class="mb-3 last:mb-1">
+                      {item?.timestamp}
+                      <br />
+                      <a
+                        class="sm:hover:text-white text-blue-400"
+                        href={item?.link}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow">{item?.title}</a
+                      >
+                    </li>
+                  {/each}
+                </ul>
               </div>
             </div>
           {/if}
-
-          <div
-            on:click={() => goto("/analysts")}
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
-          >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Wallstreet Analyst
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Wall Street analyst ratings.
-              </span>
-            </div>
-          </div>
-
-          <div
-            on:click={() => goto("/politicians")}
-            class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
-          >
-            <div class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0">
-              <div class="w-full flex justify-between items-center p-3 mt-3">
-                <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Congress Trading
-                </h2>
-                <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
-              </div>
-              <span class="text-white p-3 ml-3 mr-3">
-                Get the latest top Congress trading insights.
-              </span>
-            </div>
-          </div>
         </aside>
       </div>
     </div>
