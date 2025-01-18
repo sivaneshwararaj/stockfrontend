@@ -634,7 +634,7 @@
               >
                 <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                   <div class="flex items-center justify-between sm:block">
-                    <div class="text-sm font-semibold text-white">Date</div>
+                    <div class="text-[1rem] font-semibold text-white">Date</div>
                     <div
                       class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
                     >
@@ -645,7 +645,9 @@
 
                 <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                   <div class="flex items-center justify-between sm:block">
-                    <div class="text-sm font-semibold text-white">Volume</div>
+                    <div class="text-[1rem] font-semibold text-white">
+                      Volume
+                    </div>
                     <div
                       class="mt-1 break-words font-semibold leading-8 text-white text-sm sm:text-[1rem]"
                     >
@@ -659,7 +661,7 @@
                 </div>
                 <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                   <div class="flex items-center justify-between sm:block">
-                    <div class="text-sm font-semibold text-white">
+                    <div class="text-[1rem] font-semibold text-white">
                       Net Call Premium
                     </div>
                     <div
@@ -675,7 +677,7 @@
                 </div>
                 <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                   <div class="flex items-center justify-between sm:block">
-                    <div class="text-sm font-semibold text-white">
+                    <div class="text-[1rem] font-semibold text-white">
                       Net Put Premium
                     </div>
                     <div

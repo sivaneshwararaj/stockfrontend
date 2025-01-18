@@ -5,7 +5,7 @@
   import SEO from "$lib/components/SEO.svelte";
 
   export let data;
-  let rawData = data?.getMagnificentSeven;
+  let rawData = data?.getData;
 
   let totalMarketCap =
     rawData?.reduce((total, stock) => total + stock?.marketCap, 0) ?? 0;
@@ -13,16 +13,11 @@
     rawData?.reduce((total, stock) => total + stock?.revenue, 0) ?? 0;
 </script>
 
-<SEO
-  title="A List of All Magnificent Seven Stocks"
-  description="The Magnificent Seven stocks refer to seven leading U.S. technology companies: Meta (formerly Facebook), Amazon, Apple, Microsoft, Nvidia, Alphabet (Google), and Tesla."
-/>
+<SEO title="A List of Artificial Intelligence (AI) Stocks" description="" />
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox
-    text="The magnificent seven stocks are 7 technology stocks that drove a large
-    portion of the market's returns in 2023 and 2024. The list includes Apple,
-    Microsoft, Amazon, Alphabet (Google), Tesla, Nvidia and Meta Platforms."
+    text="This is a list of the top stocks that are directly involved with artificial intelligence (AI) and/or have significant exposure to the growth of AI technology."
   />
 
   <div
@@ -60,5 +55,5 @@
     </div>
   </div>
 
-  <Table {data} rawData={data?.getMagnificentSeven} />
+  <Table {data} rawData={data?.getData} />
 </section>

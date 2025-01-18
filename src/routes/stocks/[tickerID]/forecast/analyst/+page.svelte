@@ -316,7 +316,7 @@
             <div class="text-[1rem] font-normal text-white">Total Analysts</div>
 
             <div
-              class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+              class="mt-1 break-words font-semibold leading-8 text-white text-xl sm:text-2xl"
             >
               {numOfAnalyst}
             </div>
@@ -326,7 +326,7 @@
               Consensus Rating
             </div>
             <div
-              class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+              class="mt-1 break-words font-semibold leading-8 text-white text-xl sm:text-2xl"
             >
               {consensusRating}
             </div>
@@ -334,7 +334,7 @@
           <div class="p-4 bp:p-5 sm:p-6 border-t border-gray-600 md:border-0">
             <div class="text-[1rem] font-normal text-white">Price Target</div>
             <div
-              class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+              class="mt-1 break-words font-semibold leading-8 text-white text-xl sm:text-2xl"
             >
               {priceTarget !== null && priceTarget !== undefined
                 ? priceTarget

@@ -222,6 +222,34 @@
       title: "Highest Option Premium",
       link: "/list/highest-option-premium",
     },
+    {
+      title: "Biggest Artificial Intelligence Stocks",
+      link: "/list/ai-stocks",
+    },
+    {
+      title: "Biggest Mobile Game Stocks",
+      link: "/list/mobile-games",
+    },
+    {
+      title: "Biggest Social Media Stocks by Market Cap",
+      link: "/list/social-media-stocks",
+    },
+    {
+      title: "Biggest Clean Energy Stocks",
+      link: "/list/clean-energy",
+    },
+    {
+      title: "Biggest E-Sports Stocks",
+      link: "/list/esports",
+    },
+    {
+      title: "Biggest Car Company Stocks",
+      link: "/list/car-company-stocks",
+    },
+    {
+      title: "Biggest Electric Vehicle Stocks",
+      link: "/list/electric-vehicles",
+    },
   ];
 
   navigation = [...navigationIndustry, ...navigation];
@@ -236,7 +264,7 @@
 </script>
 
 <section
-  class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"
+  class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden pb-40 pt-5 px-4 lg:px-3 mb-20"
 >
   <div class="text-sm sm:text-[1rem] breadcrumbs">
     <ul>

@@ -113,11 +113,11 @@
               >
                 <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                   <div class="flex items-center justify-between sm:block">
-                    <div class="text-sm font-semibold text-white">
+                    <div class="text-[1rem] font-semibold text-white">
                       FTD Shares
                     </div>
                     <div
-                      class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+                      class="mt-1 break-words font-semibold leading-8 text-white text-xl sm:text-2xl"
                     >
                       {abbreviateNumber(
                         rawData?.slice(-1)?.at(0)?.failToDeliver,
@@ -128,11 +128,11 @@
                 </div>
                 <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                   <div class="flex items-center justify-between sm:block">
-                    <div class="text-sm font-semibold text-white">
+                    <div class="text-[1rem] font-semibold text-white">
                       FTD / Avg Volume
                     </div>
                     <div
-                      class="mt-1 break-words font-semibold leading-8 text-white text-[1rem] sm:text-lg"
+                      class="mt-1 break-words font-semibold leading-8 text-white text-xl sm:text-2xl"
                     >
                       {relativeFTD > 0.01
                         ? relativeFTD + "%"
@@ -144,7 +144,7 @@
                 </div>
                 <div class="px-4 py-3 sm:px-2 sm:py-5 md:px-3 lg:p-6">
                   <div class="flex items-center justify-between sm:block">
-                    <div class="text-sm font-semibold text-white">
+                    <div class="text-[1rem] font-semibold text-white">
                       1-Year Change
                     </div>
                     <div

@@ -236,6 +236,96 @@
 
 <!--End Other Lists-->
 
+<div class="text-white">
+  <h2 class="mb-2 text-xl font-bold pt-10">
+    Category of Stocks Ranked by Market Cap
+  </h2>
+  <ul
+    class="list-outside list-disc space-y-1 p-1 pl-6 text-base md:columns-2 md:gap-x-8 md:text-lg"
+  >
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/mobile-games/"
+        >Mobile Games</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/social-media-stocks/">Social Media</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/clean-energy/"
+        >Clean Energy</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/esports/"
+        >E-Sports</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/car-company-stocks/">Car Companies</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/ai-stocks/"
+        >Artificial Intelligence</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/electric-vehicles/">Electric Vehicles</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/online-gambling/"
+        >Online Gambling</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/augmented-reality/">Augmented Reality</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/gaming-stocks/"
+        >Gaming</a
+      >
+    </li>
+    <li>
+      <a
+        class="text-blue-400 sm:hover:text-white"
+        href="/list/pharmaceutical-stocks/">Pharmaceuticals</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/online-dating/"
+        >Online Dating</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/virtual-reality/"
+        >Virtual Reality</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/sports-betting/"
+        >Sports Betting</a
+      >
+    </li>
+    <li>
+      <a class="text-blue-400 sm:hover:text-white" href="/list/metaverse/"
+        >Metaverse</a
+      >
+    </li>
+  </ul>
+</div>
+
 <!--Start Non-US Stocks Listed on US Exchanges-->
 <div class="text-white">
   <h2 class="mb-2 text-xl font-bold pt-10">
