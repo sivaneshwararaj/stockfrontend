@@ -49,7 +49,7 @@
         for="whyPriceMovedInfo"
         class="mr-1 cursor-pointer flex flex-row items-center text-white text-2xl font-bold"
       >
-        Why Price Moved
+        <h2>Why Price Moved</h2>
       </label>
       <InfoModal
         title={"Why Price Moved"}
@@ -86,14 +86,17 @@
                       <div class="flex flex-col items-start">
                         <div class="flex flex-row items-start w-full">
                           <span class="text-white text-sm"
-                            >{formatDate(item?.date)} &#183;
+                            >{formatDate(item?.date)}
+                            <!--
+                            &#183;
                             <a
                               href={item?.url}
                               class="inline-block text-sm text-white sm:hover:underline sm:hover:underline-offset-4"
                             >
                               Source
-                            </a></span
-                          >
+                            </a>
+                            -->
+                          </span>
                           {#if latestInfoDate(item?.date)}
                             <label
                               class="bg-[#fff] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3"

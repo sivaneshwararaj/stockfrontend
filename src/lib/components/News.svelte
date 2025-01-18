@@ -87,7 +87,7 @@
           <label
             class="mr-1 cursor-pointer flex flex-row items-center text-white text-2xl font-bold"
           >
-            News
+            <h2>News</h2>
           </label>
         </div>
       </div>
