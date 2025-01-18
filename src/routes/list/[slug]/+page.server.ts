@@ -1,7 +1,7 @@
-export const load = async ({ locals }) => {
-  const getFAANG = async () => {
+export const load = async ({ locals, params }) => {
+  const getData = async () => {
     const { apiKey, apiURL } = locals;
-    const postData = {'filterList': 'faang'}
+    const postData = {'filterList': params.slug}
     // make the POST request to the endpoint
     const response = await fetch(apiURL + "/list-category", {
       method: "POST",
@@ -13,11 +13,12 @@ export const load = async ({ locals }) => {
     });
 
     const output = await response.json();
+
     return output;
   };
 
   // Make sure to return a promise
   return {
-    getFAANG: await getFAANG(),
+    getData: await getData(),
   };
 };

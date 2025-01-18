@@ -250,6 +250,38 @@
       title: "Biggest Electric Vehicle Stocks",
       link: "/list/electric-vehicles",
     },
+    {
+      title: "Biggest Augmented Reality Stocks",
+      link: "/list/augmented-reality",
+    },
+    {
+      title: "Biggest Gaming Stocks by Market Cap",
+      link: "/list/gaming-stocks",
+    },
+    {
+      title: "Biggest Pharmaceutical Stocks",
+      link: "/list/pharmaceutical-stocks",
+    },
+    {
+      title: "Biggest Online Dating Stocks",
+      link: "/list/online-dating",
+    },
+    {
+      title: "Biggest Virtual Reality Stocks",
+      link: "/list/virtual-reality",
+    },
+    {
+      title: "Biggest Sports Betting Stocks",
+      link: "/list/sports-betting",
+    },
+    {
+      title: "Biggest Metaverse Stocks",
+      link: "/list/metaverse",
+    },
+    {
+      title: "Biggest Online Gambling Stocks",
+      link: "/list/online-gambling",
+    },
   ];
 
   navigation = [...navigationIndustry, ...navigation];
