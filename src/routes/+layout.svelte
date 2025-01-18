@@ -534,7 +534,7 @@
                             class="w-full bg-[#141417] hover:bg-[#141417]"
                           >
                             <a
-                              href="/ipos/2024"
+                              href="/ipos"
                               class="text-start w-full text-[1rem] text-white ml-4 mt-4"
                               >IPO Calendar</a
                             >
@@ -1050,7 +1050,7 @@
                             >FDA Calendar</a
                           >
                           <a
-                            href="/ipos/2024"
+                            href="/ipos"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >IPO Calendar</a
                           >
