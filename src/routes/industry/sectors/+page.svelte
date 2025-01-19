@@ -16,7 +16,7 @@
     { key: "avgDividendYield", label: "Div. Yield", align: "right" },
     { key: "pe", label: "PE Ratio", align: "right" },
     { key: "profitMargin", label: "Profit Margin", align: "right" },
-    { key: "avgChange1M", label: "1M Change", align: "right" },
+    { key: "avgChange1D", label: "1D Change", align: "right" },
     { key: "avgChange1Y", label: "1Y Change", align: "right" },
   ];
 
@@ -27,7 +27,7 @@
     avgDividendYield: { order: "none", type: "number" },
     pe: { order: "none", type: "number" },
     profitMargin: { order: "none", type: "number" },
-    avgChange1M: { order: "none", type: "number" },
+    avgChange1D: { order: "none", type: "number" },
     avgChange1Y: { order: "none", type: "number" },
   };
 
@@ -129,19 +129,19 @@
               <td
                 class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
-                {abbreviateNumber(item?.totalMarketCap) ?? "-"}
+                {abbreviateNumber(item?.totalMarketCap) ?? "n/a"}
               </td>
 
               <td
                 class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
-                {item?.avgDividendYield?.toFixed(2) ?? "-"}%
+                {item?.avgDividendYield?.toFixed(2) ?? "n/a"}%
               </td>
 
               <td
                 class="text-white text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
-                {item?.pe?.toFixed(2) ?? "-"}
+                {item?.pe?.toFixed(2) ?? "n/a"}
               </td>
 
               <td
@@ -157,7 +157,7 @@
                   ? "before:content-['+']  text-[#00FC50]"
                   : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
-                {item?.avgChange1M?.toFixed(2) ?? "-"}%
+                {item?.avgChange1D?.toFixed(2) ?? "n/a"}%
               </td>
 
               <td
@@ -165,7 +165,7 @@
                   ? "before:content-['+']  text-[#00FC50]"
                   : 'text-[#FF2F1F]'} text-end font-medium text-sm sm:text-[1rem] whitespace-nowrap"
               >
-                {item?.avgChange1Y?.toFixed(2) ?? "-"}%
+                {item?.avgChange1Y?.toFixed(2) ?? "n/a"}%
               </td>
             </tr>
           {/each}
