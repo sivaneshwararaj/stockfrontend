@@ -21,10 +21,6 @@
       link: "/options-flow",
     },
     {
-      title: "Dark Pool Flow",
-      link: "/dark-pool-flow",
-    },
-    {
       title: "Earnings",
       link: "/earnings-calendar",
     },

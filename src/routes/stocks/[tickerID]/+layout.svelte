@@ -951,16 +951,7 @@
                         >
                           Options
                         </a>
-                        <a
-                          href={`/stocks/${$stockTicker}/dark-pool`}
-                          on:click={() => changeSection("dark-pool")}
-                          class="p-2 px-5 cursor-pointer {displaySection ===
-                          'dark-pool'
-                            ? 'text-white bg-secondary sm:hover:bg-opacity-[0.95] font-semibold'
-                            : 'text-gray-400 sm:hover:text-white sm:hover:bg-secondary sm:hover:bg-opacity-[0.95]'}"
-                        >
-                          Dark Pool
-                        </a>
+
                         <a
                           href={`/stocks/${$stockTicker}/insider`}
                           on:click={() => changeSection("insider")}
