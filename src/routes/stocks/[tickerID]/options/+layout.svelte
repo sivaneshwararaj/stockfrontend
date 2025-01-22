@@ -1,6 +1,6 @@
 <script lang="ts">
   import { stockTicker } from "$lib/store";
-  //import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { page } from "$app/stores";
 
   export let data;
@@ -56,7 +56,7 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full">
+        <main class="w-full lg:w-3/4 lg:pr-10">
           <nav
             class="sm:ml-4 overflow-x-scroll pt-1 text-sm sm:text-[1rem] whitespace-nowrap"
           >
@@ -124,9 +124,8 @@
             <slot />
           </div>
         </main>
-        <!--
-        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
 
+        <aside class="hidden lg:block relative fixed w-1/4 ml-4">
           <div
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
           >
@@ -165,7 +164,6 @@
             </a>
           </div>
         </aside>
-        -->
       </div>
     </div>
   </div>

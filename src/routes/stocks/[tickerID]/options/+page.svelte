@@ -7,11 +7,7 @@
   } from "$lib/store";
   import DailyStats from "$lib/components/Options/DailyStats.svelte";
   import { Chart } from "svelte-echarts";
-  import {
-    abbreviateNumber,
-    abbreviateNumberWithColor,
-    monthNames,
-  } from "$lib/utils";
+  import { abbreviateNumberWithColor, monthNames } from "$lib/utils";
   import { onMount } from "svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { init, use } from "echarts/core";
@@ -19,7 +15,6 @@
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
   import Infobox from "$lib/components/Infobox.svelte";
-  import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
 
   use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
@@ -428,12 +423,16 @@
                     <td class="text-white font-semibold text-sm text-center"
                       >P Volume</td
                     >
+                    <!--
                     <td class="text-white font-semibold text-sm text-end"
                       >Vol/30D</td
                     >
+                      -->
+                    <!--
                     <td class="text-white font-semibold text-sm text-end"
                       >🐻/🐂 Prem</td
                     >
+                  -->
                     <td class="text-white font-semibold text-sm text-end"
                       >Total OI</td
                     >
@@ -446,12 +445,14 @@
                     <td class="text-white font-semibold text-sm text-end"
                       >P Prem</td
                     >
+                    <!--
                     <td class="text-white font-semibold text-sm text-end"
                       >Net Prem</td
                     >
                     <td class="text-white font-semibold text-sm text-end"
                       >Total Prem</td
                     >
+                      -->
                   </tr>
                 </thead>
                 <tbody>
@@ -509,22 +510,21 @@
                       >
                         {item?.put_volume?.toLocaleString("en-US")}
                       </td>
-
+                      <!--
                       <td class="text-sm sm:text-[1rem] text-white text-end">
                         {item?.avgVolumeRatio?.toFixed(2)}
                       </td>
-
+                      -->
+                      <!--
                       <td class="text-sm sm:text-[1rem] text-end">
                         <HoverCard.Root>
                           <HoverCard.Trigger
                             class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
                           >
                             <div class="flex items-center justify-end">
-                              <!-- Bar Container -->
                               <div
                                 class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
                               >
-                                <!-- Bearish -->
                                 <div
                                   class="bg-red-500 h-full"
                                   style="width: calc(({item
@@ -534,7 +534,6 @@
                                     ?.premium_ratio[2]})) * 100%)"
                                 ></div>
 
-                                <!-- Neutral -->
                                 <div
                                   class="bg-gray-300 h-full"
                                   style="width: calc(({item
@@ -544,7 +543,6 @@
                                     ?.premium_ratio[2]})) * 100%)"
                                 ></div>
 
-                                <!-- Bullish -->
                                 <div
                                   class="bg-green-500 h-full"
                                   style="width: calc(({item
@@ -589,6 +587,7 @@
                           </HoverCard.Content>
                         </HoverCard.Root>
                       </td>
+                      -->
 
                       <td class="text-sm sm:text-[1rem] text-end text-white">
                         {@html abbreviateNumberWithColor(
@@ -635,7 +634,7 @@
                           true,
                         )}
                       </td>
-
+                      <!--
                       <td class="text-sm sm:text-[1rem] text-end text-white">
                         {@html abbreviateNumberWithColor(
                           item?.net_premium,
@@ -651,6 +650,7 @@
                           true,
                         )}
                       </td>
+                      -->
                     </tr>
                   {/each}
                 </tbody>
