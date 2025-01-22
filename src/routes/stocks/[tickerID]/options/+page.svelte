@@ -1,10 +1,5 @@
 <script lang="ts">
-  import {
-    numberOfUnreadNotification,
-    displayCompanyName,
-    screenWidth,
-    stockTicker,
-  } from "$lib/store";
+  import { displayCompanyName, screenWidth, stockTicker } from "$lib/store";
   import DailyStats from "$lib/components/Options/DailyStats.svelte";
   import { Chart } from "svelte-echarts";
   import { abbreviateNumberWithColor, monthNames } from "$lib/utils";
@@ -15,6 +10,7 @@
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
@@ -58,10 +54,6 @@
     var formattedDate = month + "/" + day + "/" + year;
 
     return formattedDate;
-  }
-
-  function changeTimePeriod(event) {
-    displayTimePeriod = event.target.value;
   }
 
   function changeVolumeOI(event) {
@@ -292,42 +284,10 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Options Activity · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Options Activity · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Options Activity · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Options Activity"
+  description={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$stockTicker}).`}
+/>
 
 <section class="w-full bg-default overflow-hidden text-white min-h-screen">
   <div class="w-full flex h-full overflow-hidden">
@@ -347,6 +307,7 @@
 
         {#if rawData?.length > 0}
           <div class="flex flex-row items-center w-full mt-10">
+            <!--
             <select
               class="ml-1 w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
               on:change={changeTimePeriod}
@@ -358,9 +319,10 @@
               <option value="sixMonths">6 Months</option>
               <option value="oneYear" selected>1 Year</option>
             </select>
+            -->
 
             <select
-              class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
+              class=" w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
               on:change={changeVolumeOI}
             >
               <option disabled>Choose a category</option>
@@ -437,6 +399,9 @@
                       >Total OI</td
                     >
                     <td class="text-white font-semibold text-sm text-end"
+                      >OI Change</td
+                    >
+                    <td class="text-white font-semibold text-sm text-end"
                       >% OI Change</td
                     >
                     <td class="text-white font-semibold text-sm text-end"
@@ -470,7 +435,7 @@
                       </td>
 
                       <td class="text-white text-sm sm:text-[1rem] text-end">
-                        {#if item?.changesPercentage >= 0}
+                        {#if item?.changesPercentage >= 0 && item?.changesPercentage !== null}
                           <span class="text-[#00FC50]"
                             >+{item?.changesPercentage >= 1000
                               ? abbreviateNumberWithColor(
@@ -478,7 +443,7 @@
                                 )
                               : item?.changesPercentage?.toFixed(2)}%</span
                           >
-                        {:else if item?.changesPercentage < 0}
+                        {:else if item?.changesPercentage < 0 && item?.changesPercentage !== null}
                           <span class="text-[#FF2F1F]"
                             >{item?.changesPercentage <= -1000
                               ? abbreviateNumberWithColor(
@@ -595,6 +560,20 @@
                           false,
                           true,
                         )}
+                      </td>
+
+                      <td class="text-white text-sm sm:text-[1rem] text-end">
+                        {#if item?.changeOI >= 0}
+                          <span class="text-[#00FC50]"
+                            >+{item?.changeOI?.toLocaleString("en-US")}</span
+                          >
+                        {:else if item?.changeOI < 0}
+                          <span class="text-[#FF2F1F]"
+                            >{item?.changeOI?.toLocaleString("en-US")}
+                          </span>
+                        {:else}
+                          <span class="text-white"> n/a </span>
+                        {/if}
                       </td>
 
                       <td class="text-white text-sm sm:text-[1rem] text-end">
