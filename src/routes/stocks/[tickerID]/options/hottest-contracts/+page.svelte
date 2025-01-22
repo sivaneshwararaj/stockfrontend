@@ -164,12 +164,12 @@
     { key: "strike_price", label: "Chain", align: "left" },
     { key: "dte", label: "DTE", align: "right" },
     { key: "otm", label: "% OTM", align: "right" },
-    { key: "last_price", label: "Last", align: "right" },
-    { key: "high_price", label: "Low-High", align: "right" },
+    { key: "last", label: "Last", align: "right" },
+    { key: "high", label: "Low-High", align: "right" },
     { key: "volume", label: "Volume", align: "right" },
     { key: "open_interest", label: "OI", align: "right" },
     { key: "open_interest_change", label: "OI Change", align: "right" },
-    { key: "bid_volume", label: "Bid/Ask Vol", align: "right" },
+    { key: "iv", label: "IV", align: "right" },
     { key: "total_premium", label: "Total Prem", align: "right" },
   ];
 
@@ -177,12 +177,12 @@
     strike_price: { order: "none", type: "number" },
     dte: { order: "none", type: "number" },
     otm: { order: "none", type: "number" },
-    last_price: { order: "none", type: "number" },
-    high_price: { order: "none", type: "number" },
+    last: { order: "none", type: "number" },
+    high: { order: "none", type: "number" },
     volume: { order: "none", type: "number" },
     open_interest: { order: "none", type: "number" },
     open_interest_change: { order: "none", type: "number" },
-    bid_volume: { order: "none", type: "number" },
+    iv: { order: "none", type: "number" },
     total_premium: { order: "none", type: "number" },
   };
 
@@ -509,7 +509,8 @@
       output = cachedData;
     } else {
       const postData = {
-        params: contractId,
+        ticker: $stockTicker,
+        contract: contractId,
       };
 
       // make the POST request to the endpoint
@@ -690,12 +691,12 @@
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
-                      {item?.last_price}
+                      {item?.last}
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
-                      {item?.low_price}-{item?.high_price}
+                      {item?.low}-{item?.high}
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
@@ -710,82 +711,18 @@
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
-                      {#if item?.open_interest_change >= 0}
+                      {#if item?.changeOI >= 0}
                         <span class="text-[#00FC50]"
-                          >+{item?.open_interest_change?.toLocaleString(
-                            "en-US",
-                          )}</span
+                          >+{item?.changeOI?.toLocaleString("en-US")}</span
                         >
                       {:else}
                         <span class="text-[#FF2F1F]"
-                          >{item?.open_interest_change?.toLocaleString(
-                            "en-US",
-                          )}</span
+                          >{item?.changeOI?.toLocaleString("en-US")}</span
                         >
                       {/if}
                     </td>
                     <td class="text-sm sm:text-[1rem] text-end">
-                      <HoverCard.Root>
-                        <HoverCard.Trigger
-                          class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
-                        >
-                          <div class="flex items-center justify-end">
-                            <!-- Bar Container -->
-                            <div
-                              class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
-                            >
-                              <!-- Bearish -->
-                              <div
-                                class="bg-red-500 h-full"
-                                style="width: calc(({item?.bid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
-
-                              <!-- Neutral -->
-                              <div
-                                class="bg-gray-300 h-full"
-                                style="width: calc(({item?.mid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
-
-                              <!-- Bullish -->
-                              <div
-                                class="bg-green-500 h-full"
-                                style="width: calc(({item?.ask_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
-                            </div>
-                          </div>
-                        </HoverCard.Trigger>
-                        <HoverCard.Content
-                          class="w-auto bg-secondary border border-gray-600"
-                        >
-                          <div class="flex justify-between space-x-4">
-                            <div
-                              class="space-y-1 flex flex-col items-start text-white"
-                            >
-                              <div>
-                                Bid Vol: {@html abbreviateNumberWithColor(
-                                  item?.bid_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                              <div>
-                                Mid Vol: {@html abbreviateNumberWithColor(
-                                  item?.mid_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                              <div>
-                                Ask Vol: {@html abbreviateNumberWithColor(
-                                  item?.ask_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </HoverCard.Content>
-                      </HoverCard.Root>
+                      {item?.iv}%
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
@@ -868,12 +805,12 @@
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
-                      {item?.last_price}
+                      {item?.last}
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
-                      {item?.low_price}-{item?.high_price}
+                      {item?.low}-{item?.high}
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
@@ -888,82 +825,18 @@
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                     >
-                      {#if item?.open_interest_change >= 0}
+                      {#if item?.changeOI >= 0}
                         <span class="text-[#00FC50]"
-                          >+{item?.open_interest_change?.toLocaleString(
-                            "en-US",
-                          )}</span
+                          >+{item?.changeOI?.toLocaleString("en-US")}</span
                         >
                       {:else}
                         <span class="text-[#FF2F1F]"
-                          >{item?.open_interest_change?.toLocaleString(
-                            "en-US",
-                          )}</span
+                          >{item?.changeOI?.toLocaleString("en-US")}</span
                         >
                       {/if}
                     </td>
                     <td class="text-sm sm:text-[1rem] text-end">
-                      <HoverCard.Root>
-                        <HoverCard.Trigger
-                          class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
-                        >
-                          <div class="flex items-center justify-end">
-                            <!-- Bar Container -->
-                            <div
-                              class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
-                            >
-                              <!-- Bearish -->
-                              <div
-                                class="bg-red-500 h-full"
-                                style="width: calc(({item?.bid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
-
-                              <!-- Neutral -->
-                              <div
-                                class="bg-gray-300 h-full"
-                                style="width: calc(({item?.mid_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
-
-                              <!-- Bullish -->
-                              <div
-                                class="bg-green-500 h-full"
-                                style="width: calc(({item?.ask_volume} / ({item?.bid_volume} + {item?.mid_volume} + {item?.ask_volume})) * 100%)"
-                              ></div>
-                            </div>
-                          </div>
-                        </HoverCard.Trigger>
-                        <HoverCard.Content
-                          class="w-auto bg-secondary border border-gray-600"
-                        >
-                          <div class="flex justify-between space-x-4">
-                            <div
-                              class="space-y-1 flex flex-col items-start text-white"
-                            >
-                              <div>
-                                Bid Vol: {@html abbreviateNumberWithColor(
-                                  item?.bid_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                              <div>
-                                Mid Vol: {@html abbreviateNumberWithColor(
-                                  item?.mid_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                              <div>
-                                Ask Vol: {@html abbreviateNumberWithColor(
-                                  item?.ask_volume,
-                                  false,
-                                  true,
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </HoverCard.Content>
-                      </HoverCard.Root>
+                      {item?.iv}%
                     </td>
                     <td
                       class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
@@ -1208,7 +1081,7 @@
                     </td>
 
                     <td class="text-sm sm:text-[1rem] text-end text-white">
-                      {item?.last_price}
+                      {item?.last}
                     </td>
 
                     <td class="text-sm sm:text-[1rem] text-end text-white">

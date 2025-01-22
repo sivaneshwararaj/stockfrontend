@@ -4,7 +4,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const data = await request.json();
   const { apiURL, apiKey } = locals;
 
-  const postData = { params: data?.params };
+  const postData = { ticker: data?.ticker, contract: data?.contract };
   const response = await fetch(apiURL + "/options-contract-history", {
     method: "POST",
     headers: {
