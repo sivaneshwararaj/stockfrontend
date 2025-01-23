@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { etfTicker } from "$lib/store";
+  import { stockTicker } from "$lib/store";
   import { page } from "$app/stores";
 
   export let data;
@@ -15,10 +15,10 @@
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
-      //goto(`/etf/${$etfTicker}${subSectionMap[state]}`);
+      //goto(`/stocks/${$stockTicker}${subSectionMap[state]}`);
     } else {
       displaySubSection = state;
-      //goto(`/etf/${$etfTicker}/statistics`);
+      //goto(`/stocks/${$stockTicker}/statistics`);
     }
   }
 
@@ -55,7 +55,7 @@
           >
             <ul class="flex flex-row items-center w-full text-white">
               <a
-                href={`/etf/${$etfTicker}/options/dex`}
+                href={`/stocks/${$stockTicker}/options/dex`}
                 on:click={() => changeSubSection("overview")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'overview'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
@@ -65,7 +65,7 @@
               </a>
 
               <a
-                href={`/etf/${$etfTicker}/options/dex/strike`}
+                href={`/stocks/${$stockTicker}/options/dex/strike`}
                 on:click={() => changeSubSection("strike")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'strike'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
@@ -74,7 +74,7 @@
                 By Strike
               </a>
               <a
-                href={`/etf/${$etfTicker}/options/dex/expiry`}
+                href={`/stocks/${$stockTicker}/options/dex/expiry`}
                 on:click={() => changeSubSection("expiry")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'expiry'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'

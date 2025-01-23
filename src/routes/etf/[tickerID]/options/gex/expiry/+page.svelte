@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    etfTicker,
+    stockTicker,
     numberOfUnreadNotification,
     displayCompanyName,
   } from "$lib/store";
@@ -17,21 +17,21 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Gamma Exposure by Expiry · Stocknear
+    {$displayCompanyName} ({$stockTicker}) Gamma Exposure by Expiry · Stocknear
   </title>
   <meta
     name="description"
-    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
+    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure by Expiry · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Expiry · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
+    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -40,11 +40,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Gamma Exposure by Expiry · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Gamma Exposure by Expiry · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$etfTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
+    content={`Analyze Gamma Exposure by expiry for ${$displayCompanyName} (${$stockTicker}). Access historical volume, open interest trends, and save options contracts for detailed analysis and insights.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>

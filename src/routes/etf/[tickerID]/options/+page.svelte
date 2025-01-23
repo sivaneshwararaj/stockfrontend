@@ -1,17 +1,8 @@
 <script lang="ts">
-  import {
-    numberOfUnreadNotification,
-    displayCompanyName,
-    screenWidth,
-    etfTicker,
-  } from "$lib/store";
+  import { displayCompanyName, screenWidth, etfTicker } from "$lib/store";
   import DailyStats from "$lib/components/Options/DailyStats.svelte";
   import { Chart } from "svelte-echarts";
-  import {
-    abbreviateNumber,
-    abbreviateNumberWithColor,
-    monthNames,
-  } from "$lib/utils";
+  import { abbreviateNumberWithColor, monthNames } from "$lib/utils";
   import { onMount } from "svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import { init, use } from "echarts/core";
@@ -19,7 +10,7 @@
   import { GridComponent, TooltipComponent } from "echarts/components";
   import { CanvasRenderer } from "echarts/renderers";
   import Infobox from "$lib/components/Infobox.svelte";
-  import * as HoverCard from "$lib/components/shadcn/hover-card/index.js";
+  import SEO from "$lib/components/SEO.svelte";
 
   use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
@@ -42,7 +33,7 @@
   let putOpenInterestList; //= data?.getOptionsPlotData?.putOpenInterestList;
   let priceList;
 
-  let displayTimePeriod = "threeMonths";
+  let displayTimePeriod = "oneYear";
 
   function formatDate(dateStr) {
     // Parse the input date string (YYYY-mm-dd)
@@ -63,10 +54,6 @@
     var formattedDate = month + "/" + day + "/" + year;
 
     return formattedDate;
-  }
-
-  function changeTimePeriod(event) {
-    displayTimePeriod = event.target.value;
   }
 
   function changeVolumeOI(event) {
@@ -110,7 +97,7 @@
               marker +
               param.seriesName +
               ": " +
-              abbreviateNumber(param.value) +
+              abbreviateNumberWithColor(param.value, false, true) +
               "<br/>";
           });
 
@@ -126,7 +113,7 @@
       grid: {
         left: $screenWidth < 640 ? "5%" : "2%",
         right: $screenWidth < 640 ? "5%" : "2%",
-        bottom: "20%",
+        bottom: "10%",
         containLabel: true,
       },
       xAxis: [
@@ -288,7 +275,7 @@
   });
 
   $: {
-    if ((displayTimePeriod || displayData) && typeof window !== "undefined") {
+    if (displayTimePeriod || displayData) {
       // Filter the raw plot data based on the selected time period
       filteredList = filterDate(rawData, displayTimePeriod);
       // Process the filtered list to generate the plot data
@@ -297,42 +284,10 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Options Activity · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Options Activity · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Options Activity · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Options Activity"
+  description={`Detailed informaton of unusual options activity for ${$displayCompanyName} (${$etfTicker}).`}
+/>
 
 <section class="w-full bg-default overflow-hidden text-white min-h-screen">
   <div class="w-full flex h-full overflow-hidden">
@@ -352,20 +307,22 @@
 
         {#if rawData?.length > 0}
           <div class="flex flex-row items-center w-full mt-10">
+            <!--
             <select
               class="ml-1 w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
               on:change={changeTimePeriod}
             >
               <option disabled>Choose a time period</option>
               <option value="oneWeek">1 Week</option>
-              <option value="oneMonth" selected>1 Month</option>
-              <option value="threeMonths" selected>3 Months</option>
+              <option value="oneMonth">1 Month</option>
+              <option value="threeMonths">3 Months</option>
               <option value="sixMonths">6 Months</option>
-              <option value="oneYear">1 Year</option>
+              <option value="oneYear" selected>1 Year</option>
             </select>
+            -->
 
             <select
-              class="ml-auto sm:ml-3 w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
+              class=" w-40 select select-bordered select-sm p-0 pl-5 bg-secondary"
               on:change={changeVolumeOI}
             >
               <option disabled>Choose a category</option>
@@ -428,14 +385,21 @@
                     <td class="text-white font-semibold text-sm text-center"
                       >P Volume</td
                     >
+                    <!--
                     <td class="text-white font-semibold text-sm text-end"
                       >Vol/30D</td
                     >
+                      -->
+                    <!--
                     <td class="text-white font-semibold text-sm text-end"
                       >🐻/🐂 Prem</td
                     >
+                  -->
                     <td class="text-white font-semibold text-sm text-end"
                       >Total OI</td
+                    >
+                    <td class="text-white font-semibold text-sm text-end"
+                      >OI Change</td
                     >
                     <td class="text-white font-semibold text-sm text-end"
                       >% OI Change</td
@@ -446,12 +410,14 @@
                     <td class="text-white font-semibold text-sm text-end"
                       >P Prem</td
                     >
+                    <!--
                     <td class="text-white font-semibold text-sm text-end"
                       >Net Prem</td
                     >
                     <td class="text-white font-semibold text-sm text-end"
                       >Total Prem</td
                     >
+                      -->
                   </tr>
                 </thead>
                 <tbody>
@@ -469,7 +435,7 @@
                       </td>
 
                       <td class="text-white text-sm sm:text-[1rem] text-end">
-                        {#if item?.changesPercentage >= 0}
+                        {#if item?.changesPercentage >= 0 && item?.changesPercentage !== null}
                           <span class="text-[#00FC50]"
                             >+{item?.changesPercentage >= 1000
                               ? abbreviateNumberWithColor(
@@ -477,7 +443,7 @@
                                 )
                               : item?.changesPercentage?.toFixed(2)}%</span
                           >
-                        {:else if item?.changesPercentage < 0}
+                        {:else if item?.changesPercentage < 0 && item?.changesPercentage !== null}
                           <span class="text-[#FF2F1F]"
                             >{item?.changesPercentage <= -1000
                               ? abbreviateNumberWithColor(
@@ -509,22 +475,21 @@
                       >
                         {item?.put_volume?.toLocaleString("en-US")}
                       </td>
-
+                      <!--
                       <td class="text-sm sm:text-[1rem] text-white text-end">
                         {item?.avgVolumeRatio?.toFixed(2)}
                       </td>
-
+                      -->
+                      <!--
                       <td class="text-sm sm:text-[1rem] text-end">
                         <HoverCard.Root>
                           <HoverCard.Trigger
                             class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
                           >
                             <div class="flex items-center justify-end">
-                              <!-- Bar Container -->
                               <div
                                 class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
                               >
-                                <!-- Bearish -->
                                 <div
                                   class="bg-red-500 h-full"
                                   style="width: calc(({item
@@ -534,7 +499,6 @@
                                     ?.premium_ratio[2]})) * 100%)"
                                 ></div>
 
-                                <!-- Neutral -->
                                 <div
                                   class="bg-gray-300 h-full"
                                   style="width: calc(({item
@@ -544,7 +508,6 @@
                                     ?.premium_ratio[2]})) * 100%)"
                                 ></div>
 
-                                <!-- Bullish -->
                                 <div
                                   class="bg-green-500 h-full"
                                   style="width: calc(({item
@@ -589,6 +552,7 @@
                           </HoverCard.Content>
                         </HoverCard.Root>
                       </td>
+                      -->
 
                       <td class="text-sm sm:text-[1rem] text-end text-white">
                         {@html abbreviateNumberWithColor(
@@ -596,6 +560,20 @@
                           false,
                           true,
                         )}
+                      </td>
+
+                      <td class="text-white text-sm sm:text-[1rem] text-end">
+                        {#if item?.changeOI >= 0}
+                          <span class="text-[#00FC50]"
+                            >+{item?.changeOI?.toLocaleString("en-US")}</span
+                          >
+                        {:else if item?.changeOI < 0}
+                          <span class="text-[#FF2F1F]"
+                            >{item?.changeOI?.toLocaleString("en-US")}
+                          </span>
+                        {:else}
+                          <span class="text-white"> n/a </span>
+                        {/if}
                       </td>
 
                       <td class="text-white text-sm sm:text-[1rem] text-end">
@@ -635,7 +613,7 @@
                           true,
                         )}
                       </td>
-
+                      <!--
                       <td class="text-sm sm:text-[1rem] text-end text-white">
                         {@html abbreviateNumberWithColor(
                           item?.net_premium,
@@ -651,6 +629,7 @@
                           true,
                         )}
                       </td>
+                      -->
                     </tr>
                   {/each}
                 </tbody>

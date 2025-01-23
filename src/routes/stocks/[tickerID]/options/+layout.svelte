@@ -100,6 +100,7 @@
               >
                 OI
               </a>
+              <!--
               <a
                 href={`/stocks/${$stockTicker}/options/gex`}
                 on:click={() => changeSubSection("gex")}
@@ -118,6 +119,7 @@
               >
                 DEX
               </a>
+              -->
             </ul>
           </nav>
           <div class="mt-2 sm:mt-0">

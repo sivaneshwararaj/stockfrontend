@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    etfTicker,
+    stockTicker,
     numberOfUnreadNotification,
     displayCompanyName,
   } from "$lib/store";
@@ -17,22 +17,22 @@
   <meta name="viewport" content="width=device-width" />
   <title>
     {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$etfTicker}) Delta Exposure by Strike Price ·
+    {$displayCompanyName} ({$stockTicker}) Delta Exposure by Strike Price ·
     Stocknear
   </title>
   <meta
     name="description"
-    content={`Discover detailed Delta Exposure analysis by strike price for ${$displayCompanyName} (${$etfTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
+    content={`Discover detailed Delta Exposure analysis by strike price for ${$displayCompanyName} (${$stockTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
   />
 
   <!-- Other meta tags -->
   <meta
     property="og:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Delta Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Delta Exposure by Strike Price · Stocknear`}
   />
   <meta
     property="og:description"
-    content={`Discover detailed Delta Exposure analysis by strike price for ${$displayCompanyName} (${$etfTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
+    content={`Discover detailed Delta Exposure analysis by strike price for ${$displayCompanyName} (${$stockTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
   />
   <meta property="og:type" content="website" />
   <!-- Add more Open Graph meta tags as needed -->
@@ -41,11 +41,11 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta
     name="twitter:title"
-    content={`${$displayCompanyName} (${$etfTicker}) Delta Exposure by Strike Price · Stocknear`}
+    content={`${$displayCompanyName} (${$stockTicker}) Delta Exposure by Strike Price · Stocknear`}
   />
   <meta
     name="twitter:description"
-    content={`Discover detailed Delta Exposure analysis by strike price for ${$displayCompanyName} (${$etfTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
+    content={`Discover detailed Delta Exposure analysis by strike price for ${$displayCompanyName} (${$stockTicker}). Explore historical volume, open interest, and save individual options contracts for in-depth insights.`}
   />
   <!-- Add more Twitter meta tags as needed -->
 </svelte:head>

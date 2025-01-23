@@ -34,17 +34,13 @@
   rawData = rawData?.map((item) => ({
     ...item,
     volatilitySpread:
-      item?.realized_volatility !== null
-        ? (item?.implied_volatility - item?.realized_volatility)?.toFixed(2)
-        : null,
+      item?.rv !== null ? (item?.iv - item?.rv)?.toFixed(2) : null,
   }));
 
   const avgIV =
-    rawData?.reduce((acc, entry) => acc + entry.implied_volatility, 0) /
-    rawData?.length;
+    rawData?.reduce((acc, entry) => acc + entry.iv, 0) / rawData?.length;
   const avgRV =
-    rawData?.reduce((acc, entry) => acc + entry.realized_volatility, 0) /
-    rawData?.length;
+    rawData?.reduce((acc, entry) => acc + entry.rv, 0) / rawData?.length;
 
   let displayList = rawData?.slice(0, 150);
   let timePeriod = "3M";
@@ -88,12 +84,8 @@
 
     // Extract the dates and gamma values from the filtered data
     const dateList = filteredData?.map((item) => item.date);
-    const impliedVolatility = filteredData?.map(
-      (item) => item?.implied_volatility,
-    );
-    const realizedVolatility = filteredData?.map(
-      (item) => item?.realized_volatility,
-    );
+    const impliedVolatility = filteredData?.map((item) => item?.iv);
+    const realizedVolatility = filteredData?.map((item) => item?.rv);
 
     const volatilitySpread = filteredData?.map(
       (item) => item?.volatilitySpread,
@@ -161,7 +153,7 @@
       },
       silent: true,
       grid: {
-        left: $screenWidth < 640 ? "5%" : "0%",
+        left: $screenWidth < 640 ? "5%" : "4%",
         right: $screenWidth < 640 ? "5%" : "0%",
         bottom: "10%",
         containLabel: true,
@@ -318,12 +310,12 @@
       align: "right",
     },
     {
-      key: "implied_volatility",
-      label: "IV (30D)",
+      key: "iv",
+      label: "Implied Volatility",
       align: "right",
     },
     {
-      key: "realized_volatility",
+      key: "rv",
       label: "Realized Vol.",
       align: "right",
     },
@@ -334,8 +326,8 @@
     date: { order: "none", type: "date" },
     changesPercentage: { order: "none", type: "number" },
     putCallRatio: { order: "none", type: "number" },
-    implied_volatility: { order: "none", type: "number" },
-    realized_volatility: { order: "none", type: "number" },
+    iv: { order: "none", type: "number" },
+    rv: { order: "none", type: "number" },
     volatilitySpread: { order: "none", type: "number" },
     total_open_interest: { order: "none", type: "number" },
     changesPercentageOI: { order: "none", type: "number" },
@@ -422,19 +414,6 @@
   <div class="w-full overflow-hidden m-auto mt-5">
     {#if options !== null}
       <div class="app w-full relative">
-        <div class="flex justify-start space-x-2 absolute right-0 top-0 z-10">
-          {#each ["3M", "6M", "1Y"] as item}
-            <label
-              on:click={() => (timePeriod = item)}
-              class="px-3 py-1 text-sm {timePeriod === item
-                ? 'bg-white text-black '
-                : 'text-white bg-table text-opacity-[0.6]'} transition ease-out duration-100 sm:hover:bg-white sm:hover:text-black rounded-md cursor-pointer"
-            >
-              {item}
-            </label>
-          {/each}
-        </div>
-
         <Chart {init} {options} class="chart" />
       </div>
     {:else}
@@ -474,13 +453,13 @@
             </td>
 
             <td class="text-white text-sm sm:text-[1rem] text-end">
-              {#if item?.changesPercentage >= 0}
+              {#if item?.changesPercentage >= 0 && item?.changesPercentage !== null}
                 <span class="text-[#00FC50]"
                   >+{item?.changesPercentage >= 1000
                     ? abbreviateNumberWithColor(item?.changesPercentage)
                     : item?.changesPercentage?.toFixed(2)}%</span
                 >
-              {:else if item?.changesPercentage < 0}
+              {:else if item?.changesPercentage < 0 && item?.changesPercentage !== null}
                 <span class="text-[#FF2F1F]"
                   >{item?.changesPercentage <= -1000
                     ? abbreviateNumberWithColor(item?.changesPercentage)
@@ -524,12 +503,12 @@
             <td
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
-              {item?.implied_volatility}
+              {item?.iv}
             </td>
             <td
               class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
             >
-              {item?.realized_volatility ?? "n/a"}
+              {item?.rv ?? "n/a"}
             </td>
 
             <td

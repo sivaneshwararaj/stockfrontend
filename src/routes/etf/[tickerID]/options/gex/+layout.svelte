@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { etfTicker } from "$lib/store";
+  import { stockTicker } from "$lib/store";
+  import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { page } from "$app/stores";
 
   export let data;
@@ -15,10 +16,10 @@
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
-      //goto(`/etf/${$etfTicker}${subSectionMap[state]}`);
+      //goto(`/stocks/${$stockTicker}${subSectionMap[state]}`);
     } else {
       displaySubSection = state;
-      //goto(`/etf/${$etfTicker}/statistics`);
+      //goto(`/stocks/${$stockTicker}/statistics`);
     }
   }
 
@@ -55,7 +56,7 @@
           >
             <ul class="flex flex-row items-center w-full text-white">
               <a
-                href={`/etf/${$etfTicker}/options/gex`}
+                href={`/stocks/${$stockTicker}/options/gex`}
                 on:click={() => changeSubSection("overview")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'overview'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
@@ -65,7 +66,7 @@
               </a>
 
               <a
-                href={`/etf/${$etfTicker}/options/gex/strike`}
+                href={`/stocks/${$stockTicker}/options/gex/strike`}
                 on:click={() => changeSubSection("strike")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'strike'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
@@ -74,7 +75,7 @@
                 By Strike
               </a>
               <a
-                href={`/etf/${$etfTicker}/options/gex/expiry`}
+                href={`/stocks/${$stockTicker}/options/gex/expiry`}
                 on:click={() => changeSubSection("expiry")}
                 class="p-2 px-5 cursor-pointer {displaySubSection === 'expiry'
                   ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'

@@ -904,7 +904,7 @@
         </div>
         <div class="mr-3 whitespace-nowrap">
           <span class="text-[var(--light-text-color)] font-normal">Avg:</span>
-          ${optionHistoryList?.at(0)?.avg_price}
+          ${optionHistoryList?.at(0)?.mark}
         </div>
         <div class="mr-3 whitespace-nowrap">
           <span class="text-[var(--light-text-color)] font-normal">Prem:</span>
