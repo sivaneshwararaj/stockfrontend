@@ -1,14 +1,33 @@
 <script lang="ts">
   import { abbreviateNumberWithColor, monthNames } from "$lib/utils";
+  import { screenWidth } from "$lib/store";
 
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
+  import { onMount } from "svelte";
+  import { init, use } from "echarts/core";
+  import { BarChart, LineChart } from "echarts/charts";
+  import { GridComponent, TooltipComponent } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
+  import { Chart } from "svelte-echarts";
+
+  use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
   export let data;
 
   const currentTime = new Date(
     new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
   )?.getTime();
+
+  let rawData = data?.getData?.map((item) => ({
+    ...item,
+    dte: daysLeft(item?.expiry),
+  }));
+
+  let displayList = rawData?.slice(0, 150) || [];
+
+  let options = plotData();
 
   function daysLeft(targetDate) {
     const targetTime = new Date(targetDate).getTime();
@@ -41,12 +60,200 @@
     return formattedDate;
   }
 
-  let rawData = data?.getData?.map((item) => ({
-    ...item,
-    dte: daysLeft(item?.expiry),
-  }));
+  function plotData() {
+    let dates = [];
+    let callData = [];
+    let putData = [];
+    let priceList = [];
+    let totalPremiums = [];
 
-  let displayList = rawData?.slice(0, 150) || [];
+    // Sort history by date
+    const history = rawData?.sort(
+      (a, b) => new Date(a?.date) - new Date(b?.date),
+    );
+
+    // Map to aggregate call size, put size, and premiums for each date
+    const aggregatedData = {};
+
+    history?.forEach((item) => {
+      const { date, optionType, size, premium } = item;
+
+      // Initialize the date in aggregatedData if it doesn't exist
+      if (!aggregatedData[date]) {
+        aggregatedData[date] = { callSize: 0, putSize: 0, totalPremium: 0 };
+      }
+
+      // Aggregate call size, put size, and premium
+      if (optionType === "Call") {
+        aggregatedData[date].callSize += size;
+      } else if (optionType === "Put") {
+        aggregatedData[date].putSize += size;
+      }
+
+      // Add premium
+      aggregatedData[date].totalPremium += premium;
+    });
+
+    // Extract dates, call data, put data, premiums, and price list
+    dates = Object.keys(aggregatedData);
+    callData = dates.map((date) => aggregatedData[date].callSize);
+    putData = dates.map((date) => aggregatedData[date].putSize);
+    totalPremiums = dates.map((date) => aggregatedData[date].totalPremium);
+
+    // Match historical prices for the same dates
+    priceList = dates.map((date) => {
+      const matchingData = data?.getHistoricalPrice?.find(
+        (d) => d?.time === date,
+      );
+      return matchingData?.close || null; // Use `null` if no match is found
+    });
+
+    const options = {
+      animation: false,
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          // Get the timestamp from the first parameter
+          const timestamp = params[0].axisValue;
+
+          // Initialize result with timestamp
+          let result = timestamp + "<br/>";
+
+          // Add each series data
+          params?.forEach((param) => {
+            const marker =
+              '<span style="display:inline-block;margin-right:4px;' +
+              "border-radius:10px;width:10px;height:10px;background-color:" +
+              param.color +
+              '"></span>';
+            result +=
+              marker +
+              param.seriesName +
+              ": " +
+              abbreviateNumberWithColor(param.value, false, true) +
+              "<br/>";
+          });
+
+          return result;
+        },
+        axisPointer: {
+          lineStyle: {
+            color: "#fff",
+          },
+        },
+      },
+      silent: true,
+      grid: {
+        left: $screenWidth < 640 ? "5%" : "2%",
+        right: $screenWidth < 640 ? "5%" : "2%",
+        bottom: "10%",
+        containLabel: true,
+      },
+      xAxis: [
+        {
+          type: "category",
+          data: dates,
+          axisLabel: {
+            color: "#fff",
+
+            formatter: function (value) {
+              // Assuming dates are in the format 'yyyy-mm-dd'
+              const dateParts = value.split("-");
+              const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+              const year = parseInt(dateParts[0]);
+              const day = parseInt(dateParts[2]);
+              return `${day} ${monthNames[monthIndex]} ${year}`;
+            },
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          position: "right",
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+      ],
+      series: [
+        {
+          name: "Call",
+          type: "bar",
+          stack: "Put-Call Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: callData,
+          itemStyle: {
+            color: "#00FC50",
+          },
+        },
+        {
+          name: "Put",
+          type: "bar",
+          stack: "Put-Call Ratio",
+          emphasis: {
+            focus: "series",
+          },
+          data: putData,
+          itemStyle: {
+            color: "#EE5365", //'#7A1C16'
+          },
+        },
+        {
+          name: "Price", // Name for the line chart
+          type: "line", // Type of the chart (line)
+          yAxisIndex: 1, // Use the second y-axis on the right
+          data: priceList, // iv60Data (assumed to be passed as priceList)
+          itemStyle: {
+            color: "#fff", // Choose a color for the line (gold in this case)
+          },
+          lineStyle: {
+            width: 2, // Set the width of the line
+          },
+          smooth: true, // Optional: make the line smooth
+          showSymbol: false,
+        },
+      ],
+    };
+    return options;
+  }
+
+  async function handleScroll() {
+    const scrollThreshold = document.body.offsetHeight * 0.8; // 80% of the website height
+    const isBottom = window.innerHeight + window.scrollY >= scrollThreshold;
+    if (isBottom && displayList?.length !== rawData?.length) {
+      const nextIndex = displayList?.length;
+      const filteredNewResults = rawData?.slice(nextIndex, nextIndex + 50);
+      displayList = [...displayList, ...filteredNewResults];
+    }
+  }
+  onMount(async () => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   $: columns = [
     { key: "date", label: "Date", align: "left" },
@@ -92,7 +299,7 @@
 
     // Reset to original data when 'none' and stop further sorting
     if (sortOrder === "none") {
-      displayList = [...originalData]; // Reset originalData to rawData
+      displayList = [...originalData]?.slice(0, 150); // Reset originalData to rawData
       return;
     }
 
@@ -127,7 +334,7 @@
     };
 
     // Sort using the generic comparison function
-    displayList = [...originalData].sort(compareValues);
+    displayList = [...originalData].sort(compareValues)?.slice(0, 150);
   };
 </script>
 
@@ -144,6 +351,13 @@
         >
           Unusual Activity
         </h2>
+        <Infobox
+          text="Options trades with a premium of at least $1 million that are still active and unexpired."
+        />
+
+        <div class="app w-full">
+          <Chart {init} {options} class="chart" />
+        </div>
         <div class="w-full overflow-x-scroll text-white">
           <table
             class="w-full table table-sm table-compact bg-table border border-gray-800 rounded-none sm:rounded-md m-auto mt-4 overflow-x-auto"
@@ -152,7 +366,7 @@
               <TableHeader {columns} {sortOrders} {sortData} />
             </thead>
             <tbody>
-              {#each displayList as item, index}
+              {#each data?.user?.tier !== "Pro" ? displayList?.slice(0, 3) : displayList as item, index}
                 <tr
                   class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
                     1 ===
@@ -172,7 +386,12 @@
                     {item?.dte}
                   </td>
                   <td
-                    class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+                    class=" text-sm sm:text-[1rem] text-end whitespace-nowrap {item?.optionType ===
+                    'Call'
+                      ? 'text-[#00FC50]'
+                      : item?.optionType === 'Put'
+                        ? 'text-[#FF2F1F]'
+                        : 'text-white'} "
                   >
                     {item?.optionType}
                   </td>
@@ -182,7 +401,12 @@
                     {item?.unusualType}
                   </td>
                   <td
-                    class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+                    class="text-sm sm:text-[1rem] text-end whitespace-nowrap {item?.sentiment ===
+                    'Bullish'
+                      ? 'text-[#00FC50]'
+                      : item?.sentiment === 'Bearish'
+                        ? 'text-[#FF2F1F]'
+                        : 'text-[#C8A32D]'} "
                   >
                     {item?.sentiment}
                   </td>
