@@ -9,9 +9,10 @@
     getCache,
     stockTicker,
     screenWidth,
-    numberOfUnreadNotification,
     displayCompanyName,
   } from "$lib/store";
+
+  import SEO from "$lib/components/SEO.svelte";
 
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
@@ -372,12 +373,6 @@
           // Initialize result with timestamp
           let result = timestamp + "<br/>";
 
-          // Variables to store bid and ask values and their colors
-          let bidValue = null;
-          let askValue = null;
-          let bidColor = null;
-          let askColor = null;
-
           // Sort params to ensure Vol appears last
           params.sort((a, b) => {
             if (a.seriesName === "Vol") return 1;
@@ -393,12 +388,13 @@
               param.color +
               '"></span>';
 
-            result +=
-              marker +
-              param.seriesName +
-              ": " +
-              abbreviateNumberWithColor(param.value, false, true) +
-              "<br/>";
+            // Check if the series is for IV and add a '%' sign
+            const value =
+              param.seriesName === "IV"
+                ? `${param.value}%`
+                : (param.value?.toLocaleString("en-US") ?? "n/a");
+
+            result += marker + param.seriesName + ": " + value + "<br/>";
           });
 
           if (rawDataPoint?.dte !== undefined) {
@@ -554,43 +550,10 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Hottest Options Chain Contract ·
-    Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Hottest Options Chain Contract · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Hottest Options Chain Contract · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Explore historic volume & open interest of option chains & save individual contracts for later`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title={`${$displayCompanyName} (${$stockTicker}) - Explore the Hottest Options Contracts | Stocknear`}
+  description={`Analyze historical volume, open interest, and trends in option chains for ${$displayCompanyName} (${$stockTicker}). Discover actionable insights for trading decisions.`}
+/>
 
 <section
   class="w-full bg-default overflow-hidden text-white min-h-screen pb-40"
