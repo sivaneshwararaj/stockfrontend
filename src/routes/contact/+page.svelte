@@ -1,42 +1,16 @@
 <script>
   import logo from "$lib/images/feedback_logo.png";
-  import { numberOfUnreadNotification } from "$lib/store";
+  import SEO from "$lib/components/SEO.svelte";
 
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
 
   const emailAddress = "support@stocknear.com";
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Contact
-    Us · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Need help, found a bug or you have a feature request. Please contact us to resolve any issues.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`Contact Us · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`Need help, found a bug or you have a feature request. Please contact us to resolve any issues.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Contact Us · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`Need help, found a bug or you have a feature request. Please contact us to resolve any issues.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Contact Us"
+  description="Need help, found a bug or you have a feature request. Please contact us to resolve any issues."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 pb-40"
@@ -157,17 +131,17 @@
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
-              href="/contact"
+              href="/about"
               class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Contact Us
+                  About Us
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Let me know if you need something
+                Learn the mission of the company and the team
               </span>
             </a>
           </div>

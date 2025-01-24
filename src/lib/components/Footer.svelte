@@ -7,7 +7,7 @@
   class="bg-default border-t border-gray-600 z-20 sm:z-50 relative bottom-0 w-full sm:px-10 m-auto"
 >
   <div class="container mx-auto px-5 sm:px-3">
-    <div class="w-full flex flex-col md:flex-row py-6">
+    <div class="w-full flex flex-col md:flex-row py-3">
       <div class="flex-1 mb-8">
         <div class="flex flex-row items-center mt-4">
           <a
@@ -278,11 +278,16 @@
       -->
     </div>
 
-    <div class="hidden sm:flex flex-col">
+    <div class="flex flex-col">
       <div class="border-b border-gray-700 w-full" />
-      <span class="flex flex-row items-center mt-6 text-md text-gray-300 mb-5">
-        © 2025 Stocknear. All Rights Reserved.
-      </span>
+      <div
+        class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mt-6 text-md text-gray-300 mb-5"
+      >
+        <span class="mb-2 sm:mb-0"> Stocknear is 100% Open Source⚡ </span>
+        <span class="hidden sm:inline-block">
+          © 2025 Stocknear. All Rights Reserved.
+        </span>
+      </div>
     </div>
   </div>
 </footer>
