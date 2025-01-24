@@ -11,6 +11,7 @@
     const subSectionMap = {
       overview: "/options",
       "hottest-contracts": "/options/hottest-contracts",
+      "unusual-activity": "/options/unusual-activity",
       volatility: "/options/volatility",
       gex: "/options/gex",
       dex: "/options/dex",
@@ -19,10 +20,10 @@
 
     if (state !== "overview" && subSectionMap[state]) {
       displaySubSection = state;
-      //goto(`/stocks/${$etfTicker}${subSectionMap[state]}`);
+      //goto(`/etf/${$etfTicker}${subSectionMap[state]}`);
     } else {
       displaySubSection = state;
-      //goto(`/stocks/${$etfTicker}/statistics`);
+      //goto(`/etf/${$etfTicker}/statistics`);
     }
   }
 
@@ -32,6 +33,7 @@
       const sectionMap = {
         overview: "overview",
         "hottest-contracts": "hottest-contracts",
+        "unusual-activity": "unusual-activity",
         volatility: "volatility",
         gex: "gex",
         dex: "dex",
@@ -70,7 +72,16 @@
               >
                 Overview
               </a>
-
+              <a
+                href={`/etf/${$etfTicker}/options/unusual-activity`}
+                on:click={() => changeSubSection("unusual-activity")}
+                class="p-2 px-5 cursor-pointer {displaySubSection ===
+                'unusual-activity'
+                  ? 'text-white bg-primary sm:hover:bg-opacity-[0.95]'
+                  : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+              >
+                Unusual Activity
+              </a>
               <a
                 href={`/etf/${$etfTicker}/options/hottest-contracts`}
                 on:click={() => changeSubSection("hottest-contracts")}
@@ -161,7 +172,7 @@
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Build your Stock Screener to find profitable stocks.
+                Build your Stock Screener to find profitable etf.
               </span>
             </a>
           </div>
