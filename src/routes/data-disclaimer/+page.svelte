@@ -1,41 +1,15 @@
 <script>
-  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import SEO from "$lib/components/SEO.svelte";
 
   let discordURL = import.meta.env.VITE_DISCORD_URL;
   const emailAddress = "support@stocknear.com";
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Data
-    Disclaimer · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`All data shown on this website is for informational purposes only and should not be relied upon to make trading or investing decisions.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`Data Disclaimer · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`All data shown on this website is for informational purposes only and should not be relied upon to make trading or investing decisions.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Data Disclaimer · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`All data shown on this website is for informational purposes only and should not be relied upon to make trading or investing decisions.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Data Disclaimer"
+  description="All data shown on this website is for informational purposes only and should not be relied upon to make trading or investing decisions."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
@@ -164,8 +138,7 @@
               </h2>
               <p class="text-white mb-10 mt-5 text-[1rem] sm:text-lg">
                 Options flow data is sourced from Benzinga via OPRA. Individual
-                ticker options data is from Unusual Whales, also sourced from
-                OPRA.
+                ticker options data is from Intrinio, also sourced from OPRA.
               </p>
             </div>
           </div>
