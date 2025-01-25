@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
+  import SEO from "$lib/components/SEO.svelte";
+
   export let data;
 
   let rawData = data?.getFDACalendar ?? [];
@@ -15,7 +16,7 @@
             day: "2-digit",
             month: "short",
             year: "numeric",
-          }).format(new Date(item.start_date)); // Use start_date for grouping
+          }).format(new Date(item?.date)); // Use start_date for grouping
 
           if (!acc[dateKey]) acc[dateKey] = [];
           acc[dateKey].push(item);
@@ -26,7 +27,7 @@
         .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
         .map(([date, items]) => {
           // Sort items within each group by latest time (if needed)
-          items.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+          items.sort((a, b) => new Date(a?.date) - new Date(b?.date));
 
           // Get unique tickers in the group
           const tickers = [...new Set(items.map((item) => item.ticker))];
@@ -37,40 +38,12 @@
   };
 
   let groupData = groupNewsByStartDate(rawData);
-
-  $: charNumber = $screenWidth < 640 ? 15 : 20;
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} FDA
-    Calendar · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`FDA Approval to track success rates of Biotech companies in the stock market.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`FDA Calendar · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`FDA Approval to track success rates of Biotech companies in the stock market.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`FDA Tracker · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`FDA Approval to track success rates of Biotech companies in the stock market.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="FDA Calendar"
+  description="FDA Approval to track success rates of Biotech companies in the stock market."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3 text-white"
@@ -127,13 +100,13 @@
                     >
                       <div class="text-white mb-2">
                         <h4 class="font-semibold">
-                          Drug: <span class="font-normal">{item.drug}</span>
+                          Drug: <span class="font-normal">{item?.drug}</span>
                         </h4>
                       </div>
                       <div class="text-white mb-2">
                         <h4 class="font-semibold">
                           Description: <span class="font-normal"
-                            >{item.description}</span
+                            >{item?.description}</span
                           >
                         </h4>
                       </div>
@@ -146,7 +119,8 @@
                       </div>
                       <div class="text-white">
                         <h4 class="font-semibold">
-                          Status: <span class="font-normal">{item.status}</span>
+                          Status: <span class="font-normal">{item?.status}</span
+                          >
                         </h4>
                       </div>
                       <div class="flex flex-wrap gap-x-2 pt-2 lg:pt-0.5">
