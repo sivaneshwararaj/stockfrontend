@@ -5,34 +5,22 @@
   import * as Table from "$lib/components/shadcn/table/index.ts";
   import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
   import { abbreviateNumber } from "$lib/utils";
-  import * as Tabs from "$lib/components/shadcn/tabs/index.js";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
-  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import { compareTimes, formatTime, isPWAInstalled } from "$lib/utils";
   import Infobox from "$lib/components/Infobox.svelte";
   import { closedPWA } from "$lib/store";
   import Feedback from "$lib/components/Feedback.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
-  let optionsMode = "openInterest";
 
-  let optionsTable = data?.getDashboard?.optionsData?.openInterest || [];
   let gainersList = data?.getDashboard?.marketMovers?.gainers || [];
   let losersList = data?.getDashboard?.marketMovers?.losers || [];
   let marketStatus = data?.getDashboard?.marketStatus ?? 0;
   let analystReport = data?.getDashboard?.analystReport || {};
   let recentWIIM = data?.getDashboard?.wiim || [];
 
-  function changeTable(state) {
-    optionsMode = state;
-    if (optionsMode === "premium") {
-      optionsTable = data?.getDashboard?.optionsData?.premium || [];
-    } else if (optionsMode === "ivRank") {
-      optionsTable = data?.getDashboard?.optionsData?.ivRank || [];
-    } else if (optionsMode === "openInterest") {
-      optionsTable = data?.getDashboard?.optionsData?.openInterest || [];
-    }
-  }
   let pwaInstalled = false;
   let AppInstalled = null;
 
@@ -69,42 +57,10 @@
   $: charNumber = $screenWidth < 640 ? 20 : 15;
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stocknear
-    - Free Online Stock Analysis for Investors
-  </title>
-
-  <meta
-    name="description"
-    content="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."
-  />
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content="Stocknear - Free Online Stock Analysis for Investors"
-  />
-  <meta
-    property="og:description"
-    content="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content="Stocknear - Free Online Stock Analysis for Investors"
-  />
-  <meta
-    name="twitter:description"
-    content="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Free Online Stock Analysis for Investors"
+  description="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."
+/>
 
 <div
   class="w-full sm:max-w-[1400px] overflow-hidden m-auto min-h-screen bg-default mb-40"
@@ -169,12 +125,12 @@
         class="text-center mb-10 relative w-fit flex justify-center m-auto text-white"
       >
         <div class="mb-4 flex justify-center -mt-3 lg:mb-8">
-          <a href="/stocks/NVDA/options/volatility"
+          <a href="/stocks/NVDA/options/unusual-activity"
             ><div
               class="flex items-center justify-center sm:hover:text-white text-blue-400"
             >
               <div class="text-lg sm:text-xl font-semibold">
-                Volatility Exposure
+                Unusual Activity
               </div>
               <div
                 class="-mt-2 ml-1 -rotate-6 rounded-lg bg-red-500 px-1 py-0.5 text-xs font-semibold text-white"
