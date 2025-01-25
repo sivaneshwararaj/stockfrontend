@@ -1371,13 +1371,6 @@
       defaultValue: "any",
       category: "Company Info",
     },
-    gexRatio: {
-      label: "Gex Ratio",
-      step: [20, 10, 5, 3, 1, 0.5, 0],
-      defaultCondition: "over",
-      defaultValue: "any",
-      category: "Options Activity",
-    },
     ivRank: {
       label: "IV Rank",
       step: [50, 30, 20, 10, 5, 1, 0],
@@ -1402,20 +1395,6 @@
     changeOI: {
       label: "Change OI",
       step: ["5K", "3K", "1K", "500", "300", "100"],
-      defaultCondition: "over",
-      defaultValue: "any",
-      category: "Options Activity",
-    },
-    netCallPrem: {
-      label: "Net Call Prem",
-      step: ["1M", "500K", "100K", "50K", "-50K", "-100K", "-500K", "-1M"],
-      defaultCondition: "over",
-      defaultValue: "any",
-      category: "Options Activity",
-    },
-    netPutPrem: {
-      label: "Net Put Prem",
-      step: ["1M", "500K", "100K", "50K", "-50K", "-100K", "-500K", "-1M"],
       defaultCondition: "over",
       defaultValue: "any",
       category: "Options Activity",

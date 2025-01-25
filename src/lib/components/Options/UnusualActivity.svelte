@@ -352,7 +352,7 @@
           Unusual Activity
         </h2>
         <Infobox
-          text="Options trades with a premium of at least $1 million that are still active and unexpired."
+          text="Options trades with a premium of at least $100K that are still active and unexpired."
         />
 
         <div class="app w-full">
