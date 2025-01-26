@@ -273,7 +273,7 @@
     optionType: { order: "none", type: "string" },
     unusualType: { order: "none", type: "string" },
     dte: { order: "none", type: "number" },
-    sentiment: { order: "none", type: "string" },
+    sentiment: { order: "none", type: "sentiment" },
     size: { order: "none", type: "number" },
     strike: { order: "none", type: "number" },
     avgPrice: { order: "none", type: "number" },
@@ -319,6 +319,13 @@
           return sortOrder === "asc"
             ? valueA.localeCompare(valueB)
             : valueB.localeCompare(valueA);
+        case "sentiment":
+          const sentimentOrder = { BULLISH: 1, NEUTRAL: 2, BEARISH: 3 };
+          const sentimentA = sentimentOrder[a?.sentiment?.toUpperCase()] || 4;
+          const sentimentB = sentimentOrder[b?.sentiment?.toUpperCase()] || 4;
+          return sortOrder === "asc"
+            ? sentimentA - sentimentB
+            : sentimentB - sentimentA;
         case "number":
         default:
           valueA = parseFloat(a[key]);
@@ -326,11 +333,10 @@
           break;
       }
 
-      if (sortOrder === "asc") {
-        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-      } else {
-        return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
-      }
+      // Default comparison for numbers and fallback case
+      if (valueA < valueB) return sortOrder === "asc" ? -1 : 1;
+      if (valueA > valueB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
     };
 
     // Sort using the generic comparison function
