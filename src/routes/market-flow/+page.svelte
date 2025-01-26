@@ -3,11 +3,7 @@
 
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
-  import {
-    abbreviateNumber,
-    abbreviateNumberWithColor,
-    sectorNavigation,
-  } from "$lib/utils";
+  import { abbreviateNumberWithColor, sectorNavigation } from "$lib/utils";
   import InfoModal from "$lib/components/InfoModal.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
@@ -36,15 +32,15 @@
   let isLoading = false;
   let optionsData = null;
   let sectorData = data?.getData?.sectorData || [];
-  let topSectorTickers = data?.getData?.topSectorTickers || {};
-  let marketTideData = data?.getData?.marketTide["SPY"] || {};
+  //let topSectorTickers = data?.getData?.topSectorTickers || {};
+  let marketTideData = data?.getData?.marketTide || {};
   let selectedSector = "SPY";
   let originalData = [...sectorData]; // Unaltered copy of raw data
 
   let stockList = sectorData ?? [];
 
-  let originalTopTickers = [...topSectorTickers[selectedSector]];
-  let displayTopTickers = topSectorTickers[selectedSector];
+  //let originalTopTickers = [...topSectorTickers[selectedSector]];
+  //let displayTopTickers = topSectorTickers[selectedSector];
 
   function findLastNonNull(dataArray, key) {
     for (let i = dataArray.length - 1; i >= 0; i--) {
@@ -118,8 +114,6 @@
     netPutPremium: { order: "none", type: "number" },
     call_premium: { order: "none", type: "number" },
     put_premium: { order: "none", type: "number" },
-    gexRatio: { order: "none", type: "number" },
-    gexNetChange: { order: "none", type: "number" },
     ivRank: { order: "none", type: "number" },
   };
 
@@ -132,8 +126,6 @@
     { key: "netPremium", label: "Net Prem", align: "right" },
     { key: "netCallPremium", label: "Net Call Prem", align: "right" },
     { key: "netPutPremium", label: "Net Put Prem", align: "right" },
-    { key: "gexRatio", label: "Gex Ratio", align: "right" },
-    { key: "gexNetChange", label: "Gex Change", align: "right" },
     { key: "ivRank", label: "IV Rank", align: "right" },
   ];
 
@@ -510,6 +502,7 @@
   }
   optionsData = marketTideData ? getPlotOptions() : null;
 
+  /*
   $: {
     if (selectedSector) {
       originalTopTickers = [...topSectorTickers[selectedSector]];
@@ -519,6 +512,7 @@
           : displayTopTickers?.slice(0, 3);
     }
   }
+    */
 </script>
 
 <svelte:head>
@@ -679,7 +673,7 @@
                   />
                 </div>
               </div>
-
+              <!--
               <div
                 class="w-full m-auto rounded-none sm:rounded-md mb-4 overflow-x-scroll"
               >
@@ -758,16 +752,6 @@
                         </td>
 
                         <td class="text-sm sm:text-[1rem] text-end">
-                          {item?.gexRatio}
-                        </td>
-                        <td class="text-sm sm:text-[1rem] text-end">
-                          {@html abbreviateNumberWithColor(
-                            item?.gexNetChange,
-                            false,
-                            true,
-                          )}
-                        </td>
-                        <td class="text-sm sm:text-[1rem] text-end">
                           {item?.ivRank}
                         </td>
                       </tr>
@@ -775,7 +759,8 @@
                   </tbody>
                 </table>
               </div>
-
+              -->
+              <!--
               <div class="mb-3 mt-10">
                 <div class="flex flex-row items-center">
                   <label
@@ -900,11 +885,9 @@
                               class="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
                             >
                               <div class="flex items-center justify-end">
-                                <!-- Bar Container -->
                                 <div
                                   class="flex w-full max-w-28 h-5 bg-gray-200 rounded-md overflow-hidden"
                                 >
-                                  <!-- Bearish -->
                                   <div
                                     class="bg-red-500 h-full"
                                     style="width: calc(({item
@@ -914,7 +897,6 @@
                                       ?.premium_ratio[2]})) * 100%)"
                                   ></div>
 
-                                  <!-- Neutral -->
                                   <div
                                     class="bg-gray-300 h-full"
                                     style="width: calc(({item
@@ -924,7 +906,6 @@
                                       ?.premium_ratio[2]})) * 100%)"
                                   ></div>
 
-                                  <!-- Bullish -->
                                   <div
                                     class="bg-green-500 h-full"
                                     style="width: calc(({item
@@ -974,6 +955,7 @@
                   </tbody>
                 </table>
               </div>
+              -->
             </div>
             <UpgradeToPro {data} />
           </div>
