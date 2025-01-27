@@ -89,7 +89,7 @@
           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
           ><td
             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-            >Volatility
+            >Implied Volatility (IV)
           </td>
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
@@ -119,7 +119,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumberWithColor(rawData?.dex, false, true)}</td
+            >{@html abbreviateNumberWithColor(rawData?.gex, false, true)}</td
           ></tr
         >
       </tbody>
@@ -240,11 +240,13 @@
           class="flex flex-col border-b border-gray-600 py-1 sm:table-row sm:py-0"
           ><td
             class="whitespace-nowrap px-0.5 py-[1px] xs:px-1 sm:py-2 text-[1rem]"
-            >DEX</td
+            >IV Rank</td
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{@html abbreviateNumberWithColor(rawData?.dex, false, true)}</td
+            >{rawData?.ivRank !== null
+              ? rawData?.ivRank?.toFixed(2)
+              : "n/a"}</td
           ></tr
         >
       </tbody>
