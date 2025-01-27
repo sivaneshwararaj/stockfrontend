@@ -244,7 +244,7 @@
           >
           <td
             class="whitespace-nowrap px-0.5 py-[1px] text-left text-sm font-semibold xs:px-1 sm:py-2 sm:text-right sm:text-[1rem]"
-            >{rawData?.ivRank !== null
+            >{rawData?.ivRank !== undefined
               ? rawData?.ivRank?.toFixed(2)
               : "n/a"}</td
           ></tr
