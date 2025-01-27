@@ -409,19 +409,19 @@
                               >Market Mover</a
                             >
                           </Button>
-                          <!--
+
                           <Button
                             builders={[builder]}
                             type="submit"
                             class="w-full bg-[#141417] hover:bg-[#141417]"
                           >
                             <a
-                              href="/heatmaps"
+                              href="/heatmap"
                               class="text-start w-full text-[1rem] text-white ml-4 mt-4"
-                              >Heatmaps</a
+                              >Market Heatmap</a
                             >
                           </Button>
-                          -->
+
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -969,12 +969,13 @@
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Market Mover</a
                           >
-                          <!--
+
                           <a
-                            href="/heatmaps"
-                            class="text-[1rem] text-white ml-4 mt-4">Heatmaps</a
+                            href="/heatmap"
+                            class="text-[1rem] text-white ml-4 mt-4"
+                            >Market Heatmap</a
                           >
-                            -->
+
                           <a
                             href="/list"
                             class="text-[1rem] text-white ml-4 mt-4"

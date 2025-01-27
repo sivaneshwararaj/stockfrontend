@@ -65,6 +65,7 @@ const pages = [
   { title: "/politicians/flow-data" },
   { title: "/analysts" },
   { title: "/analysts/top-stocks" },
+  { title: "/heatmap" },
 ];
 
 const website = "https://stocknear.com";

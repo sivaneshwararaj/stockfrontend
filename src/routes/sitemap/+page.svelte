@@ -125,6 +125,10 @@
       link: "/stock-screener",
     },
     {
+      title: "Market Heatmap",
+      link: "/heatmap",
+    },
+    {
       title: "Stock Lists",
       link: "/list",
     },
