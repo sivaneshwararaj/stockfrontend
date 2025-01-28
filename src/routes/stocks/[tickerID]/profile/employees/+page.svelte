@@ -2,6 +2,7 @@
   import {
     numberOfUnreadNotification,
     displayCompanyName,
+    screenWidth,
     stockTicker,
   } from "$lib/store";
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
@@ -55,23 +56,17 @@
 
     for (let i = 0; i < employeeHistory?.length; i++) {
       const current = employeeHistory[i]?.employeeCount;
-      //const previousDividend = i === 0 ? 0 : employeeHistory[i - 1]?.dividend;
-
       dateList?.push(employeeHistory[i]?.filingDate?.slice(0, 4));
       employeeList?.push(current);
-
-      //const growthRate = ( (currentDividend - previousDividend) / previousDividend ) ;
-
-      //growthList.push(growthRate?.toFixed(2))
     }
 
     const options = {
       animation: false,
       grid: {
-        left: "0%",
-        right: "0%",
+        left: $screenWidth < 640 ? "5%" : "0%",
+        right: $screenWidth < 640 ? "3%" : "0%",
         top: "10%",
-        bottom: "20%",
+        bottom: "10%",
         containLabel: true,
       },
       xAxis: {
@@ -79,9 +74,10 @@
         type: "category",
         axisLabel: {
           color: "#fff",
-          interval: 0, // Show all labels
+          interval: (index, value) =>
+            dateList.length > 12 ? index % 2 === 0 : 0, // Show every second label if there are too many
           rotate: 45, // Rotate labels for better readability
-          fontSize: 12, // Adjust font size if needed
+          fontSize: 12,
           margin: 10,
         },
       },
@@ -89,11 +85,10 @@
         {
           type: "value",
           splitLine: {
-            show: false, // Disable x-axis grid lines
+            show: false,
           },
-
           axisLabel: {
-            show: false, // Hide y-axis labels
+            show: false,
           },
         },
       ],
@@ -108,22 +103,27 @@
           },
         },
       ],
-
       tooltip: {
         trigger: "axis",
         hideDelay: 100,
-        borderColor: "#969696", // Black border color
-        borderWidth: 1, // Border width of 1px
-        backgroundColor: "#313131", // Optional: Set background color for contrast
+        borderColor: "#969696",
+        borderWidth: 1,
+        backgroundColor: "#313131",
         textStyle: {
-          color: "#fff", // Optional: Text color for better visibility
+          color: "#fff",
         },
         formatter: function (params) {
-          const date = params[0].name; // Get the date from the x-axis value
-          // Return the tooltip content
+          const date = params[0].name;
           return `${date}<br/> Employees: ${params[0].value?.toLocaleString("en-US")}`;
         },
       },
+      dataZoom: [
+        {
+          type: "slider", // Adds a horizontal slider for zooming
+          start: 0,
+          end: 100,
+        },
+      ],
     };
 
     return options;
