@@ -54,7 +54,7 @@
           </div>
 
           <div class=" lg:float-left lg:w-[calc(100%-336px-40px)]">
-            <div class="-mt-5 mb-5">
+            <div class="sm-mt-5 mb-5">
               <Infobox
                 text={`Since the inauguration of Donald J. Trump on January 20, 2025, the 
   S&P500 has ${data?.getData?.returnSince >= 0 ? "grown" : "declined"} by <span class="${data?.getData?.returnSince >= 0 ? "text-[#00FC50] before:content-['+']" : "text-[#FF2F1F]"}">
