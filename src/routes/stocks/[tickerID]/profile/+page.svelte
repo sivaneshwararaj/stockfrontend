@@ -174,7 +174,7 @@ ${paragraphs.join("\n")}
                     <td class="px-1 py-1.5 text-right lg:py-2"
                       ><a
                         class="sm:hover:text-blue-400 text-white underline underline-offset-4"
-                        href={`/stocks/${$stockTicker}/statistics/employees`}
+                        href={`/stocks/${$stockTicker}/profile/employees`}
                         >{rawData?.fullTimeEmployees
                           ? new Intl.NumberFormat("en")?.format(
                               rawData?.fullTimeEmployees,

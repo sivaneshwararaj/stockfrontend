@@ -2,6 +2,8 @@
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   import SEO from "$lib/components/SEO.svelte";
+  import { setCache, getCache } from "$lib/store";
+  import { onDestroy } from "svelte";
 
   export let data;
   let rawData = data?.getData;
@@ -9,19 +11,28 @@
   let iframeLoaded = false;
   let selectedFormat: "png" | "jpeg" | "svg" = "png";
   let selectedTimePeriod = "1D";
-  let isLoaded = false;
+  let iframeUrl: string;
 
   async function getHeatMap() {
-    const postData = { params: selectedTimePeriod };
-    const response = await fetch("/api/heatmap", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
+    const cachedData = getCache(selectedTimePeriod, "getHeatmap");
+    if (cachedData) {
+      rawData = cachedData;
+    } else {
+      const postData = { params: selectedTimePeriod };
+      const response = await fetch("/api/heatmap", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
 
-    rawData = await response.json();
+      rawData = await response.json();
+      setCache(selectedTimePeriod, rawData, "getHeatmap");
+    }
+
+    const blob = new Blob([rawData], { type: "text/html" });
+    iframeUrl = URL.createObjectURL(blob);
   }
 
   async function downloadPlot(item) {
@@ -68,14 +79,22 @@
     }
   }
 
+  onDestroy(() => {
+    if (iframeUrl) URL.revokeObjectURL(iframeUrl);
+  });
+
   $: {
     if (selectedTimePeriod && typeof window !== "undefined") {
-      isLoaded = false;
-      getHeatMap();
-      isLoaded = true;
+      (async () => {
+        await getHeatMap();
+      })();
     }
   }
 </script>
+
+<svelte:head>
+  <script src="https://cdn.plot.ly/plotly-2.18.0.min.js" defer></script>
+</svelte:head>
 
 <SEO
   title="S&P 500 Stock Market Heatmap"
@@ -210,7 +229,7 @@
             {#if rawData}
               <iframe
                 bind:this={iframe}
-                srcdoc={rawData}
+                src={iframeUrl}
                 class="w-full h-screen border-none"
                 on:load={() => (iframeLoaded = true)}
               />
