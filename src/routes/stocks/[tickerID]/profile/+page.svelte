@@ -1,10 +1,7 @@
 <script lang="ts">
-  import {
-    stockTicker,
-    displayCompanyName,
-    numberOfUnreadNotification,
-  } from "$lib/store";
+  import { stockTicker, displayCompanyName } from "$lib/store";
   import { sectorNavigation } from "$lib/utils";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -43,43 +40,10 @@ ${paragraphs.join("\n")}
   );
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker?.toUpperCase()}) Company Profile &
-    Overview · Stocknear
-  </title>
-
-  <meta
-    name="description"
-    content={`Company profile for ${$displayCompanyName} (${$stockTicker?.toUpperCase()}) with a description, list of executives, contact details and other key facts.`}
-  />
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker?.toUpperCase()}) Company Profile & Overview · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Company profile for ${$displayCompanyName} (${$stockTicker?.toUpperCase()}) with a description, list of executives, contact details and other key facts.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker?.toUpperCase()}) Company Profile & Overview · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Company profile for ${$displayCompanyName} (${$stockTicker?.toUpperCase()}) with a description, list of executives, contact details and other key facts.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title={`${$displayCompanyName} (${$stockTicker?.toUpperCase()}) Company Profile & Overview`}
+  description={`Company profile for ${$displayCompanyName} (${$stockTicker?.toUpperCase()}) with a description, list of executives, contact details and other key facts.`}
+/>
 
 <section class="w-full bg-default overflow-hidden text-white h-full">
   <div class="w-full flex h-full overflow-hidden">

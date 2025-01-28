@@ -662,19 +662,19 @@
                               >Reddit Tracker</a
                             >
                           </Button>
-                          <!--
+
                           <Button
                             builders={[builder]}
                             type="submit"
                             class="w-full bg-[#141417] hover:bg-[#141417]"
                           >
                             <a
-                              href="/corporate-lobbying-tracker"
+                              href="/potus-tracker"
                               class="text-start w-full text-[1rem] text-white ml-4 mt-4"
-                              >Lobbying Tracker</a
+                              >Potus Tracker</a
                             >
                           </Button>
-                          -->
+
                           <!--
                           <Button
                             builders={[builder]}
@@ -1124,13 +1124,13 @@
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Reddit Tracker</a
                           >
-                          <!--
+
                           <a
-                            href="/corporate-lobbying-tracker"
+                            href="/potus-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"
-                            >Lobbying Tracker</a
+                            >Potus Tracker</a
                           >
-                            -->
+
                           <!--
                           <a
                             href="/sentiment-tracker"
