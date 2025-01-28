@@ -53,7 +53,7 @@
           </div>
 
           <div class=" mb-2 lg:float-left lg:w-[calc(100%-336px-40px)]">
-            <h2 class="text-white text-xl font-semibold mb-2">
+            <h2 class="text-white text-lg font-semibold mb-2">
               The US President is in {data?.getData?.city ?? "n/a"}
             </h2>
 
