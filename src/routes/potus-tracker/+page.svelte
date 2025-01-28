@@ -1,6 +1,7 @@
 <script lang="ts">
   import SEO from "$lib/components/SEO.svelte";
   import Map from "$lib/components/Map.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   export let data;
 
@@ -52,9 +53,18 @@
             </h1>
           </div>
 
-          <div class=" mb-2 lg:float-left lg:w-[calc(100%-336px-40px)]">
+          <div class=" lg:float-left lg:w-[calc(100%-336px-40px)]">
+            <div class="-mt-5 mb-5">
+              <Infobox
+                text={`Since the inauguration of Donald J. Trump on January 20, 2025, the 
+  S&P500 has ${data?.getData?.returnSince >= 0 ? "grown" : "declined"} by <span class="${data?.getData?.returnSince >= 0 ? "text-[#00FC50] before:content-['+']" : "text-[#FF2F1F]"}">
+  ${data?.getData?.returnSince ?? "n/a"}%</span>.`}
+              />
+            </div>
+
             <h2 class="text-white text-lg font-semibold mb-2">
-              The US President is in {data?.getData?.city ?? "n/a"}
+              The US President is currently located in {data?.getData?.city ??
+                "n/a"}
             </h2>
 
             <div class="w-full m-auto border border-gray-800 rounded-[10px]">
@@ -69,9 +79,24 @@
               {#each Object.entries(groupedByDate) as [date, items], indexA}
                 <div class="my-4">
                   <div
-                    class="border-b border-gray-800 pb-2 text-lg font-semibold text-white"
+                    class="border-b border-gray-800 pb-2 w-full flex flex-row items-center justify-between"
                   >
-                    {date}
+                    <span class="text-lg font-semibold text-white">
+                      {date}</span
+                    >
+                    {#if items?.at(0)?.changesPercentage}
+                      <div class="ml-auto text-sm">
+                        <span class="inline-block">S&P500</span>
+                        <span
+                          class="{items?.at(0)?.changesPercentage > 0
+                            ? "text-[#00FC50] before:content-['+']"
+                            : 'text-[#FF2F1F]'} "
+                          >{items.length > 0
+                            ? items?.at(0)?.changesPercentage
+                            : "n/a"}%</span
+                        >
+                      </div>
+                    {/if}
                   </div>
                   <!-- Display date -->
                   <br />
