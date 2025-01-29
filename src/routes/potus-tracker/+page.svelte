@@ -2,6 +2,28 @@
   import SEO from "$lib/components/SEO.svelte";
   import Map from "$lib/components/Map.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import { monthNames } from "$lib/utils";
+  import { screenWidth } from "$lib/store";
+
+  import { Chart } from "svelte-echarts";
+
+  import { init, use } from "echarts/core";
+  import { LineChart, BarChart } from "echarts/charts";
+  import {
+    GridComponent,
+    TooltipComponent,
+    LegendComponent,
+  } from "echarts/components";
+  import { CanvasRenderer } from "echarts/renderers";
+
+  use([
+    LineChart,
+    BarChart,
+    GridComponent,
+    TooltipComponent,
+    LegendComponent,
+    CanvasRenderer,
+  ]);
 
   export let data;
 
@@ -22,6 +44,139 @@
 
   let modalTitle = "n/a";
   let modalDescription = "n/a";
+
+  const tabs = [
+    {
+      title: "Location Tracker",
+    },
+    {
+      title: "Egg Price Tracker",
+    },
+  ];
+
+  let activeIdx = 0;
+
+  function plotData() {
+    const history = data?.getEggPrice?.history || [];
+    const dateList = history.map((item) => item?.date ?? null);
+    const priceList = history.map((item) => item?.price ?? null);
+    const yoyChangeList = history.map((item) => item?.yoyChange ?? null);
+
+    const options = {
+      animation: false,
+      tooltip: {
+        trigger: "axis",
+        hideDelay: 100,
+        borderColor: "#969696", // Black border color
+        borderWidth: 1, // Border width of 1px
+        backgroundColor: "#313131", // Optional: Set background color for contrast
+        textStyle: {
+          color: "#fff", // Optional: Text color for better visibility
+        },
+        formatter: function (params) {
+          const timestamp = params[0].axisValue;
+          let result = timestamp + "<br/>";
+
+          params?.forEach((param) => {
+            const marker =
+              '<span style="display:inline-block;margin-right:4px;' +
+              "border-radius:10px;width:10px;height:10px;background-color:" +
+              param.color +
+              '"></span>';
+
+            // Check if it's "YoY Change" and append "%"
+            const value =
+              param.seriesName === "YoY Change"
+                ? param.value + "%"
+                : param.value;
+
+            result += marker + param.seriesName + ": " + value + "<br/>";
+          });
+
+          return result;
+        },
+        axisPointer: {
+          lineStyle: {
+            color: "#fff",
+          },
+        },
+      },
+      silent: true,
+      grid: {
+        left: $screenWidth < 640 ? "5%" : "4%",
+        right: $screenWidth < 640 ? "5%" : "0%",
+        bottom: "4%",
+        containLabel: true,
+      },
+      xAxis: [
+        {
+          type: "category",
+          data: dateList,
+          axisLabel: {
+            color: "#fff",
+
+            formatter: function (value) {
+              // Assuming dates are in the format 'yyyy-mm-dd'
+              const dateParts = value.split("-");
+              const monthIndex = parseInt(dateParts[1]) - 1; // Months are zero-indexed in JavaScript Date objects
+              const year = parseInt(dateParts[0]);
+              const day = parseInt(dateParts[2]);
+              return `${day} ${monthNames[monthIndex]} ${year}`;
+            },
+          },
+        },
+      ],
+      yAxis: [
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+        {
+          type: "value",
+          splitLine: {
+            show: false, // Disable x-axis grid lines
+          },
+          position: "right",
+          axisLabel: {
+            show: false, // Hide y-axis labels
+          },
+        },
+      ],
+      series: [
+        {
+          name: "Price per Dozens",
+          type: "line",
+          data: priceList,
+          yAxisIndex: 1,
+          lineStyle: { width: 2 },
+          itemStyle: {
+            color: "#fff",
+          },
+          smooth: true,
+          showSymbol: false,
+        },
+        {
+          name: "YoY Change",
+          type: "bar",
+          lineStyle: { width: 2 },
+          data: yoyChangeList,
+          itemStyle: {
+            color: "#9B5DC4",
+          },
+          smooth: true,
+          showSymbol: false,
+        },
+      ],
+    };
+    return options;
+  }
+
+  let options = plotData();
 </script>
 
 <SEO
@@ -54,6 +209,73 @@
           </div>
 
           <div class=" lg:float-left lg:w-[calc(100%-336px-40px)]">
+            <nav class=" border-b-[2px] overflow-x-scroll whitespace-nowrap">
+              <ul
+                class="flex flex-row items-center w-full text-[1rem] text-white"
+              >
+                {#each tabs as item, i}
+                  <a
+                    href={item?.path}
+                    on:click={() => (activeIdx = i)}
+                    class="p-2 px-5 cursor-pointer {activeIdx === i
+                      ? 'text-white bg-primary sm:hover:bg-opacity-[0.95] font-semibold'
+                      : 'text-gray-400 sm:hover:text-white sm:hover:bg-primary sm:hover:bg-opacity-[0.95]'}"
+                  >
+                    {item.title}
+                  </a>
+                {/each}
+              </ul>
+            </nav>
+
+            {#if activeIdx === 0}
+              <h2 class="text-white text-lg font-semibold mb-2 mt-4">
+                The US President is currently located in {data?.getData?.city ??
+                  "n/a"}
+              </h2>
+
+              <div class="w-full m-auto border border-gray-800 rounded-[10px]">
+                <Map LAT={data?.getData?.lat} LON={data?.getData?.lon} />
+              </div>
+              <span class="text-gray-300 text-xs">
+                Map data © OpenStreetMap
+              </span>
+            {:else}
+              <h2 class="text-white text-lg font-semibold mt-4">Egg Stats:</h2>
+
+              <div
+                class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-x-0 text-white mt-2 text-sm sm:text-[1rem] w-full"
+              >
+                <div class="whitespace-nowrap">
+                  Current Price: {data?.getEggPrice?.currentPrice}
+                </div>
+                <div class="whitespace-nowrap">
+                  <span class=" font-normal">Avg. Price:</span>
+                  {data?.getEggPrice?.avgPrice}
+                </div>
+                <div class="whitespace-nowrap">
+                  <span class=" font-normal">Min. Price:</span>
+                  {data?.getEggPrice?.minPrice}
+                </div>
+                <div class="whitespace-nowrap">
+                  <span class=" font-normal">Max. Price:</span>
+                  {data?.getEggPrice?.maxPrice}
+                </div>
+              </div>
+
+              <div class="app w-full relative">
+                <Chart {init} {options} class="chart" />
+              </div>
+
+              <span class="text-sm">
+                The Federal Reserve Economic Data is collected monthly and
+                updates egg prices across the United States.
+              </span>
+            {/if}
+
+            <h3 class="text-white text-xl font-semibold mb-2 mt-10">
+              Official Presidential Schedule
+            </h3>
+
             <div class="sm-mt-5 mb-5">
               <Infobox
                 text={`Since the inauguration of Donald J. Trump on January 20, 2025, the 
@@ -61,22 +283,6 @@
   ${data?.getData?.returnSince ?? "n/a"}%</span>.`}
               />
             </div>
-
-            <h2 class="text-white text-lg font-semibold mb-2">
-              The US President is currently located in {data?.getData?.city ??
-                "n/a"}
-            </h2>
-
-            <div class="w-full m-auto border border-gray-800 rounded-[10px]">
-              <Map LAT={data?.getData?.lat} LON={data?.getData?.lon} />
-            </div>
-            <span class="text-gray-300 text-xs">
-              Map data © OpenStreetMap
-            </span>
-
-            <h3 class="text-white text-xl font-semibold mb-2 mt-10">
-              Official Presidential Schedule
-            </h3>
 
             <div class="space-y-4">
               {#each Object.entries(groupedByDate) as [date, items], indexA}
@@ -245,3 +451,21 @@
     </div>
   </div>
 </dialog>
+
+<style>
+  .app {
+    height: 500px;
+    width: 100%;
+  }
+
+  @media (max-width: 560px) {
+    .app {
+      width: 100%;
+      height: 300px;
+    }
+  }
+
+  .chart {
+    width: 100%;
+  }
+</style>
