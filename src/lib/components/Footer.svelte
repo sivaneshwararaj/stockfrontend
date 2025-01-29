@@ -135,7 +135,7 @@
             <a
               href="/pricing"
               class="no-underline sm:hover:underline text-gray-100 sm:hover:text-blue-400"
-              >Stock Analysis Pro</a
+              >Pricing</a
             >
           </li>
           <li class="mt-2 inline-block mr-2 md:block md:mr-0">

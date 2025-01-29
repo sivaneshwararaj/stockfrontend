@@ -28,7 +28,7 @@
   export let data;
 
   let rawData = data?.getData?.history || [];
-  let billData = data?.getData?.billData || [];
+  let executiveOrders = data?.getData?.executiveOrders || [];
 
   const groupedByDate = rawData?.reduce((acc, item) => {
     const dateKey = new Intl.DateTimeFormat("en-US", {
@@ -44,6 +44,7 @@
 
   let modalTitle = "n/a";
   let modalDescription = "n/a";
+  let modalLink = "#";
 
   const tabs = [
     {
@@ -371,18 +372,30 @@
               Latest Legislations
             </h3>
             <div class="overflow-y-auto max-h-[1000px]">
-              {#each billData as item}
+              {#each executiveOrders as item}
                 <div class="bg-gray-800/50 rounded-lg p-4 mb-4">
                   <!-- Badge and Time -->
                   <div class="flex justify-between items-center mb-4">
                     <span
-                      class="bg-emerald-500 text-white px-4 py-1 rounded text-sm font-medium"
+                      class="{item?.sentiment === 'Bullish'
+                        ? 'bg-emerald-500'
+                        : item?.sentiment === 'Bearish'
+                          ? 'bg-red-600'
+                          : 'bg-yellow-600'} text-white px-4 py-1 rounded text-sm font-medium"
                     >
-                      {item?.badge}
+                      {item?.sentiment}
                     </span>
                     <span class="text-gray-400 text-sm"
-                      >{item?.time !== null ? item?.time : ""}</span
-                    >
+                      >{#if item?.date !== null}
+                        {new Date(item?.date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      {:else}
+                        ""
+                      {/if}
+                    </span>
                   </div>
 
                   <!-- Title -->
@@ -403,6 +416,7 @@
                       on:click={() => {
                         modalTitle = item?.title;
                         modalDescription = item?.description;
+                        modalLink = item?.link;
                       }}
                       for="readMore"
                       class="cursor-pointer bg-blue-500 sm:hover:bg-blue-600 ease-out transition duration-100 text-white px-3 py-1.5 rounded text-sm"
@@ -434,14 +448,23 @@
     class="modal-box rounded-md border border-gray-600 w-full bg-secondary flex flex-col items-center"
   >
     <div class="mx-auto h-1.5 w-20 flex-shrink-0 rounded-full" />
-    <div class="text-white mb-5 text-center">
+    <div class="text-white mb-5 text-start">
       <h3 class="font-bold text-xl mb-5">{modalTitle}</h3>
       <span class="text-white text-[1rem] font-normal"
         >{@html modalDescription}</span
       >
     </div>
 
-    <div class="border-t border-gray-600 mt-2 w-full">
+    <a
+      href={modalLink}
+      rel="noopener noreferrer"
+      target="_blank"
+      class="ml-auto mb-3 cursor-pointer bg-blue-500 sm:hover:bg-blue-600 ease-out transition duration-100 text-white px-3 py-1.5 rounded text-sm"
+    >
+      Read Source
+    </a>
+
+    <div class="sm:hidden border-t border-gray-600 mt-2 w-full">
       <label
         for="readMore"
         class="mt-4 font-semibold text-white text-xl m-auto flex justify-center cursor-pointer"
