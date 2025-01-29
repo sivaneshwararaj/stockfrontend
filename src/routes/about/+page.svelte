@@ -1,55 +1,15 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
-  /*
-  import { intersect } from 'svelte-intersection-observer-action';
-
-  
-  const threshold = 0.4 // change the threshold value to 0.4 for 40%
-	const rootMargin = '-0px 0px'
-	const intersectOptions = { callback, threshold, rootMargin }
-	function callback(entry: IntersectionObserverEntry) {
-		if (entry.intersectionRatio > threshold) {
-      entry.target.classList.remove('invisible')
-			entry.target.classList.add('')
-    }
-  }
-  */
 
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} About
-    · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="Welcome to Stocknear — a site that aims to be the internet's best source of free stock data and information for small investors."
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="About · Stocknear" />
-  <meta
-    property="og:description"
-    content="Welcome to Stocknear — a site that aims to be the internet's best source of free stock data and information for small investors."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="About · Stocknear" />
-  <meta
-    name="twitter:description"
-    content="Welcome to Stocknear — a site that aims to be the internet's best source of free stock data and information for small investors."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="About"
+  description="Welcome to Stocknear — a site that aims to be the internet's best source of free stock data and information for regular investors."
+/>
 
 <body class="text-white w-full">
   <section class="border-b border-gray-600 sm:rounded-md w-full">

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import { getLastTradingDay } from "$lib/utils";
   import { page } from "$app/stores";
   import InfoModal from "$lib/components/InfoModal.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
   const lastTradingDay = new Date(getLastTradingDay() ?? null)?.toLocaleString(
@@ -17,42 +17,10 @@
   $: categoryType = $page.url.pathname.split("/").pop();
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    Premarket Top Stocks · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`A list of the stocks with the highest percentage gain, highest percentage loss and most active today. See stock price, volume, market cap and more.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`Today's Premarket Top Stocks · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`A list of the stocks with the highest percentage gain, highest percentage loss and most active today. See stock price, volume, market cap and more.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Today's Premarket Top Stocks · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`A list of the stocks with the highest percentage gain, highest percentage loss and most active today. See stock price, volume, market cap and more.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Today's Premarket Top Stocks"
+  description="A list of the stocks with the highest percentage gain, highest percentage loss and most active today. See stock price, volume, market cap and more."
+/>
 
 <section class="w-full overflow-hidden m-auto min-h-screen">
   <div class="flex justify-center w-full m-auto overflow-hidden">

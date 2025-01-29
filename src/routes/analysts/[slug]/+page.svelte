@@ -170,43 +170,6 @@
   };
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
-    Wall Street Stock Analysts · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`Top Wall Street Stock Analysts · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Top Wall Street Stock Analysts · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`A list of the top Wall Street stock analysts, ranked by their success rate and average return per rating.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
-
 <SEO
   title={`${analystName} - Analyst At ${companyName}`}
   description={`${analystName} is a Wall Street analyst working for ${companyName}. ${analystName} has covered ${totalRatings} stocks with a ${successRate}% success rate and an average return of ${avgReturn}%.`}

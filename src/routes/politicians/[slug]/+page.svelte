@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import { formatString, sectorNavigation } from "$lib/utils";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import RatingsChart from "$lib/components/RatingsChart.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
   let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
@@ -103,42 +103,10 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Which
-    stocks is {name} trading? · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`A list of all trades from the US Politician ${name}.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`Which stocks is ${name} trading? · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`A list of all trades from the US Politician ${name}.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Which stocks is ${name} trading? · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`A list of all trades from the US Politician ${name}.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title={`${name} - ${politicianParty} Member | Investment & Trading Activity`}
+  description={`${name}, a member of ${politicianParty}, made ${numOfTrades} trades totaling ${totalAmountTraded}. Discover their buy/sell ratio of ${buySellRatio} and investment trends.`}
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"

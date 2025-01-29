@@ -3,8 +3,8 @@
   import democraticBackground from "$lib/images/bg-democratic.png";
   import otherBackground from "$lib/images/bg-other.png";
 
-  import { numberOfUnreadNotification } from "$lib/store";
-  import { abbreviateNumber } from "$lib/utils";
+  import SEO from "$lib/components/SEO.svelte";
+
   import { onMount } from "svelte";
   import { page } from "$app/stores";
 
@@ -141,43 +141,11 @@
   }
 </script>
 
-<!-- HEADER FOR BETTER SEO -->
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} US
-    Politician Stock Trade Tracker · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="What are US Politicians trading? Filter by Senate or House, Party, Committee, State and more - get detailed infomation about it."
-  />
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content="US Politician Stock Trade Tracker · Stocknear"
-  />
-  <meta
-    property="og:description"
-    content="What are US Politicians trading? Filter by Senate or House, Party, Committee, State and more - get detailed infomation about it."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content="US Politician Stock Trade Tracker · Stocknear"
-  />
-  <meta
-    name="twitter:description"
-    content="What are US Politicians trading? Filter by Senate or House, Party, Committee, State and more - get detailed infomation about it."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="US
+    Politician Stock Trade Tracker"
+  description="What are US Politicians trading? Filter by Senate or House, Party, Committee, State and more - get detailed infomation about it."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 pb-40 px-3"

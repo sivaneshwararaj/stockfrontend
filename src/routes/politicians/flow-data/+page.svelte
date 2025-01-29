@@ -7,7 +7,7 @@
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import Infobox from "$lib/components/Infobox.svelte";
 
-  //  import * as XLSX from 'xlsx';
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -60,43 +60,11 @@
   $: charNumber = $screenWidth < 640 ? 20 : 40;
 </script>
 
-<!-- HEADER FOR BETTER SEO -->
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Latest
-    Congressional Trading · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="Find the latest congress trading and see what insiders who have access to regulations are investing."
-  />
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content="Latest Congressional Trading · Stocknear"
-  />
-  <meta
-    property="og:description"
-    content="Find the latest congress trading and see what insiders who have access to regulations are investing."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content="Latest Congressional Trading · Stocknear"
-  />
-  <meta
-    name="twitter:description"
-    content="Find the latest congress trading and see what insiders who have access to regulations are investing."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Latest
+    Congressional Trading"
+  description="Find the latest congress trading and see what insiders who have access to regulations are investing."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
