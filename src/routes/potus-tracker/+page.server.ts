@@ -1,5 +1,5 @@
 export const load = async ({ locals }) => {
-    const { apiKey, apiURL, user } = locals;
+    const { apiKey, apiURL } = locals;
 
   const getData = async () => {
 
