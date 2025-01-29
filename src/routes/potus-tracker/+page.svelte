@@ -449,8 +449,8 @@
   >
     <div class="mx-auto h-1.5 w-20 flex-shrink-0 rounded-full" />
     <div class="text-white mb-5 text-start">
-      <h3 class="font-bold text-xl mb-5">{modalTitle}</h3>
-      <span class="text-white text-[1rem] font-normal"
+      <h3 class="font-bold text-lg mb-3">{modalTitle}</h3>
+      <span class="text-white text-sm font-normal"
         >{@html modalDescription}</span
       >
     </div>
