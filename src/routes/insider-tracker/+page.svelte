@@ -6,6 +6,7 @@
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import RatingsChart from "$lib/components/RatingsChart.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -158,36 +159,10 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Insider
-    Tracker · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Stay ahead of the market with our real-time insider tracking page.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`Insider Tracker · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`Stay ahead of the market with our real-time insider tracking page.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Insider Tracker · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`Stay ahead of the market with our real-time insider tracking page.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Insider Tracker - Real-Time Insider Trading Data"
+  description="Stay ahead of the market with real-time insider trading data. Track insider buys, sells, and ownership changes to make informed investment decisions."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"

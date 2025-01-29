@@ -4,7 +4,7 @@
   import { Chart } from "svelte-echarts";
   import Lazy from "$lib/components/Lazy.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
-
+  import SEO from "$lib/components/SEO.svelte";
   import { init, use } from "echarts/core";
   import { LineChart, BarChart } from "echarts/charts";
   import { GridComponent, TooltipComponent } from "echarts/components";
@@ -618,36 +618,10 @@
   });
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} US
-    Economic Indicator · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Economic indicators measure economic performance and identify growth trends.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`US Economic Indicator · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`Economic indicators measure economic performance and identify growth trends.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`US Economic Indicator · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`Economic indicators measure economic performance and identify growth trends.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="US Economic Indicators - Track Key Growth Metrics"
+  description="Monitor key US economic indicators to measure economic performance and identify growth trends. Stay informed with real-time data and analysis."
+/>
 
 <section
   class="w-full max-w-screen-2xl overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"

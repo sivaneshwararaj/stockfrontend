@@ -2,6 +2,7 @@
   import { screenWidth } from "$lib/store";
   import { abbreviateNumber, sectorNavigation } from "$lib/utils";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
   let rawData = data?.getSectorOverview;
@@ -89,6 +90,11 @@
     displayList = [...originalData].sort(compareValues);
   };
 </script>
+
+<SEO
+  title="Stock Sectors"
+  description={`A list of ${rawData?.length} sectors that can be sorted by total market cap, PE ratio, profit margin, performance and other metrics.`}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <!-- Page wrapper -->

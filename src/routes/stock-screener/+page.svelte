@@ -22,6 +22,7 @@
   import DownloadData from "$lib/components/DownloadData.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
   import Input from "$lib/components/Input.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   //const userConfirmation = confirm('Unsaved changes detected. Leaving now will discard your strategy. Continue?');
 
@@ -2484,39 +2485,10 @@ const handleKeyDown = (event) => {
   */
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-  />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
-    Screener · Stocknear
-  </title>
-
-  <meta
-    name="description"
-    content={`Build your Stock Screener to find profitable stocks.`}
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`Stock Screener · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`Build your Stock Screener to find profitable stocks.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Stock Screener · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`Build your Stock Screener to find profitable stocks.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Free Stock Screener - Search, Filter and Analyze Stocks"
+  description={`A free stock screener to search, filter and analyze stocks by ${allRows?.length} different indicators and metrics. The screener data is updated once per minute.`}
+/>
 
 <svelte:window on:scroll={handleScroll} />
 

@@ -3,6 +3,7 @@
   import { openLemonSqueezyUrl } from "$lib/lemonsqueezy";
   //import Discount from '$lib/components/Discount.svelte';
   import { onMount } from "svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   //import proTierLogo from "$lib/images/pro_tier_logo.png";
 
@@ -71,41 +72,16 @@
 </script>
 
 <svelte:head>
-  <meta charset="utf-8" />
-
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Pricing
-    · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`Pricing · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Pricing · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-
   <script>
     window.lemonSqueezyAffiliateConfig = { store: "stocknear" };
   </script>
   <script src="https://lmsqueezy.com/affiliate.js" defer></script>
 </svelte:head>
+
+<SEO
+  title="Pricing"
+  descriptiion="Get unlimited access to all of our data and tools, including full financial history, full ETF holdings, and more."
+/>
 
 <section
   class="bg-default min-h-screen mb-40 w-full max-w-3xl sm:max-w-screen-lg pt-10 m-auto"

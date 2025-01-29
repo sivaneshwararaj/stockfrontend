@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
+  import SEO from "$lib/components/SEO.svelte";
 
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import Table from "$lib/components/Table/Table.svelte";
@@ -9,42 +9,10 @@
   let rawData = data?.getStockList;
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} List
-    of All Stock ETF Symbols · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`An overview of all the etf ticker symbols listed. Explore the stock pages to learn about the company's price history, financials, key stats, and more.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`List of All ETF Ticker Symbols · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`An overview of all the etf ticker symbols listed. Explore the stock pages to learn about the company's price history, financials, key stats, and more.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`List of All ETF Ticker Symbols · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`An overview of all the etf ticker symbols listed. Explore the stock pages to learn about the company's price history, financials, key stats, and more.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="List of All ETF Ticker Symbols"
+  description="An overview of all the ETF symbols listed. Explore the ETF pages to learn about the fund's price history, holdings, dividends and more."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"

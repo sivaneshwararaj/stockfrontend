@@ -2,12 +2,18 @@
   import { screenWidth } from "$lib/store";
   import IndustryTable from "$lib/components/IndustryTable.svelte";
   import { industryList, sectorList, sectorNavigation } from "$lib/utils";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
   let rawData = data?.getSectorIndustryOverview;
 
   $: charNumber = $screenWidth < 640 ? 20 : 30;
 </script>
+
+<SEO
+  title="Stock Sectors & Industries"
+  description={`A list of ${sectorList?.length} sectors and ${industryList?.length} industries used to categorize stocks based on the company's primary business activity.`}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <div

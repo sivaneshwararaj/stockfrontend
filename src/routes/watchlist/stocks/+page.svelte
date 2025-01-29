@@ -17,6 +17,7 @@
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { goto } from "$app/navigation";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
   let timeoutId;
@@ -1009,36 +1010,10 @@
   };
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
-    Watchlist · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="A stock watchlist tracker tool. Add stocks and ETFs to keep track of their performance."
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Stock Watchlist · Stocknear" />
-  <meta
-    property="og:description"
-    content="A stock watchlist tracker tool. Add stocks and ETFs to keep track of their performance."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stock Watchlist · Stocknear" />
-  <meta
-    name="twitter:description"
-    content="A stock watchlist tracker tool. Add stocks and ETFs to keep track of their performance."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Stock Watchlist Tracker - Monitor Stocks & ETFs"
+  description="Track your favorite stocks and ETFs in one place. Use our stock watchlist tool to monitor performance, price changes, and market trends in real time."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 pb-40"

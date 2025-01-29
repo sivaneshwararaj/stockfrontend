@@ -1,27 +1,10 @@
 <script>
-  import { numberOfUnreadNotification } from "$lib/store";
+  import SEO from "$lib/components/SEO.svelte";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   const emailAddress = "support@stocknear.com";
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Privacy
-    Policy · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Privacy Policy · Stocknear" />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Privacy Policy · Stocknear" />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO title="Privacy Policiy" description="" />
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden pb-20 pt-5 px-4 lg:px-3"

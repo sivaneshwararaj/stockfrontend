@@ -1,27 +1,9 @@
 <script>
-  import { numberOfUnreadNotification } from "$lib/store";
-
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
+  import SEO from "$lib/components/SEO.svelte";
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Terms
-    of Use · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Terms of Use · Stocknear" />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Terms of Use · Stocknear" />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO title="Terms of Use" description="" />
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden pb-20 pt-5 px-4 lg:px-3"

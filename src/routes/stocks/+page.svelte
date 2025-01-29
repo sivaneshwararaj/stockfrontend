@@ -1,58 +1,17 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
-
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import Table from "$lib/components/Table/Table.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
   let rawData = data?.getStockList;
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} List
-    of All Stock Ticker Symbols · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`An overview of all the stock ticker symbols listed. Explore the stock pages to learn about the company's price history, financials, key stats, and more.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`List of All Stock Ticker Symbols · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`An overview of all the stock ticker symbols listed. Explore the stock pages to learn about the company's price history, financials, key stats, and more.`}
-  />
-  <meta
-    property="og:image"
-    content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`List of All Stock Ticker Symbols · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`An overview of all the stock ticker symbols listed. Explore the stock pages to learn about the company's price history, financials, key stats, and more.`}
-  />
-  <meta
-    name="twitter:image"
-    content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="List of All Stock Tickers Symbols"
+  description="An overview of all the stock ticker symbols listed. Explore the stock pages to learn about the company's price history, financials, key stats, and more."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
