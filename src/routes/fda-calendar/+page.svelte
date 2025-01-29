@@ -80,7 +80,7 @@
               <div class="border border-gray-700">
                 {#each items as item, index}
                   <div
-                    class="flex border-gray-600 {index + 1 === items?.length &&
+                    class="flex border-gray-600 {index === items?.length &&
                     data?.user?.tier !== 'Pro'
                       ? 'opacity-[0.2]'
                       : ''}"

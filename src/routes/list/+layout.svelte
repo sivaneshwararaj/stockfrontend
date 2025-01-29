@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import { page } from "$app/stores";
   import { industryList } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";

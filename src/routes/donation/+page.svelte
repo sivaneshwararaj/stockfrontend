@@ -1,40 +1,14 @@
 <script>
-  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-
-  let cloudFrontUrl = import.meta.env.VITE_IMAGE_URL;
+  import SEO from "$lib/components/SEO.svelte";
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Become
-    a sponsor to stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Your donation helps us to become the number 1 stock analysis platform in the world with the best price plans.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`sponsor · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`Your sponsor helps us to become the number 1 stock analysis platform in the world with the best price plans.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`sponsor · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`Your sponsor helps us to become the number 1 stock analysis platform in the world with the best price plans.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Become
+    a sponsor to Stocknear"
+  description="Your sponsor helps us to become the number 1 stock analysis platform in the world with the best price plans."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden pb-20 pt-5 px-4 lg:px-3"
@@ -122,7 +96,7 @@
               </div>
 
               <h2 class="text-white text-2xl font-semibold">
-                Become a sponsor to stocknear
+                Become a sponsor to Stocknear
               </h2>
               <p class="text-white mb-5 text-[1rem]">
                 If you believe in our mission and want to support us beyond your
@@ -134,7 +108,7 @@
                 <iframe
                   class="w-full border border-gray-600 rounded-md"
                   src="https://github.com/sponsors/stocknear/card"
-                  title="Sponsor stocknear"
+                  title="Sponsor Stocknear"
                   height={$screenWidth < 640 ? "300" : "auto"}
                 ></iframe>
                 <br />

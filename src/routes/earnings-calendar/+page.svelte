@@ -12,6 +12,7 @@
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -303,36 +304,10 @@
   };
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Earnings
-    Calendar · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`A list of upcoming earnings on the US stock market, with dates, times and estimated revenue and earnings growth.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`Earnings Calendar · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`A list of upcoming earnings on the US stock market, with dates, times and estimated revenue and earnings growth.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={`Earnings Calendar · Stocknear`} />
-  <meta
-    name="twitter:description"
-    content={`A list of upcoming earnings on the US stock market, with dates, times and estimated revenue and earnings growth.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Earnings Calendar"
+  description="A list of upcoming earnings on the US stock market, with dates, times and estimated revenue and earnings growth."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"

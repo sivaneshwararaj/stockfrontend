@@ -7,6 +7,7 @@
   import { Button } from "$lib/components/shadcn/button/index.js";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   import { onMount } from "svelte";
   import { page } from "$app/stores";
@@ -304,42 +305,11 @@
   };
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Worldwide
-    Economic Calendar · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`A list of upcoming economic events on the US stock market, with dates, times and estimation.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`Worldwide Economic Calendar · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`A list of upcoming economic events on the US stock market, with dates, times and estimation.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Worldwide Economic Calendar · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`A list of upcoming economic events on the US stock market, with dates, times and estimation.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Worldwide
+    Economic Calendar"
+  description="A list of upcoming economic events on the US stock market, with dates, times and estimation."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 mb-20"

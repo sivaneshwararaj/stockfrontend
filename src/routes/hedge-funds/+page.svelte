@@ -1,10 +1,9 @@
 <script lang="ts">
   import cardBackground from "$lib/images/bg-hedge-funds.png";
 
-  import { numberOfUnreadNotification } from "$lib/store";
   import { abbreviateNumber, formatString } from "$lib/utils";
   import { onMount } from "svelte";
-  //  import * as XLSX from 'xlsx';
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -77,37 +76,11 @@
   }
 </script>
 
-<!-- HEADER FOR BETTER SEO -->
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} All
-    listed Hedge Funds · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
-
-  <meta
-    name="description"
-    content="Find all listed Hedge Funds based on the US Market."
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="All listed Hedge Funds · Stocknear" />
-  <meta
-    property="og:description"
-    content="Find all listed Hedge Funds based on the US Market."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="All listed Hedge Funds · Stocknear" />
-  <meta
-    name="twitter:description"
-    content="Find all listed Hedge Funds based on the US Market."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="All
+    listed Hedge Funds"
+  description="Find all listed Hedge Funds based on the US Market."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 pb-40 px-3"

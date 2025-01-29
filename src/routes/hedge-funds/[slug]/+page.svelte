@@ -3,6 +3,7 @@
   import { formatString, sectorNavigation, abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -42,42 +43,10 @@
   ];
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Top
-    Wall Street Hedge Funds · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`Top Wall Street hedge funds · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Top Wall Street hedge funds · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Top Wall Street hedge funds"
+  description="A list of the top Wall Street hedge funds, ranked by their success rate and average return per rating."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pt-5 px-4 lg:px-3 pb-40"

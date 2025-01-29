@@ -70,6 +70,9 @@
             <div class="w-full m-auto border border-gray-800 rounded-[10px]">
               <Map LAT={data?.getData?.lat} LON={data?.getData?.lon} />
             </div>
+            <span class="text-gray-300 text-xs">
+              Map data © OpenStreetMap
+            </span>
 
             <h3 class="text-white text-xl font-semibold mb-2 mt-10">
               Official Presidential Schedule
