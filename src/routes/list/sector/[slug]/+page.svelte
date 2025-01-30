@@ -2,6 +2,8 @@
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
+
   export let data;
 
   let rawData = data?.getSectorCategory;
@@ -15,6 +17,13 @@
     0,
   );
 </script>
+
+<SEO
+  title={`A List of Stocks in the ${data?.getParams}`}
+  description={`The ${data?.getParams} sector has a total of ${rawData?.length} stocks, with a
+    combined market cap of ${abbreviateNumber(totalMarketCap)} and a total revenue
+    of ${abbreviateNumber(totalRevenue)}.`}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

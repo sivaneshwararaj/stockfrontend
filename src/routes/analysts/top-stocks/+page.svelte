@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import Table from "$lib/components/Table/Table.svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -25,39 +25,10 @@
   const hideLastRow = true;
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    Top Analyst Strong Buy Stocks · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`The top 100 "Strong Buy" stocks according to the best performing Wall Street analysts, with a rating of 5 stars.`}
-  />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content={`Top 100 Strong Buy Stocks · Stocknear`} />
-  <meta
-    property="og:description"
-    content={`The top 100 "Strong Buy" stocks according to the best performing Wall Street analysts, with a rating of 5 stars.`}
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`Top 100 Strong Buy Stocks · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`The top 100 "Strong Buy" stocks according to the best performing Wall Street analysts, with a rating of 5 stars.`}
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Top Analyst Strong Buy Stocks"
+  description="The top 100 Strong Buy stocks according to the best performing Wall Street analysts, with a rating of 5 stars."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"

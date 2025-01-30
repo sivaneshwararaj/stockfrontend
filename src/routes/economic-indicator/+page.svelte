@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
   import { Chart } from "svelte-echarts";
   import Lazy from "$lib/components/Lazy.svelte";

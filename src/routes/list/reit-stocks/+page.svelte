@@ -1,5 +1,6 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -19,6 +20,11 @@
     { name: "Dividend Yield", rule: "dividendYield" },
   ];
 </script>
+
+<SEO
+  title="Top REIT Stocks List – Best Real Estate Investment Trusts to Invest In"
+  description="Discover the best REIT stocks to invest in. Explore a comprehensive list of real estate investment trusts (REITs) with key insights, performance data, and sector trends."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <div
