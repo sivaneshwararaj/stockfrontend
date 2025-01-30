@@ -411,7 +411,11 @@
     }
   }
 
-  let displayLegend = { close: "-", date: "-" };
+  let displayLegend = {
+    close: data?.getStockQuote?.price,
+    date: "-",
+    change: data?.getStockQuote?.changesPercentage,
+  };
 
   let displayLastLogicalRangeValue;
 
@@ -668,7 +672,7 @@
 </script>
 
 <SEO
-  title={`${$etfTicker} ${$realtimePrice ?? displayLegend?.close} ${displayLegend?.change >= 0 ? "▲" : "▼"} ${displayLegend?.change}%`}
+  title={`${$etfTicker} ${$currentPortfolioPrice !== null && $currentPortfolioPrice !== 0 ? $currentPortfolioPrice : data?.getStockQuote?.price} ${displayLegend?.change >= 0 ? "▲" : "▼"} ${displayLegend?.change}%`}
   description={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
 />
 
