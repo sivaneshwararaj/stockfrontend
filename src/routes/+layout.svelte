@@ -671,7 +671,7 @@
                             <a
                               href="/potus-tracker"
                               class="text-start w-full text-[1rem] text-white ml-4 mt-4"
-                              >Potus Tracker</a
+                              >POTUS Tracker</a
                             >
                           </Button>
 
@@ -1128,7 +1128,7 @@
                           <a
                             href="/potus-tracker"
                             class="text-[1rem] text-white ml-4 mt-4"
-                            >Potus Tracker</a
+                            >POTUS Tracker</a
                           >
 
                           <!--

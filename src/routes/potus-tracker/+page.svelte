@@ -369,7 +369,7 @@
 
           <div class="order-4 flex-shrink-0 lg:float-right lg:w-[336px]">
             <h3 class="text-xl text-white font-semibold mb-3">
-              Latest Legislations
+              Executive Orders
             </h3>
             <div class="overflow-y-auto max-h-[1000px]">
               {#each executiveOrders as item}
@@ -381,7 +381,7 @@
                         ? 'bg-emerald-500'
                         : item?.sentiment === 'Bearish'
                           ? 'bg-red-600'
-                          : 'bg-yellow-600'} text-white px-4 py-1 rounded text-sm font-medium"
+                          : 'bg-[#6c757d]'} text-white px-4 py-1 rounded text-sm font-medium"
                     >
                       {item?.sentiment}
                     </span>
