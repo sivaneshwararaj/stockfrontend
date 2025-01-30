@@ -56,12 +56,12 @@
         >, delivered to your inbox every morning before the market opens, Monday
         to Friday.
       </p>
-      {#if !data?.user}
+      {#if data?.user?.tier !== "Pro"}
         <a
-          href="/register"
+          href="/pricing"
           class="mt-10 btn bg-[#fff] border border-gray-600 sm:hover:bg-gray-300 transition duration-100 btn-md w-full rounded-md m-auto text-black font-semibold text-[1rem]"
         >
-          <span class="text-[1rem] sm:text-lg">Sign Up</span>
+          <span class="text-[1rem] sm:text-lg">Get Pro Membership</span>
         </a>
       {/if}
     </div>
