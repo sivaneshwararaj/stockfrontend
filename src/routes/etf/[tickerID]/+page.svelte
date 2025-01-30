@@ -17,6 +17,7 @@
   } from "$lib/store";
   import { onDestroy, onMount } from "svelte";
   import WIIM from "$lib/components/WIIM.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   import News from "$lib/components/News.svelte";
   import ETFSidecard from "$lib/components/ETFSidecard.svelte";
@@ -666,44 +667,10 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {data?.companyName} ({$etfTicker}) Stock Price, Quote & News · Stocknear
-  </title>
-
-  <meta
-    name="description"
-    content={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
-  />
-  <!-- Other meta tags -->
-  <meta
-    property="og:title"
-    content={`${data?.companyName} (${$etfTicker}) Stock Price, Quote & News · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
-  />
-  <!--<meta property="og:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${data?.companyName} (${$etfTicker}) Stock Price, Quote & News · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
-  />
-  <!--<meta name="twitter:image" content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"/>-->
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title={`${$etfTicker} ${displayLegend?.change >= 0 ? "▲" : "▼"} ${displayLegend?.change}%`}
+  description={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
+/>
 
 <section class="bg-default min-h-screen pb-40 overflow-hidden w-full">
   <div class="w-full m-auto overflow-hidden">
