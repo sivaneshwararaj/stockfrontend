@@ -7,12 +7,13 @@
     subWeeks,
     differenceInWeeks,
   } from "date-fns";
-  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import TableHeader from "$lib/components/Table/TableHeader.svelte";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
   import SEO from "$lib/components/SEO.svelte";
+  import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
 
   export let data;
 
@@ -450,10 +451,15 @@
                           <TableHeader {columns} {sortOrders} {sortData} />
                         </thead>
                         <tbody>
-                          {#each day as item, index}
+                          {#each data?.user?.tier === "Pro" ? day : day?.slice(0, 6) as item, index}
                             <!-- row -->
                             <tr
-                              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800"
+                              class="sm:hover:bg-[#245073] sm:hover:bg-opacity-[0.2] odd:bg-odd border-b border-gray-800 {index +
+                                1 ===
+                                day?.slice(0, 6)?.length &&
+                              data?.user?.tier !== 'Pro'
+                                ? 'opacity-[0.1]'
+                                : ''}"
                             >
                               <td
                                 class="text-blue-400 text-start text-sm sm:text-[1rem]"
@@ -587,6 +593,7 @@
                         </tbody>
                       </table>
                     </div>
+                    <UpgradeToPro {data} />
                   {:else}
                     <div class="mt-5 mb-3">
                       <Infobox

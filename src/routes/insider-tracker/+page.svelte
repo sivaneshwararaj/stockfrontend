@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { numberOfUnreadNotification, screenWidth } from "$lib/store";
+  import { screenWidth } from "$lib/store";
   import { abbreviateNumber } from "$lib/utils";
   import { onMount } from "svelte";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
