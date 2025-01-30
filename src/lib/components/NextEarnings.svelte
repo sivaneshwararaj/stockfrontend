@@ -68,32 +68,53 @@
           during market hours.
         {/if}
         <br />Analysts project revenue of
-        <span class="font-semibold"
-          >{@html abbreviateNumber(rawData?.revenueEst, true, true)}</span
-        >, reflecting a
-        <span
-          class="{revenueRatio >= 0 && revenueRatio !== 'Infinity'
-            ? "before:content-['+'] text-[#00FC50]"
-            : revenueRatio < 0 && revenueRatio !== 'Infinity'
-              ? 'text-[#FF2F1F]'
-              : 'text-white'} "
-          >{revenueRatio !== "Infinity"
-            ? abbreviateNumber(revenueRatio) + "%"
-            : "n/a"}</span
-        >
-        YoY {revenueRatio > 0 ? "growth" : revenueRatio < 0 ? "shrinking" : ""}
-        {#if epsRatio !== null}
-          and earnings per share of
-          <span class="font-semibold">{rawData?.epsEst}</span>, making a
-          <span
-            class="{epsRatio > 0
-              ? "before:content-['+'] text-[#00FC50]"
-              : 'text-[#FF2F1F]'} ">{epsRatio}%</span
+        {#if data?.user?.tier !== "Pro"}
+          ... Unlock content with
+          <a
+            class="inline-block ml-0.5 text-blue-400 sm:hover:text-white"
+            href="/pricing"
+            >Pro Subscription <svg
+              class="w-4 h-4 mb-1 inline-block text[#A3A3A3] sm:hover:text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              ><path
+                fill="currentColor"
+                d="M17 9V7c0-2.8-2.2-5-5-5S7 4.2 7 7v2c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3v-7c0-1.7-1.3-3-3-3M9 7c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z"
+              /></svg
+            ></a
           >
-          {epsRatio > 0 ? "increase" : epsRatio < 0 ? "decrease" : ""} YoY.
         {:else}
-          and earnings per share of
-          <span class="font-semibold">{rawData?.epsEst}</span>.
+          <span class="font-semibold"
+            >{@html abbreviateNumber(rawData?.revenueEst, true, true)}</span
+          >, reflecting a
+          <span
+            class="{revenueRatio >= 0 && revenueRatio !== 'Infinity'
+              ? "before:content-['+'] text-[#00FC50]"
+              : revenueRatio < 0 && revenueRatio !== 'Infinity'
+                ? 'text-[#FF2F1F]'
+                : 'text-white'} "
+            >{revenueRatio !== "Infinity"
+              ? abbreviateNumber(revenueRatio) + "%"
+              : "n/a"}</span
+          >
+          YoY {revenueRatio > 0
+            ? "growth"
+            : revenueRatio < 0
+              ? "shrinking"
+              : ""}
+          {#if epsRatio !== null}
+            and earnings per share of
+            <span class="font-semibold">{rawData?.epsEst}</span>, making a
+            <span
+              class="{epsRatio > 0
+                ? "before:content-['+'] text-[#00FC50]"
+                : 'text-[#FF2F1F]'} ">{epsRatio}%</span
+            >
+            {epsRatio > 0 ? "increase" : epsRatio < 0 ? "decrease" : ""} YoY.
+          {:else}
+            and earnings per share of
+            <span class="font-semibold">{rawData?.epsEst}</span>.
+          {/if}
         {/if}
       </div>
     </div>

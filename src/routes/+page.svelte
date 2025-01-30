@@ -387,19 +387,55 @@
             <Card.Content>
               {#if recentWIIM?.length !== 0}
                 <ul style="padding-left: 5px;">
-                  {#each recentWIIM as item}
-                    <li
-                      class="text-sm sm:text-[1rem]"
-                      style="margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
-                    >
-                      {item?.text}
-
-                      <a
-                        href={`/stocks/${item?.ticker}`}
-                        class="inline-block badge rounded-sm ml-1 px-2 m-auto text-blue-400 sm:hover:text-white"
-                        >{item?.ticker}</a
+                  {#each recentWIIM as item, index}
+                    {#if index >= 3 && data?.user?.tier !== "Pro"}
+                      <li
+                        class="text-sm sm:text-[1rem]"
+                        style="margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
                       >
-                    </li>
+                        {item?.text?.slice(0, 48) + "..."}
+                        <a href="/pricing" class="inline-block text-sm">
+                          <svg
+                            class="size-5 text-[#fff] inline-block"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            style="max-width: 40px;"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clip-rule="evenodd"
+                            >
+                            </path>
+                          </svg>
+
+                          <span
+                            class="ml-1 font-semibold text-gray-300 group-hover:text-white"
+                          >
+                            Upgrade
+                          </span>
+                        </a>
+
+                        <a
+                          href={`/stocks/${item?.ticker}`}
+                          class="inline-block badge rounded-sm ml-1 px-2 m-auto text-blue-400 sm:hover:text-white"
+                          >{item?.ticker}</a
+                        >
+                      </li>
+                    {:else}
+                      <li
+                        class="text-sm sm:text-[1rem]"
+                        style="margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
+                      >
+                        {item?.text}
+
+                        <a
+                          href={`/stocks/${item?.ticker}`}
+                          class="inline-block badge rounded-sm ml-1 px-2 m-auto text-blue-400 sm:hover:text-white"
+                          >{item?.ticker}</a
+                        >
+                      </li>
+                    {/if}
                   {/each}
                 </ul>
               {:else}
@@ -648,48 +684,104 @@
             <Card.Content>
               {#if data?.getDashboard?.upcomingEarnings?.length !== 0}
                 <ul style="padding-left: 5px;">
-                  {#each data?.getDashboard?.upcomingEarnings as item}
-                    <li
-                      class="text-sm sm:text-[1rem]"
-                      style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
-                    >
-                      <strong>{item?.name}</strong> (<HoverStockChart
-                        symbol={item?.symbol}
-                      />)
-                      {item?.isToday === true
-                        ? "will report today"
-                        : [
-                              "Monday",
-                              "Tuesday",
-                              "Wednesday",
-                              "Thursday",
-                            ].includes(
-                              new Date().toLocaleDateString("en-US", {
-                                weekday: "long",
-                              }),
-                            )
-                          ? "will report tomorrow"
-                          : "will report monday"}
-                      {#if item?.time}
-                        {#if compareTimes(item?.time, "16:00") >= 0}
-                          after market closes.
-                        {:else if compareTimes(item?.time, "09:30") <= 0}
-                          before market opens.
-                        {:else}
-                          during market.
+                  {#each data?.getDashboard?.upcomingEarnings as item, index}
+                    {#if index >= 3 && data?.user?.tier !== "Pro"}
+                      <li
+                        class="text-sm sm:text-[1rem]"
+                        style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
+                      >
+                        <strong>{item?.name}</strong> (<HoverStockChart
+                          symbol={item?.symbol}
+                        />)
+                        {item?.isToday === true
+                          ? "will report today"
+                          : [
+                                "Monday",
+                                "Tuesday",
+                                "Wednesday",
+                                "Thursday",
+                              ].includes(
+                                new Date().toLocaleDateString("en-US", {
+                                  weekday: "long",
+                                }),
+                              )
+                            ? "will report tomorrow"
+                            : "will report monday"}
+                        {#if item?.time}
+                          {#if compareTimes(item?.time, "16:00") >= 0}
+                            after market closes.
+                          {:else if compareTimes(item?.time, "09:30") <= 0}
+                            before market opens.
+                          {:else}
+                            during market.
+                          {/if}
+                        {/if}Analysts estimate ...
+                        <a href="/pricing" class="inline-block text-sm">
+                          <svg
+                            class="size-5 text-[#fff] inline-block"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            style="max-width: 40px;"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clip-rule="evenodd"
+                            >
+                            </path>
+                          </svg>
+
+                          <span
+                            class="ml-1 font-semibold text-gray-300 group-hover:text-white"
+                          >
+                            Upgrade
+                          </span>
+                        </a>
+                      </li>
+                    {:else}
+                      <li
+                        class="text-sm sm:text-[1rem]"
+                        style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
+                      >
+                        <strong>{item?.name}</strong> (<HoverStockChart
+                          symbol={item?.symbol}
+                        />)
+                        {item?.isToday === true
+                          ? "will report today"
+                          : [
+                                "Monday",
+                                "Tuesday",
+                                "Wednesday",
+                                "Thursday",
+                              ].includes(
+                                new Date().toLocaleDateString("en-US", {
+                                  weekday: "long",
+                                }),
+                              )
+                            ? "will report tomorrow"
+                            : "will report monday"}
+                        {#if item?.time}
+                          {#if compareTimes(item?.time, "16:00") >= 0}
+                            after market closes.
+                          {:else if compareTimes(item?.time, "09:30") <= 0}
+                            before market opens.
+                          {:else}
+                            during market.
+                          {/if}
+                        {/if}Analysts estimate {abbreviateNumber(
+                          item?.revenueEst,
+                        )} in revenue ({(
+                          (item?.revenueEst / item?.revenuePrior - 1) *
+                          100
+                        )?.toFixed(2)}% YoY) and {item?.epsEst} in earnings per share
+                        {#if item?.epsPrior !== 0}
+                          ({(
+                            (item?.epsEst / item?.epsPrior - 1) *
+                            100
+                          )?.toFixed(2)}% YoY).
                         {/if}
-                      {/if}Analysts estimate {abbreviateNumber(
-                        item?.revenueEst,
-                      )} in revenue ({(
-                        (item?.revenueEst / item?.revenuePrior - 1) *
-                        100
-                      )?.toFixed(2)}% YoY) and {item?.epsEst} in earnings per share
-                      {#if item?.epsPrior !== 0}
-                        ({((item?.epsEst / item?.epsPrior - 1) * 100)?.toFixed(
-                          2,
-                        )}% YoY).
-                      {/if}
-                    </li>
+                      </li>
+                    {/if}
                   {/each}
                 </ul>
               {:else}
