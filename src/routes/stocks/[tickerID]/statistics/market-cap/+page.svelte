@@ -1,10 +1,8 @@
 <script lang="ts">
-  import {
-    numberOfUnreadNotification,
-    displayCompanyName,
-    stockTicker,
-  } from "$lib/store";
+  import { displayCompanyName, stockTicker } from "$lib/store";
   import { abbreviateNumber, monthNames } from "$lib/utils";
+  import SEO from "$lib/components/SEO.svelte";
+
   import * as DropdownMenu from "$lib/components/shadcn/dropdown-menu/index.js";
   import { Button } from "$lib/components/shadcn/button/index.js";
   //import * as XLSX from 'xlsx';
@@ -393,33 +391,10 @@
   $: capCategory = getMarketCapCategory(data?.getStockQuote?.marketCap);
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Market Cap & Net Worth · Stocknear
-  </title>
-  <meta name="description" content={`Historical Market Cap of the company.`} />
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Market Cap & Net Worth · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Historical Market Cap of the company.`}
-  />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Market Cap & Net Worth · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Historical Market Cap of the company.`}
-  />
-</svelte:head>
+<SEO
+  title={`${$displayCompanyName} (${$stockTicker}) Market Cap & Net Worth`}
+  description={`Historical Market Cap of ${$displayCompanyName}.`}
+/>
 
 <section
   class="bg-default w-full overflow-hidden min-h-screen text-white h-full"

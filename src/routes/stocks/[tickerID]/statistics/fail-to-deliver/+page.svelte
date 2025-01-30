@@ -7,6 +7,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import Infobox from "$lib/components/Infobox.svelte";
   import FailToDeliver from "$lib/components/FailToDeliver.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -60,36 +61,10 @@
   changePercentageYearAgo = computeYearOverYearChange(rawData);
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Fail-to-Deliver Shares · Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Historical Fail-to-Deliver shares of ${$stockTicker}.`}
-  />
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Fail-to-Deliver Shares · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Historical Fail-to-Deliver shares of ${$stockTicker}.`}
-  />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Fail-to-Deliver Shares · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Historical Fail-to-Deliver shares of ${$stockTicker}.`}
-  />
-</svelte:head>
+<SEO
+  title={`${$displayCompanyName} (${$stockTicker}) Fail-to-Deliver Shares`}
+  description={`Historical Fail-to-Deliver shares of ${$displayCompanyName}.`}
+/>
 
 <section
   class="bg-default w-full overflow-hidden min-h-screen text-white h-full"

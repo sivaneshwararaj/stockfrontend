@@ -1,11 +1,8 @@
 <script lang="ts">
-  import {
-    numberOfUnreadNotification,
-    displayCompanyName,
-    stockTicker,
-  } from "$lib/store";
+  import { displayCompanyName, stockTicker } from "$lib/store";
   import UpgradeToPro from "$lib/components/UpgradeToPro.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -35,36 +32,10 @@
   }
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {$displayCompanyName} ({$stockTicker}) Value-at-Risk Stocknear
-  </title>
-  <meta
-    name="description"
-    content={`Historical Value-at-Risk of ${$stockTicker}.`}
-  />
-  <meta
-    property="og:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Value-at-Risk · Stocknear`}
-  />
-  <meta
-    property="og:description"
-    content={`Historical Value-at-Risk of ${$stockTicker}.`}
-  />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta
-    name="twitter:title"
-    content={`${$displayCompanyName} (${$stockTicker}) Value-at-Risk · Stocknear`}
-  />
-  <meta
-    name="twitter:description"
-    content={`Historical Value-at-Risk of ${$stockTicker}.`}
-  />
-</svelte:head>
+<SEO
+  title={`Price Reaction ${$displayCompanyName} (${$stockTicker})`}
+  description={`Historical price reaction of ${$displayCompanyName} based on the earnings releases.`}
+/>
 
 <section
   class="bg-default w-full overflow-hidden min-h-screen text-white h-full"
