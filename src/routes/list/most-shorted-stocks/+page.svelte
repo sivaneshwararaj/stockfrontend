@@ -1,6 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -21,6 +22,11 @@
     "shortFloatPercent",
   ]);
 </script>
+
+<SEO
+  title="Most Shorted Stocks – High Short Interest Shares"
+  description="Discover the most shorted stocks with the highest short interest relative to float. Learn how short sellers target these stocks and what it means for investors."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

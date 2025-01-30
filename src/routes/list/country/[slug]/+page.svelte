@@ -2,6 +2,7 @@
   import { abbreviateNumber } from "$lib/utils";
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -26,6 +27,11 @@
     cn: "Chinese",
   };
 </script>
+
+<SEO
+  title={`List of ${countryNavigation[data?.getParams?.toLowerCase()]} Companies on the US Stock Market`}
+  description={`Explore a complete list of ${countryNavigation[data?.getParams?.toLowerCase()]} companies publicly traded on the US stock market. Find stock symbols, market data, and more.`}
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

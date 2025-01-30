@@ -5,6 +5,7 @@
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import DownloadData from "$lib/components/DownloadData.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -99,6 +100,11 @@
 
   $: charNumber = $screenWidth < 640 ? 15 : 20;
 </script>
+
+<SEO
+  title="Bitcoin ETFs - A Complete List"
+  description="A list of all the bitcoin ETFs trading on the US stock market. These funds provide exposure to the price of bitcoin."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox

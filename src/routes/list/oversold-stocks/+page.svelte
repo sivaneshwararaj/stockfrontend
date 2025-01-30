@@ -1,6 +1,7 @@
 <script lang="ts">
   import Table from "$lib/components/Table/Table.svelte";
   import Infobox from "$lib/components/Infobox.svelte";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
@@ -21,6 +22,11 @@
     "rsi",
   ]);
 </script>
+
+<SEO
+  title="Oversold Stocks List – RSI Indicator Analysis"
+  description="Explore a list of oversold stocks based on the Relative Strength Index (RSI), a key technical indicator used to identify potential buying opportunities in the market."
+/>
 
 <section class="w-full overflow-hidden m-auto">
   <Infobox
