@@ -668,7 +668,7 @@
 </script>
 
 <SEO
-  title={`${$etfTicker} ${displayLegend?.close} ${displayLegend?.change >= 0 ? "▲" : "▼"} ${displayLegend?.change}%`}
+  title={`${$etfTicker} ${$realtimePrice ?? displayLegend?.close} ${displayLegend?.change >= 0 ? "▲" : "▼"} ${displayLegend?.change}%`}
   description={`Get a real-time ${data?.companyName} (${$etfTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
 />
 

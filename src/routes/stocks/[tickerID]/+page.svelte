@@ -670,7 +670,7 @@
 </script>
 
 <SEO
-  title={`${$stockTicker} ${displayLegend?.close} ${displayLegend?.change >= 0 ? "▲" : "▼"} ${displayLegend?.change}%`}
+  title={`${$stockTicker} ${$realtimePrice ?? displayLegend?.close} ${displayLegend?.change >= 0 ? "▲" : "▼"} ${displayLegend?.change}%`}
   description={`Get a real-time ${data?.companyName} (${$stockTicker}) stock chart, price quote with breaking news, financials, statistics, charts and more.`}
 />
 
