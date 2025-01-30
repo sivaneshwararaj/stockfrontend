@@ -59,7 +59,7 @@
               <ul class="list-disc pl-7 md:pl-5 text-lg">
                 <li>
                   Reach a focused audience of over <strong
-                    >+3,000 active subscribers</strong
+                    >+300 active subscribers</strong
                   >.
                 </li>
                 <li>

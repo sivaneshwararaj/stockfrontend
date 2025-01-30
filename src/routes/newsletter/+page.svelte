@@ -50,8 +50,11 @@
       </ul>
 
       <p class="mt-4">
-        The newsletter is completely free, delivered to your inbox every morning
-        before the market opens, Monday to Friday.
+        The newsletter is completely free for <a
+          class="text-blue-400 sm:hover:text-white sm:hover:underline sm:hover:underline-offset-4"
+          href="/pricing">Pro Members</a
+        >, delivered to your inbox every morning before the market opens, Monday
+        to Friday.
       </p>
       {#if !data?.user}
         <a
