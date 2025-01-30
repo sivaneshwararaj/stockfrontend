@@ -1,35 +1,19 @@
 <script>
   import { numberOfUnreadNotification } from "$lib/store";
   import { getImageURL } from "$lib/utils";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
   const article = data?.getArticle;
 </script>
 
-<svelte:head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    {article?.title} · stocknear</title
-  >
-  <meta
-    name="description"
-    content="Latest articles on stocks, finance and investing"
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content={article?.title} />
-  <meta property="og:description" content={article?.abstract} />
-  <meta property="og:type" content="article" />
-  <!-- Add more Open Graph meta tags as needed -->
+<SEO
+  title={article?.title}
+  description={article?.abstract}
+  image={getImageURL(article?.collectionId, article?.id, article?.cover)}
+/>
 
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={article?.title} />
-  <meta name="twitter:description" content={article?.abstract} />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
 <div>
   <main id="main" class="mt-2 text-white min-h-screen pb-40">
     <div class="mx-auto max-w-screen-xl">

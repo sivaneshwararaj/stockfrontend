@@ -3,6 +3,7 @@
 
   export let title;
   export let description;
+  export let image;
 </script>
 
 <svelte:head>
@@ -17,15 +18,21 @@
   </title>
 
   <meta name="description" content={description} />
-  <!-- Other meta tags -->
+
+  <!-- Open Graph meta tags -->
   <meta property="og:title" content={`${title} - Stocknear`} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
+  {#if image}
+    <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={title} />
+  {/if}
 
-  <!-- Twitter specific meta tags -->
+  <!-- Twitter meta tags -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={`${title} - Stocknear`} />
   <meta name="twitter:description" content={description} />
-  <!-- Add more Twitter meta tags as needed -->
+  {#if image}
+    <meta name="twitter:image" content={image} />
+  {/if}
 </svelte:head>

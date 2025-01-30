@@ -1,42 +1,17 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import { getImageURL, convertToSlug } from "$lib/utils";
+  import SEO from "$lib/components/SEO.svelte";
 
   export let data;
 
   let allBlogPosts = data?.getAllBlogPost;
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stock
-    Analysis Blog · stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta
-    name="description"
-    content="Get the latest blog post to understand and invest correctly into companies."
-  />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Stock Analysis Blog · stocknear" />
-  <meta
-    property="og:description"
-    content="Get the latest blog post to understand and invest correctly into companies."
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stock Analysis Blog · stocknear" />
-  <meta
-    name="twitter:description"
-    content="Get the latest blog post to understand and invest correctly into companies."
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Stock
+    Analysis Blog"
+  description="Get the latest blog post to understand and invest correctly into companies."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
