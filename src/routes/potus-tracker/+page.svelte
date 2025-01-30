@@ -399,7 +399,7 @@
                   </div>
 
                   <!-- Title -->
-                  <h2 class="text-[#E5E7EB] text-lg font-semibold mb-3">
+                  <h2 class="text-[#E5E7EB] text-[1rem] font-semibold mb-3">
                     {item?.title}
                   </h2>
 
