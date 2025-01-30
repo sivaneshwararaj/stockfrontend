@@ -666,17 +666,17 @@
             class="w-full text-white border border-gray-600 rounded-md h-fit pb-4 mt-4 cursor-pointer bg-inherit sm:hover:bg-secondary transition ease-out duration-100"
           >
             <a
-              href="/sentiment-tracker"
+              href="/potus-tracker"
               class="w-auto lg:w-full p-1 flex flex-col m-auto px-2 sm:px-0"
             >
               <div class="w-full flex justify-between items-center p-3 mt-3">
                 <h2 class="text-start text-xl font-semibold text-white ml-3">
-                  Sentiment Tracker
+                  POTUS Tracker
                 </h2>
                 <ArrowLogo class="w-8 h-8 mr-3 flex-shrink-0" />
               </div>
               <span class="text-white p-3 ml-3 mr-3">
-                Follow the latest trends in realtime on social media
+                Follow the latest executive orders of the US President
               </span>
             </a>
           </div>
