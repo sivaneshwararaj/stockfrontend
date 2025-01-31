@@ -29,10 +29,6 @@
       link: "/dividends-calendar",
     },
     {
-      title: "FDA Calendar",
-      link: "/fda-calendar",
-    },
-    {
       title: "Economic Events",
       link: "/economic-calendar",
     },

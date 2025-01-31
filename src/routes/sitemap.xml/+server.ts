@@ -41,7 +41,6 @@ const pages = [
   { title: "/earnings-calendar" },
   { title: "/economic-calendar" },
   { title: "/dividends-calendar" },
-  { title: "/fda-calendar" },
   { title: "/market-mover/gainers" },
   { title: "/market-mover/losers" },
   { title: "/market-mover/active" },
