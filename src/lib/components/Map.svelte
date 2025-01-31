@@ -12,6 +12,7 @@
   import Feature from "ol/Feature";
   import Point from "ol/geom/Point";
   import { Style, Circle, Fill } from "ol/style";
+  import { defaults as defaultInteractions } from "ol/interaction";
 
   // White House coordinates
   const LON = -77.0365427;
@@ -89,6 +90,10 @@
         maxZoom: 18,
       }),
       controls: [],
+      interactions: defaultInteractions({
+        mouseWheelZoom: false, // Disable scroll zoom
+        pinchZoom: false, // Disable pinch-to-zoom
+      }),
     });
 
     animate();

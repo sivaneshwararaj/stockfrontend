@@ -7,7 +7,7 @@
 
 <SEO
   title="Market Newsletter: Stay Informed in Just 2 Minutes Per Day"
-  description="Stay ahead in the market with our free newsletter! Get the latest updates, trends, and insights delivered straight to your inbox."
+  description="Stay ahead in the market with our pro newsletter! Get the latest updates, trends, and insights delivered straight to your inbox."
 />
 
 <div class="w-full max-w-7xl min-h-screen text-white m-auto mt-5">
@@ -20,7 +20,7 @@
         Stay informed in just 2 minutes per day
       </h1>
       <p>
-        Market Bullets is a free newsletter that makes it super easy to keep up
+        Market Bullets is a Pro Newsletter that makes it super easy to keep up
         with financial markets.
       </p>
       <p class="mt-4">
