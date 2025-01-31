@@ -181,8 +181,8 @@
 </script>
 
 <SEO
-  title="POTUS Tracker - Executive Orders, Presidential Schedule, Signed Legislation"
-  description="Where is the President? Find out what the President of the United States is doing with real-time location, schedule, legislation, and executive order updates."
+  title="POTUS Tracker: Real-Time Presidential Schedule, Executive Orders & Legislation"
+  description="Track the President of the United States in real-time. Get updates on the POTUS schedule, executive orders, signed legislation, and official events."
 />
 
 <section
