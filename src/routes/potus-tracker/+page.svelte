@@ -419,7 +419,7 @@
                 Latest Executive Orders analyzed by AI
               </h3>
               <div class="space-y-4">
-                {#each Object.entries(groupedOrders) as [date, items]}
+                {#each Object.entries(groupedOrders) as [date, items], indexA}
                   <div class="my-4">
                     <div
                       class="border-b border-gray-800 pb-2 flex flex-row items-center justify-between"
@@ -430,27 +430,42 @@
                     </div>
                     <br />
 
-                    {#each items as item, index}
+                    {#each items as item, indexB}
                       <div class="flex flex-col items-start space-y-1 mb-6">
                         <div class="flex flex-row items-center space-x-2">
                           <div class="relative">
                             <svg
-                              fill={index === 0 ? "#2E86DE" : "#808080"}
+                              fill={indexA === 0 && indexB === 0
+                                ? "#2E86DE"
+                                : "#808080"}
                               class="w-5 h-5 relative z-10"
                               viewBox="-51.2 -51.2 614.40 614.40"
+                              id="_78_Circle-Full"
                               xmlns="http://www.w3.org/2000/svg"
-                              stroke={index === 0 ? "#2E86DE" : "#808080"}
+                              stroke={indexA === 0 && indexB === 0
+                                ? "#2E86DE"
+                                : "#808080"}
                               stroke-width="0.00512"
                             >
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g
+                                id="SVGRepo_tracerCarrier"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke="#CCCCCC"
+                                stroke-width="24.576"
+                              ></g>
                               <g id="SVGRepo_iconCarrier">
                                 <path
+                                  id="Path_111"
+                                  data-name="Path 111"
                                   d="M256,512C114.625,512,0,397.375,0,256S114.625,0,256,0,512,114.625,512,256,397.375,512,256,512Zm0-448C149.969,64,64,149.969,64,256s85.969,192,192,192,192-85.969,192-192S362.031,64,256,64Zm0,320A128,128,0,1,1,384,256,128.006,128.006,0,0,1,256,384Z"
                                   fill-rule="evenodd"
                                 ></path>
                               </g>
                             </svg>
 
-                            {#if index === 0}
+                            {#if indexA === 0 && indexB === 0}
                               <span
                                 class="absolute -inset-1 rounded-full animate-ping w-3 h-3 m-auto bg-blue-400/75"
                               ></span>
