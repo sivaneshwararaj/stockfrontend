@@ -515,7 +515,7 @@
                               >Earnings Calendar</a
                             >
                           </Button>
-
+                          <!--
                           <Button
                             builders={[builder]}
                             type="submit"
@@ -527,6 +527,7 @@
                               >FDA Calendar</a
                             >
                           </Button>
+                          -->
 
                           <Button
                             builders={[builder]}
@@ -1035,12 +1036,13 @@
                             class="text-[1rem] text-white ml-4 mt-4"
                             >Earnings Calendar</a
                           >
-
+                          <!--
                           <a
                             href="/fda-calendar"
                             class="text-[1rem] text-white ml-4 mt-4"
                             >FDA Calendar</a
                           >
+                            -->
 
                           <a
                             href="/ipos"

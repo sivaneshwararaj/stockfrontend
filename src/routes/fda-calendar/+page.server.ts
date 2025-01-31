@@ -1,4 +1,13 @@
+import { redirect, error } from "@sveltejs/kit";
+
+
 export const load = async ({ locals }) => {
+
+  const { pb, user } = locals;
+
+
+  redirect(303, "/");
+
   const getFDACalendar = async () => {
     const { apiURL, apiKey, user } = locals;
 
