@@ -23,21 +23,25 @@ const ICONS = {
 self.addEventListener('push', (event: PushEvent) => {
   if (!event.data) return;
 
-  let title = ''; // Use an empty title to suppress "von Stocknear"
+  let title = 'Stocknear';
   let body: string;
   
   try {
+    // Try to get the payload as text first
     const payload = event.data.text();
     
     try {
+      // Try to parse as JSON
       const jsonData = JSON.parse(payload);
       if (jsonData.title) {
-        title = jsonData.title; // Use title from payload if provided
+        title = jsonData.title;
         body = jsonData.body;
       } else {
+        // If no title in JSON, use the entire payload as body
         body = payload;
       }
     } catch {
+      // If JSON parsing fails, use the payload as body
       body = payload;
     }
   } catch {
@@ -53,9 +57,8 @@ self.addEventListener('push', (event: PushEvent) => {
     tag: 'stocknear-notification',
     renotify: true,
     vibrate: [200, 100, 200],
-    silent: true, // Prevents Apple from modifying the notification
     data: {
-      suppressNotificationFrom: true
+      suppressNotificationFrom: true  // Custom flag to indicate branding should be suppressed
     }
   };
 
@@ -63,8 +66,6 @@ self.addEventListener('push', (event: PushEvent) => {
     self.registration.showNotification(title, options)
   );
 });
-
-
 /**
  * Notification click handler
  * Handles user interaction with notifications
