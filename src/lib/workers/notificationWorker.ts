@@ -19,11 +19,9 @@ onmessage = async (event: MessageEvent) => {
   let output = {}
   try {
     const [notificationList] = await Promise?.all([loadNotifications()]);
-    const numberOfUnreadNotification = notificationList?.filter(
-      (item?) => !item?.readed,
-    );
+    const numberOfUnreadNotification = notificationList?.length
     const hasUnreadElement =
-      numberOfUnreadNotification?.length !== 0 ? true : false;
+      numberOfUnreadNotification > 0 ? true : false;
     output = {
       notificationList,
       hasUnreadElement,

@@ -91,7 +91,7 @@
     const output = event.data?.output;
     notificationList = output?.notificationList;
     hasUnreadElement = output?.hasUnreadElement;
-    numberOfUnreadNotification.set(output?.numberOfUnreadNotification?.length);
+    numberOfUnreadNotification.set(output?.numberOfUnreadNotification);
     //pushNotification()
   };
 
@@ -100,8 +100,8 @@
     const permissionGranted = await requestNotificationPermission();
 
     if (permissionGranted) {
-      sendNotification("Stocknear", {
-        body: "Celestica shares are trading higher following better-than-expected Q4 financial results and Q1 guidance issued above estimates.",
+      sendNotification("Price Alert for ZBRA", {
+        body: `📈 The price of 12 is above your target of 23.`,
         iconSize: 12,
         url: "/notifications",
       });
@@ -150,20 +150,19 @@
   async function fallbackWorker() {
     // Implement fallback logic here, e.g., using timers or other techniques
     console.log("Fallback worker activated");
-
+    const postData = { readed: false };
     const response = await fetch("/api/get-notifications", {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(postData),
     });
 
     notificationList = await response.json();
-    const numberOfUnreadNotification = notificationList.filter(
-      (item?) => !item?.readed,
-    );
-    hasUnreadElement = numberOfUnreadNotification?.length !== 0 ? true : false;
-    numberOfUnreadNotification.set(numberOfUnreadNotification?.length);
+    const unreadNotifications = notificationList?.length; //notificationList.filter((item?) => !item?.readed,);
+    hasUnreadElement = unreadNotifications > 0 ? true : false;
+    numberOfUnreadNotification.set(unreadNotifications);
   }
 
   let Cookie;
