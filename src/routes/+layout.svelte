@@ -51,12 +51,13 @@
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
-
+  /*
   import {
     requestNotificationPermission,
     sendNotification,
   } from "$lib/notifications";
 
+   */
   export let data;
 
   let hideHeader = false;
@@ -92,48 +93,7 @@
     notificationList = output?.notificationList;
     hasUnreadElement = output?.hasUnreadElement;
     numberOfUnreadNotification.set(output?.numberOfUnreadNotification);
-    //pushNotification()
   };
-
-  // Send notification and handle click redirection
-  async function handleNotificationClick() {
-    const permissionGranted = await requestNotificationPermission();
-
-    if (permissionGranted) {
-      sendNotification("Price Alert for ZBRA", {
-        body: `📈 The price of 12 is above your target of 23.`,
-        iconSize: 12,
-        url: "/notifications",
-      });
-    }
-  }
-
-  //Check Service Worker (SW)
-  /*
-  async function detectSWUpdate() {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-
-      registration.addEventListener("updatefound", () => {
-        const newSW = registration.installing;
-
-        newSW?.addEventListener("statechange", () => {
-          if (newSW.state === "installed") {
-            const message =
-              "🚀 A fresh update is ready! Reload now to enjoy the latest features";
-
-            if (confirm(message)) {
-              newSW.postMessage({ type: "SKIP_WAITING" });
-              window.location.reload();
-            }
-          }
-        });
-      });
-    } catch (error) {
-      console.error("Service Worker registration failed:", error);
-    }
-  }
-  */
 
   const loadWorker = async () => {
     if ("serviceWorker" in navigator) {
@@ -1214,9 +1174,11 @@
           </div>
           <div class="w-full">
             <main class="w-full overflow-y-auto bg-default sm:p-4">
+              <!--
               <button on:click={handleNotificationClick}>
                 Send Notification
               </button>
+              -->
 
               <slot />
               <Toaster class="bg-[#1A1A27] text-white text-medium" />
