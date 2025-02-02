@@ -52,12 +52,6 @@
   import Gem from "lucide-svelte/icons/gem";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
 
-  import {
-    requestNotificationPermission,
-    subscribeUser,
-    checkSubscriptionStatus,
-  } from "$lib/notifications";
-
   export let data;
 
   let hideHeader = false;

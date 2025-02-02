@@ -25,6 +25,7 @@
   let AppInstalled = null;
 
   function getClosedPWA() {
+    //if user closed the banner
     const item = localStorage.getItem("closePWA");
     if (!item) return null;
 

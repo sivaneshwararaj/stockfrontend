@@ -2,6 +2,7 @@
   import SEO from "$lib/components/SEO.svelte";
   import toast from "svelte-french-toast";
   import { enhance } from "$app/forms";
+  import { isPWAInstalled } from "$lib/utils";
   import {
     requestNotificationPermission,
     checkSubscriptionStatus,
@@ -13,8 +14,9 @@
   export let data;
   export let form;
 
+  let pwaInstalled;
   let nottifPermGranted: boolean | null = null;
-  let isPushSubscribed = false;
+  let isPushSubscribed = data?.getPushSubscriptionData !== null ? true : false;
 
   let subscriptionData = data?.getSubscriptionData;
   let isClicked = false;
@@ -159,11 +161,13 @@
   };
 
   onMount(async () => {
-    if (data?.user?.id) {
-      nottifPermGranted = await requestNotificationPermission();
-      if (nottifPermGranted) {
-        isPushSubscribed = (await checkSubscriptionStatus()) || false;
-      }
+    pwaInstalled = isPWAInstalled();
+    nottifPermGranted = await requestNotificationPermission();
+    if (nottifPermGranted) {
+      isPushSubscribed =
+        ((await checkSubscriptionStatus()) &&
+          data?.getPushSubscriptionData !== null) ||
+        false;
     }
   });
 
@@ -177,12 +181,20 @@
   }
 
   async function handlePushSubscribe() {
-    subscribeUser();
-    isPushSubscribed = true;
-    toast.success("Push notification activated successfully!", {
-      style:
-        "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
-    });
+    const output = await subscribeUser();
+    console.log(output);
+    if (output?.success === true) {
+      isPushSubscribed = true;
+      toast.success("Push notification activated successfully!", {
+        style:
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
+      });
+    } else {
+      toast.error("Your browser does not support push notifications...", {
+        style:
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
+      });
+    }
   }
 </script>
 
@@ -236,46 +248,49 @@
             >
           </div>
 
-          <div
-            class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
-          >
-            <h2 class="text-white text-2xl font-semibold mb-3">
-              Push Notification
-            </h2>
-            <div class="mt-3">
-              {#if nottifPermGranted === null}
-                <p>Checking permissions...</p>
-              {:else if nottifPermGranted === true}
-                {#if isPushSubscribed}
-                  <p class="mb-3">Push notifications are currently active.</p>
-                  <div class="mt-3">
+          {#if !pwaInstalled}
+            <div
+              class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
+            >
+              <h2 class="text-white text-2xl font-semibold mb-3">
+                Push Notification
+              </h2>
+              <div class="mt-3">
+                {#if nottifPermGranted === null}
+                  <p>Checking permissions...</p>
+                {:else if nottifPermGranted === true}
+                  {#if isPushSubscribed}
+                    <p class="mb-3">Push notifications are currently active.</p>
+                    <div class="mt-3">
+                      <button
+                        class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
+                        type="button"
+                        on:click={handlePushUnsubscribe}
+                        >Disable notifications</button
+                      >
+                    </div>
+                  {:else}
+                    <p class="mb-3">
+                      Stay up-to-date with real-time price alerts, the latest
+                      stock news, and earnings calls delivered straight to your
+                      device.
+                    </p>
                     <button
                       class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
                       type="button"
-                      on:click={handlePushUnsubscribe}
-                      >Disable notifications</button
+                      on:click={handlePushSubscribe}
+                      >Enable notifications</button
                     >
-                  </div>
-                {:else}
-                  <p class="mb-3">
-                    Stay up-to-date with real-time price alerts, the latest
-                    stock news, and earnings calls delivered straight to your
-                    device.
+                  {/if}
+                {:else if nottifPermGranted === false}
+                  <p class="">
+                    Review your settings and enable notifications to stay
+                    updated with Stocknear alerts.
                   </p>
-                  <button
-                    class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
-                    type="button"
-                    on:click={handlePushSubscribe}>Enable notifications</button
-                  >
                 {/if}
-              {:else if nottifPermGranted === false}
-                <p class="">
-                  Review your settings and enable notifications to stay updated
-                  with Stocknear alerts.
-                </p>
-              {/if}
+              </div>
             </div>
-          </div>
+          {/if}
 
           <div
             class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"

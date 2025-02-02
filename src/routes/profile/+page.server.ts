@@ -6,6 +6,30 @@ export const load = async ({ locals }) => {
     redirect(303, "/login");
   }
 
+const getPushSubscriptionData = async () => {
+  let output = {};
+  try {
+    output = await pb.collection("pushSubscription").getFullList({
+      filter: `user="${user?.id}"`,
+      sort: "-created", // Sorts newest first
+    });
+
+    if (output?.length > 1) {
+      const [, ...toDelete] = output; // Keep the first item, delete the rest
+      await Promise.all(
+        toDelete.map((item) => pb.collection("pushSubscription").delete(item?.id))
+      );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  return output?.at(0) || null; // Return only the latest item
+};
+
+
+
+
   const getSubscriptionData = async () => {
     const output =
       (
@@ -23,7 +47,9 @@ export const load = async ({ locals }) => {
 
   return {
     getSubscriptionData: await getSubscriptionData(),
+    getPushSubscriptionData: await getPushSubscriptionData(),
   };
+
 };
 
 export const actions = {

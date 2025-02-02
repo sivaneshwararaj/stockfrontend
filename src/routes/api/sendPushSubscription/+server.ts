@@ -12,46 +12,54 @@ webPush.setVapidDetails(
 
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { pb, apiKey } = locals;
+  const { body, key } = await request?.json();
 
-    const { body, key } = await request?.json();
+  if (apiKey !== key) {
+    console.warn('Invalid API key');
+    return new Response(JSON.stringify({ success: false, error: 'Invalid API key' }), { status: 401 });
+  }
 
-    if (apiKey === key) {
-    
-        try {
+  try {
+    // Get all push subscriptions
+    const subscriptions = await pb.collection('pushSubscription').getFullList({ sort: '-created' });
 
-            // Get all push subscriptions
-            const subscriptions = await pb.collection('pushSubscription').getFullList({
-            sort: '-created'
-            });
-
-            // Send notifications to all subscriptions
-            const sendNotifications = subscriptions?.map(async (subRecord) => {
-            try {
-                const subscriptionData = subRecord.subscription?.subscription;
-                await webPush.sendNotification(
-                subscriptionData, // Ensure correct format
-                body
-                );
-            } catch (error: any) {
-                console.error('Error sending notification:', error);
-
-                // Delete invalid subscriptions (410 means "Gone")
-                if (error.statusCode === 410) {
-                await pb.collection('pushSubscription').delete(subRecord.id);
-                }
-            }
-            });
-
-            await Promise.all(sendNotifications);
-
-            return new Response(JSON.stringify({ success: true, message: `Notifications sent to ${subscriptions.length} devices` }));
-        } catch (error: any) {
-            console.error('Error sending notifications:', error);
-            return new Response(JSON.stringify({ success: false, error: error.message }, { status: 500 }));
-        }
-
-    } else {
-        console.log('key is wrong')
+    if (!subscriptions.length) {
+      console.warn('No subscriptions found.');
+      return new Response(JSON.stringify({ success: false, error: 'No subscriptions found' }), { status: 404 });
     }
 
+    // Send notifications
+    const sendNotifications = subscriptions.map(async (subRecord) => {
+      try {
+        const subscriptionData = subRecord.subscription?.subscription;
+        
+        if (!subscriptionData || !subscriptionData.endpoint) {
+          console.warn(`Skipping invalid subscription: ${subRecord.id}`);
+          return;
+        }
+
+        // Apple Push Notifications do not support VAPID
+        const payload = subscriptionData.endpoint.includes('web.push.apple.com') ? '' : body;
+
+        await webPush.sendNotification(subscriptionData, payload);
+        console.log(`Notification sent to: ${subscriptionData.endpoint}`);
+        
+      } catch (error: any) {
+        console.error(`Error sending notification to ${subRecord.id}:`, error);
+
+        // Remove invalid subscriptions
+        if (error.statusCode === 410 || error.statusCode === 404) {
+          console.warn(`Deleting invalid subscription: ${subRecord.id}`);
+          await pb.collection('pushSubscription').delete(subRecord.id);
+        }
+      }
+    });
+
+    await Promise.all(sendNotifications);
+
+    return new Response(JSON.stringify({ success: true, message: `Notifications sent to ${subscriptions.length} devices` }));
+  } catch (error: any) {
+    console.error('Error sending notifications:', error);
+    return new Response(JSON.stringify({ success: false, error: error.message }), { status: 500 });
+  }
 };

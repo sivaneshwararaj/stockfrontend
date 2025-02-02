@@ -64,15 +64,17 @@ export async function unsubscribe() {
 
 async function sendSubscriptionToServer(subscription) {
 		try {
-			const res = await fetch('/api/addPushSubscription', {
+			const response = await fetch('/api/addPushSubscription', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({ subscription })
 			});
-			if (!res.ok)
-				throw new Error(`Error saving subscription on server: ${res.statusText} (${res.status})`);
+
+			const output = await response?.json()
+			return output;
+			
 		} catch (error) {
 			console.error('Error saving subscription on server:', error);
 			unsubscribe();
@@ -87,9 +89,11 @@ export async function subscribeUser() {
 					userVisibleOnly: true,
 					applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
 				});
-				sendSubscriptionToServer(subscription);
+				const output = sendSubscriptionToServer(subscription);
+				return output;
 			} catch (err) {
 				console.error('Error subscribing:', err);
+				return {'success': false}
 			}
 		}
 	}
@@ -104,7 +108,7 @@ export async function checkSubscriptionStatus() {
       //this can be optional
 			if (exists) {
 				// just to make sure the subscription is saved on the server
-				sendSubscriptionToServer(subscription);
+				//sendSubscriptionToServer(subscription);
 			}
 			return exists;
 		}
