@@ -56,7 +56,10 @@ self.addEventListener('push', (event: PushEvent) => {
     requireInteraction: true,
     tag: 'stocknear-notification',
     renotify: true,
-    vibrate: [200, 100, 200]
+    vibrate: [200, 100, 200],
+    data: {
+      suppressNotificationFrom: true  // Custom flag to indicate branding should be suppressed
+    }
   };
 
   event.waitUntil(
