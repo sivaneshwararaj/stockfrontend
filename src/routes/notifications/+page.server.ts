@@ -8,11 +8,14 @@ export const load = async ({ locals, fetch }) => {
   }
 
   async function getNotifications() {
+
+    const postData = {'readed': true}
     const response = await fetch("/api/get-notifications", {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(postData),
     });
 
     const output = await response.json();

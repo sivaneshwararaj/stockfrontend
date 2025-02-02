@@ -51,12 +51,11 @@
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
-  /*
+
   import {
     requestNotificationPermission,
     sendNotification,
   } from "$lib/notifications";
-*/
 
   export let data;
 
@@ -96,21 +95,21 @@
     //pushNotification()
   };
 
-  /*
   // Send notification and handle click redirection
   async function handleNotificationClick() {
     const permissionGranted = await requestNotificationPermission();
 
     if (permissionGranted) {
       sendNotification("Stocknear", {
-        body: "This is a detailed notification message",
-        iconSize: 12, // Smaller logo size
+        body: "Celestica shares are trading higher following better-than-expected Q4 financial results and Q1 guidance issued above estimates.",
+        iconSize: 12,
+        url: "/notifications",
       });
     }
   }
 
   //Check Service Worker (SW)
-  
+  /*
   async function detectSWUpdate() {
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -1216,11 +1215,10 @@
           </div>
           <div class="w-full">
             <main class="w-full overflow-y-auto bg-default sm:p-4">
-              <!--
               <button on:click={handleNotificationClick}>
                 Send Notification
               </button>
-              -->
+
               <slot />
               <Toaster class="bg-[#1A1A27] text-white text-medium" />
               {#if Cookie && $showCookieConsent === true}

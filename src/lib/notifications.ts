@@ -1,3 +1,4 @@
+import { goto } from '$app/navigation';
 
 export async function requestNotificationPermission() {
   // Check if the browser supports notifications
@@ -19,12 +20,27 @@ export async function requestNotificationPermission() {
   }
 }
 
-export function sendNotification(title: string, options?: NotificationOptions & { iconSize?: number }) {
-  // Only send if permission is granted
-  if (Notification.permission === 'granted') {
-    new Notification(title, {
-      icon: "/pwa-192x192.png", // Use the imported image directly
-      ...options
-    });
-  }
+
+export function sendNotification(
+    title: string,
+    options?: NotificationOptions & { iconSize?: number; url?: string }
+) {
+    // Only send if permission is granted
+    if (Notification.permission === 'granted') {
+        // Extract custom properties and remaining NotificationOptions
+        const { iconSize, url, ...notificationOptions } = options || {};
+
+        const notification = new Notification(title, {
+            icon: "/pwa-192x192.png",
+            ...notificationOptions // Spread only valid NotificationOptions
+        });
+
+        // Navigate when the notification is clicked
+        if (url) {
+            notification.onclick = () => {
+                window.focus(); // Ensure the window is focused
+                goto(url); // Client-side navigation
+            };
+        }
+    }
 }
