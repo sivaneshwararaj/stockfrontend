@@ -8,19 +8,22 @@
   "description": "Clear & Simple Market Insight",
   "icons": [
     {
-      "src": "pwa-64x64.png",
+      "src": "/pwa-64x64.png",
       "type": "image/png",
-      "sizes": "64x64"
+      "sizes": "64x64",
+      "purpose": "any maskable"
     },
     {
-      "src": "pwa-192x192.png",
+      "src": "/pwa-192x192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "pwa-512x512.png",
+      "src": "/pwa-512x512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ]
 }

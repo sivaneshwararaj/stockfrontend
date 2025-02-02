@@ -1,3 +1,4 @@
+// server endpoints file
 import type { RequestHandler } from '@sveltejs/kit';
 import webPush from 'web-push';
 
@@ -12,7 +13,7 @@ webPush.setVapidDetails(
 
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { pb, apiKey } = locals;
-  const { body, key } = await request?.json();
+  const { title, body, key, options = {} } = await request?.json();
 
   if (apiKey !== key) {
     console.warn('Invalid API key');
@@ -20,7 +21,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
 
   try {
-    // Get all push subscriptions
     const subscriptions = await pb.collection('pushSubscription').getFullList({ sort: '-created' });
 
     if (!subscriptions.length) {
@@ -28,7 +28,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       return new Response(JSON.stringify({ success: false, error: 'No subscriptions found' }), { status: 404 });
     }
 
-    // Send notifications
     const sendNotifications = subscriptions.map(async (subRecord) => {
       try {
         const subscriptionData = subRecord.subscription?.subscription;
@@ -38,8 +37,19 @@ export const POST: RequestHandler = async ({ request, locals }) => {
           return;
         }
 
-        // Apple Push Notifications do not support VAPID
-        const payload = subscriptionData.endpoint.includes('web.push.apple.com') ? '' : body;
+        const isApple = subscriptionData.endpoint.includes('web.push.apple.com');
+        const payload = JSON.stringify({
+          title,
+          body,
+          options: {
+            ...options,
+            // Additional options specific to the platform
+            ...(isApple && {
+              silent: false, // Ensure notification shows on iOS
+              timestamp: Date.now(), // Required for iOS
+            })
+          }
+        });
 
         await webPush.sendNotification(subscriptionData, payload);
         console.log(`Notification sent to: ${subscriptionData.endpoint}`);
@@ -47,7 +57,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       } catch (error: any) {
         console.error(`Error sending notification to ${subRecord.id}:`, error);
 
-        // Remove invalid subscriptions
         if (error.statusCode === 410 || error.statusCode === 404) {
           console.warn(`Deleting invalid subscription: ${subRecord.id}`);
           await pb.collection('pushSubscription').delete(subRecord.id);
@@ -57,7 +66,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
     await Promise.all(sendNotifications);
 
-    return new Response(JSON.stringify({ success: true, message: `Notifications sent to ${subscriptions.length} devices` }));
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: `Notifications sent to ${subscriptions.length} devices` 
+    }));
   } catch (error: any) {
     console.error('Error sending notifications:', error);
     return new Response(JSON.stringify({ success: false, error: error.message }), { status: 500 });
