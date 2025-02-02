@@ -62,7 +62,6 @@
   description="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."
   image=""
 />
-/>
 
 <div
   class="w-full sm:max-w-[1400px] overflow-hidden m-auto min-h-screen bg-default mb-40"

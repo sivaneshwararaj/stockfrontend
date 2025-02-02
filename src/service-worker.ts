@@ -85,7 +85,8 @@ self.addEventListener('push', function (event: any) {
 	const registration = (self as any).registration as ServiceWorkerRegistration;
 	event.waitUntil(
 		registration.showNotification('Stocknear', {
-			body: payload
+			body: payload,
+      icon: "/pwa-192x192.png",
 		})
 	);
 } as EventListener);
