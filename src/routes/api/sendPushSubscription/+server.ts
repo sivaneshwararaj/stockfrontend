@@ -13,7 +13,7 @@ webPush.setVapidDetails(
 
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { pb, apiKey } = locals;
-  const { title, body, key, options = {} } = await request?.json();
+  const { title, body, key } = await request?.json();
 
   if (apiKey !== key) {
     console.warn('Invalid API key');
@@ -37,19 +37,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
           return;
         }
 
-        const isApple = subscriptionData.endpoint.includes('web.push.apple.com');
-        const payload = JSON.stringify({
-          title,
-          body,
-          options: {
-            ...options,
-            // Additional options specific to the platform
-            ...(isApple && {
-              silent: false, // Ensure notification shows on iOS
-              timestamp: Date.now(), // Required for iOS
-            })
-          }
-        });
+        // Send just the body text for Android
+        const isAndroid = !subscriptionData.endpoint.includes('web.push.apple.com');
+        const payload = isAndroid ? body : JSON.stringify({ title, body });
 
         await webPush.sendNotification(subscriptionData, payload);
         console.log(`Notification sent to: ${subscriptionData.endpoint}`);
