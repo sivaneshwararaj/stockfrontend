@@ -25,25 +25,29 @@
       switch (result.type) {
         case "success":
           toast.success("Subscription Cancelled successfully!", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "redirect":
           toast.success("Subscription Cancelled successfully!", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "failure":
           toast.error("Something went wrong.", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "error":
           toast.error(result.error.message, {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           break;
         default:
@@ -67,25 +71,29 @@
       switch (result.type) {
         case "success":
           toast.success("Subscription Reactivate successfully!", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "redirect":
           toast.success("Subscription Reactivate successfully!", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "failure":
           toast.error("Something went wrong.", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "error":
           toast.error(result.error.message, {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           break;
         default:
@@ -109,25 +117,29 @@
       switch (result.type) {
         case "success":
           toast.success("Changing to Annual Plan successfully!", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "redirect":
           toast.success("Changing to Annual Plan successfully!", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "failure":
           toast.error("Something went wrong.", {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           await update();
           break;
         case "error":
           toast.error(result.error.message, {
-            style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+            style:
+              "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
           });
           break;
         default:
@@ -151,7 +163,6 @@
       nottifPermGranted = await requestNotificationPermission();
       if (nottifPermGranted) {
         isPushSubscribed = (await checkSubscriptionStatus()) || false;
-        console.log(isPushSubscribed);
       }
     }
   });
@@ -161,7 +172,7 @@
     isPushSubscribed = false;
     toast.success("Push notification deactivated successfully!", {
       style:
-        "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;", // gray-600 hex color
+        "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
     });
   }
 
@@ -170,7 +181,7 @@
     isPushSubscribed = true;
     toast.success("Push notification activated successfully!", {
       style:
-        "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;", // gray-600 hex color
+        "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
     });
   }
 </script>
@@ -257,25 +268,11 @@
                     on:click={handlePushSubscribe}>Enable notifications</button
                   >
                 {/if}
-
-                <!--
               {:else if nottifPermGranted === false}
-                <button
-                  class="button"
-                  type="button"
-                  on:click={requestNotificationPermission}
-                  >Enable notifications</button
-                >
-              {:else}
-                <p>Push notification is currently active.</p>
-                <div class="mt-3">
-                  <button
-                    class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
-                    type="button"
-                    on:click={unsubscribe}>Disable notifications</button
-                  >
-                </div>
-            -->
+                <p class="">
+                  Review your settings and enable notifications to stay updated
+                  with Stocknear alerts.
+                </p>
               {/if}
             </div>
           </div>
