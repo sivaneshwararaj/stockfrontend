@@ -44,3 +44,63 @@ export function sendNotification(
         }
     }
 }
+
+
+async function unsubscribe() {
+		if ('serviceWorker' in navigator) {
+			const registration = await navigator.serviceWorker.ready;
+			const subscription = await registration.pushManager.getSubscription();
+			if (subscription) {
+				await subscription.unsubscribe();
+			}
+		}
+	}
+
+async function sendSubscriptionToServer(subscription) {
+		try {
+			const res = await fetch('/api/addPushSubscription', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ subscription })
+			});
+			if (!res.ok)
+				throw new Error(`Error saving subscription on server: ${res.statusText} (${res.status})`);
+		} catch (error) {
+			console.error('Error saving subscription on server:', error);
+			unsubscribe();
+		}
+	}
+
+export async function subscribeUser() {
+		if ('serviceWorker' in navigator) {
+			try {
+				const registration = await navigator.serviceWorker.ready;
+				const subscription = await registration.pushManager.subscribe({
+					userVisibleOnly: true,
+					applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY
+				});
+				sendSubscriptionToServer(subscription);
+			} catch (err) {
+				console.error('Error subscribing:', err);
+			}
+		}
+	}
+
+export async function checkSubscriptionStatus() {
+		if ('serviceWorker' in navigator) {
+			const registration = await navigator.serviceWorker.ready;
+
+			const subscription = await registration.pushManager.getSubscription();
+			//console.log('check Subscription:', subscription);
+			const exists = subscription !== null;
+      //this can be optional
+			if (exists) {
+				// just to make sure the subscription is saved on the server
+				sendSubscriptionToServer(subscription);
+			}
+			return exists;
+		}
+		return false;
+	}

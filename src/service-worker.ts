@@ -5,16 +5,20 @@ declare let self: ServiceWorkerGlobalScope;
 
 import { build, files, version } from "$service-worker";
 
+// Fixed template literal syntax
 const CACHE = `cache-${version}`;
 const ASSETS = [...build, ...files];
 
 // install service worker
 self.addEventListener("install", (event) => {
   async function addFilesToCache() {
-    const cache = await caches.open(CACHE);
-    await cache.addAll(ASSETS);
+    try {
+      const cache = await caches.open(CACHE);
+      await cache.addAll(ASSETS);
+    } catch (error) {
+      console.error('Service worker installation failed:', error);
+    }
   }
-
   event.waitUntil(addFilesToCache());
 });
 
@@ -72,3 +76,16 @@ self.addEventListener("message", (event) => {
     self.skipWaiting();
   }
 });
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+self.addEventListener('push', function (event: any) {
+	const payload = event.data?.text() ?? 'no payload';
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const registration = (self as any).registration as ServiceWorkerRegistration;
+	event.waitUntil(
+		registration.showNotification('Stocknear', {
+			body: payload
+		})
+	);
+} as EventListener);

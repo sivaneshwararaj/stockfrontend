@@ -51,13 +51,13 @@
   import AudioLine from "lucide-svelte/icons/audio-lines";
   import Gem from "lucide-svelte/icons/gem";
   import stocknear_logo from "$lib/images/stocknear_logo.png";
-  /*
+
   import {
     requestNotificationPermission,
-    sendNotification,
+    subscribeUser,
+    checkSubscriptionStatus,
   } from "$lib/notifications";
 
-   */
   export let data;
 
   let hideHeader = false;
@@ -132,7 +132,18 @@
   onMount(async () => {
     if (data?.user?.id) {
       await loadWorker();
+
+      const permissionGranted = await requestNotificationPermission();
+
+      if (permissionGranted) {
+        const isSubscribed = (await checkSubscriptionStatus()) || false;
+
+        if (!isSubscribed) {
+          await subscribeUser();
+        }
+      }
     }
+
     await checkMarketHour();
     if ($showCookieConsent === true) {
       Cookie = (await import("$lib/components/Cookie.svelte")).default;
@@ -1181,7 +1192,7 @@
               -->
 
               <slot />
-              <Toaster class="bg-[#1A1A27] text-white text-medium" />
+              <Toaster />
               {#if Cookie && $showCookieConsent === true}
                 <Cookie />
               {/if}
