@@ -15,6 +15,8 @@
   export let form;
 
   let pwaInstalled;
+  let loading = false;
+
   let nottifPermGranted: boolean | null = null;
   let isPushSubscribed = data?.getPushSubscriptionData !== null ? true : false;
 
@@ -181,6 +183,7 @@
   }
 
   async function handlePushSubscribe() {
+    loading = true;
     const output = await subscribeUser();
     console.log(output);
     if (output?.success === true) {
@@ -195,6 +198,7 @@
           "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     }
+    loading = false;
   }
 </script>
 
@@ -275,12 +279,22 @@
                       stock news, and earnings calls delivered straight to your
                       device.
                     </p>
-                    <button
-                      class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
-                      type="button"
-                      on:click={handlePushSubscribe}
-                      >Enable notifications</button
-                    >
+                    {#if !loading}
+                      <button
+                        class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
+                        type="button"
+                        on:click={handlePushSubscribe}
+                        >Enable notifications</button
+                      >
+                    {:else}
+                      <button
+                        class="cursor-not-allowed border border-gray-600 w-fit px-5 py-1.5 bg-white/60 text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
+                        ><div class="flex flex-row m-auto items-center">
+                          <span class="loading loading-infinity"></span>
+                          <span class=" ml-1.5">Activating...</span>
+                        </div></button
+                      >
+                    {/if}
                   {/if}
                 {:else if nottifPermGranted === false}
                   <p class="">
