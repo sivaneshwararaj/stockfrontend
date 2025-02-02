@@ -132,7 +132,7 @@
   onMount(async () => {
     if (data?.user?.id) {
       await loadWorker();
-
+      /*
       const permissionGranted = await requestNotificationPermission();
 
       if (permissionGranted) {
@@ -142,6 +142,7 @@
           await subscribeUser();
         }
       }
+        */
     }
 
     await checkMarketHour();

@@ -1,12 +1,20 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
-
+  import SEO from "$lib/components/SEO.svelte";
   import toast from "svelte-french-toast";
-
   import { enhance } from "$app/forms";
+  import {
+    requestNotificationPermission,
+    checkSubscriptionStatus,
+    unsubscribe,
+    subscribeUser,
+  } from "$lib/notifications";
+  import { onMount } from "svelte";
 
   export let data;
   export let form;
+
+  let nottifPermGranted: boolean | null = null;
+  let isPushSubscribed = false;
 
   let subscriptionData = data?.getSubscriptionData;
   let isClicked = false;
@@ -137,28 +145,40 @@
       }, 5000);
     };
   };
+
+  onMount(async () => {
+    if (data?.user?.id) {
+      nottifPermGranted = await requestNotificationPermission();
+      if (nottifPermGranted) {
+        isPushSubscribed = (await checkSubscriptionStatus()) || false;
+        console.log(isPushSubscribed);
+      }
+    }
+  });
+
+  async function handlePushUnsubscribe() {
+    unsubscribe();
+    isPushSubscribed = false;
+    toast.success("Push notification deactivated successfully!", {
+      style:
+        "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;", // gray-600 hex color
+    });
+  }
+
+  async function handlePushSubscribe() {
+    subscribeUser();
+    isPushSubscribed = true;
+    toast.success("Push notification activated successfully!", {
+      style:
+        "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;", // gray-600 hex color
+    });
+  }
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""}
-    My Account · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <!-- Other meta tags -->
-  <meta property="og:title" content="My Account · Stocknear" />
-
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="My Account · Stocknear" />
-
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="My Account - Stocknear | Manage Your Profile, Password, Subscriptions & Notifications"
+  description="Easily manage your profile, change your password, update subscription plans, and customize notifications on Stocknear. Stay in control of your stock analysis and alerts."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
@@ -183,7 +203,7 @@
           </div>
 
           <div
-            class="rounded-md border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
+            class="rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
           >
             <h2 class="text-white text-2xl font-semibold mb-3">
               User Information
@@ -206,7 +226,62 @@
           </div>
 
           <div
-            class="mt-6 rounded-md border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
+            class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
+          >
+            <h2 class="text-white text-2xl font-semibold mb-3">
+              Push Notification
+            </h2>
+            <div class="mt-3">
+              {#if nottifPermGranted === null}
+                <p>Checking permissions...</p>
+              {:else if nottifPermGranted === true}
+                {#if isPushSubscribed}
+                  <p class="mb-3">Push notifications are currently active.</p>
+                  <div class="mt-3">
+                    <button
+                      class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
+                      type="button"
+                      on:click={handlePushUnsubscribe}
+                      >Disable notifications</button
+                    >
+                  </div>
+                {:else}
+                  <p class="mb-3">
+                    Stay up-to-date with real-time price alerts, the latest
+                    stock news, and earnings calls delivered straight to your
+                    device.
+                  </p>
+                  <button
+                    class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black text-sm font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
+                    type="button"
+                    on:click={handlePushSubscribe}>Enable notifications</button
+                  >
+                {/if}
+
+                <!--
+              {:else if nottifPermGranted === false}
+                <button
+                  class="button"
+                  type="button"
+                  on:click={requestNotificationPermission}
+                  >Enable notifications</button
+                >
+              {:else}
+                <p>Push notification is currently active.</p>
+                <div class="mt-3">
+                  <button
+                    class="border border-gray-600 w-fit px-5 py-1.5 bg-white text-black font-semibold rounded sm:hover:bg-white/80 transition ease-out duration-100"
+                    type="button"
+                    on:click={unsubscribe}>Disable notifications</button
+                  >
+                </div>
+            -->
+              {/if}
+            </div>
+          </div>
+
+          <div
+            class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
           >
             <h2 class="text-white text-2xl font-semibold mb-3">
               Manage Subscription
@@ -290,7 +365,7 @@
               >
                 <label
                   for="cancelSubscriptionModal"
-                  class="cursor-pointer text-white border border-gray-600 sm:hover:bg-primary bg-opacity-[0.5] text-sm sm:text-[1rem] px-4 py-2 rounded-md mt-5"
+                  class="cursor-pointer text-white border border-gray-600 sm:hover:bg-primary bg-opacity-[0.5] text-sm sm:text-[1rem] px-4 py-2 rounded mt-5"
                 >
                   Cancel Subscription
                 </label>
@@ -306,7 +381,7 @@
                       : 'cursor-not-allowed'} {subscriptionData?.card_brand !==
                       null && subscriptionData?.card_brand?.length !== 0
                       ? 'bg-white sm:hover:bg-white/80 text-black font-semibold'
-                      : 'bg-gray-600 opacity-[0.8] text-white'} text-sm sm:text-[1rem] px-4 py-2 rounded-md mt-5"
+                      : 'bg-gray-600 opacity-[0.8] text-white'} text-sm sm:text-[1rem] px-4 py-2 rounded mt-5"
                   >
                     Change to Annual Plan
                   </label>
@@ -315,7 +390,7 @@
             {:else if subscriptionData?.status_formatted === "Cancelled"}
               <label
                 for="reactivateSubscriptionModal"
-                class="cursor-pointer text-black bg-[#fff] sm:hover:bg-gray-300 text-sm sm:text-[1rem] px-4 py-2 rounded-md"
+                class="cursor-pointer text-black bg-[#fff] sm:hover:bg-gray-300 text-sm sm:text-[1rem] px-4 py-2 rounded"
               >
                 Reactivate Subscription
               </label>
@@ -331,7 +406,7 @@
           </div>
 
           <div
-            class="mt-6 rounded-md border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
+            class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
           >
             <h2 class="text-white text-2xl font-semibold mb-3">Need help?</h2>
             <div class="mt-1">
@@ -405,7 +480,7 @@
       on:click={() => (isClicked = !isClicked)}
       class="{!isClicked
         ? ''
-        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-md bg-red-600 text-center text-white text-[1rem] font-normal"
+        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded bg-red-600 text-center text-white text-[1rem] font-normal"
     >
       Cancel Subscription
       <input
@@ -462,7 +537,7 @@
       on:click={() => (isClicked = !isClicked)}
       class="{!isClicked
         ? ''
-        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded-md bg-[#fff] sm:hover:bg-gray-300 text-center text-black text-[1rem] font-medium"
+        : 'hidden'} cursor-pointer px-7 py-2 mb-5 rounded bg-[#fff] sm:hover:bg-gray-300 text-center text-black text-[1rem] font-medium"
     >
       Proceed
       <input

@@ -86,7 +86,7 @@ self.addEventListener('push', function (event: any) {
 	event.waitUntil(
 		registration.showNotification('Stocknear', {
 			body: payload,
-      icon: "/pwa-192x192.png",
+      icon: '/pwa-192x192.png',
 		})
 	);
 } as EventListener);

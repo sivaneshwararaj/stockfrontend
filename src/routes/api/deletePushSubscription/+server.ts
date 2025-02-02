@@ -3,22 +3,15 @@ import { error} from '@sveltejs/kit';
 
 
 
-export const POST = (async ({ locals, request }) => {
+export const GET = (async ({ locals }) => {
 	const { user, pb } = locals;
 
 	if (!user?.id) {
 		console.log('No username passed to addSubscription');
 		throw error(401, 'Unauthorized');
 	}
+	
 
-	const data = await request.json();
-
-	if (!data?.subscription) {
-		console.log('No subscription passed to unsubscribe', data);
-		throw error(400, 'Bad Request');
-	}
-
-   
 	const output = await pb.collection("pushSubscription").getFullList({
 	filter: `user="${user?.id}"`,
 	});

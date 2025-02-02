@@ -13,13 +13,11 @@ webPush.setVapidDetails(
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { pb, apiKey } = locals;
 
-    const { title, body, key } = await request?.json();
+    const { body, key } = await request?.json();
 
     if (apiKey === key) {
     
         try {
-
-            console.log(title, body)
 
             // Get all push subscriptions
             const subscriptions = await pb.collection('pushSubscription').getFullList({
@@ -53,7 +51,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         }
 
     } else {
-        console.log('api key wrong')
+        console.log('key is wrong')
     }
 
 };

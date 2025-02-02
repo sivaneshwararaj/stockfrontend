@@ -46,11 +46,17 @@ export function sendNotification(
 }
 
 
-async function unsubscribe() {
+export async function unsubscribe() {
 		if ('serviceWorker' in navigator) {
 			const registration = await navigator.serviceWorker.ready;
 			const subscription = await registration.pushManager.getSubscription();
 			if (subscription) {
+				const res = await fetch('/api/deletePushSubscription', {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+				});
 				await subscription.unsubscribe();
 			}
 		}
