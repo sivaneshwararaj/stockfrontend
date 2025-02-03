@@ -252,7 +252,7 @@
             >
           </div>
 
-          {#if pwaInstalled}
+          {#if !pwaInstalled}
             <div
               class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
             >

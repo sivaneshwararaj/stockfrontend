@@ -1,4 +1,3 @@
-// server endpoints file
 import type { RequestHandler } from '@sveltejs/kit';
 import webPush from 'web-push';
 
@@ -13,10 +12,10 @@ webPush.setVapidDetails(
 
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { pb, apiKey } = locals;
-  const { title, body, key } = await request?.json();
+  // Extract 'url' from the request body
+  const { title, body, key, url } = await request?.json();
 
   if (apiKey !== key) {
-    console.warn('Invalid API key');
     return new Response(JSON.stringify({ success: false, error: 'Invalid API key' }), { status: 401 });
   }
 
@@ -24,7 +23,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     const subscriptions = await pb.collection('pushSubscription').getFullList({ sort: '-created' });
 
     if (!subscriptions.length) {
-      console.warn('No subscriptions found.');
       return new Response(JSON.stringify({ success: false, error: 'No subscriptions found' }), { status: 404 });
     }
 
@@ -32,23 +30,21 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       try {
         const subscriptionData = subRecord.subscription?.subscription;
         
-        if (!subscriptionData || !subscriptionData.endpoint) {
+        if (!subscriptionData?.endpoint) {
           console.warn(`Skipping invalid subscription: ${subRecord.id}`);
           return;
         }
 
-        // Send just the body text for Android
-        const isAndroid = !subscriptionData.endpoint.includes('web.push.apple.com');
-        const payload = isAndroid ? body : JSON.stringify({ title, body });
+        // Always send JSON payload with title, body, and url
+        const payload = JSON.stringify({ title, body, url });
 
         await webPush.sendNotification(subscriptionData, payload);
-        console.log(`Notification sent to: ${subscriptionData.endpoint}`);
+        //console.log(`Notification sent to: ${subscriptionData.endpoint}`);
         
       } catch (error: any) {
         console.error(`Error sending notification to ${subRecord.id}:`, error);
 
         if (error.statusCode === 410 || error.statusCode === 404) {
-          console.warn(`Deleting invalid subscription: ${subRecord.id}`);
           await pb.collection('pushSubscription').delete(subRecord.id);
         }
       }
