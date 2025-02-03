@@ -13,20 +13,20 @@ webPush.setVapidDetails(
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { pb, apiKey } = locals;
   // Extract 'url' from the request body
-  const { title, body, key, url } = await request?.json();
+  const { title, body, key, url, userId } = await request?.json();
 
   if (apiKey !== key) {
     return new Response(JSON.stringify({ success: false, error: 'Invalid API key' }), { status: 401 });
   }
 
   try {
-    const subscriptions = await pb.collection('pushSubscription').getFullList({ sort: '-created' });
+    const subscriptions = await pb.collection('pushSubscription').getFullList({ filter: `user="${userId}"`, sort: '-created' });
 
     if (!subscriptions.length) {
       return new Response(JSON.stringify({ success: false, error: 'No subscriptions found' }), { status: 404 });
     }
 
-    const sendNotifications = subscriptions.map(async (subRecord) => {
+    const sendNotifications = subscriptions?.map(async (subRecord) => {
       try {
         const subscriptionData = subRecord.subscription?.subscription;
         
