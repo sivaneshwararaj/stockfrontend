@@ -185,7 +185,6 @@
   async function handlePushSubscribe() {
     loading = true;
     const output = await subscribeUser();
-    console.log(output);
     if (output?.success === true) {
       isPushSubscribed = true;
       toast.success("Push notification activated successfully!", {

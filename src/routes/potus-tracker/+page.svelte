@@ -55,10 +55,6 @@
     return acc;
   }, {});
 
-  let modalTitle = "n/a";
-  let modalDescription = "n/a";
-  let modalLink = "#";
-
   const tabs = [
     {
       title: "Location Tracker",
@@ -201,6 +197,31 @@
   }
 
   let options = plotData();
+
+  function latestInfoDate(inputDate) {
+    // Create a Date object for the input date and convert it to New York time zone
+    const inputDateLocal = new Date(inputDate).toLocaleString("en-US", {
+      timeZone: "America/New_York",
+    });
+
+    // Get the current date and time in New York timezone
+    const todayLocal = new Date().toLocaleString("en-US", {
+      timeZone: "America/New_York",
+    });
+
+    // Convert the localized strings back to Date objects
+    const inputDateMs = new Date(inputDateLocal).getTime();
+    const todayMs = new Date(todayLocal).getTime();
+
+    // Calculate the difference in milliseconds
+    const differenceInMs = todayMs - inputDateMs;
+
+    // Convert milliseconds to days
+    const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+
+    // Return whether the difference is less than or equal to 1 day
+    return differenceInDays <= 2;
+  }
 </script>
 
 <SEO
@@ -401,12 +422,12 @@
                             {/if}
                           </div>
 
-                          <span class="text-sm text-gray-400">
+                          <span class="text-sm sm:text-[1rem] text-gray-400">
                             {item.time_formatted} - {item.location}
                           </span>
                         </div>
 
-                        <span class="text-sm ml-7">
+                        <span class="text-sm sm:text-[1rem] ml-7">
                           {item.details}
                         </span>
                       </div>
@@ -416,17 +437,23 @@
               </div>
             {:else}
               <h3 class="text-white text-lg font-semibold mb-2 mt-6">
-                Latest Executive Orders analyzed by AI
+                AI-Powered Analysis of the Latest Executive Orders
               </h3>
               <div class="space-y-4">
                 {#each Object.entries(groupedOrders) as [date, items], indexA}
                   <div class="my-4">
                     <div
-                      class="border-b border-gray-800 pb-2 flex flex-row items-center justify-between"
+                      class="border-b border-gray-800 pb-2 flex flex-row items-center"
                     >
                       <span class="text-lg font-semibold text-white"
                         >{date}</span
                       >
+                      {#if latestInfoDate(date)}
+                        <label
+                          class="bg-[#fff] rounded text-black font-semibold text-xs px-2 py-0.5 ml-3 inline-block"
+                          >New</label
+                        >
+                      {/if}
                     </div>
                     <br />
 
@@ -472,35 +499,39 @@
                             {/if}
                           </div>
 
-                          <span class="text-sm">
+                          <div
+                            class="text-sm flex flex-col items-start w-full mb-1"
+                          >
                             <span
-                              class="{item?.sentiment === 'Bullish'
-                                ? 'bg-emerald-500 text-white'
-                                : item?.sentiment === 'Bearish'
-                                  ? 'bg-red-600 text-white'
-                                  : 'bg-white text-black'} py-1 rounded text-xs w-fit px-2 font-medium"
-                            >
-                              {item?.sentiment}
-                            </span>
-                            -
-                            <span class="text-white font-bold"
+                              class="text-white sm:text-lg font-semibold inline-block"
                               >{item.title}</span
                             >
-                          </span>
+                          </div>
                         </div>
 
-                        <span class="text-sm ml-7 pt-3">{item.description}</span
+                        <div
+                          class="ml-7 {item?.sentiment === 'Bullish'
+                            ? 'bg-emerald-500 text-white'
+                            : item?.sentiment === 'Bearish'
+                              ? 'bg-red-600 text-white'
+                              : 'bg-white text-black'} py-1 rounded text-xs sm:text-sm w-fit px-2 font-medium"
+                        >
+                          {item?.sentiment}
+                        </div>
+
+                        <span class="text-[1rem] ml-7 pt-2"
+                          >{item.description}</span
                         >
 
                         <a
                           href={item?.link}
                           rel="noopener noreferrer"
                           target="_blank"
-                          class="ml-7 inline-block text-sm text-white hover:underline"
+                          class="ml-7 inline-block text-sm sm:text-[1rem] text-white hover:underline"
                         >
                           Source
                           <svg
-                            class="w-4 h-4 -mt-0.5 inline-block"
+                            class="w-4 h-4 sm:w-5 sm:h-5 -mt-0.5 inline-block"
                             fill="#fff"
                             viewBox="0 0 64 64"
                             version="1.1"
