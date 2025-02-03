@@ -186,7 +186,7 @@
                             <div class="flex flex-col items-start">
                               <div class="text-md mt-0.5">
                                 <span class="font-semibold"
-                                  >⚡BREAKING News for</span
+                                  >BREAKING News for</span
                                 >
                                 <HoverStockChart
                                   symbol={item?.liveResults?.symbol}
@@ -194,9 +194,7 @@
                                 />
                               </div>
                               <div class="text-md mt-0.5">
-                                A new market update sheds light on the company's
-                                recent volatility, explaining the reasons behind
-                                the "Why Price Moved" event.
+                                New data for "Why Price Moved" event is out.
                               </div>
                             </div>
                           </div>
