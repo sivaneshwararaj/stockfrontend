@@ -80,7 +80,7 @@
 <dialog id="installModal" class="modal overflow-hidden p-3 sm:p-0">
   <label for="installModal" class="cursor-pointer modal-backdrop"></label>
 
-  <div class="modal-box rounded w-full bg-primary border border-gray-600">
+  <div class="modal-box rounded w-full bg-secondary border border-gray-600">
     <div class="flex flex-row items-center pt-5">
       <h4 class="text-white text-2xl font-bold text-center m-auto">
         Steps to install
