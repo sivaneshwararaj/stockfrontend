@@ -1,37 +1,93 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
   import * as Card from "$lib/components/shadcn/card/index.ts";
   import * as Table from "$lib/components/shadcn/table/index.ts";
   import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
   import { abbreviateNumber } from "$lib/utils";
+  import * as Tabs from "$lib/components/shadcn/tabs/index.js";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
-  import { screenWidth } from "$lib/store";
+  import { screenWidth, numberOfUnreadNotification } from "$lib/store";
   import { compareTimes, formatTime, isPWAInstalled } from "$lib/utils";
   import Infobox from "$lib/components/Infobox.svelte";
   import { closedPWA } from "$lib/store";
-  import Feedback from "$lib/components/Feedback.svelte";
-  import SEO from "$lib/components/SEO.svelte";
+  import { options } from "marked";
+  import { pb } from '$lib/pocketbase';
+  import { redirect } from '@sveltejs/kit';
+  import { goto } from '$app/navigation';
+  import { createEventDispatcher } from 'svelte';
+  import { enhance } from '$app/forms';
+  import { debounce } from 'lodash-es';
+  import * as devalue from 'devalue';
 
+  export let form;
+
+  // Props and initial data
   export let data;
-
-  let gainersList = data?.getDashboard?.marketMovers?.gainers || [];
-  let losersList = data?.getDashboard?.marketMovers?.losers || [];
-  let marketStatus = data?.getDashboard?.marketStatus ?? 0;
-  let analystReport = data?.getDashboard?.analystReport || {};
-  let recentWIIM = data?.getDashboard?.wiim || [];
-
+  let optionsMode = "openInterest";
+  let Feedback;
   let pwaInstalled = false;
   let AppInstalled = null;
+  let dropdownElement: HTMLDivElement;
+  let isDropdownOpen = false;
+  let selectedSubreddits: string[] = data.selectedSubreddits || [];
+  import { invalidateAll } from '$app/navigation';
+  const dispatch = createEventDispatcher();
 
+  // Time options
+  const timeOptions = [
+    "4 Hours",
+    "6 Hours",
+    "12 Hours",
+    "24 Hours",
+    "2 Days",
+    "3 Days",
+    "4 Days",
+    "5 Days",
+    "6 Days",
+    "1 Week",
+  ];
+  let selectedTime = "5 Days";
+  $: console.log("selectedTime changed:", selectedTime);
+
+  // Sample top mentions data
+  let topMentions = [
+
+  ];
+
+  // Function to handle outside clicks
+  function handleClickOutside(event: MouseEvent) {
+    if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
+      isDropdownOpen = false;
+      console.log("we dropdown")
+    }
+  }
+
+  // Function to toggle star
+  async function toggleStar(symbol: string) {
+    if (!pb.authStore.isValid) {
+        goto('/login');
+        return;
+    }
+    topMentions = topMentions.map(item => {
+      if (item.symbol === symbol) {
+        const newState = !item.isStarred;
+        console.log(`Toggled ${symbol} star to ${newState}`);
+        return {...item, isStarred: newState};
+      }
+      return item;
+    });
+    // Here you would add API call to persist the star state
+    // await pb.collection('stars').create({ symbol, userId: pb.authStore.model.id });
+  }
+
+  // PWA related functions
   function getClosedPWA() {
-    //if user closed the banner
     const item = localStorage.getItem("closePWA");
     if (!item) return null;
 
     const { value, expires } = JSON.parse(item);
     if (new Date() > new Date(expires)) {
-      localStorage.removeItem("closePWA"); // Remove expired item
+      localStorage.removeItem("closePWA");
       return null;
     }
     return value;
@@ -43,856 +99,332 @@
     if (!pwaInstalled) {
       try {
         $closedPWA = getClosedPWA();
-
         if (!$closedPWA) {
-          // Dynamically import the AppInstalled component
-          AppInstalled = (await import("$lib/components/AppInstalled.svelte"))
-            .default;
+          AppInstalled = (await import("$lib/components/AppInstalled.svelte")).default;
         }
       } catch (e) {
         console.error("Error loading AppInstalled component:", e);
       }
     }
+
+    Feedback = (await import("$lib/components/Feedback.svelte")).default;
+
+    // Add click event listener to window
+    window.addEventListener('click', handleClickOutside);
+
+    // Clean up the event listener on component destruction
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
   });
 
+  // Reactive statements
   $: charNumber = $screenWidth < 640 ? 20 : 15;
+  $: newsData = data?.getDashboard?.newsData || [];
+  $: {
+    if (selectedSubreddits) {
+      console.log('Selected subreddits updated:', selectedSubreddits);
+    }
+  }
+
+  // Function to fetch mentions data
+  async function fetchMentionsData() {
+    const formData = new FormData();
+    formData.append('timeframe', selectedTime);
+    selectedSubreddits.forEach(subreddit => {
+      formData.append('subreddits', subreddit);
+    });
+
+    try {
+      const response = await fetch('?/updateMentions', {
+        method: 'POST',
+        body: formData
+      });
+     
+
+      const result1 = await response?.json();
+      if (result1) { // Parse the JSON string in result.data
+            let parsedData = result1?.data;
+            let stringified = devalue.parse(parsedData);
+            console.log("lets check here",stringified.data)
+            stringified=stringified.data
+            // Initialize array to store formatted mentions
+            const formattedMentions = [];
+            
+            // Skip first element (metadata) and iterate through data
+            for(let i = 1; i < stringified.length-1; i ++) {
+
+                if (stringified[i] && stringified[i].ticker) {
+                    const item = {
+                        symbol: stringified[i].ticker,
+                        name: stringified[i].name,
+                        price: "N/A", // You'll need to get price data from another source
+                        mentionCount: stringified[i].count,
+                        mentionChange: `${(parseFloat(stringified[i].sentiment) * 100).toFixed(2)}%`,
+                        marketCap: "N/A", // You'll need to get market cap data from another source
+                        isStarred: false
+                    };
+                    console.log(item)
+                    formattedMentions.push(item);
+                }
+            }
+            
+            topMentions = formattedMentions;
+            console.log("Processed mentions:", topMentions);
+      } else {
+        console.error('Failed to fetch mentions:', result.error);
+      }
+    } catch (error) {
+      console.error('Error fetching mentions:', error);
+    }
+  }
+
+  // Debounced version of fetchMentionsData
+  const debouncedFetchMentions = debounce(fetchMentionsData, 500);
+
+  // Watch for changes in selectedTime or selectedSubreddits
+  $: {
+    if (selectedTime || selectedSubreddits) {
+      debouncedFetchMentions();
+    }
+  }
+
+  $: {
+    if (form?.success) {
+      try {
+        // Parse the JSON string in form.data
+        const parsedData = JSON.parse(form.data);
+
+        // Initialize array to store formatted mentions
+        const formattedMentions = [];
+
+        // Iterate through the parsed data, starting from index 6
+        for (let i = 6; i < parsedData.length; i++) {
+          if (parsedData[i].ticker && parsedData[i].name) {
+            const item = {
+              symbol: parsedData[i].ticker,
+              name: parsedData[i].name,
+              price: "N/A", // You'll need to get price data from another source
+              mentionCount: parsedData[i].count,
+              mentionChange: `${(parseFloat(parsedData[i].sentiment) * 100).toFixed(2)}%`,
+              marketCap: "N/A", // You'll need to get market cap data from another source
+              isStarred: false
+            };
+            formattedMentions.push(item);
+          }
+        }
+
+        topMentions = formattedMentions;
+        console.log("Processed mentions:", topMentions);
+      } catch (error) {
+        console.error('Error parsing or processing data:', error);
+      }
+    }
+  }
+
 </script>
 
-<SEO
-  title="Free Online Stock Analysis for Investors"
-  description="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."
-  image=""
-/>
+<svelte:head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>
+    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Stocknear
+    - Free Online Stock Analysis for Investors
+  </title>
+  <meta
+    name="description"
+    content="Stocknear has everything you need to analyze stocks with help of AI, including detailed financial data, statistics, news and charts."
+  />
+</svelte:head>
 
-<div
-  class="w-full sm:max-w-[1400px] overflow-hidden m-auto min-h-screen bg-default mb-40"
->
-  {#if AppInstalled && !$closedPWA}
-    <svelte:component this={AppInstalled} />
-  {/if}
+<div class="min-h-screen bg-black-900 text-white p-6 justify-center  items-center">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-xl font-semibold items-center">Sentiment and Mention Tracker — All Subreddits</h1>
+      <p class="text-xs font-semibold">Discover what tickers are trending and monitor social sentiment on Reddit across 231 stock and crypto subreddits.</p>
+      <div class="flex gap-4 mt-4">
+        <div class="flex items-center gap-2">
+          <span class="text-gray-400">Top Mentions - Timeframe</span>
+          <div class="flex items-center gap-2">
+            <select
+              class="bg-gray-800 rounded px-2 py-1"
+              bind:value={selectedTime}
+            >
+              {#each timeOptions as option}
+                <option value={option}>{option}</option>
+              {/each}
+            </select>
+          </div>
+        </div>
 
-  <!--
-  {#if data?.user?.tier !== "Pro" || data?.user?.freeTrial === true}
-    <div
-      class="mb-5 relative isolate sm:rounded text-center flex justify-center items-center gap-x-6 overflow-hidden bg-[#FFC233] px-6 py-3.5 sm:py-2.5 sm:px-3.5 sm:before:flex-1"
-    >
-      <div
-        class="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-        aria-hidden="true"
-      >
-        <div
-          class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-          style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
-        ></div>
-      </div>
-      <div
-        class="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
-        aria-hidden="true"
-      >
-        <div
-          class="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#ff80b5] to-[#9089fc] opacity-30"
-          style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
-        ></div>
-      </div>
-      <div
-        class="w-full m-auto flex flex-col sm:flex-row justify-center items-center gap-x-4 gap-y-2"
-      >
-        <p
-          class="text-md text-black font-semibold flex flex-col sm:flex-row items-center"
-        >
-         <span class="text-black font-bold">Last Chance</span><svg
-            viewBox="0 0 2 2"
-            class="mx-2 inline h-0.5 w-0.5 fill-current hidden sm:inline-block"
-            aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg
-          >
-          The Lifetime Deal officially ends permanently this Friday at 12:00 AM (CET).
-        </p>
+        <div class="flex items-center gap-2">
+          <form method="POST" use:enhance class="w-full">
+            <div class="relative"
+                 bind:this={dropdownElement}
+                 on:click|stopPropagation>
+              <button
+                type="button"
+                class="bg-gray-800 rounded px-2 py-1 w-48 text-left"
+                on:click={() => isDropdownOpen = !isDropdownOpen}
+              >
+                {selectedSubreddits.length === 0 ? 'All Subreddits' : `${selectedSubreddits.length} selected`}
+              </button>
 
-        <a
-          href="/pricing"
-          class="flex-none rounded-full m-auto sm:m-0 px-3.5 py-1 text-[1rem] font-semibold text-black shadow-sm sm:hover:bg-gray-100 bg-[#fff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-        >
-          Get Lifetime
-        </a>
+              {#if isDropdownOpen}
+                <div class="absolute bg-gray-800 mt-1 rounded shadow-lg z-50 w-64 max-h-60 overflow-y-auto">
+                  <div class="p-2 space-y-2">
+                    {#each data?.subreddits as subreddit}
+                      <label class="flex items-center p-1 hover:bg-gray-700 rounded cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="subreddits"
+                          value={subreddit}
+                          bind:group={selectedSubreddits}
+                          class="mr-2"
+                        />
+                        <span class="text-gray-300">{subreddit}</span>
+                      </label>
+                    {/each}
+                  </div>
+                </div>
+              {/if}
+              <button type="submit" class="hidden">Submit</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  {/if}
-  -->
 
-  <div class="flex flex-col m-auto justify-center items-center">
-    <div class="text-center mb-10 w-full px-4 sm:px-3 mt-10">
-      <Feedback {data} />
-
-      <div
-        class="text-center mb-10 relative w-fit flex justify-center m-auto text-white"
-      >
-        <div class="mb-4 flex justify-center -mt-3 lg:mb-8">
-          <a href="/potus-tracker"
-            ><div
-              class="flex items-center justify-center sm:hover:text-white text-blue-400"
-            >
-              <div class="text-lg sm:text-xl font-semibold">POTUS Tracker</div>
-              <div
-                class="-mt-2 ml-1 -rotate-6 rounded-lg bg-red-500 px-1 py-0.5 text-xs font-semibold text-white"
-              >
-                New
-              </div>
-            </div></a
-          >
-        </div>
-      </div>
-
-      <h1
-        class="hidden sm:block text-3xl lg:text-4xl text-white font-bold text-center mb-10 relative w-fit flex justify-center m-auto"
-      >
-        Clear & <span class="italic text-[#fff]">Simple</span> Market Insight.
-      </h1>
-
-      <h2
-        class="text-white text-2xl font-semibold text-start w-full pb-4 sm:pl-4 sm:pb-2"
-      >
-        Dashboard
-      </h2>
-
-      <main class="flex flex-1 flex-col gap-4 sm:p-4 md:gap-8">
-        <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
-          <Card.Root
-            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar max-h-[450px]"
-          >
-            <Card.Header class="flex flex-row items-center">
-              <div class="flex flex-col items-start w-full">
-                <div class="flex flex-row w-full items-center">
-                  <Card.Title
-                    ><a
-                      href={`/market-mover/${marketStatus === 0 ? "gainers" : marketStatus === 1 ? "premarket/gainers" : "afterhours/gainers"}`}
-                      class="text-xl sm:text-2xl tex-white font-semibold cursor-pointer sm:hover:underline sm:hover:underline-offset-4"
-                    >
-                      {marketStatus === 0
-                        ? "Top"
-                        : marketStatus === 1
-                          ? "Pre-Market"
-                          : "Afterhours"} Gainers
-                      <svg
-                        class="h-5 w-5 inline-block"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        style="max-width:40px"
-                        aria-hidden="true"
-                        ><path
-                          fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                        ></path></svg
-                      ></a
-                    >
-                  </Card.Title>
-                </div>
-              </div>
-            </Card.Header>
-            <Card.Content>
-              {#if gainersList?.length > 0}
-                <Table.Root class="overflow-x-scroll w-full">
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.Head class="text-white font-semibold"
-                        >Symbol</Table.Head
-                      >
-                      <Table.Head
-                        class="hidden sm:table-cell text-white font-semibold"
-                        >Name</Table.Head
-                      >
-                      <Table.Head class="text-white text-right font-semibold"
-                        >Price</Table.Head
-                      >
-                      <Table.Head class="text-white text-right font-semibold"
-                        >Change</Table.Head
-                      >
-                      <Table.Head
-                        class="text-white text-right font-semibold whitespace-nowrap"
-                        >Market Cap</Table.Head
-                      >
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {#each gainersList as item}
-                      <Table.Row>
-                        <Table.Cell class="text-sm sm:text-[1rem]">
-                          <HoverStockChart symbol={item?.symbol} />
-                        </Table.Cell>
-                        <Table.Cell
-                          class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
-                        >
-                          {item?.name?.length > charNumber
-                            ? item?.name?.slice(0, charNumber) + "..."
-                            : item?.name}
-                        </Table.Cell>
-                        <Table.Cell
-                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
-                        >
-                          {item?.price?.toFixed(2)}
-                        </Table.Cell>
-                        <Table.Cell
-                          class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
-                        >
-                          {#if item?.changesPercentage >= 0}
-                            <span class="text-[#00FC50]"
-                              >+{item?.changesPercentage >= 1000
-                                ? abbreviateNumber(item?.changesPercentage)
-                                : item?.changesPercentage?.toFixed(2)}%</span
-                            >
-                          {:else}
-                            <span class="text-[#FF2F1F]"
-                              >{item?.changesPercentage <= -1000
-                                ? abbreviateNumber(item?.changesPercentage)
-                                : item?.changesPercentage?.toFixed(2)}%
-                            </span>
-                          {/if}
-                        </Table.Cell>
-                        <Table.Cell
-                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
-                        >
-                          {abbreviateNumber(item?.marketCap)}
-                        </Table.Cell>
-                      </Table.Row>
-                    {/each}
-                  </Table.Body>
-                </Table.Root>
-              {:else}
-                <Infobox
-                  text="Currently, no market gainer data is available."
-                />
-              {/if}
-            </Card.Content>
-          </Card.Root>
-          <Card.Root
-            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar max-h-[450px]"
-          >
-            <Card.Header class="flex flex-row items-center">
-              <div class="flex flex-col items-start w-full">
-                <div class="flex flex-row w-full items-center">
-                  <Card.Title>
-                    <a
-                      href={`/market-mover/${marketStatus === 0 ? "losers" : marketStatus === 1 ? "premarket/losers" : "afterhours/losers"}`}
-                      class="text-xl sm:text-2xl tex-white font-semibold cursor-pointer sm:hover:underline sm:hover:underline-offset-4"
-                    >
-                      {marketStatus === 0
-                        ? "Top"
-                        : marketStatus === 1
-                          ? "Pre-Market"
-                          : "Afterhours"} Losers
-                      <svg
-                        class="h-5 w-5 inline-block"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        style="max-width:40px"
-                        aria-hidden="true"
-                        ><path
-                          fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd"
-                        ></path></svg
-                      >
-                    </a></Card.Title
-                  >
-                </div>
-              </div>
-            </Card.Header>
-            <Card.Content>
-              {#if losersList?.length > 0}
-                <Table.Root class="overflow-x-scroll w-full">
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.Head class="text-white font-semibold"
-                        >Symbol</Table.Head
-                      >
-                      <Table.Head
-                        class="hidden sm:table-cell text-white font-semibold"
-                        >Name</Table.Head
-                      >
-                      <Table.Head class="text-white text-right font-semibold"
-                        >Price</Table.Head
-                      >
-                      <Table.Head class="text-white text-right font-semibold"
-                        >Change</Table.Head
-                      >
-                      <Table.Head
-                        class="text-white text-right font-semibold whitespace-nowrap"
-                        >Market Cap</Table.Head
-                      >
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {#each losersList as item}
-                      <Table.Row>
-                        <Table.Cell class="text-sm sm:text-[1rem]">
-                          <HoverStockChart symbol={item?.symbol} />
-                        </Table.Cell>
-                        <Table.Cell
-                          class="hidden sm:table-cell xl:table.-column text-sm sm:text-[1rem]"
-                        >
-                          {item?.name?.length > charNumber
-                            ? item?.name?.slice(0, charNumber) + "..."
-                            : item?.name}
-                        </Table.Cell>
-                        <Table.Cell
-                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
-                        >
-                          {item?.price?.toFixed(2)}
-                        </Table.Cell>
-                        <Table.Cell
-                          class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
-                        >
-                          {#if item?.changesPercentage >= 0}
-                            <span class="text-[#00FC50]"
-                              >+{item?.changesPercentage >= 1000
-                                ? abbreviateNumber(item?.changesPercentage)
-                                : item?.changesPercentage?.toFixed(2)}%</span
-                            >
-                          {:else}
-                            <span class="text-[#FF2F1F]"
-                              >{item?.changesPercentage <= -1000
-                                ? abbreviateNumber(item?.changesPercentage)
-                                : item?.changesPercentage?.toFixed(2)}%
-                            </span>
-                          {/if}
-                        </Table.Cell>
-                        <Table.Cell
-                          class="text-right xl:table.-column text-sm sm:text-[1rem]"
-                        >
-                          {abbreviateNumber(item?.marketCap)}
-                        </Table.Cell>
-                      </Table.Row>
-                    {/each}
-                  </Table.Body>
-                </Table.Root>
-              {:else}
-                <Infobox text="Currently, no market loser data is available." />
-              {/if}
-            </Card.Content>
-          </Card.Root>
-        </div>
-
-        <div class="grid gap-4 md:gap-8 grid-cols-1 lg:grid-cols-2 text-start">
-          <Card.Root
-            class="order-1 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[470px]"
-          >
-            <Card.Header class="flex flex-row items-center">
-              <div class="flex flex-col items-start w-full">
-                <div class="flex flex-row w-full items-center">
-                  <Card.Title
-                    class="text-xl sm:text-2xl tex-white font-semibold"
-                    >Stock & Market News</Card.Title
-                  >
-                </div>
-              </div>
-            </Card.Header>
-            <Card.Content>
-              {#if recentWIIM?.length !== 0}
-                <ul style="padding-left: 5px;">
-                  {#each recentWIIM as item, index}
-                    {#if index >= 3 && data?.user?.tier !== "Pro"}
-                      <li
-                        class="text-sm sm:text-[1rem]"
-                        style="margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
-                      >
-                        {item?.text?.slice(0, 48) + "..."}
-                        <a href="/pricing" class="inline-block text-sm">
-                          <svg
-                            class="size-5 text-[#fff] inline-block"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            style="max-width: 40px;"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                              clip-rule="evenodd"
-                            >
-                            </path>
-                          </svg>
-
-                          <span
-                            class="ml-1 font-semibold text-gray-300 group-hover:text-white"
-                          >
-                            Upgrade
-                          </span>
-                        </a>
-
-                        <a
-                          href={`/stocks/${item?.ticker}`}
-                          class="inline-block badge rounded-sm ml-1 px-2 m-auto text-blue-400 sm:hover:text-white"
-                          >{item?.ticker}</a
-                        >
-                      </li>
-                    {:else}
-                      <li
-                        class="text-sm sm:text-[1rem]"
-                        style="margin-left: 8px; margin-bottom: 15px; list-style-type: disc;"
-                      >
-                        {item?.text}
-
-                        <a
-                          href={`/stocks/${item?.ticker}`}
-                          class="inline-block badge rounded-sm ml-1 px-2 m-auto text-blue-400 sm:hover:text-white"
-                          >{item?.ticker}</a
-                        >
-                      </li>
-                    {/if}
-                  {/each}
-                </ul>
-              {:else}
-                <Infobox
-                  text="There are no major stock market news available yet."
-                />
-              {/if}
-            </Card.Content>
-          </Card.Root>
-
-          <!--
-          <Card.Root class="overflow-x-scroll overflow-hidden overflow-y-auto">
-            <Card.Header class="flex flex-row items-center">
-              <div class="flex flex-col items-start w-full">
-                <div class="flex flex-row w-full items-center">
-                  <Card.Title
-                    class="text-xl sm:text-2xl tex-white font-semibold"
-                    >Hottest Options Activity</Card.Title
-                  >
-                  <a
-                    href={optionsMode === "openInterest"
-                      ? "/list/highest-open-interest-change"
-                      : optionsMode === "ivRank"
-                        ? "/list/highest-option-iv-rank"
-                        : "/list/highest-option-premium"}
-                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#fff] text-black"
-                  >
-                    View All
-                    <ArrowUpRight
-                      class="hidden sm:inline-block h-4 w-4 shrink-0 -mt-1 ml-0.5"
-                    />
-                  </a>
-                </div>
-                <Card.Description class="mt-2 text-sm sm:text-[1rem]"
-                  >Recent unusual options with the highest ...</Card.Description
+    <!-- Main Table -->
+<div class="bg-gray-800 rounded-lg overflow-hidden mb-6">
+  <div class="overflow-x-auto">
+    <div class="overflow-y-auto" style="max-height: 330px;">
+      <table class="w-full">
+        <thead class="sticky top-0 bg-gray-800">
+          <tr class="text-gray-400 text-sm">
+            <th class="px-4 py-2 text-left"></th>
+            <th class="px-4 py-2 text-left">#</th>
+            <th class="px-4 py-2 text-left">Symbol</th>
+            <th class="px-4 py-2 text-left">Name</th>
+            <th class="px-4 py-2 text-right">Price</th>
+            <th class="px-4 py-2 text-right">Mention Count</th>
+            <th class="px-4 py-2 text-right">Mention Change</th>
+            <th class="px-4 py-2 text-right">Market Cap</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each topMentions as item, i}
+            <tr class="border-t border-gray-700">
+              <td class="px-4 py-3">
+                <button
+                  on:click={() => toggleStar(item.symbol)}
+                  class="hover:text-yellow-400 focus:outline-none"
                 >
-                <Tabs.Root value="openInterest" class="w-full sm:w-fit mt-5 ">
-                  <Tabs.List class="grid w-full grid-cols-3 bg-secondary">
-                    <Tabs.Trigger
-                      on:click={() => changeTable("openInterest")}
-                      value="openInterest"
-                      class="text-sm">OI Change</Tabs.Trigger
-                    >
-                    <Tabs.Trigger
-                      on:click={() => changeTable("premium")}
-                      value="premium"
-                      class="text-sm">Premium</Tabs.Trigger
-                    >
-                    <Tabs.Trigger
-                      on:click={() => changeTable("ivRank")}
-                      value="ivRank"
-                      class="text-sm">IV Rank</Tabs.Trigger
-                    >
-                  </Tabs.List>
-                </Tabs.Root>
-              </div>
-            </Card.Header>
-            <Card.Content>
-              <Table.Root class="overflow-x-scroll w-full">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.Head class="text-white font-semibold"
-                      >Symbol</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >Total OI</Table.Head
-                    >
-
-                    <Table.Head class="text-white text-right font-semibold"
-                      >Change OI</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >Total Prem</Table.Head
-                    >
-                    <Table.Head class="text-white text-right font-semibold"
-                      >IV Rank</Table.Head
-                    >
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {#each optionsTable as item}
-                    <Table.Row>
-                      <Table.Cell class="text-sm sm:text-[1rem]">
-                        <HoverStockChart symbol={item?.symbol} />
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right xl:table.-column text-sm sm:text-[1rem] "
-                      >
-                        {abbreviateNumber(item?.totalOI)}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right xl:table.-column text-sm sm:text-[1rem]"
-                      >
-                        {#if item?.changeOI >= 0}
-                          <span class="text-[#00FC50]"
-                            >+{item?.changeOI?.toLocaleString("en-US")}</span
-                          >
-                        {:else if item?.changeOI < 0}
-                          <span class="text-[#FF2F1F]"
-                            >{item?.changeOI?.toLocaleString("en-US")}</span
-                          >
-                        {/if}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
-                      >
-                        {abbreviateNumber(item?.totalPrem)}
-                      </Table.Cell>
-                      <Table.Cell
-                        class="text-right md:table.-cell xl:table.-column text-sm sm:text-[1rem] text-white"
-                      >
-                        {abbreviateNumber(item?.ivRank)}
-                      </Table.Cell>
-                    </Table.Row>
-                  {/each}
-                </Table.Body>
-              </Table.Root>
-            </Card.Content>
-          </Card.Root>
-          -->
-
-          <Card.Root
-            class="order-3 sm:order-1 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[470px]"
-          >
-            <Card.Header class="flex flex-row items-center">
-              <div class="flex flex-col items-start w-full">
-                <div
-                  class="whitespace-nowrap flex flex-row w-full items-center"
-                >
-                  <Card.Title
-                    class="text-xl sm:text-2xl tex-white font-semibold"
-                    >AI Analyst report
-                  </Card.Title>
-                  {#if analystReport?.date}
-                    <label
-                      class="hidden sm:inline-block text-white text-sm italic ml-auto"
-                      >Updated {analystReport?.date}</label
-                    >
-                  {/if}
-                </div>
-                {#if analystReport?.date}
-                  <label class="sm:hidden text-white text-xs italic mt-2"
-                    >Updated {analystReport?.date}</label
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill={item.isStarred ? 'rgb(250 204 21)' : 'none'}
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class={item.isStarred ? 'text-yellow-400' : 'text-gray-400'}
                   >
-                {/if}
-              </div>
-            </Card.Header>
-            <Card.Content>
-              {#if Object?.keys(analystReport)?.length > 0}
-                {analystReport?.insight}
-
-                <div class="text-white mt-4">
-                  According to {analystReport?.numOfAnalyst} analyst ratings, the
-                  average rating for <HoverStockChart
-                    symbol={analystReport?.symbol}
-                  />
-                  stock is "{analystReport?.consensusRating}" The 12-month stock
-                  price forecast is ${analystReport?.highPriceTarget}, which is
-                  an {analystReport?.highPriceChange > 0
-                    ? "increase"
-                    : "decreas"} of {analystReport?.highPriceChange}% from the
-                  latest price.
-                </div>
-                <table
-                  class="w-full text-right text-tiny text-white xs:text-sm sm:text-base mt-5"
-                >
-                  <thead
-                    ><tr
-                      class="border-b border-gray-600 font-normal text-sm sm:text-[1rem]"
-                      ><th class="py-[3px] text-left font-semibold lg:py-0.5"
-                        >Target</th
-                      > <th class="font-semibold">Low</th>
-                      <th class="font-semibold">Average</th>
-                      <th class="font-semibold">Median</th>
-                      <th class="font-semibold">High</th></tr
-                    ></thead
-                  >
-                  <tbody
-                    ><tr
-                      class="border-b border-gray-600 font-normal text-sm sm:text-[1rem]"
-                      ><td class="py-[3px] text-left lg:py-0.5">Price</td>
-                      <td>${analystReport?.lowPriceTarget}</td>
-                      <td>${analystReport?.avgPriceTarget}</td>
-                      <td>${analystReport?.medianPriceTarget}</td>
-                      <td>${analystReport?.highPriceTarget}</td></tr
-                    >
-                    <tr class="text-sm sm:text-[1rem]"
-                      ><td class="py-[3px] text-left lg:py-0.5">Change</td>
-                      <td
-                        class={analystReport?.lowPriceChange > 0
-                          ? "before:content-['+'] text-[#00FC50]"
-                          : "text-[#FF2F1F]"}
-                        >{analystReport?.lowPriceChange}%</td
-                      >
-                      <td
-                        class={analystReport?.avgPriceChange > 0
-                          ? "before:content-['+'] text-[#00FC50]"
-                          : "text-[#FF2F1F]"}
-                        >{analystReport?.avgPriceChange}%</td
-                      >
-                      <td
-                        class={analystReport?.medianPriceChange > 0
-                          ? "before:content-['+'] text-[#00FC50]"
-                          : "text-[#FF2F1F]"}
-                        >{analystReport?.medianPriceChange}%</td
-                      >
-                      <td
-                        class={analystReport?.highPriceChange > 0
-                          ? "before:content-['+'] text-[#00FC50]"
-                          : "text-[#FF2F1F]"}
-                        >{analystReport?.highPriceChange}%</td
-                      ></tr
-                    ></tbody
-                  >
-                </table>
-              {:else}
-                <Infobox
-                  text="Currently, there are no new analyst reports available."
-                />
-              {/if}
-            </Card.Content>
-          </Card.Root>
-
-          <Card.Root
-            class="order-1 sm:order-2 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[550px]"
-          >
-            <Card.Header class="flex flex-row items-center">
-              <div class="flex flex-col items-start w-full">
-                <div class="flex flex-row w-full items-center">
-                  <Card.Title
-                    class="text-xl sm:text-2xl tex-white font-semibold"
-                    >Upcoming Earnings</Card.Title
-                  >
-                  <a
-                    href="/earnings-calendar"
-                    class="ml-auto rounded-md text-xs sm:text-sm px-2 sm:px-3 py-2 font-semibold bg-[#fff] text-black"
-                  >
-                    View All
-                    <ArrowUpRight
-                      class="hidden sm:inline-block h-4 w-4 shrink-0 -mt-1 ml-0.5"
-                    />
-                  </a>
-                </div>
-              </div>
-            </Card.Header>
-            <Card.Content>
-              {#if data?.getDashboard?.upcomingEarnings?.length !== 0}
-                <ul style="padding-left: 5px;">
-                  {#each data?.getDashboard?.upcomingEarnings as item, index}
-                    {#if index >= 3 && data?.user?.tier !== "Pro"}
-                      <li
-                        class="text-sm sm:text-[1rem]"
-                        style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
-                      >
-                        <strong>{item?.name}</strong> (<HoverStockChart
-                          symbol={item?.symbol}
-                        />)
-                        {item?.isToday === true
-                          ? "will report today"
-                          : [
-                                "Monday",
-                                "Tuesday",
-                                "Wednesday",
-                                "Thursday",
-                              ].includes(
-                                new Date().toLocaleDateString("en-US", {
-                                  weekday: "long",
-                                }),
-                              )
-                            ? "will report tomorrow"
-                            : "will report monday"}
-                        {#if item?.time}
-                          {#if compareTimes(item?.time, "16:00") >= 0}
-                            after market closes.
-                          {:else if compareTimes(item?.time, "09:30") <= 0}
-                            before market opens.
-                          {:else}
-                            during market.
-                          {/if}
-                        {/if}Analysts estimate ...
-                        <a href="/pricing" class="inline-block text-sm">
-                          <svg
-                            class="size-5 text-[#fff] inline-block"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            style="max-width: 40px;"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                              clip-rule="evenodd"
-                            >
-                            </path>
-                          </svg>
-
-                          <span
-                            class="ml-1 font-semibold text-gray-300 group-hover:text-white"
-                          >
-                            Upgrade
-                          </span>
-                        </a>
-                      </li>
-                    {:else}
-                      <li
-                        class="text-sm sm:text-[1rem]"
-                        style=" margin-left: 8px;  margin-bottom: 30px; list-style-type: disc;"
-                      >
-                        <strong>{item?.name}</strong> (<HoverStockChart
-                          symbol={item?.symbol}
-                        />)
-                        {item?.isToday === true
-                          ? "will report today"
-                          : [
-                                "Monday",
-                                "Tuesday",
-                                "Wednesday",
-                                "Thursday",
-                              ].includes(
-                                new Date().toLocaleDateString("en-US", {
-                                  weekday: "long",
-                                }),
-                              )
-                            ? "will report tomorrow"
-                            : "will report monday"}
-                        {#if item?.time}
-                          {#if compareTimes(item?.time, "16:00") >= 0}
-                            after market closes.
-                          {:else if compareTimes(item?.time, "09:30") <= 0}
-                            before market opens.
-                          {:else}
-                            during market.
-                          {/if}
-                        {/if}Analysts estimate {abbreviateNumber(
-                          item?.revenueEst,
-                        )} in revenue ({(
-                          (item?.revenueEst / item?.revenuePrior - 1) *
-                          100
-                        )?.toFixed(2)}% YoY) and {item?.epsEst} in earnings per share
-                        {#if item?.epsPrior !== 0}
-                          ({(
-                            (item?.epsEst / item?.epsPrior - 1) *
-                            100
-                          )?.toFixed(2)}% YoY).
-                        {/if}
-                      </li>
-                    {/if}
-                  {/each}
-                </ul>
-              {:else}
-                <Infobox
-                  text="There are no major upcoming earnings to report today but you can check the earnings calendar for a complete list."
-                />
-              {/if}
-            </Card.Content>
-          </Card.Root>
-
-          <Card.Root
-            class="order-2 sm:order-3 overflow-x-scroll overflow-hidden overflow-y-auto no-scrollbar sm:max-h-[550px]"
-          >
-            <Card.Header class="flex flex-row items-center">
-              <div class="flex flex-col items-start w-full">
-                <div class="flex flex-row w-full items-center">
-                  <Card.Title
-                    class="text-xl sm:text-2xl tex-white font-semibold"
-                    >Recent Earnings <span class="text-sm text-gray-300"
-                      >(NYSE Time)</span
-                    ></Card.Title
-                  >
-                </div>
-              </div>
-            </Card.Header>
-            <Card.Content>
-              {#if data?.getDashboard?.recentEarnings?.length !== 0}
-                <ul style="padding-left: 5px;">
-                  {#each data?.getDashboard?.recentEarnings as item}
-                    <strong>{item?.name}</strong> (<HoverStockChart
-                      symbol={item?.symbol}
-                    />) has released its quarterly earnings at {formatTime(
-                      item?.time,
-                    )}:
-
-                    <li
-                      class="text-sm sm:text-[1rem]"
-                      style="color: #fff;  margin-top:10px; margin-left: 30px; margin-bottom: 10px; list-style-type: disc;"
-                    >
-                      Revenue of {abbreviateNumber(item?.revenue)}
-                      {item?.revenueSurprise > 0 ? "exceeds" : "misses"} estimates
-                      by {abbreviateNumber(Math.abs(item?.revenueSurprise))},
-                      with {(
-                        (item?.revenue / item?.revenuePrior - 1) *
-                        100
-                      )?.toFixed(2)}% YoY {item?.revenue / item?.revenuePrior -
-                        1 <
-                      0
-                        ? "decline"
-                        : "growth"}.
-                    </li>
-                    <li
-                      style="color: #fff; line-height: 22px; margin-top:0px; margin-left: 30px; margin-bottom: 30px; list-style-type: disc;"
-                    >
-                      EPS of {item?.eps}
-                      {item?.epsSurprise > 0 ? "exceeds" : "misses"} estimates by
-                      {item?.epsSurprise?.toFixed(2)}
-                      {#if item?.epsPrior}
-                        with {(
-                          ((item?.eps - item?.epsPrior) /
-                            Math.abs(item?.epsPrior)) *
-                          100
-                        )?.toFixed(2)}% YoY {(item?.eps - item?.epsPrior) /
-                          Math.abs(item?.epsPrior) <
-                        0
-                          ? "decline"
-                          : "growth"}.
-                      {/if}
-                    </li>
-                  {/each}
-                </ul>
-              {:else}
-                <Infobox
-                  text="There are no major recent earnings to report today but you can check the earnings calendar for a complete list."
-                />
-              {/if}
-            </Card.Content>
-          </Card.Root>
-        </div>
-      </main>
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                </button>
+              </td>
+              <td class="px-4 py-3">{i + 1}</td>
+              <td class="px-4 py-3 font-semibold">{item.symbol}</td>
+              <td class="px-4 py-3">{item.name}</td>
+              <td class="px-4 py-3 text-right">{item.price}</td>
+              <td class="px-4 py-3 text-right">{item.mentionCount}</td>
+              <td class="px-4 py-3 text-right" 
+                  class:text-green-400={parseFloat(item.mentionChange) >= 0} 
+                  class:text-red-400={parseFloat(item.mentionChange) < 0}>
+                {item.mentionChange}
+              </td>
+              <td class="px-4 py-3 text-right">{item.marketCap}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
-<style>
-  .scrollbar {
-    display: grid;
-    grid-gap: 90px;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    grid-auto-flow: column;
-    overflow-x: auto;
-    scrollbar-width: thin; /* Hide the default scrollbar in Firefox */
-    scrollbar-color: transparent transparent; /* Hide the default scrollbar in Firefox */
-  }
+    <!-- Bottom Section -->
+    <div class="grid grid-cols-2 gap-6">
+      <!-- Top Gainers -->
+      <div class="bg-gray-800 rounded-lg p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Top Gainers</h2>
+    <button class="text-blue-400 text-sm">View All →</button>
+  </div>
+  <table class="w-full">
+    <thead>
+      <tr class="text-gray-400 text-sm">
+        <th class="px-2 py-2 text-left">Symbol</th>
+        <th class="px-2 py-2 text-left">Name</th>
+        <th class="px-2 py-2 text-right">Price</th>
+        <th class="px-2 py-2 text-right">Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each topMentions
+        .sort((a, b) => parseFloat(b.mentionChange) - parseFloat(a.mentionChange))
+        .slice(0, 5) as item}
+        <tr class="border-t border-gray-700">
+          <td class="px-2 py-2 font-semibold">{item.symbol}</td>
+          <td class="px-2 py-2">{item.name}</td>
+          <td class="px-2 py-2 text-right">{item.price}</td>
+          <td class="px-2 py-2 text-right" 
+              class:text-green-400={parseFloat(item.mentionChange) >= 0}
+              class:text-red-400={parseFloat(item.mentionChange) < 0}>
+            {item.mentionChange}
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
 
-  /* Custom scrollbar for Webkit (Chrome, Safari) */
-  .scrollbar::-webkit-scrollbar {
-    width: 0; /* Hide the width of the scrollbar */
-    height: 0; /* Hide the height of the scrollbar */
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb {
-    background: transparent; /* Make the thumb transparent */
-  }
-
-  .stroke-text {
-    font-size: 56px; /* Adjust the font size as needed */
-    font-weight: bold; /* Adjust the font weight as needed */
-    color: transparent; /* Make the text transparent */
-    -webkit-text-stroke: 1px #cbd5e1; /* Add a black stroke outline with a thickness of 2px */
-  }
-</style>
+      <!-- News Section -->
+      <div class="bg-gray-800 rounded-lg p-4">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold">Top News</h2>
+          <button class="text-blue-400 text-sm">View All →</button>
+        </div>
+        <div class="space-y-4">
+          {#each data?.getDashboard?.newsData || [] as news}
+            <div class="border-t border-gray-700 pt-4">
+              <div class="flex items-center gap-2 mb-2">
+                <a href={news.url} target="_blank" rel="noopener noreferrer"
+                   class="text-gray-200 hover:text-blue-400 transition-colors">
+                  {news.title}
+                </a>
+              </div>
+              <div class="flex items-center justify-between text-sm text-gray-400">
+                <span>{news.author}</span>
+                <span>{formatTime(news.publishedAt)}</span>
+              </div>
+              {#if news.channel}
+                <span class="inline-block mt-2 text-xs px-2 py-1 bg-gray-700 rounded-full text-gray-300">
+                  {news.channel}
+                </span>
+              {/if}
+            </div>
+          {/each}
+          {#if !data?.getDashboard?.newsData?.length}
+            <div class="text-gray-400 text-center py-4">
+              No news available at the moment
+            </div>
+          {/if}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
