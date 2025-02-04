@@ -35,14 +35,7 @@ export const actions = {
     //let username = generateUsername(formData.name.split(' ').join('')).toLowerCase();
 
     try {
-       await locals.pb.collection("users").create(formData);
-      /*
-      await locals.pb?.collection('users').update(
-              newUser?.id, {
-                'freeTrial' : true,
-                'tier': 'Pro', //Give new users a free trial for the Pro Subscription
-            });
-      */
+       const newUser = await locals.pb.collection("users").create(formData);
 
       await locals.pb.collection("users").requestVerification(formData.email);
     } catch (err) {

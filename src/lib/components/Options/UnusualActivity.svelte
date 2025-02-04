@@ -84,9 +84,9 @@
       }
 
       // Aggregate call size, put size, and premium
-      if (optionType === "Call") {
+      if (optionType === "Calls") {
         aggregatedData[date].callSize += size;
-      } else if (optionType === "Put") {
+      } else if (optionType === "Puts") {
         aggregatedData[date].putSize += size;
       }
 
@@ -260,10 +260,10 @@
     { key: "dte", label: "DTE", align: "right" },
     { key: "optionType", label: "P/C", align: "right" },
     { key: "unusualType", label: "Type", align: "right" },
+    { key: "executionEst", label: "Exec", align: "right" },
     { key: "sentiment", label: "Sent.", align: "right" },
     { key: "size", label: "Size", align: "right" },
     { key: "strike", label: "Strike", align: "right" },
-    { key: "avgPrice", label: "Avg Price Paid", align: "right" },
     { key: "price", label: "Spot", align: "right" },
     { key: "premium", label: "Prem", align: "right" },
   ];
@@ -272,11 +272,11 @@
     date: { order: "none", type: "date" },
     optionType: { order: "none", type: "string" },
     unusualType: { order: "none", type: "string" },
+    executionEst: { order: "none", type: "string" },
     dte: { order: "none", type: "number" },
     sentiment: { order: "none", type: "sentiment" },
     size: { order: "none", type: "number" },
     strike: { order: "none", type: "number" },
-    avgPrice: { order: "none", type: "number" },
     price: { order: "none", type: "number" },
     premium: { order: "none", type: "number" },
   };
@@ -326,6 +326,7 @@
           return sortOrder === "asc"
             ? sentimentA - sentimentB
             : sentimentB - sentimentA;
+
         case "number":
         default:
           valueA = parseFloat(a[key]);
@@ -406,6 +407,13 @@
                   >
                     {item?.unusualType}
                   </td>
+
+                  <td
+                    class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
+                  >
+                    {item?.executionEst}
+                  </td>
+
                   <td
                     class="text-sm sm:text-[1rem] text-end whitespace-nowrap {item?.sentiment ===
                     'Bullish'
@@ -427,11 +435,6 @@
                     {item?.strike}
                   </td>
 
-                  <td
-                    class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
-                  >
-                    {item?.avgPrice}
-                  </td>
                   <td
                     class="text-white text-sm sm:text-[1rem] text-end whitespace-nowrap"
                   >

@@ -295,14 +295,16 @@
 
     if (!title || title?.length === 0) {
       toast.error("Title cannot be empty!", {
-        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+        style:
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
       return;
     }
 
     if (title?.length > 100) {
       toast.error("Title is too long. Keep it simple and concise bruv!", {
-        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+        style:
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
       return;
     }
@@ -334,7 +336,8 @@
         }
 
         toast.success("Watchlist created successfully!", {
-          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+          style:
+            "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
         });
 
         const clicked = document.getElementById("addWatchlist");
@@ -344,13 +347,15 @@
         anchor.dispatchEvent(new MouseEvent("click"));
       } else {
         toast.error("Something went wrong. Please try again!", {
-          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+          style:
+            "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
         });
       }
     } catch (error) {
       console.error("Error:", error);
       toast.error("An error occurred. Please try again later.", {
-        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+        style:
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     }
   }
@@ -382,7 +387,8 @@
 
       if (output === "success") {
         toast.success("Watchlist deleted successfully!", {
-          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+          style:
+            "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
         });
 
         allList = allList?.filter((item) => item?.id !== displayWatchList?.id);
@@ -395,13 +401,15 @@
         clicked.dispatchEvent(new MouseEvent("click"));
       } else {
         toast.error("Something went wrong. Please try again!", {
-          style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+          style:
+            "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
         });
       }
     } catch (error) {
       console.error("Error:", error);
       toast.error("An error occurred. Please try again later.", {
-        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+        style:
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     }
   }
@@ -433,7 +441,7 @@
     if (numberOfChecked === 0) {
       toast.error(`You need to select symbols before you can delete them`, {
         style:
-          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     } else {
       watchList = watchList?.filter(
@@ -500,7 +508,7 @@
     } else {
       toast.error(`This symbol is already in your watchlist`, {
         style:
-          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
 
       inputValue = "";
@@ -574,7 +582,8 @@
       saveRules();
     } else {
       toast.error("Only for Pro Members", {
-        style: "border-radius: 200px; background: #2A2E39; color: #fff;",
+        style:
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     }
   }
@@ -1856,7 +1865,7 @@
   ></label>
 
   <!-- Desktop modal content -->
-  <div class="modal-box w-full bg-[#191919]">
+  <div class="modal-box w-full bg-secondary">
     <div class="text-white mb-5">
       <h3 class="font-bold text-2xl mb-5">New Watchlist</h3>
 

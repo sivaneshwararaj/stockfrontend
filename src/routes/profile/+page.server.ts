@@ -6,6 +6,45 @@ export const load = async ({ locals }) => {
     redirect(303, "/login");
   }
 
+const getNotificationChannels = async () => {
+  const userId = user?.id;
+  let output = {};
+
+  try {
+    // Check if the user already exists in the collection
+    output = await pb.collection("notificationChannels").getFirstListItem(`user="${userId}"`);
+  } catch (error) {
+    if (error.status === 404) {
+      try {
+        // Fetch the collection schema to dynamically get all boolean fields
+        const collectionSchema = await pb.collection("notificationChannels").getFullList();
+
+        // Find all boolean fields and set them to `true`
+        const defaultValues = collectionSchema[0]
+          ? Object.keys(collectionSchema[0]).reduce((acc, key) => {
+              if (typeof collectionSchema[0][key] === "boolean") {
+                acc[key] = true;
+              }
+              return acc;
+            }, {})
+          : {};
+
+        // Ensure the user field is included
+        defaultValues.user = userId;
+
+        // Create the new record
+        output = await pb.collection("notificationChannels").create(defaultValues);
+      } catch (creationError) {
+        console.error("Error creating new user notification channel:", creationError);
+      }
+    } else {
+      console.error("Error checking for existing user:", error);
+    }
+  }
+  return output; // Return only the latest item
+};
+
+
 const getPushSubscriptionData = async () => {
   let output = {};
   try {
@@ -28,8 +67,6 @@ const getPushSubscriptionData = async () => {
 };
 
 
-
-
   const getSubscriptionData = async () => {
     const output =
       (
@@ -45,9 +82,12 @@ const getPushSubscriptionData = async () => {
   };
 
 
+
+
   return {
     getSubscriptionData: await getSubscriptionData(),
     getPushSubscriptionData: await getPushSubscriptionData(),
+    getNotificationChannels: await getNotificationChannels(),
   };
 
 };

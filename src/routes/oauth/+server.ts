@@ -47,18 +47,7 @@ export const GET = async ({ locals, url, cookies }) => {
       .authWithOAuth2Code(provider.name, code, expectedVerifier, redirectURL);
 
 
-    //oauthUsername = generateUsername(newUser['meta']['name'].split(' ').join('')).toLowerCase();
-
-    // Check if user was created or existed already
-    /*
-        if(newUser?.meta?.isNew === true) {
-            await locals.pb?.collection('users').update(
-                newUser['record']['id'], {
-                    'freeTrial' : true,
-                    'tier': 'Pro', //Give new users a free trial for the Pro Subscription
-                });
-        }
-    */
+    
   } catch (err) {
     console.log("Error logging in with OAuth2 user", err);
     redirect(302, "/register");
