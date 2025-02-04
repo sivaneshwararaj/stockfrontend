@@ -1,6 +1,0 @@
-# Allow all web crawlers full access to all content
-User-agent: *
-Disallow:
-
-# Sitemap for better indexing
-Sitemap: https://stocknear.com/sitemap.xml
