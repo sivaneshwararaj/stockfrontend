@@ -18,7 +18,7 @@
     if (targetPrice < 0) {
       toast.error(`Target Price must be above zero`, {
         style:
-          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     } else {
       const closePopup = document.getElementById("priceAlertModal");
@@ -49,7 +49,7 @@
 
       toast.success(`Successfully created price alert`, {
         style:
-          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
       targetPrice = currentPrice;
     }
@@ -224,7 +224,7 @@
             >
             <p class="text-sm sm:text-[1rem]">
               Your price alert will notify you when the stock price is {condition}
-              {targetPrice?.toFixed(2)}.
+              {targetPrice}.
             </p>
           </div>
         {/if}

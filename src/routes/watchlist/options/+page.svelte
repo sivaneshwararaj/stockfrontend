@@ -93,12 +93,12 @@
     if (numberOfChecked === 0) {
       toast.error(`You need to select symbols before you can delete them`, {
         style:
-          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     } else if (data?.getOptionsWatchlist?.id?.length === 0) {
       toast.error(`You need to select symbols before you can delete them`, {
         style:
-          "border-radius: 10px; background: #2A2E39; color: #fff;  padding: 12px; margin-top: 10px; box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);",
+          "border-radius: 5px; background: #fff; color: #000; border-color: #4B5563; font-size: 15px;",
       });
     } else {
       optionsWatchlist = optionsWatchlist?.filter(
@@ -122,6 +122,7 @@
 
       deleteOptionsId = [];
       numberOfChecked = 0;
+      editMode = !editMode;
     }
   }
 
