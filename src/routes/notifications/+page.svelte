@@ -1,10 +1,11 @@
 <script lang="ts">
   import { formatDate } from "$lib/utils";
   import ArrowLogo from "lucide-svelte/icons/move-up-right";
-  import avatar from "$lib/images/visual_mod.webp";
   import HoverStockChart from "$lib/components/HoverStockChart.svelte";
   import { onMount } from "svelte";
   import { numberOfUnreadNotification } from "$lib/store";
+  import SEO from "$lib/components/SEO.svelte";
+  import Infobox from "$lib/components/Infobox.svelte";
 
   export let data;
   export let form;
@@ -57,35 +58,10 @@
   });
 </script>
 
-<svelte:head>
-  <title>
-    {$numberOfUnreadNotification > 0 ? `(${$numberOfUnreadNotification})` : ""} Notifications
-    · Stocknear</title
-  >
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-
-  <meta name="description" content="Free Stock Analysis" />
-  <!-- Other meta tags -->
-  <meta property="og:title" content="Notifications · Stocknear" />
-  <meta property="og:description" content="Free Stock Analysis" />
-  <meta
-    property="og:image"
-    content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"
-  />
-  <meta property="og:type" content="website" />
-  <!-- Add more Open Graph meta tags as needed -->
-
-  <!-- Twitter specific meta tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Notifications · Stocknear" />
-  <meta name="twitter:description" content="Free Stock Analysis" />
-  <meta
-    name="twitter:image"
-    content="https://stocknear-pocketbase.s3.amazonaws.com/logo/meta_logo.jpg"
-  />
-  <!-- Add more Twitter meta tags as needed -->
-</svelte:head>
+<SEO
+  title="Stock Market Notifications | Real-Time Updates & Alerts"
+  description="Stay informed with real-time stock market notifications. Get instant alerts on price changes, trends, and market movements to make smarter investment decisions."
+/>
 
 <section
   class="w-full max-w-3xl sm:max-w-[1400px] overflow-hidden min-h-screen pb-20 pt-5 px-4 lg:px-3"
@@ -102,11 +78,17 @@
       <div
         class="relative flex justify-center items-start overflow-hidden w-full"
       >
-        <main class="w-full lg:w-3/4 lg:pr-5">
-          <div class="mb-6 border-b-[2px]">
+        <main class="w-full lg:w-3/4 lg:pr-10">
+          <div class="mb-3 border-b-[2px]">
             <h1 class="mb-1 text-white text-2xl sm:text-3xl font-bold">
               Notification
             </h1>
+          </div>
+
+          <div class="mb-4">
+            <Infobox
+              text="Personalize your notifications on your account page."
+            />
           </div>
 
           {#if notificationList?.length !== 0}
@@ -115,7 +97,7 @@
                 {#if item?.notifyType === "priceAlert"}
                   <!-- svelte-ignore a11y-click-events-have-key-events -->
                   <div
-                    class="sm:hover:bg-[#2B2B2B] pb-3 sm:p-3 mb-6 sm:mb-3 text-gray-200 w-full {!item?.readed
+                    class=" pb-3 sm:p-3 mb-6 sm:mb-3 text-white w-full {!item?.readed
                       ? 'bg-[#F9AB00] bg-opacity-[0.1]'
                       : ''} "
                   >
@@ -163,7 +145,7 @@
                 {:else if item?.notifyType === "wiim"}
                   <!-- svelte-ignore a11y-click-events-have-key-events -->
                   <div
-                    class="sm:hover:bg-[#2B2B2B] pb-3 sm:p-3 mb-6 sm:mb-3 text-gray-200 w-full {!item?.readed
+                    class=" pb-3 sm:p-3 mb-6 sm:mb-3 text-white w-full {!item?.readed
                       ? 'bg-[#F9AB00] bg-opacity-[0.1]'
                       : ''} "
                   >
@@ -207,7 +189,7 @@
                   </div>
                 {:else if item?.notifyType === "earningsSurprise"}
                   <div
-                    class="sm:hover:bg-[#2B2B2B] pb-3 sm:p-3 mb-6 sm:mb-3 text-gray-200 w-full {!item?.readed
+                    class=" pb-3 sm:p-3 mb-6 sm:mb-3 text-white w-full {!item?.readed
                       ? 'bg-[#F9AB00] bg-opacity-[0.1]'
                       : ''} "
                   >

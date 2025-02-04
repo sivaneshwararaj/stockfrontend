@@ -19,6 +19,14 @@
 
   let nottifPermGranted: boolean | null = null;
   let isPushSubscribed = data?.getPushSubscriptionData !== null ? true : false;
+  let notificationChannels = data?.getNotificationChannels;
+
+  const mode = Object?.entries(notificationChannels)
+    .filter(([key, value]) => typeof value === "boolean") // Filter boolean properties
+    .reduce((acc, [key, value]) => {
+      acc[key] = value; // Add to mode object
+      return acc;
+    }, {});
 
   let subscriptionData = data?.getSubscriptionData;
   let isClicked = false;
@@ -199,6 +207,26 @@
     }
     loading = false;
   }
+
+  async function updateNotificationChannels() {
+    const postData = {
+      id: notificationChannels?.id,
+      ...mode,
+    };
+
+    const response = await fetch("/api/update-notification-channels", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+  }
+
+  async function toggleMode(state) {
+    mode[state] = !mode[state];
+    await updateNotificationChannels();
+  }
 </script>
 
 <SEO
@@ -251,13 +279,51 @@
             >
           </div>
 
-          {#if pwaInstalled}
-            <div
-              class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
-            >
-              <h2 class="text-white text-2xl font-semibold mb-3">
-                Push Notification
-              </h2>
+          <div
+            class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
+          >
+            <h2 class="text-white text-2xl font-semibold mb-3">Notification</h2>
+            Customize your notification alerts based on your preferences.
+
+            <div class="flex flex-col items-start w-full mt-4 mb-4">
+              <div class="flex w-full md:w-1/3 justify-between items-center">
+                <span class="text-white">Earnings Surprise</span>
+                <label class="inline-flex cursor-pointer relative">
+                  <input
+                    on:click={() => toggleMode("earningsSurprise")}
+                    type="checkbox"
+                    checked={mode["earningsSurprise"]}
+                    value={mode["earningsSurprise"]}
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="w-10 h-5 bg-gray-600 rounded-full peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[0.25rem] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-500"
+                  ></div>
+                </label>
+              </div>
+              <div
+                class=" mt-2 flex w-full md:w-1/3 justify-between items-center"
+              >
+                <span class="text-white"> Why Priced Moved </span>
+                <label class="inline-flex cursor-pointer relative">
+                  <input
+                    on:click={() => toggleMode("wiim")}
+                    type="checkbox"
+                    checked={mode["wiim"]}
+                    value={mode["wiim"]}
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="w-10 h-5 bg-gray-600 rounded-full peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[0.25rem] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-500"
+                  ></div>
+                </label>
+              </div>
+            </div>
+
+            <h3 class="text-white text-xl font-semibold mb-2 mt-4">
+              Push Notification
+            </h3>
+            {#if pwaInstalled}
               <div class="mt-3">
                 {#if nottifPermGranted === null}
                   <p>Checking permissions...</p>
@@ -302,8 +368,21 @@
                   </p>
                 {/if}
               </div>
-            </div>
-          {/if}
+            {:else}
+              <div class="mt-2">
+                <p class="mb-3">
+                  You can activate the push notification only if you downloaded
+                  the app.
+                </p>
+                <label
+                  for="installModal"
+                  class="flex-none rounded px-4 py-1.5 text-sm font-semibold text-black cursor-pointer bg-[#fff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                >
+                  Install the App
+                </label>
+              </div>
+            {/if}
+          </div>
 
           <div
             class="mt-6 rounded border border-gray-600 p-4 text-base xs:p-4 xs:text-lg text-white"
@@ -670,3 +749,55 @@
   </div>
 </dialog>
 <!-- End Cancel Subscription Modal -->
+
+<!--Start Create Watchlist Modal-->
+<input type="checkbox" id="installModal" class="modal-toggle" />
+
+<dialog id="installModal" class="modal overflow-hidden p-3 sm:p-0">
+  <label for="installModal" class="cursor-pointer modal-backdrop"></label>
+
+  <div class="modal-box rounded w-full bg-secondary border border-gray-600">
+    <div class="flex flex-row items-center pt-5">
+      <h4 class="text-white text-2xl font-bold text-center m-auto">
+        Steps to install
+      </h4>
+      <label
+        for="installModal"
+        class="inline-block cursor-pointer absolute right-3 top-3 text-[1.3rem] sm:text-[1.8rem] text-white"
+      >
+        <svg
+          class="w-6 h-6 sm:w-8 sm:h-8"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          ><path
+            fill="white"
+            d="m6.4 18.308l-.708-.708l5.6-5.6l-5.6-5.6l.708-.708l5.6 5.6l5.6-5.6l.708.708l-5.6 5.6l5.6 5.6l-.708.708l-5.6-5.6z"
+          /></svg
+        >
+      </label>
+    </div>
+
+    <div
+      class="text-white flex flex-col justify-center items-center text-xl h-full"
+    >
+      <ul class="list-decimal list-inside text-left mt-5">
+        <li class="mb-2">Tap on the Safari share button.</li>
+        <li class="mb-2">Tap on "Add to Home Screen."</li>
+        <li class="mb-4">Tap on "Add."</li>
+
+        <p class="text-lg mb-4">
+          Note that web apps on iOS can only be installed using Safari.
+        </p>
+      </ul>
+    </div>
+
+    <div class="border-t border-gray-600 mt-2">
+      <label
+        for="installModal"
+        class="mt-4 font-semibold text-white text-xl m-auto flex justify-center"
+      >
+        Close
+      </label>
+    </div>
+  </div>
+</dialog>

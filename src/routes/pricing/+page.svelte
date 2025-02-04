@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { numberOfUnreadNotification } from "$lib/store";
   import { openLemonSqueezyUrl } from "$lib/lemonsqueezy";
   //import Discount from '$lib/components/Discount.svelte';
   import { onMount } from "svelte";
