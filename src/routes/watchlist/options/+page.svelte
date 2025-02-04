@@ -112,7 +112,10 @@
         id: data?.getOptionsWatchlist?.id,
       };
 
-      const response = await fetch("/api/update-options-watchlist", {
+      numberOfChecked = 0;
+      editMode = !editMode;
+
+      await fetch("/api/update-options-watchlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,8 +124,6 @@
       });
 
       deleteOptionsId = [];
-      numberOfChecked = 0;
-      editMode = !editMode;
     }
   }
 
