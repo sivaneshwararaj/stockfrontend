@@ -54,7 +54,10 @@
 
   ];
 
-  function மீனாமீனா(timeString) {
+  onMount(() => {
+    debouncedFetchMentions();
+  })
+  function convertTimesToUnix(timeString) {
   const now = Math.floor(Date.now() / 1000);
   let givenTimeTimestamp = null;
 
