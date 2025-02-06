@@ -9,6 +9,7 @@ export const handle = sequence(async ({ event, resolve }) => {
   const apiURL = import.meta.env.VITE_USEAST_API_URL; //isUS ? import.meta.env.VITE_USEAST_API_URL : import.meta.env.VITE_EU_API_URL;
   const fastifyURL = import.meta.env.VITE_USEAST_FASTIFY_URL; //isUS ? import.meta.env.VITE_USEAST_FASTIFY_URL : import.meta.env.VITE_EU_FASTIFY_URL;
   const wsURL = import.meta.env.VITE_USEAST_WS_URL; //isUS ? import.meta.env.VITE_USEAST_WS_URL : import.meta.env.VITE_EU_WS_URL;
+  const CHARTBASEKEY = import.meta.env.VITE_CHARTBASEKEY;
 
   event.locals = {
     pb: new PocketBase(pbURL),
@@ -16,6 +17,7 @@ export const handle = sequence(async ({ event, resolve }) => {
     fastifyURL,
     wsURL,
     apiKey: import.meta.env.VITE_STOCKNEAR_API_KEY,
+    CHARTBASEKEY,
   };
 
   const authCookie = event?.request?.headers?.get("cookie") || "";

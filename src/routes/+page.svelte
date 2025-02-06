@@ -46,7 +46,7 @@
     "6 Days",
     "1 Week",
   ];
-  let selectedTime = "5 Days";
+  let selectedTime = "4 Hours";
   $: console.log("selectedTime changed:", selectedTime);
 
   // Sample top mentions data
@@ -54,11 +54,47 @@
 
   ];
 
+  function மீனாமீனா(timeString) {
+  const now = Math.floor(Date.now() / 1000);
+  let givenTimeTimestamp = null;
+
+  const match = timeString.match(/^(\d+)\s*(Hours?|Days?|Week)$/i);
+
+  if (match) {
+    const value = parseInt(match[1]);
+    const unit = match[2].toLowerCase();
+    let seconds = 0;
+
+    if (unit.startsWith("hour")) {
+      seconds = value * 3600;
+    } else if (unit.startsWith("day")) {
+      seconds = value * 86400;
+    } else if (unit === "week") {
+      seconds = value * 604800;
+    }
+
+    givenTimeTimestamp = now - seconds; // Calculate past timestamp
+
+    return {
+      currentTime: now,
+      givenTime: givenTimeTimestamp,
+      givenTimeString: timeString, // Include the original string
+    };
+  } else {
+      return {
+          currentTime: now,
+          givenTime: null, // Indicate invalid input
+          givenTimeString: timeString,
+      }
+  }
+}
   // Function to handle outside clicks
   function handleClickOutside(event: MouseEvent) {
     if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
       isDropdownOpen = false;
-      console.log("we dropdown")
+      //checking if it works
+      console.log("we drop down")
+      debouncedFetchMentions();
     }
   }
 
@@ -146,7 +182,7 @@
       if (result1) { // Parse the JSON string in result.data
             let parsedData = result1?.data;
             let stringified = devalue.parse(parsedData);
-            console.log("lets check here",stringified.data)
+            //console.log("lets check here",stringified.data)
             stringified=stringified.data
             // Initialize array to store formatted mentions
             const formattedMentions = [];
@@ -164,13 +200,13 @@
                         marketCap: "N/A", // You'll need to get market cap data from another source
                         isStarred: false
                     };
-                    console.log(item)
+                    //console.log(item)
                     formattedMentions.push(item);
                 }
             }
             
             topMentions = formattedMentions;
-            console.log("Processed mentions:", topMentions);
+           // console.log("Processed mentions:", topMentions);
       } else {
         console.error('Failed to fetch mentions:', result.error);
       }
@@ -185,7 +221,8 @@
   // Watch for changes in selectedTime or selectedSubreddits
   $: {
     if (selectedTime || selectedSubreddits) {
-      debouncedFetchMentions();
+    // lets change here
+      // debouncedFetchMentions();
     }
   }
 
@@ -237,14 +274,14 @@
   />
 </svelte:head>
 
-<div class="min-h-screen bg-black-900 text-white p-6 justify-center  items-center">
+<div class="min-h-screen bg-black-900 text-white p-6  justify-center items-center">
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-6">
-      <h1 class="text-xl font-semibold items-center">Sentiment and Mention Tracker — All Subreddits</h1>
-      <p class="text-xs font-semibold">Discover what tickers are trending and monitor social sentiment on Reddit across 231 stock and crypto subreddits.</p>
-      <div class="flex gap-4 mt-4">
-        <div class="flex items-center gap-2">
+      <h1 class="text-xl font-semibold items-center  text-center">Sentiment and Mention Tracker — All Subreddits</h1>
+      <p class="text-xs font-semibold  text-center">Discover what tickers are trending and monitor social sentiment on Reddit across 231 stock and crypto subreddits.</p>
+      <div class="flex gap-4 mt-4 items-center justify-center">
+        <div class="flex  gap-2">
           <span class="text-gray-400">Top Mentions - Timeframe</span>
           <div class="flex items-center gap-2">
             <select
