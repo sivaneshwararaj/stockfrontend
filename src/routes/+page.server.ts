@@ -3,50 +3,40 @@ import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 import fs from 'fs';
 import path from 'path';
+
+// Helper function to get subreddits -  moved OUTSIDE of load
+function getSubreddits() {
+  const subreddits = [];
+  try {
+    const filePath = path.join(process.cwd(), 'src/data', 'subreddit.csv');
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const rows = fileContent.split('\n');
+
+    for (let i = 1; i < rows.length; i++) { // Assuming the first row is a header
+      const row = rows[i].trim();
+      if (row) {
+        subreddits.push(row);
+      }
+    }
+  } catch (err) {
+    console.error("Error reading or parsing subreddit.csv:", err);
+    // Consider re-throwing or handling more gracefully
+  }
+  console.log("getSubreddits:", subreddits); // Debugging
+  return subreddits;
+}
+
 export const load = async ({ locals }) => {
-  const { apiKey, apiURL,CHARTBASEKEY } = locals;
+  const { apiKey, apiURL, CHARTBASEKEY } = locals;
 
   const getDashboard = async () => {
-    // const response = await fetch(apiURL + "/dashboard-info", {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "X-API-KEY": apiKey,
-    //   },
-    // });
-
-    // const output = await response?.json();
-
-    // return output;
+    // Dashboard fetch logic (currently returns an empty array)
     return [];
-
   };
-  function getSubreddits() {
-    const subreddits = [];
-    try {
-      const filePath = path.join(process.cwd(), 'src/data', 'subreddit.csv');
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const rows = fileContent.split('\n');
 
-      for (let i = 1; i < rows.length; i++) { // Assuming the first row is a header
-        const row = rows[i].trim();
-        if (row) {
-          subreddits.push(row);
-        }
-      }
-    } catch (err) {
-      console.error("Error reading or parsing subreddit.csv:", err);
-      // You might want to handle the error differently depending on your needs
-      // For example, you could throw the error to be handled by the caller:
-      // throw err;
-    }
-    console.log(subreddits)
-    return subreddits;
-  }
-  // Make sure to return a promise
   return {
     getDashboard: await getDashboard(),
-    subreddits: getSubreddits(),
+    subreddits: getSubreddits(), // Call getSubreddits here for the load function
   };
 };
 
@@ -61,6 +51,7 @@ async function checkDisposableEmail(email) {
   const output = (await response.json())?.disposable ?? false;
   return output;
 }
+
 function convertTimesToUnix(timeString) {
   const now = Math.floor(Date.now() / 1000);
   let givenTimeTimestamp = null;
@@ -98,6 +89,7 @@ function convertTimesToUnix(timeString) {
 
 export const actions = {
   login: async ({ request, locals }) => {
+    // ... (login logic - unchanged)
     const { formData, errors } = await validateData(
       await request.formData(),
       loginUserSchema,
@@ -124,6 +116,7 @@ export const actions = {
   },
 
   register: async ({ locals, request }) => {
+    // ... (register logic - unchanged)
     const { formData, errors } = await validateData(
       await request.formData(),
       registerUserSchema,
@@ -145,12 +138,12 @@ export const actions = {
     try {
       await locals.pb.collection("users").create(formData);
       /*
-		await locals.pb?.collection('users').update(
-						newUser?.id, {
-							'freeTrial' : true,
-							'tier': 'Pro', //Give new users a free trial for the Pro Subscription
-					});
-		*/
+    await locals.pb?.collection('users').update(
+            newUser?.id, {
+              'freeTrial' : true,
+              'tier': 'Pro', //Give new users a free trial for the Pro Subscription
+        });
+    */
 
       await locals.pb.collection("users").requestVerification(formData.email);
     } catch (err) {
@@ -164,13 +157,13 @@ export const actions = {
         .authWithPassword(formData.email, formData.password);
 
       /*
-			if (!locals.pb?.authStore?.model?.verified) {
-				locals.pb.authStore.clear();
-				return {
-					notVerified: true,
-				};
-			}
-			*/
+      if (!locals.pb?.authStore?.model?.verified) {
+        locals.pb.authStore.clear();
+        return {
+          notVerified: true,
+        };
+      }
+      */
     } catch (err) {
       console.log("Error: ", err);
       error(err.status, err.message);
@@ -180,6 +173,7 @@ export const actions = {
   },
 
   oauth2: async ({ url, locals, request, cookies }) => {
+    // ... (oauth2 logic - unchanged)
     const authMethods = (await locals?.pb
       ?.collection("users")
       ?.listAuthMethods())?.oauth2;
@@ -208,8 +202,8 @@ export const actions = {
     const state = provider.state;
     const verifier = provider.codeVerifier;
 
-    
-    
+
+
     cookies.set("state", state, {
       httpOnly: true,
       sameSite: "lax",
@@ -244,11 +238,12 @@ export const actions = {
 
     redirect(302, authProviderRedirect);
   },
-  updateMentions: async ({ request,locals }) => {
+
+  updateMentions: async ({ request, locals }) => {
     try {
       const body = await request.formData();
       const timeframe = body.get('timeframe');
-      const subredditsString = body.getAll('subreddits'); // Use getAll, returns an array
+      let subredditsString = body.getAll('subreddits');
 
       if (!timeframe) {
         return fail(400, { error: 'Missing required timeframe field' });
@@ -272,11 +267,15 @@ export const actions = {
       let apiUrl = "https://chartexchange.com/api/v1/data/reddit/mentions/top/?";
       apiUrl += `start=${startTime}&end=${endTime}&limit=100&filter_noise=true&format=json&api_key=${locals.CHARTBASEKEY}`;
       let apiResponse = [];
-      //Correct empty Subreddit string
+
       if (subredditsString.length === 0 || (subredditsString.length === 1 && subredditsString[0].trim() === '')) {
-        // No subreddits provided, use base URL as is
-        console.log("No subreddits provided, using base URL");
+        // No subreddits provided, use all from file
+        const allSubreddits = getSubreddits(); // NOW DEFINED!
+        const subredditParam = allSubreddits.map(sub => encodeURIComponent(sub.trim())).join(',');
+        apiUrl += `&subreddit=${subredditParam}`;
+        console.log("No subreddits provided, using all from file");
       } else {
+        //Subreddits from Form
         const validSubreddits = subredditsString.filter(sub => sub.trim() !== "");
         if (validSubreddits.length > 0) {
           // Subreddits provided, add to URL
@@ -308,6 +307,4 @@ export const actions = {
       return fail(500, { error: 'Internal server error' });
     }
   },
-
 };
-
