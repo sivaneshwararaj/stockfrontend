@@ -266,7 +266,7 @@ export const actions = {
 
     //    let apiUrl = "https://chartexchange.com/api/v1/data/reddit/mentions/top/?";
     //   apiUrl += `start=${startTime}&end=${endTime}&limit=100&filter_noise=true&format=json&api_key=${locals.CHARTBASEKEY}`;
-        let apiUrl = "http://localhost:8000/aggregateranker?";
+      let apiUrl = "http://15.204.218.175:8000/aggregateranker?";
         apiUrl += `start_time=${startTime}&end_time=${endTime}&subreddits=all`;
 
 
