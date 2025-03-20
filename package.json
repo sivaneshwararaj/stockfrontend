@@ -99,6 +99,7 @@
     "marked": "^15.0.6",
     "ol": "^10.3.1",
     "plotly.js": "^2.35.3",
+    "svelte-hero-icons": "^5.2.0",
     "svelte-plotly.js": "^1.2.0",
     "ua-parser-js": "^1.0.37"
   },

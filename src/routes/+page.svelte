@@ -11,6 +11,8 @@
     import { debounce } from 'lodash-es';
     import * as devalue from 'devalue';
     import { closedPWA } from "$lib/store";
+    import { Icon, ArrowUp, ArrowDown } from "svelte-hero-icons";
+
 
     export let form;
     // Props and initial data
@@ -30,7 +32,7 @@
 
     // Time options
     const timeOptions = [
-        "4 Hours", "6 Hours", "12 Hours", "24 Hours", "2 Days", "3 Days", "4 Days", "5 Days", "6 Days", "1 Week",
+        "4 Hours", "6 Hours", "12 Hours", "24 Hours", "2 Days",
     ];
     let selectedTime = "24 Hours";
     $: console.log("selectedTime changed:", selectedTime);
@@ -181,13 +183,15 @@
                             mentionCount: stringified[i].count,
                             mentionChange: `${(parseFloat(stringified[i].sentiment) * 100).toFixed(2)}%`,
                             marketCap: "N/A", // You'll need to get market cap data from another source
-                            isStarred: false
+                            isStarred: false,
+                            rank_change:stringified[i].rank_change,
                         };
                         formattedMentions.push(item);
                     }
                 }
 
                 topMentions = formattedMentions;
+                console.log(topMentions)
             } else {
                 console.error('Failed to fetch mentions:', result.error);
             }
@@ -333,6 +337,8 @@
                     <table class="w-full">
                         <thead class="sticky top-0 bg-gray-800">
                             <tr class="text-gray-400 text-sm">
+                                
+                                <th class="px-4 py-2 text-left"></th>
                                 <th class="px-4 py-2 text-left"></th>
                                 <th class="px-4 py-2 text-left">#</th>
                                 <th class="px-4 py-2 text-left">Symbol</th>
@@ -346,6 +352,18 @@
                         <tbody>
                             {#each topMentions as item, i}
                                 <tr class="border-t border-gray-700">
+                                     <td class="px-4 py-3">
+                                    {#if item.rank_change !== 0}
+                                        {#if item.rank_change < 0}
+                                        
+                                            <span class="text-red-500"><Icon src="{ArrowDown}" class="text-red-500 h-3 w-3" />{Math.abs(item.rank_change)}</span>
+                                        {:else}
+                                            <span class="text-green-500"><Icon src="{ArrowUp}" class="text-green-500 h-3 w-3" /> {item.rank_change}</span>
+                                        {/if}
+                                        {:else}
+                                        <span class="text-gray-500">&nbsp;&nbsp;&nbsp; </span>
+                                        {/if}
+                                        </td>
                                     <td class="px-4 py-3">
                                         <button on:click={() => toggleStar(item.symbol)} class="hover:text-yellow-400 focus:outline-none" >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={item.isStarred ? 'rgb(250 204 21)' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class={item.isStarred ? 'text-yellow-400' : 'text-gray-400'} >
@@ -353,7 +371,8 @@
                                             </svg>
                                         </button>
                                     </td>
-                                    <td class="px-4 py-3">{i + 1}</td>
+                                    
+                                                                            <td class="px-4 py-3">{i + 1}</td>
                                     <td class="px-4 py-3 font-semibold">{item.symbol}</td>
                                     <td class="px-4 py-3">{item.name}</td>
                                     <td class="px-4 py-3 text-right">{item.price}</td>
