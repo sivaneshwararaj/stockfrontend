@@ -12,6 +12,9 @@ const config = {
       middleware: (handler) => compression()(handler),
       worker: true, // Add this line if the adapter supports handling worker files
     }),
+    csrf: {
+      checkOrigin: false,
+    }
   },
   preprocess: vitePreprocess(),
   paths: {
