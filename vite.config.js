@@ -27,7 +27,11 @@ const config = {
               .toString();
           }
         },
+        external: ["svelte-hero-icons"],
+
+        
       },
+      
     },
     brotliSize: true, // Enable Brotli compression
   },
