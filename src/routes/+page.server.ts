@@ -311,4 +311,76 @@ export const actions = {
       return fail(500, { error: 'Internal server error' });
     }
   },
+  updateMentionsPenny: async ({ request, locals }) => {
+    try {
+      const body = await request.formData();
+      const timeframe = body.get('timeframe');
+      let subredditsString = body.getAll('subreddits');
+
+      if (!timeframe) {
+        return fail(400, { error: 'Missing required timeframe field' });
+      }
+
+      if (typeof timeframe !== 'string') {
+        return fail(400, { error: 'Invalid timeframe provided' });
+      }
+
+      const timeValidation = convertTimesToUnix(timeframe);
+      if (timeValidation.givenTime === null) {
+        return fail(400, { error: 'Invalid timeframe format' });
+      }
+
+      const times = convertTimesToUnix(timeframe);
+      const startTime = times.givenTime;
+      const endTime = times.currentTime;
+      console.log("current time", times.currentTime);
+      console.log("given time", times.givenTime);
+
+      //    let apiUrl = "https://chartexchange.com/api/v1/data/reddit/mentions/top/?";
+      //   apiUrl += `start=${startTime}&end=${endTime}&limit=100&filter_noise=true&format=json&api_key=${locals.CHARTBASEKEY}`;
+      let apiUrl = "http://127.0.0.1:8000/pennyaggregateranker?";
+      apiUrl += `start_time=${startTime}&end_time=${endTime}&subreddits=all`;
+
+
+      let apiResponse = [];
+
+      if (subredditsString.length === 0 || (subredditsString.length === 1 && subredditsString[0].trim() === '')) {
+        // No subreddits provided, use all from file
+        const allSubreddits = getSubreddits(); // NOW DEFINED!
+        const subredditParam = allSubreddits.map(sub => encodeURIComponent(sub.trim())).join(',');
+        apiUrl += `&subreddits=${subredditParam}`;
+        console.log("No subreddits provided, using all from file");
+      } else {
+        //Subreddits from Form
+        const validSubreddits = subredditsString.filter(sub => sub.trim() !== "");
+        if (validSubreddits.length > 0) {
+          // Subreddits provided, add to URL
+          const subredditParam = validSubreddits.map(sub => encodeURIComponent(sub.trim())).join(',');
+          apiUrl += `&subreddits=${subredditParam}`;
+        } else {
+          return fail(400, { error: 'Invalid subreddits provided' }); // all were empty
+        }
+      }
+
+      console.log("the url is", apiUrl);
+
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Request Failed:", response.status, errorText);
+        return fail(response.status, { error: `API Error: ${response.status} - ${errorText}` });
+      }
+
+      apiResponse = await response.json();
+
+      return {
+        data: apiResponse,
+        success: true
+      };
+    } catch (err) {
+      console.error('Error processing updateMentions request:', err);
+      return fail(500, { error: 'Internal server error' });
+    }
+  },
 };
