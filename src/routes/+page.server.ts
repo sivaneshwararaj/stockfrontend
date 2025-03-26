@@ -3,6 +3,7 @@ import { validateData } from "$lib/utils";
 import { loginUserSchema, registerUserSchema } from "$lib/schemas";
 import fs from 'fs';
 import path from 'path';
+import { env } from '$env/dynamic/private';
 
 // Helper function to get subreddits -  moved OUTSIDE of load
 function getSubreddits() {
@@ -266,8 +267,10 @@ export const actions = {
 
     //    let apiUrl = "https://chartexchange.com/api/v1/data/reddit/mentions/top/?";
     //   apiUrl += `start=${startTime}&end=${endTime}&limit=100&filter_noise=true&format=json&api_key=${locals.CHARTBASEKEY}`;
-      let apiUrl = "http://15.204.218.175:8000/aggregateranker?";
-        apiUrl += `start_time=${startTime}&end_time=${endTime}&subreddits=all`;
+     // let apiUrl = "http://15.204.218.175:8000/aggregateranker?";
+      let apiUrl = env.VITE_USEAST_API_URL
+      apiUrl = apiUrl+"/aggregateranker?";
+      apiUrl += `start_time=${startTime}&end_time=${endTime}&subreddits=all`;
 
 
     let apiResponse = [];
@@ -338,7 +341,9 @@ export const actions = {
 
       //    let apiUrl = "https://chartexchange.com/api/v1/data/reddit/mentions/top/?";
       //   apiUrl += `start=${startTime}&end=${endTime}&limit=100&filter_noise=true&format=json&api_key=${locals.CHARTBASEKEY}`;
-      let apiUrl = "http://15.204.218.175:8000/pennyaggregateranker?";
+      //let apiUrl = "http://15.204.218.175:8000/pennyaggregateranker?";
+      let apiUrl = env.VITE_USEAST_API_URL
+      apiUrl = apiUrl+"/pennyaggregateranker?";
       apiUrl += `start_time=${startTime}&end_time=${endTime}&subreddits=all`;
 
 

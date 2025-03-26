@@ -12,6 +12,7 @@
     import * as devalue from 'devalue';
     import { closedPWA } from "$lib/store";
     import { Icon, ArrowUp, ArrowDown } from "svelte-hero-icons";
+    
 
 
     export let form;
@@ -421,6 +422,81 @@
                             {/each}
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- tracker Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Top Gainers -->
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Top Gainers</h2>
+                    <button class="text-blue-400 text-sm">View All →</button>
+                </div>
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-gray-400 text-sm">
+                            <th class="px-2 py-2 text-left">Symbol</th>
+                            <th class="px-2 py-2 text-left">Name</th>
+                            <th class="px-2 py-2 text-right">Price</th>
+                            <th class="px-2 py-2 text-right">Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         {#each topMentions
+                        .sort((a, b) => parseFloat(b.mentionChange) - parseFloat(a.mentionChange))
+                        .slice(0, 5) as item}
+                        <tr class="border-t border-gray-700">
+                            <td class="px-2 py-2 font-semibold">{item.symbol}</td>
+                            <td class="px-2 py-2">{item.name}</td>
+                            <td class="px-2 py-2 text-right">{item.price}</td>
+                            <td class="px-2 py-2 text-right"
+                                class:text-green-400={parseFloat(item.mentionChange) >= 0}
+                                class:text-red-400={parseFloat(item.mentionChange) < 0}
+                            >
+                                {item.mentionChange}
+                            </td>
+                        </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+            <!-- News Section -->
+            <div class="bg-gray-800 rounded-lg p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Top News</h2>
+                    <button class="text-blue-400 text-sm">View All →</button>
+                </div>
+                <div class="space-y-4">
+                    {#each data?.getDashboard?.newsData || [] as news}
+                        <div class="border-t border-gray-700 pt-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <a
+                                    href={news.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="text-gray-200 hover:text-blue-400 transition-colors"
+                                >
+                                    {news.title}
+                                </a>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-gray-400">
+                                <span>{news.author}</span>
+                                <span>{formatTime(news.publishedAt)}</span>
+                            </div>
+                            {#if news.channel}
+                                <span class="inline-block mt-2 text-xs px-2 py-1 bg-gray-700 rounded-full text-gray-300">
+                                    {news.channel}
+                                </span>
+                            {/if}
+                        </div>
+                    {/each}
+                    {#if !data?.getDashboard?.newsData?.length}
+                        <div class="text-gray-400 text-center py-4">
+                            No news available at the moment
+                        </div>
+                    {/if}
                 </div>
             </div>
         </div>
