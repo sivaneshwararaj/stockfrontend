@@ -353,7 +353,7 @@ export const actions = {
         // No subreddits provided, use all from file
         const allSubreddits = getSubreddits(); // NOW DEFINED!
         const subredditParam = allSubreddits.map(sub => encodeURIComponent(sub.trim())).join(',');
-        apiUrl += `&subreddits=${subredditParam}`;
+        //apiUrl += `&subreddits=${subredditParam}`;
         console.log("No subreddits provided, using all from file");
       } else {
         //Subreddits from Form
