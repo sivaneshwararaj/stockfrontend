@@ -3,7 +3,7 @@
     import * as Card from "$lib/components/shadcn/card/index.ts";
     import * as Table from "$lib/components/shadcn/table/index.ts";
     import ArrowUpRight from "lucide-svelte/icons/arrow-up-right";
-    import { pb } from '$lib/pocketbase';
+    
     import { redirect } from '@sveltejs/kit';
     import { goto } from '$app/navigation';
     import { createEventDispatcher } from 'svelte';
